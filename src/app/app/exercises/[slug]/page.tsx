@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Dumbbell, ExternalLink } from "lucide-react";
 import { getExerciseBySlug, type ExerciseCard as ExerciseCardData } from "@/lib/data/exercises";
@@ -70,7 +71,15 @@ export default async function ExerciseDetailPage({ params }: PageProps<"/app/exe
         <div className="flex flex-col gap-4">
           <div className="flex items-start justify-between gap-3">
             <h1 className="text-2xl font-bold tracking-tight">{exercise.namePt}</h1>
-            {session ? <FavoriteButton exerciseId={exercise.id} initialFavorited={favorited} /> : null}
+            <div className="flex items-center gap-2">
+              <Link
+                href={`/app/exercises/${exercise.slug}/history`}
+                className="text-xs font-medium text-accent hover:underline"
+              >
+                Meu histórico
+              </Link>
+              {session ? <FavoriteButton exerciseId={exercise.id} initialFavorited={favorited} /> : null}
+            </div>
           </div>
 
           <dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">

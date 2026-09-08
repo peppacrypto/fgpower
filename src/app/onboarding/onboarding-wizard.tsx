@@ -175,11 +175,16 @@ export function OnboardingWizard() {
           Voltar
         </Button>
         {step < totalSteps - 1 ? (
-          <Button type="button" onClick={() => setStep((s) => Math.min(totalSteps - 1, s + 1))}>
+          // key differs from the submit button below so React always mounts
+          // a fresh DOM node when switching — reusing the same <button> node
+          // while patching type="button" -> type="submit" mid-click can make
+          // the browser apply the new type's default action (form submit)
+          // to the very click that triggered the swap.
+          <Button key="continue" type="button" onClick={() => setStep((s) => Math.min(totalSteps - 1, s + 1))}>
             Continuar
           </Button>
         ) : (
-          <Button type="submit" disabled={pending}>
+          <Button key="submit" type="submit" disabled={pending}>
             {pending ? "Salvando…" : "Concluir"}
           </Button>
         )}

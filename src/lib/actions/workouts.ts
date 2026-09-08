@@ -272,6 +272,16 @@ export async function finishWorkoutSession(sessionId: string) {
   redirect(`/app/workout/${sessionId}/summary`);
 }
 
+/** Permanently deletes a completed session and all its logs (spec §43.15). */
+export async function deleteWorkoutSession(sessionId: string) {
+  const user = await requireUserOrThrow();
+  const session = await prisma.workoutSession.findUniqueOrThrow({ where: { id: sessionId } });
+  if (session.userId !== user.id) throw new Error("FORBIDDEN");
+  await prisma.workoutSession.delete({ where: { id: sessionId } });
+  revalidatePath("/app/history");
+  redirect("/app/history");
+}
+
 export async function discardWorkoutSession(sessionId: string) {
   const user = await requireUserOrThrow();
   const session = await prisma.workoutSession.findUniqueOrThrow({ where: { id: sessionId } });
