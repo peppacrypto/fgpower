@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
+import { ServiceWorkerRegistration } from "@/components/pwa/service-worker-registration";
 import "./globals.css";
 
 const inter = Inter({
@@ -26,6 +27,11 @@ export const metadata: Metadata = {
     "FGPOWER é uma plataforma de musculação orientada por ciência: programas com base em evidências, biblioteca de exercícios detalhada e progressão registrada semana após semana.",
   applicationName: "FGPOWER",
   manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "FGPOWER",
+  },
   openGraph: {
     type: "website",
     siteName: "FGPOWER",
@@ -46,7 +52,10 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="pt-BR" className={`${inter.variable} ${jetbrainsMono.variable} h-full antialiased`} suppressHydrationWarning>
-      <body className="min-h-full flex flex-col bg-background text-foreground">{children}</body>
+      <body className="min-h-full flex flex-col bg-background text-foreground">
+        {children}
+        <ServiceWorkerRegistration />
+      </body>
     </html>
   );
 }

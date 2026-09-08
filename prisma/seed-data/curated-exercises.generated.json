@@ -1,0 +1,1260 @@
+[
+ {
+  "slug": "hack-squat",
+  "setupEn": "Press your entire back and shoulders firmly into the pad before releasing the safety catches, and set your feet mid-platform at shoulder width with toes turned slightly out. Brace your core to pin your torso against the pad — that constant back contact is what protects your lower back through the eccentric. Only release the safeties once you feel locked in, then extend the legs without locking the knees to find your starting position.",
+  "setupPt": "Encoste toda a região das costas e ombros firmemente no apoio antes de destravar as alças de segurança, e posicione os pés no centro da plataforma com afastamento na largura dos ombros, pontas levemente para fora. Contraia o abdômen para travar o tronco contra o encosto — essa pressão constante nas costas é o que protege a lombar durante a fase excêntrica. Só destrave as travas depois de se sentir bem ajustado, e estenda as pernas sem travar os joelhos para achar a posição inicial.",
+  "breathingEn": "Take a deep breath before you start descending and hold it (bracing) as the knees flex under load, keeping intra-abdominal pressure high to stabilize your torso against the pad. Exhale in a controlled way during the drive up, especially through the hardest part of the range.",
+  "breathingPt": "Inspire profundamente antes de iniciar a descida e segure o ar (bracing) enquanto os joelhos flexionam sob carga, mantendo a pressão intra-abdominal alta para estabilizar o tronco contra o apoio. Expire de forma controlada durante o empurrão de subida, principalmente na parte mais difícil do movimento.",
+  "coachingCuesEn": [
+   "Drive through your heels, not your toes",
+   "Keep your back glued to the pad the entire rep",
+   "Lower until your thighs are just below parallel without losing lumbar contact",
+   "Knees track over your toes, don't let them cave inward",
+   "Don't slam the knees straight at the top — extend and flow into the next rep"
+  ],
+  "coachingCuesPt": [
+   "Empurre o chão com os calcanhares, não com a ponta dos pés",
+   "Mantenha as costas coladas no apoio do início ao fim",
+   "Desça até a coxa ficar um pouco abaixo do paralelo, sem perder o contato da lombar",
+   "Os joelhos seguem a direção dos dedos dos pés, sem colapsar para dentro",
+   "Não trave os joelhos com força no topo — estenda e siga direto para a próxima repetição"
+  ],
+  "commonMistakesEn": [
+   "Letting the lower back peel off the pad near the bottom, arching or rounding to fake extra depth",
+   "Letting the knees drift well past the toes and continuing to descend anyway, piling stress onto the joint",
+   "Cutting the range short well above parallel on heavy sets, which blunts the quad hypertrophy stimulus compared to going deeper",
+   "Letting the knees cave inward (valgus) on the drive up, especially on the last few reps",
+   "Shifting weight onto the toes during the push and losing heel contact with the platform"
+  ],
+  "commonMistakesPt": [
+   "Deixar a lombar descolar do apoio perto do fundo do movimento, arqueando ou arredondando as costas pra 'roubar' amplitude",
+   "Levar os joelhos muito além da linha dos pés e continuar descendo assim mesmo, sobrecarregando a articulação",
+   "Cortar a amplitude bem acima do paralelo em séries pesadas, o que reduz o estímulo de hipertrofia no quadríceps em comparação a descer mais",
+   "Deixar os joelhos colapsarem para dentro (valgo) na fase de subida, principalmente nas últimas repetições",
+   "Transferir o peso pra ponta dos pés durante o empurrão e perder o contato do calcanhar com a plataforma"
+  ],
+  "rangeOfMotionEn": "Full range here means descending until the thighs sit just below parallel to the floor (knee-hip angle a bit under 90°), while keeping your low back pinned to the pad the whole way — if your back lifts off before that point, that's your real working depth, not wherever the platform happens to stop. Squat-depth research shows greater quadriceps and glute volume gains with full-depth training compared to partial reps, and full squats tend to produce larger neuromuscular adaptations with less reported pain than partial ones. The caveat: people with a history of patellofemoral pain, very limited ankle/hip mobility, or acute discomfort at end range should individualize their depth — knee joint loading does increase with depth, so trimming range is a reasonable call in specific cases, not an automatic mistake.",
+  "rangeOfMotionPt": "Amplitude completa aqui significa descer até a coxa ficar um pouco abaixo da paralela ao chão (ângulo joelho-quadril pouco menor que 90°), sempre mantendo a lombar encostada no apoio — se a lombar despega antes disso, essa é a sua profundidade real de trabalho, não o ponto onde a plataforma para. Estudos com variações de agachamento mostram maior ganho de volume muscular no quadríceps e nos glúteos com amplitude completa comparada à parcial, e o agachamento completo tende a gerar adaptações neuromusculares maiores com menos dor relatada do que o parcial. A ressalva: quem tem histórico de dor patelofemoral, mobilidade de tornozelo/quadril bem limitada ou desconforto agudo no fundo do movimento deve ajustar a profundidade individualmente — a carga no joelho tende a aumentar conforme a profundidade, então reduzir a amplitude é uma escolha razoável em casos específicos, não um erro por si só.",
+  "whyThisExerciseExistsEn": "The hack squat is a track-guided squat variation that fully supports the back and reduces the balance/coordination demand compared to a free-standing squat, letting you focus load on the quadriceps through a fixed, predictable path. That doesn't make it \"superior\" to the free-weight squat — research comparing machines and free weights generally finds comparable strength and hypertrophy outcomes between the two — but the fixed track and back support do shift the knee and spine loading profile relative to a free squat at the same depth, which makes it useful either as a squat-pattern variation or as a higher-volume accessory once trunk-stabilization fatigue from other lifts is already high.",
+  "whyThisExerciseExistsPt": "O hack squat é uma variação de agachamento guiada por trilho, que dá suporte total às costas e reduz a exigência de equilíbrio e coordenação em comparação ao agachamento livre, permitindo concentrar a carga no quadríceps através de uma trajetória fixa e previsível. Isso não o torna \"superior\" ao agachamento livre — pesquisas comparando máquinas e pesos livres, em geral, encontram ganhos de força e hipertrofia equivalentes entre as duas modalidades — mas o trilho fixo e o apoio nas costas mudam o perfil de carga sobre joelho e coluna em relação a um agachamento livre na mesma profundidade, o que o torna útil como variação do padrão de agachamento ou como exercício acessório de maior volume quando a fadiga de estabilização do tronco de outros exercícios já está alta.",
+  "regressionHints": [
+   "Leg press",
+   "Goblet squat"
+  ],
+  "progressionHints": [
+   "Agachamento livre com barra (back squat)",
+   "Hack squat unilateral (uma perna por vez)"
+  ],
+  "alternativeHints": [
+   "Leg press",
+   "Agachamento frontal"
+  ],
+  "evidenceKeys": [
+   "kubo-2019-squat-depth-muscle-volume",
+   "pallares-2020-full-vs-partial-squat",
+   "hartmann-2013-squat-depth-knee-spine-load",
+   "heidel-2022-machines-vs-free-weights-meta-analysis"
+  ],
+  "evidenceNotesPt": {
+   "kubo-2019-squat-depth-muscle-volume": "Mostra que variações de agachamento com maior profundidade produzem maior ganho de volume muscular no quadríceps e nos glúteos do que amplitudes parciais, sustentando a orientação de descer até pouco abaixo do paralelo no hack squat.",
+   "pallares-2020-full-vs-partial-squat": "Compara agachamento completo e parcial e encontra adaptações neuromusculares maiores e menos dor relatada com amplitude completa, base para a orientação de amplitude e para a ressalva sobre ajustar a profundidade em caso de dor.",
+   "hartmann-2013-squat-depth-knee-spine-load": "Analisa como a carga sobre joelho e coluna muda conforme a profundidade do agachamento, sustentando a orientação de manter o joelho alinhado com o pé e a ressalva de reduzir a profundidade em quem tem histórico de dor no joelho.",
+   "heidel-2022-machines-vs-free-weights-meta-analysis": "Meta-análise que encontra ganhos de força e hipertrofia equivalentes entre máquinas e pesos livres, base para explicar por que o hack squat (uma variação em máquina) não é 'superior' ao agachamento livre, apenas uma alternativa com perfil de carga diferente."
+  }
+ },
+ {
+  "slug": "romanian-deadlift",
+  "setupEn": "Load the bar and take a shoulder-width (or slightly wider) pronated grip — switch to mixed grip or use straps once the load gets heavy enough that grip becomes the limiter. Stand with feet hip-width apart, bar resting against the thighs, and set a slight, FIXED knee bend before you start moving — this is a hip hinge, not a squat. Brace before lifting off or unracking: inhale into the belly, stack the ribcage over the pelvis, and hold that pressure. Pulling from a small step can extend the range of motion, but only use it if your hip and hamstring mobility actually let you get there without the lower back rounding.",
+  "setupPt": "Carregue a barra e pegue com pegada pronada, um pouco mais aberta que a largura dos ombros — troque para pegada mista ou use straps quando a carga ficar pesada o suficiente pra pegada virar o fator limitante. Fique em pé com os pés na largura do quadril, barra encostada nas coxas, e trave uma flexão leve e FIXA de joelho antes de começar — isso é uma dobradiça de quadril, não um agachamento. Feche o abdômen antes de tirar a barra do suporte ou do chão: inspire pro \"estômago\", trave as costelas sobre a pelve e segure essa pressão. Puxar de um step baixo pode aumentar a amplitude, mas só vale se sua mobilidade de quadril e posterior realmente permitir chegar lá sem a lombar arredondar.",
+  "breathingEn": "Inhale and brace (intra-abdominal pressure) before the descent, hold that brace through the entire eccentric phase, and exhale in a controlled way as you drive the hips forward to stand back up — never breathe \"into\" a rounding lower back.",
+  "breathingPt": "Inspire e trave o abdômen (pressão intra-abdominal) antes da descida, segure essa pressão durante toda a fase excêntrica, e solte o ar de forma controlada enquanto empurra o quadril à frente pra subir — nunca respire \"dentro\" de uma lombar que está arredondando.",
+  "coachingCuesEn": [
+   "Push the hips back, not down",
+   "Keep the bar glued to your legs the whole way",
+   "Knees soft but locked in place — don't let them bend further on the way down",
+   "Chest up, lats tight, like squeezing an orange in your armpit",
+   "Feel the stretch in the hamstrings, then stop — you don't need to touch the floor"
+  ],
+  "coachingCuesPt": [
+   "Empurra o quadril pra trás, não pra baixo",
+   "Barra colada na perna o tempo todo",
+   "Joelho mole, mas travado — não deixa flexionar mais na descida",
+   "Peito aberto, dorsal travado, como se apertasse uma laranja embaixo do braço",
+   "Sentiu o alongamento no posterior? Para aí, não precisa encostar a barra no chão"
+  ],
+  "commonMistakesEn": [
+   "Turning it into a stiff-legged squat: the knees keep bending through the descent instead of the hips hinging back, pulling load off the hamstrings.",
+   "Letting the bar drift away from the body, which increases the moment arm — and the stress — on the lower back.",
+   "Rounding the lower back to reach further down, past the point where the pelvis stops tilting posteriorly.",
+   "Bouncing at the bottom and using the stretch reflex to yank the bar back up instead of reversing under control.",
+   "Hyperextending at the top with an exaggerated lumbar arch instead of stopping at neutral hip extension."
+  ],
+  "commonMistakesPt": [
+   "Transformar o exercício num agachamento de pernas semi-retas: o joelho continua flexionando na descida em vez do quadril ir pra trás, tirando tensão do posterior.",
+   "Deixar a barra se afastar do corpo, o que aumenta o braço de alavanca — e o estresse — sobre a lombar.",
+   "Arredondar a lombar pra 'ganhar' mais amplitude, além do ponto em que a pelve para de rodar posteriormente.",
+   "Quicar no fundo do movimento e usar o reflexo de estiramento pra puxar a barra de volta, em vez de reverter com controle.",
+   "Hiperestender no topo com um arco lombar exagerado, em vez de parar na extensão neutra do quadril."
+  ],
+  "rangeOfMotionEn": "Lower only as far as you can while keeping the pelvis in a roughly neutral-to-slightly-anterior tilt and the lower back flat — for most lifters that lands somewhere between mid-shin and just below the knee, not full contact with the floor. One honest caveat: because the RDL loads the hamstrings near their longest muscle length, and the literature (a broad ROM meta-analysis alongside hamstring-specific long-vs-short-length work) suggests training at long muscle lengths — whether partial or full range — can produce a comparable or greater hypertrophy signal than short-length training, chasing extra depth beyond what your own hip mobility allows just trades useful hamstring tension for lumbar-flexion risk. Individualize the depth to your flexibility, not to a fixed bar height.",
+  "rangeOfMotionPt": "Desça só até onde você consegue manter a pelve numa inclinação neutra a levemente anterior, com a lombar reta — pra maioria dos alunos isso fica entre a canela e um pouco abaixo do joelho, não até tocar o chão. Uma ressalva honesta: como o RTR carrega o posterior de coxa perto do seu comprimento máximo, e a literatura (uma meta-análise ampla sobre amplitude de movimento somada a estudos específicos de posterior comparando comprimento longo x curto) sugere que treinar em comprimento muscular alongado — parcial ou total — pode gerar um estímulo de hipertrofia comparável ou até maior do que treinar em comprimento curto, forçar mais profundidade do que sua mobilidade de quadril permite só troca tensão útil no posterior por risco de flexão lombar. Individualize a profundidade pela sua flexibilidade, não por uma altura fixa de barra.",
+  "whyThisExerciseExistsEn": "The Romanian deadlift is a hip-hinge pattern that loads the hamstrings (and glutes) through a long, controlled eccentric with the muscle held near a lengthened position — a stimulus that regional-activation and length-based hypertrophy research suggests can complement, not replace, knee-flexion-dominant hamstring work like leg curls. It's also commonly programmed to build hip-hinge strength and technique that carries over to the conventional deadlift, while emphasizing the hamstrings and glutes more directly than the deadlift itself does.",
+  "whyThisExerciseExistsPt": "O Levantamento Terra Romeno é um padrão de dobradiça de quadril (hip hinge) que carrega o posterior de coxa (e o glúteo) numa fase excêntrica longa e controlada, com o músculo perto da posição alongada — um estímulo que a literatura de ativação regional e hipertrofia por comprimento muscular sugere que pode complementar, não substituir, exercícios de flexão de joelho como a mesa flexora. Ele também costuma entrar no programa pra construir força e técnica de hinge que transferem pro levantamento terra convencional, enquanto enfatiza posterior de coxa e glúteo de forma mais direta do que o terra em si.",
+  "regressionHints": [
+   "Dumbbell Romanian deadlift",
+   "Cable pull-through"
+  ],
+  "progressionHints": [
+   "Deficit Romanian deadlift",
+   "Single-leg Romanian deadlift"
+  ],
+  "alternativeHints": [
+   "Seated leg curl",
+   "Good morning"
+  ],
+  "evidenceKeys": [
+   "bourne-2017-hamstring-exercise-selection-emg",
+   "schoenfeld-2015-hamstring-regional-activation",
+   "maeo-2021-hamstring-long-vs-short-length",
+   "pallares-2021-rom-meta-analysis"
+  ],
+  "evidenceNotesPt": {
+   "bourne-2017-hamstring-exercise-selection-emg": "Estudo de EMG comparando exercícios de posterior de coxa mostra que o RTR ativa fortemente o bíceps femoral dentro de um padrão de hinge, sustentando por que ele complementa exercícios de flexão de joelho num programa.",
+   "schoenfeld-2015-hamstring-regional-activation": "Mostra ativação regional diferente entre exercícios de quadril (como o RTR) e exercícios de joelho (como a mesa flexora) dentro do próprio posterior de coxa, o que embasa a recomendação de combinar os dois padrões de movimento.",
+   "maeo-2021-hamstring-long-vs-short-length": "Compara treinar o posterior de coxa em comprimento muscular longo (a posição que o RTR enfatiza) versus curto e encontra maior hipertrofia no grupo treinado alongado, dando base à orientação de amplitude deste exercício.",
+   "pallares-2021-rom-meta-analysis": "Meta-análise geral sobre amplitude de movimento no treino de força, usada aqui de forma comedida pra embasar que amplitude maior tende a favorecer ganhos, desde que a técnica e a mobilidade individual permitam."
+  }
+ },
+ {
+  "slug": "barbell-bench-press-medium-grip",
+  "setupEn": "Set the bench flat and lie back so your eyes sit roughly under the bar. Plant your feet flat and drive them into the floor, retract and depress your shoulder blades to create a stable base against the bench, and hold a natural, moderate arch in your lower back. Take a medium grip — a bit wider than shoulder width, one that puts your forearms roughly vertical (about a 90° elbow angle) when the bar reaches your chest — then unrack the bar directly over your shoulder joints before lowering to the starting position with elbows locked but not hyperextended.",
+  "setupPt": "Deite no banco reto com os olhos praticamente embaixo da barra e os pés bem apoiados, empurrando o chão. Retraia e deprima as escápulas contra o banco pra criar uma base estável — \"junta e desce os ombros\" — e mantenha um arco lombar natural, sem exagero. Feche numa pegada média, um pouco além da largura dos ombros, de forma que o antebraço fique quase na vertical (ângulo de cotovelo perto de 90°) quando a barra tocar o peito, e retire a barra do suporte alinhada com a articulação do ombro antes de travar os braços na posição inicial.",
+  "breathingEn": "Take a deep breath and brace your core before unracking, then inhale again at the top of each rep and hold that brace through the descent and the hardest part of the press. Exhale once you clear the sticking point on the way up, resetting your breath between reps rather than mid-rep.",
+  "breathingPt": "Encha o ar e trave o abdômen antes de tirar a barra do suporte; puxe o ar de novo no topo de cada repetição e segure essa pressão durante a descida e a parte mais difícil da subida. Solte o ar só depois de passar o ponto de maior dificuldade (sticking point), resetando a respiração entre as repetições, nunca no meio do movimento.",
+  "coachingCuesEn": [
+   "Pull the bar down into your chest — don't let it drop.",
+   "Elbows at roughly 45–75° from your torso, not flared to 90°.",
+   "Shoulder blades pinned back and down for the whole set.",
+   "Drive your feet into the floor for full-body tightness.",
+   "Touch and go — no bounce off the chest."
+  ],
+  "coachingCuesPt": [
+   "Puxa a barra pro peito, não deixa ela cair sozinha.",
+   "Cotovelo em torno de 45–75° do tronco, sem abrir pra 90°.",
+   "Escápula travada, pra trás e pra baixo, do início ao fim da série.",
+   "Empurra o chão com os pés — corpo todo tenso, não só o peito.",
+   "Toca e sobe — sem quicar a barra no peito."
+  ],
+  "commonMistakesEn": [
+   "Bouncing the bar off the chest to use elastic rebound instead of controlled strength.",
+   "Flaring the elbows out to 90° from the torso, overloading the front of the shoulder.",
+   "Losing shoulder blade retraction mid-set, letting the shoulders roll forward and the chest cave.",
+   "Lifting the hips or heels off the bench/floor, killing leg drive and whole-body stability.",
+   "An uneven, asymmetric bar path from one side pressing harder than the other."
+  ],
+  "commonMistakesPt": [
+   "Quicar a barra no peito pra usar o rebote elástico em vez de força controlada.",
+   "Abrir demais o cotovelo (perto de 90° do tronco), sobrecarregando a frente do ombro.",
+   "Perder a retração da escápula no meio da série, deixando o ombro rolar pra frente e o peito \"afundar\".",
+   "Levantar o quadril do banco ou tirar o calcanhar do chão, perdendo o drive das pernas e a base.",
+   "Barra saindo torta, subindo mais de um lado que do outro por assimetria de pegada ou força."
+  ],
+  "rangeOfMotionEn": "Full range means lowering the bar under control until it makes light contact with the mid-chest and pressing back up to elbow lock-out without hyperextending. Range-of-motion literature broadly favors training through a fuller range for strength and hypertrophy outcomes, but touching the chest on every single rep isn't a strict requirement for everyone — lifters with a shoulder impingement history, limited shoulder mobility, or acute bottom-range discomfort can stop an inch or two short of the chest without meaningfully sacrificing the target range, prioritizing pain-free depth over a rigid \"must touch\" rule.",
+  "rangeOfMotionPt": "Amplitude completa aqui é descer a barra sob controle até ela encostar de leve no meio do peito e subir até travar o cotovelo sem hiperestender. De forma geral, a literatura de amplitude de movimento favorece treinar numa faixa mais completa pra ganhos de força e hipertrofia, mas encostar no peito em toda repetição não é regra obrigatória pra todo mundo — quem tem histórico de impacto no ombro, mobilidade limitada ou desconforto no fundo do movimento pode parar alguns centímetros antes do peito sem abrir mão de fato da amplitude relevante, priorizando profundidade sem dor em vez de uma regra rígida de \"tem que encostar\".",
+  "whyThisExerciseExistsEn": "The barbell bench press is the classic horizontal-push movement for loading the pectoralis major, with substantial secondary involvement of the anterior deltoid and triceps. EMG evidence across bench press variants shows it reliably drives high pectoral activation, and being a barbell compound lift, it allows the kind of heavy, progressively-overloaded training that dose-response literature associates with strength and hypertrophy adaptations — without implying it is uniquely superior to other horizontal-push options like the dumbbell or machine press. A medium grip width is generally used as a practical middle ground between narrower, more strength-favoring grips and wider, more chest-emphasizing ones.",
+  "whyThisExerciseExistsPt": "O supino reto com barra é o movimento clássico de push horizontal pra sobrecarregar o peitoral maior, com bastante trabalho secundário de deltoide anterior e tríceps. Estudos de EMG comparando variações de supino mostram ativação consistentemente alta do peitoral, e por ser um exercício composto com barra, ele permite o tipo de sobrecarga progressiva pesada que a literatura de dose-resposta associa a ganhos de força e hipertrofia — sem que isso signifique que ele seja \"superior\" a outras opções de push horizontal, como o supino com halteres ou na máquina. A pegada média costuma funcionar como um meio-termo prático entre pegadas mais fechadas (que tendem a favorecer força) e pegadas mais abertas (que tendem a enfatizar mais o peitoral).",
+  "regressionHints": [
+   "push-up",
+   "machine chest press"
+  ],
+  "progressionHints": [
+   "close-grip bench press",
+   "paused bench press"
+  ],
+  "alternativeHints": [
+   "dumbbell bench press",
+   "incline barbell bench press"
+  ],
+  "evidenceKeys": [
+   "saeterbakken-2021-grip-width-bench-press",
+   "lehman-2005-grip-width-pronation-supination",
+   "lopez-vivancos-2023-pectoralis-emg-systematic-review",
+   "van-den-tillaar-2012-sticking-region-chest-press"
+  ],
+  "evidenceNotesPt": {
+   "saeterbakken-2021-grip-width-bench-press": "Mostra como a largura da pegada altera ativação muscular e força no supino, sustentando a escolha da pegada média como meio-termo entre pegada fechada e aberta.",
+   "lehman-2005-grip-width-pronation-supination": "Reforça que a largura da pegada muda a atividade mioelétrica do tronco superior, dando base pra dica do ângulo de cotovelo perto de 90° na pegada média.",
+   "lopez-vivancos-2023-pectoralis-emg-systematic-review": "Revisão sistemática de EMG do peitoral em variações de supino, sustentando que o supino com barra ativa o peitoral de forma consistente e alta entre as variações.",
+   "van-den-tillaar-2012-sticking-region-chest-press": "Descreve a região de maior dificuldade (sticking region) no supino, embasando a dica de manter a barra numa rota estável ao passar por esse ponto."
+  }
+ },
+ {
+  "slug": "wide-grip-lat-pulldown",
+  "setupEn": "Set the thigh pad snug against your legs before you sit down — too loose and your hips will rise off the seat once the weight loads. Grab the wide bar with a pronated grip roughly 1.5–2x shoulder width, symmetric on both sides, and unrack it with your arms extended overhead. Sit tall, brace your core, and lean your torso back about 20–30 degrees from vertical, driving your chest up and slightly forward — this fixes your torso position so the pull comes from your shoulders and lats, not from rocking.",
+  "setupPt": "Ajuste o apoio de coxa rente às pernas antes de sentar — se ficar frouxo, o quadril levanta do banco assim que a carga entra. Pegue a barra larga com pegada pronada, mais ou menos 1,5 a 2x a largura dos ombros, simétrica dos dois lados, e destrave com os braços estendidos acima da cabeça. Sente-se ereto, contraia o abdômen e incline o tronco uns 20 a 30 graus para trás, projetando o peito para cima e um pouco para frente — isso trava a posição do tronco pra puxada vir do ombro e do latíssimo, e não de balanço do corpo.",
+  "breathingEn": "Inhale as the bar is overhead and your lats are stretched at the top; exhale through the pull as you drive the bar to your upper chest. Keep a light brace through the trunk the whole set — you're not moving a heavy hinge load, but a stable ribcage stops you from using the lean-back as momentum instead of muscle.",
+  "breathingPt": "Inspire com a barra lá em cima, no ponto de alongamento do latíssimo, e expire durante a puxada, levando a barra até a parte de cima do peito. Mantenha uma leve contração abdominal a série inteira — não é uma carga pesada tipo hinge, mas uma caixa torácica estável evita que você use a inclinação do tronco como impulso em vez de músculo.",
+  "coachingCuesEn": [
+   "Elbows lead, hands just hold the bar.",
+   "Drive the elbows down and back, not just down.",
+   "Bar to the top of your chest, not your chin or your neck.",
+   "Pinch the shoulder blades together at the bottom, then control it back up.",
+   "Chest up, ribs down — don't chase the weight by throwing your torso back."
+  ],
+  "coachingCuesPt": [
+   "Cotovelo lidera, a mão só segura a barra.",
+   "Cotovelo desce pra baixo e pra trás, não só pra baixo.",
+   "Barra até o topo do peito, não até o queixo ou o pescoço.",
+   "Junta as escápulas no fundo do movimento e controla a volta.",
+   "Peito erguido, costela pra baixo — não jogue o tronco pra trás pra 'ajudar' o peso."
+  ],
+  "commonMistakesEn": [
+   "Swinging the torso backward past the initial lean to sling the bar down, turning the pulldown into a standing row.",
+   "Pulling the bar behind the neck — forces the shoulders into an end-range rotation combo with no real ROM or activation benefit and raises impingement risk.",
+   "Initiating the pull by flaring the elbows out and yanking with the forearms/biceps, so the movement finishes as an arm curl instead of a lat-driven pull.",
+   "Letting the bar rebound uncontrolled back to the top, losing tension at the lengthened position where a meaningful part of the stimulus lives.",
+   "Gripping excessively wide 'for a bigger back,' which shortens the usable range of motion and shifts load toward the shoulders and rear delts rather than the lats."
+  ],
+  "commonMistakesPt": [
+   "Balançar o tronco além da inclinação inicial pra 'jogar' a barra pra baixo, transformando a puxada numa remada em pé.",
+   "Puxar a barra atrás da nuca — força o ombro numa combinação de rotação de fim de curso que não amplia amplitude nem ativação e aumenta o risco de impacto (impingement).",
+   "Iniciar o movimento jogando os cotovelos pra fora e puxando com antebraço/bíceps, terminando como se fosse uma rosca em vez de uma puxada de costas.",
+   "Deixar a barra 'quicar' de volta pro topo sem controle, perdendo tensão justamente na posição alongada, onde parte relevante do estímulo acontece.",
+   "Pegar de forma excessivamente aberta achando que 'isola mais as costas', o que na prática encurta a amplitude útil e desloca a demanda pro ombro e deltoide posterior."
+  ],
+  "rangeOfMotionEn": "Full range here means starting with the arms fully extended overhead, lats stretched, scapulae allowed to elevate slightly, and finishing with the bar at the upper chest and the elbows driven behind the torso, scapulae depressed and retracted. Don't chase extra range by pulling the bar to the neck or behind it — that doesn't add a real training range, it just adds shoulder strain. If you have a history of shoulder impingement or limited overhead shoulder flexion, it's reasonable to stop the top position a bit short of full lat stretch rather than force it, and build that range back gradually.",
+  "rangeOfMotionPt": "Amplitude completa aqui é começar com os braços totalmente estendidos acima da cabeça, latíssimo alongado, deixando a escápula elevar um pouco, e terminar com a barra na parte de cima do peito e os cotovelos levados para trás do tronco, com escápula deprimida e retraída. Não corra atrás de \"mais amplitude\" puxando a barra até o pescoço ou atrás dele — isso não soma amplitude de treino de verdade, só soma estresse no ombro. Se você tem histórico de impacto no ombro ou mobilidade limitada de flexão de ombro acima da cabeça, é razoável parar a posição de topo um pouco antes do alongamento máximo e ganhar essa amplitude aos poucos, em vez de forçar.",
+  "whyThisExerciseExistsEn": "The wide-grip lat pulldown covers the vertical-pull pattern — trunk essentially fixed, arms driving down against resistance — which is the cable-based counterpart to pull-ups and chin-ups, letting you load and regulate resistance more finely than bodyweight variations allow. Research comparing grip widths on the pulldown finds real differences in force output and muscle activation between wide and narrower grips, which is the basis for treating grip width as an actual training variable here rather than a cosmetic choice — though that evidence describes acute activation and strength differences, not that one grip width is definitively superior for long-term back development. It's a reasonable pick for building vertical-pulling capacity and back musculature when full sets of pull-ups aren't yet achievable, or when you want a controllable, progressable load on that pattern.",
+  "whyThisExerciseExistsPt": "A puxada aberta cobre o padrão de puxada vertical — tronco praticamente fixo, braço puxando contra resistência — que é o equivalente no cabo da barra fixa, permitindo regular a carga de um jeito mais fino do que dá pra fazer só com o peso do corpo. Estudos comparando larguras de pegada na puxada mostram diferenças reais de força produzida e ativação muscular entre pegada aberta e mais fechada, o que sustenta tratar a largura de pegada como uma variável de treino de verdade aqui, não só estética — embora essa evidência descreva diferenças agudas de ativação e força, não que uma largura seja definitivamente superior pro desenvolvimento de costas a longo prazo. É uma escolha razoável pra construir capacidade de puxada vertical e volume de costas quando séries completas de barra fixa ainda não são viáveis, ou quando você quer uma carga controlável e progressiva nesse padrão.",
+  "regressionHints": [
+   "puxada com pegada neutra",
+   "remada sentada na polia"
+  ],
+  "progressionHints": [
+   "barra fixa (pull-up) com peso corporal",
+   "puxada unilateral no cabo"
+  ],
+  "alternativeHints": [
+   "puxada com pegada fechada",
+   "barra fixa assistida"
+  ],
+  "evidenceKeys": [
+   "andersen-2014-lat-pulldown-grip-width",
+   "lusk-2010-pulldown-grip-forearm-orientation",
+   "sperandei-2009-pulldown-variations",
+   "pallares-2021-rom-meta-analysis"
+  ],
+  "evidenceNotesPt": {
+   "andersen-2014-lat-pulldown-grip-width": "Comparou diferentes larguras de pegada na puxada e mostrou diferenças reais de força e ativação entre pegada aberta e fechada — sustenta tratar a pegada larga como escolha técnica com efeito real, não estética.",
+   "lusk-2010-pulldown-grip-forearm-orientation": "Mostrou que largura de pegada e orientação do antebraço (pronada vs. neutra) alteram a ativação muscular na puxada, dando base pra recomendação de pegada pronada e aberta no setup.",
+   "sperandei-2009-pulldown-variations": "Análise de EMG comparando variações de puxada (incluindo pela frente vs. atrás da nuca) é a base pra apontar a variação atrás da nuca como erro, já que ela aumenta risco articular sem ganho claro de ativação.",
+   "pallares-2021-rom-meta-analysis": "Meta-análise mostra que treinar com amplitude completa tende a produzir mais ganho de força e hipertrofia do que amplitude parcial no treinamento resistido em geral — usada aqui, com a ressalva de não ser específica da puxada, pra justificar buscar a amplitude total do movimento."
+  }
+ },
+ {
+  "slug": "lying-t-bar-row",
+  "setupEn": "Set the pad height so your upper chest — not your chin or collarbones — sits right at the top of the pad when you lie face-down. Plant your feet against the base or floor for a stable platform, and pick a grip (pronated, supinated, or neutral) based on which part of your back you want to emphasize. Press your chest firmly into the pad and lift the bar off the rack before starting your first rep, arms fully extended in front of you.",
+  "setupPt": "Ajuste a altura do apoio para que a parte de cima do peito — não o queixo, não a clavícula — fique bem no topo do encosto quando você deitar de bruços. Apoie os pés firmes no chão ou na base da máquina pra ter uma plataforma estável, e escolha a pegada (pronada, supinada ou neutra) de acordo com qual região das costas você quer enfatizar mais. Encoste o peito com firmeza no apoio e só então levante a barra do suporte, com os braços totalmente estendidos à frente antes da primeira repetição.",
+  "breathingEn": "Exhale as you pull the bar toward your torso — that's the hard part of the rep. Inhale on the way back out as your arms extend and your lats stretch. Keep a light brace through your midsection throughout; the chest pad handles most of the trunk-stabilization work here, so you don't need the heavy full-body brace a standing row demands.",
+  "breathingPt": "Expire enquanto puxa a barra em direção ao tronco — essa é a parte pesada da repetição. Inspire na volta, enquanto os braços estendem e o latíssimo alonga. Mantenha uma leve contração abdominal o tempo todo; como o apoio segura boa parte do trabalho de estabilização do tronco, você não precisa da mesma trava total de core que uma remada em pé exige.",
+  "coachingCuesEn": [
+   "Chest stays glued to the pad — if it lifts off, the weight's too heavy.",
+   "Lead the pull with your elbows, not your hands.",
+   "Squeeze your shoulder blades together and hold for a beat at the top.",
+   "Keep the bar path close to your body, elbows drifting back, not out to the sides.",
+   "Control the negative — don't let the stack yank your arms straight."
+  ],
+  "coachingCuesPt": [
+   "Peito grudado no apoio — se ele levantar, o peso tá pesado demais.",
+   "Puxe liderando com o cotovelo, não com a mão.",
+   "Aperte as escápulas uma contra a outra e segure um instante no topo.",
+   "Mantenha a barra próxima do corpo, cotovelos indo pra trás, não pros lados.",
+   "Controle a descida — não deixa o peso puxar seu braço de volta rápido demais."
+  ],
+  "commonMistakesEn": [
+   "Lifting the chest off the pad to sling extra weight up with momentum — this defeats the point of the exercise and shifts load onto the lower back.",
+   "Flaring the elbows wide and turning the pull into a shoulder-dominant motion instead of driving through the mid-back.",
+   "Cutting the range short at the top — not actually retracting the shoulder blades — or stopping the return early and losing the stretch at the bottom.",
+   "Initiating the pull with the biceps, essentially curling the weight up, instead of pulling with the elbows and back.",
+   "Letting the weight stack drop and bounce at the bottom instead of controlling the eccentric."
+  ],
+  "commonMistakesPt": [
+   "Levantar o peito do apoio pra jogar o peso pra cima com embalo — isso anula o propósito do exercício e joga a carga pra lombar.",
+   "Abrir demais os cotovelos e transformar o movimento em algo mais de ombro do que de meio das costas.",
+   "Cortar a amplitude no topo, sem realmente juntar as escápulas, ou voltar rápido demais sem completar o alongamento embaixo.",
+   "Iniciar o puxão com o bíceps, praticamente fazendo uma rosca com o peso, em vez de puxar com cotovelo e costas.",
+   "Deixar o peso bater e saltar na pilha embaixo em vez de controlar a fase excêntrica."
+  ],
+  "rangeOfMotionEn": "Full range here means starting with arms completely extended in front of you — shoulders protracted, a real stretch felt through the lats and mid-back — and finishing with the elbows driven back and the shoulder blades fully retracted, without the chest coming off the pad. The ROM literature broadly favors training through a fuller range for hypertrophy and strength outcomes when it's tolerated pain-free, so it's worth reaching that bottom stretch rather than cutting reps short. That said, if you have a history of shoulder impingement or the bottom stretch position causes pinching or pain, it's reasonable to stop a few degrees short rather than chase the full stretch.",
+  "rangeOfMotionPt": "Amplitude completa aqui significa começar com os braços totalmente estendidos à frente — ombro projetado pra frente, sentindo um alongamento de verdade no latíssimo e no meio das costas — e terminar com o cotovelo puxado atrás e a escápula totalmente contraída, sem o peito sair do apoio. A literatura de amplitude de movimento, de forma geral, favorece treinar numa faixa mais completa pra ganhos de hipertrofia e força quando isso é tolerado sem dor, então vale a pena buscar esse alongamento final em vez de cortar a repetição pela metade. Dito isso, se você tem histórico de impacto no ombro ou sente beliscão/dor na posição de alongamento máximo, é razoável parar alguns graus antes em vez de insistir na amplitude total.",
+  "whyThisExerciseExistsEn": "The lying T-bar row fixes your torso against a support pad, which removes most of the isometric lower-back and hip-stabilization demand that free-standing rows (barbell, cable, single-arm) place on you — so the mid-back and lats can be trained more directly, closer to local fatigue, without the trunk acting as the limiting factor first. Switching grip (pronated, supinated, neutral) shifts emphasis somewhat across the back musculature, per activation studies on row and pulldown variations. Machine-based row variants have generally shown hypertrophy and strength outcomes comparable to free-weight equivalents, so this belongs in a program as a joint-friendly, fatigue-efficient option alongside — not a replacement for — standing or free-weight rows.",
+  "whyThisExerciseExistsPt": "A remada cavalinho deitado trava seu tronco contra um apoio, o que tira boa parte da demanda isométrica de estabilização lombar e de quadril que remadas livres (barra, cabo, unilateral) exigem — assim o meio das costas e o latíssimo conseguem ser treinados de forma mais direta, chegando mais perto da fadiga local, sem que o tronco vire o fator limitante antes do músculo-alvo. Trocar a pegada (pronada, supinada, neutra) desloca um pouco a ênfase entre regiões das costas, conforme estudos de ativação em variações de remada e puxada. Variações de remada em máquina, de forma geral, mostraram resultados de hipertrofia e força comparáveis aos exercícios livres equivalentes, então esse exercício entra no programa como uma opção eficiente e mais amigável às articulações ao lado das remadas livres — não como substituta obrigatória delas.",
+  "regressionHints": [
+   "chest-supported dumbbell row",
+   "seated cable row"
+  ],
+  "progressionHints": [
+   "barbell bent-over row",
+   "single-arm dumbbell row"
+  ],
+  "alternativeHints": [
+   "seated cable row",
+   "single-arm dumbbell row"
+  ],
+  "evidenceKeys": [
+   "fenwick-2009-rowing-exercises-trunk",
+   "lehman-2004-latissimus-exercise-variations",
+   "heidel-2022-machines-vs-free-weights-meta-analysis",
+   "pallares-2021-rom-meta-analysis"
+  ],
+  "evidenceNotesPt": {
+   "fenwick-2009-rowing-exercises-trunk": "Compara ativação de tronco e carga na coluna lombar entre diferentes tipos de remada, dando base pra explicar por que apoiar o peito reduz a demanda estabilizadora da lombar nesse exercício, comparado a remadas feitas em pé.",
+   "lehman-2004-latissimus-exercise-variations": "Mostra diferenças de ativação muscular entre variações de remada e puxada, sustentando a orientação de trocar a pegada (pronada/supinada/neutra) pra deslocar a ênfase entre regiões das costas.",
+   "heidel-2022-machines-vs-free-weights-meta-analysis": "Meta-análise mostrando que exercícios em máquina produzem ganhos de força e hipertrofia comparáveis aos exercícios livres, o que sustenta a remada cavalinho deitado como opção igualmente válida — não inferior — às remadas livres.",
+   "pallares-2021-rom-meta-analysis": "Revisão sistemática sobre amplitude de movimento e seus efeitos em hipertrofia e força, base pra orientar buscar a amplitude completa (alongamento no início, contração total no topo) sempre que a mobilidade do ombro permitir isso sem dor."
+  }
+ },
+ {
+  "slug": "side-lateral-raise",
+  "setupEn": "Pick a pair of dumbbells lighter than you'd guess — the long lever arm of a straight elbow makes even 5-8 kg feel heavy once your arm reaches shoulder height. Stand with feet roughly hip-width, knees soft, and brace your core lightly, as if bracing for a nudge from the side; this keeps the work in the shoulder instead of leaking into the lower back. Hold the dumbbells with a relaxed, neutral grip — don't white-knuckle the handles, since over-gripping bleeds tension into the forearms and upper traps — arms hanging fully at your sides. A very slight forward lean from the hips can shift the movement into the scapular plane rather than pure frontal-plane abduction, which many lifters find more comfortable on the shoulder joint.",
+  "setupPt": "Escolha halteres mais leves do que você imagina — o braço de alavanca do cotovelo esticado faz até 5-8 kg pesarem bastante assim que o braço chega na altura do ombro. Fique em pé com os pés na largura do quadril, joelhos levemente flexionados, e ative o core de forma leve, como se alguém fosse te empurrar de lado — isso mantém o trabalho no ombro e tira a lombar da jogada. Segure os halteres com pegada relaxada e neutra (não aperte com força, isso rouba tensão pro antebraço e trapézio superior), braços totalmente estendidos ao lado do corpo. Uma leve inclinação de tronco à frente, partindo do quadril, ajuda a levar o movimento pro plano da escápula em vez de uma abdução pura no plano frontal — muita gente sente o ombro mais confortável assim.",
+  "breathingEn": "Take a light inhale and brace gently before each rep — you don't need a heavy Valsalva-style brace here since the loads are submaximal, just enough tension to keep the torso still. Exhale as the arms rise, and inhale in a controlled way on the way down; never hold your breath through the whole set.",
+  "breathingPt": "Inspire leve e ative o core de forma suave antes de cada repetição — não precisa de uma manobra de Valsalva pesada aqui, já que a carga é submáxima, só o suficiente pra manter o tronco parado. Expire enquanto os braços sobem e inspire de forma controlada na descida; nunca prenda a respiração durante a série toda.",
+  "coachingCuesEn": [
+   "Lead with the elbows — the hands trail slightly behind.",
+   "Stop the top of the rep around shoulder height; don't chase extra range with your traps.",
+   "Keep a soft, fixed bend in the elbow the whole set — don't let it straighten or collapse.",
+   "Lower for a full 2-3 count — control the weight down, don't let it drop.",
+   "Ribs down, no leaning back to sling the weight up."
+  ],
+  "coachingCuesPt": [
+   "Lidera com o cotovelo — a mão vem levemente atrás.",
+   "Para o movimento na altura do ombro; não busca mais amplitude puxando com o trapézio.",
+   "Mantém o cotovelo levemente flexionado e fixo a série toda, sem esticar nem afundar.",
+   "Desce contando até 2-3 — controla o halter, não deixa cair.",
+   "Costela pra baixo, sem jogar o tronco pra trás pra embalar o peso."
+  ],
+  "commonMistakesEn": [
+   "Using torso swing or momentum to heave the dumbbells up instead of letting the deltoid do the work.",
+   "Shrugging the shoulders in the last few degrees, letting the upper trapezius take over from the middle delt.",
+   "Raising well past shoulder height (much beyond ~90° of abduction), which adds subacromial pinching risk without extra middle-delt benefit.",
+   "Letting the hands drift forward into a front-raise arc instead of staying in the scapular/lateral plane.",
+   "Loading too heavy to control, so the eccentric turns into a fast drop instead of a slow lower."
+  ],
+  "commonMistakesPt": [
+   "Balançar o tronco pra usar embalo em vez de deixar o deltoide fazer o trabalho.",
+   "Encolher o ombro nos últimos graus do movimento, deixando o trapézio superior assumir o lugar do deltoide medial.",
+   "Subir bem além da linha do ombro (muito acima de ~90° de abdução), aumentando o risco de pinçamento no ombro sem ganho extra pro deltoide medial.",
+   "Deixar as mãos irem pra frente, virando um arco de elevação frontal em vez de manter o plano lateral/escapular.",
+   "Usar carga pesada demais pra controlar, fazendo a fase excêntrica virar uma queda rápida em vez de uma descida lenta."
+  ],
+  "rangeOfMotionEn": "Full range here means starting with the arms hanging completely at the sides — deltoid at a long, stretched length — and raising until the upper arm is roughly parallel to the floor (about 90° of abduction), staying in the scapular plane rather than pure frontal-plane abduction. Going meaningfully past 90° recruits more upper trapezius and raises shoulder-impingement risk for many lifters without a clear added benefit to the middle delt, so \"full ROM\" for this exercise is the stretched-to-90° arc, not overhead. Range-of-motion research broadly favors training through a fuller stretch-to-shortened range for hypertrophy and strength (Pallarés et al., 2021), though that evidence base leans heavily on larger compound lifts rather than small isolation movements like this one — treat it as a general principle here, not an exercise-specific finding. If you feel pinching or catching near the top, stop a few degrees short and prioritize the pain-free arc; that's a case-by-case call, especially with a shoulder injury history.",
+  "rangeOfMotionPt": "Amplitude completa aqui é começar com os braços totalmente estendidos ao lado do corpo — deltoide num comprimento bem alongado — e subir até o braço ficar mais ou menos paralelo ao chão (uns 90° de abdução), sempre no plano da escápula, não numa abdução pura de frente. Passar bem de 90° recruta mais trapézio superior e aumenta o risco de pinçamento no ombro pra boa parte das pessoas, sem benefício claro a mais pro deltoide medial — então \"amplitude completa\" aqui é o arco do alongado até 90°, não até acima da cabeça. A literatura de amplitude de movimento, de forma geral, favorece treinar numa faixa mais completa, do alongado ao encurtado, pra hipertrofia e força (Pallarés et al., 2021), mas essa base de evidência se apoia principalmente em exercícios compostos maiores, não em isolamentos pequenos como esse — trate como princípio geral aqui, não achado específico desse exercício. Se sentir uma bicada ou travamento perto do topo, pare alguns graus antes e priorize o arco sem dor; isso é uma decisão caso a caso, principalmente com histórico de lesão no ombro.",
+  "whyThisExerciseExistsEn": "The lateral raise isolates shoulder abduction in a way that pressing and pulling movements generally don't, putting direct, targeted tension on the middle deltoid rather than letting it act as a secondary mover behind the chest, back, or front delt. EMG work comparing lateral raise variants suggests execution details — elbow-lead, plane of movement, cable versus dumbbell — meaningfully shift how much of that tension the middle delt actually receives (Coratella et al., 2020), which is why the setup and cueing above matter as much as the load itself. It's generally included as an accessory to give a smaller muscle group direct volume that compound pressing work alone tends to under-stimulate, in line with the broader technique-optimization principles reviewed by Korakakis et al. (2023) — not because it's uniquely superior to other abduction-pattern exercises, but because it's an efficient, low-skill way to add that volume.",
+  "whyThisExerciseExistsPt": "A elevação lateral isola a abdução do ombro de um jeito que supino, desenvolvimento e puxadas geralmente não fazem, colocando tensão direta no deltoide medial em vez de deixá-lo trabalhar só como sinergista atrás do peitoral, das costas ou do deltoide anterior. Estudos de EMG comparando variações da elevação lateral sugerem que detalhes de execução — cotovelo liderando, plano do movimento, cabo versus halter — mudam de forma relevante quanto dessa tensão realmente chega no deltoide medial (Coratella et al., 2020), e é por isso que o setup e as dicas de execução pesam tanto quanto a carga em si. De modo geral, ela entra no treino como acessório pra dar volume direto a um grupo muscular menor que o trabalho de empurrar composto tende a estimular de menos, alinhado aos princípios mais amplos de otimização técnica revisados por Korakakis et al. (2023) — não porque seja superior a outros exercícios de abdução, mas porque é um jeito eficiente e de baixa exigência técnica de adicionar esse volume.",
+  "regressionHints": [
+   "seated dumbbell lateral raise",
+   "cable lateral raise"
+  ],
+  "progressionHints": [
+   "leaning cable lateral raise",
+   "single-arm lateral raise with a pause at the top"
+  ],
+  "alternativeHints": [
+   "machine lateral raise",
+   "band lateral raise"
+  ],
+  "evidenceKeys": [
+   "coratella-2020-lateral-raise-variants-emg",
+   "pallares-2021-rom-meta-analysis",
+   "korakakis-2023-technique-hypertrophy-review",
+   "escamilla-2009-shoulder-rehabilitation-exercises-review"
+  ],
+  "evidenceNotesPt": {
+   "coratella-2020-lateral-raise-variants-emg": "Análise de EMG comparando variações da elevação lateral (halter, cabo, ângulos diferentes) que embasa a orientação de liderar com o cotovelo e manter o plano correto pra maximizar ativação do deltoide medial.",
+   "pallares-2021-rom-meta-analysis": "Meta-análise sobre amplitude de movimento no treinamento resistido, usada aqui com ressalva pra justificar treinar do alongado até ~90° em vez de amplitude parcial, reconhecendo que a base de evidência é majoritariamente de exercícios compostos maiores.",
+   "korakakis-2023-technique-hypertrophy-review": "Revisão narrativa sobre otimização de técnica (tempo, amplitude de movimento) que sustenta a lógica geral de execução controlada e amplitude completa usada nas dicas de coaching.",
+   "escamilla-2009-shoulder-rehabilitation-exercises-review": "Revisão sobre ativação muscular e função do ombro em exercícios comuns, usada como base pro cuidado de não ultrapassar muito ~90° de abdução por risco de pinçamento subacromial."
+  }
+ },
+ {
+  "slug": "barbell-curl",
+  "setupEn": "Load the bar to a weight you can control through a full stretch without swinging your trunk. Stand tall with feet roughly hip- to shoulder-width, take a shoulder-width pronated grip on the bar, and let your arms hang fully extended with the bar resting against your thighs. Brace your core and set your shoulders back and down before the first rep — this trunk position is what you'll be holding still throughout the set, since the barbell curl is a single-joint elbow movement, not a whole-body lift.",
+  "setupPt": "Carregue a barra com uma carga que você consiga controlar em amplitude completa sem balançar o tronco. Fique em pé, pés na largura dos ombros, pegada pronada também na largura dos ombros, braços totalmente estendidos com a barra apoiada nas coxas. Contraia o abdômen e fixe os ombros para trás e para baixo antes da primeira repetição — essa postura de tronco é o que você vai manter parado durante toda a série, já que a rosca direta é um movimento de uma articulação só (cotovelo), não um levantamento de corpo inteiro.",
+  "breathingEn": "Exhale as you curl the bar up through the sticking point, and inhale as you lower it back to full extension. Keep intra-abdominal pressure steady throughout — a braced trunk is what stops the rep from turning into a hip-driven heave.",
+  "breathingPt": "Expire ao levantar a barra na fase de flexão, especialmente ao passar pelo ponto mais difícil, e inspire ao descer de volta à extensão total. Mantenha a pressão intra-abdominal constante — é o tronco travado que impede a repetição de virar um embalo de quadril.",
+  "coachingCuesEn": [
+   "Pin your elbows to your ribs and keep them there for the whole rep.",
+   "Squeeze the biceps hard at the top — don't just tap the position and drop.",
+   "Lower on a 2-3 count; don't let the bar fall.",
+   "Ribs down, no leaning back to launch the weight.",
+   "Wrists stay neutral — don't flick them at the top to 'finish' the rep."
+  ],
+  "coachingCuesPt": [
+   "Cotovelos colados nas costelas do início ao fim da repetição.",
+   "Contraia o bíceps com força no topo — não só toque a posição e já desça.",
+   "Desça a barra contando uns 2-3 segundos, sem deixar cair.",
+   "Costelas para baixo, sem inclinar o tronco para trás para lançar o peso.",
+   "Punho neutro — não flexione o pulso no topo para 'ajudar' a repetição."
+  ],
+  "commonMistakesEn": [
+   "Cheating with hip drive or torso swing to sling the bar up, especially on the last reps — this offloads the biceps onto momentum and the lower back.",
+   "Letting the elbows drift forward as the bar rises, turning part of the movement into shoulder flexion instead of elbow flexion.",
+   "Stopping short of full elbow extension at the bottom, which trims the lengthened portion of the range.",
+   "Flicking the wrists into extra flexion at the top to 'help' the bar up, shifting work onto the forearm flexors instead of the biceps.",
+   "Loading more weight than can be curled with a controlled eccentric, so the bar drops fast and skips the stretched portion of the rep entirely."
+  ],
+  "commonMistakesPt": [
+   "Usar embalo de quadril ou balanço de tronco para arremessar a barra, principalmente nas últimas repetições — tira carga do bíceps e joga na lombar.",
+   "Deixar os cotovelos irem para frente conforme a barra sobe, transformando parte do movimento em flexão de ombro em vez de cotovelo.",
+   "Parar antes da extensão completa do cotovelo lá embaixo, cortando justamente a parte alongada da amplitude.",
+   "Flexionar o pulso a mais no topo para 'ajudar' a barra a subir, transferindo trabalho para os flexores do antebraço.",
+   "Carregar peso além do que dá pra controlar na descida, fazendo a barra cair rápido e pular a fase alongada da repetição."
+  ],
+  "rangeOfMotionEn": "Full range on the barbell curl runs from near-complete elbow extension at the bottom (arms hanging, without violently locking out under load) to full elbow flexion at the top, where the forearm approaches the upper arm. Training that includes the lengthened end of that range appears to matter for elbow-flexor size and strength gains, and range-of-motion evidence across exercises generally leans toward full ROM outperforming partial ROM. Caveat: if you have anterior elbow or distal biceps tendon irritation, or notably hyperextensible elbows, stop just short of a hard lockout at the bottom rather than forcing terminal extension under load.",
+  "rangeOfMotionPt": "A amplitude completa da rosca direta vai de uma extensão quase total do cotovelo na parte de baixo (braço estendido, sem travar bruscamente sob carga) até a flexão total no topo, com o antebraço se aproximando do braço. Treinar incluindo essa ponta alongada do movimento parece importar para o ganho de força e volume dos flexores de cotovelo, e a evidência sobre ROM em exercícios no geral tende a favorecer amplitude completa sobre amplitude parcial. Ressalva: quem tem irritação na região anterior do cotovelo, no tendão distal do bíceps, ou cotovelos bem hiperextensíveis, deve parar um pouco antes do travamento total lá embaixo em vez de forçar a extensão terminal sob carga.",
+  "whyThisExerciseExistsEn": "The barbell curl isolates elbow flexion almost entirely, letting you load the biceps brachii — with the brachialis and forearm flexors assisting — directly, instead of as a secondary mover behind a row or pulldown. EMG comparisons across standing curl variants show it produces strong biceps activation as a free-weight option, though that doesn't make it uniquely better than other curl variants. It's one solid way to add direct arm volume on top of the pulling work most lifters already do, where elbow flexors get trained indirectly anyway.",
+  "whyThisExerciseExistsPt": "A rosca direta com barra isola quase totalmente a flexão de cotovelo, permitindo carregar o bíceps braquial diretamente — com ajuda do braquial e dos flexores do antebraço —, em vez de trabalhá-lo só como músculo secundário atrás de uma remada ou puxada. Comparações eletromiográficas entre variações de rosca em pé mostram boa ativação do bíceps nessa versão com barra livre, o que não a torna necessariamente superior às outras variações. É uma forma sólida de somar volume direto de braço além do trabalho de puxada que a maioria já faz, onde os flexores de cotovelo já recebem estímulo indireto.",
+  "regressionHints": [
+   "EZ-bar curl",
+   "cable curl"
+  ],
+  "progressionHints": [
+   "incline dumbbell curl",
+   "21s barbell curl"
+  ],
+  "alternativeHints": [
+   "dumbbell curl",
+   "preacher curl"
+  ],
+  "evidenceKeys": [
+   "marcolin-2018-curl-variants-emg",
+   "sato-2021-elbow-joint-angle-training",
+   "pallares-2021-rom-meta-analysis",
+   "zabaleta-korta-2023-preacher-vs-incline-curl-regional-hypertrophy"
+  ],
+  "evidenceNotesPt": {
+   "marcolin-2018-curl-variants-emg": "Comparação eletromiográfica entre variações de rosca mostra boa ativação do bíceps braquial na rosca em pé com barra, o que embasa a rosca direta como opção sólida de isolamento de cotovelo — sem indicar que seja superior às demais variações.",
+   "sato-2021-elbow-joint-angle-training": "Estudo sobre ângulo do cotovelo no treino de flexores indica que incluir a posição de alongamento total (perto da extensão) tende a gerar mais ganho de força e espessura muscular do que restringir a ângulos mais fechados — sustenta a orientação de buscar extensão quase completa na base da rosca direta.",
+   "pallares-2021-rom-meta-analysis": "Meta-análise sobre amplitude de movimento no treinamento de força indica vantagem geral de ROM completa sobre ROM parcial para ganhos de força e hipertrofia — reforça a recomendação de amplitude completa na rosca direta, respeitando limitações articulares individuais.",
+   "zabaleta-korta-2023-preacher-vs-incline-curl-regional-hypertrophy": "Estudo sobre exercícios de flexão de cotovelo em comprimentos musculares longos e curtos mostra hipertrofia regional distinta entre variações como rosca scott e rosca inclinada — contextualiza por que a rosca scott aparece como alternativa complementar à rosca direta em pé, não como substituta direta."
+  }
+ },
+ {
+  "slug": "triceps-pushdown",
+  "setupEn": "Attach a straight or angled bar to a high pulley and select your load. Stand close to the machine with a shoulder-width pronated grip, feet planted about hip-width apart (staggering one foot slightly forward adds stability), and step back just enough to keep the cable taut with the weight stack off the bottom. Set your elbows at your sides, bent to roughly 90°, brace your core, and take a small forward lean from the hips — that's your starting position before you push.",
+  "setupPt": "Prenda uma barra reta (ou angulada) na polia alta e ajuste a carga. Fique perto do aparelho com pegada pronada na largura dos ombros, pés apoiados na largura do quadril (dá pra adiantar um pé pra ganhar mais base), e recue o suficiente pra manter o cabo tensionado, sem o stack de peso encostar embaixo. Cotovelos colados ao tronco, flexionados a uns 90°, abdômen firme e leve inclinação de tronco à frente — essa é a posição de partida antes de empurrar.",
+  "breathingEn": "Exhale as you press the bar down toward full elbow extension; inhale on the controlled return to the top. Because your torso leans slightly forward against the cable, take a light bracing breath (a bit of intra-abdominal pressure) before the first rep so the trunk doesn't sway or rock with the load.",
+  "breathingPt": "Expire empurrando a barra pra baixo até a extensão total do cotovelo; inspire na volta controlada até o topo. Como o tronco fica levemente inclinado contra o cabo, faça uma respiração de brace leve (uma pressão intra-abdominal) antes da primeira repetição pra não deixar o tronco balançar junto com a carga.",
+  "coachingCuesEn": [
+   "Pin your elbows to your ribs and keep them glued there for the whole set.",
+   "Only the forearms move — shoulders and upper arms stay locked in place.",
+   "Extend all the way down without whipping or snapping the bar at lockout.",
+   "Keep your chest tall; don't let the shoulders round forward on the way back up.",
+   "Hold a beat at full extension and squeeze the triceps before you let it come back."
+  ],
+  "coachingCuesPt": [
+   "Cotovelo colado nas costelas do início ao fim da série.",
+   "Só o antebraço se move — ombro e braço ficam travados no lugar.",
+   "Estende total lá embaixo sem chicotear ou estalar a barra.",
+   "Peito aberto, sem deixar o ombro cair pra frente na volta.",
+   "Segura um instante na extensão total e contrai o tríceps antes de voltar."
+  ],
+  "commonMistakesEn": [
+   "Elbows creep forward away from the torso as the load gets heavy, turning it into a shoulder/lat-assisted pull instead of pure elbow extension.",
+   "Using body weight to yank the bar down — leaning hard and bouncing — instead of driving the movement from the triceps.",
+   "Cutting the eccentric short and only working the top half of the range, never letting the elbow bend back past ~90°.",
+   "Snapping the elbow into forceful hyperextension at the bottom instead of controlling the last few degrees.",
+   "Letting the wrists cock back (flex) under load instead of staying neutral in line with the forearm, shifting stress onto the wrist."
+  ],
+  "commonMistakesPt": [
+   "Cotovelo foge pra frente do corpo conforme a carga aumenta, virando puxada de ombro/dorsal em vez de extensão pura de cotovelo.",
+   "Usa o peso do corpo pra 'chicotear' a barra pra baixo, com balanço, em vez de fazer o tríceps puxar o movimento.",
+   "Encurta a fase excêntrica e trabalha só a metade de cima da amplitude, sem deixar o cotovelo voltar além de 90°.",
+   "Trava o cotovelo com violência/hiperextensão lá embaixo em vez de controlar os últimos graus do movimento.",
+   "Deixa o punho quebrar (flexionar) sob carga em vez de manter neutro, alinhado com o antebraço — jogando a sobrecarga pro punho."
+  ],
+  "rangeOfMotionEn": "Full range here starts with the elbow bent to roughly 90° (forearm pointing up toward the pulley) and finishes at full elbow extension without snapping the joint into forceful hyperextension. Because the upper arm stays pinned at your side throughout, this exercise extends the elbow without meaningfully lengthening the triceps' long head at the shoulder — work on elbow-flexor training at different arm positions shows joint angle materially changes which portion of a two-joint arm muscle gets trained (maeo-2023), so pushdowns train the triceps through a shorter overall muscle-length range than an overhead variant would. More generally, training through the full available ROM tends to match or outperform partial-ROM training for strength and hypertrophy outcomes (pallares-2021), so it's worth avoiding a habit of cutting the top or bottom of the rep short. If you have hyperextensive elbows or a history of tendon irritation, stop just short of full lockout rather than driving into it.",
+  "rangeOfMotionPt": "Amplitude completa aqui é sair com o cotovelo flexionado por volta de 90° (antebraço apontando pra polia) e terminar na extensão total do cotovelo, sem travar com violência/hiperextensão. Como o braço fica fixo junto ao corpo o tempo todo, esse exercício estende o cotovelo mas não alonga de forma relevante a cabeça longa do tríceps, que cruza o ombro — estudos sobre posição do braço em exercícios de flexão de cotovelo mostram que o ângulo/posição do braço muda bastante qual parte de um músculo biarticular é mais treinada (maeo-2023), então a polia trabalha o tríceps numa faixa de comprimento menor do que uma variação acima da cabeça trabalharia. De forma mais geral, treinar na amplitude completa disponível tende a igualar ou superar o treino parcial em resultados de força e hipertrofia (pallares-2021), então vale evitar o hábito de cortar o topo ou a base da repetição. Se você tem hiperextensão de cotovelo ou histórico de irritação no tendão, pare a extensão um pouco antes do fim em vez de travar com força.",
+  "whyThisExerciseExistsEn": "The triceps pushdown is a single-joint, cable-based elbow-extension exercise that keeps tension on the triceps across the range, since the cable's resistance doesn't drop off near lockout the way it can in some free-weight pressing. It's typically used as accessory volume alongside compound pressing work (bench press, overhead press), which already loads the triceps heavily but trains it in a multi-joint context at a different arm position. Per maeo-2023, elbow-extension work performed with the arm overhead produced substantially more triceps hypertrophy than the same movement done at the side — likely tied to the long head being trained at a greater muscle length — so a pushdown alone isn't the most complete way to target all three triceps heads; it remains a solid, joint-friendly way to add controlled, isolated elbow-extension volume to a session.",
+  "whyThisExerciseExistsPt": "O tríceps na polia é um exercício monoarticular de extensão de cotovelo que mantém tensão no tríceps ao longo de toda a amplitude, já que a resistência do cabo não cai perto da extensão total como pode acontecer em alguns exercícios de empurrar com peso livre. Normalmente entra como volume de acessório depois de exercícios compostos de empurrar (supino, desenvolvimento), que já sobrecarregam bastante o tríceps, mas o treinam num contexto multiarticular e numa posição de braço diferente. Segundo maeo-2023, a extensão de cotovelo feita com o braço acima da cabeça gerou hipertrofia de tríceps bem maior do que a mesma extensão feita com o braço ao lado do corpo — provavelmente porque a cabeça longa é treinada num comprimento muscular maior —, então a polia sozinha não é a forma mais completa de treinar as três cabeças do tríceps; ainda assim, segue sendo uma maneira sólida e confortável pra articulação de somar volume controlado e isolado de extensão de cotovelo no treino.",
+  "regressionHints": [
+   "cable pushdown with a resistance band (self-limiting load)",
+   "bench dip with bent knees"
+  ],
+  "progressionHints": [
+   "overhead triceps extension with rope or dumbbell",
+   "close-grip bench press"
+  ],
+  "alternativeHints": [
+   "rope triceps pushdown",
+   "skull crusher (lying triceps extension)"
+  ],
+  "evidenceKeys": [
+   "maeo-2023-triceps-overhead-vs-neutral-extension",
+   "pallares-2021-rom-meta-analysis",
+   "korakakis-2023-technique-hypertrophy-review"
+  ],
+  "evidenceNotesPt": {
+   "maeo-2023-triceps-overhead-vs-neutral-extension": "Mostra que a extensão de cotovelo feita com o braço acima da cabeça produz mais hipertrofia de tríceps do que a mesma extensão com o braço ao lado do corpo — base pra explicar por que a polia (braço junto ao tronco) treina bem o tríceps, mas não maximiza especificamente a cabeça longa.",
+   "pallares-2021-rom-meta-analysis": "Meta-análise que sustenta a orientação de buscar a amplitude completa disponível na polia, já que treinar em ROM completo tende a igualar ou superar o treino parcial em ganhos de força e hipertrofia.",
+   "korakakis-2023-technique-hypertrophy-review": "Revisão sobre técnica de treino que embasa as dicas de controlar a fase excêntrica e evitar travar o cotovelo com violência no fim do movimento, priorizando execução limpa em vez de balanço/momentum."
+  }
+ },
+ {
+  "slug": "leg-press",
+  "setupEn": "Sit fully into the seat with your low back flat against the backrest and your hips wedged into the corner where seat meets pad — don't let the pelvis ride forward before you start. Place your feet at a medium, roughly shoulder-width stance, toes turned out slightly, positioned mid-to-low on the platform so the ankle can dorsiflex freely without your heels lifting. Extend your legs to unrack, release the safety catches only once the sled is under control, and set the range-limiter (if the machine has one) so it won't bottom out before your hips finish flexing. Keep a light grip on the side handles for stability, not for pulling.",
+  "setupPt": "Sente-se totalmente no banco, com a lombar bem apoiada no encosto e o quadril encaixado no canto entre o assento e o encosto — não deixe a pelve escorregar pra frente antes de começar. Posicione os pés num afastamento médio, mais ou menos na largura dos ombros, pontas levemente pra fora, numa altura média/baixa da plataforma pra o tornozelo flexionar livremente sem o calcanhar descolar. Estenda as pernas pra destravar, solte as travas de segurança só depois que o carrinho estiver sob controle, e regule o limitador de curso (se o aparelho tiver) pra ele não bater no batente antes do quadril terminar a flexão. Segure as alças laterais de leve, só pra estabilidade, não pra puxar.",
+  "breathingEn": "Take a breath and brace your core before unlocking the sled, hold that intra-abdominal pressure as you lower the platform under control, then exhale through the hardest part of the drive back up. On heavier sets a brief breath-hold through the sticking point helps keep the spine stable against the load that tends to tuck the pelvis under — just don't hold it past that point.",
+  "breathingPt": "Inspire e contraia o abdômen antes de destravar o carrinho, mantenha essa pressão intra-abdominal enquanto desce a plataforma de forma controlada, e expire passando pela parte mais dura da subida. Em séries mais pesadas, segurar brevemente o ar no ponto mais difícil ajuda a manter a coluna estável contra a carga que tende a \"enrolar\" a pelve — só não prenda além desse ponto.",
+  "coachingCuesEn": [
+   "Push through the whole foot, weight split between heel and midfoot.",
+   "Knees track toward the second/third toe — don't let them cave in.",
+   "Stop the descent right where your hips would start tucking off the pad.",
+   "Drive the platform away, don't just snap the knees straight.",
+   "Head and upper back pinned to the pad for the whole set."
+  ],
+  "coachingCuesPt": [
+   "Empurra com o pé inteiro, peso dividido entre calcanhar e meio do pé.",
+   "Joelho seguindo a linha do segundo/terceiro dedo — não deixa afundar pra dentro.",
+   "Para a descida bem no ponto em que o quadril começaria a descolar do encosto.",
+   "Empurra a plataforma pra longe, não só estica o joelho de forma seca.",
+   "Cabeça e costas coladas no encosto a série inteira."
+  ],
+  "commonMistakesEn": [
+   "Letting the hips lift and the low back round at the bottom to chase extra depth — the classic butt-wink under load.",
+   "Locking the knees hard and resting at the top of every rep, which unloads the quadriceps and stresses the joint.",
+   "Feet too high on the platform (shifts load to glutes/hamstrings, shortens real quad range) or too low (drives the knees far past the toes and overloads the patellar tendon).",
+   "Letting the knees cave inward under heavier loads, especially as fatigue sets in near the end of a set.",
+   "Bouncing the sled off the bottom safety stops instead of controlling the eccentric — using momentum instead of the quads to reverse direction."
+  ],
+  "commonMistakesPt": [
+   "Deixar o quadril descolar e a lombar arredondar lá embaixo pra 'ganhar' amplitude — o clássico butt-wink sob carga.",
+   "Travar o joelho com força e descansar no topo de cada repetição, tirando a tensão do quadríceps e sobrecarregando a articulação.",
+   "Pé muito alto na plataforma (joga a carga pro glúteo/isquiotibiais e encurta a amplitude real de quadríceps) ou muito baixo (leva o joelho bem além da ponta do pé e sobrecarrega o tendão patelar).",
+   "Deixar o joelho cair pra dentro em cargas mais altas, principalmente perto do fim da série com fadiga.",
+   "Quicar o carrinho nos batentes de segurança em vez de controlar a excêntrica — usar embalo em vez do quadríceps pra inverter o movimento."
+  ],
+  "rangeOfMotionEn": "\"Full\" range here means lowering until the knee reaches roughly 90° or a bit past — thigh approaching the chest — without the hips rounding off the pad. You can typically go deeper on a leg press than in a free-weight squat because the machine supports the trunk, and pushing knee flexion into a longer quadriceps length appears to add a hypertrophy stimulus, in line with findings from squat-depth and other lengthened-range research. That said, this only applies to someone who can keep the pelvis pinned and stable at that depth — anyone with anterior knee pain, a patellar history, or limited hip/ankle mobility should stop the descent where control is still solid; a well-controlled partial rep beats a deep one with a rounded low back.",
+  "rangeOfMotionPt": "Amplitude completa aqui significa descer até o joelho chegar a mais ou menos 90° ou um pouco além — coxa se aproximando do tronco — sem a lombar arredondar e descolar do encosto. Geralmente dá pra descer mais fundo no leg press do que no agachamento livre porque a máquina sustenta o tronco, e levar a flexão de joelho pra um comprimento maior do quadríceps parece somar estímulo de hipertrofia, na linha do que a literatura de profundidade de agachamento e de amplitude em comprimento alongado mostra. Só que isso vale só pra quem consegue manter a pelve travada e estável nessa profundidade — quem tem dor anterior no joelho, histórico de problema patelar ou mobilidade limitada de quadril/tornozelo deve parar a descida onde ainda mantém controle; uma repetição parcial bem controlada vale mais que uma profunda com a lombar arredondando.",
+  "whyThisExerciseExistsEn": "The leg press loads the quadriceps — with meaningful glute, hamstring and calf contribution — through a closed-kinetic-chain, multi-joint pattern similar to a squat, but with the trunk fully supported and the load applied more directly to the legs. That's useful when spinal loading, balance demands, or the setup complexity of a barbell squat aren't the priority for a given lifter or a given point in a session. Direct comparisons suggest leg press and squat can produce comparable strength and speed-strength adaptations, and closed-chain knee-mechanics analyses support it as a relatively joint-friendly way to load the quadriceps deep into flexion. It's best treated as a complement to free-weight squat patterns rather than a strict replacement, since transfer between the two isn't fully interchangeable.",
+  "whyThisExerciseExistsPt": "O leg press carrega o quadríceps — com contribuição relevante de glúteo, isquiotibiais e panturrilha — num padrão multiarticular de cadeia cinética fechada parecido com o agachamento, mas com o tronco totalmente apoiado e a carga aplicada mais diretamente nas pernas. Isso é útil quando a sobrecarga na coluna, a demanda de equilíbrio ou a complexidade de setup de um agachamento livre não são a prioridade pra aquele aluno ou aquele momento do treino. Comparações diretas sugerem que leg press e agachamento podem gerar adaptações de força e speed-strength comparáveis, e análises de mecânica de joelho em cadeia fechada reforçam que é uma forma relativamente amigável à articulação de carregar o quadríceps em flexão profunda. Faz mais sentido tratá-lo como complemento ao agachamento livre do que como substituto direto, já que a transferência entre os dois não é totalmente intercambiável.",
+  "regressionHints": [
+   "leg extension",
+   "goblet squat"
+  ],
+  "progressionHints": [
+   "barbell back squat",
+   "hack squat"
+  ],
+  "alternativeHints": [
+   "belt squat",
+   "Bulgarian split squat"
+  ],
+  "evidenceKeys": [
+   "wirth-2016-squat-vs-leg-press-speed-strength",
+   "escamilla-1998-knee-biomechanics-ckc-okc",
+   "wilk-1996-tibiofemoral-forces-emg-okc-ckc",
+   "heidel-2022-machines-vs-free-weights-meta-analysis"
+  ],
+  "evidenceNotesPt": {
+   "wirth-2016-squat-vs-leg-press-speed-strength": "Comparou agachamento livre e leg press diretamente e encontrou ganhos de força e speed-strength comparáveis, embasando o leg press como alternativa válida — não substituto — ao agachamento.",
+   "escamilla-1998-knee-biomechanics-ckc-okc": "Análise biomecânica de cadeia cinética fechada que inclui o leg press, base para a orientação de controlar profundidade e alinhamento do joelho e evitar sobrecarga articular na descida.",
+   "wilk-1996-tibiofemoral-forces-emg-okc-ckc": "Compara forças tibiofemorais em exercícios de cadeia fechada como o leg press, sustentando a recomendação de não travar o joelho com força nem perder o controle da amplitude.",
+   "heidel-2022-machines-vs-free-weights-meta-analysis": "Meta-análise mostrando que treino em máquina, como o leg press, produz ganhos de força e hipertrofia equivalentes ao treino com peso livre, embasando a justificativa de incluir o exercício no programa."
+  }
+ },
+ {
+  "slug": "barbell-hip-thrust",
+  "setupEn": "Sit on the floor with your upper back against the edge of a flat bench, roughly at mid-scapula height, knees bent and feet flat about hip-to-shoulder width apart. Roll a loaded barbell over your legs until it sits directly in the crease of your hip — never on your abdomen — and use a thick bar pad or a folded towel/mat to protect the pelvis. Brace your core and pull your ribs down before you start driving, and set your feet so that at the top of the rep your shins will land close to vertical.",
+  "setupPt": "Sente no chão com a parte superior das costas apoiada na borda de um banco reto, na altura aproximada das escápulas, joelhos flexionados e pés apoiados no chão, mais ou menos na largura dos ombros. Role a barra sobre as pernas até ela ficar exatamente na dobra do quadril — nunca em cima do abdômen — e use uma almofada grossa ou uma toalha/tapete dobrado para proteger a pelve. Contraia o abdômen e \"tranque\" as costelas para baixo antes de iniciar, e ajuste os pés para que, no topo da repetição, as canelas fiquem próximas da vertical.",
+  "breathingEn": "Inhale and brace (build intra-abdominal pressure) just before driving the hips up, hold that brace through the concentric push, and exhale at or just after lockout at the top — then re-brace before controlling the descent. Avoid holding your breath for more than a rep or two, especially as the load gets heavy.",
+  "breathingPt": "Inspire e faça a contração abdominal (pressão intra-abdominal) pouco antes de empurrar o quadril para cima, mantenha essa contração durante toda a subida e expire no topo ou logo depois do lockout — recontraindo antes de controlar a descida. Evite prender a respiração por mais de uma ou duas repetições seguidas, principalmente quando a carga fica pesada.",
+  "coachingCuesEn": [
+   "Drive through your heels, not your toes.",
+   "Tuck your chin slightly and keep your eyes forward, not up at the ceiling.",
+   "Finish at the top — squeeze the glutes hard instead of just reaching lockout.",
+   "Ribs down: stop the movement at hip extension, don't add range by arching the low back.",
+   "Push the floor away rather than thinking about lifting the bar."
+  ],
+  "coachingCuesPt": [
+   "Empurre o chão com os calcanhares, não com a ponta do pé.",
+   "Recolha levemente o queixo e olhe para frente, não para o teto.",
+   "Termine no topo — aperte forte o glúteo em vez de só encostar no lockout.",
+   "Costelas para baixo: pare o movimento na extensão de quadril, sem arquear mais a lombar pra 'ganhar' amplitude.",
+   "Empurre o chão para longe, em vez de pensar em levantar a barra."
+  ],
+  "commonMistakesEn": [
+   "Hyperextending the lumbar spine at the top instead of extending through the hip, turning lockout into a lower-back arch rather than a glute contraction.",
+   "Feet placed too far forward from the hips, which shifts load toward the hamstrings and reduces glute drive — or too close, which overloads the knees and quads.",
+   "Letting the bar creep up onto the abdomen instead of keeping it seated in the hip crease, which causes discomfort and an inefficient bar path.",
+   "Pushing off the toes or balls of the feet instead of the heels, which pulls more work into the quads and reduces stability.",
+   "Rushing the eccentric and bouncing the hips off the floor at the bottom instead of controlling the descent."
+  ],
+  "commonMistakesPt": [
+   "Hiperestender a lombar no topo em vez de estender pelo quadril, transformando o lockout num arqueamento das costas em vez de uma contração de glúteo.",
+   "Posicionar os pés longe demais do quadril, transferindo carga para o posterior de coxa e reduzindo o trabalho de glúteo — ou perto demais, sobrecarregando joelho e quadríceps.",
+   "Deixar a barra subir para cima do abdômen em vez de mantê-la na dobra do quadril, o que gera desconforto e um trajeto de barra ineficiente.",
+   "Empurrar pela ponta do pé/antepé em vez do calcanhar, puxando mais trabalho para o quadríceps e perdendo estabilidade.",
+   "Descer rápido demais e 'quicar' o quadril no chão em vez de controlar a fase excêntrica."
+  ],
+  "rangeOfMotionEn": "Full range on the hip thrust means starting with the hips just short of the floor (or lightly touching) and driving to complete hip extension at the top, where torso and thighs form a straight line and the glutes are maximally contracted — without hyperextending the lumbar spine to fake extra range. Range-of-motion research generally favors training through a fuller range for hypertrophy, but here \"full ROM\" is bounded by hip extension, not spinal extension: arching the low back further doesn't add useful range, it just adds unnecessary lumbar stress. Anyone with hip mobility restrictions or low-back sensitivity may need to stop slightly short of a hard lockout and prioritize a controlled, neutral-spine top position over squeezing out extra range.",
+  "rangeOfMotionPt": "Amplitude completa no hip thrust é começar com o quadril próximo do chão (ou levemente tocando) e estender totalmente o quadril no topo, com tronco e coxas formando uma linha reta e o glúteo em contração máxima — sem hiperestender a lombar para \"fingir\" mais amplitude. A literatura sobre amplitude de movimento, de forma geral, favorece treinar em amplitudes mais completas para hipertrofia, mas aqui o \"ROM completo\" é limitado pela extensão do quadril, não pela extensão da coluna: arquear mais a lombar não soma amplitude útil, só sobrecarga desnecessária. Quem tem restrição de mobilidade de quadril ou sensibilidade lombar pode precisar parar um pouco antes do lockout total, priorizando controle e coluna neutra no topo em vez de espremer amplitude extra.",
+  "whyThisExerciseExistsEn": "The barbell hip thrust isolates hip extension with the resistance vector closely aligned to the direction of glute force production, and EMG comparisons against the back squat show relatively high gluteus maximus activation with this setup. Controlled training comparisons suggest hip thrust programs can produce gluteal hypertrophy comparable to back squat programs and transfer similarly to hinge-pattern lifts like the deadlift — not superior, but a reasonable way to load hip extension directly and at high effort without relying solely on squat or deadlift volume. It's included here as a complementary hip-extension movement alongside compound lower-body lifts, not as a replacement for them.",
+  "whyThisExerciseExistsPt": "O hip thrust com barra isola a extensão de quadril com o vetor de resistência bem alinhado à direção de produção de força do glúteo, e comparações por EMG contra o agachamento mostram ativação relativamente alta do glúteo máximo nesse setup. Comparações controladas de treino sugerem que programas de hip thrust podem gerar hipertrofia glútea comparável à do agachamento e transferir de forma parecida para movimentos de hinge como o levantamento terra — não superior, mas uma forma razoável de carregar a extensão de quadril diretamente e com alto esforço, sem depender só do volume de agachamento ou terra. Ele entra aqui como um movimento complementar de extensão de quadril ao lado dos grandes compostos de membro inferior, não como substituto deles.",
+  "regressionHints": [
+   "glute bridge (bodyweight or light barbell)",
+   "machine hip thrust"
+  ],
+  "progressionHints": [
+   "single-leg barbell hip thrust",
+   "pause hip thrust (2-3 sec hold at top)"
+  ],
+  "alternativeHints": [
+   "cable pull-through",
+   "45-degree back extension (hip extension focus)"
+  ],
+  "evidenceKeys": [
+   "contreras-2015-emg-squat-hip-thrust",
+   "plotkin-2023-hip-thrust-vs-squat-glute-hypertrophy",
+   "barbalho-2020-squat-vs-hip-thrust-women",
+   "pallares-2021-rom-meta-analysis"
+  ],
+  "evidenceNotesPt": {
+   "contreras-2015-emg-squat-hip-thrust": "Mediu por EMG a ativação do glúteo máximo, bíceps femoral e vasto lateral comparando agachamento e hip thrust com barra, mostrando ativação glútea relativamente alta no hip thrust — base para as cues de empurrar pelo calcanhar e contrair forte o glúteo no topo.",
+   "plotkin-2023-hip-thrust-vs-squat-glute-hypertrophy": "Comparou programas de hip thrust e agachamento e encontrou hipertrofia glútea semelhante entre os dois, sustentando a ideia de que o hip thrust é uma opção comparável — não superior — para desenvolver o glúteo.",
+   "barbalho-2020-squat-vs-hip-thrust-women": "Comparou diretamente hip thrust com agachamento em mulheres treinadas, dando suporte a incluir o hip thrust como exercício legítimo de extensão de quadril no programa, e não apenas como acessório secundário.",
+   "pallares-2021-rom-meta-analysis": "Meta-análise sobre o efeito da amplitude de movimento nas adaptações do treino, usada aqui para embasar a orientação de buscar extensão completa do quadril — sem hiperestender a lombar — como amplitude-alvo do exercício."
+  }
+ },
+ {
+  "slug": "seated-leg-curl",
+  "setupEn": "Adjust the machine's lever pad so it rests a few centimeters above the ankles, just behind the calves, and lock the thigh pad down snugly above the knees so the hips stay pinned to the seat throughout the set. Sit with your back flat against the backrest and hold the side handles for stability. Start each rep with the legs fully extended, stopping just short of locking the knee, so the hamstrings begin under a long, comfortable stretch.",
+  "setupPt": "Ajuste o braço da máquina para que a almofada fique apoiada alguns centímetros acima dos tornozelos, logo atrás da panturrilha, e trave o encosto de coxa rente acima dos joelhos, prendendo o quadril no banco durante toda a série. Sente com as costas totalmente apoiadas no encosto e segure as alças laterais para se estabilizar. Comece cada repetição com as pernas estendidas, parando um pouco antes de travar o joelho, sentindo um alongamento confortável do posterior de coxa logo no início.",
+  "breathingEn": "Exhale during the flexion phase as you curl the pad toward your glutes, and inhale as you return under control to the starting stretch. Keep a light brace through the core so the hips stay pinned to the seat instead of lifting to help push through the last part of the rep.",
+  "breathingPt": "Expire durante a fase de flexão, quando você puxa a almofada em direção aos glúteos, e inspire ao retornar controladamente até o alongamento inicial. Mantenha uma leve contração de abdômen para travar o quadril no banco, em vez de deixá-lo levantar para \"ajudar\" no final da repetição.",
+  "coachingCuesEn": [
+   "Point your toes toward your shins (dorsiflex) to take the calves out of it and bias the hamstrings.",
+   "Squeeze the pad into your glutes at the top and hold for a beat.",
+   "Keep your hips glued to the seat — don't let them lift to steal the last few degrees.",
+   "Control the negative on the way back; don't let the weight stack drop.",
+   "Think 'heels to hips', not 'kick the pad'."
+  ],
+  "coachingCuesPt": [
+   "Aponte os pés em direção à canela (dorsiflexão) para tirar a panturrilha do movimento e focar no posterior de coxa.",
+   "Aperta a almofada contra o glúteo no topo e segura um instante.",
+   "Cola o quadril no banco — não deixa levantar pra 'roubar' a última parte da repetição.",
+   "Controla a volta, não solta o peso na descida.",
+   "Pensa em 'calcanhar até o glúteo', não em 'chutar a almofada'."
+  ],
+  "commonMistakesEn": [
+   "Letting the hips and glutes rise off the seat to muscle through the last portion of the curl, which shifts load off the hamstrings.",
+   "Using momentum — jerking the pad up instead of a smooth, controlled flexion.",
+   "Pointing the toes down (plantarflexing), which lets the calves share the pull.",
+   "Stopping short of a full stretch at the start of the rep, effectively training only a partial, shortened range.",
+   "Yanking on the side handles and arching hard to move more weight than the hamstrings can actually control."
+  ],
+  "commonMistakesPt": [
+   "Levantar o quadril do banco para completar a repetição na força, tirando a tensão do posterior de coxa.",
+   "Usar embalo, puxando a almofada com solavanco em vez de uma flexão suave e controlada.",
+   "Apontar os pés para baixo (flexão plantar), deixando a panturrilha dividir o trabalho.",
+   "Parar antes de estender bem a perna no início, treinando só uma amplitude parcial e encurtada.",
+   "Puxar com força nas alças e arquear o corpo para mover mais carga do que o posterior de coxa realmente consegue controlar."
+  ],
+  "rangeOfMotionEn": "Full range here means starting from a near-fully extended knee — a long, stretched hamstring position — and curling through to maximal knee flexion, where the pad approaches the back of the thigh/glute. Research comparing training at longer versus shorter muscle lengths in knee-flexion movements (e.g. Maeo et al., 2021) suggests using the complete range, including that stretched bottom position, is at least as effective as a partial range and may specifically favor hypertrophy driven by the lengthened portion. Caveat: if you have anterior knee discomfort or a hamstring strain history, don't force the knee to full lockout at the bottom — stopping a few degrees short is a reasonable, safe adjustment, and the top of the movement should end at a comfortable maximal contraction rather than being forced with momentum.",
+  "rangeOfMotionPt": "Amplitude completa aqui significa começar com o joelho quase totalmente estendido — posterior de coxa bem alongado — e flexionar até a almofada chegar perto da parte de trás da coxa/glúteo. Estudos que compararam treinar em comprimentos musculares mais longos versus mais curtos em movimentos de flexão de joelho (como Maeo et al., 2021) sugerem que usar a amplitude completa, incluindo essa posição alongada no início, é pelo menos tão eficaz quanto uma amplitude parcial — e possivelmente favorece o ganho de massa vindo justamente dessa parte alongada. Ressalva: se você sente desconforto no joelho anterior ou tem histórico de lesão no posterior de coxa, não force o joelho a travar totalmente no início — parar alguns graus antes é um ajuste seguro e razoável, e o topo do movimento deve terminar numa contração máxima confortável, sem forçar com embalo.",
+  "whyThisExerciseExistsEn": "The seated leg curl isolates knee flexion, one of the hamstrings' two primary actions — the other being hip extension, trained by hinge movements like the Romanian deadlift. Evidence on regional hamstring activation suggests knee-flexion exercises and hip-dominant hinges don't recruit the hamstring heads identically, so pairing both is a reasonable way to train the muscle group more completely rather than assuming a single movement covers everything. As a single-joint, machine-guided exercise, it also lets you isolate and fatigue the hamstrings directly with lower technical demand and less involvement of the low back and grip than heavy hinge work, which is useful for adding targeted volume or finishing a session. This is a training-principle rationale, not a claim that the leg curl is superior to, or a substitute for, hip-dominant hamstring work.",
+  "whyThisExerciseExistsPt": "A mesa flexora isola a flexão de joelho, uma das duas ações principais do posterior de coxa — a outra é a extensão de quadril, trabalhada em movimentos de hinge como o levantamento terra romeno. Estudos sobre ativação regional do posterior de coxa sugerem que exercícios de flexão de joelho e hinges de quadril dominante não recrutam as cabeças do músculo da mesma forma, então combinar os dois é uma maneira razoável de treinar o grupamento de forma mais completa, em vez de assumir que um único movimento resolve tudo. Por ser um exercício de articulação única, guiado por máquina, ele também permite isolar e fadigar o posterior de coxa diretamente, com menor exigência técnica e menor envolvimento da lombar e da pegada do que o trabalho pesado de hinge — útil para somar volume específico ou fechar o treino. Essa é uma justificativa baseada em princípios de treino, não uma alegação de que a mesa flexora seja superior ou substitua o trabalho de quadril dominante.",
+  "regressionHints": [
+   "resistance band leg curl",
+   "stability ball hamstring curl"
+  ],
+  "progressionHints": [
+   "Nordic hamstring curl",
+   "single-leg (unilateral) seated leg curl"
+  ],
+  "alternativeHints": [
+   "lying leg curl",
+   "Romanian deadlift"
+  ],
+  "evidenceKeys": [
+   "maeo-2021-hamstring-long-vs-short-length",
+   "schoenfeld-2015-hamstring-regional-activation",
+   "bourne-2017-hamstring-exercise-selection-emg",
+   "pallares-2021-rom-meta-analysis"
+  ],
+  "evidenceNotesPt": {
+   "maeo-2021-hamstring-long-vs-short-length": "Comparou treinar o posterior de coxa em comprimentos musculares longos vs. curtos em exercício de flexão de joelho e encontrou hipertrofia maior incluindo a posição alongada — sustenta a orientação de usar amplitude completa na mesa flexora, sem cortar o início do movimento.",
+   "schoenfeld-2015-hamstring-regional-activation": "Mostra que exercícios de flexão de joelho (isolamento) e exercícios de quadril dominante ativam regiões diferentes do posterior de coxa — justifica combinar a mesa flexora com hinges como o terra romeno para um estímulo mais completo do grupamento.",
+   "bourne-2017-hamstring-exercise-selection-emg": "Reforça que a escolha do exercício de posterior de coxa (isolamento de joelho vs. hinge de quadril) muda o padrão de ativação muscular e tem relevância para prevenção de lesão, apoiando o uso complementar da mesa flexora junto a exercícios de quadril.",
+   "pallares-2021-rom-meta-analysis": "Meta-análise sobre o efeito da amplitude de movimento em ganhos de força e hipertrofia — sustenta a orientação de priorizar amplitude completa na mesa flexora sempre que mobilidade e histórico de lesão permitirem."
+  }
+ },
+ {
+  "slug": "incline-dumbbell-press",
+  "setupEn": "Set the bench to a 30–45° incline — steeper than that turns the movement into more of a shoulder press than a chest press. Sit with the dumbbells resting on your thighs, then use your knees to help kick them up to shoulder height as you lie back, rotating your wrists so your palms face forward at the top. Plant your feet flat on the floor, pull your shoulder blades back and down into the bench, and set a slight natural arch in your lower back before you start pressing.",
+  "setupPt": "Ajuste o banco entre 30° e 45° de inclinação — mais íngreme que isso já vira quase um desenvolvimento de ombro em vez de supino. Sente com os halteres apoiados nas coxas e use o impulso dos joelhos para levá-los até a altura dos ombros enquanto deita, girando os punhos até as palmas ficarem voltadas para frente no topo. Plante os pés firmes no chão, retraia e deprima as escápulas contra o banco, e mantenha um leve arco natural na lombar antes de começar a série.",
+  "breathingEn": "Take a breath and set a light 360° core brace just before unracking the dumbbells off your thighs. Inhale as the dumbbells descend, then exhale through the sticking point as you press back up.",
+  "breathingPt": "Inspire e faça uma leve contração abdominal em 360° (não é só \"sugar a barriga\") antes de tirar os halteres das coxas. Inspire durante a descida e expire passando pelo ponto mais difícil enquanto empurra o peso de volta pra cima.",
+  "coachingCuesEn": [
+   "Bench at 30–45°, not steeper.",
+   "Pin your shoulder blades back and down before you unrack.",
+   "Drive the dumbbells up and slightly together, not straight up and out.",
+   "Lower under control — don't let the dumbbells free-fall to the bottom.",
+   "Feet planted, hips down — don't turn this into a bridge press."
+  ],
+  "coachingCuesPt": [
+   "Banco entre 30° e 45°, sem exagerar na inclinação.",
+   "Trava a escápula pra trás e pra baixo antes de tirar o peso da coxa.",
+   "Empurra os halteres pra cima e levemente pra dentro, não reto pra cima e pra fora.",
+   "Desce controlado — não deixa o halter cair sozinho.",
+   "Pé fixo no chão e quadril no banco, não vira uma ponte."
+  ],
+  "commonMistakesEn": [
+   "Setting the bench too steep (60–70°), which shifts load onto the anterior deltoid and turns it into a shoulder press in disguise.",
+   "Flaring the elbows out to near 90° from the torso, loading the front of the shoulder harder than necessary.",
+   "Losing the shoulder blade retraction mid-set as fatigue sets in, letting the shoulders roll forward and dumping tension off the chest.",
+   "Bouncing the dumbbells at the bottom or forcing an uncomfortably deep stretch just to chase range of motion instead of stopping where shoulder mobility is comfortable.",
+   "Letting the dumbbells drift apart or wobble on an inconsistent path instead of a controlled, slightly converging arc."
+  ],
+  "commonMistakesPt": [
+   "Colocar o banco muito íngreme (60-70°), o que transfere carga pro deltoide anterior e vira um desenvolvimento disfarçado.",
+   "Abrir demais o cotovelo, quase 90° do tronco, sobrecarregando a frente do ombro sem necessidade.",
+   "Perder a retração da escápula no meio da série por fadiga, deixando o ombro rolar pra frente e tirar tensão do peito.",
+   "Deixar o halter quicar lá embaixo ou forçar uma amplitude desconfortável só pra 'descer mais', em vez de parar onde a mobilidade do ombro permite com conforto.",
+   "Deixar os braços abrirem ou balançarem em vez de manter um trajeto controlado e levemente convergente."
+  ],
+  "rangeOfMotionEn": "Lower the dumbbells until your upper arms are roughly in line with your torso and you feel a real stretch across the upper chest — because each dumbbell travels independently, you can generally reach a bit more depth at the bottom than a fixed barbell allows. Training through a fuller, controlled range of motion tends to be associated with strength and hypertrophy outcomes at least as good as stopping short, but that's not a license to force depth past what your shoulder mobility comfortably allows — with any history of shoulder issues, a slightly shorter, pain-free range is the right call over chasing an extra inch of stretch.",
+  "rangeOfMotionPt": "Desça até o braço ficar praticamente alinhado com o tronco e sentir um alongamento real na parte superior do peito — como cada halter se move de forma independente, dá pra descer um pouco mais fundo do que numa barra fixa. Treinar numa amplitude mais completa e controlada tende a vir associado a ganhos de força e hipertrofia pelo menos tão bons quanto parar no meio do caminho, mas isso não é motivo pra forçar profundidade além do que a mobilidade do seu ombro permite com conforto — com histórico de dor no ombro, vale priorizar uma amplitude um pouco menor e sem dor em vez de correr atrás de mais um centímetro de alongamento.",
+  "whyThisExerciseExistsEn": "Changing the bench angle changes which part of the pressing musculature takes on relatively more of the work — EMG comparisons across bench inclinations show the clavicular (upper) portion of the pec major and the anterior deltoid contributing more as the angle increases, which is the basic case for including an incline press alongside flat pressing rather than training the same angle every time. Using dumbbells instead of a fixed bar also lets each arm find its own path and typically allows a bit more range at the bottom. None of this makes the incline dumbbell press inherently superior to other press variants — it's one useful angle within the horizontal/incline pressing pattern, not a replacement for the rest of it.",
+  "whyThisExerciseExistsPt": "Mudar o ângulo do banco muda qual parte da musculatura do supino assume relativamente mais trabalho — comparações de EMG entre inclinações de banco mostram a porção clavicular (superior) do peitoral maior e o deltoide anterior contribuindo mais conforme o ângulo aumenta, e essa é a lógica básica de incluir o inclinado ao lado do supino reto, em vez de treinar sempre no mesmo ângulo. Usar halteres em vez de barra fixa também permite que cada braço siga seu próprio trajeto e geralmente dá um pouco mais de amplitude lá embaixo. Nada disso torna o supino inclinado com halteres superior às outras variações — é um ângulo útil dentro do padrão de empurrar horizontal/inclinado, não um substituto pro resto dele.",
+  "regressionHints": [
+   "incline machine chest press",
+   "incline push-up"
+  ],
+  "progressionHints": [
+   "incline barbell press",
+   "single-arm incline dumbbell press"
+  ],
+  "alternativeHints": [
+   "low-incline barbell press",
+   "incline cable press"
+  ],
+  "evidenceKeys": [
+   "lopez-vivancos-2023-pectoralis-emg-systematic-review",
+   "rodriguez-ridao-2020-bench-inclination-emg",
+   "lauver-2016-bench-angle-muscle-activation",
+   "pallares-2021-rom-meta-analysis"
+  ],
+  "evidenceNotesPt": {
+   "lopez-vivancos-2023-pectoralis-emg-systematic-review": "Revisão sistemática com meta-análise da ativação EMG do peitoral maior em diferentes variações de supino, incluindo o inclinado, embasando a ideia de que a angulação do banco desloca a ênfase entre porções do peitoral.",
+   "rodriguez-ridao-2020-bench-inclination-emg": "Comparou EMG do peitoral maior, deltoide anterior e tríceps braquial em cinco inclinações de banco, mostrando que ângulos maiores aumentam a participação do deltoide anterior — base para recomendar manter o banco entre 30° e 45° em vez de mais íngreme.",
+   "lauver-2016-bench-angle-muscle-activation": "Estudo sobre ativação muscular do membro superior em diferentes ângulos de banco, reforçando que a inclinação escolhida influencia qual região do peito/ombro recebe mais estímulo.",
+   "pallares-2021-rom-meta-analysis": "Meta-análise sobre o efeito da amplitude de movimento nas adaptações do treino de força, embasando a orientação de buscar amplitude completa e controlada dentro da mobilidade confortável de ombro, sem forçar profundidade além do que é tolerável."
+  }
+ },
+ {
+  "slug": "seated-cable-rows",
+  "setupEn": "Set the footplate/knee stops so your knees stay slightly bent (not locked) with feet planted flat, and pick a V-bar for a neutral grip or a straight bar for pronated. Sit tall, grip the handle at shoulder width or slightly narrower, then hinge forward from the hips — not the lower back — until you feel a real stretch through the lats. Set your shoulder blades back and down before the first pull, and brace your core so the trunk doesn't rock once the cable loads.",
+  "setupPt": "Ajuste o apoio dos pés/joelhos para que os joelhos fiquem levemente flexionados (sem travar) e os pés bem apoiados; escolha a barra em V para pegada neutra ou a barra reta para pegada pronada. Sente-se ereto, segure a pegada na largura dos ombros ou um pouco mais fechada, e incline o tronco à frente a partir do quadril — não da lombar — até sentir um alongamento de verdade no latíssimo. Trave as escápulas para trás e para baixo antes da primeira puxada, e contraia o abdômen para o tronco não balançar quando o cabo carregar.",
+  "breathingEn": "Inhale and brace before the pull, exhale as you drive the handle into your torso and squeeze the shoulder blades together, then inhale again as you control the return to the stretched position. Keep intra-abdominal pressure steady through the rep rather than letting your breath drive trunk rocking.",
+  "breathingPt": "Inspire e crie pressão intra-abdominal antes de puxar, expire enquanto traz o peso em direção ao tronco apertando as escápulas, e inspire de novo controlando a volta até o alongamento. Mantenha a pressão abdominal constante durante a repetição, sem deixar a respiração virar balanço do tronco.",
+  "coachingCuesEn": [
+   "Row your elbows back past your ribs, not just your hands to your belly.",
+   "Set the shoulder blades back and down before you pull.",
+   "Torso stays still — the movement happens at the shoulder and elbow, not the hips.",
+   "Let the stack tap and pause between reps, don't bounce it.",
+   "Reach fully into the stretch each rep instead of stopping short."
+  ],
+  "coachingCuesPt": [
+   "Puxe com o cotovelo passando as costelas, não só a mão até a barriga.",
+   "Trave as escápulas para trás e para baixo antes de puxar.",
+   "Tronco parado — o movimento é no ombro e no cotovelo, não no quadril.",
+   "Deixe o peso encostar e parar entre as repetições, sem quicar.",
+   "Alongue de verdade a cada repetição, não corte na metade."
+  ],
+  "commonMistakesEn": [
+   "Rounding the lower back and rocking the hips to yank the handle back, turning it into momentum instead of a back contraction.",
+   "Shrugging the traps up toward the ears at the top instead of driving the shoulder blades down and together.",
+   "Cutting the return short by stopping mid-range and never reaching the stretched position at the lats.",
+   "Leading the pull with the arms and letting the elbows flare wide, which shifts the load toward biceps/rear delts instead of the back.",
+   "Letting the plates crash between reps and using that bounce to launch the next rep instead of controlling the eccentric."
+  ],
+  "commonMistakesPt": [
+   "Arredondar a lombar e usar balanço de quadril para chicotear a barra, virando embalo em vez de contração das costas.",
+   "Encolher o trapézio até a orelha no topo do movimento em vez de levar as escápulas para baixo e para trás.",
+   "Cortar a volta na metade do caminho, nunca chegando no alongamento completo do latíssimo.",
+   "Puxar iniciando pelo braço com os cotovelos abertos, jogando a carga pro bíceps/deltoide posterior em vez das costas.",
+   "Deixar o peso bater forte entre as repetições e usar esse solavanco pra puxar de novo, sem controlar a fase excêntrica."
+  ],
+  "rangeOfMotionEn": "Full range here starts from a genuine stretch — torso hinged forward, arms fully extended, lats lengthened — through to a full contraction where the handle reaches the torso and the shoulder blades are drawn together. ROM literature generally favors training through longer muscle excursions for hypertrophy, so it's worth deliberately reaching that terminal stretch rather than clipping the range. That said, if you have a history of lower-back irritation, keep the forward lean moderate and prioritize a neutral spine over chasing extra stretch — rowing under load with a flexed lumbar spine increases shear on the low back.",
+  "rangeOfMotionPt": "Amplitude completa aqui é sair de um alongamento de verdade — tronco inclinado à frente, braços totalmente estendidos, latíssimo alongado — até a contração plena, com o peso tocando o tronco e as escápulas juntas. A literatura de amplitude de movimento, de forma geral, favorece treinar com maior excursão muscular para hipertrofia, então vale buscar esse alongamento final de propósito, sem cortar a amplitude. Porém, se você tem histórico de dor lombar, mantenha a inclinação do tronco moderada e priorize a lombar neutra em vez de buscar alongamento extra — remar sob carga com a coluna flexionada aumenta o cisalhamento na região lombar.",
+  "whyThisExerciseExistsEn": "The seated cable row is a horizontal-pull pattern where the cable keeps roughly constant tension on the mid-back and lats through the whole range, unlike a barbell row where tension can drop near lockout. Rowing patterns trained through a long muscle length tend to engage the lats and surrounding back musculature well, and the supported, seated position removes hip-hinge endurance and grip fatigue as limiting factors, letting you load the pull itself more directly. It also gives you fairly direct control over trunk position, which matters because evidence on rowing biomechanics shows trunk motion and spinal posture both influence lumbar loading — so this variation is a practical way to accumulate horizontal-pull volume while being deliberate about keeping the spine stable. None of this implies it's superior to other rows; it's one solid tool for training this pattern.",
+  "whyThisExerciseExistsPt": "A remada sentada na polia é um padrão de puxada horizontal em que o cabo mantém a tensão praticamente constante nas costas e no latíssimo durante toda a amplitude, diferente da remada com barra, onde a tensão pode cair perto da extensão total. Padrões de remada treinados com o músculo mais alongado costumam recrutar bem o latíssimo e a musculatura ao redor das escápulas, e a posição sentada e apoiada tira da equação a resistência de quadril e a fadiga de pegada como fatores limitantes, deixando o foco na puxada em si. Ela também dá bastante controle sobre a posição do tronco, o que importa porque a evidência sobre biomecânica de remadas mostra que o movimento do tronco e a postura da coluna afetam a carga lombar — então essa variação é uma forma prática de acumular volume de puxada horizontal sendo deliberado com a estabilidade da coluna. Isso não quer dizer que ela seja superior a outras remadas; é só uma ferramenta sólida pra treinar esse padrão.",
+  "regressionHints": [
+   "chest-supported row (machine)",
+   "resistance band seated row"
+  ],
+  "progressionHints": [
+   "single-arm cable row",
+   "barbell bent-over row"
+  ],
+  "alternativeHints": [
+   "chest-supported row",
+   "one-arm dumbbell row"
+  ],
+  "evidenceKeys": [
+   "fenwick-2009-rowing-exercises-trunk",
+   "lehman-2004-latissimus-exercise-variations",
+   "pallares-2021-rom-meta-analysis",
+   "korakakis-2023-technique-hypertrophy-review"
+  ],
+  "evidenceNotesPt": {
+   "fenwick-2009-rowing-exercises-trunk": "Comparou ativação do tronco e movimento/carga lombar entre diferentes exercícios de remada, dando base para a orientação de manter o tronco estável e a lombar neutra durante a puxada.",
+   "lehman-2004-latissimus-exercise-variations": "Mediu ativação muscular em variações tradicionais de remada e puxada, apoiando a expectativa de que essa remada recruta bem o latíssimo e a musculatura das costas.",
+   "pallares-2021-rom-meta-analysis": "Meta-análise sobre o efeito da amplitude de movimento nas adaptações do treino, base para priorizar o alongamento completo do latíssimo no início do movimento.",
+   "korakakis-2023-technique-hypertrophy-review": "Revisão sobre técnica (amplitude e tempo) para maximizar hipertrofia, respaldando a dica de buscar contração plena e alongamento completo em cada repetição."
+  }
+ },
+ {
+  "slug": "leverage-shoulder-press",
+  "setupEn": "Set the seat height so the handles start roughly level with the top of your shoulders and your feet sit flat on the floor or platform. Sit all the way back with your head, upper back, and lower back pressed into the pad, take a firm pronated grip on the handles, and pull your shoulder blades down and slightly back before unracking — that scapular position is what you'll hold for the whole set, not something you re-find mid-rep.",
+  "setupPt": "Ajuste o banco pra que os pegadores comecem na altura aproximada dos ombros e os pés fiquem bem apoiados no chão ou na plataforma. Sente totalmente encostado, com cabeça, parte superior e lombar coladas no encosto, feche a pegada pronada firme nos pegadores e puxe as escápulas pra baixo e levemente pra trás antes de destravar — essa posição de escápula é pra sustentar a série inteira, não pra ficar reajustando no meio da repetição.",
+  "breathingEn": "Inhale and hold a light abdominal brace as the handles come down, then exhale as you drive them up through the hardest part of the press. You don't need a hard Valsalva breath-hold on this exercise — a moderate, controlled brace is enough to keep the torso stable against the fixed pressing path.",
+  "breathingPt": "Inspire e mantenha uma leve pressão abdominal enquanto os pegadores descem, e solte o ar empurrando pra cima, principalmente na parte mais difícil do movimento. Não precisa de Valsalva forte aqui — uma pressão abdominal moderada e controlada já é suficiente pra manter o tronco estável contra o trajeto guiado da máquina.",
+  "coachingCuesEn": [
+   "Drive through the heel of your palm, not your fingertips.",
+   "Keep your shoulder blades pinned to the pad the entire rep.",
+   "Press up following the machine's arc — don't fight it forward or back.",
+   "Stop just short of locking the elbow out to keep tension on the shoulder.",
+   "Chest tall, head still — don't let it creep forward as you finish the press."
+  ],
+  "coachingCuesPt": [
+   "Empurre com a base da palma da mão, não com a ponta dos dedos.",
+   "Mantenha as escápulas coladas no encosto a repetição inteira.",
+   "Empurre seguindo o arco natural da máquina, sem forçar pra frente ou pra trás.",
+   "Pare um pouco antes de travar o cotovelo pra não perder a tensão no ombro.",
+   "Peito erguido, cabeça parada — não deixe ela avançar na hora de finalizar o empurrão."
+  ],
+  "commonMistakesEn": [
+   "Setting the seat too low or too high so the handles start well above or below shoulder height, cutting the working range or shifting stress onto the front delt at an awkward angle.",
+   "Locking the elbows out hard and resting the weight on the machine's stops between reps, which kills muscle tension and turns the set into a series of dead-stop singles.",
+   "Flaring the elbows out and shrugging the traps up to help finish the rep instead of driving the load through the shoulders and triceps.",
+   "Arching the lower back off the pad to steal leverage at the sticking point.",
+   "Letting the head push forward off the pad at the top of the press instead of keeping it neutral."
+  ],
+  "commonMistakesPt": [
+   "Regular o banco baixo ou alto demais, fazendo os pegadores começarem muito acima ou abaixo da linha dos ombros — isso corta a amplitude útil ou joga a tensão pro deltoide anterior num ângulo ruim.",
+   "Travar o cotovelo com força e descansar o peso nos batentes entre as repetições, o que mata a tensão muscular e transforma a série numa sequência de repetições soltas.",
+   "Abrir demais o cotovelo e encolher o trapézio pra ajudar a terminar a repetição, tirando o trabalho do ombro e do tríceps.",
+   "Arquear a lombar e tirar as costas do encosto pra ganhar alavanca no ponto mais difícil do movimento.",
+   "Deixar a cabeça sair do encosto e avançar no topo do movimento em vez de mantê-la parada e neutra."
+  ],
+  "rangeOfMotionEn": "Full range here means starting with the handles roughly at shoulder height — upper arm close to parallel with the floor or just below — and pressing up to just short of a hard elbow lockout, keeping continuous tension on the shoulder and triceps rather than resting on the machine's stops at the top. Because the machine's path is fixed, it tends to give a more consistent, predictable bottom position than a free-weight overhead press, which is why it's often a reasonable option when shoulder mobility or stability is a limiting factor. If you have a history of shoulder impingement, starting from a slightly higher (less deep) position and avoiding the very bottom of the range, where the shoulder is more internally rotated under load, is a sensible adjustment — range-of-motion research broadly supports training through fuller ranges for hypertrophy, but for pressing overhead specifically, how deep you go should be governed by your own shoulder health, not chased for its own sake.",
+  "rangeOfMotionPt": "Amplitude completa aqui é começar com os pegadores por volta da altura dos ombros — braço praticamente paralelo ao chão ou um pouco abaixo — e empurrar até quase travar o cotovelo, mantendo tensão contínua no ombro e no tríceps em vez de descansar nos batentes no topo. Como o trajeto da máquina é fixo, ela costuma dar uma posição inicial mais consistente e previsível do que o desenvolvimento livre, por isso é uma opção razoável quando mobilidade ou estabilidade de ombro são um fator limitante. Se você já teve histórico de impacto no ombro, começar um pouco mais alto (amplitude levemente reduzida no fundo) e evitar o ponto mais baixo, onde o ombro fica mais rodado internamente sob carga, é um ajuste sensato — a literatura de amplitude de movimento favorece, de forma geral, treinar em amplitudes mais completas pra hipertrofia, mas no desenvolvimento acima da cabeça especificamente, o quão fundo você desce deve ser guiado pela saúde do seu ombro, não perseguido por si só.",
+  "whyThisExerciseExistsEn": "The leverage shoulder press gives you a fixed, guided path for vertical pushing, which removes much of the balance and stabilization demand of a free-weight overhead press and lets you load the deltoids and triceps directly and progressively. Evidence comparing machine-based and free-weight training suggests both can produce comparable strength and hypertrophy outcomes when effort and volume are matched, and EMG work comparing barbell and machine overhead press variations shows the machine still drives meaningful deltoid activation despite the fixed path. It's a practical way to accumulate vertical-push volume with less technical demand and lower stabilization fatigue than a standing barbell or dumbbell press, which is useful for building shoulder-pressing capacity or for placing pressing work later in a session when stabilizer fatigue would otherwise limit a free-weight variation.",
+  "whyThisExerciseExistsPt": "O desenvolvimento na máquina articulada oferece um trajeto fixo e guiado pro empurrão vertical, o que tira boa parte da demanda de equilíbrio e estabilização que o desenvolvimento livre exige, permitindo carregar o deltoide e o tríceps de forma direta e progressiva. Evidências comparando treino em máquina e com pesos livres indicam que os dois podem gerar ganhos parecidos de força e hipertrofia quando esforço e volume são equivalentes, e análises de EMG comparando barra e máquina no desenvolvimento mostram que a versão guiada ainda gera ativação relevante do deltoide mesmo com o trajeto fixo. É uma forma prática de acumular volume de empurrão vertical com menos exigência técnica e menos fadiga de estabilização do que o desenvolvimento em pé com barra ou halteres — útil pra construir capacidade de empurrar acima da cabeça ou pra colocar o trabalho de ombro mais tarde no treino, quando a fadiga de estabilizadores já limitaria uma variação livre.",
+  "regressionHints": [
+   "seated dumbbell shoulder press with light load",
+   "resistance band overhead press"
+  ],
+  "progressionHints": [
+   "standing barbell overhead press",
+   "seated dumbbell shoulder press with heavier load"
+  ],
+  "alternativeHints": [
+   "Smith machine shoulder press",
+   "Arnold press"
+  ],
+  "evidenceKeys": [
+   "hernandez-belmonte-2023-freeweight-machine-strength-hypertrophy",
+   "coratella-2022-front-back-barbell-machine-overhead-press-emg",
+   "saeterbakken-fimland-2013-seated-vs-standing-shoulder-press",
+   "korakakis-2023-technique-hypertrophy-review"
+  ],
+  "evidenceNotesPt": {
+   "hernandez-belmonte-2023-freeweight-machine-strength-hypertrophy": "Mostra que treino em máquina, incluindo desenvolvimento de ombro, produz ganhos de força e hipertrofia comparáveis ao treino com pesos livres quando o esforço é equivalente — sustenta esse exercício guiado como opção legítima, não inferior à barra ou ao halter.",
+   "coratella-2022-front-back-barbell-machine-overhead-press-emg": "Comparação eletromiográfica entre barra e máquina no desenvolvimento de ombro mostra que a versão guiada ainda recruta bem o deltoide, respaldando a máquina articulada como ferramenta eficaz de empurrão vertical.",
+   "saeterbakken-fimland-2013-seated-vs-standing-shoulder-press": "Analisa como a posição do corpo (sentado vs. em pé) e o tipo de carga afetam a ativação muscular e a força no desenvolvimento, embasando a orientação de manter tronco e cabeça totalmente apoiados no encosto durante a execução sentada e guiada.",
+   "korakakis-2023-technique-hypertrophy-review": "Revisão sobre otimização de técnica para hipertrofia, incluindo amplitude de movimento e tempo sob tensão, que sustenta a orientação de não descansar o peso nos batentes e manter tensão contínua ao longo de toda a repetição."
+  }
+ },
+ {
+  "slug": "preacher-curl",
+  "setupEn": "Set the preacher bench pad height so its top edge sits right at your armpit line when you're seated — too low and your shoulders round forward, too high and you lose the fixed upper-arm angle that isolates the biceps. Grip the EZ-bar at the inner, angled handles (or a dumbbell if training one arm at a time) with a shoulder-width or slightly narrower grip, then rest the back of your upper arms flush against the pad from armpit to elbow before you take the weight off the rack. Sit tall with your chest against the pad and feet planted, and brace your core lightly — this keeps the torso from helping the lift once the bar gets heavy.",
+  "setupPt": "Ajuste a altura do banco Scott para que a borda do encosto fique na linha da axila quando você está sentado — baixo demais e o ombro cai pra frente, alto demais e você perde o ângulo fixo do braço que isola o bíceps. Pegue a barra W pelas empunhaduras mais internas e anguladas (ou um halter, se for fazer unilateral) com uma pegada na largura dos ombros ou um pouco mais fechada, e só depois encoste a parte de trás do braço no encosto, da axila até o cotovelo, antes de tirar o peso do suporte. Sente ereto com o peito apoiado, pés firmes no chão, e mantenha um leve brace no abdômen — isso evita que o tronco \"ajude\" o movimento quando a carga ficar pesada.",
+  "breathingEn": "Inhale as you lower the bar into the stretched bottom position, then exhale through the sticking point as you curl up. Because the load is light relative to compound lifts, you don't need a hard Valsalva brace — just steady, controlled breathing that keeps you from holding your breath and jerking the bar past the hardest part of the range.",
+  "breathingPt": "Inspire enquanto desce a barra até o alongamento no fundo do movimento e expire ao passar pelo ponto mais difícil, na subida. Como a carga é baixa perto de exercícios compostos, não precisa de Valsalva forte — só uma respiração constante e controlada, pra não prender o ar e \"arrancar\" a barra com o tronco no ponto mais difícil.",
+  "coachingCuesEn": [
+   "Armpit stays glued to the pad the whole set — if it lifts off, the weight's too heavy.",
+   "Control the bottom — don't let the bar free-fall into a locked-out elbow.",
+   "Squeeze at the top without shrugging your shoulders up toward your ears.",
+   "Think 'elbow hinge only' — the upper arm doesn't move, only the forearm.",
+   "Stop just short of a hard lockout if your elbows are cranky; a soft stop protects the joint without losing tension."
+  ],
+  "coachingCuesPt": [
+   "A axila fica colada no encosto o treino inteiro — se ela sair do banco, o peso tá pesado demais.",
+   "Controle o fundo do movimento — não deixa a barra despencar até travar o cotovelo.",
+   "Contraia no topo sem subir o ombro em direção à orelha.",
+   "Pensa 'dobradiça só no cotovelo' — o braço não se move, só o antebraço.",
+   "Pare um pouco antes da extensão total se o cotovelo reclama — parar suave protege a articulação sem perder tensão."
+  ],
+  "commonMistakesEn": [
+   "Bouncing out of the bottom stretch by snapping the elbows into hyperextension to escape the hardest part of the range, instead of controlling through it.",
+   "Doing partial reps that skip the stretched bottom position because it's the hardest point, training only the easier top half.",
+   "Letting the shoulders rise off the pad and round forward on the concentric to recruit the front delts and momentum.",
+   "Using a grip so wide or narrow that one forearm (brachioradialis) takes over unevenly, or the wrists cock back under load.",
+   "Loading a weight too heavy to control on the way down, turning the eccentric into a free-fall that stresses the distal biceps tendon."
+  ],
+  "commonMistakesPt": [
+   "Saltar do fundo do alongamento jogando o cotovelo pra hiperextensão pra escapar do ponto mais difícil, em vez de controlar a descida até lá.",
+   "Fazer repetição parcial pulando o fundo alongado (que é o ponto mais difícil) e treinar só a metade de cima, que é mais fácil.",
+   "Deixar o ombro subir do encosto e arredondar pra frente na subida, puxando com deltoide anterior e embalo.",
+   "Usar uma pegada muito aberta ou muito fechada, fazendo o antebraço (braquiorradial) compensar de forma desigual, ou deixar o punho quebrar pra trás sob carga.",
+   "Carregar peso que você não controla na descida, transformando a fase excêntrica numa queda livre que sobrecarrega o tendão distal do bíceps."
+  ],
+  "rangeOfMotionEn": "Full range on the preacher curl means starting with the elbow just short of a locked, hyperextended position — forearm hanging vertical, biceps fully stretched — and finishing with the forearm curled up until tension noticeably drops near the top. Because the pad fixes the upper arm in front of the torso, resistance torque is highest in that bottom, lengthened portion and falls off as the forearm approaches vertical near the top — which is roughly the range some regional-hypertrophy work on preacher vs. incline curls has been built around (Zabaleta-Korta 2023; Kassiano 2025), though those trials are small and run in recreationally trained women, so treat them as directional, not definitive. Elbow-angle-specific training data (Sato 2021) also suggests adaptations track fairly closely to the joint angles you actually train through, which is the practical case for not habitually cutting the bottom stretch short. If you have a history of distal biceps tendon irritation or elbows that hyperextend easily, stop a few degrees before full lockout at the bottom rather than chasing the last bit of stretch — general resistance-training ROM evidence (Pallarés 2021) favors training through a full, controlled range on the whole, but a full range that aggravates a joint isn't the range worth chasing that day.",
+  "rangeOfMotionPt": "Amplitude completa na rosca Scott significa começar com o cotovelo perto da extensão total (mas sem travar com força ou hiperestender), antebraço praticamente na vertical e bíceps bem alongado, e terminar com o antebraço subindo até o ponto em que a tensão cai visivelmente perto do topo. Como o encosto fixa o braço à frente do tronco, o torque de resistência é maior justamente nessa parte de baixo, alongada, e diminui conforme o antebraço se aproxima da vertical no topo — é mais ou menos essa faixa que parte da literatura sobre hipertrofia regional em rosca Scott vs. rosca inclinada explora (Zabaleta-Korta 2023; Kassiano 2025), embora sejam estudos pequenos, feitos com mulheres recreacionalmente treinadas, então vale tratar como indicativo, não definitivo. Dados sobre treino em ângulos específicos de cotovelo (Sato 2021) também sugerem que a adaptação acompanha de perto o ângulo que você realmente treina, o que reforça não cortar o alongamento do fundo por hábito. Se você tem histórico de irritação no tendão distal do bíceps ou cotovelo que hiperestende fácil, pare alguns graus antes da extensão total no fundo em vez de correr atrás dos últimos graus de alongamento — a evidência geral sobre amplitude de movimento em treino de força (Pallarés 2021) favorece treinar em amplitude completa e controlada como regra, mas amplitude completa que agride a articulação não é a amplitude que vale buscar naquele dia.",
+  "whyThisExerciseExistsEn": "The preacher bench fixes the upper arm against a pad in front of the torso, which removes the shoulder flexion and body swing that let lifters cheat a standing curl once it gets heavy — so tension stays on the elbow flexors (biceps brachii and brachialis) more consistently across the set. That fixed position also shifts more of the resistance toward the bottom, lengthened part of the curl rather than the mid-range, which is the rationale some coaches use for pairing it with a curl that biases the short muscle length instead (like a concentration curl) later in a session — an idea partly informed by comparative work on preacher vs. incline curls (Zabaleta-Korta 2023; Kassiano 2025), though that evidence is early and shouldn't be read as the preacher curl being uniquely superior to other curl variations for growth.",
+  "whyThisExerciseExistsPt": "O banco Scott trava o braço contra um encosto à frente do tronco, o que tira a flexão de ombro e o embalo do corpo que deixam o praticante \"roubar\" na rosca direta em pé quando a carga fica pesada — então a tensão fica mais consistente nos flexores de cotovelo (bíceps braquial e braquial) durante a série inteira. Essa posição fixa também desloca boa parte da resistência pra parte de baixo, alongada, da rosca, em vez do meio do movimento, o que é a lógica que alguns treinadores usam pra combinar com uma rosca que privilegia o comprimento curto do músculo (tipo a rosca concentrada) depois na sessão — uma ideia parcialmente baseada em estudos comparando rosca Scott e rosca inclinada (Zabaleta-Korta 2023; Kassiano 2025), embora essa evidência ainda seja inicial e não deva ser lida como a rosca Scott sendo comprovadamente superior às outras variações de rosca para hipertrofia.",
+  "regressionHints": [
+   "dumbbell preacher curl (one arm at a time)",
+   "cable preacher curl"
+  ],
+  "progressionHints": [
+   "spider curl",
+   "single-arm preacher curl with a heavier dumbbell"
+  ],
+  "alternativeHints": [
+   "incline dumbbell curl",
+   "concentration curl"
+  ],
+  "evidenceKeys": [
+   "zabaleta-korta-2023-preacher-vs-incline-curl-regional-hypertrophy",
+   "kassiano-2025-preacher-vs-incline-curl-adaptations",
+   "sato-2021-elbow-joint-angle-training",
+   "pallares-2021-rom-meta-analysis"
+  ],
+  "evidenceNotesPt": {
+   "zabaleta-korta-2023-preacher-vs-incline-curl-regional-hypertrophy": "Compara rosca Scott e rosca inclinada (comprimentos musculares diferentes) em hipertrofia regional do bíceps, base pra ideia de que a rosca Scott enfatiza mais a porção alongada do movimento.",
+   "kassiano-2025-preacher-vs-incline-curl-adaptations": "Estudo mais recente comparando rosca Scott e rosca inclinada, mostrando adaptações distintas de força e hipertrofia entre as duas — sustenta tratar a rosca Scott como variação com ênfase própria, não intercambiável 1:1 com outras roscas.",
+   "sato-2021-elbow-joint-angle-training": "Mostra que treinar em ângulos específicos de cotovelo gera adaptação mais específica àquele ângulo, o que embasa não cortar a amplitude no fundo alongado da rosca Scott.",
+   "pallares-2021-rom-meta-analysis": "Meta-análise geral mostrando que treinar em amplitude completa tende a igualar ou superar amplitude parcial pra força/hipertrofia — usada aqui como base geral pra recomendação de ROM, com a ressalva sobre dor articular."
+  }
+ },
+ {
+  "slug": "triceps-pushdown-rope-attachment",
+  "setupEn": "Clip a rope handle onto a high pulley and set the pulley so the cable runs straight down, roughly level with your upper chest. Take a neutral grip near the ends of each rope tail, stand with feet shoulder-width apart and a slight forward hip lean, and pin your upper arms against your ribs — that contact point has to hold for the whole set. Brace your core lightly before the first rep so the torso doesn't rock as the weight comes on.",
+  "setupPt": "Prenda a corda na polia alta e ajuste a roldana pra que o cabo desça em linha reta, mais ou menos na altura do peito. Pegue a corda com pegada neutra, perto das pontas, fique em pé com os pés na largura dos ombros e um leve incline de quadril pra frente, e cole os cotovelos nas costelas — esse ponto de apoio precisa se manter fixo durante toda a série. Ative levemente o core antes da primeira repetição pra o tronco não balançar quando a carga entrar.",
+  "breathingEn": "Exhale through the push as the rope travels down and the elbows lock out, then inhale on the controlled return. This is a light-to-moderate isolation lift, so you don't need a maximal Valsalva brace — just enough intra-abdominal tension to keep the torso from swaying with the cable.",
+  "breathingPt": "Expire durante o empurrão, enquanto a corda desce e o cotovelo estende, e inspire na volta controlada. É um exercício de isolamento leve a moderado, então não precisa de uma prensa abdominal máxima — só tensão suficiente pra o tronco não balançar junto com o cabo.",
+  "coachingCuesEn": [
+   "Elbows glued to your ribs the whole set",
+   "Push down and let the rope tails separate at the bottom",
+   "Only the forearms move — upper arm stays vertical and still",
+   "Resist the stack on the way back up, don't let it snap you forward",
+   "Full lockout, brief squeeze, then reset"
+  ],
+  "coachingCuesPt": [
+   "Cotovelo colado na costela do início ao fim",
+   "Empurra pra baixo e deixa as pontas da corda se abrirem lá embaixo",
+   "Só o antebraço se mexe — o braço fica parado e na vertical",
+   "Segura o peso na volta, não deixa a pilha te puxar pra frente",
+   "Estende tudo, segura um instante a contração e reinicia"
+  ],
+  "commonMistakesEn": [
+   "Elbows drifting forward away from the torso as the weight gets heavier, turning it into a shoulder-driven push instead of isolated elbow extension",
+   "Leaning the whole trunk down or using a body-weight heave to help drive the rope, instead of letting the triceps do the work",
+   "Stopping short of full lockout because the load is too heavy to control through the last few degrees, cutting off the peak contraction",
+   "Letting the cable stack yank the hands back up fast on the way up instead of resisting the return",
+   "Pushing straight down without letting the rope tails separate and rotate outward, which gives up the extra range the rope offers over a fixed bar"
+  ],
+  "commonMistakesPt": [
+   "Deixar o cotovelo avançar pra frente do corpo conforme a carga aumenta, virando um movimento de ombro em vez de extensão isolada de cotovelo",
+   "Inclinar o tronco inteiro pra baixo ou usar embalo do corpo pra ajudar a empurrar a corda, tirando o trabalho do tríceps",
+   "Parar antes da extensão completa porque a carga está pesada demais pra controlar nos últimos graus, perdendo a contração no ponto de pico",
+   "Deixar a pilha de peso puxar as mãos de volta rápido demais, sem resistir na subida",
+   "Empurrar só reto pra baixo sem deixar as pontas da corda se abrirem e girarem, desperdiçando a vantagem que a corda tem sobre a barra reta"
+  ],
+  "rangeOfMotionEn": "Start with the elbow flexed at roughly 90 degrees, forearms pointing up toward the pulley with the upper arm vertical, and finish at full elbow extension, arms straight down by the thighs. The rope's real advantage over a fixed bar is that it lets the hands separate and the wrists rotate slightly outward at the bottom, so the triceps can reach a more complete contracted position instead of being blocked by a rigid bar. There's no meaningful lengthened-position component here since the upper arm stays pinned to the torso throughout — this variation trains the triceps mainly through its shortened-to-mid range, so it's a complement to, not a replacement for, overhead extension work where the long head is placed under more stretch.",
+  "rangeOfMotionPt": "Começa com o cotovelo flexionado por volta de 90 graus, antebraço apontando pra cima em direção à polia e braço na vertical, e termina com extensão completa, braços retos ao lado das coxas. A vantagem real da corda sobre a barra reta é deixar as mãos se afastarem e o punho girar um pouco pra fora no final, permitindo uma contração mais completa do tríceps em vez de travar contra uma barra rígida. Não existe um componente relevante de posição alongada aqui, já que o braço fica preso junto ao tronco o tempo todo — essa variação trabalha o tríceps principalmente na amplitude encurtada/média, então complementa (não substitui) exercícios de extensão overhead, onde a cabeça longa fica mais alongada.",
+  "whyThisExerciseExistsEn": "The triceps already get substantial indirect work from horizontal and vertical pressing, but a dedicated elbow-extension isolation movement lets you add direct volume and push the muscle closer to a full contraction without the shoulder joint becoming the limiting factor. The rope attachment sits alongside the straight-bar pushdown specifically because the free-moving handles let the wrists rotate and the hands separate near lockout, changing the hand path versus a fixed bar — a genuine but modest technical variation, not a claim that it's the superior option. Isolation work like this is one practical way to accumulate weekly direct triceps volume, and the broader resistance-training literature associates weekly volume with hypertrophy in a dose-dependent way.",
+  "whyThisExerciseExistsPt": "O tríceps já recebe bastante trabalho indireto nos exercícios de empurrar horizontais e verticais, mas um movimento de isolamento dedicado à extensão de cotovelo permite somar volume direto e levar o músculo mais perto de uma contração completa, sem o ombro virar o fator limitante. A versão com corda entra ao lado da versão com barra reta justamente porque as alças soltas deixam o punho girar e as mãos se afastarem perto do travamento, mudando o trajeto em relação a uma barra fixa — uma variação técnica real, porém modesta, não uma alegação de que ela é superior. Isolamento assim é uma forma prática de acumular volume semanal direto pro tríceps, e a literatura de treinamento resistido associa volume semanal com hipertrofia de forma dose-dependente.",
+  "regressionHints": [
+   "Seated machine triceps extension",
+   "Straight-bar triceps pushdown"
+  ],
+  "progressionHints": [
+   "Overhead rope triceps extension",
+   "Single-arm cable triceps pushdown"
+  ],
+  "alternativeHints": [
+   "Close-grip bench press",
+   "Skull crusher (lying triceps extension)"
+  ],
+  "evidenceKeys": [
+   "maeo-2023-triceps-overhead-vs-neutral-extension",
+   "pallares-2021-rom-meta-analysis",
+   "korakakis-2023-technique-hypertrophy-review",
+   "schoenfeld-2017-volume-dose-response"
+  ],
+  "evidenceNotesPt": {
+   "maeo-2023-triceps-overhead-vs-neutral-extension": "Mostra que a extensão de cotovelo em posição overhead gera mais hipertrofia da cabeça longa do que em posição neutra ao lado do corpo — por isso a puxada com corda (posição neutra) é tratada aqui como um exercício de amplitude encurtada/média, que se complementa bem com uma variante overhead.",
+   "pallares-2021-rom-meta-analysis": "Dá base pra recomendação geral de buscar amplitude de movimento completa (extensão total do cotovelo no final da repetição), já que treinar com ROM maior tende a favorecer ganhos de força e hipertrofia.",
+   "korakakis-2023-technique-hypertrophy-review": "Revisão narrativa sobre técnica (tempo, amplitude, ênfase na fase alongada) que embasa as pistas de execução sobre controlar a volta e buscar a contração completa no travamento.",
+   "schoenfeld-2017-volume-dose-response": "Sustenta a lógica de usar um exercício de isolamento pra somar volume semanal direto ao tríceps, já que a relação dose-resposta entre volume e hipertrofia é um dos pilares do racional apresentado."
+  }
+ },
+ {
+  "slug": "leverage-chest-press",
+  "setupEn": "Adjust the seat until the handles sit level with your mid-chest at the bottom of the stroke, feet flat on the floor or footrest. Retract your shoulder blades and pin them against the back pad, keeping your head and upper back in contact with the pad through the whole set. Grip the handles with your wrists stacked over your forearms, take a breath, and brace lightly before releasing the weight off the stops.",
+  "setupPt": "Ajuste o banco até os pegadores ficarem na altura do meio do peito no ponto mais baixo do movimento, com os pés firmes no chão ou no apoio. Retraia as escápulas contra o encosto e mantenha a cabeça e a parte superior das costas coladas no apoio durante toda a série. Segure os pegadores com os punhos alinhados aos antebraços, respire e trave levemente o abdômen antes de tirar o peso dos batentes.",
+  "breathingEn": "Exhale as you press the handles forward through the hardest part of the range, inhale during the controlled return. Keep a light brace throughout each rep — the fixed path of the machine already removes most of the trunk-stability demand, so there's no need for a maximal Valsalva.",
+  "breathingPt": "Expire enquanto empurra os pegadores para frente, principalmente na parte mais difícil do movimento, e inspire na volta controlada. Mantenha uma leve contração abdominal em cada repetição — o trajeto guiado da máquina já reduz bastante a exigência de estabilização do tronco, então não é preciso um Valsalva máximo.",
+  "coachingCuesEn": [
+   "Pin your shoulder blades to the pad before every rep — don't let them round forward as you press.",
+   "Drive the handles out through the middle of your chest, not up toward your ears.",
+   "Squeeze for a beat at full extension without banging your elbows straight against the stops.",
+   "Control the eccentric — don't let the stack clank between reps.",
+   "Keep your feet planted and hips on the seat; no leg drive or torso lean to move the weight."
+  ],
+  "coachingCuesPt": [
+   "Trave as escápulas no encosto antes de cada repetição — não deixe os ombros arredondarem pra frente durante o empurrão.",
+   "Empurre os pegadores pelo meio do peito, não em direção às orelhas.",
+   "Segure um instante na extensão completa sem travar os cotovelos com força contra os batentes.",
+   "Controle a fase excêntrica — não deixe o peso bater na pilha entre as repetições.",
+   "Mantenha os pés firmes e o quadril no banco; nada de empurrar com a perna ou inclinar o tronco pra ajudar."
+  ],
+  "commonMistakesEn": [
+   "Bouncing the weight off the stack's stops at the bottom of each rep instead of keeping continuous tension on the pecs.",
+   "Letting the shoulders elevate and roll forward mid-press, turning the movement into front-delt work instead of chest work.",
+   "Seat set too high or too low so the handles line up with the collarbone or lower ribs instead of mid-chest, shifting load to the shoulders or straining the wrists.",
+   "Arching off the back pad or shrugging up to grind out a last rep instead of just ending the set.",
+   "Flaring the elbows out wide and letting them travel behind the torso line, loading the front of the shoulder more than the pecs."
+  ],
+  "commonMistakesPt": [
+   "Bater o peso nos batentes no final de cada repetição em vez de manter tensão contínua no peitoral.",
+   "Deixar os ombros subirem e girarem pra frente durante o empurrão, transformando o exercício em trabalho de deltoide anterior em vez de peito.",
+   "Banco ajustado alto ou baixo demais, deixando os pegadores na altura da clavícula ou das costelas inferiores em vez do meio do peito — isso joga carga pro ombro ou força o punho numa posição ruim.",
+   "Arquear as costas pra fora do apoio ou dar um 'shrug' pra forçar a última repetição em vez de simplesmente encerrar a série.",
+   "Abrir demais os cotovelos e deixá-los passar da linha do tronco, sobrecarregando a parte da frente do ombro em vez do peitoral."
+  ],
+  "rangeOfMotionEn": "Full range here means starting with the handles at mid-chest — elbows bent enough to feel a real stretch across the pecs, without shoulder pain — and pressing to near-full elbow extension, stopping just short of a hard lockout against the machine's stops. Because a leverage machine follows a fixed arc, how deep you can go at the bottom is set by the seat and handle geometry, not by you alone. ROM research generally favors training through a fuller stretch position for hypertrophy, but if you have a history of shoulder impingement or anterior instability, it's reasonable to stop the bottom position a few centimeters short of the machine's full travel rather than chase maximum depth.",
+  "rangeOfMotionPt": "Amplitude completa aqui é começar com os pegadores na altura do meio do peito — cotovelo flexionado o suficiente pra sentir um alongamento real no peitoral, sem dor no ombro — e empurrar até quase a extensão total do cotovelo, parando um pouco antes de travar com força contra os batentes. Como a máquina articulada segue um arco fixo, a profundidade que você consegue atingir na parte de baixo depende da geometria do banco e dos pegadores, não só de você. A literatura sobre amplitude de movimento geralmente favorece treinar numa posição de alongamento mais completo pra hipertrofia, mas quem tem histórico de impacto no ombro ou instabilidade anterior pode, com razão, parar a posição inicial alguns centímetros antes do curso máximo da máquina, em vez de buscar a profundidade total.",
+  "whyThisExerciseExistsEn": "The leverage chest press trains the same horizontal-push pattern as a barbell or dumbbell bench press but along a fixed, guided path, which removes most of the balancing and stabilizing demand. That makes it a practical way to push a set closer to failure without a spotter, or to keep loading the chest when fatigue from free-weight pressing has started limiting you through stabilization rather than through the pecs themselves. Evidence comparing machine-based and free-weight training generally finds comparable strength and hypertrophy outcomes when volume and effort are matched, so this isn't a lesser substitute for the bench press — it's a different tool with a different force curve, since the fixed arc changes where in the range the exercise feels hardest.",
+  "whyThisExerciseExistsPt": "O supino na máquina articulada treina o mesmo padrão de empurrão horizontal do supino com barra ou halteres, mas num trajeto guiado e fixo, o que tira boa parte da demanda de equilíbrio e estabilização. Isso torna o exercício uma ferramenta prática pra levar a série mais perto da falha sem precisar de apoio (spotter), ou pra manter o estímulo no peito quando o cansaço do supino livre já passa a limitar mais pela estabilização do que pelo próprio peitoral. As comparações entre treino em máquina e peso livre, de forma geral, encontram resultados parecidos de força e hipertrofia quando volume e esforço são equivalentes — então isso não é um substituto \"inferior\" do supino, é uma ferramenta diferente, com uma curva de força diferente, já que o arco fixo muda em que ponto da amplitude o exercício fica mais difícil.",
+  "regressionHints": [
+   "push-up",
+   "cable chest press with a lighter load"
+  ],
+  "progressionHints": [
+   "barbell bench press",
+   "incline dumbbell press"
+  ],
+  "alternativeHints": [
+   "dumbbell bench press",
+   "cable crossover press"
+  ],
+  "evidenceKeys": [
+   "heidel-2022-machines-vs-free-weights-meta-analysis",
+   "schwanbeck-2020-free-weights-vs-machines",
+   "van-den-tillaar-2012-sticking-region-chest-press",
+   "pallares-2021-rom-meta-analysis"
+  ],
+  "evidenceNotesPt": {
+   "heidel-2022-machines-vs-free-weights-meta-analysis": "Essa metanálise mostra que treinar em máquina, como o supino articulado, produz ganhos de força e hipertrofia comparáveis aos do peso livre quando volume e esforço são equivalentes.",
+   "schwanbeck-2020-free-weights-vs-machines": "Esse estudo compara diretamente peso livre e máquina e reforça que a menor demanda de estabilização da máquina não compromete o ganho de massa muscular no peito.",
+   "van-den-tillaar-2012-sticking-region-chest-press": "Essa análise da região de maior dificuldade (sticking point) em exercícios de supino com diferentes graus de liberdade explica por que a curva de força do supino na máquina articulada é diferente da do supino livre.",
+   "pallares-2021-rom-meta-analysis": "Essa metanálise sobre amplitude de movimento sustenta a orientação de buscar um alongamento mais completo do peitoral na posição inicial sempre que a mobilidade do ombro permitir."
+  }
+ },
+ {
+  "slug": "close-grip-front-lat-pulldown",
+  "setupEn": "Sit in the pulldown machine and lock your thighs firmly under the thigh pad — there should be almost no gap, so your body weight anchors you instead of lifting off the seat on heavier sets. Take a grip inside shoulder width, narrow enough that your elbows can track close to your torso rather than flaring out. Extend your arms fully, then set your torso lean of roughly 20-30° from vertical before the first rep, chest up and shoulder blades set down and back. Keep a light brace through your core for the whole set so that fixed lean doesn't creep into a bigger rocking motion.",
+  "setupPt": "Sente na máquina e trave bem as coxas sob o apoio — praticamente sem folga, pra você ficar ancorado no banco em vez de ser levantado dele nas séries mais pesadas. Feche a pegada um pouco mais estreita que a largura dos ombros, o suficiente pra deixar o cotovelo correr perto do tronco em vez de abrir pros lados. Estenda os braços por completo e já ajuste a inclinação do tronco em uns 20-30° pra trás antes da primeira repetição, com o peito projetado e a escápula levemente deprimida. Mantenha uma leve contração no abdômen a série toda pra essa inclinação não crescer virando um balanço maior.",
+  "breathingEn": "Inhale as the bar rises and your lats stretch overhead, then exhale as you drive the elbows down into the pull. Keep a light trunk brace throughout — just enough to hold that fixed lean in place, not a maximal Valsalva hold like on a heavy squat.",
+  "breathingPt": "Inspire enquanto a barra sobe e o latíssimo alonga lá em cima, e expire ao puxar os cotovelos pra baixo. Mantenha uma leve contração de tronco durante o movimento — só o suficiente pra travar aquela inclinação fixa, não uma apneia máxima como num agachamento pesado.",
+  "coachingCuesEn": [
+   "Elbows down and back, not hands down.",
+   "Lead the pull with your elbows toward your back pockets.",
+   "Chest up to meet the bar, not chin down chasing it.",
+   "Pause and squeeze the shoulder blades together at the bottom.",
+   "Let the bar rise slow and controlled — don't let the stack yank you back."
+  ],
+  "coachingCuesPt": [
+   "Puxa com o cotovelo, não com a mão.",
+   "Cotovelo em direção ao bolso de trás, é ele quem lidera.",
+   "Peito sobe pra encontrar a barra, o queixo não desce atrás dela.",
+   "Pausa e aperta a escápula no fim da puxada.",
+   "Solta devagar — não deixa a pilha de peso te puxar de volta."
+  ],
+  "commonMistakesEn": [
+   "Increasing the torso lean rep to rep until it turns into a standing row with momentum instead of a controlled vertical pull.",
+   "Initiating the pull by flexing the elbow first, which shifts the load onto the biceps before the lats have a chance to engage.",
+   "Shrugging the shoulders up toward the ears when closing the grip, which elevates the scapula and blunts lat recruitment.",
+   "Stopping the descent a few centimeters short of the chest and calling the rep done, or craning the neck forward to force contact with the sternum.",
+   "Letting the weight stack snap the arms back to full extension instead of controlling the eccentric, cutting time under tension at the lengthened position."
+  ],
+  "commonMistakesPt": [
+   "Aumentar a inclinação do tronco a cada repetição até virar uma remada em pé com embalo, em vez de um puxão vertical controlado.",
+   "Iniciar o movimento flexionando o cotovelo primeiro, como numa rosca, jogando a carga pro bíceps antes do latíssimo entrar.",
+   "Subir o ombro em direção à orelha ao fechar a pegada, elevando a escápula e reduzindo o recrutamento do latíssimo.",
+   "Parar a descida alguns centímetros antes do peito e considerar a repetição completa, ou esticar o pescoço pra frente só pra encostar a barra no esterno.",
+   "Deixar o peso da pilha jogar o braço de volta pra extensão total sem controle, encurtando o tempo sob tensão na posição alongada."
+  ],
+  "rangeOfMotionEn": "Full range here starts from a dead hang at the top — arms fully extended, lats stretched, without letting the shoulders creep up toward the ears — and finishes with the bar at the upper chest, elbows driven down and back and the scapulae retracted and depressed. Trimming the last few centimeters off the top of the ascent (stopping short of full extension) is the most common way lifters shrink this exercise's range without noticing. If you have a history of shoulder impingement, it's reasonable to stop slightly short of the deepest overhead stretch rather than chasing a couple extra centimeters of range.",
+  "rangeOfMotionPt": "Amplitude completa aqui começa na posição de braço totalmente estendido lá em cima, com o latíssimo alongado, sem deixar o ombro subir em direção à orelha, e termina com a barra na altura do peito, cotovelo puxado pra baixo e pra trás e a escápula retraída e deprimida. Cortar os últimos centímetros da subida (parando antes da extensão total) é a forma mais comum de reduzir sem perceber a amplitude desse exercício. Se você tem histórico de impacto no ombro, é razoável parar um pouco antes do alongamento máximo lá em cima em vez de forçar aqueles centímetros extras de amplitude.",
+  "whyThisExerciseExistsEn": "The close-grip front lat pulldown gives you a cable-based version of the vertical-pull pattern that you can load and regress in small increments, which makes it a practical way to accumulate vertical-pulling volume when bodyweight chin-ups or pull-ups aren't yet manageable for full sets. EMG work comparing pulldown grip widths shows that narrowing the grip changes forearm and biceps involvement more than it changes overall lat activation (andersen-2014-lat-pulldown-grip-width, lusk-2010-pulldown-grip-forearm-orientation), and comparisons across pulldown variants find that grip and bar choice shift emphasis without one version clearly dominating the others (sperandei-2009-pulldown-variations). So it's fair to treat close-grip as a legitimate way to vary the vertical-pull pattern and match grip preference or elbow comfort — not as a categorically superior lat builder over a wider grip.",
+  "whyThisExerciseExistsPt": "A puxada frontal com pegada fechada entrega uma versão na polia do padrão de puxada vertical, com carga ajustável em incrementos pequenos — o que a torna uma forma prática de acumular volume de puxada vertical enquanto a barra fixa (pull-up/chin-up) ainda não é viável em séries completas. Estudos de EMG comparando larguras de pegada na puxada mostram que fechar a pegada muda mais o envolvimento do antebraço e do bíceps do que a ativação geral do latíssimo (andersen-2014-lat-pulldown-grip-width, lusk-2010-pulldown-grip-forearm-orientation), e comparações entre variações de puxada mostram que pegada e tipo de barra deslocam a ênfase sem que uma versão domine claramente as outras (sperandei-2009-pulldown-variations). Então faz sentido tratar a pegada fechada como uma variação legítima do padrão de puxada vertical, útil pra preferência de pegada ou conforto no cotovelo/ombro — e não como uma versão categoricamente superior à pegada aberta pra construir as costas.",
+  "regressionHints": [
+   "Assisted pull-up machine",
+   "Kneeling single-arm cable pulldown"
+  ],
+  "progressionHints": [
+   "Weighted chin-up",
+   "Neutral-grip pull-up"
+  ],
+  "alternativeHints": [
+   "Wide-grip lat pulldown",
+   "Underhand (chin-up grip) pulldown"
+  ],
+  "evidenceKeys": [
+   "andersen-2014-lat-pulldown-grip-width",
+   "lusk-2010-pulldown-grip-forearm-orientation",
+   "sperandei-2009-pulldown-variations",
+   "doma-2013-chinup-vs-pulldown"
+  ],
+  "evidenceNotesPt": {
+   "andersen-2014-lat-pulldown-grip-width": "EMG comparando larguras de pegada na puxada mostra que fechar a pegada altera principalmente a ativação de antebraço/bíceps, embasando a ideia de que a pegada fechada é uma variação de ênfase, não uma versão 'melhor' pro latíssimo.",
+   "lusk-2010-pulldown-grip-forearm-orientation": "Reforça que largura da pegada e orientação do antebraço (pronada/supinada) mudam o padrão de ativação muscular na puxada, sustentando a orientação de cotovelo e pegada dada nas dicas de execução.",
+   "sperandei-2009-pulldown-variations": "Compara diferentes tipos de puxada (pegada aberta, fechada, por trás) via EMG e mostra que nenhuma variação domina claramente as outras, usado aqui pra justificar por que a pegada fechada é apresentada como opção válida e não superior.",
+   "doma-2013-chinup-vs-pulldown": "Compara cinemática e EMG entre a barra fixa (chin-up) e a puxada na polia, dando base pra apresentar a puxada como alternativa/preparação com carga ajustável ao chin-up, usado no racional de por que esse exercício existe e nas sugestões de progressão."
+  }
+ },
+ {
+  "slug": "cable-crossover",
+  "setupEn": "Set both pulleys to the high position and load matched, symmetrical weight on each stack. Grab a handle in each hand, step forward until you're roughly centered between the two towers with a slight staggered stance, and let the cables pull your arms out to the sides at shoulder height. Lock in a small, fixed bend at the elbows, brace your core, and hinge the torso forward a few degrees from the hips so the resistance loads the chest rather than the low back.",
+  "setupPt": "Ajuste as duas polias na posição alta e coloque uma carga igual nos dois lados. Segure uma alça em cada mão, dê um passo à frente até ficar mais ou menos no meio das duas torres, com um pé levemente à frente, e deixe os cabos puxarem os braços para os lados na altura dos ombros. Trave uma flexão leve e fixa no cotovelo, ative o core e incline o tronco alguns graus à frente a partir do quadril, para a carga ficar no peitoral e não na lombar.",
+  "breathingEn": "Inhale as the cables pull your arms open into the stretch, and exhale as you drive the handles down and together in front of the chest. Keep a light abdominal brace through the whole set — the load here isn't heavy, but a stable trunk keeps the movement isolated at the shoulder instead of leaking into the spine.",
+  "breathingPt": "Inspire enquanto os cabos puxam os braços para abrir no alongamento, e expire enquanto você traz as alças para baixo e para o centro, na frente do peito. Mantenha uma leve pressão abdominal (IAP) durante toda a série — a carga geralmente não é pesada, mas um tronco estável evita que o movimento vaze para a coluna em vez de ficar isolado no ombro.",
+  "coachingCuesEn": [
+   "Soften the elbows and lock that bend in for the whole set",
+   "Hug a barrel — sweep the hands down and in, not straight forward",
+   "Chest leads the movement, hands finish low and lightly crossed",
+   "Keep the shoulder blades set — don't let the stretch pull them forward",
+   "Hold a one-count squeeze at the bottom before letting the cables pull you back open"
+  ],
+  "coachingCuesPt": [
+   "Trava a flexão do cotovelo e mantém ela igual do início ao fim da série",
+   "Abraça um barril — desce as mãos em arco, não empurra reto para frente",
+   "O peitoral puxa, as mãos terminam embaixo e levemente cruzadas",
+   "Escápula fica no lugar — não deixa o alongamento puxar o ombro pra frente",
+   "Segura um segundo contraído embaixo antes de soltar de volta pro alongamento"
+  ],
+  "commonMistakesEn": [
+   "Letting the elbows bend and straighten through the rep, turning the fly into a disguised press",
+   "Loading too much weight, which lets the shoulders round forward and internally rotate at the bottom of the stretch",
+   "Pressing the hands straight forward instead of arcing them down and across the body, which shifts work onto the front delts",
+   "Standing too far in front of or behind the cable line, so tension drops off at the top or bottom of the range",
+   "Rushing the eccentric and letting the stack yank the arms back into the stretch instead of controlling it"
+  ],
+  "commonMistakesPt": [
+   "Deixar o cotovelo dobrar e esticar durante a repetição, transformando o crucifixo em um supino disfarçado",
+   "Usar carga demais e deixar o ombro rodar para dentro e cair para frente no fundo do alongamento",
+   "Empurrar as mãos reto para frente em vez de fazer o arco para baixo e para o centro, o que tira carga do peitoral e joga para o deltoide anterior",
+   "Ficar longe demais ou perto demais da linha dos cabos, perdendo tensão no topo ou no fundo do movimento",
+   "Fazer a fase excêntrica rápido demais e deixar o peso puxar o braço de volta para o alongamento sem controle"
+  ],
+  "rangeOfMotionEn": "Full range here means opening the arms wide enough to feel a genuine stretch across the chest — without letting the shoulders roll forward into internal rotation — and finishing with the hands meeting, or lightly crossing, in front of the sternum. Training through this longer, stretched bottom position is where fly-pattern chest work tends to be most productive, but how far back you can safely go is individual: shoulder mobility, prior shoulder injury, and how high the pulleys are set will all change the usable range, so the stretch should feel like tension, not a pinch or a loss of control.",
+  "rangeOfMotionPt": "Amplitude completa aqui é abrir os braços o suficiente para sentir um alongamento real no peitoral — sem deixar o ombro rodar para dentro e cair para frente — e fechar até as mãos se encontrarem, ou cruzarem levemente, na frente do esterno. Treinar nessa posição mais alongada do fundo costuma ser onde o padrão de crucifixo rende mais para o peitoral, mas até onde dá para ir com segurança é individual: mobilidade de ombro, histórico de lesão no ombro e a altura das polias mudam a amplitude utilizável — o alongamento deve parecer tensão, nunca beliscão ou perda de controle.",
+  "whyThisExerciseExistsEn": "Cable crossover isolates the pectoralis major through horizontal adduction with roughly constant cable tension across the whole arc, including the lengthened bottom position — a loading pattern that's harder to get from a barbell press, where resistance tends to drop off near the chest. It's typically used to complement pressing work rather than replace it: EMG comparisons across pectoral exercise variants show fly-pattern and press-pattern movements both drive meaningful chest activation, without either one being consistently superior. The dual-pulley setup also lets you keep tension through a longer stretched range than most fixed-plane fly machines allow, which fits current thinking on training a muscle at longer lengths as part of a hypertrophy program.",
+  "whyThisExerciseExistsPt": "O crucifixo no cross over isola o peitoral maior num movimento de adução horizontal com tensão praticamente constante ao longo de todo o arco, inclusive na posição alongada do fundo — um tipo de carga difícil de reproduzir num supino com barra, onde a resistência cai justamente perto do peito. Ele costuma ser usado para complementar o trabalho de press, não para substituí-lo: comparações de EMG entre variações de exercício para peitoral mostram que tanto o padrão de crucifixo quanto o de press ativam bem o peitoral, sem um se mostrar consistentemente superior ao outro. O sistema de duas polias também permite manter tensão numa amplitude mais alongada do que a maioria das máquinas de crucifixo de plano fixo oferece, o que conversa com o que a literatura atual sugere sobre incluir trabalho em comprimentos musculares mais longos num programa de hipertrofia.",
+  "regressionHints": [
+   "pec deck fly",
+   "single-arm cable fly"
+  ],
+  "progressionHints": [
+   "low-to-high cable fly",
+   "weighted dip"
+  ],
+  "alternativeHints": [
+   "dumbbell fly",
+   "pec deck machine"
+  ],
+  "evidenceKeys": [
+   "lopez-vivancos-2023-pectoralis-emg-systematic-review",
+   "warneke-2023-stretch-mediated-hypertrophy",
+   "korakakis-2023-technique-hypertrophy-review",
+   "golshani-2018-upper-extremity-weightlifting-injuries"
+  ],
+  "evidenceNotesPt": {
+   "lopez-vivancos-2023-pectoralis-emg-systematic-review": "Essa revisão sistemática de EMG do peitoral comparando supino e outras variações de exercício, incluindo padrões de crucifixo/cross over, embasa a ideia de que a adução horizontal ativa bem o peitoral maior sem ser categoricamente superior ao press.",
+   "warneke-2023-stretch-mediated-hypertrophy": "Essa revisão sobre hipertrofia mediada por alongamento sustenta a lógica de valorizar a tensão na posição alongada do crucifixo, com os braços bem abertos, como parte do estímulo do exercício.",
+   "korakakis-2023-technique-hypertrophy-review": "Essa revisão de técnica de treino apoia a orientação de buscar amplitude completa e controlar a fase alongada/excêntrica do crucifixo para maximizar o estímulo de hipertrofia.",
+   "golshani-2018-upper-extremity-weightlifting-injuries": "Essa revisão sobre lesões de membro superior no treino de força embasa o alerta de não deixar o ombro rodar para dentro e cair demais no fundo do alongamento, ponto comum de sobrecarga na articulação do ombro nesse tipo de movimento."
+  }
+ },
+ {
+  "slug": "reverse-flyes",
+  "setupEn": "Set an incline bench to roughly 30-45° and lie face-down with your chest and abdomen pressed firmly into the pad, feet planted on the floor or bench rails for stability. Choose a pair of dumbbells you can control through the full horizontal-abduction arc without swinging — usually lighter than you'd guess. Grip the dumbbells with palms facing each other (neutral grip), let your arms hang straight down perpendicular to the bench, and fix a slight, constant bend in the elbows that you'll hold for the whole set.",
+  "setupPt": "Ajuste o banco inclinado em algo entre 30° e 45° e deite de bruços, com o peito e o abdômen bem apoiados no encosto, pés firmes no chão ou nos apoios do banco pra não escorregar. Escolha um par de halteres que você controle no arco completo de abdução horizontal sem embalar o corpo — normalmente mais leve do que você imagina. Pegada neutra, palmas uma de frente pra outra, braços soltos e perpendiculares ao banco, com um leve ângulo fixo no cotovelo que você mantém durante a série inteira.",
+  "breathingEn": "Exhale as you sweep the dumbbells out and up into the horizontal-abduction position, and inhale as you lower them back under control. Because the bench supports your torso, there's no heavy bracing demand like a standing hinge, but keep light abdominal tension against the pad so your ribcage doesn't flare and your lower back doesn't extend to help the movement.",
+  "breathingPt": "Expire enquanto os halteres sobem em arco na abdução horizontal, e inspire na descida controlada. Como o tronco fica apoiado no banco, não existe a mesma demanda de pressão intra-abdominal de um hip hinge em pé, mas mantenha uma leve tensão no abdômen contra o encosto pra não deixar as costelas abrirem nem a lombar entrar em extensão pra ajudar o movimento.",
+  "coachingCuesEn": [
+   "Lead with your elbows, not your hands.",
+   "Imagine squeezing an orange between your shoulder blades at the top.",
+   "Keep that same soft elbow bend the whole rep — don't let it turn into a row.",
+   "Chest stays glued to the pad; no pushing up off the bench.",
+   "Stop the dumbbells around shoulder height, arms roughly in line with your torso, not higher."
+  ],
+  "coachingCuesPt": [
+   "Puxa liderando com o cotovelo, não com a mão.",
+   "Imagina apertando uma laranja entre as escápulas lá em cima.",
+   "Mantém aquele mesmo ângulo leve no cotovelo a repetição inteira — não deixa virar remada.",
+   "Peito colado no banco o tempo todo, sem empurrar o corpo pra cima.",
+   "Para os halteres na altura do ombro, braço mais ou menos alinhado com o tronco, sem passar disso."
+  ],
+  "commonMistakesEn": [
+   "Bending the elbows more as the set gets hard and turning the fly into a bent-over row, shifting the work to the lats and biceps.",
+   "Lifting the chest off the pad and using trunk extension to help sling the weight up.",
+   "Shrugging the shoulders toward the ears at the top, letting the upper traps take over instead of the rear delts and rhomboids.",
+   "Loading too heavy and only completing the bottom third of the range near the torso, where the rear delts are least stretched.",
+   "Raising the dumbbells well above shoulder height, which turns the movement into shoulder extension instead of horizontal abduction."
+  ],
+  "commonMistakesPt": [
+   "Flexionar mais o cotovelo conforme a série fica difícil, transformando o crucifixo numa remada — aí quem trabalha é dorsal e bíceps, não o deltoide posterior.",
+   "Tirar o peito do banco e usar extensão de tronco pra ajudar a jogar o peso pra cima.",
+   "Encolher os ombros em direção à orelha no topo, deixando o trapézio superior assumir o movimento no lugar do deltoide posterior e romboides.",
+   "Carregar peso demais e só completar o terço inferior da amplitude, perto do tronco, onde o deltoide posterior está menos alongado.",
+   "Levantar os halteres bem acima da altura do ombro, o que transforma o movimento em extensão de ombro em vez de abdução horizontal."
+  ],
+  "rangeOfMotionEn": "Full range here means starting with the arms hanging straight down, perpendicular to the torso, feeling a light stretch across the back of the shoulder — not by rounding the upper back to fake extra length — and finishing with the arms raised to roughly torso height, elbows no higher than the shoulders. There isn't a dedicated partial-vs-full-ROM trial on the reverse fly specifically in the evidence base used here, so this guidance leans on the broader resistance-training ROM literature, which generally favors training through a fuller, controlled range over truncated partials. If you have a history of shoulder impingement or instability, it's reasonable to stop the top of the movement a touch short of full horizontal to keep the humerus from drifting into a provocative position.",
+  "rangeOfMotionPt": "Amplitude completa aqui é começar com os braços soltos, perpendiculares ao tronco, sentindo um leve alongamento na parte de trás do ombro — sem arredondar as costas pra fingir mais amplitude — e terminar com os braços na altura do tronco, cotovelo no máximo na altura do ombro. Não existe, na base de evidências usada aqui, um estudo específico comparando amplitude parcial versus completa só pro crucifixo inverso; a orientação se apoia na literatura mais geral de ROM em treino de força, que costuma favorecer amplitude completa e controlada em vez de parciais curtas. Se você tem histórico de impacto ou instabilidade no ombro, faz sentido parar um pouco antes da horizontal total no topo, evitando levar o úmero pra uma posição mais provocativa.",
+  "whyThisExerciseExistsEn": "Most pushing-dominant programs pile up far more horizontal-adduction volume (bench press, flyes, presses) than horizontal-abduction work for the posterior shoulder, and the rear delts and scapular retractors end up comparatively undertrained. The reverse fly isolates shoulder horizontal abduction directly, and EMG work on this exact movement shows that hand and forearm position shifts how much of the load lands on the posterior deltoid versus the rotator cuff, which is useful for dialing in technique. The chest-supported incline setup removes momentum and lumbar involvement, letting the posterior deltoid and mid-back do the work the exercise is meant to target — it's one reasonable tool for balancing shoulder programming, not a uniquely superior one.",
+  "whyThisExerciseExistsPt": "A maioria dos programas com foco em empurrar acumula muito mais volume de adução horizontal (supino, crucifixo, desenvolvimento) do que de abdução horizontal pro ombro posterior, e o deltoide posterior junto com os retratores de escápula acabam ficando relativamente pouco treinados. O crucifixo inverso isola diretamente a abdução horizontal de ombro, e o estudo de EMG feito especificamente nesse movimento mostra que a posição da mão e do antebraço muda quanto da carga recai sobre o deltoide posterior versus estruturas do manguito rotador — o que é útil pra ajustar a técnica. A versão apoiada no banco inclinado tira o embalo e a participação lombar da equação, deixando o deltoide posterior e o meio das costas fazerem o trabalho que o exercício se propõe a treinar — é uma ferramenta razoável pra equilibrar a programação de ombro, não a única ou a \"melhor\" opção que existe.",
+  "regressionHints": [
+   "banded pull-apart",
+   "seated machine reverse fly"
+  ],
+  "progressionHints": [
+   "standing bent-over reverse fly",
+   "cable reverse fly"
+  ],
+  "alternativeHints": [
+   "face pull",
+   "single-arm cable rear delt fly"
+  ],
+  "evidenceKeys": [
+   "schoenfeld-2013-reverse-fly-hand-position",
+   "jakobsen-2012-shoulder-training-emg",
+   "escamilla-2009-shoulder-rehabilitation-exercises-review",
+   "pallares-2021-rom-meta-analysis"
+  ],
+  "evidenceNotesPt": {
+   "schoenfeld-2013-reverse-fly-hand-position": "Esse é o estudo mais direto sobre este exercício: mostra que a posição da mão/antebraço no crucifixo inverso muda a ativação relativa do deltoide posterior em relação a estruturas do manguito rotador, o que embasa a recomendação de manter uma pegada neutra e consistente durante a série.",
+   "jakobsen-2012-shoulder-training-emg": "Traz dados de EMG de uma sessão padronizada de treino de ombro em praticantes novatos, incluindo exercícios de deltoide posterior, o que ajuda a situar o crucifixo inverso dentro do padrão de ativação esperado para essa musculatura.",
+   "escamilla-2009-shoulder-rehabilitation-exercises-review": "Revisão sobre atividade muscular em exercícios comuns de reabilitação de ombro, incluindo exercícios de deltoide posterior — sustenta a lógica de incluir esse padrão de abdução horizontal para equilibrar o volume de empurrar (peito/ombro anterior) com trabalho da cadeia posterior do ombro.",
+   "pallares-2021-rom-meta-analysis": "Meta-análise sobre o efeito da amplitude de movimento nas adaptações do treino de força; não é específica para o crucifixo inverso, mas embasa de forma geral a orientação de priorizar amplitude completa e controlada sempre que a articulação permitir com segurança."
+  }
+ }
+]

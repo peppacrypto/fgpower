@@ -9,6 +9,18 @@ import { PrismaClient } from "../src/generated/prisma/client";
 import { MUSCLES, EQUIPMENT, MOVEMENT_PATTERNS } from "./seed-data/taxonomy";
 import { PRINCIPLES } from "./seed-data/principles";
 import { FLAGSHIP_PROGRAM } from "./seed-data/flagship-program";
+
+interface CuratedExercise {
+  slug: string;
+  setupEn: string; setupPt: string;
+  breathingEn: string; breathingPt: string;
+  coachingCuesEn: string[]; coachingCuesPt: string[];
+  commonMistakesEn: string[]; commonMistakesPt: string[];
+  rangeOfMotionEn: string; rangeOfMotionPt: string;
+  whyThisExerciseExistsEn: string; whyThisExerciseExistsPt: string;
+  evidenceKeys: string[];
+  evidenceNotesPt: Record<string, string>;
+}
 import { normalizeText } from "../src/lib/utils/normalize-text";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
@@ -303,6 +315,64 @@ async function seedFlagshipProgram() {
   console.log(`Flagship program "${p.namePt}": seeded with ${p.days.length} days.`);
 }
 
+async function seedCuratedExerciseContent() {
+  const file = path.join(SEED_DATA_DIR, "curated-exercises.generated.json");
+  let curated: CuratedExercise[];
+  try {
+    curated = JSON.parse(await readFile(file, "utf8"));
+  } catch {
+    console.warn(`No curated exercise content at ${file} — skipping.`);
+    return;
+  }
+
+  let count = 0;
+  for (const c of curated) {
+    const exercise = await prisma.exercise.findUnique({ where: { slug: c.slug } });
+    if (!exercise) {
+      console.warn(`  curated content: exercise slug "${c.slug}" not found, skipping.`);
+      continue;
+    }
+
+    const contentEn = {
+      setup: c.setupEn,
+      breathing: c.breathingEn,
+      coachingCues: c.coachingCuesEn,
+      commonMistakes: c.commonMistakesEn,
+      rangeOfMotion: c.rangeOfMotionEn,
+      whyThisExerciseExists: c.whyThisExerciseExistsEn,
+    };
+    const contentPt = {
+      setup: c.setupPt,
+      breathing: c.breathingPt,
+      coachingCues: c.coachingCuesPt,
+      commonMistakes: c.commonMistakesPt,
+      rangeOfMotion: c.rangeOfMotionPt,
+      whyThisExerciseExists: c.whyThisExerciseExistsPt,
+    };
+
+    await prisma.exercise.update({
+      where: { id: exercise.id },
+      data: { isCurated: true, contentEn: contentEn as never, contentPt: contentPt as never },
+    });
+
+    let sortOrder = 0;
+    for (const key of c.evidenceKeys) {
+      const source = await prisma.evidenceSource.findUnique({ where: { key } });
+      if (!source) {
+        console.warn(`  curated content: evidence key "${key}" not found for ${c.slug}, skipping link.`);
+        continue;
+      }
+      await prisma.exerciseEvidence.upsert({
+        where: { exerciseId_sourceId: { exerciseId: exercise.id, sourceId: source.id } },
+        create: { exerciseId: exercise.id, sourceId: source.id, notePt: c.evidenceNotesPt[key] ?? null, sortOrder: sortOrder++ },
+        update: { notePt: c.evidenceNotesPt[key] ?? null, sortOrder: sortOrder++ },
+      });
+    }
+    count++;
+  }
+  console.log(`Curated exercise content: applied to ${count} exercises.`);
+}
+
 async function seedExercises() {
   const file = path.join(SEED_DATA_DIR, "exercises.generated.json");
   let exercises: GeneratedExercise[];
@@ -391,6 +461,7 @@ async function main() {
   await seedExercises();
   await seedEvidence();
   await seedPrinciples();
+  await seedCuratedExerciseContent();
   await seedFlagshipProgram();
 
   const [muscles, equipment, patterns, exercises, evidence, principles, templates] = await Promise.all([
