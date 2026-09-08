@@ -1,26 +1,151 @@
 @import "tailwindcss";
 
+/* ---------------------------------------------------------------------
+   FGPOWER design tokens.
+   Dark-first premium athletic/scientific identity: near-black surfaces,
+   off-white type, one energetic accent (performance lime). Light theme
+   is a fully-specified fallback for prefers-color-scheme / OS setting.
+--------------------------------------------------------------------- */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f7f7f5;
+  --surface: #ffffff;
+  --surface-2: #f0f0ee;
+  --border: #e2e2df;
+  --foreground: #0b0b0c;
+  --muted: #5c5c61;
+  --accent: #7a9900;
+  --accent-foreground: #0b0b0c;
+  --accent-soft: #eef5cc;
+  --danger: #c53030;
+  --danger-soft: #fbe3e3;
+  --success: #1a7f4b;
+  --success-soft: #d9f2e3;
+  --warning: #9a6b00;
+  --warning-soft: #fbedcc;
+  --ring: #7a9900;
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.75rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --background: #0a0a0b;
+    --surface: #131315;
+    --surface-2: #1a1a1d;
+    --border: #26262a;
+    --foreground: #f5f5f2;
+    --muted: #9a9aa1;
+    --accent: #cdff4d;
+    --accent-foreground: #0a0a0b;
+    --accent-soft: #1f2707;
+    --danger: #ff6b6b;
+    --danger-soft: #2a1414;
+    --success: #4ade80;
+    --success-soft: #10261a;
+    --warning: #f5c14d;
+    --warning-soft: #2a2110;
+    --ring: #cdff4d;
+  }
+}
+
+:root[data-theme="dark"] {
+  --background: #0a0a0b;
+  --surface: #131315;
+  --surface-2: #1a1a1d;
+  --border: #26262a;
+  --foreground: #f5f5f2;
+  --muted: #9a9aa1;
+  --accent: #cdff4d;
+  --accent-foreground: #0a0a0b;
+  --accent-soft: #1f2707;
+  --danger: #ff6b6b;
+  --danger-soft: #2a1414;
+  --success: #4ade80;
+  --success-soft: #10261a;
+  --warning: #f5c14d;
+  --warning-soft: #2a2110;
+  --ring: #cdff4d;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-soft: var(--accent-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-ring: var(--ring);
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono);
 }
 
+html {
+  color-scheme: light dark;
+}
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
   }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+:root[data-theme="light"] {
+  color-scheme: light;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-feature-settings: "cv11", "ss01";
+}
+
+* {
+  border-color: var(--border);
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Focus ring, consistent across all interactive elements. */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

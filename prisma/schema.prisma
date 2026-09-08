@@ -1,0 +1,1068 @@
+// FGPOWER — relational schema
+// PostgreSQL + Prisma 7 (driver adapter: @prisma/adapter-pg)
+//
+// Sections:
+//   1. Auth (better-auth managed tables)
+//   2. Profile & settings
+//   3. Exercise catalog (taxonomy, exercises, media, relations)
+//   4. Scientific evidence system
+//   5. Canonical workout templates (admin curated)
+//   6. User programs (custom / forked)
+//   7. Training log (sessions, exercise logs, set logs, PRs, body metrics)
+//   8. Social layer (follows, activities, FGs, notifications, blocks, reports)
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------------------
+// 1. AUTH — tables managed by better-auth (field names follow its schema)
+// ---------------------------------------------------------------------------
+
+model User {
+  id              String    @id
+  name            String
+  email           String    @unique
+  emailVerified   Boolean   @default(false)
+  image           String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  // username plugin
+  username        String?   @unique
+  displayUsername String?
+  // admin plugin
+  role            String?   @default("user")
+  banned          Boolean?  @default(false)
+  banReason       String?
+  banExpires      DateTime?
+
+  sessions Session[]
+  accounts Account[]
+  profile  Profile?
+
+  favoriteExercises FavoriteExercise[]
+  exerciseNotes     ExerciseUserNote[]
+  programs          UserProgram[]
+  enrollments       ProgramEnrollment[]
+  workoutSessions   WorkoutSession[]
+  exerciseLogs      WorkoutExerciseLog[]
+  setLogs           SetLog[]
+  personalRecords   ExercisePersonalRecord[]
+  bodyMetrics       BodyMetric[]
+
+  following        Follow[]        @relation("FollowFollower")
+  followers        Follow[]        @relation("FollowFollowing")
+  sentRequests     FollowRequest[] @relation("FollowRequestRequester")
+  receivedRequests FollowRequest[] @relation("FollowRequestTarget")
+  activities       Activity[]
+  fgs              ActivityFG[]
+  notifications    Notification[]  @relation("NotificationRecipient")
+  actedNotifs      Notification[]  @relation("NotificationActor")
+  blocksMade       UserBlock[]     @relation("BlockBlocker")
+  blocksReceived   UserBlock[]     @relation("BlockBlocked")
+  reportsMade      UserReport[]    @relation("ReportReporter")
+  reportsReceived  UserReport[]    @relation("ReportReported")
+  reportsResolved  UserReport[]    @relation("ReportResolver")
+
+  @@map("user")
+}
+
+model Session {
+  id             String   @id
+  expiresAt      DateTime
+  token          String   @unique
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  ipAddress      String?
+  userAgent      String?
+  userId         String
+  impersonatedBy String?
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+// ---------------------------------------------------------------------------
+// 2. PROFILE & SETTINGS
+// ---------------------------------------------------------------------------
+
+enum TrainingGoal {
+  HYPERTROPHY
+  STRENGTH
+  GENERAL_FITNESS
+  STRENGTH_HYPERTROPHY
+  SPORTS_PERFORMANCE
+}
+
+enum ExperienceLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum EquipmentAccess {
+  FULL_GYM
+  HOME_DUMBBELLS
+  HOME_BODYWEIGHT
+  MINIMAL
+}
+
+enum UnitSystem {
+  METRIC
+  IMPERIAL
+}
+
+enum Visibility {
+  PRIVATE
+  FOLLOWERS
+  PUBLIC
+}
+
+model Profile {
+  id                       String          @id @default(cuid())
+  userId                   String          @unique
+  user                     User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  displayName              String
+  bio                      String?
+  goal                     TrainingGoal    @default(GENERAL_FITNESS)
+  experience               ExperienceLevel @default(BEGINNER)
+  daysPerWeek              Int             @default(3)
+  sessionMinutes           Int             @default(60)
+  equipmentAccess          EquipmentAccess @default(FULL_GYM)
+  preferredDays            Int[]           @default([]) // 0 = Sunday … 6 = Saturday
+  doesEndurance            Boolean         @default(false)
+  enduranceNotes           String?
+  limitations              String?
+  locale                   String          @default("pt-BR")
+  unitSystem               UnitSystem      @default(METRIC)
+  loadIncrementKg          Float           @default(2.5)
+  restTimerSound           Boolean         @default(true)
+  onboardingCompletedAt    DateTime?
+  // Privacy
+  isPublicAccount          Boolean         @default(false)
+  defaultWorkoutVisibility Visibility      @default(PRIVATE)
+  showLoadsPublicly        Boolean         @default(false)
+  showBodyMetricsPublicly  Boolean         @default(false)
+  showCurrentProgram       Boolean         @default(true)
+  discoverable             Boolean         @default(true)
+  autoShareAchievements    Boolean         @default(true)
+  location                 String?
+  createdAt                DateTime        @default(now())
+  updatedAt                DateTime        @updatedAt
+}
+
+// ---------------------------------------------------------------------------
+// 3. EXERCISE CATALOG
+// ---------------------------------------------------------------------------
+
+enum MuscleGroup {
+  CHEST
+  BACK
+  SHOULDERS
+  ARMS
+  LEGS
+  GLUTES
+  CORE
+  NECK
+  FULL_BODY
+}
+
+model Muscle {
+  id        String           @id // slug, e.g. "lateral-deltoid"
+  nameEn    String
+  namePt    String
+  group     MuscleGroup
+  sortOrder Int              @default(0)
+  exercises ExerciseMuscle[]
+}
+
+enum EquipmentCategory {
+  FREE_WEIGHT
+  MACHINE
+  CABLE
+  BODYWEIGHT
+  BAND
+  SPECIALTY
+  NONE
+}
+
+model Equipment {
+  id        String            @id // slug
+  nameEn    String
+  namePt    String
+  category  EquipmentCategory
+  sortOrder Int               @default(0)
+  exercises Exercise[]
+}
+
+model MovementPattern {
+  id            String     @id // slug e.g. "horizontal-push"
+  nameEn        String
+  namePt        String
+  descriptionEn String?
+  descriptionPt String?
+  sortOrder     Int        @default(0)
+  exercises     Exercise[]
+}
+
+enum ExerciseCategory {
+  STRENGTH
+  STRETCHING
+  PLYOMETRICS
+  POWERLIFTING
+  OLYMPIC_WEIGHTLIFTING
+  STRONGMAN
+  CARDIO
+}
+
+enum Difficulty {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum ForceType {
+  PUSH
+  PULL
+  STATIC
+  OTHER
+}
+
+enum Laterality {
+  BILATERAL
+  UNILATERAL
+  ALTERNATING
+}
+
+enum Mechanics {
+  COMPOUND
+  ISOLATION
+}
+
+model Exercise {
+  id                String           @id @default(cuid())
+  slug              String           @unique
+  sourceId          String?          @unique // free-exercise-db id
+  nameEn            String
+  namePt            String
+  category          ExerciseCategory @default(STRENGTH)
+  movementPatternId String?
+  movementPattern   MovementPattern? @relation(fields: [movementPatternId], references: [id], onDelete: SetNull)
+  equipmentId       String?
+  equipment         Equipment?       @relation(fields: [equipmentId], references: [id], onDelete: SetNull)
+  difficulty        Difficulty       @default(BEGINNER)
+  forceType         ForceType        @default(OTHER)
+  laterality        Laterality       @default(BILATERAL)
+  mechanics         Mechanics        @default(COMPOUND)
+  isCurated         Boolean          @default(false) // has full structured coaching content
+  isPublished       Boolean          @default(true)
+  popularity        Int              @default(0)
+  // Basic instructions (string[]), both locales
+  instructionsEn    Json             @default("[]")
+  instructionsPt    Json             @default("[]")
+  // Structured coaching content (see ExerciseContent type in src/lib/exercises/content.ts)
+  contentEn         Json?
+  contentPt         Json?
+  // Normalized (lowercase, accent-stripped) text used for search
+  searchText        String           @default("")
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  aliases         ExerciseAlias[]
+  muscles         ExerciseMuscle[]
+  media           ExerciseMedia[]
+  relationsFrom   ExerciseRelation[]        @relation("RelationFrom")
+  relationsTo     ExerciseRelation[]        @relation("RelationTo")
+  evidence        ExerciseEvidence[]
+  favorites       FavoriteExercise[]
+  userNotes       ExerciseUserNote[]
+  templateEntries WorkoutTemplateExercise[]
+  programEntries  UserProgramExercise[]
+  exerciseLogs    WorkoutExerciseLog[]
+  setLogs         SetLog[]
+  personalRecords ExercisePersonalRecord[]
+  substitutedLogs WorkoutExerciseLog[]      @relation("SubstitutedFrom")
+
+  @@index([namePt])
+  @@index([nameEn])
+  @@index([equipmentId])
+  @@index([movementPatternId])
+  @@index([isPublished, popularity])
+}
+
+model ExerciseAlias {
+  id         String   @id @default(cuid())
+  exerciseId String
+  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  alias      String
+  locale     String   @default("pt-BR")
+
+  @@unique([exerciseId, alias, locale])
+  @@index([alias])
+}
+
+enum MuscleRole {
+  PRIMARY
+  SECONDARY
+}
+
+model ExerciseMuscle {
+  exerciseId String
+  exercise   Exercise   @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  muscleId   String
+  muscle     Muscle     @relation(fields: [muscleId], references: [id], onDelete: Cascade)
+  role       MuscleRole
+
+  @@id([exerciseId, muscleId])
+  @@index([muscleId, role])
+}
+
+enum MediaKind {
+  IMAGE_START
+  IMAGE_END
+  ILLUSTRATION
+  VIDEO
+}
+
+model ExerciseMedia {
+  id          String    @id @default(cuid())
+  exerciseId  String
+  exercise    Exercise  @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  kind        MediaKind
+  url         String
+  width       Int?
+  height      Int?
+  altEn       String?
+  altPt       String?
+  attribution String?
+  sortOrder   Int       @default(0)
+
+  @@index([exerciseId, sortOrder])
+}
+
+enum ExerciseRelationKind {
+  REGRESSION
+  PROGRESSION
+  ALTERNATIVE
+}
+
+model ExerciseRelation {
+  id                String               @id @default(cuid())
+  exerciseId        String
+  exercise          Exercise             @relation("RelationFrom", fields: [exerciseId], references: [id], onDelete: Cascade)
+  relatedExerciseId String
+  related           Exercise             @relation("RelationTo", fields: [relatedExerciseId], references: [id], onDelete: Cascade)
+  kind              ExerciseRelationKind
+  sortOrder         Int                  @default(0)
+
+  @@unique([exerciseId, relatedExerciseId, kind])
+  @@index([relatedExerciseId])
+}
+
+model FavoriteExercise {
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exerciseId String
+  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@id([userId, exerciseId])
+}
+
+/// Persistent per-exercise note ("seat position 4") shown next time the user trains it.
+model ExerciseUserNote {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exerciseId String
+  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  note       String
+  updatedAt  DateTime @updatedAt
+
+  @@unique([userId, exerciseId])
+}
+
+// ---------------------------------------------------------------------------
+// 4. SCIENTIFIC EVIDENCE SYSTEM
+// ---------------------------------------------------------------------------
+
+enum EvidenceType {
+  GUIDELINE
+  SYSTEMATIC_REVIEW
+  META_ANALYSIS
+  UMBRELLA_REVIEW
+  RCT
+  CONTROLLED_TRIAL
+  CROSSOVER_TRIAL
+  BIOMECHANICAL
+  EMG
+  OBSERVATIONAL
+  EXPERT_CONSENSUS
+  NARRATIVE_REVIEW
+}
+
+/// A = guidelines / strong systematic evidence; B = multiple controlled studies;
+/// C = biomechanical or limited direct evidence; D = expert consensus / indirect.
+enum EvidenceLevel {
+  A
+  B
+  C
+  D
+}
+
+model EvidenceSource {
+  id              String        @id @default(cuid())
+  key             String        @unique // slug e.g. "schoenfeld-2017-volume-dose-response"
+  title           String
+  authors         String
+  journal         String
+  publicationYear Int
+  doi             String?       @unique
+  pubmedId        String?
+  url             String
+  evidenceType    EvidenceType
+  evidenceLevel   EvidenceLevel
+  abstractSummary String // English, faithful to the abstract
+  summaryPt       String?
+  topics          String[]      @default([])
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  exercises  ExerciseEvidence[]
+  principles TrainingPrincipleEvidence[]
+  templates  WorkoutTemplateEvidence[]
+
+  @@index([evidenceLevel])
+}
+
+model ExerciseEvidence {
+  exerciseId String
+  exercise   Exercise       @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  sourceId   String
+  source     EvidenceSource @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  noteEn     String?
+  notePt     String?
+  sortOrder  Int            @default(0)
+
+  @@id([exerciseId, sourceId])
+}
+
+model TrainingPrinciple {
+  id        String   @id @default(cuid())
+  slug      String   @unique // e.g. "rir", "progressive-overload"
+  titleEn   String
+  titlePt   String
+  summaryEn String
+  summaryPt String
+  bodyEn    String // markdown
+  bodyPt    String // markdown
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  evidence  TrainingPrincipleEvidence[]
+  templates WorkoutTemplatePrinciple[]
+}
+
+model TrainingPrincipleEvidence {
+  principleId String
+  principle   TrainingPrinciple @relation(fields: [principleId], references: [id], onDelete: Cascade)
+  sourceId    String
+  source      EvidenceSource    @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  noteEn      String?
+  notePt      String?
+  sortOrder   Int               @default(0)
+
+  @@id([principleId, sourceId])
+}
+
+// ---------------------------------------------------------------------------
+// 5. CANONICAL WORKOUT TEMPLATES (admin curated, versioned)
+// ---------------------------------------------------------------------------
+
+enum TrainingStyle {
+  FULL_BODY
+  UPPER_LOWER
+  PUSH_PULL_LEGS
+  BODY_PART_SPLIT
+  HYBRID
+  ENDURANCE_SUPPORT
+}
+
+enum ProgressionStrategy {
+  DOUBLE
+  LINEAR_LOAD
+  REPETITION
+  RIR_BASED
+  MANUAL
+}
+
+model WorkoutTemplate {
+  id                  String              @id @default(cuid())
+  slug                String              @unique
+  version             Int                 @default(1)
+  nameEn              String
+  namePt              String
+  taglineEn           String
+  taglinePt           String
+  descriptionEn       String // markdown
+  descriptionPt       String // markdown
+  audienceEn          String
+  audiencePt          String
+  goal                TrainingGoal
+  experienceLevel     ExperienceLevel
+  daysPerWeek         Int
+  durationWeeks       Int
+  sessionMinutes      Int
+  equipmentAccess     EquipmentAccess
+  trainingStyle       TrainingStyle
+  progressionStrategy ProgressionStrategy @default(DOUBLE)
+  rationaleEn         String // markdown, scientific rationale
+  rationalePt         String
+  weeklyGuidance      Json                @default("[]") // WeekGuidance[]
+  restGuidanceEn      String?
+  restGuidancePt      String?
+  isFlagship          Boolean             @default(false)
+  isPublished         Boolean             @default(true)
+  sortOrder           Int                 @default(0)
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+
+  days       WorkoutTemplateDay[]
+  evidence   WorkoutTemplateEvidence[]
+  principles WorkoutTemplatePrinciple[]
+  forks      UserProgram[]
+
+  @@index([isPublished, sortOrder])
+}
+
+model WorkoutTemplateDay {
+  id               String                    @id @default(cuid())
+  templateId       String
+  template         WorkoutTemplate           @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  dayIndex         Int
+  nameEn           String
+  namePt           String
+  focusEn          String?
+  focusPt          String?
+  estimatedMinutes Int?
+  exercises        WorkoutTemplateExercise[]
+
+  @@unique([templateId, dayIndex])
+}
+
+model WorkoutTemplateExercise {
+  id                  String               @id @default(cuid())
+  dayId               String
+  day                 WorkoutTemplateDay   @relation(fields: [dayId], references: [id], onDelete: Cascade)
+  exerciseId          String
+  exercise            Exercise             @relation(fields: [exerciseId], references: [id], onDelete: Restrict)
+  sortOrder           Int
+  groupKey            String? // superset / group label, e.g. "A"
+  alternativeSlugs    String[]             @default([]) // "Hack squat OR back squat"
+  sets                Int
+  repMin              Int
+  repMax              Int
+  rirTarget           Float?
+  rpeTarget           Float?
+  restSeconds         Int
+  tempo               String?
+  warmupSets          Int                  @default(0)
+  progressionStrategy ProgressionStrategy?
+  loadIncrementKg     Float?
+  notesEn             String?
+  notesPt             String?
+
+  @@unique([dayId, sortOrder])
+  @@index([exerciseId])
+}
+
+model WorkoutTemplateEvidence {
+  templateId String
+  template   WorkoutTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  sourceId   String
+  source     EvidenceSource  @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  noteEn     String?
+  notePt     String?
+  sortOrder  Int             @default(0)
+
+  @@id([templateId, sourceId])
+}
+
+model WorkoutTemplatePrinciple {
+  templateId  String
+  template    WorkoutTemplate   @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  principleId String
+  principle   TrainingPrinciple @relation(fields: [principleId], references: [id], onDelete: Cascade)
+  sortOrder   Int               @default(0)
+
+  @@id([templateId, principleId])
+}
+
+// ---------------------------------------------------------------------------
+// 6. USER PROGRAMS (custom or forked from a template)
+// ---------------------------------------------------------------------------
+
+enum ProgramStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+model UserProgram {
+  id                    String              @id @default(cuid())
+  userId                String
+  user                  User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name                  String
+  description           String?
+  sourceTemplateId      String?
+  sourceTemplate        WorkoutTemplate?    @relation(fields: [sourceTemplateId], references: [id], onDelete: SetNull)
+  sourceTemplateVersion Int?
+  goal                  TrainingGoal?
+  daysPerWeek           Int                 @default(3)
+  durationWeeks         Int?
+  progressionStrategy   ProgressionStrategy @default(DOUBLE)
+  weeklyGuidance        Json                @default("[]")
+  status                ProgramStatus       @default(DRAFT)
+  isPublic              Boolean             @default(false)
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+  archivedAt            DateTime?
+
+  days        UserProgramDay[]
+  enrollments ProgramEnrollment[]
+  sessions    WorkoutSession[]
+
+  @@index([userId, status, updatedAt])
+}
+
+model UserProgramDay {
+  id               String                @id @default(cuid())
+  programId        String
+  program          UserProgram           @relation(fields: [programId], references: [id], onDelete: Cascade)
+  dayIndex         Int
+  name             String
+  focus            String?
+  weekday          Int? // planned weekday 0-6 (optional)
+  estimatedMinutes Int?
+  exercises        UserProgramExercise[]
+  sessions         WorkoutSession[]
+
+  @@unique([programId, dayIndex])
+}
+
+model UserProgramExercise {
+  id                  String               @id @default(cuid())
+  dayId               String
+  day                 UserProgramDay       @relation(fields: [dayId], references: [id], onDelete: Cascade)
+  exerciseId          String
+  exercise            Exercise             @relation(fields: [exerciseId], references: [id], onDelete: Restrict)
+  sortOrder           Int
+  groupKey            String?
+  sets                Int                  @default(3)
+  repMin              Int                  @default(8)
+  repMax              Int                  @default(12)
+  rirTarget           Float?
+  rpeTarget           Float?
+  restSeconds         Int                  @default(120)
+  tempo               String?
+  warmupSets          Int                  @default(0)
+  loadTargetKg        Float?
+  progressionStrategy ProgressionStrategy?
+  loadIncrementKg     Float?
+  notes               String?
+
+  exerciseLogs WorkoutExerciseLog[]
+
+  @@index([dayId, sortOrder])
+  @@index([exerciseId])
+}
+
+enum EnrollmentStatus {
+  ACTIVE
+  COMPLETED
+  ABANDONED
+}
+
+/// Program lifecycle record: when a user started/finished a program, adherence,
+/// and an immutable snapshot of the program as it was when it started.
+model ProgramEnrollment {
+  id                String           @id @default(cuid())
+  userId            String
+  user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  programId         String
+  program           UserProgram      @relation(fields: [programId], references: [id], onDelete: Cascade)
+  status            EnrollmentStatus @default(ACTIVE)
+  startedAt         DateTime         @default(now())
+  endedAt           DateTime?
+  currentWeek       Int              @default(1)
+  nextDayIndex      Int              @default(0)
+  plannedSessions   Int?
+  completedSessions Int              @default(0)
+  programSnapshot   Json
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  sessions WorkoutSession[]
+
+  @@index([userId, status])
+}
+
+// ---------------------------------------------------------------------------
+// 7. TRAINING LOG
+// ---------------------------------------------------------------------------
+
+enum SessionStatus {
+  IN_PROGRESS
+  COMPLETED
+  DISCARDED
+}
+
+model WorkoutSession {
+  id                String             @id @default(cuid())
+  userId            String
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  enrollmentId      String?
+  enrollment        ProgramEnrollment? @relation(fields: [enrollmentId], references: [id], onDelete: SetNull)
+  programId         String?
+  program           UserProgram?       @relation(fields: [programId], references: [id], onDelete: SetNull)
+  programDayId      String?
+  programDay        UserProgramDay?    @relation(fields: [programDayId], references: [id], onDelete: SetNull)
+  name              String
+  status            SessionStatus      @default(IN_PROGRESS)
+  startedAt         DateTime           @default(now())
+  finishedAt        DateTime?
+  durationSeconds   Int?
+  programWeek       Int?
+  programDayIndex   Int?
+  notes             String?
+  bodyweightKg      Float?
+  totalVolumeKg     Float?
+  totalWorkingSets  Int?
+  totalReps         Int?
+  visibility        Visibility         @default(PRIVATE)
+  showDetailedLoads Boolean            @default(false)
+  caption           String?
+  daySnapshot       Json? // prescription at the time (immutable)
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  exerciseLogs WorkoutExerciseLog[]
+  setLogs      SetLog[]
+  records      ExercisePersonalRecord[]
+  activity     Activity?
+
+  @@index([userId, startedAt(sort: Desc)])
+  @@index([userId, status])
+}
+
+model WorkoutExerciseLog {
+  id                        String               @id @default(cuid())
+  sessionId                 String
+  session                   WorkoutSession       @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  userId                    String
+  user                      User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exerciseId                String
+  exercise                  Exercise             @relation(fields: [exerciseId], references: [id], onDelete: Restrict)
+  programExerciseId         String?
+  programExercise           UserProgramExercise? @relation(fields: [programExerciseId], references: [id], onDelete: SetNull)
+  sortOrder                 Int
+  groupKey                  String?
+  prescribedSets            Int
+  repMin                    Int
+  repMax                    Int
+  rirTarget                 Float?
+  rpeTarget                 Float?
+  restSeconds               Int
+  warmupSets                Int                  @default(0)
+  tempo                     String?
+  notes                     String?
+  wasSkipped                Boolean              @default(false)
+  substitutedFromExerciseId String?
+  substitutedFrom           Exercise?            @relation("SubstitutedFrom", fields: [substitutedFromExerciseId], references: [id], onDelete: SetNull)
+  createdAt                 DateTime             @default(now())
+
+  sets SetLog[]
+
+  @@index([sessionId, sortOrder])
+  @@index([userId, exerciseId, createdAt(sort: Desc)])
+}
+
+enum SetType {
+  WARMUP
+  WORKING
+  DROP
+  FAILURE
+}
+
+model SetLog {
+  id            String             @id @default(cuid())
+  userId        String
+  user          User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessionId     String
+  session       WorkoutSession     @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  exerciseLogId String
+  exerciseLog   WorkoutExerciseLog @relation(fields: [exerciseLogId], references: [id], onDelete: Cascade)
+  exerciseId    String
+  exercise      Exercise           @relation(fields: [exerciseId], references: [id], onDelete: Restrict)
+  setNumber     Int
+  setType       SetType            @default(WORKING)
+  weightKg      Float?
+  reps          Int?
+  rir           Float?
+  rpe           Float?
+  restSeconds   Int?
+  isCompleted   Boolean            @default(false)
+  completedAt   DateTime?
+  notes         String?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  records ExercisePersonalRecord[]
+
+  @@index([exerciseLogId, setNumber])
+  @@index([userId, exerciseId, completedAt(sort: Desc)])
+  @@index([sessionId])
+}
+
+enum PersonalRecordKind {
+  MAX_WEIGHT
+  MAX_REPS_AT_WEIGHT
+  ESTIMATED_1RM
+  SESSION_VOLUME
+}
+
+model ExercisePersonalRecord {
+  id         String             @id @default(cuid())
+  userId     String
+  user       User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exerciseId String
+  exercise   Exercise           @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  kind       PersonalRecordKind
+  value      Float
+  weightKg   Float?
+  reps       Int?
+  setLogId   String?
+  setLog     SetLog?            @relation(fields: [setLogId], references: [id], onDelete: SetNull)
+  sessionId  String?
+  session    WorkoutSession?    @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  achievedAt DateTime           @default(now())
+
+  @@index([userId, exerciseId, kind, achievedAt(sort: Desc)])
+  @@index([userId, achievedAt(sort: Desc)])
+}
+
+enum BodyMetricKind {
+  BODYWEIGHT
+  WAIST
+  CHEST
+  HIPS
+  ARM
+  THIGH
+  CALF
+  CUSTOM
+}
+
+model BodyMetric {
+  id          String         @id @default(cuid())
+  userId      String
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind        BodyMetricKind
+  customLabel String?
+  value       Float
+  unit        String         @default("kg")
+  measuredAt  DateTime       @default(now())
+  createdAt   DateTime       @default(now())
+
+  @@index([userId, kind, measuredAt(sort: Desc)])
+}
+
+// ---------------------------------------------------------------------------
+// 8. SOCIAL LAYER
+// ---------------------------------------------------------------------------
+
+model Follow {
+  followerId  String
+  follower    User     @relation("FollowFollower", fields: [followerId], references: [id], onDelete: Cascade)
+  followingId String
+  following   User     @relation("FollowFollowing", fields: [followingId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+
+  @@id([followerId, followingId])
+  @@index([followingId, createdAt])
+}
+
+enum FollowRequestStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+
+model FollowRequest {
+  id          String              @id @default(cuid())
+  requesterId String
+  requester   User                @relation("FollowRequestRequester", fields: [requesterId], references: [id], onDelete: Cascade)
+  targetId    String
+  target      User                @relation("FollowRequestTarget", fields: [targetId], references: [id], onDelete: Cascade)
+  status      FollowRequestStatus @default(PENDING)
+  createdAt   DateTime            @default(now())
+  respondedAt DateTime?
+
+  notifications Notification[]
+
+  @@unique([requesterId, targetId])
+  @@index([targetId, status])
+}
+
+enum ActivityType {
+  WORKOUT
+  PERSONAL_RECORD
+  MILESTONE
+  PROGRAM_COMPLETED
+}
+
+model Activity {
+  id                String          @id @default(cuid())
+  userId            String
+  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type              ActivityType
+  sessionId         String?         @unique
+  session           WorkoutSession? @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  caption           String?
+  visibility        Visibility      @default(PRIVATE)
+  showDetailedLoads Boolean         @default(false)
+  summary           Json // precomputed card payload (ActivitySummary)
+  fgCount           Int             @default(0)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  fgs           ActivityFG[]
+  notifications Notification[]
+  reports       UserReport[]
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([visibility, createdAt(sort: Desc)])
+}
+
+model ActivityFG {
+  activityId String
+  activity   Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@id([activityId, userId])
+  @@index([userId, createdAt])
+}
+
+enum NotificationType {
+  FG_RECEIVED
+  NEW_FOLLOWER
+  FOLLOW_REQUEST
+  FOLLOW_ACCEPTED
+  PERSONAL_RECORD
+  PROGRAM_WEEK_COMPLETE
+  PROGRAM_COMPLETED
+}
+
+model Notification {
+  id              String           @id @default(cuid())
+  recipientId     String
+  recipient       User             @relation("NotificationRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  actorId         String?
+  actor           User?            @relation("NotificationActor", fields: [actorId], references: [id], onDelete: Cascade)
+  type            NotificationType
+  activityId      String?
+  activity        Activity?        @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  followRequestId String?
+  followRequest   FollowRequest?   @relation(fields: [followRequestId], references: [id], onDelete: Cascade)
+  data            Json?
+  readAt          DateTime?
+  createdAt       DateTime         @default(now())
+
+  @@index([recipientId, readAt, createdAt(sort: Desc)])
+}
+
+model UserBlock {
+  blockerId String
+  blocker   User     @relation("BlockBlocker", fields: [blockerId], references: [id], onDelete: Cascade)
+  blockedId String
+  blocked   User     @relation("BlockBlocked", fields: [blockedId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@id([blockerId, blockedId])
+  @@index([blockedId])
+}
+
+enum ReportReason {
+  SPAM
+  HARASSMENT
+  INAPPROPRIATE_CONTENT
+  FAKE_DATA
+  OTHER
+}
+
+enum ReportStatus {
+  OPEN
+  REVIEWED
+  ACTIONED
+  DISMISSED
+}
+
+model UserReport {
+  id             String       @id @default(cuid())
+  reporterId     String
+  reporter       User         @relation("ReportReporter", fields: [reporterId], references: [id], onDelete: Cascade)
+  reportedUserId String?
+  reportedUser   User?        @relation("ReportReported", fields: [reportedUserId], references: [id], onDelete: Cascade)
+  activityId     String?
+  activity       Activity?    @relation(fields: [activityId], references: [id], onDelete: SetNull)
+  reason         ReportReason
+  details        String?
+  status         ReportStatus @default(OPEN)
+  resolvedById   String?
+  resolvedBy     User?        @relation("ReportResolver", fields: [resolvedById], references: [id], onDelete: SetNull)
+  resolutionNote String?
+  createdAt      DateTime     @default(now())
+  resolvedAt     DateTime?
+
+  @@index([status, createdAt])
+}
