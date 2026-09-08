@@ -1,12 +1,6 @@
-import { MarketingHeader } from "@/components/marketing/marketing-header";
-import { MarketingFooter } from "@/components/marketing/marketing-footer";
-
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="flex min-h-dvh flex-col bg-background">
-      <MarketingHeader />
-      <main className="flex-1">{children}</main>
-      <MarketingFooter />
-    </div>
-  );
+  // Header/footer are provided per-page so the landing can render a committed
+  // dark athletic experience while sub-pages (programs/exercises/science/
+  // privacy/terms) keep the clean light chrome.
+  return <>{children}</>;
 }

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { MarketingShell } from "@/components/marketing/marketing-shell";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
@@ -52,7 +53,8 @@ export default async function PublicExerciseDetailPage({ params }: PageProps<"/e
   const alternatives = exercise.relationsFrom.filter((r) => r.kind === "ALTERNATIVE");
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16">
+    <MarketingShell>
+      <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16">
       <div className="grid gap-6 sm:grid-cols-2">
         <div className="flex gap-2 overflow-hidden rounded-[var(--radius-lg)] border border-border bg-surface-2">
           {exercise.media.length > 0 ? (
@@ -210,7 +212,8 @@ export default async function PublicExerciseDetailPage({ params }: PageProps<"/e
           </p>
         </Section>
       ) : null}
-    </div>
+      </div>
+    </MarketingShell>
   );
 }
 

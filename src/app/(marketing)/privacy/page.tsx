@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import { MarketingShell } from "@/components/marketing/marketing-shell";
 
 export const metadata: Metadata = { title: "Privacidade" };
 
 export default function PrivacyPage() {
   return (
-    <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
+    <MarketingShell>
+      <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
       <h1 className="text-2xl font-bold tracking-tight">Política de Privacidade</h1>
       <p className="mt-2 text-sm text-muted">Última atualização: setembro de 2026</p>
 
@@ -54,5 +56,6 @@ export default function PrivacyPage() {
         </section>
       </div>
     </div>
+    </MarketingShell>
   );
 }

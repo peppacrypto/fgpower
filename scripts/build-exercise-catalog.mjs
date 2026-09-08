@@ -133,11 +133,6 @@ async function loadTranslations() {
   return map;
 }
 
-// free-exercise-db's own id doubles as a stable, human-readable slug source.
-// (We do NOT use its bundled photos — see docs/DATA_SOURCES.md: their
-// upstream provenance disclaims commercial redistribution rights. Exercise
-// pages fall back to an icon treatment instead; see ExerciseMedia's `url`
-// docs for how to wire in a properly-licensed image source later.)
 function slugify(fedbId) {
   return fedbId
     .toLowerCase()
@@ -149,6 +144,10 @@ function slugify(fedbId) {
 
 async function main() {
   const source = JSON.parse(await readFile(path.join(SOURCE_DIR, "dist", "exercises.json"), "utf8"));
+  const mediaManifest = JSON.parse(
+    await readFile(path.join(SEED_DATA_DIR, "exercise-media.generated.json"), "utf8"),
+  );
+  const mediaBySource = new Map(mediaManifest.map((m) => [m.sourceId, m]));
   const translations = await loadTranslations();
 
   const exercises = [];
@@ -158,6 +157,7 @@ async function main() {
     const slug = slugify(fedb.id);
     const t = translations.get(fedb.id);
     if (!t) missingTranslation++;
+    const media = mediaBySource.get(fedb.id);
 
     exercises.push({
       sourceId: fedb.id,
@@ -175,8 +175,13 @@ async function main() {
       instructionsPt: t?.instructionsPt ?? fedb.instructions,
       primaryMuscles: fedb.primaryMuscles.map((m) => MUSCLE_MAP[m]).filter(Boolean),
       secondaryMuscles: fedb.secondaryMuscles.map((m) => MUSCLE_MAP[m]).filter(Boolean),
-      // No bundled media — see the slugify() comment above.
-      media: [],
+      media: (media?.media ?? []).map((m) => ({
+        kind: m.index === 0 ? "IMAGE_START" : "IMAGE_END",
+        url: m.path,
+        width: m.width,
+        height: m.height,
+        sortOrder: m.index,
+      })),
     });
   }
 

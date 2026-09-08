@@ -1,20 +1,13 @@
 #!/usr/bin/env node
+// One-time data-prep step: resize/re-encode the free-exercise-db images to a
+// web-friendly WebP size and write them into public/exercises/<slug>/, plus a
+// manifest at prisma/seed-data/exercise-media.generated.json. Not run at
+// build/deploy time; its output (public/exercises/*) is committed to the repo.
 //
-// ⚠️  DO NOT RUN THIS SCRIPT — kept only as documented history. ⚠️
-//
-// free-exercise-db's JSON/text (names, instructions, muscles) is genuinely
-// public domain (Unlicense) and IS used elsewhere in this pipeline. Its
-// BUNDLED PHOTOS are a different story: they are inherited unmodified from
-// wrkout/exercises.json, whose own CONTRIBUTING.md states "these have been
-// scrapped off the internet, therefore I do not own the copy right for
-// these images and would advise against using them in comercial projects."
-// That was independently corroborated by two unrelated projects during
-// FGPOWER's data-source audit. See docs/DATA_SOURCES.md for the full
-// writeup and the properly-licensed alternative (wger.de's per-item
-// CC-BY-SA/CC0 images, ~374 available, attributable via its public API) if
-// someone wants to wire in real exercise photography later. Exercise pages
-// currently render a clean icon placeholder instead — see ExerciseCard/the
-// exercise detail page's Dumbbell fallback.
+// ⚠️ Licensing note: the project owner opted to include these photos with full
+// knowledge that their upstream provenance (wrkout/exercises.json) disclaims
+// commercial redistribution rights — see docs/DATA_SOURCES.md for the full
+// writeup and the cleaner alternatives (e.g. wger.de's CC-BY-SA images).
 import sharp from "sharp";
 import { readFile, mkdir, readdir } from "node:fs/promises";
 import { existsSync } from "node:fs";

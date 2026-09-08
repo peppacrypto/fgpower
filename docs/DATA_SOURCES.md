@@ -25,14 +25,18 @@ isolation) for all 876 exercises.
 This data is genuinely, unambiguously safe to use commercially — it is a text/JSON
 dedication to the public domain, unrestricted.
 
-### ⚠️ Exercise photography — evaluated and explicitly rejected
+### ⚠️ Exercise photography — the licensing situation (project owner opted to include)
 
-The same repository bundles two JPEG photos per exercise. **FGPOWER does NOT use them**,
-and this was a deliberate reversal during the build: an earlier pass in this project
-processed and shipped these images (resized to WebP, ~46 MB across 876 exercises,
-committed to the repo and live on the deployed site) before a licensing audit caught the
-problem below. They were removed in full — see `scripts/process-exercise-images.mjs`,
-which is kept only as documented history and is prominently marked "DO NOT RUN."
+**Current state:** FGPOWER ships the free-exercise-db photos (resized to WebP under
+`public/exercises/<slug>/`, ~39 MB). This is a deliberate decision by the project owner,
+made with full knowledge of the licensing caveat documented below — the images add real
+visual value to the library and the owner accepts the risk for this project. The caveat
+and the cleaner alternatives are kept on record here so the decision can be revisited.
+
+
+
+The same repository bundles two JPEG photos per exercise, which FGPOWER processes to
+WebP and serves. The licensing chain below is real and worth understanding.
 
 **The finding:** `free-exercise-db`'s images are inherited unmodified from its own
 upstream source, [`wrkout/exercises.json`](https://github.com/wrkout/exercises.json).
@@ -57,13 +61,12 @@ unrelated third parties found during the same audit:
 does not — and, per the chain above, legally cannot — retroactively clear photography it
 inherited without holding the underlying rights.
 
-**What FGPOWER does instead:** exercise cards and detail pages render a clean icon
-placeholder (`Dumbbell` icon on the app's surface color) when no media exists, which today
-means every exercise. `ExerciseMedia` remains a first-class model in the schema — wiring
-in a real image source is a data-population task, not a schema change.
+**What FGPOWER does today:** it serves these photos (project owner's decision, above).
+Exercise cards/detail pages fall back to a `Dumbbell` icon only for the 3 source entries
+that have no image at all. `ExerciseMedia` is a first-class model, so swapping to a
+cleaner image source later is a data-population task, not a schema change.
 
-**Recommended path if/when real exercise photography is wanted**, in order of
-preference:
+**Cleaner alternatives if the photos are ever swapped out**, in order of preference:
 
 - **wger.de's public API** — the cleanest large-scale alternative found. Every
   `/api/v2/exerciseimage/` result carries a per-item `license` id (verified live by

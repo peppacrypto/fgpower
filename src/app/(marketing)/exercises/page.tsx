@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Dumbbell } from "lucide-react";
@@ -35,7 +36,8 @@ export default async function PublicExerciseLibraryPage({ searchParams }: PagePr
   const muscleGroups = MUSCLE_GROUPS.map((group) => ({ group, namePt: MUSCLE_GROUP_LABEL[group].pt }));
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+    <MarketingShell>
+      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
       <p className="text-xs font-semibold uppercase tracking-wider text-accent">Biblioteca</p>
       <h1 className="text-display mt-2 text-4xl font-semibold">Exercícios</h1>
       <p className="mt-3 max-w-lg text-muted">Como executar, por que executar, e a ciência por trás.</p>
@@ -78,6 +80,7 @@ export default async function PublicExerciseLibraryPage({ searchParams }: PagePr
         </div>
       ) : null}
     </div>
+    </MarketingShell>
   );
 }
 

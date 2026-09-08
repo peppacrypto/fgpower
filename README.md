@@ -197,9 +197,9 @@ re-run any time; every seed function upserts on a stable key (slug/id).
 
 ## Exercise dataset attribution & scientific evidence methodology
 
-See **`docs/DATA_SOURCES.md`** (full license audit, including a significant finding about
-bundled exercise photography that was evaluated and explicitly excluded from the shipped
-product) and **`docs/SCIENCE_METHOD.md`** (evidence hierarchy, citation verification
+See **`docs/DATA_SOURCES.md`** (full license audit, including the licensing situation
+around the bundled exercise photography the app ships and the project owner's decision to
+include it) and **`docs/SCIENCE_METHOD.md`** (evidence hierarchy, citation verification
 process, how uncertainty is handled). Deterministic programming heuristics are documented
 separately in **`docs/PROGRAMMING_RULES.md`**.
 

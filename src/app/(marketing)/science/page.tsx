@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getCurrentSession } from "@/lib/auth/require-user";
@@ -14,7 +15,8 @@ export default async function PublicScienceIndexPage() {
   const principles = await prisma.trainingPrinciple.findMany({ orderBy: { sortOrder: "asc" } });
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-16">
+    <MarketingShell>
+      <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-16">
       <p className="text-xs font-semibold uppercase tracking-wider text-accent">Metodologia</p>
       <h1 className="text-display mt-2 text-4xl font-semibold">Princípios científicos</h1>
       <p className="mt-3 max-w-lg text-muted">
@@ -34,5 +36,6 @@ export default async function PublicScienceIndexPage() {
         ))}
       </div>
     </div>
+    </MarketingShell>
   );
 }

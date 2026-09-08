@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowRight, ExternalLink } from "lucide-react";
@@ -38,7 +39,8 @@ export default async function PublicTemplateDetailPage({ params }: PageProps<"/p
   if (!template) notFound();
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-16">
+    <MarketingShell>
+      <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-16">
       {template.isFlagship ? (
         <Badge variant="accent" className="mb-3">
           Programa em destaque
@@ -120,6 +122,7 @@ export default async function PublicTemplateDetailPage({ params }: PageProps<"/p
         ) : null}
       </Section>
     </div>
+    </MarketingShell>
   );
 }
 

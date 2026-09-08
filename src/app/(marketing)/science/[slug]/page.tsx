@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { notFound, redirect } from "next/navigation";
 import { ExternalLink } from "lucide-react";
 import { getCurrentSession } from "@/lib/auth/require-user";
@@ -31,7 +32,8 @@ export default async function PublicPrincipleDetailPage({ params }: PageProps<"/
   if (!principle) notFound();
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-16">
+    <MarketingShell>
+      <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-16">
       <h1 className="text-display text-3xl font-semibold sm:text-4xl">{principle.titlePt}</h1>
       <p className="mt-3 text-lg text-muted">{principle.summaryPt}</p>
 
@@ -77,5 +79,6 @@ export default async function PublicPrincipleDetailPage({ params }: PageProps<"/
         </section>
       ) : null}
     </div>
+    </MarketingShell>
   );
 }
