@@ -140,9 +140,9 @@ export default async function TodayPage() {
       </div>
 
       {/* Stats grid */}
-      <div className="mt-6 grid gap-3 sm:grid-cols-2">
+      <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
         {enrollment ? (
-          <div className="rounded-[var(--radius-lg)] border border-border bg-surface p-5">
+          <div className="min-w-0 rounded-[var(--radius-lg)] border border-border bg-surface p-5">
             <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted">Programa</span>
             <p className="mt-1.5 truncate text-sm font-semibold">{enrollment.program.name}</p>
             {enrollment.program.durationWeeks ? (
@@ -165,7 +165,7 @@ export default async function TodayPage() {
           </div>
         ) : null}
 
-        <div className="rounded-[var(--radius-lg)] border border-border bg-surface p-5">
+        <div className="min-w-0 rounded-[var(--radius-lg)] border border-border bg-surface p-5">
           <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted">Esta semana</span>
           <p className="mt-1.5 font-mono text-2xl font-bold tabular-nums">
             {weeklyCount}
