@@ -7,6 +7,12 @@ import { BrowserFrame } from "@/components/marketing/browser-frame";
 import { ProductPreview } from "@/components/marketing/product-preview";
 import { prisma } from "@/lib/db";
 
+// Live counters + a real seeded-program preview mean this page must render
+// per-request, not be statically pre-rendered at build time (when the
+// database — reachable only over Railway's private network at runtime —
+// isn't available yet).
+export const dynamic = "force-dynamic";
+
 const PILLARS = [
   {
     icon: Dumbbell,
