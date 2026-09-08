@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LogOut, Shield } from "lucide-react";
+import { Bell, LogOut, Shield, Users } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { Wordmark } from "@/components/brand/logo";
 import { authClient } from "@/lib/auth/auth-client";
@@ -37,6 +37,29 @@ export function Sidebar({ isAdmin }: { isAdmin: boolean }) {
             </Link>
           );
         })}
+
+        <div className="mt-4 flex flex-col gap-1 border-t border-border pt-4">
+          <Link
+            href="/app/feed"
+            className={cn(
+              "flex items-center gap-3 rounded-[var(--radius-md)] px-3 py-2.5 text-sm font-medium transition-colors",
+              pathname.startsWith("/app/feed") ? "bg-accent-soft text-accent" : "text-muted hover:bg-surface-2 hover:text-foreground",
+            )}
+          >
+            <Users className="size-[18px]" />
+            Feed
+          </Link>
+          <Link
+            href="/app/notifications"
+            className={cn(
+              "flex items-center gap-3 rounded-[var(--radius-md)] px-3 py-2.5 text-sm font-medium transition-colors",
+              pathname.startsWith("/app/notifications") ? "bg-accent-soft text-accent" : "text-muted hover:bg-surface-2 hover:text-foreground",
+            )}
+          >
+            <Bell className="size-[18px]" />
+            Notificações
+          </Link>
+        </div>
 
         {isAdmin ? (
           <Link

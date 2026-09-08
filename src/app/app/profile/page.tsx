@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Heart, Settings, ExternalLink } from "lucide-react";
+import { Bell, Heart, Settings, ExternalLink, Users } from "lucide-react";
 import { requireUser } from "@/lib/auth/require-user";
 import { getProfile } from "@/lib/data/profile";
 import { listFavoriteExercises } from "@/lib/data/favorites";
@@ -65,6 +65,21 @@ export default async function ProfilePage() {
           Escolha um nome de usuário público em Configurações
         </Link>
       )}
+
+      <div className="mt-5 flex gap-2 sm:hidden">
+        <Button variant="outline" size="sm" className="flex-1" asChild>
+          <Link href="/app/feed">
+            <Users className="size-4" />
+            Feed
+          </Link>
+        </Button>
+        <Button variant="outline" size="sm" className="flex-1" asChild>
+          <Link href="/app/notifications">
+            <Bell className="size-4" />
+            Notificações
+          </Link>
+        </Button>
+      </div>
 
       <div className="mt-6 grid grid-cols-3 gap-3 text-center">
         <Card>
