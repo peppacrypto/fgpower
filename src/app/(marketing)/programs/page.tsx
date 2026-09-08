@@ -1,21 +1,12 @@
 import type { Metadata } from "next";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import { getCurrentSession } from "@/lib/auth/require-user";
 import { listTemplates } from "@/lib/data/templates";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { SectionHead } from "@/components/ui/section-head";
+import { ProtocolCard } from "@/components/programs/protocol-card";
 
 export const metadata: Metadata = { title: "Programas" };
-
-const GOAL_LABEL: Record<string, string> = {
-  HYPERTROPHY: "Hipertrofia",
-  STRENGTH: "Força",
-  GENERAL_FITNESS: "Fitness geral",
-  STRENGTH_HYPERTROPHY: "Força + Hipertrofia",
-  SPORTS_PERFORMANCE: "Performance esportiva",
-};
 
 export default async function PublicProgramsPage() {
   const session = await getCurrentSession();
@@ -25,37 +16,39 @@ export default async function PublicProgramsPage() {
 
   return (
     <MarketingShell>
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
-      <p className="text-xs font-semibold uppercase tracking-wider text-accent">Biblioteca</p>
-      <h1 className="text-display mt-2 max-w-xl text-4xl font-semibold">Programas</h1>
-      <p className="mt-3 max-w-lg text-muted">
-        Programas prontos, construídos em torno de evidência real — objetivo, frequência e progressão explicados,
-        nunca só uma planilha de exercícios.
-      </p>
+      <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
+        <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-muted">Biblioteca de protocolos</span>
+        <h1 className="text-display mt-1 max-w-xl text-4xl font-extrabold sm:text-5xl">Programas</h1>
+        <p className="mt-3 max-w-lg text-muted">
+          Protocolos prontos, construídos em torno de evidência real — objetivo, frequência e progressão
+          explicados, nunca só uma planilha de exercícios.
+        </p>
 
-      <div className="mt-10 grid gap-4 sm:grid-cols-2">
-        {templates.map((t) => (
-          <Link key={t.id} href={`/programs/${t.slug}`}>
-            <Card className="h-full transition-colors hover:border-accent/50">
-              <CardContent className="flex h-full flex-col pt-6">
-                {t.isFlagship ? (
-                  <Badge variant="accent" className="mb-3 w-fit">
-                    Programa em destaque
-                  </Badge>
-                ) : null}
-                <h2 className="text-lg font-semibold">{t.namePt}</h2>
-                <p className="mt-1.5 text-sm text-muted">{t.taglinePt}</p>
-                <div className="mt-auto flex flex-wrap gap-1.5 pt-5">
-                  <Badge>{GOAL_LABEL[t.goal] ?? t.goal}</Badge>
-                  <Badge>{t.daysPerWeek}x/semana</Badge>
-                  <Badge>{t.durationWeeks} semanas</Badge>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-        ))}
+        <div className="mt-10">
+          <SectionHead label="Todos os protocolos" count={`${templates.length}`} />
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            {templates.map((t, i) => (
+              <ProtocolCard
+                key={t.id}
+                data={{
+                  index: i + 1,
+                  href: `/programs/${t.slug}`,
+                  namePt: t.namePt,
+                  taglinePt: t.taglinePt,
+                  goal: t.goal,
+                  experienceLevel: t.experienceLevel,
+                  trainingStyle: t.trainingStyle,
+                  daysPerWeek: t.daysPerWeek,
+                  durationWeeks: t.durationWeeks,
+                  sessionMinutes: t.sessionMinutes,
+                  dayNames: t.days.map((d) => d.namePt),
+                  isFlagship: t.isFlagship,
+                }}
+              />
+            ))}
+          </div>
+        </div>
       </div>
-    </div>
     </MarketingShell>
   );
 }

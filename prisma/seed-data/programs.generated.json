@@ -1,0 +1,2906 @@
+[
+ {
+  "slug": "full-body-beginner",
+  "nameEn": "Full Body Beginner — Build Your Base",
+  "namePt": "Full Body Iniciante — Construa Sua Base",
+  "taglineEn": "Full-body 3x/week to learn the movements and build your base — 8 weeks.",
+  "taglinePt": "Full body 3x por semana para aprender os movimentos e construir sua base — 8 semanas.",
+  "descriptionEn": "An 8-week full-body program for anyone starting resistance training with access to a full gym. Three sessions per week (A, B and C), each training the whole body, focused on learning the fundamental movement patterns and building a solid base of strength and muscle. Loads are guided by reps in reserve (RIR) and progressed with double progression, so you always know when to add weight — no 1RM testing required.",
+  "descriptionPt": "Um programa full body de 8 semanas para quem está começando na musculação com acesso a uma academia completa. Três treinos por semana (A, B e C), cada um trabalhando o corpo inteiro, com foco em aprender os padrões de movimento fundamentais e construir uma base sólida de força e músculo. As cargas são guiadas por repetições em reserva (RIR) e evoluem por progressão dupla, então você sempre sabe quando aumentar o peso — sem precisar testar 1RM.",
+  "audienceEn": "Beginners training in a full gym who want to start the right way — learning to perform the main lifts with good technique before chasing heavy loads. It also suits anyone returning after a long break.",
+  "audiencePt": "Iniciantes que treinam em academia completa e querem começar do jeito certo — aprendendo a executar os principais exercícios com técnica antes de perseguir cargas altas. Também serve para quem está voltando após uma longa pausa.",
+  "goal": "STRENGTH_HYPERTROPHY",
+  "experienceLevel": "BEGINNER",
+  "daysPerWeek": 3,
+  "durationWeeks": 8,
+  "sessionMinutes": 60,
+  "equipmentAccess": "FULL_GYM",
+  "trainingStyle": "FULL_BODY",
+  "progressionStrategy": "DOUBLE",
+  "rationaleEn": "**Why full body 3x/week?** For someone starting out, training the whole body each session puts every major muscle group under stimulus about three times a week. The frequency literature suggests that, at an equal weekly volume, spreading the work across more sessions tends to match or beat cramming it into one — and for a beginner, more frequent sessions also mean more chances to practice each movement pattern, which is where most of the early progress comes from.\n\n**Why learn the movements before chasing max load?** A large share of early strength comes from the nervous system learning to coordinate the lift, not from new muscle. So the block starts conservative, with more reps in reserve, and raises the demand gradually across the 8 weeks. We prioritize the fundamental patterns — squat, hinge, push and pull — in variations that are easy to learn (barbell squat, leg press, goblet squat; barbell, dumbbell and machine presses; rows and pulldowns).\n\n**Why RIR 2-3 instead of training to failure?** Keeping 2 to 3 reps \"in reserve\" delivers enough stimulus for strength and hypertrophy without the extra fatigue and technical risk of grinding to failure — a poor trade while technique is still being consolidated. Volume-equated reviews generally find no clear advantage to training to failure for most goals.\n\n**Why double progression?** It gives an objective rule for adding load: when you can complete every set at the top of its rep range while holding the target RIR, you increase the weight next session and drop back to the bottom of the range. That automates progressive overload without needing 1RM tests or a rigid spreadsheet.\n\n**Volume and rest.** We start with 2 sets per exercise in the first weeks and build toward 2-3, keeping weekly volume in a moderate range — enough to progress without piling on fatigue that gets in the way of learning. Rests of 2 to 3 minutes on the compounds protect set quality; 60-90 seconds is enough on isolation work. Week 8 is a light deload to consolidate gains before the next block. None of this is a guarantee — individual response varies — but it reflects what the current evidence supports for beginners.",
+  "rationalePt": "**Por que full body 3x por semana?** Para quem está começando, treinar o corpo todo em cada sessão coloca cada grupo muscular principal sob estímulo cerca de três vezes por semana. A literatura sobre frequência sugere que, com o mesmo volume semanal, distribuir o trabalho em mais sessões tende a igualar ou superar concentrá-lo em uma única — e, para o iniciante, sessões mais frequentes também significam mais oportunidades de praticar cada padrão de movimento, que é onde está a maior parte dos ganhos nas primeiras semanas.\n\n**Por que aprender os movimentos antes de buscar carga máxima?** Boa parte da força inicial vem do sistema nervoso aprendendo a coordenar o exercício, não de músculo novo. Por isso o bloco começa conservador, com mais repetições em reserva, e sobe a exigência aos poucos ao longo das 8 semanas. Priorizamos os padrões fundamentais — agachar, levantar do chão (hinge), empurrar e puxar — em variações fáceis de aprender (agachamento com barra, leg press, goblet; supino com barra, halteres e máquina; remadas e puxadas).\n\n**Por que RIR 2-3 e não treinar até a falha?** Manter 2 a 3 repetições \"na reserva\" entrega estímulo suficiente para ganho de força e hipertrofia sem o custo de fadiga e o risco técnico de ir até a falha — uma troca ruim enquanto a técnica ainda está sendo consolidada. Revisões que igualam o volume geralmente não encontram vantagem clara em treinar até a falha para a maioria dos objetivos.\n\n**Por que progressão dupla?** Ela dá um critério objetivo para subir a carga: quando você consegue completar todas as séries no topo da faixa de repetições mantendo o RIR-alvo, aumenta o peso na próxima sessão e volta para a base da faixa. Isso automatiza a sobrecarga progressiva sem depender de teste de 1RM nem de planilha rígida.\n\n**Volume e descanso.** Começamos com 2 séries por exercício nas primeiras semanas e chegamos a 2-3, mantendo o volume semanal em uma faixa moderada — suficiente para progredir sem acumular fadiga que atrapalhe o aprendizado. Descansos de 2 a 3 minutos nos compostos preservam a qualidade das séries; 60-90 segundos bastam nos isolados. A semana 8 é um deload leve para consolidar os ganhos antes do próximo bloco. Nada disso é garantia — a resposta individual varia — mas reflete o que a evidência atual sustenta para iniciantes.",
+  "restGuidanceEn": "2 to 3 minutes (150-180s) on the heavy compounds like squat, Romanian deadlift and bench press; 90-120 seconds on the other compounds and 60-90 seconds on isolation work. If you're still out of breath, wait a bit longer — set quality matters more than the clock.",
+  "restGuidancePt": "2 a 3 minutos (150-180s) nos compostos pesados como agachamento, terra romeno e supino; 90-120 segundos nos demais compostos e 60-90 segundos nos isolados. Se ainda estiver ofegante, espere mais um pouco — a qualidade da série importa mais que o cronômetro.",
+  "weeklyGuidance": [
+   {
+    "week": 1,
+    "rirTarget": 3,
+    "setsNotePt": "Faça apenas 2 séries de trabalho por exercício. Escolha cargas leves, com bastante sobra.",
+    "notePt": "Semana de aprendizado: prioridade total na técnica e na amplitude, sem buscar carga. Nada de teste de 1RM."
+   },
+   {
+    "week": 2,
+    "rirTarget": 3,
+    "setsNotePt": "2 séries de trabalho por exercício.",
+    "notePt": "Repita os movimentos e anote pesos e repetições de cada série — esse registro é o que vai guiar a progressão."
+   },
+   {
+    "week": 3,
+    "rirTarget": 2.5,
+    "setsNotePt": "Suba para o volume completo (2-3 séries conforme prescrito).",
+    "notePt": "Comece a aplicar a progressão dupla: atingiu o topo da faixa de repetições em todas as séries mantendo o RIR? Aumente a carga na próxima sessão."
+   },
+   {
+    "week": 4,
+    "rirTarget": 2.5,
+    "setsNotePt": "Volume completo (2-3 séries).",
+    "notePt": "Continue a progressão dupla nos exercícios em que a técnica já está sólida; onde ainda não estiver, segure a carga e refine a execução."
+   },
+   {
+    "week": 5,
+    "rirTarget": 2,
+    "setsNotePt": "Volume completo.",
+    "notePt": "Aproxime-se um pouco mais do esforço, mantendo cerca de 2 repetições na reserva nos compostos."
+   },
+   {
+    "week": 6,
+    "rirTarget": 2,
+    "setsNotePt": "Volume completo.",
+    "notePt": "Mantenha a progressão dupla; platôs pontuais são normais — siga registrando e ajustando."
+   },
+   {
+    "week": 7,
+    "rirTarget": 2,
+    "setsNotePt": "Volume completo — semana de pico do bloco.",
+    "notePt": "Semana mais exigente em carga. Cuide do sono, da alimentação e do aquecimento."
+   },
+   {
+    "week": 8,
+    "rirTarget": 3,
+    "setsNotePt": "Deload: reduza para 2 séries por exercício e tire cerca de 10% da carga.",
+    "notePt": "Semana leve para consolidar os ganhos e chegar recuperado ao próximo bloco. Sem teste de 1RM."
+   }
+  ],
+  "evidenceKeys": [
+   "schoenfeld-2016-frequency-hypertrophy",
+   "folland-williams-2007-adaptations-strength-training",
+   "acsm-2009-progression-models-position-stand",
+   "grgic-2022-failure-vs-nonfailure",
+   "refalo-2023-proximity-to-failure-hypertrophy",
+   "plotkin-2022-load-vs-rep-progression",
+   "schoenfeld-2017-volume-dose-response",
+   "grgic-2018-rest-interval-strength-review"
+  ],
+  "principleSlugs": [
+   "beginner-adaptation",
+   "training-frequency",
+   "double-progression",
+   "rir",
+   "progressive-overload",
+   "rest-intervals"
+  ],
+  "days": [
+   {
+    "dayIndex": 0,
+    "nameEn": "Session A",
+    "namePt": "Sessão A",
+    "focusEn": "Whole body — barbell pattern focus",
+    "focusPt": "Corpo inteiro — foco nos padrões com barra",
+    "estimatedMinutes": 62,
+    "exercises": [
+     {
+      "exerciseSlug": "barbell-squat",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 10,
+      "rirTarget": 3,
+      "restSeconds": 150,
+      "warmupSets": 2,
+      "notesEn": "Learn to sit between the hips with the heels planted; go only as deep as you can control.",
+      "notesPt": "Aprenda a descer entre os quadris com os calcanhares fixos no chão; desça só até onde consegue controlar."
+     },
+     {
+      "exerciseSlug": "romanian-deadlift",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 10,
+      "rirTarget": 3,
+      "restSeconds": 150,
+      "warmupSets": 1,
+      "notesEn": "Push the hips back with a long spine; feel the hamstrings stretch, don't round the lower back.",
+      "notesPt": "Empurre o quadril para trás com a coluna alongada; sinta o alongamento dos posteriores, sem arredondar a lombar."
+     },
+     {
+      "exerciseSlug": "barbell-bench-press-medium-grip",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 10,
+      "rirTarget": 3,
+      "restSeconds": 150,
+      "warmupSets": 2,
+      "notesEn": "Medium grip, touch the mid-chest under control.",
+      "notesPt": "Pegada média, encoste no meio do peito de forma controlada."
+     },
+     {
+      "exerciseSlug": "seated-cable-rows",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 1,
+      "notesEn": "Pull to the lower ribs and squeeze the shoulder blades together.",
+      "notesPt": "Puxe em direção às costelas baixas e junte as escápulas."
+     },
+     {
+      "exerciseSlug": "dumbbell-shoulder-press",
+      "sets": 2,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 1
+     },
+     {
+      "exerciseSlug": "triceps-pushdown",
+      "sets": 2,
+      "repMin": 12,
+      "repMax": 15,
+      "rirTarget": 2,
+      "restSeconds": 75,
+      "warmupSets": 0
+     },
+     {
+      "exerciseSlug": "plank",
+      "sets": 3,
+      "repMin": 20,
+      "repMax": 40,
+      "rirTarget": 2,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesEn": "Reps are seconds. Keep the glutes and abs tight, hips level.",
+      "notesPt": "As repetições são segundos. Mantenha glúteos e abdômen contraídos, quadril alinhado."
+     }
+    ]
+   },
+   {
+    "dayIndex": 1,
+    "nameEn": "Session B",
+    "namePt": "Sessão B",
+    "focusEn": "Whole body — machines and posterior chain",
+    "focusPt": "Corpo inteiro — máquinas e cadeia posterior",
+    "estimatedMinutes": 60,
+    "exercises": [
+     {
+      "exerciseSlug": "leg-press",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": 3,
+      "restSeconds": 150,
+      "warmupSets": 2,
+      "notesEn": "Feet mid-platform; don't let the lower back round off the pad at the bottom.",
+      "notesPt": "Pés no meio da plataforma; não deixe a lombar descolar do apoio na descida."
+     },
+     {
+      "exerciseSlug": "barbell-hip-thrust",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 1,
+      "notesEn": "Ribs down, chin tucked; squeeze the glutes at the top without over-arching.",
+      "notesPt": "Costelas para baixo, queixo recolhido; contraia os glúteos no topo sem hiperestender a lombar."
+     },
+     {
+      "exerciseSlug": "machine-bench-press",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 1
+     },
+     {
+      "exerciseSlug": "wide-grip-lat-pulldown",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 1,
+      "notesEn": "Pull the bar to the upper chest, leading with the elbows.",
+      "notesPt": "Puxe a barra até a parte alta do peito, conduzindo com os cotovelos."
+     },
+     {
+      "exerciseSlug": "side-lateral-raise",
+      "sets": 3,
+      "repMin": 12,
+      "repMax": 15,
+      "rirTarget": 2,
+      "restSeconds": 75,
+      "warmupSets": 0,
+      "notesEn": "Light weight, lead with the elbows to shoulder height.",
+      "notesPt": "Carga leve, suba conduzindo pelos cotovelos até a altura dos ombros."
+     },
+     {
+      "exerciseSlug": "dumbbell-bicep-curl",
+      "sets": 2,
+      "repMin": 12,
+      "repMax": 15,
+      "rirTarget": 2,
+      "restSeconds": 75,
+      "warmupSets": 0
+     },
+     {
+      "exerciseSlug": "cable-crunch",
+      "sets": 3,
+      "repMin": 12,
+      "repMax": 15,
+      "rirTarget": 2,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesEn": "Round the spine to crunch the abs, not a hip fold.",
+      "notesPt": "Flexione a coluna para contrair o abdômen, não é dobrar o quadril."
+     }
+    ]
+   },
+   {
+    "dayIndex": 2,
+    "nameEn": "Session C",
+    "namePt": "Sessão C",
+    "focusEn": "Whole body — dumbbells and pattern reinforcement",
+    "focusPt": "Corpo inteiro — halteres e reforço dos padrões",
+    "estimatedMinutes": 58,
+    "exercises": [
+     {
+      "exerciseSlug": "goblet-squat",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": 3,
+      "restSeconds": 120,
+      "warmupSets": 2,
+      "notesEn": "Hold the dumbbell at the chest, torso upright; great for grooving squat depth.",
+      "notesPt": "Segure o halter junto ao peito, tronco ereto; ótimo para treinar a profundidade do agachamento."
+     },
+     {
+      "exerciseSlug": "dumbbell-bench-press",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 1
+     },
+     {
+      "exerciseSlug": "one-arm-dumbbell-row",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 90,
+      "warmupSets": 1,
+      "notesEn": "Reps per side. Keep the torso still and pull the elbow toward the hip.",
+      "notesPt": "Repetições por lado. Mantenha o tronco estável e puxe o cotovelo em direção ao quadril."
+     },
+     {
+      "exerciseSlug": "leverage-shoulder-press",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 1
+     },
+     {
+      "exerciseSlug": "lying-leg-curls",
+      "sets": 3,
+      "repMin": 12,
+      "repMax": 15,
+      "rirTarget": 2,
+      "restSeconds": 90,
+      "warmupSets": 1
+     },
+     {
+      "exerciseSlug": "barbell-curl",
+      "sets": 2,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 75,
+      "warmupSets": 0
+     },
+     {
+      "exerciseSlug": "hyperextensions-back-extensions",
+      "sets": 2,
+      "repMin": 12,
+      "repMax": 15,
+      "rirTarget": 2,
+      "restSeconds": 75,
+      "warmupSets": 0,
+      "notesEn": "Extend to a straight line — no need to arch past neutral. Add load only when bodyweight is easy.",
+      "notesPt": "Estenda até a linha reta do corpo — não precisa passar da posição neutra. Só adicione carga quando o peso corporal ficar fácil."
+     }
+    ]
+   }
+  ],
+  "_droppedSlugs": []
+ },
+ {
+  "slug": "push-pull-legs",
+  "nameEn": "FGPOWER Push/Pull/Legs — 6-Day Hypertrophy",
+  "namePt": "FGPOWER Push/Pull/Legs — Hipertrofia 6x/Semana",
+  "taglineEn": "Six sessions a week, every muscle trained twice, built for intermediate lifters chasing size.",
+  "taglinePt": "Seis sessões por semana, cada músculo treinado duas vezes — para o intermediário que quer ganhar massa.",
+  "descriptionEn": "A six-week, high-volume Push/Pull/Legs run twice per week. You train Push, Pull, and Legs on days A and B, so every major muscle gets two distinct sessions per week — A leans toward one emphasis (flat pressing, horizontal rowing, quad-dominant squatting) and B rotates the exercise selection (overhead pressing, vertical pulling, posterior-chain and unilateral leg work) to spread stimulus across angles and cover weak points. Sets sit mostly at RIR 1–2 in classic hypertrophy rep ranges, with weeks 1–5 accumulating volume and intensity and week 6 pulled back as a planned deload. Intended for an intermediate who can already perform the main lifts with sound technique and recover from training six days a week.",
+  "descriptionPt": "Um Push/Pull/Legs de seis semanas, alto volume, rodado duas vezes por semana. Você treina Push, Pull e Pernas nos dias A e B, então cada grande grupo muscular recebe duas sessões distintas na semana — o dia A puxa para uma ênfase (supino reto, remada horizontal, agachamento com foco em quadríceps) e o dia B troca a seleção de exercícios (desenvolvimento acima da cabeça, puxada vertical, cadeia posterior e trabalho unilateral de perna) para distribuir o estímulo em vários ângulos e cobrir pontos fracos. As séries ficam em sua maioria em RIR 1–2, nas faixas clássicas de hipertrofia, com as semanas 1–5 acumulando volume e intensidade e a semana 6 recuada como deload planejado. Feito para o intermediário que já executa os movimentos principais com técnica sólida e consegue se recuperar treinando seis dias por semana.",
+  "audienceEn": "Intermediate lifters with a year or more of consistent training who already own the main compound lifts, have the schedule to train six days a week, and want a higher-volume block dedicated to muscle growth. Not a starting point for beginners or anyone unable to recover from six weekly sessions.",
+  "audiencePt": "Praticantes intermediários com um ano ou mais de treino consistente, que já dominam os principais exercícios compostos, têm agenda para treinar seis dias por semana e querem um bloco de maior volume dedicado ao ganho de massa. Não é ponto de partida para iniciantes nem para quem não consegue se recuperar de seis sessões semanais.",
+  "goal": "HYPERTROPHY",
+  "experienceLevel": "INTERMEDIATE",
+  "daysPerWeek": 6,
+  "durationWeeks": 6,
+  "sessionMinutes": 70,
+  "equipmentAccess": "FULL_GYM",
+  "trainingStyle": "PUSH_PULL_LEGS",
+  "progressionStrategy": "DOUBLE",
+  "rationaleEn": "**Why PPL six times a week, hitting each muscle twice?** Frequency reviews find that, once weekly volume is equated, training a muscle twice a week tends to match or slightly beat once a week, and the more recent dose–response work reads the frequency effect largely as a vehicle for fitting in more quality weekly volume rather than a magic property of frequency itself. Running Push/Pull/Legs twice lets us place a lot of weekly sets while keeping each individual session fresh enough to be productive — you're never asked to grind 20 chest sets in one sitting.\n\n**Why this much volume?** The volume literature shows a broadly dose-dependent relationship between weekly sets per muscle and growth, which is why most muscles here land in roughly the 12–20 weekly-set range across the two sessions. That relationship is not infinite and is highly individual, so treat these numbers as a well-supported starting dose, not a target to keep inflating — if recovery, sleep, or joint comfort slips, trim sets before adding them.\n\n**Why RIR 1–2 instead of training to failure?** Meta-analytic work on proximity to failure suggests that stopping a rep or two short captures most of the hypertrophy stimulus while sparing a disproportionate amount of fatigue. At six sessions a week that fatigue math matters: leaving 1–2 reps in reserve on most sets, and reserving true near-failure effort for the final set of isolation moves, is what keeps the frequency sustainable.\n\n**Why the 6-to-20 rep spread?** Hypertrophy is similar across a wide band of loads when sets are taken close enough to failure, so we anchor each muscle with a heavier 6–10 compound (mechanical tension plus some strength carryover and easier loadability) and fill in with 10–20 rep accessories and isolation that are gentler on the joints and let you chase a good stretch and pump.\n\n**Why 2–3 minutes of rest on the compounds?** Longer inter-set rest on multi-joint lifts preserves the reps and load you can complete across a set, which protects total training volume — the thing actually driving growth. Isolation work, where fatigue is local and stakes are lower, is run on shorter 60–90s rest.\n\n**Why double progression, and why deload in week 6?** Double progression gives an unambiguous rule for adding load — climb within the rep range at the target RIR, and once you hit the top of the range across all sets, add weight and start again — which matches evidence that progressing either load or reps drives adaptation. Weeks 1–5 accumulate; week 6 is a planned deload, consistent with expert consensus that scheduled reductions in volume and intensity help dissipate accumulated fatigue after a hard high-frequency block.",
+  "rationalePt": "**Por que PPL seis vezes por semana, treinando cada músculo duas vezes?** As revisões de frequência mostram que, com o volume semanal equalizado, treinar um músculo duas vezes por semana tende a igualar ou superar levemente uma vez por semana — e o trabalho mais recente de dose–resposta lê o efeito da frequência sobretudo como um veículo para encaixar mais volume semanal de qualidade, não como uma propriedade mágica da frequência em si. Rodar Push/Pull/Legs duas vezes permite acumular muitas séries na semana mantendo cada sessão fresca o bastante para render — você nunca precisa espremer 20 séries de peito de uma vez só.\n\n**Por que todo esse volume?** A literatura de volume mostra uma relação amplamente dependente da dose entre séries semanais por músculo e crescimento, e por isso a maioria dos grupos aqui fica em torno de 12–20 séries por semana somando as duas sessões. Essa relação não é infinita e é muito individual: encare esses números como uma dose inicial bem embasada, não como uma meta para ficar inflando. Se recuperação, sono ou conforto articular piorarem, corte séries antes de adicionar.\n\n**Por que RIR 1–2 e não treinar até a falha?** As meta-análises sobre proximidade da falha sugerem que parar uma ou duas repetições antes captura a maior parte do estímulo de hipertrofia poupando uma quantidade desproporcional de fadiga. A seis sessões por semana essa conta importa: deixar 1–2 repetições na reserva na maioria das séries — e guardar o esforço perto da falha para a última série dos isoladores — é o que torna a frequência sustentável.\n\n**Por que a faixa de 6 a 20 repetições?** A hipertrofia é semelhante numa ampla faixa de cargas quando as séries chegam perto o suficiente da falha, então ancoramos cada músculo com um composto mais pesado de 6–10 (tensão mecânica, algum carryover de força e carga fácil de progredir) e completamos com acessórios e isoladores de 10–20 repetições, mais amigáveis às articulações e que permitem buscar bom alongamento e congestão.\n\n**Por que 2–3 minutos de descanso nos compostos?** Descansos maiores entre séries nos exercícios multiarticulares preservam as repetições e a carga que você consegue completar ao longo da série, protegendo o volume total de treino — que é o que de fato impulsiona o crescimento. O trabalho de isolamento, onde a fadiga é local e o risco é menor, roda com descansos mais curtos de 60–90s.\n\n**Por que progressão dupla e por que deload na semana 6?** A progressão dupla dá uma regra clara para adicionar carga — suba dentro da faixa de repetições no RIR-alvo e, quando bater o topo da faixa em todas as séries, aumente o peso e recomece —, alinhada à evidência de que progredir carga ou repetições impulsiona a adaptação. As semanas 1–5 acumulam; a semana 6 é um deload planejado, consistente com o consenso de especialistas de que reduções programadas de volume e intensidade ajudam a dissipar a fadiga acumulada após um bloco duro de alta frequência.",
+  "restGuidanceEn": "2–3 minutes (150–180s) on heavy compound presses, squats, hinges, and rows; 90–120s on machine and cable accessories; 60–90s on shoulder, arm, and calf isolation.",
+  "restGuidancePt": "2 a 3 minutos (150–180s) nos compostos pesados de empurrar, agachar, dobradiça (hinge) e remar; 90–120s nos acessórios de máquina e cabo; 60–90s no isolamento de ombro, braço e panturrilha.",
+  "weeklyGuidance": [
+   {
+    "week": 1,
+    "rirTarget": 2.5,
+    "setsNotePt": "Semana de calibração. Use a base de séries prescrita (não adicione séries) e escolha cargas que deixem 2–3 repetições na reserva. Priorize técnica e conexão com o músculo.",
+    "notePt": "Anote cargas e repetições de cada exercício — elas são a referência para progredir nas próximas semanas. Sem testes de carga máxima."
+   },
+   {
+    "week": 2,
+    "rirTarget": 2,
+    "setsNotePt": "Mesma base de séries. Suba a carga ou as repetições onde a técnica já estiver sólida, mirando RIR 2 nos compostos.",
+    "notePt": "Comece a aplicar a progressão dupla: avance dentro da faixa de repetições antes de aumentar o peso."
+   },
+   {
+    "week": 3,
+    "rirTarget": 2,
+    "setsNotePt": "Adicione 1 série a até dois grupos que você queira enfatizar (ex.: costas ou ombros). Demais exercícios mantêm a base.",
+    "notePt": "Volume subindo. Se o sono ou a recuperação piorarem, mantenha a base em vez de adicionar séries."
+   },
+   {
+    "week": 4,
+    "rirTarget": 1.5,
+    "setsNotePt": "Mantenha o volume da semana 3. Aperte a intensidade: isoladores podem chegar a RIR 1 na última série; compostos ficam em RIR 1–2.",
+    "notePt": "Pico de acúmulo se aproximando. Foque em bater o topo das faixas de repetição para disparar aumentos de carga."
+   },
+   {
+    "week": 5,
+    "rirTarget": 1,
+    "setsNotePt": "Semana mais dura do bloco. Volume máximo e RIR 1 na maioria das séries de trabalho; guarde a falha real só para a última série dos isoladores.",
+    "notePt": "Fadiga alta é esperada. Se a técnica degradar num composto, encerre a série — não vale forçar repetição feia."
+   },
+   {
+    "week": 6,
+    "rirTarget": 3,
+    "setsNotePt": "Deload planejado. Reduza para cerca de 1–2 séries de trabalho por exercício e use ~60–70% da carga habitual, mantendo RIR 3+ e movimento leve e limpo.",
+    "notePt": "O objetivo é dissipar fadiga, não estimular. Você deve sair de cada sessão sentindo que poderia ter feito bem mais."
+   }
+  ],
+  "evidenceKeys": [
+   "schoenfeld-2016-frequency-hypertrophy",
+   "pelland-2025-volume-frequency-meta-regression",
+   "schoenfeld-2017-volume-dose-response",
+   "refalo-2023-proximity-to-failure-hypertrophy",
+   "schoenfeld-2017-low-vs-high-load",
+   "schoenfeld-2016-rest-interval-1-vs-3min",
+   "plotkin-2022-load-vs-rep-progression",
+   "bell-2023-deloading-delphi-consensus"
+  ],
+  "principleSlugs": [
+   "training-frequency",
+   "training-volume",
+   "rir",
+   "rep-ranges",
+   "double-progression",
+   "deloads"
+  ],
+  "days": [
+   {
+    "dayIndex": 0,
+    "nameEn": "Push A",
+    "namePt": "Push A",
+    "focusEn": "Chest-focused push — chest, shoulders, triceps",
+    "focusPt": "Push com ênfase em peito — peito, ombros e tríceps",
+    "estimatedMinutes": 70,
+    "exercises": [
+     {
+      "exerciseSlug": "barbell-bench-press-medium-grip",
+      "sets": 4,
+      "repMin": 6,
+      "repMax": 8,
+      "rirTarget": 2,
+      "restSeconds": 165,
+      "warmupSets": 2,
+      "notesEn": "Main press of the week. Controlled eccentric, touch the chest, drive up.",
+      "notesPt": "Press principal da semana. Excêntrica controlada, encoste no peito e empurre."
+     },
+     {
+      "exerciseSlug": "incline-dumbbell-press",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 0,
+      "notesEn": "Bench at 30°. Full stretch at the bottom without dropping the weights.",
+      "notesPt": "Banco a 30°. Alongue bem embaixo sem despencar os halteres."
+     },
+     {
+      "exerciseSlug": "machine-shoulder-military-press",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 1
+     },
+     {
+      "exerciseSlug": "cable-crossover",
+      "sets": 3,
+      "repMin": 12,
+      "repMax": 15,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 0,
+      "notesEn": "Emphasize the stretch; let the cables pull the arms back before squeezing.",
+      "notesPt": "Enfatize o alongamento; deixe os cabos puxarem os braços para trás antes de fechar."
+     },
+     {
+      "exerciseSlug": "side-lateral-raise",
+      "sets": 4,
+      "repMin": 12,
+      "repMax": 20,
+      "rirTarget": 1,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesEn": "Lead with the elbows; no swing.",
+      "notesPt": "Conduza pelos cotovelos; sem embalo."
+     },
+     {
+      "exerciseSlug": "triceps-pushdown",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 15,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 0
+     },
+     {
+      "exerciseSlug": "cable-rope-overhead-triceps-extension",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 15,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 0,
+      "notesEn": "Overhead position biases the long head at a long length.",
+      "notesPt": "A posição acima da cabeça enfatiza a cabeça longa em maior alongamento."
+     }
+    ]
+   },
+   {
+    "dayIndex": 1,
+    "nameEn": "Pull A",
+    "namePt": "Pull A",
+    "focusEn": "Horizontal pull — back thickness, rear delts, biceps",
+    "focusPt": "Puxada horizontal — espessura de costas, deltoide posterior e bíceps",
+    "estimatedMinutes": 66,
+    "exercises": [
+     {
+      "exerciseSlug": "bent-over-barbell-row",
+      "sets": 4,
+      "repMin": 6,
+      "repMax": 8,
+      "rirTarget": 2,
+      "restSeconds": 165,
+      "warmupSets": 2,
+      "notesEn": "Flat back, torso near-parallel; pull to the lower ribs.",
+      "notesPt": "Coluna neutra, tronco quase paralelo; puxe em direção às costelas baixas."
+     },
+     {
+      "exerciseSlug": "wide-grip-lat-pulldown",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 1
+     },
+     {
+      "exerciseSlug": "seated-cable-rows",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 105,
+      "warmupSets": 0,
+      "notesEn": "Neutral spine; don't heave with the lower back.",
+      "notesPt": "Coluna neutra; não jogue com a lombar."
+     },
+     {
+      "exerciseSlug": "face-pull",
+      "sets": 3,
+      "repMin": 15,
+      "repMax": 20,
+      "rirTarget": 1,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesEn": "Pull to the forehead, elbows high; rear delts and external rotators.",
+      "notesPt": "Puxe até a testa, cotovelos altos; deltoide posterior e rotadores externos."
+     },
+     {
+      "exerciseSlug": "barbell-curl",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 1,
+      "restSeconds": 90,
+      "warmupSets": 1
+     },
+     {
+      "exerciseSlug": "incline-dumbbell-curl",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 15,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 0,
+      "notesEn": "Arms behind the torso for a long-length biceps stretch.",
+      "notesPt": "Braços atrás do tronco para alongar bem o bíceps."
+     }
+    ]
+   },
+   {
+    "dayIndex": 2,
+    "nameEn": "Legs A",
+    "namePt": "Pernas A",
+    "focusEn": "Quad-focused legs — squat pattern, hamstrings, calves",
+    "focusPt": "Pernas com ênfase em quadríceps — agachamento, posteriores e panturrilha",
+    "estimatedMinutes": 72,
+    "exercises": [
+     {
+      "exerciseSlug": "barbell-full-squat",
+      "sets": 4,
+      "repMin": 6,
+      "repMax": 8,
+      "rirTarget": 2,
+      "restSeconds": 180,
+      "warmupSets": 2,
+      "notesEn": "Full depth you can control with a neutral spine.",
+      "notesPt": "Profundidade total que você controla com a coluna neutra."
+     },
+     {
+      "exerciseSlug": "romanian-deadlift",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 10,
+      "rirTarget": 2,
+      "restSeconds": 150,
+      "warmupSets": 1,
+      "notesEn": "Push the hips back, feel the hamstring stretch, stop before the lower back rounds.",
+      "notesPt": "Empurre o quadril para trás, sinta o alongamento do posterior e pare antes de a lombar arredondar."
+     },
+     {
+      "exerciseSlug": "leg-press",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 0
+     },
+     {
+      "exerciseSlug": "seated-leg-curl",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 15,
+      "rirTarget": 1,
+      "restSeconds": 90,
+      "warmupSets": 0,
+      "notesEn": "Seated curl trains the hamstrings at a longer length.",
+      "notesPt": "A mesa flexora sentada trabalha o posterior em maior alongamento."
+     },
+     {
+      "exerciseSlug": "leg-extensions",
+      "sets": 3,
+      "repMin": 12,
+      "repMax": 15,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 0
+     },
+     {
+      "exerciseSlug": "standing-calf-raises",
+      "sets": 4,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 1,
+      "notesEn": "Full stretch at the bottom, pause a beat before pressing up.",
+      "notesPt": "Alongue totalmente embaixo, pause um instante antes de subir."
+     }
+    ]
+   },
+   {
+    "dayIndex": 3,
+    "nameEn": "Push B",
+    "namePt": "Push B",
+    "focusEn": "Shoulder-focused push — overhead press, upper chest, triceps",
+    "focusPt": "Push com ênfase em ombro — desenvolvimento, peito superior e tríceps",
+    "estimatedMinutes": 66,
+    "exercises": [
+     {
+      "exerciseSlug": "standing-military-press",
+      "sets": 4,
+      "repMin": 6,
+      "repMax": 8,
+      "rirTarget": 2,
+      "restSeconds": 165,
+      "warmupSets": 2,
+      "notesEn": "Braced torso, glutes tight; press without excessive lean-back.",
+      "notesPt": "Tronco firme, glúteos contraídos; empurre sem inclinar demais para trás."
+     },
+     {
+      "exerciseSlug": "leverage-chest-press",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 1,
+      "notesEn": "Machine press; adds chest volume with low stabilizer cost after overhead work.",
+      "notesPt": "Supino na máquina; adiciona volume de peito com baixo custo de estabilização após o desenvolvimento."
+     },
+     {
+      "exerciseSlug": "incline-dumbbell-flyes",
+      "sets": 3,
+      "repMin": 12,
+      "repMax": 15,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 0,
+      "notesEn": "Upper-chest stretch focus; controlled range, no bouncing at the bottom.",
+      "notesPt": "Foco no alongamento do peito superior; amplitude controlada, sem quicar embaixo."
+     },
+     {
+      "exerciseSlug": "cable-seated-lateral-raise",
+      "sets": 4,
+      "repMin": 12,
+      "repMax": 20,
+      "rirTarget": 1,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesEn": "Cable keeps tension on the side delt through the whole range.",
+      "notesPt": "O cabo mantém tensão no deltoide lateral em toda a amplitude."
+     },
+     {
+      "exerciseSlug": "dips-triceps-version",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 90,
+      "warmupSets": 0,
+      "notesEn": "Stay fairly upright to bias triceps; add load if bodyweight is easy.",
+      "notesPt": "Fique mais vertical para enfatizar o tríceps; adicione carga se o peso do corpo estiver fácil."
+     },
+     {
+      "exerciseSlug": "dumbbell-one-arm-triceps-extension",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 15,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 0
+     }
+    ]
+   },
+   {
+    "dayIndex": 4,
+    "nameEn": "Pull B",
+    "namePt": "Pull B",
+    "focusEn": "Vertical pull — back width, traps, rear delts, arms",
+    "focusPt": "Puxada vertical — largura de costas, trapézio, deltoide posterior e braços",
+    "estimatedMinutes": 68,
+    "exercises": [
+     {
+      "exerciseSlug": "pullups",
+      "sets": 3,
+      "repMin": 6,
+      "repMax": 10,
+      "rirTarget": 2,
+      "restSeconds": 150,
+      "warmupSets": 1,
+      "notesEn": "Full hang to chin over bar. Add weight when you clear 10 clean reps; use assistance if you can't reach 6.",
+      "notesPt": "Da suspensão total até o queixo acima da barra. Adicione peso quando passar de 10 repetições limpas; use assistência se não chegar a 6."
+     },
+     {
+      "exerciseSlug": "one-arm-dumbbell-row",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 105,
+      "warmupSets": 0,
+      "notesEn": "Unilateral row for a big range and even side-to-side loading.",
+      "notesPt": "Remada unilateral para grande amplitude e carga equilibrada entre os lados."
+     },
+     {
+      "exerciseSlug": "close-grip-front-lat-pulldown",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 105,
+      "warmupSets": 0,
+      "notesEn": "Neutral close grip; drive the elbows down and in.",
+      "notesPt": "Pegada fechada neutra; leve os cotovelos para baixo e para dentro."
+     },
+     {
+      "exerciseSlug": "reverse-machine-flyes",
+      "sets": 3,
+      "repMin": 15,
+      "repMax": 20,
+      "rirTarget": 1,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesEn": "Rear delts; lead with the elbows, don't shrug.",
+      "notesPt": "Deltoide posterior; conduza pelos cotovelos, sem encolher os ombros."
+     },
+     {
+      "exerciseSlug": "barbell-shrug",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 15,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 0,
+      "notesEn": "Straight up-and-down; pause at the top, no rolling.",
+      "notesPt": "Suba e desça reto; pause no topo, sem rolar os ombros."
+     },
+     {
+      "exerciseSlug": "preacher-curl",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 1,
+      "restSeconds": 90,
+      "warmupSets": 1,
+      "notesEn": "Biceps at a short length; control the bottom, don't let the elbow fully snap out.",
+      "notesPt": "Bíceps em posição encurtada; controle a descida, sem estender o cotovelo bruscamente."
+     },
+     {
+      "exerciseSlug": "hammer-curls",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 15,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 0,
+      "notesEn": "Neutral grip for brachialis and forearm.",
+      "notesPt": "Pegada neutra para braquial e antebraço."
+     }
+    ]
+   },
+   {
+    "dayIndex": 5,
+    "nameEn": "Legs B",
+    "namePt": "Pernas B",
+    "focusEn": "Posterior-chain legs — hinge, glutes, unilateral, calves",
+    "focusPt": "Pernas com ênfase posterior — dobradiça (hinge), glúteos, unilateral e panturrilha",
+    "estimatedMinutes": 70,
+    "exercises": [
+     {
+      "exerciseSlug": "hack-squat",
+      "sets": 4,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 150,
+      "warmupSets": 2,
+      "notesEn": "Machine squat; deep, controlled range with the quads under tension throughout.",
+      "notesPt": "Agachamento na máquina; amplitude profunda e controlada, com o quadríceps sob tensão o tempo todo."
+     },
+     {
+      "exerciseSlug": "stiff-legged-barbell-deadlift",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 10,
+      "rirTarget": 2,
+      "restSeconds": 150,
+      "warmupSets": 1,
+      "notesEn": "Hip hinge with soft knees; hamstrings and glutes. Keep the bar close.",
+      "notesPt": "Dobradiça de quadril com joelhos levemente flexionados; posteriores e glúteos. Mantenha a barra rente ao corpo."
+     },
+     {
+      "exerciseSlug": "barbell-hip-thrust",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 1,
+      "notesEn": "Full hip lockout, ribs down; pause and squeeze the glutes at the top.",
+      "notesPt": "Extensão total do quadril, costelas para baixo; pause e contraia os glúteos no topo."
+     },
+     {
+      "exerciseSlug": "lying-leg-curls",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 15,
+      "rirTarget": 1,
+      "restSeconds": 90,
+      "warmupSets": 0,
+      "notesEn": "Different hamstring stimulus than the seated curl in Legs A.",
+      "notesPt": "Estímulo de posterior diferente da mesa flexora sentada do dia Pernas A."
+     },
+     {
+      "exerciseSlug": "split-squat-with-dumbbells",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": 1,
+      "restSeconds": 90,
+      "warmupSets": 0,
+      "notesEn": "Per leg. Front foot flat, long stride for glute and quad.",
+      "notesPt": "Por perna. Pé da frente apoiado, passada longa para glúteo e quadríceps."
+     },
+     {
+      "exerciseSlug": "seated-calf-raise",
+      "sets": 4,
+      "repMin": 10,
+      "repMax": 15,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 1,
+      "notesEn": "Seated raise biases the soleus; full stretch and pause each rep.",
+      "notesPt": "A panturrilha sentada enfatiza o sóleo; alongue totalmente e pause a cada repetição."
+     }
+    ]
+   }
+  ],
+  "_droppedSlugs": []
+ },
+ {
+  "slug": "upper-lower",
+  "nameEn": "Upper / Lower — 4-Day Strength & Hypertrophy",
+  "namePt": "Superior / Inferior — Força e Hipertrofia em 4 Dias",
+  "taglineEn": "Four days a week for eight weeks: heavy compounds for strength, higher-rep accessories for size.",
+  "taglinePt": "Quatro dias por semana durante oito semanas: compostos pesados para força e acessórios em repetições altas para tamanho.",
+  "descriptionEn": "An eight-week upper/lower split for lifters who already own the basics and want to keep building strength and muscle at the same time. Each week you train two upper and two lower sessions, with a slight push-vs-pull and squat-vs-hinge rotation so every major pattern gets trained about twice a week. The first movement of each session is a heavy compound in the 5-8 rep range to drive strength; the rest is hypertrophy work in the 8-15 range to accumulate volume. Intensity ramps from a conservative start toward a harder middle block, then backs off for a deload in week 8.",
+  "descriptionPt": "Um split superior/inferior de oito semanas para quem já domina o básico e quer continuar ganhando força e músculo ao mesmo tempo. A cada semana você treina duas sessões de superior e duas de inferior, com um leve rodízio entre empurrar e puxar e entre agachar e flexionar o quadril, de modo que cada padrão de movimento importante seja treinado cerca de duas vezes por semana. O primeiro exercício de cada sessão é um composto pesado na faixa de 5 a 8 repetições para puxar a força; o restante é trabalho de hipertrofia na faixa de 8 a 15 para acumular volume. A intensidade sobe de um começo conservador até um bloco central mais duro e depois recua para um deload na semana 8.",
+  "audienceEn": "Intermediate lifters with roughly 6+ months of consistent training who can perform the barbell squat, bench, deadlift, row and overhead press with solid technique, train 4 days a week, and have full-gym access. Not intended for absolute beginners or for anyone returning from a long layoff — start with an adaptation block first.",
+  "audiencePt": "Praticantes intermediários com cerca de 6 meses ou mais de treino consistente, que executam agachamento, supino, terra, remada e desenvolvimento com técnica sólida, treinam 4 dias por semana e têm acesso a uma academia completa. Não é indicado para iniciantes absolutos nem para quem está voltando de uma longa pausa — nesses casos, comece antes com um bloco de adaptação.",
+  "goal": "STRENGTH_HYPERTROPHY",
+  "experienceLevel": "INTERMEDIATE",
+  "daysPerWeek": 4,
+  "durationWeeks": 8,
+  "sessionMinutes": 70,
+  "equipmentAccess": "FULL_GYM",
+  "trainingStyle": "UPPER_LOWER",
+  "progressionStrategy": "DOUBLE",
+  "rationaleEn": "**Why an upper/lower split trained 4x/week?** Splitting the body into two upper and two lower sessions lets each major muscle group be trained about twice per week. Meta-analyses on frequency suggest that, once weekly volume is matched, training a muscle twice a week tends to produce at least as much growth as once — and often a bit more — largely because a higher frequency makes it easier to accumulate quality volume without cramming everything into a single punishing session. Recent dose-response work modelling volume and frequency together points in the same direction: more weekly sets generally help up to a point, and spreading them across sessions is a practical way to fit that volume in.\n\n**Why mix heavy 5-8s with 8-15s?** Load research is fairly consistent that maximal-strength gains favor heavier loads, while muscle growth can be achieved across a wide spectrum of loads when sets are taken reasonably close to failure. Leading each session with a heavy compound (5-8 reps) targets the strength side of the goal; filling the rest with accessories at 8-15 reps accumulates hypertrophy volume with less joint and systemic strain than doing everything heavy. This isn't a claim that one rep range is \"best\" — it's a way to pursue both goals inside one program.\n\n**Why RIR 2 on the compounds?** Proximity-to-failure evidence indicates you don't need to grind every set to true failure to grow or get stronger; leaving roughly 1-2 reps in reserve captures most of the benefit while sharply reducing the fatigue you carry into your next set and next session. That fatigue economy matters more here because heavy compounds appear twice a week. Small isolation movements (raises, curls, calves) sit closer to failure since their recovery cost is low.\n\n**Why double progression and long rests on the main lifts?** Double progression gives a clear, self-regulating rule: work within the prescribed rep range, and once you hit the top of the range on all working sets at the target RIR, add load next time. It's a simple way to apply progressive overload without guessing. Longer rest periods (about 2-3 minutes) on the heavy compounds are supported by evidence showing that fuller recovery between sets better preserves strength and total volume — which is precisely what those first movements are for.\n\n**Why a deload in week 8?** After roughly six weeks of accumulating volume and intensity, a lighter week lets accumulated fatigue dissipate. Deload practice is common among coaches, and at least one controlled trial suggests a planned lighter week doesn't compromise — and may support — adaptation over a block. Treat week 8 as a bridge into your next training phase, not a week off.",
+  "rationalePt": "**Por que um split superior/inferior treinado 4x/semana?** Dividir o corpo em duas sessões de superior e duas de inferior permite que cada grupo muscular importante seja treinado cerca de duas vezes por semana. As meta-análises sobre frequência sugerem que, quando o volume semanal é igualado, treinar um músculo duas vezes por semana tende a gerar pelo menos tanto crescimento quanto uma vez — e muitas vezes um pouco mais —, em grande parte porque uma frequência maior facilita acumular volume de qualidade sem espremer tudo em uma única sessão exaustiva. Os trabalhos recentes de dose-resposta que modelam volume e frequência juntos apontam na mesma direção: mais séries semanais costumam ajudar até certo ponto, e distribuí-las entre as sessões é uma forma prática de encaixar esse volume.\n\n**Por que misturar 5-8 pesado com 8-15?** A pesquisa sobre carga é bastante consistente em que os ganhos de força máxima favorecem cargas mais altas, enquanto o crescimento muscular pode ser obtido em um amplo espectro de cargas quando as séries são levadas razoavelmente perto da falha. Abrir cada sessão com um composto pesado (5-8 reps) mira o lado da força do objetivo; preencher o restante com acessórios de 8-15 reps acumula volume de hipertrofia com menos estresse articular e sistêmico do que fazer tudo pesado. Isto não é dizer que uma faixa de repetições é a \"melhor\" — é uma forma de perseguir os dois objetivos dentro de um mesmo programa.\n\n**Por que RIR 2 nos compostos?** A evidência sobre proximidade da falha indica que você não precisa arrastar toda série até a falha real para crescer ou ficar mais forte; deixar cerca de 1 a 2 repetições na reserva captura a maior parte do benefício e reduz bastante a fadiga que você carrega para a próxima série e para a próxima sessão. Essa economia de fadiga importa ainda mais aqui, já que os compostos pesados aparecem duas vezes por semana. Os isolados pequenos (elevações, roscas, panturrilhas) ficam mais perto da falha, porque o custo de recuperação deles é baixo.\n\n**Por que progressão dupla e descansos longos nos exercícios principais?** A progressão dupla dá uma regra clara e autorregulada: trabalhe dentro da faixa de repetições prescrita e, quando bater o topo da faixa em todas as séries de trabalho no RIR-alvo, adicione carga na próxima vez. É uma forma simples de aplicar sobrecarga progressiva sem adivinhação. Descansos mais longos (cerca de 2 a 3 minutos) nos compostos pesados têm apoio na evidência de que uma recuperação mais completa entre séries preserva melhor a força e o volume total — que é exatamente para o que esses primeiros movimentos servem.\n\n**Por que um deload na semana 8?** Depois de cerca de seis semanas acumulando volume e intensidade, uma semana mais leve permite que a fadiga acumulada se dissipe. O uso de deload é comum entre treinadores, e ao menos um estudo controlado sugere que uma semana mais leve planejada não compromete — e pode até favorecer — a adaptação ao longo de um bloco. Encare a semana 8 como uma ponte para a próxima fase de treino, não como uma semana de folga.",
+  "restGuidanceEn": "Rest 2.5-3 minutes (150-180s) on the heavy opening compounds, about 2 minutes (120s) on secondary compounds, and 60-90 seconds on isolation work. When in doubt on the main lifts, rest longer — preserving strength and total volume on those sets is the point.",
+  "restGuidancePt": "Descanse de 2,5 a 3 minutos (150-180s) nos compostos pesados de abertura, cerca de 2 minutos (120s) nos compostos secundários e de 60 a 90 segundos no trabalho de isolamento. Na dúvida nos exercícios principais, descanse mais — preservar a força e o volume total nessas séries é justamente o objetivo.",
+  "weeklyGuidance": [
+   {
+    "week": 1,
+    "rirTarget": 3,
+    "setsNotePt": "Volume programado completo, mas comece conservador: pare cerca de 3 repetições longe da falha nos compostos.",
+    "notePt": "Semana de calibração. Use este período para acertar as cargas de cada exercício e travar a técnica. Sem teste de 1RM."
+   },
+   {
+    "week": 2,
+    "rirTarget": 3,
+    "setsNotePt": "Volume completo, ainda com ~3 RIR nos compostos e ~2 RIR nos isolados.",
+    "notePt": "Progressão dupla já valendo: sempre que bater o topo da faixa de reps em todas as séries, adicione carga na próxima sessão."
+   },
+   {
+    "week": 3,
+    "rirTarget": 2,
+    "setsNotePt": "Volume completo. Aproxime-se da falha: 2 RIR nos compostos, 1 RIR nos isolados.",
+    "notePt": "A partir daqui as cargas devem estar bem estabelecidas. Foque em somar carga ou repetições em relação às semanas 1-2."
+   },
+   {
+    "week": 4,
+    "rirTarget": 2,
+    "setsNotePt": "Adicione 1 série ao primeiro composto de cada sessão se a recuperação permitir. 2 RIR nos compostos.",
+    "notePt": "Primeiro empurrão de volume. Se sono, apetite ou dores nas articulações piorarem, mantenha o volume da semana 3."
+   },
+   {
+    "week": 5,
+    "rirTarget": 2,
+    "setsNotePt": "Mantenha o volume elevado da semana 4. 2 RIR nos compostos.",
+    "notePt": "Consolide: tente bater o topo da faixa de reps com as cargas que na semana 4 ficavam no fundo da faixa."
+   },
+   {
+    "week": 6,
+    "rirTarget": 2,
+    "setsNotePt": "Semana mais pesada do bloco. 2 RIR firmes nos compostos, cargas no maior nível até aqui.",
+    "notePt": "Pico de carga nos compostos principais. Não sacrifique a técnica para adicionar peso."
+   },
+   {
+    "week": 7,
+    "rirTarget": 1,
+    "setsNotePt": "Volume completo. Pico de intensidade: 1 RIR nos compostos, 0-1 RIR nos isolados.",
+    "notePt": "Última semana de esforço alto. Se a barra travar bem antes do previsto, encerre a série — não é semana de falhar reps feios."
+   },
+   {
+    "week": 8,
+    "rirTarget": 4,
+    "setsNotePt": "DELOAD: reduza para cerca de metade das séries de trabalho e pare 3-4 reps longe da falha.",
+    "notePt": "Mantenha os movimentos e cargas moderadas para dissipar a fadiga. Encare como ponte para o próximo bloco, não como folga total."
+   }
+  ],
+  "evidenceKeys": [
+   "pelland-2025-volume-frequency-meta-regression",
+   "schoenfeld-2019-frequency-volume-equated",
+   "schoenfeld-2017-volume-dose-response",
+   "lopez-2021-load-network-meta-analysis",
+   "robinson-2024-proximity-to-failure-meta-regression",
+   "schoenfeld-2016-rest-interval-1-vs-3min",
+   "plotkin-2022-load-vs-rep-progression",
+   "coleman-2024-deload-rct-muscular-adaptations"
+  ],
+  "principleSlugs": [
+   "progressive-overload",
+   "double-progression",
+   "rir",
+   "training-frequency",
+   "rep-ranges",
+   "deloads"
+  ],
+  "days": [
+   {
+    "dayIndex": 0,
+    "nameEn": "Upper A — Push Focus",
+    "namePt": "Superior A — Ênfase em Empurrar",
+    "focusEn": "Horizontal press strength + chest, back and arm volume",
+    "focusPt": "Força no empurrar horizontal + volume de peito, costas e braços",
+    "estimatedMinutes": 72,
+    "exercises": [
+     {
+      "exerciseSlug": "barbell-bench-press-medium-grip",
+      "sets": 4,
+      "repMin": 6,
+      "repMax": 8,
+      "rirTarget": 2,
+      "restSeconds": 180,
+      "warmupSets": 2,
+      "notesEn": "Main strength lift. Controlled descent to the chest, no bounce.",
+      "notesPt": "Exercício principal de força. Descida controlada até o peito, sem quicar."
+     },
+     {
+      "exerciseSlug": "bent-over-barbell-row",
+      "sets": 4,
+      "repMin": 6,
+      "repMax": 8,
+      "rirTarget": 2,
+      "restSeconds": 150,
+      "warmupSets": 2,
+      "notesEn": "Heavy horizontal pull. Keep a neutral spine and drive the elbows to the hip.",
+      "notesPt": "Puxada horizontal pesada. Mantenha a coluna neutra e leve os cotovelos em direção ao quadril."
+     },
+     {
+      "exerciseSlug": "incline-dumbbell-press",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 1,
+      "notesEn": "Bench at ~30° to bias the upper chest.",
+      "notesPt": "Banco a cerca de 30° para enfatizar o peitoral superior."
+     },
+     {
+      "exerciseSlug": "wide-grip-lat-pulldown",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 0
+     },
+     {
+      "exerciseSlug": "side-lateral-raise",
+      "sets": 3,
+      "repMin": 12,
+      "repMax": 20,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 0
+     },
+     {
+      "exerciseSlug": "reverse-flyes",
+      "sets": 3,
+      "repMin": 12,
+      "repMax": 20,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 0,
+      "notesEn": "Rear delts. Lead with the elbows, avoid shrugging.",
+      "notesPt": "Deltoides posteriores. Conduza com os cotovelos e evite encolher os ombros."
+     },
+     {
+      "exerciseSlug": "barbell-curl",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 15,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 0
+     },
+     {
+      "exerciseSlug": "triceps-pushdown",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 15,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 0
+     }
+    ]
+   },
+   {
+    "dayIndex": 1,
+    "nameEn": "Lower A — Squat Focus",
+    "namePt": "Inferior A — Ênfase em Agachamento",
+    "focusEn": "Squat strength + quad, hamstring and calf volume",
+    "focusPt": "Força no agachamento + volume de quadríceps, posteriores e panturrilha",
+    "estimatedMinutes": 62,
+    "exercises": [
+     {
+      "exerciseSlug": "barbell-squat",
+      "sets": 4,
+      "repMin": 6,
+      "repMax": 8,
+      "rirTarget": 2,
+      "restSeconds": 180,
+      "warmupSets": 2,
+      "notesEn": "Main strength lift. At least thigh-parallel depth; fuller range tends to drive more quad and glute growth.",
+      "notesPt": "Exercício principal de força. Profundidade ao menos até a coxa paralela; a amplitude maior tende a gerar mais crescimento de quadríceps e glúteo."
+     },
+     {
+      "exerciseSlug": "romanian-deadlift",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 10,
+      "rirTarget": 2,
+      "restSeconds": 150,
+      "warmupSets": 1,
+      "notesEn": "Hips back, slight knee bend, feel the hamstring stretch; bar stays close to the legs.",
+      "notesPt": "Quadril para trás, joelhos levemente flexionados, sinta o alongamento dos posteriores; a barra fica rente às pernas."
+     },
+     {
+      "exerciseSlug": "leg-press",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 0
+     },
+     {
+      "exerciseSlug": "seated-leg-curl",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 90,
+      "warmupSets": 0
+     },
+     {
+      "exerciseSlug": "standing-calf-raises",
+      "sets": 4,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 1,
+      "restSeconds": 90,
+      "warmupSets": 1,
+      "notesEn": "Full pause and stretch at the bottom of each rep.",
+      "notesPt": "Pausa e alongamento completo na parte de baixo de cada repetição."
+     },
+     {
+      "exerciseSlug": "rope-crunch",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 15,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 0
+     }
+    ]
+   },
+   {
+    "dayIndex": 2,
+    "nameEn": "Upper B — Pull Focus",
+    "namePt": "Superior B — Ênfase em Puxar",
+    "focusEn": "Overhead press and vertical pull strength + arm and delt volume",
+    "focusPt": "Força no desenvolvimento e na puxada vertical + volume de braços e ombros",
+    "estimatedMinutes": 75,
+    "exercises": [
+     {
+      "exerciseSlug": "standing-military-press",
+      "sets": 4,
+      "repMin": 6,
+      "repMax": 8,
+      "rirTarget": 2,
+      "restSeconds": 180,
+      "warmupSets": 2,
+      "notesEn": "Main vertical press. Squeeze glutes and brace; don't lean back excessively.",
+      "notesPt": "Exercício principal de empurrar vertical. Contraia os glúteos e trave o core; não incline demais para trás."
+     },
+     {
+      "exerciseSlug": "weighted-pull-ups",
+      "sets": 4,
+      "repMin": 6,
+      "repMax": 8,
+      "rirTarget": 2,
+      "restSeconds": 150,
+      "warmupSets": 2,
+      "notesEn": "Heavy vertical pull. If you can't get 6 clean reps with added load, use bodyweight or a lat pulldown.",
+      "notesPt": "Puxada vertical pesada. Se não conseguir 6 repetições limpas com carga extra, use peso corporal ou a puxada na polia."
+     },
+     {
+      "exerciseSlug": "dumbbell-bench-press",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 1,
+      "notesEn": "Secondary horizontal press for chest volume.",
+      "notesPt": "Empurrar horizontal secundário para volume de peito."
+     },
+     {
+      "exerciseSlug": "seated-cable-rows",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 0
+     },
+     {
+      "exerciseSlug": "face-pull",
+      "sets": 3,
+      "repMin": 12,
+      "repMax": 20,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 0,
+      "notesEn": "Rear delts and external rotators. Pull toward the forehead, elbows high.",
+      "notesPt": "Deltoides posteriores e rotadores externos. Puxe em direção à testa, cotovelos altos."
+     },
+     {
+      "exerciseSlug": "side-lateral-raise",
+      "sets": 3,
+      "repMin": 12,
+      "repMax": 20,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 0
+     },
+     {
+      "exerciseSlug": "preacher-curl",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 15,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 0
+     },
+     {
+      "exerciseSlug": "seated-triceps-press",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 15,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 0,
+      "notesEn": "Overhead position puts the triceps on stretch, which tends to favor growth.",
+      "notesPt": "A posição acima da cabeça deixa o tríceps alongado, o que tende a favorecer o crescimento."
+     }
+    ]
+   },
+   {
+    "dayIndex": 3,
+    "nameEn": "Lower B — Hinge Focus",
+    "namePt": "Inferior B — Ênfase em Levantamento Terra",
+    "focusEn": "Deadlift strength + quad, hamstring and calf volume",
+    "focusPt": "Força no levantamento terra + volume de quadríceps, posteriores e panturrilha",
+    "estimatedMinutes": 62,
+    "exercises": [
+     {
+      "exerciseSlug": "barbell-deadlift",
+      "sets": 3,
+      "repMin": 4,
+      "repMax": 6,
+      "rirTarget": 2,
+      "restSeconds": 180,
+      "warmupSets": 2,
+      "notesEn": "Main strength lift. Lower reps because it's very recovery-demanding; neutral spine, reset each rep from a dead stop.",
+      "notesPt": "Exercício principal de força. Repetições mais baixas por ser muito exigente na recuperação; coluna neutra, reinicie cada repetição a partir do chão."
+     },
+     {
+      "exerciseSlug": "hack-squat",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 150,
+      "warmupSets": 1,
+      "notesEn": "Quad-focused and machine-supported to spare the spine after deadlifts.",
+      "notesPt": "Focado em quadríceps e apoiado na máquina para poupar a coluna depois do terra."
+     },
+     {
+      "exerciseSlug": "leg-extensions",
+      "sets": 3,
+      "repMin": 12,
+      "repMax": 15,
+      "rirTarget": 1,
+      "restSeconds": 90,
+      "warmupSets": 0
+     },
+     {
+      "exerciseSlug": "lying-leg-curls",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 90,
+      "warmupSets": 0,
+      "notesEn": "Second hamstring angle of the week, knee-flexion biased.",
+      "notesPt": "Segundo ângulo de posteriores da semana, com ênfase na flexão de joelho."
+     },
+     {
+      "exerciseSlug": "seated-calf-raise",
+      "sets": 4,
+      "repMin": 10,
+      "repMax": 15,
+      "rirTarget": 1,
+      "restSeconds": 90,
+      "warmupSets": 0,
+      "notesEn": "Bent-knee variation to bias the soleus; complements the standing raise on Lower A.",
+      "notesPt": "Variação com joelho flexionado para enfatizar o sóleo; complementa a panturrilha em pé do Inferior A."
+     },
+     {
+      "exerciseSlug": "hanging-leg-raise",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 15,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 0
+     }
+    ]
+   }
+  ],
+  "_droppedSlugs": []
+ },
+ {
+  "slug": "strength-fundamentals",
+  "nameEn": "Strength Fundamentals — The Big Barbell Lifts",
+  "namePt": "Força Fundamentos — Os Grandes Levantamentos com Barra",
+  "taglineEn": "Eight weeks of squat, bench, deadlift, press, and row — heavy, low-rep, linear progression.",
+  "taglinePt": "Oito semanas de agachamento, supino, terra, desenvolvimento e remada — pesado, poucas reps, progressão linear.",
+  "descriptionEn": "An 8-week, 3x/week strength cycle for intermediate lifters, built around the five big barbell lifts: squat, bench press, deadlift, overhead press, and row. Low reps, long rest, and linear load progression — you add weight to the bar each week and stop your sets shy of failure. Accessories are kept few and deliberate so recovery stays pointed at the main lifts. No 1RM testing inside the block.",
+  "descriptionPt": "Um ciclo de força de 8 semanas, 3x/semana, para praticantes intermediários, construído em torno dos cinco grandes levantamentos com barra: agachamento, supino, levantamento terra, desenvolvimento e remada. Poucas repetições, descanso longo e progressão linear de carga — você adiciona peso na barra a cada semana e para as séries antes da falha. Os acessórios são poucos e escolhidos com critério, para que a recuperação fique concentrada nos levantamentos principais. Sem teste de 1RM dentro do bloco.",
+  "audienceEn": "Intermediate lifters who already own the basic technique of the big barbell lifts and want a focused cycle to get stronger. Ideal for someone coming off an adaptation or hypertrophy block and ready to consolidate strength on the main lifts.",
+  "audiencePt": "Praticantes intermediários que já dominam a técnica básica dos grandes levantamentos com barra e querem um ciclo focado em ficar mais fortes. Ideal para quem sai de um bloco de adaptação ou hipertrofia e quer consolidar força nos levantamentos principais.",
+  "goal": "STRENGTH",
+  "experienceLevel": "INTERMEDIATE",
+  "daysPerWeek": 3,
+  "durationWeeks": 8,
+  "sessionMinutes": 75,
+  "equipmentAccess": "FULL_GYM",
+  "trainingStyle": "FULL_BODY",
+  "progressionStrategy": "LINEAR_LOAD",
+  "rationaleEn": "**Why full-body 3x/week around the big lifts?** Each main pattern — squat, bench, deadlift, overhead press, and row — shows up once or twice a week. The frequency evidence for strength suggests much of the \"frequency effect\" is really a vehicle for accumulating weekly volume; spreading the lifts across three sessions gives frequent, low-fatigue practice with the barbell rather than making any single session brutal to recover from.\n\n**Why low reps (3-6) and heavy loads?** For maximal-strength goals, higher loads at lower reps tend to have the edge over higher-rep work when the outcome is the 1RM. Training near 3-6 reps is also where the skill of the big barbell lifts is rehearsed most specifically.\n\n**Why 3 minutes of rest?** Longer inter-set rest preserves force output from set to set and favors strength gains. On the main lifts it is not worth rushing recovery — the quality of each heavy set matters more than session density.\n\n**Why linear load progression, and not to failure?** For an intermediate in an 8-week block, adding load in a straightforward linear fashion is a simple, well-supported model. Stopping each set around 2 reps in reserve (RIR ~2) delivers nearly all of the strength benefit with far less fatigue and technical risk than going to failure — which is exactly why there is no 1RM test inside the block: progress comes from the weight on the bar climbing week to week, not from a tested max.\n\n**Why is week 8 a deload?** A planned lighter week helps dissipate accumulated fatigue and consolidate the gains before the next cycle. Individual response varies — if you reach week 7 still feeling strong, the deload can be lighter-touch; if you are run down, take it seriously.\n\n**Why so few accessories?** Focus and recovery stay on the five big lifts. The handful of accessories (Romanian deadlift, leg curl, chin-up/pulldown, face pull, curl) round out the posterior chain, lats, and shoulder health without competing with the main work. The squat, deadlift, and press already impose a heavy isometric demand on the trunk, so direct core work is minimal by design.",
+  "rationalePt": "**Por que full-body 3x/semana em torno dos grandes levantamentos?** Cada padrão principal — agachamento, supino, terra, desenvolvimento e remada — aparece uma ou duas vezes por semana. A evidência sobre frequência para força sugere que boa parte do \"efeito da frequência\" é, na prática, um veículo para acumular volume ao longo da semana; distribuir os levantamentos em três sessões dá prática frequente e de baixa fadiga com a barra, em vez de transformar uma sessão isolada em algo brutal de recuperar.\n\n**Por que poucas repetições (3-6) e cargas altas?** Para o objetivo de força máxima, cargas mais altas com repetições baixas tendem a levar vantagem sobre faixas mais altas quando o desfecho é o 1RM. Trabalhar perto de 3-6 reps também é onde a técnica dos grandes levantamentos com barra é ensaiada de forma mais específica.\n\n**Por que 3 minutos de descanso?** Intervalos mais longos entre as séries preservam a produção de força de série para série e favorecem os ganhos de força. Nos levantamentos principais não vale a pena apressar a recuperação: a qualidade de cada série pesada importa mais do que a densidade da sessão.\n\n**Por que progressão linear de carga, e sem ir à falha?** Para um intermediário em um bloco de 8 semanas, adicionar carga de forma linear é um modelo simples e bem apoiado. Parar cada série com cerca de 2 repetições na reserva (RIR ~2) entrega quase todo o benefício de força com muito menos fadiga e risco técnico do que ir à falha — e é justamente por isso que não há teste de 1RM dentro do bloco: a progressão vem do peso na barra subindo semana a semana, não de um máximo testado.\n\n**Por que a semana 8 é de descarga?** Uma semana planejada mais leve ajuda a dissipar a fadiga acumulada e a consolidar os ganhos antes do próximo ciclo. A resposta individual varia — se você chegar na semana 7 ainda se sentindo forte, a descarga pode ser mais leve; se estiver esgotado, leve-a a sério.\n\n**Por que tão poucos acessórios?** O foco e a recuperação ficam nos cinco grandes levantamentos. Os poucos acessórios (terra romeno, mesa flexora, barra fixa/puxada, face pull e rosca) complementam a cadeia posterior, o dorsal e a saúde do ombro sem competir com o trabalho principal. O agachamento, o terra e o desenvolvimento já impõem grande demanda isométrica ao core, então o trabalho direto de abdômen é mínimo por opção.",
+  "restGuidanceEn": "3 minutes (150-180s) on the big barbell lifts; 90-120s on compound accessories; 60-90s on isolation and core work.",
+  "restGuidancePt": "3 minutos (150-180s) nos grandes levantamentos com barra; 90-120s nos acessórios compostos; 60-90s no trabalho de isolamento e core.",
+  "weeklyGuidance": [
+   {
+    "week": 1,
+    "rirTarget": 3,
+    "setsNotePt": "Estabeleça as cargas de trabalho. Escolha um peso que deixe cerca de 3 repetições na reserva no topo da faixa em cada levantamento principal. Séries completas conforme prescrito.",
+    "notePt": "Semana de calibração. Priorize técnica e velocidade da barra. Sem teste de 1RM."
+   },
+   {
+    "week": 2,
+    "rirTarget": 3,
+    "setsNotePt": "Adicione ~2,5 kg nos levantamentos de superior (supino, desenvolvimento, remada) e ~5 kg nos de perna (agachamento, terra) em relação à semana 1.",
+    "notePt": "Mantenha a mesma faixa de reps; só a carga sobe."
+   },
+   {
+    "week": 3,
+    "rirTarget": 2.5,
+    "setsNotePt": "Mais um incremento de carga (~2,5 kg superior / ~5 kg perna). A barra deve ficar visivelmente mais pesada, ainda com 2-3 reps na reserva.",
+    "notePt": ""
+   },
+   {
+    "week": 4,
+    "rirTarget": 2.5,
+    "setsNotePt": "Continue a progressão linear de carga. Se falhar a faixa de reps em duas sessões seguidas no mesmo exercício, mantenha o peso até acertar de novo.",
+    "notePt": "Primeira semana em que alguns levantamentos podem começar a exigir esforço real no fim da faixa."
+   },
+   {
+    "week": 5,
+    "rirTarget": 2,
+    "setsNotePt": "Incremento de carga. Nos levantamentos principais, foque no fundo da faixa (3-4 reps) se precisar para manter a técnica sólida.",
+    "notePt": ""
+   },
+   {
+    "week": 6,
+    "rirTarget": 2,
+    "setsNotePt": "Semana pesada. Suba a carga com cautela; RIR 2 nos principais. Priorize velocidade da barra na subida.",
+    "notePt": "Se a carga não subir esta semana, repetir o mesmo peso já é progresso."
+   },
+   {
+    "week": 7,
+    "rirTarget": 1.5,
+    "setsNotePt": "Pico de carga do bloco. Deixe 1-2 reps na reserva nos principais — não cace 1RM. Acessórios permanecem em RIR 2.",
+    "notePt": "Semana mais exigente. Durma bem e não improvise pesos além do programado."
+   },
+   {
+    "week": 8,
+    "rirTarget": 4,
+    "setsNotePt": "Descarga: reduza a carga em ~10-15% e faça apenas 2 séries por levantamento principal. Acessórios opcionais ou cortados pela metade.",
+    "notePt": "Semana de recuperação para dissipar a fadiga e consolidar os ganhos antes do próximo bloco. Sem teste de 1RM."
+   }
+  ],
+  "evidenceKeys": [
+   "grgic-2018-frequency-strength",
+   "schoenfeld-2017-low-vs-high-load",
+   "grgic-2018-rest-interval-strength-review",
+   "acsm-2009-progression-models-position-stand",
+   "grgic-2022-failure-vs-nonfailure",
+   "larsen-2021-autoregulation-systematic-review",
+   "harries-2015-periodization-strength",
+   "bell-2023-deloading-delphi-consensus"
+  ],
+  "principleSlugs": [
+   "progressive-overload",
+   "rep-ranges",
+   "rest-intervals",
+   "rir",
+   "warm-up",
+   "deloads"
+  ],
+  "days": [
+   {
+    "dayIndex": 0,
+    "nameEn": "Session A — Squat & Bench",
+    "namePt": "Sessão A — Agachamento e Supino",
+    "focusEn": "Full-body strength, squat & bench emphasis",
+    "focusPt": "Força total com ênfase em agachamento e supino",
+    "estimatedMinutes": 75,
+    "exercises": [
+     {
+      "exerciseSlug": "barbell-squat",
+      "sets": 4,
+      "repMin": 4,
+      "repMax": 6,
+      "rirTarget": 2.5,
+      "restSeconds": 180,
+      "warmupSets": 2,
+      "notesEn": "Squat to at least parallel with a neutral spine. Ramp up in the warm-up sets, then keep all 4 working sets at the same load.",
+      "notesPt": "Agache até pelo menos a paralela com a coluna neutra. Progrida a carga nas séries de aquecimento e mantenha as 4 séries de trabalho no mesmo peso."
+     },
+     {
+      "exerciseSlug": "barbell-bench-press-medium-grip",
+      "sets": 4,
+      "repMin": 4,
+      "repMax": 6,
+      "rirTarget": 2.5,
+      "restSeconds": 180,
+      "warmupSets": 2,
+      "notesEn": "Full range to the chest, elbows tucked ~45°. Use a spotter or the safeties on heavy weeks.",
+      "notesPt": "Amplitude completa até o peito, cotovelos a ~45°. Use um observador ou os pinos de segurança nas semanas mais pesadas."
+     },
+     {
+      "exerciseSlug": "bent-over-barbell-row",
+      "sets": 4,
+      "repMin": 5,
+      "repMax": 6,
+      "rirTarget": 2,
+      "restSeconds": 150,
+      "warmupSets": 1,
+      "notesEn": "Torso near parallel to the floor, spine neutral. Row to the lower ribs; avoid heaving with the hips.",
+      "notesPt": "Tronco próximo da paralela ao chão, coluna neutra. Puxe em direção às costelas inferiores; evite dar impulso com o quadril."
+     },
+     {
+      "exerciseSlug": "chin-up",
+      "sets": 3,
+      "repMin": 6,
+      "repMax": 8,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 0,
+      "notesEn": "Supinated grip. Add load once you clear the top of the range; use band assistance if you can't reach 6.",
+      "notesPt": "Pegada supinada. Adicione carga quando passar do topo da faixa; use elástico de assistência se não alcançar 6 reps."
+     },
+     {
+      "exerciseSlug": "hanging-leg-raise",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 1,
+      "restSeconds": 90,
+      "warmupSets": 0,
+      "notesEn": "Control the lowering; avoid swinging. Bent knees if straight legs round the lower back.",
+      "notesPt": "Controle a descida; evite balançar. Joelhos flexionados se pernas estendidas arredondarem a lombar."
+     }
+    ]
+   },
+   {
+    "dayIndex": 1,
+    "nameEn": "Session B — Deadlift & Press",
+    "namePt": "Sessão B — Terra e Desenvolvimento",
+    "focusEn": "Full-body strength, deadlift & press emphasis",
+    "focusPt": "Força total com ênfase em terra e desenvolvimento",
+    "estimatedMinutes": 72,
+    "exercises": [
+     {
+      "exerciseSlug": "barbell-deadlift",
+      "sets": 3,
+      "repMin": 3,
+      "repMax": 5,
+      "rirTarget": 2.5,
+      "restSeconds": 180,
+      "warmupSets": 2,
+      "notesEn": "Reset each rep from a dead stop on the floor — no bouncing. Fewer sets than the squat because the deadlift is costly to recover from.",
+      "notesPt": "Reinicie cada repetição do chão (dead stop), sem quicar. Menos séries que o agachamento porque o terra é mais custoso de recuperar."
+     },
+     {
+      "exerciseSlug": "standing-military-press",
+      "sets": 4,
+      "repMin": 4,
+      "repMax": 6,
+      "rirTarget": 2.5,
+      "restSeconds": 180,
+      "warmupSets": 2,
+      "notesEn": "Standing, glutes and abs braced. Press overhead without over-arching the lower back.",
+      "notesPt": "Em pé, glúteos e abdômen firmes. Empurre acima da cabeça sem hiperestender a lombar."
+     },
+     {
+      "exerciseSlug": "wide-grip-lat-pulldown",
+      "sets": 3,
+      "repMin": 6,
+      "repMax": 8,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 0,
+      "notesEn": "Full stretch at the top, drive elbows down to the collarbone. Vertical-pull volume to complement the chin-ups.",
+      "notesPt": "Alongamento completo no topo, leve os cotovelos em direção à clavícula. Volume de puxada vertical para complementar a barra fixa."
+     },
+     {
+      "exerciseSlug": "romanian-deadlift",
+      "sets": 3,
+      "repMin": 6,
+      "repMax": 8,
+      "rirTarget": 2,
+      "restSeconds": 150,
+      "warmupSets": 1,
+      "notesEn": "Hips back, slight knee bend, spine neutral. Lower until you feel the hamstring stretch, not to the floor.",
+      "notesPt": "Quadril para trás, leve flexão de joelho, coluna neutra. Desça até sentir o alongamento dos posteriores, não até o chão."
+     },
+     {
+      "exerciseSlug": "face-pull",
+      "sets": 3,
+      "repMin": 12,
+      "repMax": 15,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 0,
+      "notesEn": "Pull toward the forehead, elbows high. Cheap insurance for the rear delts and external rotators under all the pressing.",
+      "notesPt": "Puxe em direção à testa, cotovelos altos. Seguro barato para deltoides posteriores e rotadores externos diante de tanto trabalho de empurrar."
+     }
+    ]
+   },
+   {
+    "dayIndex": 2,
+    "nameEn": "Session C — Front Squat & Incline",
+    "namePt": "Sessão C — Agachamento Frontal e Inclinado",
+    "focusEn": "Full-body strength, front squat & incline emphasis",
+    "focusPt": "Força total com ênfase em agachamento frontal e supino inclinado",
+    "estimatedMinutes": 73,
+    "exercises": [
+     {
+      "exerciseSlug": "front-barbell-squat",
+      "sets": 4,
+      "repMin": 4,
+      "repMax": 6,
+      "rirTarget": 2.5,
+      "restSeconds": 180,
+      "warmupSets": 2,
+      "notesEn": "Elbows high, upright torso. A lighter squat variation that also strongly trains the anterior core.",
+      "notesPt": "Cotovelos altos, tronco ereto. Uma variação de agachamento com carga menor que também treina fortemente o core anterior."
+     },
+     {
+      "exerciseSlug": "barbell-incline-bench-press-medium-grip",
+      "sets": 4,
+      "repMin": 5,
+      "repMax": 6,
+      "rirTarget": 2,
+      "restSeconds": 180,
+      "warmupSets": 2,
+      "notesEn": "Bench set ~30°. A second pressing angle to complement the flat bench in Session A.",
+      "notesPt": "Banco a ~30°. Um segundo ângulo de empurrar para complementar o supino reto da Sessão A."
+     },
+     {
+      "exerciseSlug": "bent-over-barbell-row",
+      "sets": 3,
+      "repMin": 6,
+      "repMax": 8,
+      "rirTarget": 2,
+      "restSeconds": 150,
+      "warmupSets": 1,
+      "notesEn": "Second row exposure of the week, slightly higher reps. Keep the torso angle honest — no standing up as the weight climbs.",
+      "notesPt": "Segunda exposição de remada da semana, com reps um pouco mais altas. Mantenha o ângulo do tronco honesto — não suba o tronco à medida que a carga aumenta."
+     },
+     {
+      "exerciseSlug": "seated-leg-curl",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 10,
+      "rirTarget": 2,
+      "restSeconds": 90,
+      "warmupSets": 0,
+      "notesEn": "Knee-flexion hamstring work to balance the hip-hinge emphasis of the deadlift and RDL.",
+      "notesPt": "Trabalho de posteriores por flexão de joelho para equilibrar a ênfase de extensão de quadril do terra e do terra romeno."
+     },
+     {
+      "exerciseSlug": "barbell-curl",
+      "sets": 3,
+      "repMin": 6,
+      "repMax": 10,
+      "rirTarget": 1,
+      "restSeconds": 90,
+      "warmupSets": 0,
+      "notesEn": "The one dedicated arm accessory of the week. Strict form, no swinging the torso.",
+      "notesPt": "O único acessório dedicado de braço da semana. Técnica estrita, sem balançar o tronco."
+     }
+    ]
+   }
+  ],
+  "_droppedSlugs": []
+ },
+ {
+  "slug": "home-dumbbells",
+  "nameEn": "Home Dumbbells — Full-Body Beginner Base",
+  "namePt": "Halteres em Casa — Base Full-Body para Iniciantes",
+  "taglineEn": "Full-body dumbbell training 3x a week — an 8-week beginner base you can build at home.",
+  "taglinePt": "Treino full-body com halteres 3x na semana — uma base de 8 semanas para iniciantes, feita em casa.",
+  "descriptionEn": "An eight-week, three-day full-body program for beginners training at home with a pair of dumbbells (and, ideally, an adjustable bench). Each session covers the whole body — a squat pattern, a hip hinge, a press, a row, and direct arm and core work — so every muscle group gets trained two to three times a week. Loads climb through double progression: add weight only once every working set hits the top of its rep range at the target reps-in-reserve.",
+  "descriptionPt": "Um programa full-body de oito semanas e três dias por semana para iniciantes que treinam em casa com um par de halteres (e, de preferência, um banco ajustável). Cada sessão cobre o corpo inteiro — um padrão de agachamento, uma dobradiça de quadril, um empurrar, um puxar e trabalho direto de braços e core — de modo que cada grupo muscular é treinado de duas a três vezes por semana. As cargas sobem por progressão dupla: só aumente o peso quando todas as séries de trabalho atingirem o topo da faixa de repetições no RIR alvo.",
+  "audienceEn": "Beginners and anyone returning to training who works out at home with dumbbells and limited equipment. Best for people who want a simple, repeatable full-body routine three times a week rather than a gym split.",
+  "audiencePt": "Iniciantes e qualquer pessoa retornando ao treino que se exercita em casa com halteres e pouco equipamento. Ideal para quem quer uma rotina full-body simples e repetível três vezes por semana, em vez de um split de academia.",
+  "goal": "HYPERTROPHY",
+  "experienceLevel": "BEGINNER",
+  "daysPerWeek": 3,
+  "durationWeeks": 8,
+  "sessionMinutes": 55,
+  "equipmentAccess": "HOME_DUMBBELLS",
+  "trainingStyle": "FULL_BODY",
+  "progressionStrategy": "DOUBLE",
+  "rationaleEn": "**Why full body 3x a week?** For someone starting out at home with dumbbells, splitting the whole body across three equal sessions gives each muscle group two to three exposures per week — the frequency range the literature tends to associate with good hypertrophy outcomes when volume is equated. In beginners, much of the early progress comes from the nervous system learning the movements, so repeating the main patterns several times a week helps that curve more than long, isolated sessions do.\n\n**Why this much volume and no more?** The volume evidence shows a dose-response relationship, but extra sets only pay off when you can recover from them. We start with a couple of working sets per exercise and build up over the weeks — enough to drive growth without burying a beginner in fatigue and soreness.\n\n**Why 8–20 rep ranges?** Hypertrophy happens across a wide span of loads, as long as sets are taken close enough to real effort. Because home dumbbells usually jump in fairly large increments, moderate-to-higher rep ranges leave more room to progress gradually and to train each movement with safe technique.\n\n**Why RIR instead of training to failure?** Recent reviews suggest training to failure isn't required to build muscle once effort is close enough, and failure carries a disproportionate cost in fatigue and recovery. Working with reps in reserve (RIR) keeps technique clean and the next session doable — which matters more for a beginner than grinding out a last rep.\n\n**Why double progression?** It gives an objective trigger to add load: when every set of an exercise reaches the top of its rep range at the target RIR, you increase the dumbbell next time and restart at the bottom of the range. That pairs especially well with fixed dumbbell increments and removes guesswork.\n\n**Rest and warm-up.** Longer rest on the compounds preserves reps and set quality; isolation and core work can turn over faster. One or two warm-up sets on the first exercise for each major group prepares the joint and the pattern without adding meaningful fatigue.",
+  "rationalePt": "**Por que full-body 3 vezes por semana?** Para quem está começando em casa com halteres, distribuir o corpo inteiro em três sessões iguais entrega a cada grupo muscular de duas a três exposições por semana — a faixa de frequência que a literatura costuma associar a bons resultados de hipertrofia quando o volume é igualado. Em iniciantes, boa parte do progresso inicial vem do sistema nervoso aprendendo os movimentos, então repetir os padrões principais várias vezes na semana ajuda essa curva mais do que sessões longas e isoladas.\n\n**Por que este volume e não mais?** As evidências de volume mostram uma relação dose-resposta, mas séries extras só compensam quando você consegue se recuperar delas. Começamos com poucas séries de trabalho por exercício e subimos ao longo das semanas — o suficiente para estimular crescimento sem enterrar um iniciante em fadiga e dor muscular.\n\n**Por que faixas de 8 a 20 repetições?** A hipertrofia acontece numa ampla janela de cargas, desde que as séries sejam levadas perto o bastante do esforço real. Como halteres em casa costumam ter saltos de carga grandes, faixas médias e altas de repetição dão mais margem para progredir aos poucos e treinar cada movimento com técnica segura.\n\n**Por que RIR e não treinar até a falha?** Revisões recentes sugerem que treinar até a falha não é necessário para ganhar músculo quando o esforço fica próximo o bastante, e a falha cobra um preço desproporcional em fadiga e recuperação. Trabalhar com repetições na reserva (RIR) mantém a técnica limpa e a próxima sessão viável — o que importa mais para um iniciante do que espremer a última repetição.\n\n**Por que progressão dupla?** Ela dá um gatilho objetivo para adicionar carga: quando todas as séries de um exercício atingem o topo da faixa de repetições no RIR alvo, você aumenta o halter na próxima vez e recomeça na base da faixa. Isso combina especialmente bem com os incrementos fixos dos halteres e elimina a adivinhação.\n\n**Descanso e aquecimento.** Descansos mais longos nos compostos preservam repetições e a qualidade das séries; isolamento e core podem girar mais rápido. Uma ou duas séries de aquecimento no primeiro exercício de cada grande grupo preparam a articulação e o padrão sem gerar fadiga relevante.",
+  "restGuidanceEn": "2–3 minutes (150–180s) on the main compound lifts, 90–120 seconds on accessories, and 45–75 seconds on isolation and core work.",
+  "restGuidancePt": "2 a 3 minutos (150–180s) nos exercícios compostos principais, 90 a 120 segundos nos acessórios e 45 a 75 segundos no trabalho de isolamento e core.",
+  "weeklyGuidance": [
+   {
+    "week": 1,
+    "rirTarget": 3,
+    "setsNotePt": "Use apenas 2 séries de trabalho por exercício.",
+    "notePt": "Foco total na técnica e no controle da descida. Escolha uma carga que você pararia com 3 repetições ainda na reserva. Sem buscar recorde."
+   },
+   {
+    "week": 2,
+    "rirTarget": 3,
+    "setsNotePt": "2 a 3 séries por exercício.",
+    "notePt": "Repita as cargas da semana 1 e acrescente a 3ª série apenas onde a execução estiver limpa."
+   },
+   {
+    "week": 3,
+    "rirTarget": 2,
+    "setsNotePt": "Volume de séries completo (3 nos compostos, 2 nos isolados).",
+    "notePt": "Aproxime-se um pouco mais do esforço, mantendo 2 repetições na reserva."
+   },
+   {
+    "week": 4,
+    "rirTarget": 2,
+    "setsNotePt": "Volume completo.",
+    "notePt": "Comece a perseguir o topo da faixa de repetições em cada série antes de pensar em subir a carga."
+   },
+   {
+    "week": 5,
+    "rirTarget": 2,
+    "setsNotePt": "Volume completo.",
+    "notePt": "Aplique a progressão dupla: bateu o topo da faixa em todas as séries, suba o halter na próxima sessão e recomece na base da faixa."
+   },
+   {
+    "week": 6,
+    "rirTarget": 2,
+    "setsNotePt": "Volume completo.",
+    "notePt": "Continue subindo carga assim que o topo da faixa for atingido em todas as séries no RIR alvo."
+   },
+   {
+    "week": 7,
+    "rirTarget": 1,
+    "setsNotePt": "Volume completo.",
+    "notePt": "Semana mais intensa do bloco — 1 repetição na reserva nos compostos; os isolados podem chegar perto da falha técnica."
+   },
+   {
+    "week": 8,
+    "rirTarget": 3,
+    "setsNotePt": "Semana de consolidação: reduza para 2 séries por exercício e alivie um pouco a carga.",
+    "notePt": "Descarregue a fadiga, reforce a técnica e use os números do bloco para planejar o próximo. Sem teste de 1RM."
+   }
+  ],
+  "evidenceKeys": [
+   "schoenfeld-2016-frequency-hypertrophy",
+   "schoenfeld-2017-volume-dose-response",
+   "refalo-2023-proximity-to-failure-hypertrophy",
+   "grgic-2022-failure-vs-nonfailure",
+   "lopez-2021-load-network-meta-analysis",
+   "plotkin-2022-load-vs-rep-progression",
+   "schoenfeld-2016-rest-interval-1-vs-3min",
+   "folland-williams-2007-adaptations-strength-training"
+  ],
+  "principleSlugs": [
+   "training-frequency",
+   "training-volume",
+   "rir",
+   "double-progression",
+   "rep-ranges",
+   "beginner-adaptation"
+  ],
+  "days": [
+   {
+    "dayIndex": 0,
+    "nameEn": "Full Body A",
+    "namePt": "Corpo Inteiro A",
+    "focusEn": "Squat, chest press and horizontal pull",
+    "focusPt": "Agachamento, empurrar horizontal e puxar",
+    "estimatedMinutes": 55,
+    "exercises": [
+     {
+      "exerciseSlug": "dumbbell-squat",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 150,
+      "warmupSets": 2,
+      "notesEn": "Goblet or dumbbells at the shoulders. Descend under control to about parallel.",
+      "notesPt": "Segure um halter na frente (goblet) ou dois nos ombros. Desça controlado até as coxas ficarem paralelas ao chão."
+     },
+     {
+      "exerciseSlug": "stiff-legged-dumbbell-deadlift",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 150,
+      "warmupSets": 1,
+      "notesEn": "Hinge at the hips with a soft knee; feel the hamstrings stretch, keep the back neutral.",
+      "notesPt": "Dobre a partir do quadril com o joelho levemente flexionado; sinta o alongamento do posterior de coxa e mantenha a coluna neutra."
+     },
+     {
+      "exerciseSlug": "dumbbell-bench-press",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 1,
+      "notesEn": "On a bench if you have one; on the floor as a substitute (limits the stretch but is safe solo).",
+      "notesPt": "No banco, se tiver; no chão como alternativa (reduz a amplitude, mas é seguro para treinar sozinho)."
+     },
+     {
+      "exerciseSlug": "one-arm-dumbbell-row",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 1,
+      "notesEn": "Reps per side. Support the free hand on a bench, chair or knee.",
+      "notesPt": "Repetições por lado. Apoie a mão livre em um banco, cadeira ou no próprio joelho."
+     },
+     {
+      "exerciseSlug": "seated-dumbbell-press",
+      "sets": 2,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 0,
+      "notesEn": "Press overhead without flaring the ribs or overarching the lower back.",
+      "notesPt": "Empurre acima da cabeça sem estufar as costelas nem hiperestender a lombar."
+     },
+     {
+      "exerciseSlug": "dumbbell-bicep-curl",
+      "sets": 2,
+      "repMin": 10,
+      "repMax": 15,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 0,
+      "notesEn": "No swinging — control the lowering.",
+      "notesPt": "Sem impulso de tronco — controle a descida do halter."
+     },
+     {
+      "exerciseSlug": "plank",
+      "sets": 3,
+      "repMin": 30,
+      "repMax": 45,
+      "rirTarget": 2,
+      "restSeconds": 45,
+      "warmupSets": 0,
+      "notesEn": "Numbers are seconds held. Squeeze glutes and brace the abs; keep hips level.",
+      "notesPt": "Os números são o tempo em segundos. Aperte os glúteos e contraia o abdômen; mantenha o quadril alinhado."
+     }
+    ]
+   },
+   {
+    "dayIndex": 1,
+    "nameEn": "Full Body B",
+    "namePt": "Corpo Inteiro B",
+    "focusEn": "Single-leg work, incline press and shoulders",
+    "focusPt": "Trabalho unilateral de perna, supino inclinado e ombros",
+    "estimatedMinutes": 55,
+    "exercises": [
+     {
+      "exerciseSlug": "split-squat-with-dumbbells",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 1,
+      "notesEn": "Reps per leg. Rear foot elevated (Bulgarian) if balance allows; otherwise flat.",
+      "notesPt": "Repetições por perna. Pé de trás apoiado num banco (búlgaro) se o equilíbrio permitir; se não, no chão mesmo."
+     },
+     {
+      "exerciseSlug": "single-leg-glute-bridge",
+      "sets": 3,
+      "repMin": 12,
+      "repMax": 15,
+      "rirTarget": 2,
+      "restSeconds": 75,
+      "warmupSets": 0,
+      "notesEn": "Reps per leg. Drive through the heel and squeeze the glute at the top.",
+      "notesPt": "Repetições por perna. Empurre pelo calcanhar e contraia o glúteo no topo."
+     },
+     {
+      "exerciseSlug": "incline-dumbbell-press",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 1,
+      "notesEn": "Bench at ~30°. No bench? Swap for incline push-ups (hands elevated).",
+      "notesPt": "Banco a ~30°. Sem banco? Troque por flexão inclinada (mãos elevadas)."
+     },
+     {
+      "exerciseSlug": "dumbbell-incline-row",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 1,
+      "notesEn": "Chest supported on an incline bench; pull the elbows back and down.",
+      "notesPt": "Peito apoiado no banco inclinado; puxe os cotovelos para trás e para baixo."
+     },
+     {
+      "exerciseSlug": "side-lateral-raise",
+      "sets": 3,
+      "repMin": 12,
+      "repMax": 20,
+      "rirTarget": 1,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesEn": "Light weight, lead with the elbows; stop at shoulder height.",
+      "notesPt": "Carga leve, conduza pelos cotovelos; pare na altura dos ombros."
+     },
+     {
+      "exerciseSlug": "lying-dumbbell-tricep-extension",
+      "sets": 2,
+      "repMin": 10,
+      "repMax": 15,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 0,
+      "notesEn": "Keep the elbows pointing up; only the forearms move.",
+      "notesPt": "Mantenha os cotovelos apontando para cima; só os antebraços se movem."
+     },
+     {
+      "exerciseSlug": "dead-bug",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 45,
+      "warmupSets": 0,
+      "notesEn": "Reps per side. Keep the lower back flat on the floor throughout.",
+      "notesPt": "Repetições por lado. Mantenha a lombar colada no chão durante todo o movimento."
+     }
+    ]
+   },
+   {
+    "dayIndex": 2,
+    "nameEn": "Full Body C",
+    "namePt": "Corpo Inteiro C",
+    "focusEn": "Lunge, hinge and arm emphasis",
+    "focusPt": "Avanço, dobradiça de quadril e ênfase em braços",
+    "estimatedMinutes": 60,
+    "exercises": [
+     {
+      "exerciseSlug": "dumbbell-rear-lunge",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 1,
+      "notesEn": "Reps per leg. Step back and drop the rear knee toward the floor; easier on the knees than a forward lunge.",
+      "notesPt": "Repetições por perna. Passe para trás e leve o joelho de trás em direção ao chão; mais amigável aos joelhos que o avanço à frente."
+     },
+     {
+      "exerciseSlug": "stiff-legged-dumbbell-deadlift",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 1,
+      "notesEn": "Second hamstring exposure of the week — keep it a touch lighter and clean.",
+      "notesPt": "Segunda exposição de posterior da semana — mantenha um pouco mais leve e com execução limpa."
+     },
+     {
+      "exerciseSlug": "pushups",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 20,
+      "rirTarget": 1,
+      "restSeconds": 90,
+      "warmupSets": 0,
+      "notesEn": "Regress to incline push-ups (hands on a bench) if needed; progress to feet-elevated when 20 is easy.",
+      "notesPt": "Regrida para flexão inclinada (mãos no banco) se precisar; progrida para pés elevados quando 20 ficar fácil."
+     },
+     {
+      "exerciseSlug": "bent-over-two-dumbbell-row",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 1,
+      "notesEn": "Hinge forward with a flat back; row both dumbbells to the waist.",
+      "notesPt": "Incline o tronco à frente com as costas retas; puxe os dois halteres em direção à cintura."
+     },
+     {
+      "exerciseSlug": "reverse-flyes",
+      "sets": 2,
+      "repMin": 15,
+      "repMax": 20,
+      "rirTarget": 1,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesEn": "Rear delts — light weight, open the arms out to the sides.",
+      "notesPt": "Deltoide posterior — carga leve, abra os braços para os lados."
+     },
+     {
+      "exerciseSlug": "hammer-curls",
+      "sets": 2,
+      "repMin": 10,
+      "repMax": 15,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 0,
+      "notesEn": "Neutral grip (palms facing in) to hit the brachialis and forearms.",
+      "notesPt": "Pegada neutra (palmas voltadas para dentro) para recrutar o braquial e os antebraços."
+     },
+     {
+      "exerciseSlug": "seated-triceps-press",
+      "sets": 2,
+      "repMin": 10,
+      "repMax": 15,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 0,
+      "notesEn": "Overhead French press with one dumbbell; keep the elbows in.",
+      "notesPt": "Tríceps francês acima da cabeça com um halter; mantenha os cotovelos fechados."
+     },
+     {
+      "exerciseSlug": "crunches",
+      "sets": 3,
+      "repMin": 12,
+      "repMax": 20,
+      "rirTarget": 1,
+      "restSeconds": 45,
+      "warmupSets": 0,
+      "notesEn": "Curl the ribcage toward the pelvis; avoid yanking on the neck.",
+      "notesPt": "Aproxime as costelas da pelve; não puxe o pescoço com as mãos."
+     }
+    ]
+   }
+  ],
+  "_droppedSlugs": []
+ },
+ {
+  "slug": "strength-for-runners",
+  "nameEn": "Strength for Runners",
+  "namePt": "Força para Corredores",
+  "taglineEn": "Heavy-ish lower-body strength, a little jump work, and core — three days a week to build running economy and injury resilience without stealing your legs.",
+  "taglinePt": "Força de perna mais pesada, um pouco de salto e core — três dias por semana para ganhar economia de corrida e resistência a lesões sem roubar as suas pernas.",
+  "descriptionEn": "An eight-week strength block designed to run alongside your running, not compete with it. Three sessions a week built around a handful of heavy-ish lower-body lifts, a little jump work, and targeted core and single-leg training — with volume kept deliberately moderate and no sets taken to failure, so your legs stay fresh for the runs that actually matter. The aim is better running economy and more resilient tissue, not a bigger squat for its own sake.",
+  "descriptionPt": "Um bloco de força de oito semanas feito para andar ao lado da sua corrida, não para competir com ela. Três sessões por semana em torno de alguns exercícios de perna mais pesados, um pouco de trabalho de salto e um trabalho direcionado de core e unilateral — com o volume mantido propositalmente moderado e nenhuma série levada à falha, para que suas pernas cheguem inteiras aos treinos de corrida que realmente importam. O objetivo é melhorar a economia de corrida e deixar os tecidos mais resistentes, não aumentar o agachamento por si só.",
+  "audienceEn": "Recreational and competitive distance runners with some lifting experience who want structured strength work to support performance and reduce injury risk. Assumes you can already squat, hinge, and lunge with sound technique and are managing your own running volume separately.",
+  "audiencePt": "Corredores de rua e de provas, recreativos ou competitivos, com alguma experiência de academia, que querem um trabalho de força estruturado para apoiar o desempenho e reduzir o risco de lesão. Pressupõe que você já agacha, faz dobradiça de quadril e afundo com boa técnica e que gerencia o volume de corrida por conta própria.",
+  "goal": "SPORTS_PERFORMANCE",
+  "experienceLevel": "INTERMEDIATE",
+  "daysPerWeek": 3,
+  "durationWeeks": 8,
+  "sessionMinutes": 55,
+  "equipmentAccess": "FULL_GYM",
+  "trainingStyle": "ENDURANCE_SUPPORT",
+  "progressionStrategy": "LINEAR_LOAD",
+  "rationaleEn": "**Why lift at all if you run?** Systematic reviews of strength training in trained runners report improvements in running economy — the oxygen cost of holding a given pace — when heavy resistance and plyometric work are added, and the physiological determinants of middle- and long-distance performance respond to added strength. The effects tend to be modest and are clearest in already-trained runners, and the mechanism is thought to be largely neuromuscular (better force production and tendon stiffness) rather than a bigger aerobic engine. So this block treats strength as a support tool for running, not a replacement for it.\n\n**Why keep volume moderate and avoid failure?** Doing endurance and strength work in the same program can blunt strength and power adaptations — the \"interference effect\" — though updated meta-analyses suggest the interference is smaller than once feared and is minimized by managing total load and scheduling. To respect that, each session carries only about six exercises, sets stop 2–3 reps short of failure, and two lighter weeks are built in. Stopping short of failure keeps most of the strength stimulus while sharply cutting the residual fatigue that would otherwise bleed into your runs.\n\n**Why these exercises?** Distance running is a single-leg, elastic activity, so the plan leans on unilateral work (Bulgarian split squats, step-ups) that transfers well to single-leg and sprint strength, plus one heavy bilateral lift each day for raw force. Eccentric hamstring work (glute-ham raise) is included because adding a Nordic-style exercise roughly halves hamstring-injury rates in athletes, and broader reviews find strength training reduces overuse injuries. Standing and seated calf raises cover the gastrocnemius and the soleus — the calf does enormous work in running — while hip-abductor and anti-rotation core work target the hip and trunk control that keeps the knee tracking on every stride.\n\n**Why the jumps?** A small dose of box jumps, broad jumps, and bounds trains reactive strength and tendon stiffness, which contribute to the elastic energy return that makes running cheaper. Jumps are placed first, while you're fresh, kept to low reps with full recovery, and are never taken to fatigue — the aim is quality and force, not conditioning; you already get plenty of that from running.\n\n**How it progresses.** Load rises gradually across the eight weeks while reps and RIR stay in the same window — a straightforward linear-load approach that fits a support block where you don't want to chase maxes. Planned lighter weeks at week 5 and week 8 offload the cumulative fatigue of training two hard things at once; treat the week-8 deload as a chance to sharpen before a race or a heavy running week, not a setback.\n\n**A caveat.** None of this replaces running-specific training, and the strength numbers here are a means, not the goal. If a key running session and a lifting session collide, the run wins: run first, or separate them by several hours, and drop a strength set before you drop a run.",
+  "rationalePt": "**Por que treinar força se você corre?** Revisões sistemáticas sobre treino de força em corredores treinados relatam melhora na economia de corrida — o custo de oxigênio para manter um dado ritmo — quando se adiciona trabalho pesado de força e pliometria, e os determinantes fisiológicos do desempenho em provas de meio-fundo e fundo respondem ao ganho de força. Os efeitos costumam ser modestos e mais claros em quem já é treinado, e o mecanismo parece ser em grande parte neuromuscular (melhor produção de força e rigidez do tendão), não um \"motor\" aeróbio maior. Por isso, este bloco trata a força como ferramenta de apoio à corrida, não como substituta dela.\n\n**Por que manter o volume moderado e evitar a falha?** Fazer resistência e força no mesmo programa pode atenuar os ganhos de força e potência — o chamado \"efeito de interferência\" — embora meta-análises mais recentes sugiram que a interferência é menor do que se temia e é minimizada gerenciando a carga total e a distribuição. Respeitando isso, cada sessão tem apenas cerca de seis exercícios, as séries param 2 a 3 repetições antes da falha e há duas semanas mais leves planejadas. Parar antes da falha preserva a maior parte do estímulo de força e corta bastante a fadiga residual que, de outro modo, vazaria para os seus treinos de corrida.\n\n**Por que esses exercícios?** Correr é uma atividade unilateral e elástica, então o plano se apoia em trabalho unilateral (agachamento búlgaro, subida no step), que transfere bem para a força unilateral e de sprint, mais um exercício bilateral pesado por dia para força bruta. O trabalho excêntrico de posterior de coxa (elevação glúteo-femoral) entra porque incluir um exercício no estilo nórdico reduz cerca de pela metade a taxa de lesão de posterior em atletas, e revisões mais amplas mostram que o treino de força reduz lesões por sobrecarga. As elevações de panturrilha em pé e sentado cobrem o gastrocnêmio e o sóleo — a panturrilha trabalha muito na corrida — enquanto o trabalho de abdutores do quadril e de core anti-rotação atacam o controle de quadril e tronco que mantém o joelho alinhado a cada passada.\n\n**Por que os saltos?** Uma pequena dose de saltos na caixa, saltos horizontais e saltos alternados (bounds) treina a força reativa e a rigidez do tendão, que contribuem para a devolução elástica de energia que torna a corrida mais econômica. Os saltos vêm primeiro, com você descansado, em poucas repetições e com recuperação total, e nunca são levados à fadiga — o objetivo é qualidade e força, não condicionamento; disso a corrida já te dá de sobra.\n\n**Como progride.** A carga sobe aos poucos ao longo das oito semanas, enquanto as repetições e o RIR ficam na mesma faixa — uma progressão de carga linear e direta, adequada a um bloco de apoio em que você não quer perseguir máximas. As semanas mais leves planejadas (semana 5 e semana 8) descarregam a fadiga acumulada de treinar duas coisas exigentes ao mesmo tempo; encare o deload da semana 8 como uma chance de afiar antes de uma prova ou de uma semana forte de corrida, não como um retrocesso.\n\n**Uma ressalva.** Nada disso substitui o treino específico de corrida, e os números de força aqui são um meio, não o fim. Se um treino-chave de corrida e uma sessão de musculação se chocarem, a corrida vence: corra primeiro, ou separe por algumas horas, e corte uma série de força antes de cortar um treino de corrida.",
+  "restGuidanceEn": "2–3 minutes on heavy compound lifts (squat, Romanian deadlift, trap-bar deadlift, hip thrust) and full recovery (around 2 minutes) between jump sets; 90–120 seconds on single-leg and accessory work; 45–60 seconds on core.",
+  "restGuidancePt": "2 a 3 minutos nos compostos pesados (agachamento, terra romeno, terra com barra hexagonal, hip thrust) e recuperação total (cerca de 2 minutos) entre as séries de salto; 90 a 120 segundos no trabalho unilateral e nos acessórios; 45 a 60 segundos no core.",
+  "weeklyGuidance": [
+   {
+    "week": 1,
+    "rirTarget": 3,
+    "setsNotePt": "Semana de entrada: use apenas 2 séries de trabalho nos exercícios principais (agachamento, terra romeno, terra com barra hexagonal). Cargas submáximas.",
+    "notePt": "Foco em técnica e amplitude. Escolha cargas que você pararia com 3 repetições na reserva. Sem teste de 1RM — priorize a corrida nesta semana."
+   },
+   {
+    "week": 2,
+    "rirTarget": 3,
+    "setsNotePt": "Volume de séries completo. Adicione uma carga pequena onde a técnica já estiver sólida.",
+    "notePt": "Mantenha 3 repetições na reserva; a barra deve subir rápido."
+   },
+   {
+    "week": 3,
+    "rirTarget": 2.5,
+    "setsNotePt": "Volume completo. Suba a carga dos compostos em pequenos incrementos.",
+    "notePt": "Aproxime-se de 2 a 3 repetições na reserva nos compostos."
+   },
+   {
+    "week": 4,
+    "rirTarget": 2,
+    "setsNotePt": "Semana mais pesada do primeiro bloco, com carga um pouco maior nos compostos.",
+    "notePt": "Compostos com cerca de 2 repetições na reserva. Se um treino-chave de corrida cair no mesmo dia, corra primeiro ou separe por 6+ horas."
+   },
+   {
+    "week": 5,
+    "rirTarget": 3,
+    "setsNotePt": "Semana leve planejada: reduza cerca de 10% a carga e corte 1 série dos acessórios.",
+    "notePt": "Descarrega a fadiga acumulada do treino concorrente e protege suas pernas para a corrida — não é perda de progresso."
+   },
+   {
+    "week": 6,
+    "rirTarget": 2.5,
+    "setsNotePt": "Volume completo. Retome a progressão de carga a partir de onde parou na semana 4, agora um pouco mais pesado.",
+    "notePt": "2 a 3 repetições na reserva."
+   },
+   {
+    "week": 7,
+    "rirTarget": 2,
+    "setsNotePt": "Volume completo. Pico de carga do bloco nos compostos, mantendo a qualidade das repetições.",
+    "notePt": "Ainda sem falha: mantenha 2 repetições na reserva mesmo na semana mais pesada."
+   },
+   {
+    "week": 8,
+    "rirTarget": 3.5,
+    "setsNotePt": "Deload: reduza o volume em cerca de 40% (aproximadamente metade das séries) e a carga em 10 a 15%.",
+    "notePt": "Recupere e afie. Semana ideal se houver uma prova ou uma semana forte de corrida pela frente."
+   }
+  ],
+  "evidenceKeys": [
+   "balsalobre-fernandez-2016-strength-training-running-economy",
+   "blagrove-2018-strength-training-distance-running-performance",
+   "schumann-2022-concurrent-training-compatibility-meta-analysis",
+   "wilson-2012-concurrent-training-meta-analysis",
+   "lauersen-2014-exercise-injury-prevention-meta-analysis",
+   "vandyk-2019-nordic-hamstring-injury-metaanalysis",
+   "speirs-2016-unilateral-vs-bilateral-squat-rugby",
+   "robinson-2024-proximity-to-failure-meta-regression"
+  ],
+  "principleSlugs": [
+   "concurrent-training",
+   "progressive-overload",
+   "rir",
+   "training-volume",
+   "training-frequency",
+   "deloads"
+  ],
+  "days": [
+   {
+    "dayIndex": 0,
+    "nameEn": "Session A — Squat & Jumps",
+    "namePt": "Sessão A — Agachamento e Saltos",
+    "focusEn": "Squat strength, reactive power, and anti-rotation core",
+    "focusPt": "Força de agachamento, potência reativa e core anti-rotação",
+    "estimatedMinutes": 55,
+    "exercises": [
+     {
+      "exerciseSlug": "front-box-jump",
+      "sets": 4,
+      "repMin": 3,
+      "repMax": 5,
+      "rirTarget": 4,
+      "restSeconds": 120,
+      "warmupSets": 0,
+      "notesEn": "Power work, not conditioning: stop the set if height or explosiveness drops. Land softly and step down off the box rather than jumping down.",
+      "notesPt": "Trabalho de potência, não de fadiga: pare a série se a altura ou a explosão caírem. Aterrisse macio e desça da caixa pisando, não saltando para baixo."
+     },
+     {
+      "exerciseSlug": "barbell-squat",
+      "sets": 4,
+      "repMin": 5,
+      "repMax": 6,
+      "rirTarget": 2,
+      "restSeconds": 180,
+      "warmupSets": 2,
+      "notesEn": "Squat to at least parallel with control; drive the bar up fast.",
+      "notesPt": "Agache até no mínimo a coxa paralela, com controle; suba a barra rápido."
+     },
+     {
+      "exerciseSlug": "split-squat-with-dumbbells",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 10,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 0,
+      "notesEn": "Bulgarian split squat. Finish all reps on one leg, then switch. Front knee tracks over the foot.",
+      "notesPt": "Agachamento búlgaro. Faça todas as repetições de uma perna e depois troque. Joelho da frente alinhado com o pé."
+     },
+     {
+      "exerciseSlug": "standing-calf-raises",
+      "sets": 4,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 90,
+      "warmupSets": 1,
+      "notesEn": "Full range: drop the heel low (loads the calf and Achilles) and rise all the way. Standing emphasizes the gastrocnemius — key for elastic stiffness in running.",
+      "notesPt": "Amplitude total: desça bem o calcanhar (carrega a panturrilha e o tendão de Aquiles) e suba ao máximo. Em pé enfatiza o gastrocnêmio — importante para a rigidez elástica na corrida."
+     },
+     {
+      "exerciseSlug": "pallof-press",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesEn": "Anti-rotation: resist the pull, don't twist. Count reps per side.",
+      "notesPt": "Anti-rotação: resista à tração do cabo, não gire o tronco. Conte as repetições por lado."
+     },
+     {
+      "exerciseSlug": "plank",
+      "sets": 3,
+      "repMin": 30,
+      "repMax": 45,
+      "rirTarget": 3,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesEn": "Numbers are seconds held per set. Squeeze glutes and abs, neutral hips.",
+      "notesPt": "Os números são segundos de sustentação por série. Glúteos e abdômen contraídos, quadril neutro."
+     }
+    ]
+   },
+   {
+    "dayIndex": 1,
+    "nameEn": "Session B — Hinge & Posterior Chain",
+    "namePt": "Sessão B — Dobradiça e Cadeia Posterior",
+    "focusEn": "Hip hinge, posterior chain, and hamstring resilience",
+    "focusPt": "Dobradiça de quadril, cadeia posterior e resiliência de posterior de coxa",
+    "estimatedMinutes": 52,
+    "exercises": [
+     {
+      "exerciseSlug": "romanian-deadlift",
+      "sets": 4,
+      "repMin": 6,
+      "repMax": 8,
+      "rirTarget": 2,
+      "restSeconds": 180,
+      "warmupSets": 2,
+      "notesEn": "Hip hinge with soft knees; feel the hamstring stretch. Neutral spine.",
+      "notesPt": "Dobradiça de quadril com joelhos levemente flexionados; sinta o alongamento no posterior de coxa. Coluna neutra."
+     },
+     {
+      "exerciseSlug": "dumbbell-step-ups",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 10,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 0,
+      "notesEn": "Controlled ascent, no push-off from the trailing leg. All reps one leg, then switch.",
+      "notesPt": "Subida controlada, sem impulsionar com a perna de trás. Todas as repetições de uma perna e depois troque."
+     },
+     {
+      "exerciseSlug": "glute-ham-raise",
+      "sets": 3,
+      "repMin": 6,
+      "repMax": 10,
+      "rirTarget": 2,
+      "restSeconds": 90,
+      "warmupSets": 1,
+      "notesEn": "Emphasize the eccentric (slow lower). Eccentric hamstring work lowers injury risk in runners; reduce range or use assistance if the full rep is too hard.",
+      "notesPt": "Ênfase na fase excêntrica (descida lenta e controlada). O trabalho excêntrico de posterior reduz o risco de lesão em corredores; diminua a amplitude ou use assistência se a repetição completa for difícil."
+     },
+     {
+      "exerciseSlug": "seated-calf-raise",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 15,
+      "rirTarget": 2,
+      "restSeconds": 90,
+      "warmupSets": 0,
+      "notesEn": "Seated (bent knee) emphasizes the soleus — the calf's main worker at steady running paces. Full range.",
+      "notesPt": "Sentado (joelho flexionado) enfatiza o sóleo — o principal motor da panturrilha em ritmo constante de corrida. Amplitude total."
+     },
+     {
+      "exerciseSlug": "one-arm-dumbbell-row",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 90,
+      "warmupSets": 1,
+      "notesEn": "Single-arm row also challenges anti-rotation. Minimal upper-body volume, just for postural balance.",
+      "notesPt": "Remada unilateral: além das costas, desafia o core anti-rotação. Volume de superior mínimo, apenas para equilíbrio postural."
+     },
+     {
+      "exerciseSlug": "side-bridge",
+      "sets": 3,
+      "repMin": 20,
+      "repMax": 40,
+      "rirTarget": 3,
+      "restSeconds": 45,
+      "warmupSets": 0,
+      "notesEn": "Side plank. Numbers are seconds per side. Anti-lateral-flexion for the QL and glute med — key stride stabilizers.",
+      "notesPt": "Prancha lateral. Os números são segundos por lado. Anti-flexão lateral — trabalha o quadrado lombar e o glúteo médio, estabilizadores-chave da passada."
+     }
+    ]
+   },
+   {
+    "dayIndex": 2,
+    "nameEn": "Session C — Power & Single-Leg",
+    "namePt": "Sessão C — Potência e Unilateral",
+    "focusEn": "Horizontal power, single-leg strength, and glutes",
+    "focusPt": "Potência horizontal, força unilateral e glúteos",
+    "estimatedMinutes": 55,
+    "exercises": [
+     {
+      "exerciseSlug": "standing-long-jump",
+      "sets": 4,
+      "repMin": 3,
+      "repMax": 4,
+      "rirTarget": 4,
+      "restSeconds": 120,
+      "warmupSets": 0,
+      "notesEn": "Broad jump from a standstill. Horizontal power specific to running propulsion. Max quality per jump; full recovery between attempts.",
+      "notesPt": "Salto horizontal a partir de parado. Potência horizontal, específica para a propulsão da corrida. Qualidade máxima por salto; recuperação total entre as tentativas."
+     },
+     {
+      "exerciseSlug": "trap-bar-deadlift",
+      "sets": 4,
+      "repMin": 5,
+      "repMax": 6,
+      "rirTarget": 2,
+      "restSeconds": 180,
+      "warmupSets": 2,
+      "notesEn": "Hex-bar deadlift: a squat–hinge hybrid, back-friendly and easy to learn. Push the floor away hard.",
+      "notesPt": "Levantamento terra com barra hexagonal: híbrido de agachamento e dobradiça, amigável para a lombar e fácil de aprender. Empurre o chão com força."
+     },
+     {
+      "exerciseSlug": "barbell-hip-thrust",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 10,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 1,
+      "notesEn": "Glute-focused hip extension — glutes are big drivers in running. 1s pause at the top, hips fully locked out.",
+      "notesPt": "Extensão de quadril com foco em glúteos — os glúteos são grandes propulsores na corrida. Pausa de 1s no topo, quadril totalmente estendido."
+     },
+     {
+      "exerciseSlug": "thigh-abductor",
+      "sets": 3,
+      "repMin": 12,
+      "repMax": 15,
+      "rirTarget": 2,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesEn": "Abductor machine for glute med/min. Stronger abductors help control the knee and hip in stance, easing common runner complaints.",
+      "notesPt": "Cadeira abdutora para glúteo médio/mínimo. Abdutores mais fortes ajudam a controlar o joelho e o quadril na fase de apoio, aliviando queixas comuns em corredores."
+     },
+     {
+      "exerciseSlug": "dumbbell-bench-press",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 90,
+      "warmupSets": 1,
+      "notesEn": "The only upper push in the program, for balance only. Keep it light and away from failure.",
+      "notesPt": "O único empurrão de superior do programa, apenas para equilíbrio. Mantenha leve e longe da falha."
+     },
+     {
+      "exerciseSlug": "dead-bug",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 10,
+      "rirTarget": 3,
+      "restSeconds": 45,
+      "warmupSets": 0,
+      "notesEn": "Anti-extension: keep the low back pinned to the floor throughout. Numbers are reps per side, moving slowly.",
+      "notesPt": "Anti-extensão: mantenha a lombar colada no chão o tempo todo. Os números são repetições por lado, com movimento lento."
+     }
+    ]
+   }
+  ],
+  "focusPt": "Força para corredores",
+  "_droppedSlugs": []
+ },
+ {
+  "slug": "full-body-express",
+  "nameEn": "Full Body Express",
+  "namePt": "Corpo Inteiro Express",
+  "taglineEn": "Two full-body sessions a week, about 40 minutes each — the minimum effective dose for busy people.",
+  "taglinePt": "Dois treinos de corpo inteiro por semana, cerca de 40 minutos cada — a dose mínima eficaz para quem tem pouco tempo.",
+  "descriptionEn": "A 6-week program built around just two workouts a week, done with a pair of dumbbells and your own bodyweight at home or in the gym. Each session lasts about 40 minutes and pairs 5-6 compound exercises that together train the whole body. It's the minimum effective dose for anyone with a tight schedule who wants general conditioning, a base of strength, and — most of all — a training habit that actually sticks.",
+  "descriptionPt": "Um programa de 6 semanas montado em torno de apenas dois treinos por semana, feitos com um par de halteres e o peso do próprio corpo, em casa ou na academia. Cada sessão dura cerca de 40 minutos e reúne de 5 a 6 exercícios compostos que, juntos, trabalham o corpo inteiro. É a dose mínima eficaz para quem tem a agenda apertada e quer condicionamento geral, uma base de força e, acima de tudo, um hábito de treino que se sustenta de verdade.",
+  "audienceEn": "Beginners and busy people who can realistically train only twice a week and want a simple, safe, efficient plan. Ideal for anyone training at home with a single pair of dumbbells, who travels often, or who is returning to exercise and needs a sustainable starting point rather than an overwhelming split.",
+  "audiencePt": "Iniciantes e pessoas ocupadas que, na prática, só conseguem treinar duas vezes por semana e querem um plano simples, seguro e eficiente. Ideal para quem treina em casa com um único par de halteres, viaja com frequência ou está retomando a atividade física e precisa de um ponto de partida sustentável, e não de uma divisão complicada.",
+  "goal": "GENERAL_FITNESS",
+  "experienceLevel": "BEGINNER",
+  "daysPerWeek": 2,
+  "durationWeeks": 6,
+  "sessionMinutes": 40,
+  "equipmentAccess": "MINIMAL",
+  "trainingStyle": "FULL_BODY",
+  "progressionStrategy": "DOUBLE",
+  "rationaleEn": "**Why full body twice a week?** When time is short, splitting the whole body across two sessions means every muscle group gets trained twice weekly — and frequency research suggests that, at equal weekly volume, training a muscle 2x/week tends to match or slightly beat 1x/week. Public-health guidelines (WHO) also recommend muscle-strengthening activity on at least two days a week, which is exactly what this plan delivers.\n\n**Why compounds only, with dumbbells and bodyweight?** Compound exercises recruit many muscles at once, so a handful of movements can cover the whole body — the most efficient route when the clock is tight. Time-efficient training reviews point the same way: fewer, well-chosen exercises and little wasted time between sets. Dumbbells and bodyweight also remove the commute and the wait for machines, so the session happens at home, while traveling, or at the gym.\n\n**Why not train to failure?** For beginners, clean technique and consistency pay off more than grinding out the last rep. Meta-analyses indicate that failure isn't required to build strength or muscle once volume is equated, and it charges a steep price in fatigue and recovery. Leaving 2-3 reps in reserve (RIR) keeps execution sharp, lowers risk, and helps the session fit into ~40 minutes.\n\n**Why double progression?** It gives an objective, self-explaining rule for progressing: first you add reps within the range (for example, from 8 up to 12) at the same weight; once you reach the top of the range on every set, you add load and restart at the bottom. Studies comparing load progression with rep progression find broadly similar gains, so this simple method is well suited to someone still learning to self-regulate effort.\n\n**One honest caveat.** This is a minimum-effective-dose program: it's designed to fit a packed schedule, not to maximize hypertrophy or strength. As a rule, more volume and more frequency produce somewhat more — so if you find extra time, adding a third session or a few more sets will likely speed things up. The aim here is to build the habit, a base of conditioning, and early strength, sustainably. Done consistently for six weeks, it works.",
+  "rationalePt": "**Por que corpo inteiro duas vezes por semana?** Para quem tem pouco tempo, distribuir o corpo inteiro em duas sessões faz cada grupo muscular ser treinado duas vezes na semana — e a pesquisa de frequência sugere que, com o mesmo volume semanal, treinar um músculo 2x/semana tende a igualar ou superar levemente 1x/semana. As diretrizes de saúde pública (OMS) também recomendam atividades de fortalecimento muscular em pelo menos dois dias por semana, exatamente o que este plano entrega.\n\n**Por que só compostos, com halteres e peso corporal?** Exercícios compostos recrutam vários músculos de uma vez, então poucos movimentos já cobrem o corpo todo — o caminho mais eficiente quando o relógio aperta. Revisões sobre treino tempo-eficiente apontam na mesma direção: menos exercícios, bem escolhidos, e pouco tempo desperdiçado entre as séries. Usar halteres e peso corporal ainda elimina deslocamento e fila de aparelho, então o treino acontece em casa, em viagem ou na academia.\n\n**Por que não treinar até a falha?** Para iniciantes, técnica limpa e constância rendem mais do que espremer a última repetição. Metanálises indicam que a falha não é necessária para ganhar força ou massa quando o volume é equalizado, e ela cobra um preço alto em fadiga e recuperação. Deixar de 2 a 3 repetições na reserva (RIR) mantém a execução afiada, reduz o risco e ajuda a sessão a caber em cerca de 40 minutos.\n\n**Por que progressão dupla?** Ela dá um critério objetivo e autoexplicativo para evoluir: primeiro você sobe as repetições dentro da faixa (por exemplo, de 8 até 12) mantendo o mesmo peso; quando atinge o topo da faixa em todas as séries, aumenta a carga e recomeça por baixo. Estudos que comparam progredir a carga versus as repetições encontram ganhos parecidos, então esse método simples combina bem com quem ainda está aprendendo a se autorregular.\n\n**Uma ressalva honesta.** Este é um programa de dose mínima eficaz: foi desenhado para caber numa rotina apertada, não para maximizar hipertrofia ou força. Em geral, mais volume e mais frequência produzem um pouco mais — então, se um dia você tiver mais tempo, acrescentar uma terceira sessão ou algumas séries tende a acelerar o progresso. O objetivo aqui é construir o hábito, uma base de condicionamento e a força inicial, de forma sustentável. Feito com constância por seis semanas, funciona.",
+  "restGuidanceEn": "About 2 minutes between sets of the main compounds (squat, deadlift, row, dumbbell bench) and 60-90 seconds on the remaining exercises and core work. Short on time? Pair a pushing exercise with a pulling one and rest while the other muscle works.",
+  "restGuidancePt": "Cerca de 2 minutos entre as séries dos compostos principais (agachamento, terra, remada, supino com halteres) e de 60 a 90 segundos nos demais exercícios e no core. Com pouco tempo? Alterne um exercício de empurrar com um de puxar e descanse enquanto o outro músculo trabalha.",
+  "weeklyGuidance": [
+   {
+    "week": 1,
+    "rirTarget": 4,
+    "setsNotePt": "Faça apenas 2 séries de trabalho por exercício. Prioridade total na técnica.",
+    "notePt": "Semana de aprendizado: escolha uma carga que você conseguiria repetir por mais 4 vezes ao fim da série. Nada de chegar perto da falha."
+   },
+   {
+    "week": 2,
+    "rirTarget": 3,
+    "setsNotePt": "De 2 a 3 séries por exercício.",
+    "notePt": "Onde a técnica já estiver sólida, acrescente a 3ª série nos compostos principais e suba um pouco a carga."
+   },
+   {
+    "week": 3,
+    "rirTarget": 3,
+    "setsNotePt": "Volume completo: 3 séries nos compostos e 2 nos demais.",
+    "notePt": "Comece a aplicar a progressão dupla: só aumente a carga quando bater o topo da faixa de repetições em todas as séries."
+   },
+   {
+    "week": 4,
+    "rirTarget": 2,
+    "setsNotePt": "Volume completo.",
+    "notePt": "Aproxime-se um pouco mais do esforço: encerre cada série deixando cerca de 2 repetições na reserva."
+   },
+   {
+    "week": 5,
+    "rirTarget": 2,
+    "setsNotePt": "Volume completo, foco em progredir carga e repetições.",
+    "notePt": "Siga com a progressão dupla. Se a carga não subir, some 1 repetição por série antes de aumentar o peso."
+   },
+   {
+    "week": 6,
+    "rirTarget": 2,
+    "setsNotePt": "Volume completo, semana de consolidação.",
+    "notePt": "Teste o topo das faixas de repetição. Se acumulou fadiga, uma semana mais leve (RIR 3-4 e uma série a menos) recupera sem perder o progresso."
+   }
+  ],
+  "evidenceKeys": [
+   "iversen-2021-time-efficient-training",
+   "androulakis-korakakis-2020-minimum-effective-dose-1rm",
+   "schoenfeld-2019-frequency-volume-equated",
+   "bull-2020-who-physical-activity-guidelines",
+   "grgic-2022-failure-vs-nonfailure",
+   "plotkin-2022-load-vs-rep-progression",
+   "acsm-2009-progression-models-position-stand",
+   "schoenfeld-2017-volume-dose-response"
+  ],
+  "principleSlugs": [
+   "double-progression",
+   "progressive-overload",
+   "training-frequency",
+   "training-volume",
+   "rir",
+   "beginner-adaptation"
+  ],
+  "days": [
+   {
+    "dayIndex": 0,
+    "nameEn": "Session A — Full Body",
+    "namePt": "Sessão A — Corpo Inteiro",
+    "focusEn": "Full body — squat, hinge, horizontal push and pull",
+    "focusPt": "Corpo inteiro — agachamento, dobradiça, empurrar e puxar",
+    "estimatedMinutes": 42,
+    "exercises": [
+     {
+      "exerciseSlug": "goblet-squat",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 2,
+      "notesEn": "Hold one dumbbell vertically against your chest. Descend under control until your thighs reach about parallel, keeping your heels down.",
+      "notesPt": "Segure um halter na vertical contra o peito. Desça de forma controlada até a coxa ficar mais ou menos paralela ao chão, mantendo os calcanhares apoiados."
+     },
+     {
+      "exerciseSlug": "dumbbell-bench-press",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 1,
+      "notesEn": "On a bench, lower the dumbbells until your elbows are just below chest level. No bench? Do the dumbbell floor press instead.",
+      "notesPt": "No banco, desça os halteres até os cotovelos ficarem um pouco abaixo da linha do peito. Sem banco? Faça o supino no chão (floor press) com halteres."
+     },
+     {
+      "exerciseSlug": "one-arm-dumbbell-row",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 90,
+      "warmupSets": 1,
+      "notesEn": "One hand and one knee supported on a bench. Pull the dumbbell toward your hip without twisting your trunk. Reps are per side.",
+      "notesPt": "Uma mão e um joelho apoiados no banco. Puxe o halter em direção ao quadril sem girar o tronco. As repetições são por lado."
+     },
+     {
+      "exerciseSlug": "stiff-legged-dumbbell-deadlift",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 1,
+      "notesEn": "Knees slightly bent, push your hips back and feel the stretch in your hamstrings. Keep your back flat — don't round the lower spine.",
+      "notesPt": "Joelhos levemente flexionados, empurre o quadril para trás e sinta o alongamento no posterior da coxa. Mantenha a coluna reta — não arredonde a lombar."
+     },
+     {
+      "exerciseSlug": "dumbbell-shoulder-press",
+      "sets": 2,
+      "repMin": 10,
+      "repMax": 15,
+      "rirTarget": 2,
+      "restSeconds": 90,
+      "warmupSets": 1,
+      "notesEn": "Seated or standing, press overhead without arching your lower back. Brace your abs and stop just short of locking out into the joints.",
+      "notesPt": "Sentado ou em pé, empurre acima da cabeça sem arquear a lombar. Contraia o abdômen e não jogue a carga para dentro das articulações no topo."
+     },
+     {
+      "exerciseSlug": "plank",
+      "sets": 3,
+      "repMin": 20,
+      "repMax": 45,
+      "rirTarget": 2,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesEn": "Reps here mean seconds held. Keep a straight line from shoulders to ankles with abs and glutes tight. Progress from 20s toward 45s per set.",
+      "notesPt": "Aqui as repetições significam segundos de sustentação. Mantenha a linha reta do ombro ao tornozelo, abdômen e glúteos contraídos. Progrida de 20s até 45s por série."
+     }
+    ]
+   },
+   {
+    "dayIndex": 1,
+    "nameEn": "Session B — Full Body",
+    "namePt": "Sessão B — Corpo Inteiro",
+    "focusEn": "Full body — single-leg work, hinge, horizontal push and pull",
+    "focusPt": "Corpo inteiro — perna unilateral, dobradiça, empurrar e puxar",
+    "estimatedMinutes": 40,
+    "exercises": [
+     {
+      "exerciseSlug": "dumbbell-rear-lunge",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 1,
+      "notesEn": "Step backward and lower your rear knee toward the floor. The reverse step is friendlier on the knees than a forward lunge. Reps are per leg.",
+      "notesPt": "Dê um passo para trás e desça o joelho de trás em direção ao chão. O passo reverso é mais amigável para os joelhos do que o avanço para a frente. Repetições por perna."
+     },
+     {
+      "exerciseSlug": "pushups",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 15,
+      "rirTarget": 2,
+      "restSeconds": 90,
+      "warmupSets": 0,
+      "notesEn": "If a floor push-up is still hard, put your hands on a bench or the wall and progress toward the floor as you get stronger. Keep your body in one line.",
+      "notesPt": "Se a flexão no chão ainda for difícil, apoie as mãos num banco ou na parede e vá progredindo para o chão conforme ficar mais forte. Mantenha o corpo em linha reta."
+     },
+     {
+      "exerciseSlug": "bent-over-two-dumbbell-row",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 90,
+      "warmupSets": 1,
+      "notesEn": "Hinge forward with a flat back, dumbbells hanging. Row both toward your waist, squeezing the shoulder blades together at the top.",
+      "notesPt": "Incline o tronco à frente com a coluna reta, halteres soltos. Puxe os dois em direção à cintura, juntando as escápulas no topo do movimento."
+     },
+     {
+      "exerciseSlug": "butt-lift-bridge",
+      "sets": 3,
+      "repMin": 12,
+      "repMax": 15,
+      "rirTarget": 2,
+      "restSeconds": 90,
+      "warmupSets": 0,
+      "notesEn": "Drive your hips up and squeeze the glutes hard at the top. To make it harder, rest a dumbbell across your hips or do it one leg at a time.",
+      "notesPt": "Suba o quadril e aperte bem os glúteos no topo. Para deixar mais difícil, apoie um halter sobre o quadril ou faça com uma perna só."
+     },
+     {
+      "exerciseSlug": "standing-dumbbell-press",
+      "sets": 2,
+      "repMin": 10,
+      "repMax": 15,
+      "rirTarget": 2,
+      "restSeconds": 90,
+      "warmupSets": 1,
+      "notesEn": "Standing, keep your abs firm and don't arch your lower back as you press overhead. Doing it standing also trains trunk stability.",
+      "notesPt": "Em pé, mantenha o abdômen firme e não arquee a lombar ao empurrar acima da cabeça. Fazer em pé ainda treina a estabilidade do tronco."
+     },
+     {
+      "exerciseSlug": "dead-bug",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesEn": "Lower back pressed into the floor. Slowly extend the opposite arm and leg without arching your back. Reps are per side.",
+      "notesPt": "Lombar colada no chão. Estenda devagar o braço e a perna opostos sem arquear as costas. Repetições por lado."
+     }
+    ]
+   }
+  ],
+  "_droppedSlugs": []
+ },
+ {
+  "slug": "glute-focus",
+  "nameEn": "Glutes & Posterior Chain Focus",
+  "namePt": "Glúteos & Posterior",
+  "taglineEn": "A 6-week glute and posterior-chain specialization, 4x/week, without neglecting the rest of the body.",
+  "taglinePt": "Especialização de 6 semanas para glúteos e posterior de coxa, 4x/semana, sem largar o resto do corpo.",
+  "descriptionEn": "A six-week block that specializes the glutes and posterior chain through two dedicated lower-body sessions — one led by the barbell hip thrust, the other by the Romanian deadlift — paired with two upper-body sessions that keep the physique balanced. The target muscles are trained twice weekly, loaded across the hip-thrust, hinge, hip-extension, knee-flexion and abduction patterns, with double progression, an RIR 1-2 intensity target, and a deload in the final week so you finish the cycle recovered rather than buried.",
+  "descriptionPt": "Um bloco de seis semanas que especializa glúteos e cadeia posterior com dois treinos inferiores dedicados — um puxado pelo hip thrust com barra, outro pelo terra romeno — somados a dois treinos de superior que mantêm o corpo equilibrado. Os grupos-alvo são treinados 2x por semana, cobrindo os padrões de hip thrust, dobradiça (hinge), extensão de quadril, flexão de joelho e abdução, com progressão dupla, alvo de intensidade de 1 a 2 repetições na reserva (RIR) e uma semana de deload no fim, para você fechar o ciclo recuperado e não arrasado.",
+  "audienceEn": "Intermediate lifters who already own the squat, deadlift and hip thrust and want a focused block to develop the glutes and hamstrings while maintaining the rest of the body. Requires a full gym (barbell, leg press, hack squat, leg-curl and abduction machines, cables).",
+  "audiencePt": "Praticantes intermediários que já dominam agachamento, terra e hip thrust e querem um bloco focado em desenvolver glúteos e posterior de coxa, sem abandonar o restante do corpo. Exige academia completa (barra, leg press, hack, cadeira flexora e abdutora, polia).",
+  "goal": "HYPERTROPHY",
+  "experienceLevel": "INTERMEDIATE",
+  "daysPerWeek": 4,
+  "durationWeeks": 6,
+  "sessionMinutes": 65,
+  "equipmentAccess": "FULL_GYM",
+  "trainingStyle": "HYBRID",
+  "progressionStrategy": "DOUBLE",
+  "rationaleEn": "**Why two lower-focused days plus two upper support days?** Specializing a body part mostly means giving it more weekly volume without dropping the rest of the body to nothing. Frequency research suggests that, once weekly volume is accounted for, splitting that volume across two sessions per muscle tends to match or slightly beat cramming it into one — largely because two sessions let you accumulate more quality sets. So the glutes and hamstrings get two dedicated lower days, while two upper days keep chest, back, shoulders and arms progressing at a maintenance-plus dose rather than stalling.\n\n**Why anchor on the hip thrust and the Romanian deadlift, then rotate patterns around them?** The two lower days lead with different jobs of the same muscles: the hip thrust day loads hip extension against a horizontal resistance, and the RDL day loads the hip hinge at long muscle length. Training data comparing the hip thrust and the squat found both drive similar glute growth, which is why the block still keeps a squat-pattern movement (leg press, hack squat) on each lower day rather than going glute-only. Hamstrings are hit both at long length (RDL, seated leg curl with the hip flexed) and at the knee (lying leg curl), since length appears to matter for how a hamstring grows. Hip abduction is added on both days because the gluteus medius and minimus respond to dedicated abduction work that the big hinge and thrust lifts don't fully cover.\n\n**Why RIR 1-2 instead of training to failure?** Meta-analytic work on proximity to failure suggests hypertrophy is similar across a range of a few reps shy of failure up to failure, while stopping short trims the recovery cost — which matters when the same muscles are worked twice a week and the compounds are systemically taxing. Keeping 1-2 reps in reserve on the heavy hip thrust and RDL protects technique and lets the second lower day of the week actually be productive.\n\n**Why double progression and a volume ramp?** Adding reps within a fixed range before adding load gives a clear, self-checking signal for overload without chasing a heavier bar every session — useful on machine and isolation work where small load jumps are clumsy. Volume climbs modestly across the accumulation weeks (an extra top set on the two anchors by weeks 4-5) because more sets, up to a point, drive more growth.\n\n**Why deload in week 6?** Five straight weeks of rising volume on the same muscle group accumulates fatigue that can mask fitness. A lighter final week — roughly half the sets at a comfortable RIR — is a consensus-supported way to shed that fatigue so the gains show up, and so you launch the next block fresh.\n\n**Honest limits.** Specializing lower means the upper body and quadriceps get a holding pattern, not a growth priority — expect them to hold, not surge. Six weeks is enough to see and feel a change in a lagging area, not to remodel it; individual response to volume, exercise selection and rep ranges varies, so treat the prescribed sets as a starting point you adjust to your own recovery.",
+  "rationalePt": "**Por que dois dias focados em inferior mais dois dias de superior?** Especializar uma parte do corpo é, sobretudo, dar a ela mais volume semanal sem zerar o resto. As pesquisas de frequência sugerem que, uma vez considerado o volume semanal, dividir esse volume em duas sessões por músculo tende a igualar ou superar levemente concentrá-lo em uma só — em grande parte porque duas sessões permitem acumular mais séries de qualidade. Por isso glúteos e posteriores ganham dois dias inferiores dedicados, enquanto dois dias de superior mantêm peito, costas, ombros e braços progredindo numa dose de manutenção-com-sobra, em vez de estagnar.\n\n**Por que ancorar no hip thrust e no terra romeno e girar os padrões em torno deles?** Os dois dias inferiores lideram com tarefas diferentes dos mesmos músculos: o dia do hip thrust carrega a extensão de quadril contra uma resistência horizontal, e o dia do terra romeno carrega a dobradiça de quadril em grande alongamento muscular. Dados comparando hip thrust e agachamento encontraram crescimento de glúteo parecido nos dois, e é por isso que o bloco mantém um padrão de agachamento (leg press, hack) em cada dia inferior, em vez de virar um treino só de glúteo. O posterior é estimulado tanto alongado (terra romeno, flexora sentada com o quadril flexionado) quanto na função de joelho (flexora deitada), já que o comprimento em que se treina parece importar para como o isquiotibial cresce. A abdução de quadril entra nos dois dias porque o glúteo médio e o mínimo respondem a trabalho de abdução dedicado, que a dobradiça e o thrust pesados não cobrem por completo.\n\n**Por que RIR 1-2 e não treino até a falha?** As meta-análises sobre proximidade da falha sugerem que a hipertrofia é semelhante numa faixa que vai de algumas repetições antes da falha até a falha, enquanto parar um pouco antes reduz o custo de recuperação — o que importa quando os mesmos músculos são treinados 2x por semana e os compostos são sistemicamente exigentes. Manter 1 a 2 repetições na reserva no hip thrust e no terra romeno pesados protege a técnica e faz o segundo dia inferior da semana render de verdade.\n\n**Por que progressão dupla e uma rampa de volume?** Adicionar repetições dentro de uma faixa fixa antes de adicionar carga dá um sinal claro e autoverificável de sobrecarga, sem caçar mais peso na barra toda sessão — útil em máquinas e isolamentos, onde saltos pequenos de carga são desajeitados. O volume sobe de forma moderada ao longo das semanas de acúmulo (uma série-topo extra nos dois âncora nas semanas 4-5), porque mais séries, até certo ponto, geram mais crescimento.\n\n**Por que deload na semana 6?** Cinco semanas seguidas de volume crescente no mesmo grupo muscular acumulam fadiga que pode mascarar o condicionamento. Uma última semana mais leve — cerca de metade das séries num RIR confortável — é uma forma respaldada por consenso de dissipar essa fadiga para que os ganhos apareçam, e para você começar o próximo bloco descansado.\n\n**Limites honestos.** Especializar o inferior significa que superior e quadríceps entram em compasso de espera, não em prioridade de crescimento — espere que se mantenham, não que disparem. Seis semanas dão para ver e sentir mudança numa área atrasada, não para remodelá-la; a resposta individual a volume, seleção de exercícios e faixas de repetição varia, então trate as séries prescritas como ponto de partida a ajustar à sua recuperação.",
+  "restGuidanceEn": "2-3 minutes (150-180s) on the heavy compounds (hip thrust, Romanian deadlift, leg press, hack squat, bench, incline); 90-120s on rows, pulldowns and machine presses; 60-75s on isolation (abduction, calves, kickbacks, lateral/rear raises, curls, pushdowns).",
+  "restGuidancePt": "2 a 3 minutos (150-180s) nos compostos pesados (hip thrust, terra romeno, leg press, hack, supino); 90-120s nas remadas, puxadas e supinos de máquina; 60-75s nos isolamentos (abdutora, panturrilha, coice, elevações lateral/posterior, roscas e tríceps).",
+  "weeklyGuidance": [
+   {
+    "week": 1,
+    "rirTarget": 2,
+    "setsNotePt": "Semana de entrada: tire 1 série de cada isolamento (abdutora, panturrilha, coice, elevações, roscas e tríceps) e priorize técnica e conexão com glúteo/posterior.",
+    "notePt": "Use cargas que deixem 2 repetições na reserva com folga. Nada de falha; o objetivo é calibrar peso e execução."
+   },
+   {
+    "week": 2,
+    "rirTarget": 2,
+    "setsNotePt": "Volume completo programado em todos os exercícios.",
+    "notePt": "Repita as cargas da semana 1 e suba o peso onde você bateu o topo da faixa de repetições mantendo o RIR (progressão dupla)."
+   },
+   {
+    "week": 3,
+    "rirTarget": 1.5,
+    "setsNotePt": "Volume completo. Aproxime-se um pouco mais da falha nos compostos-âncora (hip thrust e terra romeno).",
+    "notePt": "Continue progredindo carga por progressão dupla; os isolamentos seguem em RIR 1."
+   },
+   {
+    "week": 4,
+    "rirTarget": 1,
+    "setsNotePt": "Adicione 1 série-topo ao hip thrust (dia inferior A) e ao terra romeno (dia inferior B).",
+    "notePt": "Semana mais pesada: 1 repetição na reserva nos compostos. Mantenha a técnica limpa mesmo perto do limite."
+   },
+   {
+    "week": 5,
+    "rirTarget": 1,
+    "setsNotePt": "Pico do bloco: mantenha a série-topo extra nos dois âncora e busque o topo das faixas de repetição em tudo.",
+    "notePt": "Última semana de acúmulo antes do deload. Se algum exercício estagnar, priorize os âncora e a abdução."
+   },
+   {
+    "week": 6,
+    "rirTarget": 3,
+    "setsNotePt": "Deload: reduza para cerca de metade das séries de trabalho e volte à série-base nos âncora (sem a extra).",
+    "notePt": "Semana de descarga: use ~2/3 da carga habitual, longe da falha. O objetivo é dissipar a fadiga acumulada, não gerar estímulo novo."
+   }
+  ],
+  "evidenceKeys": [
+   "schoenfeld-2019-frequency-volume-equated",
+   "schoenfeld-2017-volume-dose-response",
+   "refalo-2023-proximity-to-failure-hypertrophy",
+   "plotkin-2023-hip-thrust-vs-squat-glute-hypertrophy",
+   "maeo-2021-hamstring-long-vs-short-length",
+   "moore-2020-gluteus-medius-minimus-exercise-review",
+   "plotkin-2022-load-vs-rep-progression",
+   "bell-2023-deloading-delphi-consensus"
+  ],
+  "principleSlugs": [
+   "training-frequency",
+   "training-volume",
+   "progressive-overload",
+   "double-progression",
+   "rir",
+   "deloads"
+  ],
+  "days": [
+   {
+    "dayIndex": 0,
+    "nameEn": "Lower A — Glute-Dominant",
+    "namePt": "Inferior A — Ênfase em Glúteo",
+    "focusEn": "Hip thrust-led glute work with quad and hamstring support",
+    "focusPt": "Glúteo puxado pelo hip thrust, com apoio de quadríceps e posterior",
+    "estimatedMinutes": 65,
+    "exercises": [
+     {
+      "exerciseSlug": "barbell-hip-thrust",
+      "sets": 4,
+      "repMin": 6,
+      "repMax": 10,
+      "rirTarget": 2,
+      "restSeconds": 180,
+      "warmupSets": 2,
+      "notesEn": "Lock the hips out at the top and pause 1s squeezing the glutes; chin slightly tucked, ribs down, no lower-back overextension.",
+      "notesPt": "Trave o quadril no topo e faça uma pausa de 1s contraindo o glúteo; queixo levemente para baixo e costelas para baixo, sem hiperestender a lombar."
+     },
+     {
+      "exerciseSlug": "leg-press",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 150,
+      "warmupSets": 1,
+      "notesEn": "Feet placed high and a touch wider on the platform to bias the glutes and hamstrings; descend under control to your fullest range without rounding the lower back.",
+      "notesPt": "Pés altos e um pouco afastados na plataforma para deslocar a ênfase para glúteo e posterior; desça controlado até a maior amplitude sem arredondar a lombar."
+     },
+     {
+      "exerciseSlug": "hyperextensions-back-extensions",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 15,
+      "rirTarget": 2,
+      "restSeconds": 90,
+      "warmupSets": 0,
+      "notesEn": "45-degree bench. Round the upper back slightly and drive the hips into the pad to keep tension on the glutes; add load only once bodyweight is easy.",
+      "notesPt": "Banco a 45°. Arredonde levemente a coluna torácica e empurre o quadril contra o apoio para manter tensão no glúteo; só adicione carga quando o peso corporal ficar fácil."
+     },
+     {
+      "exerciseSlug": "seated-leg-curl",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 1,
+      "restSeconds": 90,
+      "warmupSets": 0,
+      "notesEn": "The seated position keeps the hamstring at a longer length (hip flexed); control the eccentric for 2-3s.",
+      "notesPt": "A posição sentada mantém o isquiotibial mais alongado (quadril flexionado); controle a fase excêntrica em 2-3s."
+     },
+     {
+      "exerciseSlug": "thigh-abductor",
+      "sets": 3,
+      "repMin": 12,
+      "repMax": 20,
+      "rirTarget": 1,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesEn": "Lean the torso slightly forward to recruit more gluteus medius; hold 1s at peak abduction.",
+      "notesPt": "Incline o tronco levemente à frente para recrutar mais o glúteo médio; segure 1s na abertura máxima."
+     }
+    ]
+   },
+   {
+    "dayIndex": 1,
+    "nameEn": "Upper A — Push Emphasis",
+    "namePt": "Superior A — Ênfase em Empurrar",
+    "focusEn": "Upper-body support, push-biased",
+    "focusPt": "Suporte de superior, com viés de empurrar",
+    "estimatedMinutes": 60,
+    "exercises": [
+     {
+      "exerciseSlug": "barbell-bench-press-medium-grip",
+      "sets": 3,
+      "repMin": 6,
+      "repMax": 10,
+      "rirTarget": 2,
+      "restSeconds": 150,
+      "warmupSets": 2,
+      "notesEn": "Keeps the horizontal press strong while the block prioritizes the lower body.",
+      "notesPt": "Mantém o empurrar horizontal forte enquanto o bloco prioriza o inferior."
+     },
+     {
+      "exerciseSlug": "seated-cable-rows",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 1,
+      "notesEn": "Chest tall, pull to the lower ribs and control the stretch.",
+      "notesPt": "Peito alto, puxe em direção às costelas baixas e controle o alongamento."
+     },
+     {
+      "exerciseSlug": "leverage-shoulder-press",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 0,
+      "notesEn": "Machine press keeps shoulder volume with low stabilization cost.",
+      "notesPt": "Supino de ombro na máquina mantém o volume de ombro com baixo custo de estabilização."
+     },
+     {
+      "exerciseSlug": "wide-grip-lat-pulldown",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 0,
+      "notesEn": "Full stretch at the top, drive elbows down to the sides.",
+      "notesPt": "Alongamento completo no topo, leve os cotovelos para baixo e para os lados."
+     },
+     {
+      "exerciseSlug": "side-lateral-raise",
+      "sets": 3,
+      "repMin": 12,
+      "repMax": 20,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 0,
+      "notesEn": "Lead with the elbows; no swinging.",
+      "notesPt": "Conduza com os cotovelos; sem embalo."
+     },
+     {
+      "exerciseSlug": "barbell-curl",
+      "sets": 2,
+      "repMin": 10,
+      "repMax": 15,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 0
+     },
+     {
+      "exerciseSlug": "triceps-pushdown",
+      "sets": 2,
+      "repMin": 10,
+      "repMax": 15,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 0
+     }
+    ]
+   },
+   {
+    "dayIndex": 2,
+    "nameEn": "Lower B — Posterior-Chain-Dominant",
+    "namePt": "Inferior B — Ênfase em Posterior",
+    "focusEn": "RDL-led hamstring and glute work with quad support",
+    "focusPt": "Posterior e glúteo puxados pelo terra romeno, com apoio de quadríceps",
+    "estimatedMinutes": 70,
+    "exercises": [
+     {
+      "exerciseSlug": "romanian-deadlift",
+      "sets": 4,
+      "repMin": 6,
+      "repMax": 10,
+      "rirTarget": 2,
+      "restSeconds": 180,
+      "warmupSets": 2,
+      "notesEn": "Hips back, slight knee bend, bar grazing the legs; lower until you feel the hamstring stretch without rounding the lower back. No need to reach the floor.",
+      "notesPt": "Quadril para trás, joelhos levemente flexionados, barra rente às pernas; desça até sentir o alongamento do posterior sem arredondar a lombar. Não precisa tocar o chão."
+     },
+     {
+      "exerciseSlug": "hack-squat",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 150,
+      "warmupSets": 1,
+      "notesEn": "Descend to the deepest range you control; this keeps the quads trained to balance the week's heavy posterior/glute volume.",
+      "notesPt": "Desça até a maior profundidade que você controla; mantém o quadríceps treinado para equilibrar o volume pesado de posterior/glúteo da semana."
+     },
+     {
+      "exerciseSlug": "lying-leg-curls",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 1,
+      "restSeconds": 90,
+      "warmupSets": 0,
+      "notesEn": "The lying position emphasizes the knee-side portion of the hamstring, complementing the seated curl on Lower A; control the eccentric.",
+      "notesPt": "A posição deitada enfatiza a porção do isquiotibial junto ao joelho, complementando a flexora sentada do Inferior A; controle a excêntrica."
+     },
+     {
+      "exerciseSlug": "one-legged-cable-kickback",
+      "sets": 3,
+      "repMin": 12,
+      "repMax": 15,
+      "rirTarget": 1,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesEn": "Isolated hip extension for the glute; squeeze at the top through a full range without arching the lower back.",
+      "notesPt": "Extensão de quadril isolada para o glúteo; contraia no topo em amplitude completa, sem arquear a lombar."
+     },
+     {
+      "exerciseSlug": "thigh-abductor",
+      "sets": 3,
+      "repMin": 12,
+      "repMax": 20,
+      "rirTarget": 1,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesEn": "Torso slightly forward to bias the gluteus medius; second weekly abduction dose.",
+      "notesPt": "Tronco levemente à frente para focar no glúteo médio; segunda dose semanal de abdução."
+     },
+     {
+      "exerciseSlug": "standing-calf-raises",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 15,
+      "rirTarget": 1,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesEn": "Standing (knee extended) biases the gastrocnemius; descend to a full stretch and pause at the bottom.",
+      "notesPt": "Em pé (joelho estendido) prioriza o gastrocnêmio; desça até o máximo alongamento e faça pausa embaixo."
+     }
+    ]
+   },
+   {
+    "dayIndex": 3,
+    "nameEn": "Upper B — Pull Emphasis",
+    "namePt": "Superior B — Ênfase em Puxar",
+    "focusEn": "Upper-body support, pull-biased",
+    "focusPt": "Suporte de superior, com viés de puxar",
+    "estimatedMinutes": 60,
+    "exercises": [
+     {
+      "exerciseSlug": "incline-dumbbell-press",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 2,
+      "notesEn": "Upper-chest bias; control the stretch at the bottom.",
+      "notesPt": "Ênfase na porção superior do peito; controle o alongamento embaixo."
+     },
+     {
+      "exerciseSlug": "lying-t-bar-row",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 1,
+      "notesEn": "Chest-supported row to spare the lower back already worked on the posterior-chain days.",
+      "notesPt": "Remada com apoio de peito para poupar a lombar, já bastante solicitada nos dias de posterior."
+     },
+     {
+      "exerciseSlug": "close-grip-front-lat-pulldown",
+      "sets": 3,
+      "repMin": 8,
+      "repMax": 12,
+      "rirTarget": 2,
+      "restSeconds": 120,
+      "warmupSets": 0,
+      "notesEn": "Neutral/close grip; full stretch overhead.",
+      "notesPt": "Pegada fechada/neutra; alongamento completo no topo."
+     },
+     {
+      "exerciseSlug": "reverse-flyes",
+      "sets": 3,
+      "repMin": 12,
+      "repMax": 20,
+      "rirTarget": 1,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesEn": "Rear delts and upper-back posture; lead with the elbows, no momentum.",
+      "notesPt": "Deltoide posterior e postura do superior das costas; conduza com os cotovelos, sem embalo."
+     },
+     {
+      "exerciseSlug": "side-lateral-raise",
+      "sets": 3,
+      "repMin": 12,
+      "repMax": 20,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 0
+     },
+     {
+      "exerciseSlug": "preacher-curl",
+      "sets": 2,
+      "repMin": 10,
+      "repMax": 15,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 0,
+      "notesEn": "Biceps at a longer length; control the bottom of each rep.",
+      "notesPt": "Bíceps em maior alongamento; controle a parte de baixo de cada repetição."
+     },
+     {
+      "exerciseSlug": "triceps-pushdown-rope-attachment",
+      "sets": 2,
+      "repMin": 10,
+      "repMax": 15,
+      "rirTarget": 1,
+      "restSeconds": 75,
+      "warmupSets": 0
+     }
+    ]
+   }
+  ],
+  "_droppedSlugs": []
+ }
+]

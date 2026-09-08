@@ -1,28 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ClipboardList, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { requireUser } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 import { listTemplates } from "@/lib/data/templates";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { EmptyState } from "@/components/ui/misc";
+import { SectionHead } from "@/components/ui/section-head";
+import { ProtocolCard } from "@/components/programs/protocol-card";
 
 export const metadata: Metadata = { title: "Programas" };
 
-const GOAL_LABEL: Record<string, string> = {
-  HYPERTROPHY: "Hipertrofia",
-  STRENGTH: "Força",
-  GENERAL_FITNESS: "Fitness geral",
-  STRENGTH_HYPERTROPHY: "Força + Hipertrofia",
-  SPORTS_PERFORMANCE: "Performance esportiva",
-};
-
-const STATUS_LABEL: Record<string, { label: string; variant: "accent" | "default" | "warning" }> = {
-  ACTIVE: { label: "Ativo", variant: "accent" },
-  DRAFT: { label: "Rascunho", variant: "default" },
-  ARCHIVED: { label: "Arquivado", variant: "warning" },
+const STATUS_LABEL: Record<string, { label: string; color: string }> = {
+  ACTIVE: { label: "Ativo", color: "var(--accent)" },
+  DRAFT: { label: "Rascunho", color: "var(--muted)" },
+  ARCHIVED: { label: "Arquivado", color: "var(--warning)" },
 };
 
 export default async function ProgramsPage() {
@@ -31,80 +22,105 @@ export default async function ProgramsPage() {
     prisma.userProgram.findMany({
       where: { userId: user.id, status: { in: ["ACTIVE", "DRAFT"] } },
       orderBy: { updatedAt: "desc" },
-      include: { days: { select: { id: true } } },
+      include: { days: { select: { id: true, name: true }, orderBy: { dayIndex: "asc" } } },
     }),
     listTemplates(),
   ]);
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-8">
-      <div className="flex items-center justify-between">
+    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+      {/* Masthead */}
+      <div className="flex items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Programas</h1>
-          <p className="mt-1 text-sm text-muted">Escolha um programa pronto ou monte o seu.</p>
+          <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-muted">Sua estante</span>
+          <h1 className="text-display mt-1 text-4xl font-extrabold sm:text-5xl">Programas</h1>
         </div>
-        <Button asChild>
+        <Button variant="strong" asChild>
           <Link href="/app/programs/new">
             <Plus className="size-4" />
-            Criar programa
+            Criar
           </Link>
         </Button>
       </div>
 
-      <section className="mt-8">
-        <h2 className="mb-3 text-sm font-bold uppercase tracking-wide text-muted">Meus programas</h2>
+      {/* Meus programas */}
+      <section className="mt-12">
+        <SectionHead label="Meus programas" count={myPrograms.length ? `${myPrograms.length} ativo(s)` : undefined} />
         {myPrograms.length === 0 ? (
-          <EmptyState
-            icon={<ClipboardList className="size-8" />}
-            title="Você ainda não tem programas"
-            description="Comece a partir de um programa pronto abaixo, ou crie o seu do zero."
-          />
+          <Link
+            href="/app/programs/new"
+            className="mt-4 flex flex-col items-start gap-1 rounded-[var(--radius-lg)] border border-dashed border-border-strong p-6 transition-colors hover:border-accent hover:bg-accent-soft/30"
+          >
+            <span className="font-mono text-2xl font-bold text-foreground/20">＋</span>
+            <span className="mt-1 font-semibold">Monte seu primeiro protocolo</span>
+            <span className="text-sm text-muted">Do zero, ou personalize um pronto da biblioteca abaixo.</span>
+          </Link>
         ) : (
-          <div className="grid gap-3 sm:grid-cols-2">
-            {myPrograms.map((p) => (
-              <Link key={p.id} href={`/app/programs/${p.id}`}>
-                <Card className="h-full transition-colors hover:border-accent/50">
-                  <CardContent className="pt-5">
-                    <div className="flex items-start justify-between gap-2">
-                      <h3 className="font-semibold">{p.name}</h3>
-                      <Badge variant={STATUS_LABEL[p.status].variant}>{STATUS_LABEL[p.status].label}</Badge>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            {myPrograms.map((p, i) => (
+              <Link
+                key={p.id}
+                href={`/app/programs/${p.id}`}
+                className="group relative flex overflow-hidden rounded-[var(--radius-lg)] border border-border bg-surface transition-all hover:border-border-strong hover:shadow-md"
+              >
+                <span className="w-1 shrink-0" style={{ background: STATUS_LABEL[p.status].color }} aria-hidden />
+                <div className="relative min-w-0 flex-1 p-5">
+                  <span className="pointer-events-none absolute right-4 top-2 font-mono text-4xl font-bold tabular-nums text-foreground/[0.06]">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span
+                    className="text-[10px] font-bold uppercase tracking-[0.18em]"
+                    style={{ color: STATUS_LABEL[p.status].color }}
+                  >
+                    {STATUS_LABEL[p.status].label}
+                  </span>
+                  <h3 className="mt-1.5 max-w-[85%] font-bold leading-tight">{p.name}</h3>
+                  {p.days.length > 0 ? (
+                    <div className="mt-3 flex flex-wrap gap-1">
+                      {p.days.map((d) => (
+                        <span
+                          key={d.id}
+                          className="rounded-[4px] bg-surface-2 px-1.5 py-1 font-mono text-[10px] text-foreground/70"
+                        >
+                          {d.name.replace(/^(dia|sess(ã|a)o)\s+/i, "").slice(0, 10).toUpperCase()}
+                        </span>
+                      ))}
                     </div>
-                    <p className="mt-1 text-xs text-muted">
-                      {p.days.length} dias · {p.daysPerWeek}x/semana
-                    </p>
-                  </CardContent>
-                </Card>
+                  ) : (
+                    <p className="mt-2 text-xs text-muted">Sem dias ainda</p>
+                  )}
+                </div>
               </Link>
             ))}
           </div>
         )}
       </section>
 
-      <section className="mt-10">
-        <h2 className="mb-3 text-sm font-bold uppercase tracking-wide text-muted">Biblioteca de programas</h2>
+      {/* Biblioteca */}
+      <section className="mt-14">
+        <SectionHead label="Biblioteca de protocolos" count={`${templates.length}`} />
         {templates.length === 0 ? (
-          <EmptyState title="Nenhum programa disponível ainda" />
+          <p className="mt-4 text-sm text-muted">Nenhum programa disponível ainda.</p>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2">
-            {templates.map((t) => (
-              <Link key={t.id} href={`/app/programs/templates/${t.slug}`}>
-                <Card className="h-full transition-colors hover:border-accent/50">
-                  <CardContent className="flex h-full flex-col pt-5">
-                    {t.isFlagship ? (
-                      <Badge variant="accent" className="mb-2 w-fit">
-                        Programa em destaque
-                      </Badge>
-                    ) : null}
-                    <h3 className="font-bold">{t.namePt}</h3>
-                    <p className="mt-1 text-sm text-muted">{t.taglinePt}</p>
-                    <div className="mt-auto flex flex-wrap gap-1.5 pt-3">
-                      <Badge>{GOAL_LABEL[t.goal] ?? t.goal}</Badge>
-                      <Badge>{t.daysPerWeek}x/semana</Badge>
-                      <Badge>{t.durationWeeks} semanas</Badge>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            {templates.map((t, i) => (
+              <ProtocolCard
+                key={t.id}
+                data={{
+                  index: i + 1,
+                  href: `/app/programs/templates/${t.slug}`,
+                  namePt: t.namePt,
+                  taglinePt: t.taglinePt,
+                  goal: t.goal,
+                  experienceLevel: t.experienceLevel,
+                  trainingStyle: t.trainingStyle,
+                  daysPerWeek: t.daysPerWeek,
+                  durationWeeks: t.durationWeeks,
+                  sessionMinutes: t.sessionMinutes,
+                  dayNames: t.days.map((d) => d.namePt),
+                  isFlagship: t.isFlagship,
+                }}
+              />
             ))}
           </div>
         )}

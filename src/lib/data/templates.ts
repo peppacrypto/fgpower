@@ -18,7 +18,7 @@ export async function listTemplates(filters: TemplateFilters = {}) {
       ...(filters.equipmentAccess ? { equipmentAccess: filters.equipmentAccess as never } : {}),
     },
     orderBy: [{ isFlagship: "desc" }, { sortOrder: "asc" }],
-    include: { days: { select: { id: true } } },
+    include: { days: { select: { id: true, namePt: true }, orderBy: { dayIndex: "asc" } } },
   });
 }
 

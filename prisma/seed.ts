@@ -315,6 +315,114 @@ async function seedFlagshipProgram() {
   console.log(`Flagship program "${p.namePt}": seeded with ${p.days.length} days.`);
 }
 
+interface GeneratedProgram {
+  slug: string;
+  nameEn: string; namePt: string;
+  taglineEn: string; taglinePt: string;
+  descriptionEn: string; descriptionPt: string;
+  audienceEn: string; audiencePt: string;
+  goal: string; experienceLevel: string;
+  daysPerWeek: number; durationWeeks: number; sessionMinutes: number;
+  equipmentAccess: string; trainingStyle: string; progressionStrategy: string;
+  rationaleEn: string; rationalePt: string;
+  restGuidanceEn?: string; restGuidancePt: string;
+  weeklyGuidance: unknown[];
+  evidenceKeys: string[]; principleSlugs: string[];
+  days: {
+    dayIndex: number; nameEn: string; namePt: string;
+    focusEn?: string; focusPt?: string; estimatedMinutes: number;
+    exercises: {
+      exerciseSlug: string; sets: number; repMin: number; repMax: number;
+      rirTarget: number; restSeconds: number; warmupSets?: number;
+      notesEn?: string; notesPt?: string;
+    }[];
+  }[];
+}
+
+async function seedGeneratedPrograms() {
+  const file = path.join(SEED_DATA_DIR, "programs.generated.json");
+  let programs: GeneratedProgram[];
+  try {
+    programs = JSON.parse(await readFile(file, "utf8"));
+  } catch {
+    console.warn(`No generated programs at ${file} — skipping.`);
+    return;
+  }
+
+  let count = 0;
+  for (let i = 0; i < programs.length; i++) {
+    const p = programs[i];
+    const sortOrder = i + 1; // flagship stays at 0
+    const base = {
+      nameEn: p.nameEn, namePt: p.namePt,
+      taglineEn: p.taglineEn, taglinePt: p.taglinePt,
+      descriptionEn: p.descriptionEn, descriptionPt: p.descriptionPt,
+      audienceEn: p.audienceEn, audiencePt: p.audiencePt,
+      goal: p.goal as never, experienceLevel: p.experienceLevel as never,
+      daysPerWeek: p.daysPerWeek, durationWeeks: p.durationWeeks, sessionMinutes: p.sessionMinutes,
+      equipmentAccess: p.equipmentAccess as never, trainingStyle: p.trainingStyle as never,
+      progressionStrategy: p.progressionStrategy as never,
+      rationaleEn: p.rationaleEn, rationalePt: p.rationalePt,
+      restGuidanceEn: p.restGuidanceEn ?? null, restGuidancePt: p.restGuidancePt,
+      weeklyGuidance: p.weeklyGuidance as never,
+    };
+    const template = await prisma.workoutTemplate.upsert({
+      where: { slug: p.slug },
+      create: { slug: p.slug, version: 1, isFlagship: false, sortOrder, ...base },
+      update: { sortOrder, ...base },
+    });
+
+    for (const day of p.days) {
+      const dayRow = await prisma.workoutTemplateDay.upsert({
+        where: { templateId_dayIndex: { templateId: template.id, dayIndex: day.dayIndex } },
+        create: {
+          templateId: template.id, dayIndex: day.dayIndex,
+          nameEn: day.nameEn, namePt: day.namePt,
+          focusEn: day.focusEn ?? null, focusPt: day.focusPt ?? null, estimatedMinutes: day.estimatedMinutes,
+        },
+        update: {
+          nameEn: day.nameEn, namePt: day.namePt,
+          focusEn: day.focusEn ?? null, focusPt: day.focusPt ?? null, estimatedMinutes: day.estimatedMinutes,
+        },
+      });
+      await prisma.workoutTemplateExercise.deleteMany({ where: { dayId: dayRow.id } });
+      let sortEx = 0;
+      for (const ex of day.exercises) {
+        const exercise = await prisma.exercise.findUnique({ where: { slug: ex.exerciseSlug } });
+        if (!exercise) {
+          console.warn(`  program ${p.slug}: exercise slug "${ex.exerciseSlug}" not found, skipping.`);
+          continue;
+        }
+        await prisma.workoutTemplateExercise.create({
+          data: {
+            dayId: dayRow.id, exerciseId: exercise.id, sortOrder: sortEx++,
+            sets: ex.sets, repMin: ex.repMin, repMax: ex.repMax, rirTarget: ex.rirTarget,
+            restSeconds: ex.restSeconds, warmupSets: ex.warmupSets ?? 0,
+            notesEn: ex.notesEn ?? null, notesPt: ex.notesPt ?? null,
+          },
+        });
+      }
+    }
+
+    await prisma.workoutTemplateEvidence.deleteMany({ where: { templateId: template.id } });
+    let evOrder = 0;
+    for (const key of p.evidenceKeys) {
+      const source = await prisma.evidenceSource.findUnique({ where: { key } });
+      if (!source) continue;
+      await prisma.workoutTemplateEvidence.create({ data: { templateId: template.id, sourceId: source.id, sortOrder: evOrder++ } });
+    }
+    await prisma.workoutTemplatePrinciple.deleteMany({ where: { templateId: template.id } });
+    let prOrder = 0;
+    for (const slug of p.principleSlugs) {
+      const principle = await prisma.trainingPrinciple.findUnique({ where: { slug } });
+      if (!principle) continue;
+      await prisma.workoutTemplatePrinciple.create({ data: { templateId: template.id, principleId: principle.id, sortOrder: prOrder++ } });
+    }
+    count++;
+  }
+  console.log(`Generated programs: seeded ${count}.`);
+}
+
 async function seedCuratedExerciseContent() {
   const file = path.join(SEED_DATA_DIR, "curated-exercises.generated.json");
   let curated: CuratedExercise[];
@@ -463,6 +571,7 @@ async function main() {
   await seedPrinciples();
   await seedCuratedExerciseContent();
   await seedFlagshipProgram();
+  await seedGeneratedPrograms();
 
   const [muscles, equipment, patterns, exercises, evidence, principles, templates] = await Promise.all([
     prisma.muscle.count(),
