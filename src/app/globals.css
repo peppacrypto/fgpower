@@ -2,73 +2,124 @@
 
 /* ---------------------------------------------------------------------
    FGPOWER design tokens.
-   Dark-first premium athletic/scientific identity: near-black surfaces,
-   off-white type, one energetic accent (performance lime). Light theme
-   is a fully-specified fallback for prefers-color-scheme / OS setting.
+   Light-first, precision SaaS identity — an Attio-style disciplined type
+   scale and flat/bordered surfaces (tight letter-spacing, 1px borders,
+   near-invisible shadows, moderate 4–16px radius scale) carrying a single
+   confident accent, used the way Strava commits to its brand color: not
+   neon, not decorative — just present everywhere it means "go." Dark mode
+   is a careful tonal inversion, not a second identity.
 --------------------------------------------------------------------- */
 
 :root {
-  --background: #f7f7f5;
+  --background: #fafafb;
   --surface: #ffffff;
-  --surface-2: #f0f0ee;
-  --border: #e2e2df;
-  --foreground: #0b0b0c;
-  --muted: #5c5c61;
-  --accent: #7a9900;
-  --accent-foreground: #0b0b0c;
-  --accent-soft: #eef5cc;
-  --danger: #c53030;
-  --danger-soft: #fbe3e3;
-  --success: #1a7f4b;
-  --success-soft: #d9f2e3;
-  --warning: #9a6b00;
-  --warning-soft: #fbedcc;
-  --ring: #7a9900;
+  --surface-2: #f3f4f6;
+  --border: #e4e7ec;
+  --border-strong: #d3d8df;
+  --foreground: #1c1d1f;
+  --muted: #6f7988;
+  --accent: #63840a;
+  --accent-hover: #536e08;
+  --accent-foreground: #ffffff;
+  --accent-soft: #eef3d8;
+  --accent-strong: #b4e600;
+  --accent-strong-foreground: #14210a;
+  --danger: #d8322f;
+  --danger-soft: #fdeceb;
+  --success: #0db472;
+  --success-soft: #e0fced;
+  --warning: #ad7c00;
+  --warning-soft: #fff3cc;
+  --ring: #63840a;
 
-  --radius-sm: 0.5rem;
-  --radius-md: 0.875rem;
-  --radius-lg: 1.25rem;
-  --radius-xl: 1.75rem;
+  --tag-purple-bg: #f5f0ff;
+  --tag-purple-fg: #6d3df0;
+  --tag-orange-bg: #fff1e6;
+  --tag-orange-fg: #c65a0a;
+  --tag-pink-bg: #fdedf3;
+  --tag-pink-fg: #d13d78;
+  --tag-blue-bg: #e8f0ff;
+  --tag-blue-fg: #245bc2;
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1.125rem;
+
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.04);
+  --shadow-md: 0 1px 3px rgba(16, 24, 40, 0.04), 0 4px 12px rgba(16, 24, 40, 0.06);
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --background: #0a0a0b;
-    --surface: #131315;
-    --surface-2: #1a1a1d;
-    --border: #26262a;
-    --foreground: #f5f5f2;
-    --muted: #9a9aa1;
-    --accent: #cdff4d;
-    --accent-foreground: #0a0a0b;
-    --accent-soft: #1f2707;
-    --danger: #ff6b6b;
-    --danger-soft: #2a1414;
-    --success: #4ade80;
-    --success-soft: #10261a;
+    --background: #0b0c0e;
+    --surface: #151619;
+    --surface-2: #1c1e22;
+    --border: #2a2d33;
+    --border-strong: #383c44;
+    --foreground: #f2f3f5;
+    --muted: #9aa0aa;
+    --accent: #a3d92e;
+    --accent-hover: #b6ec3e;
+    --accent-foreground: #0e1408;
+    --accent-soft: #1e2a0a;
+    --accent-strong: #c3ff4d;
+    --accent-strong-foreground: #0e1408;
+    --danger: #ff6b68;
+    --danger-soft: #2a1615;
+    --success: #3ddb96;
+    --success-soft: #0f261b;
     --warning: #f5c14d;
-    --warning-soft: #2a2110;
-    --ring: #cdff4d;
+    --warning-soft: #241d0c;
+    --ring: #a3d92e;
+
+    --tag-purple-bg: #211a33;
+    --tag-purple-fg: #b79dff;
+    --tag-orange-bg: #2b1c0e;
+    --tag-orange-fg: #f6a05c;
+    --tag-pink-bg: #2b1620;
+    --tag-pink-fg: #f291b8;
+    --tag-blue-bg: #101f33;
+    --tag-blue-fg: #7fb0ff;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 1px 3px rgba(0, 0, 0, 0.3), 0 8px 20px rgba(0, 0, 0, 0.35);
   }
 }
 
 :root[data-theme="dark"] {
-  --background: #0a0a0b;
-  --surface: #131315;
-  --surface-2: #1a1a1d;
-  --border: #26262a;
-  --foreground: #f5f5f2;
-  --muted: #9a9aa1;
-  --accent: #cdff4d;
-  --accent-foreground: #0a0a0b;
-  --accent-soft: #1f2707;
-  --danger: #ff6b6b;
-  --danger-soft: #2a1414;
-  --success: #4ade80;
-  --success-soft: #10261a;
+  --background: #0b0c0e;
+  --surface: #151619;
+  --surface-2: #1c1e22;
+  --border: #2a2d33;
+  --border-strong: #383c44;
+  --foreground: #f2f3f5;
+  --muted: #9aa0aa;
+  --accent: #a3d92e;
+  --accent-hover: #b6ec3e;
+  --accent-foreground: #0e1408;
+  --accent-soft: #1e2a0a;
+  --accent-strong: #c3ff4d;
+  --accent-strong-foreground: #0e1408;
+  --danger: #ff6b68;
+  --danger-soft: #2a1615;
+  --success: #3ddb96;
+  --success-soft: #0f261b;
   --warning: #f5c14d;
-  --warning-soft: #2a2110;
-  --ring: #cdff4d;
+  --warning-soft: #241d0c;
+  --ring: #a3d92e;
+
+  --tag-purple-bg: #211a33;
+  --tag-purple-fg: #b79dff;
+  --tag-orange-bg: #2b1c0e;
+  --tag-orange-fg: #f6a05c;
+  --tag-pink-bg: #2b1620;
+  --tag-pink-fg: #f291b8;
+  --tag-blue-bg: #101f33;
+  --tag-blue-fg: #7fb0ff;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 1px 3px rgba(0, 0, 0, 0.3), 0 8px 20px rgba(0, 0, 0, 0.35);
 }
 
 @theme inline {
@@ -76,11 +127,15 @@
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
   --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
   --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent-soft: var(--accent-soft);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-strong-foreground: var(--accent-strong-foreground);
   --color-danger: var(--danger);
   --color-danger-soft: var(--danger-soft);
   --color-success: var(--success);
@@ -89,10 +144,22 @@
   --color-warning-soft: var(--warning-soft);
   --color-ring: var(--ring);
 
+  --color-tag-purple-bg: var(--tag-purple-bg);
+  --color-tag-purple-fg: var(--tag-purple-fg);
+  --color-tag-orange-bg: var(--tag-orange-bg);
+  --color-tag-orange-fg: var(--tag-orange-fg);
+  --color-tag-pink-bg: var(--tag-pink-bg);
+  --color-tag-pink-fg: var(--tag-pink-fg);
+  --color-tag-blue-bg: var(--tag-blue-bg);
+  --color-tag-blue-fg: var(--tag-blue-fg);
+
   --radius-sm: var(--radius-sm);
   --radius-md: var(--radius-md);
   --radius-lg: var(--radius-lg);
   --radius-xl: var(--radius-xl);
+
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
 
   --font-sans: var(--font-inter);
   --font-mono: var(--font-jetbrains-mono);
@@ -117,6 +184,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-feature-settings: "cv11", "ss01";
+  -webkit-font-smoothing: antialiased;
 }
 
 * {
@@ -130,6 +198,11 @@ body {
 
 .tabular-nums {
   font-variant-numeric: tabular-nums;
+}
+
+/* Tight, Attio-style negative tracking for large display headlines. */
+.text-display {
+  letter-spacing: -0.02em;
 }
 
 /* Focus ring, consistent across all interactive elements. */

@@ -1,15 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { Wordmark } from "@/components/brand/logo";
 
 export const metadata: Metadata = { title: "Termos de Uso" };
 
 export default function TermsPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
-      <Link href="/">
-        <Wordmark iconSize={26} className="mb-8" />
-      </Link>
       <h1 className="text-2xl font-bold tracking-tight">Termos de Uso</h1>
       <p className="mt-2 text-sm text-muted">Última atualização: setembro de 2026</p>
 
