@@ -7,7 +7,7 @@ export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttribute
       ref={ref}
       type={type}
       className={cn(
-        "flex h-11 w-full rounded-[var(--radius-md)] border border-border bg-surface px-3.5 text-sm text-foreground placeholder:text-muted disabled:cursor-not-allowed disabled:opacity-50",
+        "flex h-11 w-full rounded-[3px] border border-border bg-surface px-3.5 text-sm text-foreground placeholder:text-muted disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}
       {...props}
@@ -21,7 +21,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, React.TextareaHTML
     <textarea
       ref={ref}
       className={cn(
-        "flex min-h-24 w-full rounded-[var(--radius-md)] border border-border bg-surface px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted disabled:cursor-not-allowed disabled:opacity-50",
+        "flex min-h-24 w-full rounded-[3px] border border-border bg-surface px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}
       {...props}
@@ -42,7 +42,7 @@ export const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttrib
     <select
       ref={ref}
       className={cn(
-        "flex h-11 w-full rounded-[var(--radius-md)] border border-border bg-surface px-3.5 text-sm text-foreground disabled:cursor-not-allowed disabled:opacity-50",
+        "flex h-11 w-full rounded-[3px] border border-border bg-surface px-3.5 text-sm text-foreground disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}
       {...props}

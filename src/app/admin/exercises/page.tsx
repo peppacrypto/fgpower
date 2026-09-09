@@ -29,7 +29,7 @@ export default async function AdminExercisesPage({ searchParams }: PageProps<"/a
         <Input name="q" defaultValue={q} placeholder="Buscar exercício…" />
       </form>
 
-      <div className="mt-6 overflow-x-auto rounded-[var(--radius-lg)] border border-border">
+      <div className="mt-6 overflow-x-auto border-t-2 border-t-[var(--rule-heavy)]">
         <table className="w-full text-sm">
           <thead className="bg-surface-2 text-left text-xs text-muted">
             <tr>

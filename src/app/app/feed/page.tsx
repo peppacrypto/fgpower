@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Users } from "lucide-react";
+import { GCohort } from "@/components/ui/glyph";
 import { requireUser } from "@/lib/auth/require-user";
 import { getFeed } from "@/lib/data/social";
 import { ActivityCard } from "@/components/social/activity-card";
@@ -20,7 +20,7 @@ export default async function FeedPage() {
         <h1 className="text-2xl font-bold tracking-tight">Feed</h1>
         <Button variant="outline" size="sm" asChild>
           <Link href="/app/discover">
-            <Users className="size-4" />
+            <GCohort className="size-4" />
             Descobrir
           </Link>
         </Button>
@@ -29,7 +29,7 @@ export default async function FeedPage() {
       {items.length === 0 ? (
         <div className="mt-8">
           <EmptyState
-            icon={<Users className="size-8" />}
+            icon={<GCohort className="size-8" />}
             title="Seu feed está vazio"
             description="Siga outros atletas para ver os treinos deles aqui, ou compartilhe o seu."
             action={

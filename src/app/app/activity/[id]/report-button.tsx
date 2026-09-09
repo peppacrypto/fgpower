@@ -43,7 +43,7 @@ export function ReportButton({ activityId }: { activityId: string }) {
               setDone(true);
             })
           }
-          className="rounded-full border border-border px-2.5 py-1 text-xs text-muted hover:bg-surface-2"
+          className="rounded-[2px] border border-border px-2.5 py-1 text-xs text-muted hover:bg-surface-2"
         >
           {r.label}
         </button>

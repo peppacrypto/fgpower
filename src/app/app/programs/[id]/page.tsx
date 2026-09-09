@@ -75,7 +75,7 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
           {feedback.map((f) => (
             <div
               key={f.code}
-              className="flex items-start gap-2.5 rounded-[var(--radius-md)] border border-border bg-surface-2 px-3.5 py-3 text-sm"
+              className="reg-frame flex items-start gap-2.5 px-3.5 py-3 text-sm"
             >
               {f.severity === "notice" ? (
                 <AlertTriangle className="mt-0.5 size-4 shrink-0 text-warning" />
@@ -91,7 +91,7 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
 
       <div className="mt-6 flex flex-col gap-3">
         {program.days.map((day) => (
-          <div key={day.id} className="rounded-[var(--radius-md)] border border-border p-4">
+          <div key={day.id} className="reg-frame p-4">
             <div className="flex items-center justify-between">
               <h3 className="font-semibold">{day.name}</h3>
               {isActive ? (

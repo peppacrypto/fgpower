@@ -41,8 +41,8 @@ export function ShareWorkoutForm({
             }}
             className={
               visibility === opt.value
-                ? "flex-1 rounded-[var(--radius-sm)] border border-accent bg-accent-soft py-2 text-sm font-semibold text-accent"
-                : "flex-1 rounded-[var(--radius-sm)] border border-border py-2 text-sm text-muted hover:bg-surface-2"
+                ? "flex-1 rounded-[3px] border border-accent bg-accent-soft py-2 text-sm font-semibold text-accent"
+                : "flex-1 rounded-[3px] border border-border py-2 text-sm text-muted hover:bg-surface-2"
             }
           >
             {opt.label}
@@ -88,7 +88,7 @@ export function ShareWorkoutForm({
           })
         }
       >
-        {pending ? "Salvando…" : saved ? "Salvo ✓" : "Salvar"}
+        {pending ? "Salvando…" : saved ? "Salvo" : "Salvar"}
       </Button>
     </div>
   );

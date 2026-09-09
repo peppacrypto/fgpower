@@ -98,7 +98,7 @@ export function ExerciseAdminForm({
         }
         className="w-fit"
       >
-        {pending ? "Salvando…" : saved ? "Salvo ✓" : "Salvar"}
+        {pending ? "Salvando…" : saved ? "Salvo" : "Salvar"}
       </Button>
 
       <div className="border-t border-border pt-6">

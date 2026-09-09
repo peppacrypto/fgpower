@@ -69,7 +69,7 @@ export function RestTimerBar({
         <div className="flex items-center gap-2">
           <button
             onClick={() => onAdd(15)}
-            className="flex h-9 items-center gap-1 rounded-full bg-black/10 px-3 text-sm font-semibold hover:bg-black/20"
+            className="flex h-9 items-center gap-1 rounded-[3px] bg-black/10 px-3 text-sm font-semibold hover:bg-black/20"
           >
             <Plus className="size-3.5" />
             15s
@@ -77,14 +77,14 @@ export function RestTimerBar({
           <button
             onClick={onTogglePause}
             aria-label={paused ? "Retomar" : "Pausar"}
-            className={cn("flex size-9 items-center justify-center rounded-full bg-black/10 hover:bg-black/20")}
+            className={cn("flex size-9 items-center justify-center rounded-[3px] bg-black/10 hover:bg-black/20")}
           >
             {paused ? <Play className="size-4" /> : <Pause className="size-4" />}
           </button>
           <button
             onClick={onSkip}
             aria-label="Pular descanso"
-            className="flex size-9 items-center justify-center rounded-full bg-black/10 hover:bg-black/20"
+            className="flex size-9 items-center justify-center rounded-[3px] bg-black/10 hover:bg-black/20"
           >
             <X className="size-4" />
           </button>

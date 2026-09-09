@@ -18,7 +18,7 @@ export default async function LoginPage() {
           <Wordmark iconSize={34} />
         </div>
 
-        <div className="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-surface shadow-md">
+        <div className="overflow-hidden reg-frame">
           {/* Brand banner — full art, never cropped */}
           <div className="relative">
             <Image

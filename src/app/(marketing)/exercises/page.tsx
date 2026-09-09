@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Dumbbell } from "lucide-react";
+import { GLoad } from "@/components/ui/glyph";
 import { getCurrentSession } from "@/lib/auth/require-user";
 import { listExercises, type ExerciseFilters } from "@/lib/data/exercises";
 import { listEquipment, listMovementPatterns } from "@/lib/data/taxonomy";
@@ -49,7 +49,7 @@ export default async function PublicExerciseLibraryPage({ searchParams }: PagePr
       {items.length === 0 ? (
         <div className="mt-10">
           <EmptyState
-            icon={<Dumbbell className="size-8" />}
+            icon={<GLoad className="size-8" />}
             title="Nenhum exercício encontrado"
             description="Tente ajustar a busca ou os filtros."
           />

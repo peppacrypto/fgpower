@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Trophy } from "lucide-react";
+import { Lettermark } from "@/components/ui/glyph";
 import { getCurrentSession } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 import { canViewActivity } from "@/lib/social/authorization";
@@ -66,7 +66,7 @@ export default async function ActivityDetailPage({ params }: PageProps<"/app/act
             <div className="mt-4 flex flex-col gap-2">
               {summary.prs.map((pr, i) => (
                 <div key={i} className="flex items-center gap-2 rounded-[var(--radius-sm)] bg-accent-soft px-3 py-2 text-sm text-accent">
-                  <Trophy className="size-4" />
+                  <Lettermark code="PR" className="size-5 text-[9px]" />
                   {pr.exerciseName}
                 </div>
               ))}

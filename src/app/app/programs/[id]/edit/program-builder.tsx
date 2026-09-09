@@ -197,8 +197,8 @@ export function ProgramBuilder({
               onClick={() => setActiveDayIndex(i)}
               className={
                 i === activeDayIndex
-                  ? "rounded-l-full border border-accent bg-accent-soft px-3 py-1.5 text-sm font-semibold text-accent"
-                  : "rounded-l-full border border-border px-3 py-1.5 text-sm text-muted hover:bg-surface-2"
+                  ? "rounded-[2px] border border-accent bg-accent-soft px-3 py-1.5 text-sm font-semibold text-accent"
+                  : "rounded-[2px] border border-border px-3 py-1.5 text-sm text-muted hover:bg-surface-2"
               }
             >
               {day.name}
@@ -207,7 +207,7 @@ export function ProgramBuilder({
         ))}
         <button
           onClick={addDay}
-          className="flex items-center gap-1 rounded-full border border-dashed border-border px-3 py-1.5 text-sm text-muted hover:bg-surface-2"
+          className="flex items-center gap-1 rounded-[2px] border border-dashed border-border px-3 py-1.5 text-sm text-muted hover:bg-surface-2"
         >
           <Plus className="size-3.5" />
           Dia
@@ -223,7 +223,7 @@ export function ProgramBuilder({
         <button
           onClick={() => moveDay(activeDayIndex, -1)}
           disabled={activeDayIndex === 0}
-          className="flex size-8 items-center justify-center rounded-full text-muted hover:bg-surface disabled:opacity-30"
+          className="flex size-8 items-center justify-center rounded-[3px] text-muted hover:bg-surface disabled:opacity-30"
           aria-label="Mover dia para cima"
         >
           <ArrowUp className="size-4" />
@@ -231,7 +231,7 @@ export function ProgramBuilder({
         <button
           onClick={() => moveDay(activeDayIndex, 1)}
           disabled={activeDayIndex === days.length - 1}
-          className="flex size-8 items-center justify-center rounded-full text-muted hover:bg-surface disabled:opacity-30"
+          className="flex size-8 items-center justify-center rounded-[3px] text-muted hover:bg-surface disabled:opacity-30"
           aria-label="Mover dia para baixo"
         >
           <ArrowDown className="size-4" />
@@ -239,7 +239,7 @@ export function ProgramBuilder({
         {days.length > 1 ? (
           <button
             onClick={() => removeDay(activeDayIndex)}
-            className="flex size-8 items-center justify-center rounded-full text-muted hover:bg-surface hover:text-danger"
+            className="flex size-8 items-center justify-center rounded-[3px] text-muted hover:bg-surface hover:text-danger"
             aria-label="Remover dia"
           >
             <Trash2 className="size-4" />
@@ -249,7 +249,7 @@ export function ProgramBuilder({
 
       <div className="mt-4">
         {activeDay.exercises.length === 0 ? (
-          <p className="rounded-[var(--radius-md)] border border-dashed border-border p-6 text-center text-sm text-muted">
+          <p className="border-y-2 border-y-[var(--rule-heavy)] bg-surface-2 p-6 text-center text-sm text-muted">
             Nenhum exercício neste dia ainda.
           </p>
         ) : (
@@ -279,7 +279,7 @@ export function ProgramBuilder({
 
       <div className="sticky bottom-16 mt-8 flex justify-end gap-2 border-t border-border bg-background py-4 sm:bottom-0">
         <Button onClick={handleSave} disabled={saving} size="lg">
-          {saving ? "Salvando…" : saved ? "Salvo ✓" : "Salvar programa"}
+          {saving ? "Salvando…" : saved ? "Salvo" : "Salvar programa"}
         </Button>
       </div>
 

@@ -88,7 +88,7 @@ export function PrivacyForm({ initial }: { initial: PrivacySettings }) {
         <select
           value={settings.defaultWorkoutVisibility}
           onChange={(e) => update({ defaultWorkoutVisibility: e.target.value as PrivacySettings["defaultWorkoutVisibility"] })}
-          className="mt-1.5 h-11 w-full rounded-[var(--radius-md)] border border-border bg-surface px-3.5 text-sm"
+          className="mt-1.5 h-11 w-full rounded-[3px] border border-border bg-surface px-3.5 text-sm"
         >
           <option value="PRIVATE">Privado</option>
           <option value="FOLLOWERS">Seguidores</option>

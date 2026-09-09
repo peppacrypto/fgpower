@@ -42,9 +42,9 @@ export function EmptyState({
   action?: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center gap-3 rounded-[var(--radius-lg)] border border-dashed border-border px-6 py-14 text-center">
-      {icon ? <div className="text-muted">{icon}</div> : null}
-      <p className="text-base font-medium text-foreground">{title}</p>
+    <div className="flex flex-col items-center justify-center gap-3 border-y-2 border-y-[var(--rule-heavy)] bg-surface-2 px-6 py-14 text-center">
+      {icon ? <div className="text-border-strong">{icon}</div> : null}
+      <p className="text-base font-semibold text-foreground">{title}</p>
       {description ? <p className="max-w-sm text-sm text-muted">{description}</p> : null}
       {action}
     </div>

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Dumbbell, LineChart, Microscope, Users } from "lucide-react";
+import { GArrow, GProgram, GExecution, GProgress, GCohort } from "@/components/ui/glyph";
 import { Button } from "@/components/ui/button";
 import { Wordmark } from "@/components/brand/logo";
 import { MarketingHeader } from "@/components/marketing/marketing-header";
@@ -24,25 +24,29 @@ const HERO_SLUGS = [
 
 const PILLARS = [
   {
-    icon: Dumbbell,
+    n: "01",
+    glyph: GProgram,
     title: "Programação",
     description:
       "Monte seu próprio programa a partir de uma biblioteca completa de exercícios, ou comece com um plano pronto e baseado em evidência.",
   },
   {
-    icon: Microscope,
+    n: "02",
+    glyph: GExecution,
     title: "Execução",
     description:
       "Saiba exatamente como executar cada exercício, com dicas de técnica, erros comuns e a ciência por trás de cada escolha.",
   },
   {
-    icon: LineChart,
+    n: "03",
+    glyph: GProgress,
     title: "Progressão",
     description:
       "Todo treino fica registrado: séries, repetições, carga e RIR. A FGPOWER mostra sua evolução automaticamente.",
   },
   {
-    icon: Users,
+    n: "04",
+    glyph: GCohort,
     title: "Comunidade",
     description:
       "Compartilhe treinos, siga outros atletas e receba FGs — o reconhecimento nativo da FGPOWER para treino de verdade.",
@@ -92,7 +96,8 @@ export default async function LandingPage() {
           <div className="pointer-events-none absolute -top-40 left-1/2 h-[600px] w-[900px] -translate-x-1/2 rounded-full bg-accent-strong/10 blur-[120px]" />
           <div className="relative mx-auto grid max-w-6xl gap-12 px-4 pt-14 pb-20 sm:px-6 sm:pt-20 lg:grid-cols-[1fr_1fr] lg:items-center">
             <div>
-              <span className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-accent-strong">
+              <span className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.16em] text-accent-strong">
+                <span className="inline-block size-1.5 bg-accent-strong" aria-hidden />
                 Musculação orientada por ciência
               </span>
               <h1 className="text-display mt-6 text-5xl font-extrabold leading-[0.95] sm:text-7xl">
@@ -108,7 +113,7 @@ export default async function LandingPage() {
                 <Button size="lg" variant="strong" asChild>
                   <Link href="/login">
                     Começar a treinar
-                    <ArrowRight className="size-4" />
+                    <GArrow className="size-4" />
                   </Link>
                 </Button>
                 <Button
@@ -139,10 +144,11 @@ export default async function LandingPage() {
               {PILLARS.map((p) => (
                 <div
                   key={p.title}
-                  className="flex h-full flex-col gap-3 rounded-[var(--radius-lg)] border border-white/10 bg-white/[0.03] p-6"
+                  className="flex h-full flex-col gap-3 border-t-2 border-t-white/70 bg-white/[0.02] p-6"
                 >
-                  <div className="flex size-10 items-center justify-center rounded-[var(--radius-md)] bg-accent-strong/15 text-accent-strong">
-                    <p.icon className="size-5" />
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-2xl font-bold tabular-nums text-white/25">{p.n}</span>
+                    <p.glyph className="size-5 text-accent-strong" />
                   </div>
                   <h2 className="font-semibold text-white">{p.title}</h2>
                   <p className="text-sm text-white/55">{p.description}</p>
@@ -181,7 +187,7 @@ export default async function LandingPage() {
             <Button variant="outline" className="mt-8 border-white/20 text-white hover:bg-white/10" asChild>
               <Link href="/science">
                 Ver a metodologia
-                <ArrowRight className="size-4" />
+                <GArrow className="size-4" />
               </Link>
             </Button>
           </div>
@@ -210,7 +216,7 @@ export default async function LandingPage() {
               <Button size="lg" variant="strong" className="mt-8" asChild>
                 <Link href="/login">
                   Continuar com Google
-                  <ArrowRight className="size-4" />
+                  <GArrow className="size-4" />
                 </Link>
               </Button>
             </div>

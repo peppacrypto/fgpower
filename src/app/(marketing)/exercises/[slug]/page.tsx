@@ -3,7 +3,8 @@ import { MarketingShell } from "@/components/marketing/marketing-shell";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { ArrowRight, Dumbbell, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
+import { GArrow, GLoad } from "@/components/ui/glyph";
 import { getCurrentSession } from "@/lib/auth/require-user";
 import { getExerciseBySlug, type ExerciseCard as ExerciseCardData } from "@/lib/data/exercises";
 import { parseExerciseContent, parseInstructions } from "@/lib/exercises/content";
@@ -56,7 +57,7 @@ export default async function PublicExerciseDetailPage({ params }: PageProps<"/e
     <MarketingShell>
       <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16">
       <div className="grid gap-6 sm:grid-cols-2">
-        <div className="flex gap-2 overflow-hidden rounded-[var(--radius-lg)] border border-border bg-surface-2">
+        <div className="flex gap-2 reg-frame">
           {exercise.media.length > 0 ? (
             exercise.media.map((m) => (
               <div key={m.id} className="relative aspect-[3/4] flex-1">
@@ -65,7 +66,7 @@ export default async function PublicExerciseDetailPage({ params }: PageProps<"/e
             ))
           ) : (
             <div className="flex aspect-[3/4] w-full items-center justify-center text-muted">
-              <Dumbbell className="size-10" />
+              <GLoad className="size-10" />
             </div>
           )}
         </div>
@@ -102,12 +103,12 @@ export default async function PublicExerciseDetailPage({ params }: PageProps<"/e
             </div>
           </dl>
 
-          <div className="mt-auto rounded-[var(--radius-lg)] border border-accent/30 bg-accent-soft p-4">
+          <div className="mt-auto border-l-2 border-l-accent bg-accent-soft p-4">
             <p className="text-sm text-foreground/90">Entre para favoritar e acompanhar seu progresso neste exercício.</p>
             <Button variant="strong" size="sm" className="mt-3" asChild>
               <Link href="/login">
                 Continuar com Google
-                <ArrowRight className="size-4" />
+                <GArrow className="size-4" />
               </Link>
             </Button>
           </div>
@@ -118,7 +119,7 @@ export default async function PublicExerciseDetailPage({ params }: PageProps<"/e
         <ol className="flex flex-col gap-3">
           {instructions.map((step, i) => (
             <li key={i} className="flex gap-3 text-sm">
-              <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-accent-soft text-xs font-bold text-accent">
+              <span className="flex size-6 shrink-0 items-center justify-center rounded-[2px] bg-accent-soft text-xs font-bold text-accent">
                 {i + 1}
               </span>
               <span className="pt-0.5 text-foreground/90">{step}</span>
@@ -181,7 +182,7 @@ export default async function PublicExerciseDetailPage({ params }: PageProps<"/e
           {exercise.evidence.length > 0 ? (
             <div className="flex flex-col gap-3">
               {exercise.evidence.map((ev) => (
-                <div key={ev.sourceId} className="rounded-[var(--radius-md)] border border-border p-3.5">
+                <div key={ev.sourceId} className="reg-frame p-3.5">
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <p className="text-sm font-semibold">{ev.source.title}</p>

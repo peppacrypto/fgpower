@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Bell, Heart, Settings, ExternalLink, Users } from "lucide-react";
+import { Bell, Heart, Settings, ExternalLink } from "lucide-react";
+import { GCohort } from "@/components/ui/glyph";
 import { requireUser } from "@/lib/auth/require-user";
 import { getProfile } from "@/lib/data/profile";
 import { listFavoriteExercises } from "@/lib/data/favorites";
@@ -69,7 +70,7 @@ export default async function ProfilePage() {
       <div className="mt-5 flex gap-2 sm:hidden">
         <Button variant="outline" size="sm" className="flex-1" asChild>
           <Link href="/app/feed">
-            <Users className="size-4" />
+            <GCohort className="size-4" />
             Feed
           </Link>
         </Button>

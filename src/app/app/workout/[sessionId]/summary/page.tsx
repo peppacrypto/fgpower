@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Trophy } from "lucide-react";
+import { Lettermark } from "@/components/ui/glyph";
 import { requireUser } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 import { Card, CardContent } from "@/components/ui/card";
@@ -50,7 +50,7 @@ export default async function WorkoutSummaryPage({ params }: PageProps<"/app/wor
           {session.records.map((pr) => (
             <Card key={pr.id} className="border-accent/40 bg-accent-soft">
               <CardContent className="flex items-center gap-3 py-3">
-                <Trophy className="size-5 text-accent" />
+                <Lettermark code="PR" className="size-5 shrink-0 text-[9px]" />
                 <div>
                   <p className="text-sm font-semibold">{pr.exercise.namePt}</p>
                   <p className="text-xs text-muted">{PR_LABEL[pr.kind]?.(pr.value, pr.weightKg, pr.reps)}</p>

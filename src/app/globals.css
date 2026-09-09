@@ -48,10 +48,22 @@
 
   --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.04);
   --shadow-md: 0 1px 3px rgba(16, 24, 40, 0.04), 0 4px 12px rgba(16, 24, 40, 0.06);
+
+  /* --- Editorial-dossier system: rules, tints, marks (escape the generic
+     1px-border + radius + soft-shadow card). All derived from --foreground so
+     they invert automatically in dark mode. --- */
+  --rule-heavy: var(--foreground); /* the 2px "cap" rule that replaces a box outline */
+  --reg: var(--border-strong); /* corner registration marks at rest */
+  --ink-2: color-mix(in oklab, var(--foreground) 2%, transparent);
+  --ink-3: color-mix(in oklab, var(--foreground) 3.5%, transparent);
+  --ink-4: color-mix(in oklab, var(--foreground) 5%, transparent);
+  --keel: color-mix(in oklab, var(--foreground) 16%, transparent); /* button bottom bevel */
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
+    /* a pure-white heavy rule glares on dark; use a confident light-grey */
+    --rule-heavy: color-mix(in oklab, var(--foreground) 70%, var(--background));
     --background: #0b0c0e;
     --surface: #151619;
     --surface-2: #1c1e22;
@@ -88,6 +100,7 @@
 }
 
 :root[data-theme="dark"] {
+  --rule-heavy: color-mix(in oklab, var(--foreground) 70%, var(--background));
   --background: #0b0c0e;
   --surface: #151619;
   --surface-2: #1c1e22;
@@ -205,11 +218,166 @@ body {
   letter-spacing: -0.02em;
 }
 
-/* Focus ring, consistent across all interactive elements. */
+/* Focus ring, consistent across all interactive elements. Square, to match
+   the sharpened no-radius geometry of the editorial-dossier system. */
 :focus-visible {
   outline: 2px solid var(--ring);
   outline-offset: 2px;
-  border-radius: var(--radius-sm);
+  border-radius: 0;
+}
+
+/* ---------------------------------------------------------------------
+   Editorial-dossier utilities — grouping by rule weight, alignment and
+   tonal bands + corner registration marks, instead of the generic
+   1px-border + radius + soft-shadow card.
+--------------------------------------------------------------------- */
+
+/* REG-FRAME — a flat panel pinned by two diagonal corner registration marks
+   (top-left + bottom-right), no full border, no drop shadow. The marks
+   extend and turn accent on hover for interactive panels (.reg-frame.is-link). */
+.reg-frame {
+  position: relative;
+  background: var(--surface);
+  border-radius: 3px;
+}
+.reg-frame::before,
+.reg-frame::after {
+  content: "";
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  border: 1.5px solid var(--reg);
+  pointer-events: none;
+  transition: width 0.18s ease, height 0.18s ease, border-color 0.18s ease;
+}
+.reg-frame::before {
+  top: -1px;
+  left: -1px;
+  border-right: 0;
+  border-bottom: 0;
+}
+.reg-frame::after {
+  bottom: -1px;
+  right: -1px;
+  border-left: 0;
+  border-top: 0;
+}
+.reg-frame.is-link:hover::before,
+.reg-frame.is-link:hover::after,
+.reg-frame[data-active="true"]::before,
+.reg-frame[data-active="true"]::after {
+  width: 16px;
+  height: 16px;
+  border-color: var(--accent);
+}
+
+/* RECORD — a ruled row that reads as grouped/elevated without a box. Use
+   inside a container with `border-t-2 border-t-[var(--rule-heavy)] divide-y
+   divide-border`. A left accent tick + tonal tint grow in on hover. */
+.record {
+  position: relative;
+  transition: background-color 0.15s ease;
+}
+.record::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  width: 2px;
+  background: var(--record-spine, var(--accent-strong));
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.18s ease;
+}
+.record:hover,
+.record[data-active="true"] {
+  background: var(--ink-3);
+}
+.record:hover::before,
+.record[data-active="true"]::before {
+  transform: scaleY(1);
+}
+.record[data-flagship]::before {
+  transform: scaleY(1);
+  background: var(--accent-strong);
+}
+
+/* PANEL-RAISED — a level-2 hero band: a --surface-2 tonal step bracketed by
+   heavy rules top and bottom. No side border, no radius, no shadow. */
+.panel-raised {
+  background: var(--surface-2);
+  border-top: 2px solid var(--rule-heavy);
+  border-bottom: 2px solid var(--rule-heavy);
+}
+
+/* TAGS — editorial, square, no pill. Meaning carried by shape + label. */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  line-height: 1;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.tag--field {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+.tag--field::before {
+  content: "";
+  width: 0.5em;
+  height: 0.5em;
+  background: currentColor; /* the color carrier — a solid square tick, not a pill fill */
+}
+.tag--spec {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  background: var(--surface-2);
+  color: var(--foreground);
+  padding: 0.15rem 0.4rem;
+  letter-spacing: 0;
+}
+.tag--mark {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--foreground);
+  border-bottom: 2px solid var(--accent-strong);
+  padding-bottom: 1px;
+}
+.tag--status {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.tag--status::before {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  margin-right: 0.15em;
+}
+.tag--ok {
+  color: var(--success);
+}
+.tag--ok::before {
+  content: "+";
+}
+.tag--warn {
+  color: var(--warning);
+}
+.tag--warn::before {
+  content: "!";
+}
+.tag--bad {
+  color: var(--danger);
+}
+.tag--bad::before {
+  content: "\00D7";
+}
+.tag--info {
+  color: var(--muted);
+}
+.tag--info::before {
+  content: "\00B7";
 }
 
 @media (prefers-reduced-motion: reduce) {

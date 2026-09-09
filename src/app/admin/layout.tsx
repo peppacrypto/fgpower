@@ -11,7 +11,7 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
         <div className="mx-auto flex max-w-5xl items-center justify-between">
           <Link href="/admin" className="flex items-center gap-3">
             <Wordmark iconSize={24} />
-            <span className="rounded-full bg-accent-soft px-2 py-0.5 text-xs font-bold text-accent">ADMIN</span>
+            <span className="rounded-[2px] bg-accent-soft px-2 py-0.5 text-xs font-bold text-accent">ADMIN</span>
           </Link>
           <nav className="flex gap-4 text-sm text-muted">
             <Link href="/admin/exercises" className="hover:text-foreground">

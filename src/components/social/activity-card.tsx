@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useState, useTransition } from "react";
-import { Heart, Trophy } from "lucide-react";
+import { Heart } from "lucide-react";
 import { Avatar } from "@/components/ui/misc";
 import { Badge } from "@/components/ui/badge";
+import { Lettermark } from "@/components/ui/glyph";
 import { giveFg, removeFg } from "@/lib/actions/social";
 import { cn } from "@/lib/utils/cn";
 import type { WorkoutActivitySummary } from "@/lib/social/activity-summary";
@@ -27,7 +28,7 @@ export function ActivityCard({ activity, currentUsername }: { activity: Activity
   const isOwn = activity.user.username === currentUsername;
 
   return (
-    <div className="rounded-[var(--radius-lg)] border border-border bg-surface p-4">
+    <div className="reg-frame p-4">
       <div className="flex items-center gap-2.5">
         <Avatar src={activity.user.image} name={activity.user.name} size={36} />
         <div className="flex-1 min-w-0">
@@ -63,7 +64,7 @@ export function ActivityCard({ activity, currentUsername }: { activity: Activity
           <div className="mt-2 flex flex-wrap gap-1.5">
             {activity.summary.prs.map((pr, i) => (
               <Badge key={i} variant="accent" className="gap-1">
-                <Trophy className="size-3" />
+                <Lettermark code="PR" plain className="text-[9px]" />
                 {pr.exerciseName}
               </Badge>
             ))}
@@ -84,7 +85,7 @@ export function ActivityCard({ activity, currentUsername }: { activity: Activity
             });
           }}
           className={cn(
-            "flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-semibold transition-colors",
+            "flex items-center gap-1.5 rounded-[2px] border px-3 py-1.5 text-sm font-semibold transition-colors",
             given ? "border-accent bg-accent-soft text-accent" : "border-border text-muted hover:bg-surface-2",
             isOwn && "opacity-50",
           )}

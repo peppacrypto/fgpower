@@ -67,7 +67,7 @@ export default async function HistoryPage({ searchParams }: PageProps<"/app/hist
       <Card className="mt-6">
         <CardContent className="pt-5">
           <div className="flex items-center justify-between">
-            <Link href={monthHref(-1)} className="flex size-8 items-center justify-center rounded-full hover:bg-surface-2">
+            <Link href={monthHref(-1)} className="flex size-8 items-center justify-center rounded-[3px] hover:bg-surface-2">
               <ChevronLeft className="size-4" />
             </Link>
             <h2 className="font-semibold">
@@ -78,8 +78,8 @@ export default async function HistoryPage({ searchParams }: PageProps<"/app/hist
               aria-disabled={isCurrentMonth}
               className={
                 isCurrentMonth
-                  ? "pointer-events-none flex size-8 items-center justify-center rounded-full opacity-30"
-                  : "flex size-8 items-center justify-center rounded-full hover:bg-surface-2"
+                  ? "pointer-events-none flex size-8 items-center justify-center rounded-[3px] opacity-30"
+                  : "flex size-8 items-center justify-center rounded-[3px] hover:bg-surface-2"
               }
             >
               <ChevronRight className="size-4" />
@@ -128,7 +128,7 @@ export default async function HistoryPage({ searchParams }: PageProps<"/app/hist
           <div className="flex flex-col gap-2">
             {recent.items.map((s) => (
               <Link key={s.id} href={`/app/workout/${s.id}/summary`}>
-                <Card className="transition-colors hover:border-accent/50">
+                <Card className="is-link">
                   <CardContent className="flex items-center justify-between py-3.5">
                     <div>
                       <p className="text-sm font-semibold">{s.name}</p>

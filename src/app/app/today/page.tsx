@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Play, Trophy } from "lucide-react";
+import { Play } from "lucide-react";
+import { GArrow, Lettermark } from "@/components/ui/glyph";
 import { requireUser } from "@/lib/auth/require-user";
 import { getProfile } from "@/lib/data/profile";
 import {
@@ -76,13 +77,13 @@ export default async function TodayPage() {
               <Button size="lg" asChild>
                 <Link href={`/app/workout/${inProgress.id}`}>
                   Continuar
-                  <ArrowRight className="size-4" />
+                  <GArrow className="size-4" />
                 </Link>
               </Button>
             }
           />
         ) : nextDay ? (
-          <div className="relative overflow-hidden rounded-[var(--radius-xl)] border border-border bg-surface shadow-md">
+          <div className="relative overflow-hidden panel-raised">
             <span className="absolute left-0 top-0 h-full w-1.5 bg-accent" aria-hidden />
             <div className="p-6 sm:p-8">
               <span className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-accent">
@@ -122,7 +123,7 @@ export default async function TodayPage() {
             </div>
           </div>
         ) : (
-          <div className="rounded-[var(--radius-xl)] border border-dashed border-border-strong p-8 text-center">
+          <div className="border-y-2 border-y-[var(--rule-heavy)] bg-surface-2 p-8 text-center">
             <p className="text-display text-2xl font-bold">Sem programa ativo.</p>
             <p className="mx-auto mt-2 max-w-sm text-sm text-muted">
               Escolha um protocolo pronto ou monte o seu para começar a treinar.
@@ -142,7 +143,7 @@ export default async function TodayPage() {
       {/* Stats grid */}
       <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
         {enrollment ? (
-          <div className="min-w-0 rounded-[var(--radius-lg)] border border-border bg-surface p-5">
+          <div className="min-w-0 reg-frame p-5">
             <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted">Programa</span>
             <p className="mt-1.5 truncate text-sm font-semibold">{enrollment.program.name}</p>
             {enrollment.program.durationWeeks ? (
@@ -165,7 +166,7 @@ export default async function TodayPage() {
           </div>
         ) : null}
 
-        <div className="min-w-0 rounded-[var(--radius-lg)] border border-border bg-surface p-5">
+        <div className="min-w-0 reg-frame p-5">
           <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted">Esta semana</span>
           <p className="mt-1.5 font-mono text-2xl font-bold tabular-nums">
             {weeklyCount}
@@ -194,7 +195,7 @@ export default async function TodayPage() {
                 href={`/app/exercises/${pr.exercise.slug}/history`}
                 className="group flex items-center gap-4 py-3.5 hover:bg-surface-2/50"
               >
-                <Trophy className="size-4 shrink-0 text-accent" />
+                <Lettermark code="PR" className="size-5 shrink-0 text-[9px]" />
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-semibold">{pr.exercise.namePt}</p>
                   <p className="text-[11px] uppercase tracking-wider text-muted">
@@ -225,7 +226,7 @@ function FocusBlock({
   cta: React.ReactNode;
 }) {
   return (
-    <div className="relative flex items-center justify-between gap-4 overflow-hidden rounded-[var(--radius-xl)] border border-border bg-surface p-6 shadow-md sm:p-8">
+    <div className="relative flex items-center justify-between gap-4 overflow-hidden panel-raised p-6 sm:p-8">
       <span className="absolute left-0 top-0 h-full w-1.5" style={{ background: spine }} aria-hidden />
       <div>
         <span className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-warning">{eyebrow}</span>

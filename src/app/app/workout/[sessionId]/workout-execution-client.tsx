@@ -3,7 +3,8 @@
 import { useEffect, useMemo, useState, useTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, Dumbbell, Info, Plus, SkipForward } from "lucide-react";
+import { ChevronLeft, ChevronRight, Info, Plus, SkipForward } from "lucide-react";
+import { GLoad, GNotes } from "@/components/ui/glyph";
 import { Button } from "@/components/ui/button";
 import { addSet, finishWorkoutSession, skipExercise } from "@/lib/actions/workouts";
 import { saveExerciseNote } from "@/lib/actions/exercise-notes";
@@ -81,7 +82,7 @@ export function WorkoutExecutionClient({ session }: { session: ExecutionSession 
           <button
             onClick={() => goToExercise(-1)}
             disabled={exerciseIndex === 0}
-            className="flex size-9 items-center justify-center rounded-full border border-border disabled:opacity-30"
+            className="flex size-9 items-center justify-center rounded-[3px] border border-border disabled:opacity-30"
             aria-label="Exercício anterior"
           >
             <ChevronLeft className="size-5" />
@@ -92,7 +93,7 @@ export function WorkoutExecutionClient({ session }: { session: ExecutionSession 
                 <Image src={exercise.imageUrl} alt={exercise.exerciseName} fill className="object-cover" />
               ) : (
                 <div className="flex h-full items-center justify-center text-muted">
-                  <Dumbbell className="size-5" />
+                  <GLoad className="size-5" />
                 </div>
               )}
             </div>
@@ -110,7 +111,7 @@ export function WorkoutExecutionClient({ session }: { session: ExecutionSession 
           <button
             onClick={() => goToExercise(1)}
             disabled={exerciseIndex === total - 1}
-            className="flex size-9 items-center justify-center rounded-full border border-border disabled:opacity-30"
+            className="flex size-9 items-center justify-center rounded-[3px] border border-border disabled:opacity-30"
             aria-label="Próximo exercício"
           >
             <ChevronRight className="size-5" />
@@ -135,13 +136,14 @@ export function WorkoutExecutionClient({ session }: { session: ExecutionSession 
         </div>
 
         {exercise.persistentNote ? (
-          <p className="mt-3 rounded-[var(--radius-sm)] bg-surface-2 px-3 py-2 text-xs text-muted">
-            📝 {exercise.persistentNote}
-          </p>
+          <div className="mt-3 flex gap-2 bg-surface-2 px-3 py-2 text-xs text-muted">
+            <GNotes className="mt-0.5 size-3.5 shrink-0 text-border-strong" />
+            <span>{exercise.persistentNote}</span>
+          </div>
         ) : null}
 
         {exercise.previousSets.length > 0 ? (
-          <div className="mt-4 rounded-[var(--radius-md)] border border-border bg-surface-2 px-3.5 py-3">
+          <div className="mt-4 border-l-2 border-l-border-strong bg-surface-2 px-3.5 py-3">
             <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted">Último treino</p>
             <div className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-sm tabular-nums">
               {exercise.previousSets.map((s, i) => (
@@ -193,7 +195,7 @@ export function WorkoutExecutionClient({ session }: { session: ExecutionSession 
             onChange={(e) => setNoteDraft(e.target.value)}
             onBlur={() => startTransition(() => saveExerciseNote(exercise.exerciseId, noteDraft))}
             placeholder="Ex.: banco na posição 4"
-            className="mt-1.5 w-full rounded-[var(--radius-md)] border border-border bg-surface px-3 py-2 text-sm"
+            className="mt-1.5 w-full rounded-[3px] border border-border bg-surface px-3 py-2 text-sm"
             rows={2}
           />
         </div>

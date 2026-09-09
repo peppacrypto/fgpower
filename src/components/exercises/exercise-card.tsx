@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Dumbbell } from "lucide-react";
+import { GLoad } from "@/components/ui/glyph";
 import { Badge } from "@/components/ui/badge";
 import type { ExerciseCard as ExerciseCardData } from "@/lib/data/exercises";
 
@@ -15,8 +15,8 @@ export function ExerciseCard({ exercise, href }: { exercise: ExerciseCardData; h
   const primaryMuscle = exercise.muscles[0]?.muscle;
 
   const content = (
-    <div className="group flex h-full flex-col overflow-hidden rounded-[var(--radius-lg)] border border-border bg-surface transition-colors hover:border-accent/50">
-      <div className="relative aspect-[4/3] w-full bg-surface-2">
+    <div className="group flex h-full flex-col reg-frame is-link">
+      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-t-[2px] bg-surface-2">
         {media ? (
           <Image
             src={media.url}
@@ -27,7 +27,7 @@ export function ExerciseCard({ exercise, href }: { exercise: ExerciseCardData; h
           />
         ) : (
           <div className="flex h-full items-center justify-center text-muted">
-            <Dumbbell className="size-8" />
+            <GLoad className="size-8" />
           </div>
         )}
         {exercise.isCurated ? (

@@ -51,7 +51,7 @@ export default async function PublicPrincipleDetailPage({ params }: PageProps<"/
                 href={ev.source.url}
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-[var(--radius-md)] border border-border p-3.5 text-sm hover:border-accent/50"
+                className="reg-frame is-link p-3.5 text-sm"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>

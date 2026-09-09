@@ -25,7 +25,7 @@ export function ReportRow({
   if (resolved) return null;
 
   return (
-    <div className="rounded-[var(--radius-md)] border border-border p-4">
+    <div className="reg-frame p-4">
       <p className="text-sm font-semibold">{reason}</p>
       <p className="mt-0.5 text-xs text-muted">
         Denunciado por {reporterName}

@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState, useTransition } from "react";
 import Image from "next/image";
-import { Dumbbell, Search, X } from "lucide-react";
+import { Search, X } from "lucide-react";
+import { GLoad } from "@/components/ui/glyph";
 import { Input } from "@/components/ui/input";
 import { searchExercisesForPicker } from "@/lib/actions/exercise-search";
 
@@ -50,9 +51,9 @@ export function ExercisePicker({
       ref={dialogRef}
       onClose={onClose}
       onCancel={onClose}
-      className="m-0 h-dvh max-h-dvh w-dvw max-w-dvw bg-transparent p-0 backdrop:bg-black/50 sm:m-auto sm:h-auto sm:max-h-[85vh] sm:w-full sm:max-w-lg sm:rounded-[var(--radius-lg)]"
+      className="m-0 h-dvh max-h-dvh w-dvw max-w-dvw bg-transparent p-0 backdrop:bg-black/50 sm:m-auto sm:h-auto sm:max-h-[85vh] sm:w-full sm:max-w-lg sm:rounded-[3px]"
     >
-      <div className="flex h-dvh flex-col bg-surface sm:h-auto sm:max-h-[85vh] sm:rounded-[var(--radius-lg)] sm:border sm:border-border">
+      <div className="flex h-dvh flex-col bg-surface sm:h-auto sm:max-h-[85vh] sm:rounded-[3px] sm:border-t-2 sm:border-t-[var(--rule-heavy)]">
         <div className="flex items-center gap-2 border-b border-border p-4">
           <div className="relative flex-1">
             <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted" />
@@ -67,7 +68,7 @@ export function ExercisePicker({
           <button
             onClick={onClose}
             aria-label="Fechar"
-            className="flex size-9 shrink-0 items-center justify-center rounded-full hover:bg-surface-2"
+            className="flex size-9 shrink-0 items-center justify-center rounded-[3px] hover:bg-surface-2"
           >
             <X className="size-4" />
           </button>
@@ -86,14 +87,14 @@ export function ExercisePicker({
                     onSelect(ex);
                     onClose();
                   }}
-                  className="flex flex-col overflow-hidden rounded-[var(--radius-md)] border border-border text-left hover:border-accent/50"
+                  className="reg-frame is-link flex flex-col text-left"
                 >
                   <div className="relative aspect-square w-full bg-surface-2">
                     {ex.imageUrl ? (
                       <Image src={ex.imageUrl} alt={ex.namePt} fill className="object-cover" sizes="150px" />
                     ) : (
                       <div className="flex h-full items-center justify-center text-muted">
-                        <Dumbbell className="size-6" />
+                        <GLoad className="size-6" />
                       </div>
                     )}
                   </div>

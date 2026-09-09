@@ -14,7 +14,7 @@ export function DangerZone() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between rounded-[var(--radius-md)] border border-border p-4">
+      <div className="reg-frame flex items-center justify-between p-4">
         <div>
           <p className="text-sm font-medium">Exportar meus dados</p>
           <p className="text-xs text-muted">Baixe todo o seu histórico de treino em JSON.</p>
@@ -27,7 +27,7 @@ export function DangerZone() {
         </Button>
       </div>
 
-      <div className="rounded-[var(--radius-md)] border border-danger/40 bg-danger-soft p-4">
+      <div className="border-y-2 border-y-danger bg-danger-soft p-4">
         <p className="text-sm font-medium text-danger">Excluir conta</p>
         <p className="mt-0.5 text-xs text-danger/80">
           Remove permanentemente sua conta e todo o seu histórico de treino. Não pode ser desfeito.

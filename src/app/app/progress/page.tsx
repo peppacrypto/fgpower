@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Trophy, TrendingUp } from "lucide-react";
+import { TrendingUp } from "lucide-react";
+import { Lettermark } from "@/components/ui/glyph";
 import { requireUser } from "@/lib/auth/require-user";
 import { getProgressSummary, getExerciseProgressDeltas, type ProgressPeriod } from "@/lib/data/progress";
 import { Card, CardContent } from "@/components/ui/card";
@@ -46,8 +47,8 @@ export default async function ProgressPage({ searchParams }: PageProps<"/app/pro
             href={`/app/progress?period=${p.value}`}
             className={
               p.value === period
-                ? "rounded-full border border-accent bg-accent-soft px-3 py-1 text-xs font-semibold text-accent"
-                : "rounded-full border border-border px-3 py-1 text-xs text-muted hover:bg-surface-2"
+                ? "rounded-[2px] border border-accent bg-accent-soft px-3 py-1 text-xs font-semibold text-accent"
+                : "rounded-[2px] px-3 py-1 text-xs text-muted hover:bg-surface-2"
             }
           >
             {p.label}
@@ -95,7 +96,7 @@ export default async function ProgressPage({ searchParams }: PageProps<"/app/pro
           <div className="flex flex-col gap-2">
             {deltas.map((d) => (
               <Link key={d.slug} href={`/app/exercises/${d.slug}/history`}>
-                <Card className="transition-colors hover:border-accent/50">
+                <Card className="is-link">
                   <CardContent className="flex items-center justify-between py-3.5">
                     <span className="text-sm font-medium">{d.namePt}</span>
                     <span className="font-mono text-sm font-semibold tabular-nums text-success">
@@ -112,7 +113,7 @@ export default async function ProgressPage({ searchParams }: PageProps<"/app/pro
 
       <div className="mt-8">
         <h2 className="mb-3 flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-muted">
-          <Trophy className="size-4" />
+          <Lettermark code="PR" className="size-5 text-[9px]" />
           Recordes recentes
         </h2>
         {summary.recentPrs.length === 0 ? (

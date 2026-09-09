@@ -58,20 +58,17 @@ export function TemplateDossier({
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
       {/* Masthead */}
-      <div className="relative overflow-hidden rounded-[var(--radius-xl)] border border-border bg-surface p-6 shadow-md sm:p-8">
+      <div className="relative overflow-hidden panel-raised p-6 sm:p-8">
         <span className="absolute left-0 top-0 h-full w-1.5" style={{ background: hue.spine }} aria-hidden />
         <div className="flex flex-wrap items-center gap-1.5">
           <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted">
             {STYLE_LABEL[template.trainingStyle] ?? "Protocolo"}
           </span>
-          <span
-            className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold"
-            style={{ background: hue.bg, color: hue.fg }}
-          >
+          <span className="tag tag--field" style={{ color: hue.fg }}>
             {GOAL_LABEL[template.goal] ?? template.goal}
           </span>
           {template.isFlagship ? (
-            <span className="rounded-full bg-accent px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-accent-foreground">
+            <span className="tag tag--mark text-[9px]">
               Destaque
             </span>
           ) : null}
@@ -102,7 +99,7 @@ export function TemplateDossier({
         <SectionHead label="Estrutura semanal" count={`${template.days.length} dias`} />
         <div className="mt-4 flex flex-col gap-3">
           {template.days.map((day, i) => (
-            <div key={day.id} className="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-surface">
+            <div key={day.id} className="overflow-hidden border-t-2 border-t-[var(--rule-heavy)] bg-surface">
               <div className="flex items-baseline justify-between border-b border-border bg-surface-2/60 px-4 py-3">
                 <div className="flex items-baseline gap-3">
                   <span className="font-mono text-sm font-bold text-foreground/30">{String(i + 1).padStart(2, "0")}</span>
@@ -144,14 +141,14 @@ export function TemplateDossier({
               <div key={w.week} className="flex gap-4">
                 {/* rail */}
                 <div className="flex flex-col items-center">
-                  <div className="flex size-8 shrink-0 items-center justify-center rounded-full border border-border bg-surface font-mono text-xs font-bold">
+                  <div className="flex size-8 shrink-0 items-center justify-center rounded-[2px] border border-border bg-surface font-mono text-xs font-bold">
                     {w.week}
                   </div>
                   {i < weekly.length - 1 ? <span className="w-px flex-1 bg-border" /> : null}
                 </div>
                 <div className="pb-5">
                   <div className="flex items-center gap-2">
-                    <span className="rounded-full bg-accent-soft px-2 py-0.5 font-mono text-[11px] font-semibold text-accent">
+                    <span className="rounded-[2px] bg-accent-soft px-2 py-0.5 font-mono text-[11px] font-semibold text-accent">
                       RIR ~{w.rirTarget}
                     </span>
                     <span className="text-[10px] uppercase tracking-wider text-muted">Semana {w.week}</span>
@@ -184,7 +181,7 @@ export function TemplateDossier({
                 href={ev.source.url}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center justify-between gap-3 rounded-[var(--radius-md)] border border-border px-3.5 py-2.5 text-sm hover:border-accent/50"
+                className="flex items-center justify-between gap-3 border-b border-border px-3.5 py-2.5 text-sm hover:bg-[var(--ink-2)]"
               >
                 <span className="min-w-0">
                   <span className="line-clamp-1">{ev.source.title}</span>
@@ -203,7 +200,7 @@ export function TemplateDossier({
               <Link
                 key={tp.principleId}
                 href={`${scienceHref}/${tp.principle.slug}`}
-                className="rounded-full bg-accent-soft px-2.5 py-1 text-xs font-medium text-accent hover:brightness-95"
+                className="rounded-[2px] bg-accent-soft px-2.5 py-1 text-xs font-medium text-accent hover:brightness-95"
               >
                 {tp.principle.titlePt}
               </Link>

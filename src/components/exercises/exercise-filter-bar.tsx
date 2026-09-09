@@ -34,7 +34,7 @@ export function ExerciseFilterBar({
   }
 
   return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+    <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
       <div className="relative flex-1">
         <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted" />
         <Input
@@ -47,11 +47,11 @@ export function ExerciseFilterBar({
           className="pl-10"
         />
       </div>
-      <div className="grid grid-cols-3 gap-2 sm:flex">
+      <div className="grid grid-cols-3 gap-2 lg:flex">
         <Select
           defaultValue={searchParams.get("muscleGroup") ?? ""}
           onChange={(e) => updateParam("muscleGroup", e.target.value)}
-          className="sm:w-40"
+          className="lg:w-40"
         >
           <option value="">Músculo</option>
           {muscleGroups.map((g) => (
@@ -63,7 +63,7 @@ export function ExerciseFilterBar({
         <Select
           defaultValue={searchParams.get("equipmentId") ?? ""}
           onChange={(e) => updateParam("equipmentId", e.target.value)}
-          className="sm:w-40"
+          className="lg:w-40"
         >
           <option value="">Equipamento</option>
           {equipment.map((e) => (
@@ -75,7 +75,7 @@ export function ExerciseFilterBar({
         <Select
           defaultValue={searchParams.get("movementPatternId") ?? ""}
           onChange={(e) => updateParam("movementPatternId", e.target.value)}
-          className="sm:w-40"
+          className="lg:w-40"
         >
           <option value="">Movimento</option>
           {movementPatterns.map((p) => (

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Trophy } from "lucide-react";
+import { Lettermark } from "@/components/ui/glyph";
 import { requireUser } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 import { getExerciseHistory, getExercisePersonalRecords } from "@/lib/data/history";
@@ -39,7 +39,7 @@ export default async function ExerciseHistoryPage({ params }: PageProps<"/app/ex
         <h1 className="text-2xl font-bold tracking-tight">{exercise.namePt}</h1>
         <div className="mt-8">
           <EmptyState
-            icon={<Trophy className="size-8" />}
+            icon={<Lettermark code="PR" className="size-8 text-[11px]" />}
             title="Sem histórico ainda"
             description="Assim que você registrar séries deste exercício em um treino concluído, o progresso aparece aqui."
           />

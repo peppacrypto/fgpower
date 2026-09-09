@@ -27,7 +27,7 @@ export function ExerciseRow({ id, exercise, onChange, onRemove, onDuplicate }: R
       ref={setNodeRef}
       style={style}
       className={cn(
-        "rounded-[var(--radius-md)] border border-border bg-surface p-3.5",
+        "reg-frame p-3.5",
         isDragging && "opacity-50",
       )}
     >
@@ -41,10 +41,10 @@ export function ExerciseRow({ id, exercise, onChange, onRemove, onDuplicate }: R
           <GripVertical className="size-4" />
         </button>
         <p className="flex-1 truncate text-sm font-semibold">{exercise.exerciseName}</p>
-        <button onClick={onDuplicate} aria-label="Duplicar" className="flex size-8 items-center justify-center rounded-full text-muted hover:bg-surface-2">
+        <button onClick={onDuplicate} aria-label="Duplicar" className="flex size-8 items-center justify-center rounded-[3px] text-muted hover:bg-surface-2">
           <Copy className="size-4" />
         </button>
-        <button onClick={onRemove} aria-label="Remover" className="flex size-8 items-center justify-center rounded-full text-muted hover:bg-surface-2 hover:text-danger">
+        <button onClick={onRemove} aria-label="Remover" className="flex size-8 items-center justify-center rounded-[3px] text-muted hover:bg-surface-2 hover:text-danger">
           <Trash2 className="size-4" />
         </button>
       </div>
@@ -101,7 +101,7 @@ function Field({
         max={max}
         step={step}
         onChange={(e) => onChange(e.target.value === "" ? "" : Number(e.target.value))}
-        className="h-9 w-full rounded-[var(--radius-sm)] border border-border bg-surface px-1.5 text-center text-sm font-mono tabular-nums"
+        className="h-9 w-full rounded-[3px] border border-border bg-surface px-1.5 text-center text-sm font-mono tabular-nums"
       />
     </label>
   );

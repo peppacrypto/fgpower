@@ -37,7 +37,7 @@ export function SetRow({
 
   if (!showEditor) {
     return (
-      <div className="flex items-center gap-3 rounded-[var(--radius-md)] border border-border bg-surface px-3.5 py-2.5">
+      <div className="reg-frame flex items-center gap-3 px-3.5 py-2.5">
         <span className="w-14 shrink-0 text-xs font-medium text-muted">{SET_TYPE_LABEL[set.setType]}</span>
         <span className="flex-1 font-mono text-sm tabular-nums">
           {set.weightKg ?? "—"} kg × {set.reps ?? "—"}
@@ -46,7 +46,7 @@ export function SetRow({
         <button
           onClick={() => setEditing(true)}
           aria-label="Editar série"
-          className="flex size-8 items-center justify-center rounded-full text-muted hover:bg-surface-2 hover:text-foreground"
+          className="flex size-8 items-center justify-center rounded-[3px] text-muted hover:bg-surface-2 hover:text-foreground"
         >
           <Pencil className="size-4" />
         </button>
@@ -57,8 +57,8 @@ export function SetRow({
   return (
     <div
       className={cn(
-        "flex flex-col gap-3 rounded-[var(--radius-md)] border p-3.5",
-        isActive ? "border-accent bg-accent-soft" : "border-border bg-surface",
+        "flex flex-col gap-3 p-3.5",
+        isActive ? "border-l-2 border-l-accent bg-accent-soft" : "reg-frame",
       )}
     >
       <div className="flex items-center justify-between">
@@ -134,7 +134,7 @@ function NumberField({
         min={0}
         value={value}
         onChange={(e) => onChange(e.target.value === "" ? "" : Number(e.target.value))}
-        className="h-12 w-full rounded-[var(--radius-sm)] border border-border bg-surface px-2 text-center font-mono text-lg font-semibold tabular-nums"
+        className="h-12 w-full rounded-[3px] border border-border bg-surface px-2 text-center font-mono text-lg font-semibold tabular-nums"
       />
     </label>
   );

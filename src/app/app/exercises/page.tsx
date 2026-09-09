@@ -6,7 +6,7 @@ import { ExerciseFilterBar } from "@/components/exercises/exercise-filter-bar";
 import { ExerciseCard } from "@/components/exercises/exercise-card";
 import { EmptyState } from "@/components/ui/misc";
 import { Button } from "@/components/ui/button";
-import { Dumbbell } from "lucide-react";
+import { GLoad } from "@/components/ui/glyph";
 import Link from "next/link";
 
 export const metadata: Metadata = { title: "Exercícios" };
@@ -43,7 +43,7 @@ export default async function ExerciseLibraryPage({
       {items.length === 0 ? (
         <div className="mt-10">
           <EmptyState
-            icon={<Dumbbell className="size-8" />}
+            icon={<GLoad className="size-8" />}
             title="Nenhum exercício encontrado"
             description="Tente ajustar a busca ou os filtros."
           />
