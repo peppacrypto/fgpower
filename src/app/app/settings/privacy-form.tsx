@@ -84,8 +84,11 @@ export function PrivacyForm({ initial }: { initial: PrivacySettings }) {
         onChange={(v) => update({ autoShareAchievements: v })}
       />
       <div className="pt-3">
-        <label className="text-sm font-medium">Visibilidade padrão dos treinos</label>
+        <label htmlFor="defaultWorkoutVisibility" className="text-sm font-medium">
+          Visibilidade padrão dos treinos
+        </label>
         <select
+          id="defaultWorkoutVisibility"
           value={settings.defaultWorkoutVisibility}
           onChange={(e) => update({ defaultWorkoutVisibility: e.target.value as PrivacySettings["defaultWorkoutVisibility"] })}
           className="mt-1.5 h-11 w-full rounded-[3px] border border-border bg-surface px-3.5 text-sm"

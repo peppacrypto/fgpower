@@ -20,7 +20,7 @@ export default async function ExerciseLibraryPage({
     muscleGroup: typeof sp.muscleGroup === "string" ? sp.muscleGroup : undefined,
     equipmentId: typeof sp.equipmentId === "string" ? sp.equipmentId : undefined,
     movementPatternId: typeof sp.movementPatternId === "string" ? sp.movementPatternId : undefined,
-    page: typeof sp.page === "string" ? Number(sp.page) : 1,
+    page: typeof sp.page === "string" ? Math.max(1, Math.floor(Number(sp.page)) || 1) : 1,
   };
 
   const [{ items, page, totalPages }, equipment, movementPatterns] = await Promise.all([

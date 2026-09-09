@@ -18,9 +18,9 @@ export default async function LoginPage() {
           <Wordmark iconSize={34} />
         </div>
 
-        <div className="overflow-hidden reg-frame">
+        <div className="reg-frame">
           {/* Brand banner — full art, never cropped */}
-          <div className="relative">
+          <div className="relative overflow-hidden rounded-t-[3px]">
             <Image
               src="/brand/fg-banner-letlive.webp"
               alt="Same weights, different you — FGPOWER"

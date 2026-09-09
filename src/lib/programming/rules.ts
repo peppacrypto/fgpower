@@ -10,6 +10,36 @@ import { MUSCLE_GROUP_LABEL, type MuscleGroupTag } from "@/lib/constants/muscle-
 
 export type { MuscleGroupTag };
 
+/** pt-BR labels for movement-pattern ids, so the pt feedback never shows the
+ * raw English slug (e.g. "horizontal push"). Lowercased for mid-sentence use. */
+const MOVEMENT_PATTERN_PT: Record<string, string> = {
+  squat: "agachamento",
+  hinge: "dobradiça de quadril",
+  lunge: "avanço",
+  "horizontal-push": "empurrar horizontal",
+  "vertical-push": "empurrar vertical",
+  "horizontal-pull": "puxar horizontal",
+  "vertical-pull": "puxar vertical",
+  "hip-extension": "extensão de quadril",
+  "knee-extension": "extensão de joelho",
+  "knee-flexion": "flexão de joelho",
+  "elbow-flexion": "flexão de cotovelo",
+  "elbow-extension": "extensão de cotovelo",
+  "shoulder-abduction": "abdução de ombro",
+  "shoulder-extension": "extensão de ombro",
+  "plantar-flexion": "flexão plantar",
+  "trunk-flexion": "flexão de tronco",
+  "anti-extension": "anti-extensão",
+  "anti-rotation": "anti-rotação",
+  rotation: "rotação",
+  carry: "carregada",
+  olympic: "levantamento olímpico",
+};
+
+function movementPatternPt(pattern: string): string {
+  return MOVEMENT_PATTERN_PT[pattern] ?? pattern.replace(/-/g, " ");
+}
+
 export interface ProgramRuleExercise {
   exerciseId: string;
   nameEn: string;
@@ -117,7 +147,7 @@ export function analyzeProgram(days: ProgramRuleDay[]): ProgramFeedbackItem[] {
           code: `similar-movements-day-${day.dayIndex}-${pattern}`,
           severity: "info",
           messageEn: `"${day.nameEn}" includes ${exs.length} very similar ${pattern.replace(/-/g, " ")} movements (${exs.map((e) => e.nameEn).join(", ")}).`,
-          messagePt: `"${day.namePt}" inclui ${exs.length} movimentos muito parecidos do tipo ${pattern.replace(/-/g, " ")} (${exs.map((e) => e.namePt).join(", ")}).`,
+          messagePt: `"${day.namePt}" inclui ${exs.length} movimentos muito parecidos do tipo ${movementPatternPt(pattern)} (${exs.map((e) => e.namePt).join(", ")}).`,
         });
       }
     }

@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { requireUserOrThrow } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
-import { isBlocked } from "@/lib/social/authorization";
+import { isBlocked, canViewActivity } from "@/lib/social/authorization";
 
 type NotificationType =
   | "FG_RECEIVED"
@@ -86,7 +86,8 @@ export async function giveFg(activityId: string) {
   const user = await requireUserOrThrow();
   const activity = await prisma.activity.findUniqueOrThrow({ where: { id: activityId } });
   if (activity.userId === user.id) throw new Error("CANNOT_FG_OWN_ACTIVITY");
-  if (await isBlocked(user.id, activity.userId)) throw new Error("BLOCKED");
+  // Can't react to an activity you're not allowed to see (private / non-followed / blocked).
+  if (!(await canViewActivity(user.id, activity))) throw new Error("FORBIDDEN");
 
   const existing = await prisma.activityFG.findUnique({ where: { activityId_userId: { activityId, userId: user.id } } });
   if (existing) return { fgCount: activity.fgCount };

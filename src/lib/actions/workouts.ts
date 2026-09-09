@@ -56,7 +56,7 @@ export async function startWorkoutSessionFromProgramDay(enrollmentId: string, da
   // Pre-create empty set slots (warm-up + working) for each exercise log.
   for (const log of session.exerciseLogs) {
     const rows = [
-      ...Array.from({ length: log.warmupSets }, (_, i) => ({
+      ...Array.from({ length: Math.min(Math.max(0, log.warmupSets), 20) }, (_, i) => ({
         userId: user.id,
         sessionId: session.id,
         exerciseLogId: log.id,
@@ -64,7 +64,7 @@ export async function startWorkoutSessionFromProgramDay(enrollmentId: string, da
         setNumber: i + 1,
         setType: "WARMUP" as const,
       })),
-      ...Array.from({ length: log.prescribedSets }, (_, i) => ({
+      ...Array.from({ length: Math.min(Math.max(0, log.prescribedSets), 40) }, (_, i) => ({
         userId: user.id,
         sessionId: session.id,
         exerciseLogId: log.id,
@@ -79,7 +79,9 @@ export async function startWorkoutSessionFromProgramDay(enrollmentId: string, da
   redirect(`/app/workout/${session.id}`);
 }
 
-/** Starts an ad-hoc session directly from a UserProgramDay without an enrollment (e.g. re-running a day). */
+/** Starts a session from a UserProgramDay. If the user has an ACTIVE enrollment
+ * in this program, the session is linked to it so finishing advances the
+ * program's day/week progression; otherwise it runs as a standalone ad-hoc day. */
 export async function startAdHocWorkoutSession(dayId: string) {
   const user = await requireUserOrThrow();
   const day = await prisma.userProgramDay.findUniqueOrThrow({
@@ -88,13 +90,20 @@ export async function startAdHocWorkoutSession(dayId: string) {
   });
   if (day.program.userId !== user.id) throw new Error("FORBIDDEN");
 
+  const enrollment = await prisma.programEnrollment.findFirst({
+    where: { userId: user.id, programId: day.programId, status: "ACTIVE" },
+  });
+
   const session = await prisma.workoutSession.create({
     data: {
       userId: user.id,
+      enrollmentId: enrollment?.id,
       programId: day.programId,
       programDayId: day.id,
       name: day.name,
       status: "IN_PROGRESS",
+      programWeek: enrollment?.currentWeek,
+      programDayIndex: day.dayIndex,
       daySnapshot: day as never,
       exerciseLogs: {
         create: day.exercises.map((ex) => ({
@@ -120,7 +129,7 @@ export async function startAdHocWorkoutSession(dayId: string) {
 
   for (const log of session.exerciseLogs) {
     const rows = [
-      ...Array.from({ length: log.warmupSets }, (_, i) => ({
+      ...Array.from({ length: Math.min(Math.max(0, log.warmupSets), 20) }, (_, i) => ({
         userId: user.id,
         sessionId: session.id,
         exerciseLogId: log.id,
@@ -128,7 +137,7 @@ export async function startAdHocWorkoutSession(dayId: string) {
         setNumber: i + 1,
         setType: "WARMUP" as const,
       })),
-      ...Array.from({ length: log.prescribedSets }, (_, i) => ({
+      ...Array.from({ length: Math.min(Math.max(0, log.prescribedSets), 40) }, (_, i) => ({
         userId: user.id,
         sessionId: session.id,
         exerciseLogId: log.id,
@@ -151,18 +160,25 @@ export interface LogSetInput {
   notes?: string;
 }
 
+/** Clamp a client-supplied number into a finite range, or null for nullish/NaN/Infinity. */
+function clampNum(v: number | null | undefined, min: number, max: number): number | null {
+  if (v === null || v === undefined || !Number.isFinite(v)) return null;
+  return Math.min(max, Math.max(min, v));
+}
+
 export async function logSet(input: LogSetInput) {
   const user = await requireUserOrThrow();
   const set = await prisma.setLog.findUniqueOrThrow({ where: { id: input.setLogId } });
   if (set.userId !== user.id) throw new Error("FORBIDDEN");
 
+  const reps = clampNum(input.reps, 0, 1000);
   await prisma.setLog.update({
     where: { id: input.setLogId },
     data: {
-      weightKg: input.weightKg,
-      reps: input.reps,
-      rir: input.rir,
-      notes: input.notes,
+      weightKg: clampNum(input.weightKg, 0, 2000),
+      reps: reps === null ? null : Math.round(reps),
+      rir: clampNum(input.rir, 0, 20),
+      notes: typeof input.notes === "string" ? input.notes.slice(0, 2000) : input.notes,
       isCompleted: true,
       completedAt: new Date(),
     },
@@ -234,8 +250,11 @@ export async function finishWorkoutSession(sessionId: string) {
   const now = new Date();
   const durationSeconds = Math.max(0, Math.round((now.getTime() - session.startedAt.getTime()) / 1000));
 
-  await prisma.workoutSession.update({
-    where: { id: sessionId },
+  // Atomic, idempotent transition: only the call that actually flips
+  // IN_PROGRESS → COMPLETED runs the one-time side effects (progression + PRs).
+  // A double-submit (or a re-finish of an already-completed session) is a no-op.
+  const transition = await prisma.workoutSession.updateMany({
+    where: { id: sessionId, status: "IN_PROGRESS" },
     data: {
       status: "COMPLETED",
       finishedAt: now,
@@ -246,27 +265,31 @@ export async function finishWorkoutSession(sessionId: string) {
     },
   });
 
-  if (session.enrollment) {
-    const program = await prisma.userProgram.findUnique({
-      where: { id: session.programId ?? undefined },
-      include: { days: { orderBy: { dayIndex: "asc" } } },
-    });
-    if (program) {
-      const idx = program.days.findIndex((d) => d.id === session.programDayId);
-      const nextIdx = idx >= 0 && idx + 1 < program.days.length ? program.days[idx + 1].dayIndex : program.days[0]?.dayIndex ?? 0;
-      const wrappedToStart = idx === program.days.length - 1;
-      await prisma.programEnrollment.update({
-        where: { id: session.enrollment.id },
-        data: {
-          completedSessions: { increment: 1 },
-          nextDayIndex: nextIdx,
-          currentWeek: wrappedToStart ? session.enrollment.currentWeek + 1 : session.enrollment.currentWeek,
-        },
+  if (transition.count > 0) {
+    if (session.enrollment) {
+      const program = await prisma.userProgram.findUnique({
+        where: { id: session.programId ?? undefined },
+        include: { days: { orderBy: { dayIndex: "asc" } } },
       });
+      if (program && program.days.length > 0) {
+        // Resolve the current position by the session's snapshot dayIndex (stable
+        // across program edits) and fall back to the live day id only if absent.
+        const curIdx =
+          session.programDayIndex ?? program.days.findIndex((d) => d.id === session.programDayId);
+        const wrappedToStart = curIdx < 0 || curIdx >= program.days.length - 1;
+        const nextIdx = wrappedToStart ? program.days[0].dayIndex : program.days[curIdx + 1].dayIndex;
+        await prisma.programEnrollment.update({
+          where: { id: session.enrollment.id },
+          data: {
+            completedSessions: { increment: 1 },
+            nextDayIndex: nextIdx,
+            currentWeek: wrappedToStart ? session.enrollment.currentWeek + 1 : session.enrollment.currentWeek,
+          },
+        });
+      }
     }
+    await checkAndRecordPersonalRecords(user.id, sessionId);
   }
-
-  await checkAndRecordPersonalRecords(user.id, sessionId);
 
   revalidatePath("/app/today");
   redirect(`/app/workout/${sessionId}/summary`);

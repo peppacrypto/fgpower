@@ -20,7 +20,7 @@ const buttonVariants = cva(
           "bg-transparent text-foreground border-b-2 border-b-border-strong hover:border-b-accent hover:bg-[var(--ink-4)] active:translate-y-[0.5px]",
         ghost: "bg-transparent text-foreground hover:bg-surface-2 active:translate-y-[0.5px]",
         danger:
-          "bg-danger text-white shadow-[inset_0_-2px_0_var(--keel)] hover:brightness-95 active:translate-y-[0.5px] active:shadow-none",
+          "bg-danger text-[var(--danger-foreground)] shadow-[inset_0_-2px_0_var(--keel)] hover:brightness-95 active:translate-y-[0.5px] active:shadow-none",
         link: "h-auto px-0 bg-transparent text-accent underline decoration-2 underline-offset-[3px] decoration-[color-mix(in_oklab,var(--accent)_35%,transparent)] hover:decoration-accent",
       },
       size: {
