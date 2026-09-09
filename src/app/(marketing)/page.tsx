@@ -158,8 +158,9 @@ export default async function LandingPage() {
           </div>
         </section>
 
-        {/* MANIFESTO BANNER — full art, never cropped */}
-        <section className="relative border-t border-white/10">
+        {/* MANIFESTO BANNER — full art, never cropped. On mobile a crisp hairline-framed
+            band (not a strip dissolving into black); on larger screens the edges blend. */}
+        <section className="relative border-y border-white/10">
           <Image
             src="/brand/fg-banner-evolucao.webp"
             alt="Evolução é um hábito — força, disciplina, evolução, liberdade"
@@ -168,8 +169,8 @@ export default async function LandingPage() {
             className="h-auto w-full select-none"
             sizes="100vw"
           />
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-[#0a0a0b] to-transparent sm:h-24" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#0a0a0b] to-transparent sm:h-24" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 hidden h-24 bg-gradient-to-b from-[#0a0a0b] to-transparent sm:block" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 hidden h-24 bg-gradient-to-t from-[#0a0a0b] to-transparent sm:block" />
         </section>
 
         {/* SCIENCE STRIP */}
@@ -193,24 +194,16 @@ export default async function LandingPage() {
           </div>
         </section>
 
-        {/* CTA */}
-        <section className="relative overflow-hidden border-t border-white/10 bg-gradient-to-b from-white/[0.03] to-transparent">
-          <div className="pointer-events-none absolute bottom-0 left-[6%] h-[420px] w-[420px] rounded-full bg-accent-strong/10 blur-[120px]" />
-          <div className="relative mx-auto grid max-w-6xl items-end gap-6 px-4 pt-14 sm:px-6 lg:grid-cols-[0.85fr_1fr] lg:gap-8 lg:pt-20">
-            {/* Athlete — full figure, never cropped */}
-            <div className="flex justify-center lg:justify-start">
-              <Image
-                src="/brand/fg-athlete.webp"
-                alt="Atleta FGPOWER"
-                width={1000}
-                height={1000}
-                className="h-auto w-full max-w-[240px] select-none object-contain drop-shadow-2xl sm:max-w-xs lg:max-w-sm"
-                sizes="(max-width: 1024px) 288px, 384px"
-              />
-            </div>
-            <div className="flex flex-col items-center pb-16 text-center lg:items-start lg:pb-24 lg:text-left">
+        {/* CTA — text and athlete read as one grounded unit: on mobile the copy
+            sits on top and the figure "stands" flush on the section's base line;
+            on desktop they sit side by side, bottom-aligned. */}
+        <section className="relative overflow-hidden border-t border-white/10 bg-white/[0.02]">
+          <div className="pointer-events-none absolute bottom-0 left-1/2 h-[360px] w-[360px] -translate-x-1/2 rounded-full bg-accent-strong/12 blur-[110px] lg:left-[14%] lg:translate-x-0" />
+          <div className="relative mx-auto flex max-w-6xl flex-col px-4 pt-14 sm:px-6 lg:grid lg:grid-cols-[0.8fr_1fr] lg:items-end lg:gap-10 lg:pt-20">
+            {/* Copy */}
+            <div className="order-1 flex flex-col items-center text-center lg:order-2 lg:items-start lg:pb-24 lg:text-left">
               <h2 className="text-display max-w-md text-3xl font-bold sm:text-5xl">Pronto para começar?</h2>
-              <p className="mt-5 max-w-lg text-white/55">
+              <p className="mt-5 max-w-md text-white/55">
                 Entre com sua conta Google e monte seu perfil de treino em menos de um minuto.
               </p>
               <Button size="lg" variant="strong" className="mt-8" asChild>
@@ -219,6 +212,18 @@ export default async function LandingPage() {
                   <GArrow className="size-4" />
                 </Link>
               </Button>
+            </div>
+
+            {/* Athlete — full figure, never cropped; stands flush on the section base */}
+            <div className="order-2 mt-8 flex justify-center lg:order-1 lg:mt-0 lg:justify-start">
+              <Image
+                src="/brand/fg-athlete.webp"
+                alt="Atleta FGPOWER"
+                width={1000}
+                height={1000}
+                className="h-auto w-full max-w-[260px] select-none object-contain object-bottom drop-shadow-2xl sm:max-w-xs lg:max-w-sm"
+                sizes="(max-width: 1024px) 260px, 384px"
+              />
             </div>
           </div>
         </section>
