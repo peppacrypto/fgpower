@@ -27,7 +27,7 @@ pages, and program pages — never hidden in fine print.
 
 ## Where citations come from
 
-Every one of the 148 sources currently in FGPOWER's database was:
+Every one of the 190 sources currently in FGPOWER's database was:
 
 1. **Identified** by topic (e.g. "rest interval hypertrophy," "squat depth quadriceps
    hypertrophy") using a real literature search, prioritizing meta-analyses and
@@ -113,6 +113,23 @@ deterministic rules that check any program, including this one) was built by:
    template (2x/week lower body, 3x/week distributed upper body, RIR 1–3 defaults, a
    4-week adaptation ramp for beginners) is directly traceable to a specific cited
    finding in its rationale text.
+
+### The GD series (GD Adaptação → GD 8)
+
+The nine GD templates form one two-year, five-day plan (a 4-week adaptation block, seven
+13-week blocks and a 9-week closing block). They were built from a separate literature
+review, weighted toward 2021–2026 evidence, run as sixteen topic reports; each report
+was re-verified source by source (DOI on Crossref, abstract read) and then challenged by a
+skeptical reviewer before a synthesis turned it into concrete programming rules (weekly
+fractional sets per muscle, per-session caps, RIR by exercise class, deload triggers,
+benchmark lifts). Every block was then checked deterministically for per-muscle weekly
+volume, per-session caps and session length before its texts were written.
+
+The 42 sources the GD templates cite that were not already in the database were added with
+`node scripts/merge-evidence-sources.mjs <sources.json>`, which re-resolves every DOI on
+Crossref and rejects any source whose title, year or first author does not match — the
+same rule as above: nothing is merged "with reduced confidence". These sources also carry a
+faithful Portuguese summary (`summaryPt`), which the science pages show when present.
 
 ## Citation requirements for any future content
 

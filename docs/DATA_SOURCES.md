@@ -133,7 +133,7 @@ products (paywalled/commercial).
 
 ## 4. Scientific evidence sources
 
-148 sources are seeded into the `EvidenceSource` table (see `docs/SCIENCE_METHOD.md` for
+190 sources are seeded into the `EvidenceSource` table (see `docs/SCIENCE_METHOD.md` for
 the full methodology). Every source is a real, independently verified peer-reviewed
 paper or guideline — DOI-resolved against Crossref and cross-checked against PubMed where
 indexed — never a fabricated or AI-hallucinated citation. Standard academic use of

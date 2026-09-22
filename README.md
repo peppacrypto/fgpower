@@ -10,7 +10,7 @@ with people who train too.
 
 FGPOWER is not a demo. It is a complete, deployed, database-backed application: real
 Google authentication, a real PostgreSQL schema, a real exercise catalog (876 exercises),
-148 independently DOI-verified scientific citations, a fully functional custom workout
+190 independently DOI-verified scientific citations, a fully functional custom workout
 builder, a mobile-first training screen with a rest timer and automatic progressive-
 overload suggestions, permanent training history with charts, and a follow/feed/FG social
 layer — all covered by unit, integration, and end-to-end tests.

@@ -58,7 +58,7 @@ export default async function PrincipleDetailPage({ params }: PageProps<"/app/sc
                     {ev.source.evidenceLevel}
                   </Badge>
                 </div>
-                <p className="mt-2 text-xs text-muted">{ev.source.abstractSummary}</p>
+                <p className="mt-2 text-xs text-muted">{ev.source.summaryPt ?? ev.source.abstractSummary}</p>
                 <span className="mt-2 inline-flex items-center gap-1 text-xs text-accent">
                   Ver fonte <ExternalLink className="size-3" />
                 </span>

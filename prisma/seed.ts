@@ -101,6 +101,7 @@ interface GeneratedEvidenceSource {
   evidenceType: string;
   evidenceLevel: string;
   summaryEn: string;
+  summaryPt?: string;
   topics: string[];
 }
 
@@ -132,6 +133,7 @@ async function seedEvidence() {
         evidenceType: s.evidenceType.toUpperCase() as never,
         evidenceLevel: s.evidenceLevel as never,
         abstractSummary: s.summaryEn,
+        summaryPt: s.summaryPt ?? null,
         topics: s.topics,
       },
       update: {
@@ -144,6 +146,9 @@ async function seedEvidence() {
         evidenceType: s.evidenceType.toUpperCase() as never,
         evidenceLevel: s.evidenceLevel as never,
         abstractSummary: s.summaryEn,
+        // Only overwrite when the seed carries a translation, so one entered
+        // through the admin panel is never wiped by a reseed.
+        ...(s.summaryPt ? { summaryPt: s.summaryPt } : {}),
         topics: s.topics,
       },
     });
