@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # FGPOWER — deploy to Railway prod + reseed the database.
 # Deploys the linked `web` service, waits for it to go live, then reseeds
-# so the 30 new programs land in the production DB.
+# so new programs, evidence and catalog changes land in the production DB.
 #
 # Run it yourself from the Claude prompt with:  ! bash scripts/deploy-prod.sh
 set -euo pipefail
@@ -17,7 +17,7 @@ export RAILWAY_API_TOKEN
 echo "==> Deploying web service to Railway prod (this builds on Railway; ~2-4 min)…"
 npx -y @railway/cli@latest up --ci -s "$WEB" -e "$ENVID"
 
-echo "==> Reseeding production database (30 new programs)…"
+echo "==> Reseeding production database (programs, evidence, catalog)…"
 ssh railway-web -- "npx tsx prisma/seed.ts"
 
 echo "==> Done. Live at https://fgpower.monster"
