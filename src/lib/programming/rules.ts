@@ -40,11 +40,20 @@ function movementPatternPt(pattern: string): string {
   return MOVEMENT_PATTERN_PT[pattern] ?? pattern.replace(/-/g, " ");
 }
 
+export interface ProgramRuleMuscle {
+  id: string;
+  nameEn: string;
+  namePt: string;
+}
+
 export interface ProgramRuleExercise {
   exerciseId: string;
   nameEn: string;
   namePt: string;
   primaryMuscleGroups: MuscleGroupTag[];
+  /** Muscle-level targets. When every exercise carries them, weekly volume is judged per muscle (rule 1). */
+  primaryMuscles?: ProgramRuleMuscle[];
+  secondaryMuscles?: ProgramRuleMuscle[];
   movementPattern: string | null;
   sets: number;
 }
@@ -71,6 +80,8 @@ const SIMILAR_MOVEMENT_MIN_COUNT = 3;
 const LOWER_BODY_HEAVY_SET_THRESHOLD = 3;
 
 const LOWER_BODY_GROUPS: MuscleGroupTag[] = ["LEGS", "GLUTES"];
+/** Credit for a set in which the muscle is a synergist rather than the prime mover (fractional counting). */
+const SECONDARY_SET_CREDIT = 0.5;
 
 function weeklySetsByMuscleGroup(days: ProgramRuleDay[]): Map<MuscleGroupTag, number> {
   const totals = new Map<MuscleGroupTag, number>();
@@ -82,6 +93,43 @@ function weeklySetsByMuscleGroup(days: ProgramRuleDay[]): Map<MuscleGroupTag, nu
     }
   }
   return totals;
+}
+
+interface MuscleVolume {
+  muscle: ProgramRuleMuscle;
+  direct: number;
+  fractional: number;
+}
+
+function weeklySetsByMuscle(days: ProgramRuleDay[]): Map<string, MuscleVolume> {
+  const totals = new Map<string, MuscleVolume>();
+  const entry = (m: ProgramRuleMuscle) => {
+    const existing = totals.get(m.id);
+    if (existing) return existing;
+    const created = { muscle: m, direct: 0, fractional: 0 };
+    totals.set(m.id, created);
+    return created;
+  };
+  for (const day of days) {
+    for (const ex of day.exercises) {
+      for (const m of ex.primaryMuscles ?? []) {
+        const e = entry(m);
+        e.direct += ex.sets;
+        e.fractional += ex.sets;
+      }
+      for (const m of ex.secondaryMuscles ?? []) {
+        if (ex.primaryMuscles?.some((p) => p.id === m.id)) continue;
+        entry(m).fractional += ex.sets * SECONDARY_SET_CREDIT;
+      }
+    }
+  }
+  return totals;
+}
+
+function formatSets(n: number, locale: "en" | "pt"): string {
+  const rounded = Math.round(n * 2) / 2;
+  const text = Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(1);
+  return locale === "pt" ? text.replace(".", ",") : text;
 }
 
 function isLowerBodyHeavy(day: ProgramRuleDay): boolean {
@@ -96,8 +144,33 @@ const GROUP_LABEL = MUSCLE_GROUP_LABEL;
 export function analyzeProgram(days: ProgramRuleDay[]): ProgramFeedbackItem[] {
   const feedback: ProgramFeedbackItem[] = [];
 
-  // 1. Weekly volume per muscle group.
-  const weekly = weeklySetsByMuscleGroup(days);
+  // 1. Weekly volume. With muscle-level data: per muscle — "high" on direct
+  // sets, "low" on fractional sets (direct + half of the sets where the muscle
+  // assists), so a muscle trained mostly through compounds is not called
+  // under-trained and separate muscles are never summed into one group total.
+  // Without it (legacy callers): per coarse muscle group, direct sets only.
+  const hasMuscleData = days.every((d) => d.exercises.every((e) => Array.isArray(e.primaryMuscles)));
+  if (hasMuscleData) {
+    for (const { muscle, direct, fractional } of weeklySetsByMuscle(days).values()) {
+      if (direct > 0 && fractional < LOW_WEEKLY_SETS_THRESHOLD) {
+        feedback.push({
+          code: `low-volume-${muscle.id}`,
+          severity: "notice",
+          messageEn: `${muscle.nameEn} gets about ${formatSets(fractional, "en")} sets/week, counting direct sets plus half of the sets where it assists. That may be low if hypertrophy for this muscle is a priority.`,
+          messagePt: `${muscle.namePt}: cerca de ${formatSets(fractional, "pt")} séries/semana, contando as séries diretas e metade das séries em que ele auxilia. Pode ser pouco se a hipertrofia desse músculo for prioridade.`,
+        });
+      }
+      if (direct > HIGH_WEEKLY_SETS_THRESHOLD) {
+        feedback.push({
+          code: `high-volume-${muscle.id}`,
+          severity: "notice",
+          messageEn: `${muscle.nameEn} is programmed for about ${formatSets(direct, "en")} direct sets/week, which is on the high end and may be hard to recover from.`,
+          messagePt: `${muscle.namePt}: cerca de ${formatSets(direct, "pt")} séries diretas/semana, um volume alto que pode ser difícil de recuperar.`,
+        });
+      }
+    }
+  }
+  const weekly = hasMuscleData ? new Map<MuscleGroupTag, number>() : weeklySetsByMuscleGroup(days);
   for (const [group, sets] of weekly) {
     if (group === "FULL_BODY" || group === "NECK") continue;
     const label = GROUP_LABEL[group];

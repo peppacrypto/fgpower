@@ -14,7 +14,7 @@ export async function analyzeUserProgram(programId: string) {
               nameEn: true,
               namePt: true,
               movementPattern: { select: { id: true } },
-              muscles: { where: { role: "PRIMARY" }, select: { muscle: { select: { group: true } } } },
+              muscles: { select: { role: true, muscle: { select: { id: true, nameEn: true, namePt: true, group: true } } } },
             },
           },
         },
@@ -30,7 +30,13 @@ export async function analyzeUserProgram(programId: string) {
       exerciseId: ex.exerciseId,
       nameEn: ex.exercise.nameEn,
       namePt: ex.exercise.namePt,
-      primaryMuscleGroups: ex.exercise.muscles.map((m) => m.muscle.group as never),
+      primaryMuscleGroups: ex.exercise.muscles.filter((m) => m.role === "PRIMARY").map((m) => m.muscle.group as never),
+      primaryMuscles: ex.exercise.muscles
+        .filter((m) => m.role === "PRIMARY")
+        .map(({ muscle }) => ({ id: muscle.id, nameEn: muscle.nameEn, namePt: muscle.namePt })),
+      secondaryMuscles: ex.exercise.muscles
+        .filter((m) => m.role === "SECONDARY")
+        .map(({ muscle }) => ({ id: muscle.id, nameEn: muscle.nameEn, namePt: muscle.namePt })),
       movementPattern: ex.exercise.movementPattern?.id ?? null,
       sets: ex.sets,
     })),

@@ -12,27 +12,37 @@ proceed regardless.
 
 ## Rules and their thresholds
 
-### 1. Weekly volume per muscle group
+### 1. Weekly volume per muscle
 
-**Constants:** `LOW_WEEKLY_SETS_THRESHOLD = 4`, `HIGH_WEEKLY_SETS_THRESHOLD = 28`.
+**Constants:** `LOW_WEEKLY_SETS_THRESHOLD = 4`, `HIGH_WEEKLY_SETS_THRESHOLD = 28`,
+`SECONDARY_SET_CREDIT = 0.5`.
 
-For each muscle group, FGPOWER sums the prescribed sets of every exercise whose
-*primary* muscle falls in that group, across every day in the program (one week's worth
-of training).
+When the program's exercises carry muscle-level data (the app always passes it), volume is
+judged **per muscle**, never summed across a coarse group such as "legs":
 
-- **Below 4 sets/week** for a group that has any direct work at all → flagged as
-  possibly low for someone prioritizing hypertrophy of that muscle.
-- **Above 28 sets/week** → flagged as high-end volume that may be hard to recover from.
+- **High:** more than 28 **direct** sets/week for one muscle (sets of exercises where it is
+  a primary mover) → flagged as high-end volume that may be hard to recover from.
+- **Low:** under 4 **fractional** sets/week for a muscle that has direct work — direct sets
+  plus half of every set in which it is a secondary mover → flagged as possibly low if
+  hypertrophy of that muscle is a priority. Counting synergist sets at half credit keeps a
+  muscle trained mostly through compounds (e.g. glutes via squats and hinges plus a few
+  hip-thrust sets) from being called under-trained.
+
+Legacy callers that only pass muscle *groups* keep the original behavior: direct sets
+summed per group against the same thresholds.
 
 **Evidence basis:** a systematic review/meta-regression of 15 studies found each
 additional weekly set associated with a small increase in hypertrophy (a "graded, not
 sharply stepped" dose-response); a systematic review of trained young men found no
 significant difference in quadriceps/biceps growth between 12–20 vs. >20 weekly sets,
-suggesting returns flatten somewhere in that range for many muscles; a larger, more
-recent meta-regression found both hypertrophy and strength increase with volume but with
-clearly diminishing returns at higher counts. FGPOWER's thresholds are set conservatively
-inside the range this literature actually supports (see `training-volume` on
-`/app/science` for full citations) — they are a sanity check, not a claimed optimum.
+suggesting returns flatten somewhere in that range for many muscles; the largest
+dose-response meta-regression to date (Pelland et al., 67 studies) found growth rising
+with weekly sets per muscle along a diminishing-returns curve, with data sparse above
+about 25 sets, and found that counting indirect sets as half a set predicted outcomes
+better than counting them as zero or as full sets — which is why the low-volume check uses
+fractional sets. FGPOWER's thresholds are set conservatively inside the range this
+literature actually supports (see `training-volume` on `/app/science` for full
+citations) — they are a sanity check, not a claimed optimum.
 
 ### 2. Total working sets per session
 
