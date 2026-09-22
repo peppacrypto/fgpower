@@ -33,6 +33,7 @@ interface DossierTemplate {
       rirTarget: number | null;
       restSeconds: number;
       warmupSets: number;
+      notesPt?: string | null;
       exercise: { namePt: string; slug: string };
     }[];
   }[];
@@ -111,19 +112,22 @@ export function TemplateDossier({
               </div>
               <ul className="divide-y divide-border">
                 {day.exercises.map((ex) => (
-                  <li key={ex.id} className="flex items-center gap-3 px-4 py-2.5">
-                    <span className="flex-1 truncate text-sm">{ex.exercise.namePt}</span>
-                    {ex.warmupSets > 0 ? (
-                      <span className="font-mono text-[10px] text-muted">+{ex.warmupSets} aq</span>
-                    ) : null}
-                    <span className="font-mono text-sm font-semibold tabular-nums">
-                      {ex.sets}×{ex.repMin === ex.repMax ? ex.repMin : `${ex.repMin}-${ex.repMax}`}
-                    </span>
-                    {ex.rirTarget != null ? (
-                      <span className="w-14 text-right font-mono text-[11px] text-muted">RIR {ex.rirTarget}</span>
-                    ) : (
-                      <span className="w-14" />
-                    )}
+                  <li key={ex.id} className="px-4 py-2.5">
+                    <div className="flex items-center gap-3">
+                      <span className="flex-1 truncate text-sm">{ex.exercise.namePt}</span>
+                      {ex.warmupSets > 0 ? (
+                        <span className="font-mono text-[10px] text-muted">+{ex.warmupSets} aq</span>
+                      ) : null}
+                      <span className="font-mono text-sm font-semibold tabular-nums">
+                        {ex.sets}×{ex.repMin === ex.repMax ? ex.repMin : `${ex.repMin}-${ex.repMax}`}
+                      </span>
+                      {ex.rirTarget != null ? (
+                        <span className="w-14 text-right font-mono text-[11px] text-muted">RIR {ex.rirTarget}</span>
+                      ) : (
+                        <span className="w-14" />
+                      )}
+                    </div>
+                    {ex.notesPt ? <p className="mt-1 text-xs text-muted">{ex.notesPt}</p> : null}
                   </li>
                 ))}
               </ul>

@@ -135,6 +135,12 @@ export function WorkoutExecutionClient({ session }: { session: ExecutionSession 
           </button>
         </div>
 
+        {exercise.notes ? (
+          <p className="mt-3 border-l-2 border-l-accent bg-surface-2 px-3 py-2 text-xs text-foreground/90">
+            {exercise.notes}
+          </p>
+        ) : null}
+
         {exercise.persistentNote ? (
           <div className="mt-3 flex gap-2 bg-surface-2 px-3 py-2 text-xs text-muted">
             <GNotes className="mt-0.5 size-3.5 shrink-0 text-border-strong" />
