@@ -3,8 +3,7 @@ import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { redirect } from "next/navigation";
 import { getCurrentSession } from "@/lib/auth/require-user";
 import { listTemplates } from "@/lib/data/templates";
-import { SectionHead } from "@/components/ui/section-head";
-import { ProtocolCard } from "@/components/programs/protocol-card";
+import { ProtocolLibrary } from "@/components/programs/protocol-library";
 
 export const metadata: Metadata = { title: "Programas" };
 
@@ -24,30 +23,23 @@ export default async function PublicProgramsPage() {
           explicados, nunca só uma planilha de exercícios.
         </p>
 
-        <div className="mt-10">
-          <SectionHead label="Todos os protocolos" count={`${templates.length}`} />
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            {templates.map((t, i) => (
-              <ProtocolCard
-                key={t.id}
-                data={{
-                  index: i + 1,
-                  href: `/programs/${t.slug}`,
-                  namePt: t.namePt,
-                  taglinePt: t.taglinePt,
-                  goal: t.goal,
-                  experienceLevel: t.experienceLevel,
-                  trainingStyle: t.trainingStyle,
-                  daysPerWeek: t.daysPerWeek,
-                  durationWeeks: t.durationWeeks,
-                  sessionMinutes: t.sessionMinutes,
-                  dayNames: t.days.map((d) => d.namePt),
-                  isFlagship: t.isFlagship,
-                }}
-              />
-            ))}
-          </div>
-        </div>
+        <ProtocolLibrary
+          label="Todos os protocolos"
+          items={templates.map((t, i) => ({
+            index: i + 1,
+            href: `/programs/${t.slug}`,
+            namePt: t.namePt,
+            taglinePt: t.taglinePt,
+            goal: t.goal,
+            experienceLevel: t.experienceLevel,
+            trainingStyle: t.trainingStyle,
+            daysPerWeek: t.daysPerWeek,
+            durationWeeks: t.durationWeeks,
+            sessionMinutes: t.sessionMinutes,
+            dayNames: t.days.map((d) => d.namePt),
+            isFlagship: t.isFlagship,
+          }))}
+        />
       </div>
     </MarketingShell>
   );

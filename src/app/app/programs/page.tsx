@@ -6,7 +6,7 @@ import { prisma } from "@/lib/db";
 import { listTemplates } from "@/lib/data/templates";
 import { Button } from "@/components/ui/button";
 import { SectionHead } from "@/components/ui/section-head";
-import { ProtocolCard } from "@/components/programs/protocol-card";
+import { ProtocolLibrary } from "@/components/programs/protocol-library";
 
 export const metadata: Metadata = { title: "Programas" };
 
@@ -43,86 +43,74 @@ export default async function ProgramsPage() {
         </Button>
       </div>
 
-      {/* Meus programas */}
-      <section className="mt-12">
-        <SectionHead label="Meus programas" count={myPrograms.length ? `${myPrograms.length} ativo(s)` : undefined} />
-        {myPrograms.length === 0 ? (
-          <Link
-            href="/app/programs/new"
-            className="mt-4 flex flex-col items-start gap-1 rounded-[var(--radius-lg)] border border-dashed border-border-strong p-6 transition-colors hover:border-accent hover:bg-accent-soft/30"
-          >
-            <span className="font-mono text-2xl font-bold text-foreground/20">＋</span>
-            <span className="mt-1 font-semibold">Monte seu primeiro protocolo</span>
-            <span className="text-sm text-muted">Do zero, ou personalize um pronto da biblioteca abaixo.</span>
-          </Link>
-        ) : (
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            {myPrograms.map((p, i) => (
-              <Link
-                key={p.id}
-                href={`/app/programs/${p.id}`}
-                className="group relative flex flex-col bg-surface p-5 pt-4 transition-colors hover:bg-[var(--ink-2)]"
-                style={{ borderTop: `2px solid ${STATUS_LABEL[p.status].color}` }}
-              >
-                <span className="pointer-events-none absolute right-4 top-3 font-mono text-4xl font-bold tabular-nums text-foreground/[0.06]">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <span
-                  className="text-[10px] font-bold uppercase tracking-[0.18em]"
-                  style={{ color: STATUS_LABEL[p.status].color }}
+      <ProtocolLibrary
+        label="Biblioteca de protocolos"
+        items={templates.map((t, i) => ({
+          index: i + 1,
+          href: `/app/programs/templates/${t.slug}`,
+          namePt: t.namePt,
+          taglinePt: t.taglinePt,
+          goal: t.goal,
+          experienceLevel: t.experienceLevel,
+          trainingStyle: t.trainingStyle,
+          daysPerWeek: t.daysPerWeek,
+          durationWeeks: t.durationWeeks,
+          sessionMinutes: t.sessionMinutes,
+          dayNames: t.days.map((d) => d.namePt),
+          isFlagship: t.isFlagship,
+        }))}
+      >
+        {/* Meus programas */}
+        <section className="mt-10">
+          <SectionHead label="Meus programas" count={myPrograms.length ? `${myPrograms.length} ativo(s)` : undefined} />
+          {myPrograms.length === 0 ? (
+            <Link
+              href="/app/programs/new"
+              className="mt-4 flex flex-col items-start gap-1 rounded-[var(--radius-lg)] border border-dashed border-border-strong p-6 transition-colors hover:border-accent hover:bg-accent-soft/30"
+            >
+              <span className="font-mono text-2xl font-bold text-foreground/20">＋</span>
+              <span className="mt-1 font-semibold">Monte seu primeiro protocolo</span>
+              <span className="text-sm text-muted">Do zero, ou personalize um pronto da biblioteca abaixo.</span>
+            </Link>
+          ) : (
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              {myPrograms.map((p, i) => (
+                <Link
+                  key={p.id}
+                  href={`/app/programs/${p.id}`}
+                  className="group relative flex flex-col bg-surface p-5 pt-4 transition-colors hover:bg-[var(--ink-2)]"
+                  style={{ borderTop: `2px solid ${STATUS_LABEL[p.status].color}` }}
                 >
-                  {STATUS_LABEL[p.status].label}
-                </span>
-                <h3 className="mt-1.5 max-w-[85%] font-bold leading-tight">{p.name}</h3>
-                {p.days.length > 0 ? (
-                  <div className="mt-3 flex flex-wrap gap-1">
-                    {p.days.map((d) => (
-                      <span
-                        key={d.id}
-                        className="bg-surface-2 px-1.5 py-1 font-mono text-[10px] text-foreground/70"
-                      >
-                        {d.name.replace(/^(dia|sess(ã|a)o)\s+/i, "").slice(0, 10).toUpperCase()}
-                      </span>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="mt-2 text-xs text-muted">Sem dias ainda</p>
-                )}
-              </Link>
-            ))}
-          </div>
-        )}
-      </section>
-
-      {/* Biblioteca */}
-      <section className="mt-14">
-        <SectionHead label="Biblioteca de protocolos" count={`${templates.length}`} />
-        {templates.length === 0 ? (
-          <p className="mt-4 text-sm text-muted">Nenhum programa disponível ainda.</p>
-        ) : (
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            {templates.map((t, i) => (
-              <ProtocolCard
-                key={t.id}
-                data={{
-                  index: i + 1,
-                  href: `/app/programs/templates/${t.slug}`,
-                  namePt: t.namePt,
-                  taglinePt: t.taglinePt,
-                  goal: t.goal,
-                  experienceLevel: t.experienceLevel,
-                  trainingStyle: t.trainingStyle,
-                  daysPerWeek: t.daysPerWeek,
-                  durationWeeks: t.durationWeeks,
-                  sessionMinutes: t.sessionMinutes,
-                  dayNames: t.days.map((d) => d.namePt),
-                  isFlagship: t.isFlagship,
-                }}
-              />
-            ))}
-          </div>
-        )}
-      </section>
+                  <span className="pointer-events-none absolute right-4 top-3 font-mono text-4xl font-bold tabular-nums text-foreground/[0.06]">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span
+                    className="text-[10px] font-bold uppercase tracking-[0.18em]"
+                    style={{ color: STATUS_LABEL[p.status].color }}
+                  >
+                    {STATUS_LABEL[p.status].label}
+                  </span>
+                  <h3 className="mt-1.5 max-w-[85%] font-bold leading-tight">{p.name}</h3>
+                  {p.days.length > 0 ? (
+                    <div className="mt-3 flex flex-wrap gap-1">
+                      {p.days.map((d) => (
+                        <span
+                          key={d.id}
+                          className="bg-surface-2 px-1.5 py-1 font-mono text-[10px] text-foreground/70"
+                        >
+                          {d.name.replace(/^(dia|sess(ã|a)o)\s+/i, "").slice(0, 10).toUpperCase()}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="mt-2 text-xs text-muted">Sem dias ainda</p>
+                  )}
+                </Link>
+              ))}
+            </div>
+          )}
+        </section>
+      </ProtocolLibrary>
     </div>
   );
 }
