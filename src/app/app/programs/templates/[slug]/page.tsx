@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { requireUser } from "@/lib/auth/require-user";
 import { getTemplateBySlug } from "@/lib/data/templates";
-import { Button } from "@/components/ui/button";
+import { getActiveEnrollment } from "@/lib/data/dashboard";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { startTemplate, customizeTemplate } from "@/lib/actions/programs";
 import { TemplateDossier } from "@/components/programs/template-dossier";
 
@@ -13,8 +15,17 @@ export async function generateMetadata({ params }: PageProps<"/app/programs/temp
 
 export default async function TemplateDetailPage({ params }: PageProps<"/app/programs/templates/[slug]">) {
   const { slug } = await params;
-  const template = await getTemplateBySlug(slug);
+  const user = await requireUser();
+  const [template, activeEnrollment] = await Promise.all([getTemplateBySlug(slug), getActiveEnrollment(user.id)]);
   if (!template) notFound();
+
+  const enrollForm = (
+    <form action={startTemplate.bind(null, template.slug)}>
+      <SubmitButton size="lg" variant="strong" pendingLabel="Ativando…">
+        Ativar programa
+      </SubmitButton>
+    </form>
+  );
 
   return (
     <TemplateDossier
@@ -22,18 +33,21 @@ export default async function TemplateDetailPage({ params }: PageProps<"/app/pro
       scienceHref="/app/science"
       actions={
         <>
-          <form action={startTemplate.bind(null, template.slug)}>
-            <Button type="submit" size="lg" variant="strong">
-              Iniciar programa
-            </Button>
-          </form>
+          {enrollForm}
           <form action={customizeTemplate.bind(null, template.slug)}>
-            <Button type="submit" size="lg" variant="outline">
+            <SubmitButton size="lg" variant="outline" pendingLabel="Abrindo…">
               Personalizar
-            </Button>
+            </SubmitButton>
           </form>
+          {activeEnrollment ? (
+            <p className="w-full text-xs text-muted">
+              Isto encerra seu programa ativo atual (
+              <span className="font-medium text-foreground">{activeEnrollment.program.name}</span>).
+            </p>
+          ) : null}
         </>
       }
+      stickyActions={enrollForm}
     />
   );
 }

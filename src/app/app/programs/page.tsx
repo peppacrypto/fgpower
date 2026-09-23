@@ -62,7 +62,7 @@ export default async function ProgramsPage() {
       >
         {/* Meus programas */}
         <section className="mt-10">
-          <SectionHead label="Meus programas" count={myPrograms.length ? `${myPrograms.length} ativo(s)` : undefined} />
+          <SectionHead label="Meus programas" count={myPrograms.length ? `${myPrograms.length} programa(s)` : undefined} />
           {myPrograms.length === 0 ? (
             <Link
               href="/app/programs/new"

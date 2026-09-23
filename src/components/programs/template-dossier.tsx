@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
+import { GArrow } from "@/components/ui/glyph";
 import { Markdown } from "@/components/markdown";
 import { SectionHead } from "@/components/ui/section-head";
 import { GOAL_LABEL, EXPERIENCE_LABEL, STYLE_LABEL, GOAL_HUE } from "@/lib/constants/program-labels";
@@ -41,14 +42,22 @@ interface DossierTemplate {
   principles: { principleId: string; principle: { slug: string; titlePt: string } }[];
 }
 
-/** A workout template rendered as a "training dossier" — spec masthead, day sheets with indexed exercises, a weekly progression timeline, and cited evidence. `actions` is the start/customize (app) or login (public) CTA; `scienceHref` prefixes principle links. */
+/** A workout template rendered as a "training dossier" — masthead, jump nav, day
+ * sheets with indexed exercises, a weekly progression timeline, and cited
+ * evidence. Long prose sections (description, science) are collapsible so the
+ * actual plan sits near the top. `actions` is the masthead CTA (start/customize
+ * in-app, or login on the public page); `stickyActions`, when given, also pins a
+ * start CTA to the bottom of the (very tall) page. `scienceHref` prefixes
+ * principle links. */
 export function TemplateDossier({
   template,
   actions,
+  stickyActions,
   scienceHref,
 }: {
   template: DossierTemplate;
   actions: React.ReactNode;
+  stickyActions?: React.ReactNode;
   scienceHref: string;
 }) {
   const hue = GOAL_HUE[template.goal] ?? GOAL_HUE.GENERAL_FITNESS;
@@ -68,64 +77,68 @@ export function TemplateDossier({
           <span className="tag tag--field" style={{ color: hue.fg }}>
             {GOAL_LABEL[template.goal] ?? template.goal}
           </span>
-          {template.isFlagship ? (
-            <span className="tag tag--mark text-[9px]">
-              Destaque
-            </span>
-          ) : null}
+          <span className="tag tag--spec">{EXPERIENCE_LABEL[template.experienceLevel] ?? template.experienceLevel}</span>
+          {template.isFlagship ? <span className="tag tag--mark text-[9px]">Destaque</span> : null}
         </div>
         <h1 className="text-display mt-2 text-3xl font-extrabold sm:text-4xl">{template.namePt}</h1>
         <p className="mt-2 text-muted">{template.taglinePt}</p>
 
-        <div className="mt-6 grid grid-cols-4 divide-x divide-border border-y border-border py-3 text-center">
+        <div className="mt-6 grid grid-cols-3 divide-x divide-border border-y border-border py-3 text-center">
           <MastheadStat value={`${template.daysPerWeek}×`} label="/ semana" />
           <MastheadStat value={String(template.durationWeeks)} label="semanas" />
           <MastheadStat value={`${template.sessionMinutes}′`} label="por sessão" />
-          <MastheadStat value={EXPERIENCE_LABEL[template.experienceLevel]?.slice(0, 5) ?? "—"} label="nível" small />
         </div>
 
         <div className="mt-6 flex flex-wrap gap-2">{actions}</div>
       </div>
 
+      {/* Jump nav — reach the plan without scrolling the prose */}
+      <nav aria-label="Seções" className="mt-4 flex flex-wrap gap-1.5">
+        <a href="#estrutura" className="tag tag--mark hover:brightness-95">
+          Estrutura
+        </a>
+        {weekly.length > 0 ? (
+          <a href="#progressao" className="tag tag--mark hover:brightness-95">
+            Progressão
+          </a>
+        ) : null}
+        <a href="#descricao" className="tag tag--mark hover:brightness-95">
+          Descrição
+        </a>
+        <a href="#ciencia" className="tag tag--mark hover:brightness-95">
+          Ciência
+        </a>
+      </nav>
+
       <Section title="Para quem é">
         <p className="text-sm text-foreground/90">{template.audiencePt}</p>
       </Section>
 
-      <Section title="Descrição">
-        <Markdown text={template.descriptionPt} />
-      </Section>
-
-      {/* Day sheets */}
-      <section className="mt-10">
+      {/* Day sheets — the actual plan, kept expanded and high on the page */}
+      <section id="estrutura" className="mt-10 scroll-mt-4">
         <SectionHead label="Estrutura semanal" count={`${template.days.length} dias`} />
         <div className="mt-4 flex flex-col gap-3">
           {template.days.map((day, i) => (
             <div key={day.id} className="overflow-hidden border-t-2 border-t-[var(--rule-heavy)] bg-surface">
-              <div className="flex items-baseline justify-between border-b border-border bg-surface-2/60 px-4 py-3">
-                <div className="flex items-baseline gap-3">
+              <div className="flex items-baseline justify-between gap-3 border-b border-border bg-surface-2/60 px-4 py-3">
+                <div className="flex min-w-0 items-baseline gap-3">
                   <span className="font-mono text-sm font-bold text-foreground/30">{String(i + 1).padStart(2, "0")}</span>
                   <h3 className="font-bold">{day.namePt}</h3>
                 </div>
                 {day.estimatedMinutes ? (
-                  <span className="font-mono text-[11px] text-muted">~{day.estimatedMinutes}′</span>
+                  <span className="shrink-0 font-mono text-[11px] text-muted">~{day.estimatedMinutes}′</span>
                 ) : null}
               </div>
               <ul className="divide-y divide-border">
                 {day.exercises.map((ex) => (
                   <li key={ex.id} className="px-4 py-2.5">
-                    <div className="flex items-center gap-3">
-                      <span className="flex-1 truncate text-sm">{ex.exercise.namePt}</span>
-                      {ex.warmupSets > 0 ? (
-                        <span className="font-mono text-[10px] text-muted">+{ex.warmupSets} aq</span>
-                      ) : null}
-                      <span className="font-mono text-sm font-semibold tabular-nums">
+                    <span className="block text-sm">{ex.exercise.namePt}</span>
+                    <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 font-mono text-[11px] text-muted">
+                      <span className="font-semibold tabular-nums text-foreground">
                         {ex.sets}×{ex.repMin === ex.repMax ? ex.repMin : `${ex.repMin}-${ex.repMax}`}
                       </span>
-                      {ex.rirTarget != null ? (
-                        <span className="w-14 text-right font-mono text-[11px] text-muted">RIR {ex.rirTarget}</span>
-                      ) : (
-                        <span className="w-14" />
-                      )}
+                      {ex.rirTarget != null ? <span>RIR {ex.rirTarget}</span> : null}
+                      {ex.warmupSets > 0 ? <span>+{ex.warmupSets} aq</span> : null}
                     </div>
                     {ex.notesPt ? <p className="mt-1 text-xs text-muted">{ex.notesPt}</p> : null}
                   </li>
@@ -138,7 +151,7 @@ export function TemplateDossier({
 
       {/* Weekly progression timeline */}
       {weekly.length > 0 ? (
-        <section className="mt-10">
+        <section id="progressao" className="mt-10 scroll-mt-4">
           <SectionHead label="Progressão semana a semana" />
           <div className="mt-4 flex flex-col">
             {weekly.map((w, i) => (
@@ -171,12 +184,13 @@ export function TemplateDossier({
         </section>
       ) : null}
 
+      <CollapsibleSection title="Descrição" id="descricao">
+        <Markdown text={template.descriptionPt} />
+      </CollapsibleSection>
+
       {/* Science */}
-      <section className="mt-10">
-        <SectionHead label="Base científica" />
-        <div className="mt-4">
-          <Markdown text={template.rationalePt} />
-        </div>
+      <CollapsibleSection title="Base científica" id="ciencia">
+        <Markdown text={template.rationalePt} />
         {template.evidence.length > 0 ? (
           <div className="mt-4 flex flex-col gap-2">
             {template.evidence.map((ev) => (
@@ -204,14 +218,20 @@ export function TemplateDossier({
               <Link
                 key={tp.principleId}
                 href={`${scienceHref}/${tp.principle.slug}`}
-                className="rounded-[2px] bg-accent-soft px-2.5 py-1 text-xs font-medium text-accent hover:brightness-95"
+                className="inline-flex min-h-9 items-center rounded-[2px] bg-accent-soft px-3 text-xs font-medium text-accent hover:brightness-95"
               >
                 {tp.principle.titlePt}
               </Link>
             ))}
           </div>
         ) : null}
-      </section>
+      </CollapsibleSection>
+
+      {stickyActions ? (
+        <div className="sticky bottom-16 z-30 mt-10 panel-raised p-3 sm:bottom-4">
+          <div className="flex flex-wrap gap-2">{stickyActions}</div>
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -222,6 +242,21 @@ function Section({ title, children }: { title: string; children: React.ReactNode
       <h2 className="mb-3 text-[11px] font-bold uppercase tracking-[0.16em] text-muted">{title}</h2>
       {children}
     </section>
+  );
+}
+
+/** A prose section that collapses (default closed), so the day sheets and weekly
+ * plan lead the page instead of a multi-thousand-pixel wall. The summary reuses
+ * the editorial field-label + a keyline GArrow that rotates when open. */
+function CollapsibleSection({ title, id, children }: { title: string; id: string; children: React.ReactNode }) {
+  return (
+    <details id={id} className="group mt-8 scroll-mt-4 border-t border-border pt-3">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
+        <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-muted">{title}</span>
+        <GArrow className="size-4 shrink-0 text-muted transition-transform group-open:rotate-90" />
+      </summary>
+      <div className="mt-3">{children}</div>
+    </details>
   );
 }
 

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Play } from "lucide-react";
-import { GArrow, Lettermark } from "@/components/ui/glyph";
+import { GArrow, GCheck, Lettermark } from "@/components/ui/glyph";
 import { requireUser } from "@/lib/auth/require-user";
 import { getProfile } from "@/lib/data/profile";
 import {
@@ -11,6 +11,7 @@ import {
   getWeeklyProgress,
 } from "@/lib/data/dashboard";
 import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { SectionHead } from "@/components/ui/section-head";
 import { startAdHocWorkoutSession } from "@/lib/actions/workouts";
 
@@ -38,7 +39,9 @@ const PR_VALUE: Record<string, (v: number, w: number | null, r: number | null) =
   SESSION_VOLUME: (v) => `${Math.round(v)}kg`,
 };
 
-export default async function TodayPage() {
+export default async function TodayPage({ searchParams }: PageProps<"/app/today">) {
+  const sp = await searchParams;
+  const justActivated = sp.ativado === "1";
   const user = await requireUser();
   const [profile, enrollment, inProgress, weeklyCount, recentPrs] = await Promise.all([
     getProfile(user.id),
@@ -86,7 +89,13 @@ export default async function TodayPage() {
           <div className="relative overflow-hidden panel-raised">
             <span className="absolute left-0 top-0 h-full w-1.5 bg-accent" aria-hidden />
             <div className="p-6 sm:p-8">
-              <span className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-accent">
+              {justActivated ? (
+                <span className="mb-2 inline-flex items-center gap-1.5 bg-accent-soft px-2 py-1 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent">
+                  <GCheck className="size-3.5" />
+                  Programa ativado
+                </span>
+              ) : null}
+              <span className="block font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-accent">
                 Próximo treino
               </span>
               <h2 className="text-display mt-2 text-3xl font-extrabold sm:text-4xl">{nextDay.name}</h2>
@@ -115,10 +124,10 @@ export default async function TodayPage() {
               </ol>
 
               <form action={startAdHocWorkoutSession.bind(null, nextDay.id)} className="mt-6">
-                <Button type="submit" size="lg" variant="strong" className="w-full sm:w-auto">
+                <SubmitButton size="lg" variant="strong" className="w-full sm:w-auto" pendingLabel="Iniciando…">
                   <Play className="size-4" />
                   Iniciar treino
-                </Button>
+                </SubmitButton>
               </form>
             </div>
           </div>

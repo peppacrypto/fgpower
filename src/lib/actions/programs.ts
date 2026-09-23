@@ -78,7 +78,7 @@ export async function startTemplate(templateSlug: string) {
   const user = await requireUserOrThrow();
   const program = await forkTemplateToProgram(templateSlug, user.id);
   await startProgramInternal(user.id, program.id);
-  redirect("/app/today");
+  redirect("/app/today?ativado=1");
 }
 
 export async function customizeTemplate(templateSlug: string) {

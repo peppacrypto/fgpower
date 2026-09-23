@@ -4,9 +4,11 @@ import Link from "next/link";
 import { AlertTriangle, Info } from "lucide-react";
 import { requireUser } from "@/lib/auth/require-user";
 import { getUserProgram } from "@/lib/data/user-programs";
+import { getActiveEnrollment } from "@/lib/data/dashboard";
 import { analyzeUserProgram } from "@/lib/programming/analyze";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { startProgram, archiveProgram, duplicateProgram } from "@/lib/actions/programs";
 import { startAdHocWorkoutSession } from "@/lib/actions/workouts";
 
@@ -22,8 +24,9 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
   const program = await getUserProgram(id);
   if (!program || program.userId !== user.id) notFound();
 
-  const feedback = await analyzeUserProgram(id);
+  const [feedback, activeEnrollment] = await Promise.all([analyzeUserProgram(id), getActiveEnrollment(user.id)]);
   const isActive = program.status === "ACTIVE";
+  const otherActive = activeEnrollment && activeEnrollment.programId !== program.id ? activeEnrollment : null;
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
@@ -53,22 +56,29 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
         </Button>
         {!isActive ? (
           <form action={startProgram.bind(null, program.id)}>
-            <Button type="submit">Iniciar este programa</Button>
+            <SubmitButton pendingLabel="Iniciando…">Iniciar este programa</SubmitButton>
           </form>
         ) : null}
         <form action={duplicateProgram.bind(null, program.id)}>
-          <Button type="submit" variant="outline">
+          <SubmitButton variant="outline" pendingLabel="Duplicando…">
             Duplicar
-          </Button>
+          </SubmitButton>
         </form>
         {program.status !== "ARCHIVED" ? (
           <form action={archiveProgram.bind(null, program.id)}>
-            <Button type="submit" variant="ghost">
+            <SubmitButton variant="ghost" pendingLabel="Arquivando…">
               Arquivar
-            </Button>
+            </SubmitButton>
           </form>
         ) : null}
       </div>
+
+      {!isActive && otherActive ? (
+        <p className="mt-2 text-xs text-muted">
+          Iniciar este programa encerra seu programa ativo atual (
+          <span className="font-medium text-foreground">{otherActive.program.name}</span>).
+        </p>
+      ) : null}
 
       {feedback.length > 0 ? (
         <div className="mt-6 flex flex-col gap-2">
@@ -96,9 +106,9 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
               <h3 className="font-semibold">{day.name}</h3>
               {isActive ? (
                 <form action={startAdHocWorkoutSession.bind(null, day.id)}>
-                  <Button type="submit" size="sm">
+                  <SubmitButton size="sm" pendingLabel="Iniciando…">
                     Iniciar
-                  </Button>
+                  </SubmitButton>
                 </form>
               ) : null}
             </div>
