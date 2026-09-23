@@ -92,10 +92,11 @@ export function WorkoutExecutionClient({ session }: { session: ExecutionSession 
               type="button"
               onClick={() => setShowOverview((v) => !v)}
               aria-expanded={showOverview}
-              className="inline-flex items-center gap-1 text-xs text-muted hover:text-foreground"
+              className="-mx-1 inline-flex min-h-8 items-center gap-1 rounded-[3px] px-1 text-xs text-muted hover:text-foreground"
             >
               Exercício {exerciseIndex + 1} de {total} · {elapsed}
-              <ChevronRight className={`size-3.5 transition-transform ${showOverview ? "rotate-90" : ""}`} />
+              <span className="font-semibold text-accent">· ver todos</span>
+              <ChevronRight className={`size-3.5 text-accent transition-transform ${showOverview ? "rotate-90" : ""}`} />
             </button>
           </div>
           <Button

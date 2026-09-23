@@ -18,8 +18,9 @@ test("choose a ready-made program, start a workout, record a set, and finish", a
     page.getByRole("button", { name: "Ativar programa" }).first().click(),
   ]);
 
-  // Start workout from Today.
-  await expect(page.getByText("Sessão A")).toBeVisible();
+  // Start workout from Today (the suggested-next card; the program's other days
+  // are also listed below it, so scope to the heading).
+  await expect(page.getByRole("heading", { name: "Sessão A" })).toBeVisible();
   await Promise.all([
     page.waitForURL(/\/app\/workout\//, { timeout: 15_000 }),
     page.getByRole("button", { name: "Iniciar treino" }).click(),
