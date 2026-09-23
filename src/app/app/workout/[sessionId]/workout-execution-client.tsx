@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState, useTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, Info, Plus, SkipForward } from "lucide-react";
-import { GLoad, GNotes } from "@/components/ui/glyph";
+import { GLoad, GNotes, GCheck } from "@/components/ui/glyph";
 import { Button } from "@/components/ui/button";
 import { addSet, finishWorkoutSession, skipExercise } from "@/lib/actions/workouts";
 import { saveExerciseNote } from "@/lib/actions/exercise-notes";
@@ -26,11 +26,18 @@ function useElapsedTime(startedAtIso: string) {
   return `${m}:${String(s).padStart(2, "0")}`;
 }
 
+function isDone(sets: ExecutionSession["exercises"][number]["sets"]): boolean {
+  return sets.length > 0 && sets.every((s) => s.isCompleted);
+}
+
 export function WorkoutExecutionClient({ session }: { session: ExecutionSession }) {
   const [exerciseIndex, setExerciseIndex] = useState(0);
   const [noteDraft, setNoteDraft] = useState(session.notes ?? "");
   const [finishing, startFinishing] = useTransition();
   const [, startTransition] = useTransition();
+  const [confirmFinish, setConfirmFinish] = useState(false);
+  const [confirmSkip, setConfirmSkip] = useState(false);
+  const [showOverview, setShowOverview] = useState(false);
   const timer = useRestTimer();
   const elapsed = useElapsedTime(session.startedAtIso);
 
@@ -38,11 +45,30 @@ export function WorkoutExecutionClient({ session }: { session: ExecutionSession 
   const total = session.exercises.length;
 
   const activeSetId = useMemo(() => exercise?.sets.find((s) => !s.isCompleted)?.id ?? null, [exercise]);
+  const allSetsDone = exercise ? isDone(exercise.sets) : false;
 
-  const allSetsDone = exercise ? exercise.sets.every((s) => s.isCompleted) && exercise.sets.length > 0 : false;
+  // Auto-disarm the two-step confirmations after a few seconds.
+  useEffect(() => {
+    if (!confirmFinish) return;
+    const t = setTimeout(() => setConfirmFinish(false), 4000);
+    return () => clearTimeout(t);
+  }, [confirmFinish]);
+  useEffect(() => {
+    if (!confirmSkip) return;
+    const t = setTimeout(() => setConfirmSkip(false), 4000);
+    return () => clearTimeout(t);
+  }, [confirmSkip]);
 
   function goToExercise(delta: number) {
     setExerciseIndex((i) => Math.max(0, Math.min(total - 1, i + delta)));
+    setConfirmSkip(false);
+    setShowOverview(false);
+  }
+
+  function jumpToExercise(i: number) {
+    setExerciseIndex(i);
+    setConfirmSkip(false);
+    setShowOverview(false);
   }
 
   if (!exercise) {
@@ -59,35 +85,81 @@ export function WorkoutExecutionClient({ session }: { session: ExecutionSession 
   return (
     <div className="flex min-h-dvh flex-col pb-40">
       <header className="sticky top-0 z-20 border-b border-border bg-background/95 px-4 py-3 backdrop-blur">
-        <div className="mx-auto flex max-w-3xl items-center justify-between">
-          <div>
-            <p className="text-sm font-semibold">{session.name}</p>
-            <p className="text-xs text-muted">
+        <div className="mx-auto flex max-w-3xl items-center justify-between gap-3">
+          <div className="min-w-0">
+            <p className="truncate text-sm font-semibold">{session.name}</p>
+            <button
+              type="button"
+              onClick={() => setShowOverview((v) => !v)}
+              aria-expanded={showOverview}
+              className="inline-flex items-center gap-1 text-xs text-muted hover:text-foreground"
+            >
               Exercício {exerciseIndex + 1} de {total} · {elapsed}
-            </p>
+              <ChevronRight className={`size-3.5 transition-transform ${showOverview ? "rotate-90" : ""}`} />
+            </button>
           </div>
           <Button
             size="sm"
-            variant="secondary"
+            variant={confirmFinish ? "danger" : "secondary"}
+            className="shrink-0"
             disabled={finishing}
-            onClick={() => startFinishing(() => finishWorkoutSession(session.id))}
+            onClick={() => {
+              if (confirmFinish) startFinishing(() => finishWorkoutSession(session.id));
+              else setConfirmFinish(true);
+            }}
           >
-            {finishing ? "Finalizando…" : "Finalizar"}
+            {finishing ? "Finalizando…" : confirmFinish ? "Confirmar" : "Finalizar"}
           </Button>
         </div>
+
+        {showOverview ? (
+          <div className="mx-auto mt-3 max-w-3xl panel-raised">
+            <ul className="divide-y divide-border">
+              {session.exercises.map((ex, i) => {
+                const done = isDone(ex.sets);
+                return (
+                  <li key={ex.id}>
+                    <button
+                      type="button"
+                      onClick={() => jumpToExercise(i)}
+                      aria-current={i === exerciseIndex ? "true" : undefined}
+                      className={`flex w-full items-center gap-3 px-4 py-2.5 text-left hover:bg-surface-2 ${
+                        i === exerciseIndex ? "bg-accent-soft" : ""
+                      }`}
+                    >
+                      <span className="w-5 shrink-0 font-mono text-xs text-foreground/30">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <span className="min-w-0 flex-1 truncate text-sm font-medium">{ex.exerciseName}</span>
+                      {ex.wasSkipped ? (
+                        <span className="tag tag--mark shrink-0 text-[9px]">Pulado</span>
+                      ) : done ? (
+                        <GCheck className="size-4 shrink-0 text-accent" />
+                      ) : (
+                        <span className="shrink-0 font-mono text-[11px] text-muted">
+                          {ex.sets.filter((s) => s.isCompleted).length}/{ex.sets.length}
+                        </span>
+                      )}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ) : null}
       </header>
 
       <div className="mx-auto w-full max-w-3xl flex-1 px-4 py-5">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-2">
           <button
             onClick={() => goToExercise(-1)}
             disabled={exerciseIndex === 0}
-            className="flex size-9 items-center justify-center rounded-[3px] border border-border disabled:opacity-30"
+            className="flex size-11 shrink-0 items-center justify-center rounded-[3px] border border-border disabled:opacity-30"
             aria-label="Exercício anterior"
           >
             <ChevronLeft className="size-5" />
           </button>
-          <div className="flex flex-1 items-center gap-3 px-3">
+          <div className="flex min-w-0 flex-1 items-center gap-3 px-1">
             <div className="relative size-14 shrink-0 overflow-hidden rounded-[var(--radius-md)] bg-surface-2">
               {exercise.imageUrl ? (
                 <Image src={exercise.imageUrl} alt={exercise.exerciseName} fill className="object-cover" />
@@ -111,27 +183,36 @@ export function WorkoutExecutionClient({ session }: { session: ExecutionSession 
           <button
             onClick={() => goToExercise(1)}
             disabled={exerciseIndex === total - 1}
-            className="flex size-9 items-center justify-center rounded-[3px] border border-border disabled:opacity-30"
+            className="flex size-11 shrink-0 items-center justify-center rounded-[3px] border border-border disabled:opacity-30"
             aria-label="Próximo exercício"
           >
             <ChevronRight className="size-5" />
           </button>
         </div>
 
-        <div className="mt-3 flex items-center gap-2">
+        <div className="mt-3 flex items-center gap-3">
           <Link
             href={`/app/exercises/${exercise.exerciseSlug}`}
-            className="inline-flex items-center gap-1 text-xs text-accent hover:underline"
+            className="-mx-2 inline-flex min-h-11 items-center gap-1 px-2 text-xs text-accent hover:underline"
           >
             <Info className="size-3.5" />
             Ver técnica
           </Link>
           <button
-            onClick={() => startTransition(() => skipExercise(exercise.id))}
-            className="inline-flex items-center gap-1 text-xs text-muted hover:text-foreground"
+            onClick={() => {
+              if (confirmSkip) {
+                startTransition(() => skipExercise(exercise.id));
+                setConfirmSkip(false);
+              } else {
+                setConfirmSkip(true);
+              }
+            }}
+            className={`-mx-2 inline-flex min-h-11 items-center gap-1 px-2 text-xs ${
+              confirmSkip ? "font-semibold text-danger" : "text-muted hover:text-foreground"
+            }`}
           >
             <SkipForward className="size-3.5" />
-            Pular exercício
+            {confirmSkip ? "Confirmar pular?" : "Pular exercício"}
           </button>
         </div>
 
@@ -191,6 +272,19 @@ export function WorkoutExecutionClient({ session }: { session: ExecutionSession 
           <Button className="mt-6 w-full" size="lg" onClick={() => goToExercise(1)}>
             Próximo exercício
             <ChevronRight className="size-4" />
+          </Button>
+        ) : null}
+
+        {allSetsDone && exerciseIndex === total - 1 ? (
+          <Button
+            className="mt-6 w-full"
+            size="lg"
+            variant="strong"
+            disabled={finishing}
+            onClick={() => startFinishing(() => finishWorkoutSession(session.id))}
+          >
+            <GCheck className="size-4" />
+            {finishing ? "Finalizando…" : "Finalizar treino"}
           </Button>
         ) : null}
 

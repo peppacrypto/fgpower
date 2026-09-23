@@ -46,7 +46,7 @@ export function SetRow({
         <button
           onClick={() => setEditing(true)}
           aria-label="Editar série"
-          className="flex size-8 items-center justify-center rounded-[3px] text-muted hover:bg-surface-2 hover:text-foreground"
+          className="flex size-11 items-center justify-center rounded-[3px] text-muted hover:bg-surface-2 hover:text-foreground"
         >
           <Pencil className="size-4" />
         </button>

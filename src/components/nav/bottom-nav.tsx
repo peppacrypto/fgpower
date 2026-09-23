@@ -8,6 +8,10 @@ import { NAV_ITEMS } from "./nav-items";
 export function BottomNav() {
   const pathname = usePathname();
 
+  // Focus mode: hide the nav during a live workout so a mistap can't drop the
+  // user out mid-session (the post-workout summary keeps the nav).
+  if (pathname.startsWith("/app/workout/") && !pathname.endsWith("/summary")) return null;
+
   return (
     <nav
       aria-label="Navegação principal"
@@ -15,7 +19,10 @@ export function BottomNav() {
     >
       <ul className="flex items-stretch justify-around">
         {NAV_ITEMS.map((item) => {
-          const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
+          const active =
+            pathname === item.href ||
+            pathname.startsWith(`${item.href}/`) ||
+            (item.activePaths?.some((p) => pathname === p || pathname.startsWith(`${p}/`)) ?? false);
           const Icon = item.icon;
           return (
             <li key={item.href} className="flex-1">
