@@ -36,12 +36,24 @@ const initialState: OnboardingFormState = {};
 export function OnboardingWizard() {
   const [state, formAction, pending] = useActionState(completeOnboarding, initialState);
   const [step, setStep] = useState(0);
+  const [name, setName] = useState("");
+  const [nameError, setNameError] = useState(false);
   const [preferredDays, setPreferredDays] = useState<number[]>([]);
   const [doesEndurance, setDoesEndurance] = useState(false);
   const totalSteps = 4;
 
   function togglePreferredDay(day: number) {
     setPreferredDays((prev) => (prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]));
+  }
+
+  // Step 0 requires a name. Gate it here — the required input lives in a
+  // hidden section on later steps, so browser validation can't surface there.
+  function goNext() {
+    if (step === 0 && name.trim() === "") {
+      setNameError(true);
+      return;
+    }
+    setStep((s) => Math.min(totalSteps - 1, s + 1));
   }
 
   return (
@@ -59,8 +71,23 @@ export function OnboardingWizard() {
         <h2 className="text-xl font-bold tracking-tight">Como podemos te chamar?</h2>
         <div>
           <Label htmlFor="displayName">Nome de exibição</Label>
-          <Input id="displayName" name="displayName" placeholder="Ex.: Guilherme" required className="mt-1.5" maxLength={60} />
-          {state.fieldErrors?.displayName ? (
+          <Input
+            id="displayName"
+            name="displayName"
+            placeholder="Ex.: Guilherme"
+            required
+            className="mt-1.5"
+            maxLength={60}
+            value={name}
+            onChange={(e) => {
+              setName(e.target.value);
+              if (nameError) setNameError(false);
+            }}
+            aria-invalid={nameError || undefined}
+          />
+          {nameError ? (
+            <p className="mt-1 text-xs text-danger">Informe seu nome para continuar.</p>
+          ) : state.fieldErrors?.displayName ? (
             <p className="mt-1 text-xs text-danger">{state.fieldErrors.displayName}</p>
           ) : null}
         </div>
@@ -109,7 +136,7 @@ export function OnboardingWizard() {
                 key={label}
                 onClick={() => togglePreferredDay(i)}
                 className={cn(
-                  "h-10 w-12 rounded-[var(--radius-sm)] border text-sm font-medium",
+                  "h-11 w-12 rounded-[var(--radius-sm)] border text-sm font-medium",
                   preferredDays.includes(i)
                     ? "border-accent bg-accent-soft text-accent"
                     : "border-border text-muted hover:bg-surface-2",
@@ -180,7 +207,7 @@ export function OnboardingWizard() {
           // while patching type="button" -> type="submit" mid-click can make
           // the browser apply the new type's default action (form submit)
           // to the very click that triggered the swap.
-          <Button key="continue" type="button" onClick={() => setStep((s) => Math.min(totalSteps - 1, s + 1))}>
+          <Button key="continue" type="button" onClick={goNext}>
             Continuar
           </Button>
         ) : (

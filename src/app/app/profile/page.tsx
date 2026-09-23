@@ -11,6 +11,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ExerciseCard } from "@/components/exercises/exercise-card";
+import { LogoutButton } from "./logout-button";
 
 export const metadata: Metadata = { title: "Perfil" };
 
@@ -40,11 +41,14 @@ export default async function ProfilePage() {
           <h1 className="text-xl font-bold tracking-tight">{profile?.displayName ?? user.name}</h1>
           {user.username ? <p className="text-sm text-muted">@{user.username}</p> : null}
         </div>
-        <Button variant="outline" size="icon" asChild>
-          <Link href="/app/settings" aria-label="Configurações">
-            <Settings className="size-4" />
-          </Link>
-        </Button>
+        <div className="flex shrink-0 items-center gap-2">
+          <Button variant="outline" size="icon" asChild>
+            <Link href="/app/settings" aria-label="Configurações">
+              <Settings className="size-4" />
+            </Link>
+          </Button>
+          <LogoutButton />
+        </div>
       </div>
 
       {profile?.bio ? <p className="mt-3 text-sm text-foreground/90">{profile.bio}</p> : null}

@@ -54,7 +54,7 @@ export default async function ExerciseDetailPage({ params }: PageProps<"/app/exe
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-6 sm:px-6 sm:py-8">
-      <div className="grid gap-6 sm:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-2">
         <div className="flex gap-2 reg-frame">
           {exercise.media.length > 0 ? (
             exercise.media.map((m) => (
@@ -71,8 +71,8 @@ export default async function ExerciseDetailPage({ params }: PageProps<"/app/exe
 
         <div className="flex flex-col gap-4">
           <div className="flex items-start justify-between gap-3">
-            <h1 className="text-2xl font-bold tracking-tight">{exercise.namePt}</h1>
-            <div className="flex items-center gap-2">
+            <h1 className="min-w-0 break-words text-2xl font-bold tracking-tight">{exercise.namePt}</h1>
+            <div className="flex shrink-0 items-center gap-2">
               <Link
                 href={`/app/exercises/${exercise.slug}/history`}
                 className="text-xs font-medium text-accent hover:underline"

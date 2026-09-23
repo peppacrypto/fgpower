@@ -105,6 +105,9 @@ export async function searchUsers(query: string, viewerId: string | null) {
   const users = await prisma.user.findMany({
     where: {
       profile: { discoverable: true },
+      // Only surface users with a public username — the rest have no openable
+      // profile, so their cards would be dead taps (href="#").
+      username: { not: null },
       OR: [{ username: { contains: query.toLowerCase() } }, { name: { contains: query, mode: "insensitive" } }],
     },
     take: 20,

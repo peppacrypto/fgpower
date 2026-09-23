@@ -47,7 +47,7 @@ export function ExerciseFilterBar({
           className="pl-10"
         />
       </div>
-      <div className="grid grid-cols-3 gap-2 lg:flex">
+      <div className="grid grid-cols-2 gap-2 lg:flex">
         <Select
           defaultValue={searchParams.get("muscleGroup") ?? ""}
           onChange={(e) => updateParam("muscleGroup", e.target.value)}

@@ -47,8 +47,8 @@ export default async function ProgressPage({ searchParams }: PageProps<"/app/pro
             href={`/app/progress?period=${p.value}`}
             className={
               p.value === period
-                ? "rounded-[2px] border border-accent bg-accent-soft px-3 py-1 text-xs font-semibold text-accent"
-                : "rounded-[2px] px-3 py-1 text-xs text-muted hover:bg-surface-2"
+                ? "inline-flex min-h-11 items-center rounded-[2px] border border-accent bg-accent-soft px-3 text-xs font-semibold text-accent"
+                : "inline-flex min-h-11 items-center rounded-[2px] px-3 text-xs text-muted hover:bg-surface-2"
             }
           >
             {p.label}

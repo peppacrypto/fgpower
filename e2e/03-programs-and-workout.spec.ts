@@ -14,7 +14,8 @@ test("choose a ready-made program, start a workout, record a set, and finish", a
 
   await Promise.all([
     page.waitForURL(/\/app\/today/, { timeout: 15_000 }),
-    page.getByRole("button", { name: "Iniciar programa" }).click(),
+    // "Ativar programa" appears in both the masthead and the sticky start bar.
+    page.getByRole("button", { name: "Ativar programa" }).first().click(),
   ]);
 
   // Start workout from Today.
@@ -33,10 +34,13 @@ test("choose a ready-made program, start a workout, record a set, and finish", a
   await page.getByRole("button", { name: "Concluir série" }).click();
   await expect(page.getByText("Descanso")).toBeVisible();
 
-  // Finish the workout (allowed even with sets remaining — a real user may cut a session short).
+  // Finish the workout (allowed even with sets remaining — a real user may cut a
+  // session short). The header "Finalizar" arms a two-step confirm to avoid an
+  // accidental finish; a second tap on "Confirmar" ends the session.
+  await page.getByRole("button", { name: "Finalizar" }).click();
   await Promise.all([
     page.waitForURL(/\/summary/, { timeout: 15_000 }),
-    page.getByRole("button", { name: "Finalizar" }).click(),
+    page.getByRole("button", { name: "Confirmar" }).click(),
   ]);
   await expect(page.getByText("Treino concluído")).toBeVisible();
 

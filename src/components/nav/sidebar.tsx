@@ -20,7 +20,18 @@ export function Sidebar({ isAdmin }: { isAdmin: boolean }) {
 
       <nav className="mt-8 flex flex-1 flex-col gap-1">
         {NAV_ITEMS.map((item) => {
-          const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
+          const active =
+            pathname === item.href ||
+            pathname.startsWith(`${item.href}/`) ||
+            // Feed/Notificações have their own dedicated sidebar links below, so
+            // don't let Perfil's activePaths double-light them on desktop.
+            (item.activePaths?.some(
+              (p) =>
+                p !== "/app/feed" &&
+                p !== "/app/notifications" &&
+                (pathname === p || pathname.startsWith(`${p}/`)),
+            ) ??
+              false);
           const Icon = item.icon;
           return (
             <Link
