@@ -10,7 +10,7 @@ export async function getUserProgram(id: string) {
         include: {
           exercises: {
             orderBy: { sortOrder: "asc" },
-            include: { exercise: { select: { id: true, namePt: true, slug: true } } },
+            include: { exercise: { select: { id: true, namePt: true, slug: true, media: { take: 1, orderBy: { sortOrder: "asc" }, select: { url: true } } } } },
           },
         },
       },

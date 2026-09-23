@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { Play } from "lucide-react";
-import { GArrow, GCheck, Lettermark } from "@/components/ui/glyph";
+import { GArrow, GCheck, GLoad, Lettermark } from "@/components/ui/glyph";
 import { requireUser } from "@/lib/auth/require-user";
 import { getProfile } from "@/lib/data/profile";
 import {
@@ -86,6 +87,7 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
             }
           />
         ) : nextDay ? (
+          <div className="flex flex-col gap-6">
           <div className="relative overflow-hidden panel-raised">
             <span className="absolute left-0 top-0 h-full w-1.5 bg-accent" aria-hidden />
             <div className="p-6 sm:p-8">
@@ -110,16 +112,24 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
                 ) : null}
               </div>
 
-              {/* exercise preview with index numbers */}
+              {/* exercise preview with thumbnails */}
               <ol className="mt-5 flex flex-col divide-y divide-border border-y border-border">
-                {nextDay.exercises.slice(0, 6).map((ex, i) => (
-                  <li key={ex.id} className="flex items-center gap-3 py-2.5">
-                    <span className="w-5 font-mono text-xs text-foreground/30">{String(i + 1).padStart(2, "0")}</span>
-                    <span className="flex-1 truncate text-sm font-medium">{ex.exercise.namePt}</span>
+                {nextDay.exercises.slice(0, 6).map((ex) => (
+                  <li key={ex.id} className="flex items-center gap-3 py-2">
+                    <div className="relative size-10 shrink-0 overflow-hidden rounded-[3px] bg-surface-2">
+                      {ex.exercise.media?.[0]?.url ? (
+                        <Image src={ex.exercise.media[0].url} alt="" fill sizes="40px" className="object-cover" />
+                      ) : (
+                        <div className="flex h-full items-center justify-center text-muted">
+                          <GLoad className="size-4" />
+                        </div>
+                      )}
+                    </div>
+                    <span className="min-w-0 flex-1 truncate text-sm font-medium">{ex.exercise.namePt}</span>
                   </li>
                 ))}
                 {nextDay.exercises.length > 6 ? (
-                  <li className="py-2.5 pl-8 text-xs text-muted">+{nextDay.exercises.length - 6} exercícios</li>
+                  <li className="py-2 pl-[52px] text-xs text-muted">+{nextDay.exercises.length - 6} exercícios</li>
                 ) : null}
               </ol>
 
@@ -130,6 +140,38 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
                 </SubmitButton>
               </form>
             </div>
+          </div>
+
+          {/* Freedom to pick any day of the program, not just the suggested next */}
+          {enrollment && enrollment.program.days.length > 1 ? (
+            <div>
+              <SectionHead label="Treinos do programa" count={`${enrollment.program.days.length} dias`} />
+              <div className="mt-3 flex flex-col gap-2">
+                {enrollment.program.days.map((day) => {
+                  const suggested = day.dayIndex === enrollment.nextDayIndex;
+                  return (
+                    <div key={day.id} className="reg-frame flex items-center gap-3 p-3">
+                      <span className="w-5 shrink-0 font-mono text-xs text-foreground/30">
+                        {String(day.dayIndex + 1).padStart(2, "0")}
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-semibold">{day.name}</p>
+                        <p className="text-xs text-muted">
+                          {day.exercises.length} exercícios
+                          {suggested ? <span className="text-accent"> · sugerido</span> : null}
+                        </p>
+                      </div>
+                      <form action={startAdHocWorkoutSession.bind(null, day.id)}>
+                        <SubmitButton size="sm" variant={suggested ? "primary" : "outline"} pendingLabel="Iniciando…">
+                          Iniciar
+                        </SubmitButton>
+                      </form>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ) : null}
           </div>
         ) : (
           <div className="border-y-2 border-y-[var(--rule-heavy)] bg-surface-2 p-8 text-center">

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { AlertTriangle, Info } from "lucide-react";
+import { GLoad } from "@/components/ui/glyph";
 import { requireUser } from "@/lib/auth/require-user";
 import { getUserProgram } from "@/lib/data/user-programs";
 import { getActiveEnrollment } from "@/lib/data/dashboard";
@@ -112,11 +114,20 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
                 </form>
               ) : null}
             </div>
-            <ul className="mt-2 flex flex-col gap-1 text-sm text-muted">
+            <ul className="mt-3 flex flex-col divide-y divide-border">
               {day.exercises.map((ex) => (
-                <li key={ex.id} className="flex justify-between">
-                  <span>{ex.exercise.namePt}</span>
-                  <span className="font-mono tabular-nums">
+                <li key={ex.id} className="flex items-center gap-3 py-2 text-sm">
+                  <div className="relative size-9 shrink-0 overflow-hidden rounded-[3px] bg-surface-2">
+                    {ex.exercise.media?.[0]?.url ? (
+                      <Image src={ex.exercise.media[0].url} alt="" fill sizes="36px" className="object-cover" />
+                    ) : (
+                      <div className="flex h-full items-center justify-center text-muted">
+                        <GLoad className="size-4" />
+                      </div>
+                    )}
+                  </div>
+                  <span className="min-w-0 flex-1 truncate">{ex.exercise.namePt}</span>
+                  <span className="shrink-0 font-mono tabular-nums text-muted">
                     {ex.sets}×{ex.repMin === ex.repMax ? ex.repMin : `${ex.repMin}-${ex.repMax}`}
                   </span>
                 </li>
