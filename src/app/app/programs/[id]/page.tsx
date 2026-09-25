@@ -6,13 +6,13 @@ import { AlertTriangle, Info } from "lucide-react";
 import { GLoad } from "@/components/ui/glyph";
 import { requireUser } from "@/lib/auth/require-user";
 import { getUserProgram } from "@/lib/data/user-programs";
-import { getActiveEnrollment } from "@/lib/data/dashboard";
+import { getActiveEnrollment, getDaysDoneThisWeek, getInProgressSessions } from "@/lib/data/dashboard";
 import { analyzeUserProgram } from "@/lib/programming/analyze";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { startProgram, archiveProgram, duplicateProgram } from "@/lib/actions/programs";
-import { startAdHocWorkoutSession } from "@/lib/actions/workouts";
+import { DayActions, DayStatus, dayStates } from "@/components/workout/day-actions";
 
 export async function generateMetadata({ params }: PageProps<"/app/programs/[id]">): Promise<Metadata> {
   const { id } = await params;
@@ -26,9 +26,19 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
   const program = await getUserProgram(id);
   if (!program || program.userId !== user.id) notFound();
 
-  const [feedback, activeEnrollment] = await Promise.all([analyzeUserProgram(id), getActiveEnrollment(user.id)]);
+  const [feedback, activeEnrollment, inProgress] = await Promise.all([
+    analyzeUserProgram(id),
+    getActiveEnrollment(user.id),
+    getInProgressSessions(user.id),
+  ]);
   const isActive = program.status === "ACTIVE";
   const otherActive = activeEnrollment && activeEnrollment.programId !== program.id ? activeEnrollment : null;
+  const ownEnrollment = activeEnrollment && activeEnrollment.programId === program.id ? activeEnrollment : null;
+  const doneThisWeek = ownEnrollment
+    ? (await getDaysDoneThisWeek(user.id, ownEnrollment.id, program.days)).byDayId
+    : new Map<string, string>();
+  const states = dayStates(program.days, inProgress, doneThisWeek);
+  const openWithData = inProgress.find((s) => s.hasData);
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
@@ -101,17 +111,33 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
         </div>
       ) : null}
 
+      {isActive && openWithData ? (
+        <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 border-l-2 border-l-warning! bg-warning-soft px-3 py-2 text-xs text-foreground/90">
+          <p className="min-w-0 flex-1">
+            Você tem um treino em andamento: <span className="font-semibold">{openWithData.name}</span>. Finalize ou
+            descarte-o para iniciar outro dia.
+          </p>
+          <Button asChild className="px-3.5">
+            <Link href={`/app/workout/${openWithData.id}`}>Continuar</Link>
+          </Button>
+        </div>
+      ) : null}
+
       <div className="mt-6 flex flex-col gap-3">
         {program.days.map((day) => (
           <div key={day.id} className="reg-frame p-4">
-            <div className="flex items-center justify-between">
-              <h3 className="font-semibold">{day.name}</h3>
+            <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+              <div className="min-w-[7rem] flex-1">
+                <h3 className="font-semibold wrap-break-word">{day.name}</h3>
+                {isActive ? (
+                  <p className="text-xs text-muted">
+                    {day.exercises.length} exercícios
+                    <DayStatus state={states.get(day.id) ?? { kind: "idle" }} suggested={false} />
+                  </p>
+                ) : null}
+              </div>
               {isActive ? (
-                <form action={startAdHocWorkoutSession.bind(null, day.id)}>
-                  <SubmitButton size="sm" pendingLabel="Iniciando…">
-                    Iniciar
-                  </SubmitButton>
-                </form>
+                <DayActions dayId={day.id} state={states.get(day.id) ?? { kind: "idle" }} locked={!!openWithData} />
               ) : null}
             </div>
             <ul className="mt-3 flex flex-col divide-y divide-border">

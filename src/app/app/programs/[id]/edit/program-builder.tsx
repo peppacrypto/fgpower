@@ -147,6 +147,7 @@ export function ProgramBuilder({
       await saveProgramDays(
         programId,
         days.map((d) => ({
+          id: d.id,
           name: d.name,
           focus: d.focus,
           exercises: d.exercises.map((e) => ({

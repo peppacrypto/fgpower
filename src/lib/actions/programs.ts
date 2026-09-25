@@ -72,6 +72,17 @@ async function setAsOnlyActiveProgram(userId: string, programId: string) {
     where: { userId, status: "ACTIVE", id: { not: programId } },
     data: { status: "ARCHIVED", archivedAt: new Date() },
   });
+  // Open workouts with nothing logged are abandoned starts: don't let one
+  // hold Today's "Treino em andamento" slot for the new program. Sessions
+  // with logged sets stay open so the user can finish or discard them.
+  await prisma.workoutSession.updateMany({
+    where: {
+      userId,
+      status: "IN_PROGRESS",
+      setLogs: { none: { OR: [{ isCompleted: true }, { weightKg: { not: null } }, { reps: { not: null } }] } },
+    },
+    data: { status: "DISCARDED" },
+  });
 }
 
 export async function startTemplate(templateSlug: string) {

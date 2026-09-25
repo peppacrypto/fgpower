@@ -4,8 +4,9 @@ import { getWorkoutSessionForExecution, getPreviousPerformance, getExerciseUserN
 import { WorkoutExecutionClient } from "./workout-execution-client";
 import type { ExecutionSession } from "./types";
 
-export default async function WorkoutExecutionPage({ params }: PageProps<"/app/workout/[sessionId]">) {
+export default async function WorkoutExecutionPage({ params, searchParams }: PageProps<"/app/workout/[sessionId]">) {
   const { sessionId } = await params;
+  const sp = await searchParams;
   const user = await requireUser();
   const session = await getWorkoutSessionForExecution(sessionId);
 
@@ -27,6 +28,8 @@ export default async function WorkoutExecutionPage({ params }: PageProps<"/app/w
         exerciseSlug: log.exercise.slug,
         imageUrl: log.exercise.media[0]?.url ?? null,
         sortOrder: log.sortOrder,
+        prescribedSets: log.prescribedSets,
+        warmupSets: log.warmupSets,
         repMin: log.repMin,
         repMax: log.repMax,
         rirTarget: log.rirTarget,
@@ -38,13 +41,14 @@ export default async function WorkoutExecutionPage({ params }: PageProps<"/app/w
           id: s.id,
           setNumber: s.setNumber,
           setType: s.setType,
+          isExtra: s.isExtra,
           weightKg: s.weightKg,
           reps: s.reps,
           rir: s.rir,
           isCompleted: s.isCompleted,
           notes: s.notes,
         })),
-        previousSets: previousSets.map((s) => ({ weightKg: s.weightKg, reps: s.reps, rir: s.rir })),
+        previousSets: previousSets.map((s) => ({ weightKg: s.weightKg, reps: s.reps, rir: s.rir, isExtra: s.isExtra })),
       };
     }),
   );
@@ -55,6 +59,7 @@ export default async function WorkoutExecutionPage({ params }: PageProps<"/app/w
     startedAtIso: session.startedAt.toISOString(),
     notes: session.notes,
     exercises,
+    notice: sp.aviso === "em-andamento" ? "em-andamento" : null,
   };
 
   return <WorkoutExecutionClient session={executionSession} />;

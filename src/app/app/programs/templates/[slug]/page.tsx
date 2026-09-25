@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { requireUser } from "@/lib/auth/require-user";
 import { getTemplateBySlug } from "@/lib/data/templates";
 import { getActiveEnrollment } from "@/lib/data/dashboard";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { startTemplate, customizeTemplate } from "@/lib/actions/programs";
 import { TemplateDossier } from "@/components/programs/template-dossier";
@@ -19,7 +21,14 @@ export default async function TemplateDetailPage({ params }: PageProps<"/app/pro
   const [template, activeEnrollment] = await Promise.all([getTemplateBySlug(slug), getActiveEnrollment(user.id)]);
   if (!template) notFound();
 
-  const enrollForm = (
+  // Already following this template: "Ativar" again would fork a fresh copy
+  // and reset the program to week 1 — send the user to their workouts instead.
+  const alreadyActive = activeEnrollment?.program.sourceTemplateId === template.id;
+  const enrollForm = alreadyActive ? (
+    <Button size="lg" variant="strong" asChild>
+      <Link href="/app/today">Programa ativo · ir para Hoje</Link>
+    </Button>
+  ) : (
     <form action={startTemplate.bind(null, template.slug)}>
       <SubmitButton size="lg" variant="strong" pendingLabel="Ativando…">
         Ativar programa
@@ -39,7 +48,7 @@ export default async function TemplateDetailPage({ params }: PageProps<"/app/pro
               Personalizar
             </SubmitButton>
           </form>
-          {activeEnrollment ? (
+          {activeEnrollment && !alreadyActive ? (
             <p className="w-full text-xs text-muted">
               Isto encerra seu programa ativo atual (
               <span className="font-medium text-foreground">{activeEnrollment.program.name}</span>).

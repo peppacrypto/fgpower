@@ -14,6 +14,7 @@ export default async function EditProgramPage({ params }: PageProps<"/app/progra
   if (!program || program.userId !== user.id) notFound();
 
   const initialDays: BuilderDay[] = program.days.map((day) => ({
+    id: day.id,
     name: day.name,
     focus: day.focus,
     exercises: day.exercises.map((ex) => ({

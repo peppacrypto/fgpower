@@ -12,6 +12,7 @@ export async function checkAndRecordPersonalRecords(userId: string, sessionId: s
   const sets = await prisma.setLog.findMany({
     where: { sessionId, userId, isCompleted: true, setType: { in: ["WORKING", "FAILURE"] } },
     include: { exercise: { select: { id: true } } },
+    orderBy: { setNumber: "asc" },
   });
   if (sets.length === 0) return;
 

@@ -60,16 +60,16 @@ export function RestTimerBar({
       className="fixed inset-x-0 bottom-0 z-30 border-t border-accent/40 bg-accent px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] text-accent-foreground shadow-lg"
     >
       <div className="mx-auto flex max-w-3xl items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
+        <div className="flex min-w-0 items-center gap-3">
           <span className="font-mono text-2xl font-bold tabular-nums">
             {minutes}:{String(seconds).padStart(2, "0")}
           </span>
-          <span className="text-sm font-medium opacity-80">Descanso</span>
+          <span className="hidden text-sm font-medium opacity-80 min-[360px]:inline">Descanso</span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
           <button
             onClick={() => onAdd(15)}
-            className="flex h-9 items-center gap-1 rounded-[3px] bg-black/10 px-3 text-sm font-semibold hover:bg-black/20"
+            className="flex h-11 items-center gap-1 rounded-[3px] bg-black/10 px-3 text-sm font-semibold hover:bg-black/20"
           >
             <Plus className="size-3.5" />
             15s
@@ -77,14 +77,14 @@ export function RestTimerBar({
           <button
             onClick={onTogglePause}
             aria-label={paused ? "Retomar" : "Pausar"}
-            className={cn("flex size-9 items-center justify-center rounded-[3px] bg-black/10 hover:bg-black/20")}
+            className={cn("flex size-11 items-center justify-center rounded-[3px] bg-black/10 hover:bg-black/20")}
           >
             {paused ? <Play className="size-4" /> : <Pause className="size-4" />}
           </button>
           <button
             onClick={onSkip}
             aria-label="Pular descanso"
-            className="flex size-9 items-center justify-center rounded-[3px] bg-black/10 hover:bg-black/20"
+            className="flex size-11 items-center justify-center rounded-[3px] bg-black/10 hover:bg-black/20"
           >
             <X className="size-4" />
           </button>

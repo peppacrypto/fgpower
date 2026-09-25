@@ -6,12 +6,15 @@ import { prisma } from "@/lib/db";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { formatDecimal } from "@/lib/training/set-plan";
 import { ShareWorkoutForm } from "./share-workout-form";
 
+const kg = (v: number | null) => (v == null ? "—" : formatDecimal(v));
+
 const PR_LABEL: Record<string, (v: number, w: number | null, r: number | null) => string> = {
-  MAX_WEIGHT: (v) => `Novo recorde de carga: ${v}kg`,
-  ESTIMATED_1RM: (v) => `Novo 1RM estimado: ${v}kg`,
-  MAX_REPS_AT_WEIGHT: (_v, w, r) => `Novo recorde de repetições: ${w}kg × ${r}`,
+  MAX_WEIGHT: (v) => `Novo recorde de carga: ${kg(v)}kg`,
+  ESTIMATED_1RM: (v) => `Novo 1RM estimado: ${kg(v)}kg`,
+  MAX_REPS_AT_WEIGHT: (_v, w, r) => `Novo recorde de repetições: ${kg(w)}kg × ${r}`,
   SESSION_VOLUME: (v) => `Novo volume recorde: ${Math.round(v)}kg`,
 };
 
@@ -24,7 +27,7 @@ export default async function WorkoutSummaryPage({ params }: PageProps<"/app/wor
     include: {
       exerciseLogs: {
         orderBy: { sortOrder: "asc" },
-        include: { exercise: { select: { namePt: true } }, sets: true },
+        include: { exercise: { select: { namePt: true } }, sets: { orderBy: { setNumber: "asc" } } },
       },
       records: { include: { exercise: { select: { namePt: true } } } },
       activity: true,
@@ -40,7 +43,8 @@ export default async function WorkoutSummaryPage({ params }: PageProps<"/app/wor
         <p className="text-sm font-semibold uppercase tracking-wide text-accent">Treino concluído</p>
         <h1 className="mt-1 text-2xl font-bold tracking-tight">{session.name}</h1>
         <p className="mt-1 text-sm text-muted">
-          {minutes != null ? `${minutes} min` : ""} · {session.totalWorkingSets ?? 0} séries de trabalho
+          {minutes != null ? `${minutes} min` : ""} · {session.totalWorkingSets ?? 0}{" "}
+          {session.totalWorkingSets === 1 ? "série de trabalho" : "séries de trabalho"}
           {session.totalVolumeKg ? ` · ${Math.round(session.totalVolumeKg)}kg de volume` : ""}
         </p>
       </div>
@@ -74,8 +78,9 @@ export default async function WorkoutSummaryPage({ params }: PageProps<"/app/wor
                 <p className="text-sm font-semibold">{log.exercise.namePt}</p>
                 <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 font-mono text-sm tabular-nums text-muted">
                   {workingSets.map((s) => (
-                    <span key={s.id}>
-                      {s.weightKg ?? "—"}kg × {s.reps ?? "—"}
+                    <span key={s.id} className={s.isExtra ? "text-foreground/70" : undefined}>
+                      {s.isExtra ? <span className="mr-1 text-[10px] font-bold uppercase text-warning">extra</span> : null}
+                      {kg(s.weightKg)}kg × {s.reps ?? "—"}
                     </span>
                   ))}
                 </div>

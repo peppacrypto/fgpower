@@ -4,10 +4,10 @@
 // layout when it (or its providers) throws. Must render its own <html>/<body>.
 export default function GlobalError({
   error,
-  reset,
+  retry,
 }: {
   error: Error & { digest?: string };
-  reset: () => void;
+  retry: () => void;
 }) {
   return (
     <html lang="pt-BR">
@@ -32,7 +32,7 @@ export default function GlobalError({
           Ocorreu um erro inesperado. Tente recarregar a página.
         </span>
         <button
-          onClick={reset}
+          onClick={() => retry()}
           style={{
             marginTop: "8px",
             background: "#b4e600",

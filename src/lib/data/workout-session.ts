@@ -18,7 +18,11 @@ export async function getWorkoutSessionForExecution(sessionId: string) {
   });
 }
 
-/** The user's most recent COMPLETED performance for an exercise, excluding the current session. */
+/**
+ * The user's most recent COMPLETED performance for an exercise, excluding the
+ * current session. Only logs where at least one working set was actually done
+ * count — an exercise skipped or left empty must not hide the last real loads.
+ */
 export async function getPreviousPerformance(userId: string, exerciseId: string, excludeSessionId: string) {
   const lastLog = await prisma.workoutExerciseLog.findFirst({
     where: {
@@ -26,6 +30,7 @@ export async function getPreviousPerformance(userId: string, exerciseId: string,
       exerciseId,
       sessionId: { not: excludeSessionId },
       session: { status: "COMPLETED" },
+      sets: { some: { isCompleted: true, setType: "WORKING" } },
     },
     orderBy: { createdAt: "desc" },
     include: { sets: { where: { isCompleted: true, setType: "WORKING" }, orderBy: { setNumber: "asc" } } },

@@ -845,6 +845,8 @@ model SetLog {
   exercise      Exercise           @relation(fields: [exerciseId], references: [id], onDelete: Restrict)
   setNumber     Int
   setType       SetType            @default(WORKING)
+  /// Added by the user beyond the program's prescription ("série extra").
+  isExtra       Boolean            @default(false)
   weightKg      Float?
   reps          Int?
   rir           Float?

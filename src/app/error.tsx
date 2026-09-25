@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 
 export default function Error({
   error,
-  reset,
+  retry,
 }: {
   error: Error & { digest?: string };
-  reset: () => void;
+  retry: () => void;
 }) {
   useEffect(() => {
     // Surface to the server/observability in dev; digest links to the server log in prod.
@@ -25,7 +25,9 @@ export default function Error({
       {error.digest ? (
         <p className="mt-1 font-mono text-[11px] text-muted">ref: {error.digest}</p>
       ) : null}
-      <Button variant="strong" className="mt-6" onClick={reset}>
+      {/* retry() re-fetches the segment from the server; reset() would only
+          re-mount the stale tree (e.g. a workout that was actually saved). */}
+      <Button variant="strong" className="mt-6" onClick={() => retry()}>
         Tentar novamente
       </Button>
     </div>
