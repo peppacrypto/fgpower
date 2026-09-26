@@ -5,9 +5,11 @@ import { requireUser } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 import { getExerciseHistory, getExercisePersonalRecords } from "@/lib/data/history";
 import { estimate1Rm } from "@/lib/training/estimated-1rm";
+import { formatAppDate } from "@/lib/training/week";
 import { Card, CardContent } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/misc";
 import { ProgressionChart, type ChartPoint } from "./progression-charts";
+import { formatDecimal } from "@/lib/training/set-plan";
 
 const PR_LABEL: Record<string, string> = {
   MAX_WEIGHT: "Maior carga",
@@ -51,7 +53,7 @@ export default async function ExerciseHistoryPage({ params }: PageProps<"/app/ex
   const chartData: ChartPoint[] = history.map((p) => {
     const est = p.bestWeightKg != null && p.bestReps != null ? estimate1Rm(p.bestWeightKg, p.bestReps) : null;
     return {
-      dateLabel: p.date.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" }),
+      dateLabel: formatAppDate(p.date, { day: "2-digit", month: "2-digit" }),
       bestWeightKg: p.bestWeightKg,
       estimated1RmKg: est?.epleyKg ?? null,
       sessionVolumeKg: Math.round(p.sessionVolumeKg),
@@ -64,8 +66,8 @@ export default async function ExerciseHistoryPage({ params }: PageProps<"/app/ex
     <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
       <h1 className="text-2xl font-bold tracking-tight">{exercise.namePt}</h1>
       <p className="mt-1 text-sm text-muted">
-        {history.length} sessões registradas · última em{" "}
-        {last.date.toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" })}
+        {history.length} {history.length === 1 ? "sessão registrada" : "sessões registradas"} · última em{" "}
+        {formatAppDate(last.date, { day: "2-digit", month: "long", year: "numeric" })}
       </p>
 
       {prs.length > 0 ? (
@@ -75,7 +77,11 @@ export default async function ExerciseHistoryPage({ params }: PageProps<"/app/ex
               <CardContent className="py-3.5">
                 <p className="text-[11px] font-medium text-muted">{PR_LABEL[pr.kind]}</p>
                 <p className="mt-0.5 font-mono text-lg font-bold tabular-nums">
-                  {pr.kind === "MAX_REPS_AT_WEIGHT" ? `${pr.weightKg}×${pr.reps}` : Math.round(pr.value * 10) / 10}
+                  {pr.kind === "MAX_REPS_AT_WEIGHT"
+                    ? `${formatDecimal(pr.weightKg) || "—"}×${pr.reps}`
+                    : pr.kind === "SESSION_VOLUME"
+                      ? Math.round(pr.value)
+                      : formatDecimal(Math.round(pr.value * 10) / 10)}
                   {pr.kind !== "MAX_REPS_AT_WEIGHT" ? "kg" : ""}
                 </p>
               </CardContent>
@@ -98,10 +104,10 @@ export default async function ExerciseHistoryPage({ params }: PageProps<"/app/ex
           {[...history].reverse().map((p, i) => (
             <div key={i} className="flex justify-between rounded-[var(--radius-sm)] bg-surface-2 px-3.5 py-2">
               <span className="text-muted">
-                {p.date.toLocaleDateString("pt-BR", { day: "2-digit", month: "short" })}
+                {formatAppDate(p.date, { day: "2-digit", month: "short" })}
               </span>
               <span className="tabular-nums">
-                {p.bestWeightKg ?? "—"}kg × {p.bestReps ?? "—"}
+                {formatDecimal(p.bestWeightKg) || "—"}kg × {p.bestReps ?? "—"}
               </span>
             </div>
           ))}

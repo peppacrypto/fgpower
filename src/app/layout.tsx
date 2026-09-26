@@ -29,7 +29,11 @@ export const metadata: Metadata = {
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
-    statusBarStyle: "black-translucent",
+    // "default" lays the installed app out below the iOS status bar, with
+    // status text that follows the system appearance. "black-translucent"
+    // drew every page under the clock (workout "Finalizar" included) with
+    // white text that vanished on the light theme.
+    statusBarStyle: "default",
     title: "FGPOWER",
   },
   openGraph: {
@@ -43,9 +47,10 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
+  // Matches --background in globals.css for each scheme.
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f7f7f5" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a0b" },
+    { media: "(prefers-color-scheme: light)", color: "#fafafb" },
+    { media: "(prefers-color-scheme: dark)", color: "#0b0c0e" },
   ],
 };
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils/cn";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Select, Textarea } from "@/components/ui/input";
@@ -33,6 +33,10 @@ const SESSION_MINUTES = [30, 45, 60, 75, 90, 120];
 
 const initialState: OnboardingFormState = {};
 
+// Step headings are script focus targets, not controls: no focus ring (inline
+// so it beats the global :focus-visible rule).
+const FOCUS_TARGET = { outline: "none" } as const;
+
 export function OnboardingWizard() {
   const [state, formAction, pending] = useActionState(completeOnboarding, initialState);
   const [step, setStep] = useState(0);
@@ -46,6 +50,14 @@ export function OnboardingWizard() {
     setPreferredDays((prev) => (prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]));
   }
 
+  // Step headings take focus when the step changes, so screen readers and the
+  // phone keyboard (which closes) both land on the new question.
+  const stepChanged = useRef(false);
+  useEffect(() => {
+    if (!stepChanged.current) return;
+    document.getElementById(`onboarding-step-${step}`)?.focus();
+  }, [step]);
+
   // Step 0 requires a name. Gate it here — the required input lives in a
   // hidden section on later steps, so browser validation can't surface there.
   function goNext() {
@@ -53,11 +65,27 @@ export function OnboardingWizard() {
       setNameError(true);
       return;
     }
+    stepChanged.current = true;
     setStep((s) => Math.min(totalSteps - 1, s + 1));
   }
 
+  function goBack() {
+    stepChanged.current = true;
+    setStep((s) => Math.max(0, s - 1));
+  }
+
+  // Enter / "Ir" in the name field triggers the browser's implicit form
+  // submission. Before the last step that must mean "next", never "finish
+  // with the defaults of every step the user hasn't seen".
+  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    if (step < totalSteps - 1) {
+      e.preventDefault();
+      goNext();
+    }
+  }
+
   return (
-    <form action={formAction} className="w-full max-w-lg">
+    <form action={formAction} onSubmit={onSubmit} noValidate className="w-full max-w-lg">
       <ProgressBar value={((step + 1) / totalSteps) * 100} className="mb-8" />
 
       {state.error ? (
@@ -68,7 +96,9 @@ export function OnboardingWizard() {
 
       {/* Step 0 — name */}
       <section hidden={step !== 0} className="flex flex-col gap-4">
-        <h2 className="text-xl font-bold tracking-tight">Como podemos te chamar?</h2>
+        <h2 id="onboarding-step-0" tabIndex={-1} style={FOCUS_TARGET} className="text-xl font-bold tracking-tight">
+          Como podemos te chamar?
+        </h2>
         <div>
           <Label htmlFor="displayName">Nome de exibição</Label>
           <Input
@@ -78,6 +108,8 @@ export function OnboardingWizard() {
             required
             className="mt-1.5"
             maxLength={60}
+            autoComplete="given-name"
+            enterKeyHint="next"
             value={name}
             onChange={(e) => {
               setName(e.target.value);
@@ -95,14 +127,18 @@ export function OnboardingWizard() {
 
       {/* Step 1 — goal */}
       <section hidden={step !== 1} className="flex flex-col gap-4">
-        <h2 className="text-xl font-bold tracking-tight">Qual é o seu principal objetivo?</h2>
+        <h2 id="onboarding-step-1" tabIndex={-1} style={FOCUS_TARGET} className="text-xl font-bold tracking-tight">
+          Qual é o seu principal objetivo?
+        </h2>
         <RadioCardGroup name="goal" options={GOALS} defaultValue="HYPERTROPHY" />
       </section>
 
       {/* Step 2 — experience + frequency */}
       <section hidden={step !== 2} className="flex flex-col gap-6">
         <div className="flex flex-col gap-4">
-          <h2 className="text-xl font-bold tracking-tight">Qual sua experiência com treino?</h2>
+          <h2 id="onboarding-step-2" tabIndex={-1} style={FOCUS_TARGET} className="text-xl font-bold tracking-tight">
+          Qual sua experiência com treino?
+        </h2>
           <RadioCardGroup name="experience" options={EXPERIENCE} defaultValue="BEGINNER" />
         </div>
         <div className="grid grid-cols-2 gap-4">
@@ -155,7 +191,9 @@ export function OnboardingWizard() {
       {/* Step 3 — equipment + optional */}
       <section hidden={step !== 3} className="flex flex-col gap-6">
         <div className="flex flex-col gap-4">
-          <h2 className="text-xl font-bold tracking-tight">Onde você vai treinar?</h2>
+          <h2 id="onboarding-step-3" tabIndex={-1} style={FOCUS_TARGET} className="text-xl font-bold tracking-tight">
+          Onde você vai treinar?
+        </h2>
           <RadioCardGroup name="equipmentAccess" options={EQUIPMENT} defaultValue="FULL_GYM" />
         </div>
 
@@ -196,7 +234,7 @@ export function OnboardingWizard() {
         <Button
           type="button"
           variant="ghost"
-          onClick={() => setStep((s) => Math.max(0, s - 1))}
+          onClick={goBack}
           className={step === 0 ? "invisible" : ""}
         >
           Voltar

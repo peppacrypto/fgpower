@@ -2,6 +2,7 @@ import { test, expect, devices } from "@playwright/test";
 import {
   QUINTA,
   finishAndSave,
+  isSetSync,
   newUserOnGd1,
   openFinishSheet,
   recordSet,
@@ -26,14 +27,15 @@ test("a correction made on another device is not overwritten by a stale screen",
   await phone2.goto(url);
   await waitForWorkoutScreen(phone2);
   const kg2 = phone2.getByLabel("Série 1 — kg", { exact: true });
+  // Typing autosaves it (the set outbox, after a short pause or on leaving
+  // the box) — wait for that save from before the first keystroke.
+  const saved = phone2.waitForResponse(
+    (r) => isSetSync(r) && (r.request().postData() ?? "").includes('"weightKg":50'),
+    { timeout: 15_000 },
+  );
   await kg2.fill("50");
-  // Leaving the box autosaves it (a server action POST).
-  await Promise.all([
-    phone2.waitForResponse((r) => r.request().method() === "POST" && r.url().includes("/app/workout/"), {
-      timeout: 15_000,
-    }),
-    phone2.getByLabel("Série 1 — repetições", { exact: true }).click(),
-  ]);
+  await phone2.getByLabel("Série 1 — repetições", { exact: true }).click();
+  await saved;
   await other.close();
 
   // The first phone (still showing 40) finishes: the 50 must survive.

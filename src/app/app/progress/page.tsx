@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { TrendingUp } from "lucide-react";
-import { Lettermark } from "@/components/ui/glyph";
+import { GArrow, Lettermark } from "@/components/ui/glyph";
 import { requireUser } from "@/lib/auth/require-user";
 import { getProgressSummary, getExerciseProgressDeltas, type ProgressPeriod } from "@/lib/data/progress";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/misc";
+import { formatDecimal } from "@/lib/training/set-plan";
 
 export const metadata: Metadata = { title: "Progresso" };
 
@@ -20,9 +21,9 @@ const PERIODS: { value: ProgressPeriod; label: string }[] = [
 ];
 
 const PR_LABEL: Record<string, (v: number, w: number | null, r: number | null) => string> = {
-  MAX_WEIGHT: (v) => `${v}kg`,
-  ESTIMATED_1RM: (v) => `1RM ~${v}kg`,
-  MAX_REPS_AT_WEIGHT: (_v, w, r) => `${w}kg × ${r}`,
+  MAX_WEIGHT: (v) => `${formatDecimal(v)}kg`,
+  ESTIMATED_1RM: (v) => `1RM ~${formatDecimal(Math.round(v * 10) / 10)}kg`,
+  MAX_REPS_AT_WEIGHT: (_v, w, r) => `${formatDecimal(w) || "—"}kg × ${r}`,
   SESSION_VOLUME: (v) => `${Math.round(v)}kg de volume`,
 };
 
@@ -38,7 +39,17 @@ export default async function ProgressPage({ searchParams }: PageProps<"/app/pro
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
-      <h1 className="text-2xl font-bold tracking-tight">Progresso</h1>
+      <div className="flex items-baseline justify-between gap-4">
+        <h1 className="text-2xl font-bold tracking-tight">Progresso</h1>
+        {/* Every past workout, by date and on the calendar. */}
+        <Link
+          href="/app/history"
+          className="-my-2 inline-flex items-center gap-1 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
+        >
+          Histórico
+          <GArrow className="size-3" />
+        </Link>
+      </div>
 
       <div className="mt-4 flex flex-wrap gap-1.5">
         {PERIODS.map((p) => (
@@ -57,12 +68,17 @@ export default async function ProgressPage({ searchParams }: PageProps<"/app/pro
       </div>
 
       <div className="mt-6 grid grid-cols-2 gap-3">
-        <Card>
-          <CardContent className="pt-5">
-            <p className="text-xs font-medium text-muted">Treinos concluídos</p>
-            <p className="mt-1 font-mono text-2xl font-bold tabular-nums">{summary.sessionCount}</p>
-          </CardContent>
-        </Card>
+        <Link href="/app/history" aria-label={`Treinos concluídos: ${summary.sessionCount} — ver histórico`}>
+          <Card className="is-link h-full">
+            <CardContent className="pt-5">
+              <p className="flex items-center justify-between gap-2 text-xs font-medium text-muted">
+                Treinos concluídos
+                <GArrow className="size-3" />
+              </p>
+              <p className="mt-1 font-mono text-2xl font-bold tabular-nums">{summary.sessionCount}</p>
+            </CardContent>
+          </Card>
+        </Link>
         <Card>
           <CardContent className="pt-5">
             <p className="text-xs font-medium text-muted">Consistência</p>
@@ -122,9 +138,9 @@ export default async function ProgressPage({ searchParams }: PageProps<"/app/pro
           <div className="flex flex-col gap-2">
             {summary.recentPrs.map((pr) => (
               <Card key={pr.id}>
-                <CardContent className="flex items-center justify-between py-3.5">
-                  <span className="text-sm font-medium">{pr.exercise.namePt}</span>
-                  <span className="font-mono text-sm tabular-nums text-muted">
+                <CardContent className="flex items-center justify-between gap-3 py-3.5">
+                  <span className="min-w-0 flex-1 text-sm font-medium">{pr.exercise.namePt}</span>
+                  <span className="shrink-0 whitespace-nowrap font-mono text-sm tabular-nums text-muted">
                     {PR_LABEL[pr.kind]?.(pr.value, pr.weightKg, pr.reps)}
                   </span>
                 </CardContent>

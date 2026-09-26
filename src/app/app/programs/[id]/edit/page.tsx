@@ -38,6 +38,7 @@ export default async function EditProgramPage({ params }: PageProps<"/app/progra
       programName={program.name}
       programDescription={program.description ?? ""}
       initialDays={initialDays}
+      version={program.updatedAt.toISOString()}
     />
   );
 }

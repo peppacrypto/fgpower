@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Check, Plus, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { formatDecimal, type SetKind } from "@/lib/training/set-plan";
@@ -14,7 +14,13 @@ export interface SetTableRowModel {
   values: Record<DraftField, string>;
   suggestion: { weightKg: number | null; reps: number | null };
   done: boolean;
-  saving: boolean;
+  /**
+   * The row's trip to the server: "sending" until the server confirms it
+   * (also while queued behind another save), "pending" once a send failed —
+   * it is kept on this device and resent by itself (never "tap ✓ again") —
+   * and "held" while the login has expired: it waits for the user to sign in.
+   */
+  sync: "sending" | "pending" | "held" | null;
   error: string | null;
   /** Only kg or only reps typed: the empty box, flagged — the row won't count. */
   missing: "weight" | "reps" | null;
@@ -97,7 +103,7 @@ export function SetTable({
       {extras.length > 0 ? (
         <section aria-label="Séries extras" className="mt-4 border-t-2 border-dashed border-foreground/35! pt-3">
           <BlockLabel>
-            Séries extras <span className="tag tag--mark ml-1 align-middle text-[9px]">além do prescrito</span>
+            Séries extras <span className="tag tag--mark ml-1 align-middle">além do prescrito</span>
           </BlockLabel>
           <div className="flex flex-col gap-2.5">
             {extras.map((row) => (
@@ -146,7 +152,7 @@ function RemoveExtraButton({ row, onRemove }: { row: SetTableRowModel; onRemove:
           if (hasValues && !armed) setArmed(true);
           else onRemove();
         }}
-        disabled={row.saving}
+        disabled={row.sync === "sending"}
         className={cn(
           "inline-flex min-h-11 items-center gap-1 px-1 text-xs disabled:opacity-40",
           armed ? "font-semibold text-danger" : "text-muted hover:text-danger",
@@ -189,17 +195,34 @@ function SetRowInputs({
   onToggle: (id: string) => void;
 }) {
   const name = rowName(row);
+  const repsRef = useRef<HTMLInputElement>(null);
+  /**
+   * Keyboard flow: "next" on kg jumps to reps; "done" on reps (or RIR)
+   * completes the row like ✓ and closes the keyboard, so the rest starts.
+   */
+  const onEnter = (f: DraftField) => (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key !== "Enter" || e.nativeEvent.isComposing) return;
+    e.preventDefault();
+    if (f === "weight") {
+      repsRef.current?.focus();
+      return;
+    }
+    if (!row.done) onToggle(row.id);
+    e.currentTarget.blur();
+  };
   const field = (f: DraftField, label: string, placeholder: string, inputMode: "decimal" | "numeric") => (
     <input
+      ref={f === "reps" ? repsRef : undefined}
       type="text"
       inputMode={inputMode}
       autoComplete="off"
-      enterKeyHint="done"
+      enterKeyHint={f === "weight" ? "next" : "done"}
       aria-label={`${name} — ${label}`}
       value={row.values[f]}
       placeholder={placeholder}
       onChange={(e) => onChange(row.id, f, e.target.value)}
       onBlur={() => onBlurRow(row.id)}
+      onKeyDown={onEnter(f)}
       className={cn(
         "h-11 w-full min-w-0 rounded-[3px] border bg-surface px-1 text-center font-mono text-base font-semibold tabular-nums placeholder:font-normal placeholder:italic placeholder:text-muted",
         // `!`: the global `* { border-color }` rule is unlayered and would win.
@@ -209,7 +232,7 @@ function SetRowInputs({
   );
 
   return (
-    <div>
+    <div data-set-row={row.id}>
       <div
         className={cn(
           GRID,
@@ -231,22 +254,26 @@ function SetRowInputs({
         <button
           type="button"
           onClick={() => onToggle(row.id)}
-          disabled={row.saving}
           aria-pressed={row.done}
           aria-label={row.done ? `${name} feita — toque para desfazer` : `Concluir ${name.toLowerCase()}`}
+          data-sync={row.sync ?? undefined}
           className={cn(
-            "flex size-11 items-center justify-center rounded-[3px] transition-colors disabled:opacity-60",
+            "flex size-11 items-center justify-center rounded-[3px] transition-colors",
             row.done
               ? "bg-accent text-accent-foreground shadow-[inset_0_-2px_0_var(--keel)]"
               : "border-2 border-foreground/50! text-foreground/60 hover:border-accent! hover:text-accent",
           )}
         >
-          <Check className={cn("size-5", row.saving ? "animate-pulse" : "")} strokeWidth={3} />
+          <Check className={cn("size-5", row.sync === "sending" ? "animate-pulse" : "")} strokeWidth={3} />
         </button>
       </div>
       {row.error ? (
         <p role="alert" className="px-1 pt-1 text-[11px] font-medium text-danger">
           {row.error}
+        </p>
+      ) : row.sync === "pending" || row.sync === "held" ? (
+        <p className="px-1 pt-1 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-warning">
+          {row.sync === "held" ? "Pendente · entre de novo" : "Pendente · reenviando"}
         </p>
       ) : null}
     </div>

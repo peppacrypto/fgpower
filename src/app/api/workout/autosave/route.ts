@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { saveSetValues, type LogSetInput } from "@/lib/actions/workouts";
+import { isSameOrigin } from "../same-origin";
 
 /**
  * Last-chance autosave of typed set values when the workout page is being
@@ -9,8 +10,8 @@ import { saveSetValues, type LogSetInput } from "@/lib/actions/workouts";
  */
 export async function POST(request: Request) {
   // Same-origin only: the session cookie must not be usable from another site.
-  const origin = request.headers.get("origin");
-  if (origin && new URL(origin).host !== request.headers.get("host")) {
+  // An opaque origin ("null", from a sandboxed frame or a privacy redirect) is refused too.
+  if (!isSameOrigin(request)) {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
   const body = (await request.json().catch(() => null)) as { rows?: unknown } | null;

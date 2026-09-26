@@ -11,7 +11,7 @@ export default async function OnboardingPage() {
   }
 
   return (
-    <div className="flex min-h-dvh flex-col items-center bg-background px-4 py-10">
+    <div className="flex min-h-dvh flex-col items-center bg-background px-4 pt-[max(2.5rem,env(safe-area-inset-top))] pb-[max(2.5rem,env(safe-area-inset-bottom))]">
       <div className="mb-10">
         <Wordmark iconSize={32} />
       </div>

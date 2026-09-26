@@ -11,6 +11,11 @@ test("choose a ready-made program, start a workout, record a set, and finish", a
   await page.goto("/app/programs");
   await page.getByText("Adaptação FGPOWER").first().click();
   await expect(page.getByRole("heading", { name: /Adaptação FGPOWER/i })).toBeVisible();
+  // Every exercise of the plan opens its technique page.
+  await page.waitForURL(/\/app\/programs\/templates\//);
+  const planRows = page.locator("#estrutura li a");
+  await expect(planRows.first()).toHaveAttribute("href", /^\/app\/exercises\/[^/]+$/);
+  expect(await planRows.count()).toBeGreaterThan(5);
 
   await Promise.all([
     page.waitForURL(/\/app\/today/, { timeout: 15_000 }),
@@ -76,4 +81,27 @@ test("create a custom program and save it", async ({ page }) => {
   await expect(page.locator("text=Supino").first()).toBeVisible();
   await page.getByRole("button", { name: "Salvar programa" }).click();
   await expect(page.getByRole("button", { name: /Salvo/ })).toBeVisible({ timeout: 10_000 });
+});
+
+test("a program without exercises can't be started, and says why", async ({ page }) => {
+  await loginAsTestUser(page, `empty-program-${Date.now()}@fgpower.dev`);
+  await completeOnboarding(page);
+
+  await page.goto("/app/programs/new");
+  await page.getByLabel("Nome do programa").fill("Programa vazio E2E");
+  await Promise.all([
+    page.waitForURL(/\/app\/programs\/.+\/edit/, { timeout: 15_000 }),
+    page.getByRole("button", { name: "Continuar" }).click(),
+  ]);
+  const programUrl = page.url().replace(/\/edit$/, "");
+
+  await page.goto(programUrl);
+  await expect(page.getByRole("button", { name: "Iniciar este programa" })).toBeDisabled();
+  await expect(page.getByText("Adicione ao menos um exercício para iniciar.")).toBeVisible();
+  await expect(page.getByRole("link", { name: "Editar programa" })).toHaveAttribute("href", /\/edit$/);
+
+  // Today never shows the half-started "Sem programa ativo" + "PROGRAMA · Vazio" mix.
+  await page.goto("/app/today");
+  await expect(page.getByText("Sem programa ativo.")).toBeVisible();
+  await expect(page.getByText("Programa vazio E2E")).toHaveCount(0);
 });

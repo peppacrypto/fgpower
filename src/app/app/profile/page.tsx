@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Bell, Heart, Settings, ExternalLink } from "lucide-react";
-import { GCohort } from "@/components/ui/glyph";
+import { Bell, BookOpen, Heart, History, Settings, ExternalLink } from "lucide-react";
+import { GArrow, GCohort } from "@/components/ui/glyph";
 import { requireUser } from "@/lib/auth/require-user";
 import { getProfile } from "@/lib/data/profile";
 import { listFavoriteExercises } from "@/lib/data/favorites";
@@ -71,28 +71,46 @@ export default async function ProfilePage() {
         </Link>
       )}
 
-      <div className="mt-5 flex gap-2 sm:hidden">
-        <Button variant="outline" size="sm" className="flex-1" asChild>
+      {/* On the phone these have no tab; the desktop sidebar links them directly. */}
+      <div className="mt-5 grid grid-cols-2 gap-2 sm:hidden">
+        <Button variant="outline" size="sm" asChild>
           <Link href="/app/feed">
             <GCohort className="size-4" />
             Feed
           </Link>
         </Button>
-        <Button variant="outline" size="sm" className="flex-1" asChild>
+        <Button variant="outline" size="sm" asChild>
           <Link href="/app/notifications">
             <Bell className="size-4" />
             Notificações
           </Link>
         </Button>
+        <Button variant="outline" size="sm" asChild>
+          <Link href="/app/history">
+            <History className="size-4" />
+            Histórico
+          </Link>
+        </Button>
+        <Button variant="outline" size="sm" asChild>
+          <Link href="/app/science">
+            <BookOpen className="size-4" />
+            Ciência
+          </Link>
+        </Button>
       </div>
 
       <div className="mt-6 grid grid-cols-3 gap-3 text-center">
-        <Card>
-          <CardContent className="py-4">
-            <p className="font-mono text-xl font-bold tabular-nums">{sessionCount}</p>
-            <p className="text-xs text-muted">Treinos</p>
-          </CardContent>
-        </Card>
+        <Link href="/app/history" aria-label={`${sessionCount} treinos — ver histórico`}>
+          <Card className="is-link h-full">
+            <CardContent className="py-4">
+              <p className="font-mono text-xl font-bold tabular-nums">{sessionCount}</p>
+              <p className="flex items-center justify-center gap-1 text-xs text-muted">
+                Treinos
+                <GArrow className="size-3" />
+              </p>
+            </CardContent>
+          </Card>
+        </Link>
         <Card>
           <CardContent className="py-4">
             <p className="font-mono text-xl font-bold tabular-nums">{followerCount}</p>

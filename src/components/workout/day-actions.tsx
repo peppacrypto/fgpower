@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { startAdHocWorkoutSession } from "@/lib/actions/workouts";
 import { resolveSessionDay } from "@/lib/training/day-match";
+import { InlineActionForm } from "./inline-action-form";
 import { RedoDayButton } from "./redo-day-button";
 
 export type DayState =
@@ -46,24 +47,33 @@ export function dayStates(
   return states;
 }
 
+/** "6 exercícios" — or, for a day with none yet, "Sem exercícios". */
+export function exerciseCount(n: number) {
+  return n === 0 ? "Sem exercícios" : n === 1 ? "1 exercício" : `${n} exercícios`;
+}
+
 /**
  * The action for one program day. A day already trained this week opens its
  * saved result ("Ver") — training it again is an explicit, confirmed
  * "Refazer" — and a day in progress continues the same session. Starting is
  * locked while another workout with logged sets is open, so a second copy of
- * a day can never be created.
+ * a day can never be created. A day without exercises can't be started (it
+ * would open a blank workout); it offers the program editor instead.
  */
 export function DayActions({
   dayId,
   state,
   locked,
   emphasize = false,
+  editHref,
 }: {
   dayId: string;
   state: DayState;
   /** Another workout with logged sets is in progress. */
   locked: boolean;
   emphasize?: boolean;
+  /** Set when the day has no exercises: where to add some. */
+  editHref?: string;
 }) {
   if (state.kind === "in-progress") {
     return (
@@ -89,6 +99,13 @@ export function DayActions({
       </div>
     );
   }
+  if (editHref) {
+    return (
+      <Button variant="ghost" asChild className="ml-auto shrink-0 px-3.5">
+        <Link href={editHref}>Editar</Link>
+      </Button>
+    );
+  }
   if (locked) {
     return (
       <Button variant="outline" disabled className="ml-auto shrink-0 px-3.5">
@@ -97,11 +114,16 @@ export function DayActions({
     );
   }
   return (
-    <form action={startAdHocWorkoutSession.bind(null, dayId)} className="ml-auto shrink-0">
+    <InlineActionForm
+      action={startAdHocWorkoutSession.bind(null, dayId)}
+      failText="Não foi possível iniciar. Tente de novo."
+      className="ml-auto flex shrink-0 flex-col items-end"
+      errorClassName="mt-1 max-w-[13rem] text-right text-[11px] leading-snug"
+    >
       <SubmitButton variant={emphasize ? "primary" : "outline"} className="px-3.5" pendingLabel="Iniciando…">
         Iniciar
       </SubmitButton>
-    </form>
+    </InlineActionForm>
   );
 }
 

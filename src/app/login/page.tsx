@@ -3,16 +3,18 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import { Wordmark } from "@/components/brand/logo";
 import { getCurrentSession } from "@/lib/auth/require-user";
+import { safeNextPath } from "@/lib/auth/safe-next";
 import { GoogleSignInButton } from "./google-sign-in-button";
 
-export default async function LoginPage() {
+export default async function LoginPage({ searchParams }: PageProps<"/login">) {
+  const next = safeNextPath((await searchParams).next);
   const session = await getCurrentSession();
   if (session) {
-    redirect("/app/today");
+    redirect(next ?? "/app/today");
   }
 
   return (
-    <div className="flex min-h-dvh flex-col items-center justify-center bg-background px-4 py-10">
+    <div className="flex min-h-dvh flex-col items-center justify-center bg-background px-4 pt-[max(2.5rem,env(safe-area-inset-top))] pb-[max(2.5rem,env(safe-area-inset-bottom))]">
       <div className="w-full max-w-md">
         <div className="mb-6 flex justify-center">
           <Wordmark iconSize={34} />
@@ -39,7 +41,7 @@ export default async function LoginPage() {
             </p>
 
             <div className="mt-6">
-              <GoogleSignInButton googleConfigured={Boolean(process.env.GOOGLE_CLIENT_ID)} />
+              <GoogleSignInButton googleConfigured={Boolean(process.env.GOOGLE_CLIENT_ID)} next={next} />
             </div>
 
             <p className="mt-6 text-center text-xs text-muted">

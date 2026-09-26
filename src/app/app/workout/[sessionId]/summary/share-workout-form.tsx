@@ -26,6 +26,7 @@ export function ShareWorkoutForm({
   const [showDetailedLoads, setShowDetailedLoads] = useState(initialShowDetailedLoads);
   const [caption, setCaption] = useState(initialCaption);
   const [saved, setSaved] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
   return (
@@ -83,13 +84,28 @@ export function ShareWorkoutForm({
         disabled={pending}
         onClick={() =>
           startTransition(async () => {
-            await shareWorkoutSession({ sessionId, visibility, showDetailedLoads, caption });
-            setSaved(true);
+            setError(null);
+            try {
+              await shareWorkoutSession({ sessionId, visibility, showDetailedLoads, caption });
+              setSaved(true);
+            } catch {
+              // Keep the choices on screen; a failed save must not replace the page.
+              setError(
+                typeof navigator !== "undefined" && !navigator.onLine
+                  ? "Sem conexão — não salvou. Tente de novo quando voltar o sinal."
+                  : "Não foi possível salvar agora. Tente de novo.",
+              );
+            }
           })
         }
       >
         {pending ? "Salvando…" : saved ? "Salvo" : "Salvar"}
       </Button>
+      {error ? (
+        <p role="alert" className="text-xs font-medium text-danger">
+          {error}
+        </p>
+      ) : null}
     </div>
   );
 }

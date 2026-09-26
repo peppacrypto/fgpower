@@ -48,18 +48,21 @@ interface DossierTemplate {
  * evidence. Long prose sections (description, science) are collapsible so the
  * actual plan sits near the top. `actions` is the masthead CTA (start/customize
  * in-app, or login on the public page); `stickyActions`, when given, also pins a
- * start CTA to the bottom of the (very tall) page. `scienceHref` prefixes
- * principle links. */
+ * start CTA to the bottom of the (very tall) page, just above the mobile nav.
+ * `scienceHref` prefixes principle links and `exerciseHref` the exercise
+ * technique pages each plan row opens. */
 export function TemplateDossier({
   template,
   actions,
   stickyActions,
   scienceHref,
+  exerciseHref = "/exercises",
 }: {
   template: DossierTemplate;
   actions: React.ReactNode;
   stickyActions?: React.ReactNode;
   scienceHref: string;
+  exerciseHref?: string;
 }) {
   const hue = GOAL_HUE[template.goal] ?? GOAL_HUE.GENERAL_FITNESS;
   const weekly = Array.isArray(template.weeklyGuidance)
@@ -79,7 +82,7 @@ export function TemplateDossier({
             {GOAL_LABEL[template.goal] ?? template.goal}
           </span>
           <span className="tag tag--spec">{EXPERIENCE_LABEL[template.experienceLevel] ?? template.experienceLevel}</span>
-          {template.isFlagship ? <span className="tag tag--mark text-[9px]">Destaque</span> : null}
+          {template.isFlagship ? <span className="tag tag--mark">Destaque</span> : null}
         </div>
         <h1 className="text-display mt-2 text-3xl font-extrabold sm:text-4xl">{template.namePt}</h1>
         <p className="mt-2 text-muted">{template.taglinePt}</p>
@@ -132,33 +135,39 @@ export function TemplateDossier({
               </div>
               <ul className="divide-y divide-border">
                 {day.exercises.map((ex) => (
-                  <li key={ex.id} className="flex gap-3 px-4 py-2.5">
-                    <div className="relative size-11 shrink-0 overflow-hidden rounded-[3px] bg-surface-2">
-                      {ex.exercise.media?.[0]?.url ? (
-                        <Image
-                          src={ex.exercise.media[0].url}
-                          alt=""
-                          fill
-                          sizes="44px"
-                          className="object-cover"
-                        />
-                      ) : (
-                        <div className="flex h-full items-center justify-center text-muted">
-                          <GLoad className="size-4" />
-                        </div>
-                      )}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <span className="block text-sm">{ex.exercise.namePt}</span>
-                      <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 font-mono text-[11px] text-muted">
-                        <span className="font-semibold tabular-nums text-foreground">
-                          {ex.sets}×{ex.repMin === ex.repMax ? ex.repMin : `${ex.repMin}-${ex.repMax}`}
-                        </span>
-                        {ex.rirTarget != null ? <span>RIR {ex.rirTarget}</span> : null}
-                        {ex.warmupSets > 0 ? <span>+{ex.warmupSets} aq</span> : null}
+                  <li key={ex.id}>
+                    <Link
+                      href={`${exerciseHref}/${ex.exercise.slug}`}
+                      className="group flex gap-3 px-4 py-2.5 transition-colors hover:bg-[var(--ink-3)]"
+                    >
+                      <div className="relative size-11 shrink-0 overflow-hidden rounded-[3px] bg-surface-2">
+                        {ex.exercise.media?.[0]?.url ? (
+                          <Image
+                            src={ex.exercise.media[0].url}
+                            alt=""
+                            fill
+                            sizes="44px"
+                            className="object-cover"
+                          />
+                        ) : (
+                          <div className="flex h-full items-center justify-center text-muted">
+                            <GLoad className="size-4" />
+                          </div>
+                        )}
                       </div>
-                      {ex.notesPt ? <p className="mt-1 text-xs text-muted">{ex.notesPt}</p> : null}
-                    </div>
+                      <div className="min-w-0 flex-1">
+                        <span className="block text-sm group-hover:text-accent">{ex.exercise.namePt}</span>
+                        <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 font-mono text-[11px] text-muted">
+                          <span className="font-semibold tabular-nums text-foreground">
+                            {ex.sets}×{ex.repMin === ex.repMax ? ex.repMin : `${ex.repMin}-${ex.repMax}`}
+                          </span>
+                          {ex.rirTarget != null ? <span>RIR {ex.rirTarget}</span> : null}
+                          {ex.warmupSets > 0 ? <span>+{ex.warmupSets} aq</span> : null}
+                        </div>
+                        {ex.notesPt ? <p className="mt-1 text-xs text-muted">{ex.notesPt}</p> : null}
+                      </div>
+                      <GArrow className="mt-1 size-3.5 shrink-0 self-start text-muted transition-transform group-hover:translate-x-0.5" />
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -246,7 +255,7 @@ export function TemplateDossier({
       </CollapsibleSection>
 
       {stickyActions ? (
-        <div className="sticky bottom-16 z-30 mt-10 panel-raised p-3 sm:bottom-4">
+        <div className="sticky bottom-[var(--nav-h)] z-30 mt-10 panel-raised p-3 sm:bottom-4">
           <div className="flex flex-wrap gap-2">{stickyActions}</div>
         </div>
       ) : null}

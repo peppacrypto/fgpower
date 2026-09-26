@@ -1,9 +1,10 @@
 import "server-only";
 import { prisma } from "@/lib/db";
 
+/** Completed sessions finished in [from, to) — pass `monthBounds()` from lib/training/week. */
 export async function listSessionsInRange(userId: string, from: Date, to: Date) {
   return prisma.workoutSession.findMany({
-    where: { userId, status: "COMPLETED", finishedAt: { gte: from, lte: to } },
+    where: { userId, status: "COMPLETED", finishedAt: { gte: from, lt: to } },
     orderBy: { finishedAt: "desc" },
     select: {
       id: true,
@@ -16,18 +17,23 @@ export async function listSessionsInRange(userId: string, from: Date, to: Date) 
   });
 }
 
+/**
+ * One page of completed sessions, newest first. `page` is clamped to
+ * [1, totalPages] (a stale ?page=99 link shows the last page instead of an
+ * empty list) and the page actually served is returned.
+ */
 export async function listAllSessions(userId: string, page = 1, pageSize = 20) {
-  const [items, total] = await Promise.all([
-    prisma.workoutSession.findMany({
-      where: { userId, status: "COMPLETED" },
-      orderBy: { finishedAt: "desc" },
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-      select: { id: true, name: true, finishedAt: true, durationSeconds: true, totalWorkingSets: true },
-    }),
-    prisma.workoutSession.count({ where: { userId, status: "COMPLETED" } }),
-  ]);
-  return { items, total, totalPages: Math.max(1, Math.ceil(total / pageSize)) };
+  const total = await prisma.workoutSession.count({ where: { userId, status: "COMPLETED" } });
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const safePage = Number.isSafeInteger(page) ? Math.min(Math.max(page, 1), totalPages) : 1;
+  const items = await prisma.workoutSession.findMany({
+    where: { userId, status: "COMPLETED" },
+    orderBy: [{ finishedAt: "desc" }, { id: "desc" }],
+    skip: (safePage - 1) * pageSize,
+    take: pageSize,
+    select: { id: true, name: true, finishedAt: true, durationSeconds: true, totalWorkingSets: true },
+  });
+  return { items, total, page: safePage, totalPages };
 }
 
 export interface ExerciseHistoryPoint {

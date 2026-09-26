@@ -42,7 +42,7 @@ export function DangerZone() {
           <div className="mt-3 flex flex-col gap-2">
             <p className="text-sm text-danger">Tem certeza? Isso é permanente.</p>
             {error ? <p className="text-xs text-danger">{error}</p> : null}
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <Button
                 variant="danger"
                 size="sm"

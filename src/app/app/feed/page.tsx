@@ -45,6 +45,7 @@ export default async function FeedPage() {
             <ActivityCard
               key={a.id}
               currentUsername={user.username}
+              isOwn={a.userId === user.id}
               activity={{
                 id: a.id,
                 sessionId: a.sessionId,

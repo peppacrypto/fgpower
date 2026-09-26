@@ -26,19 +26,30 @@ export interface FinishStats {
  */
 export function FinishSheet({
   stats,
+  stale,
   finishing,
   discarding,
   error,
   onFinish,
+  onFinishStale,
   onDiscard,
   onClose,
   onReview,
 }: {
   stats: FinishStats;
-  finishing: boolean;
+  /**
+   * A workout left open since an earlier day: it can be saved as done on that
+   * day ("Salvar como feito em 20/09") instead of today. `preferred`: nothing
+   * was done in it lately, so that is the first choice; once it was continued
+   * today, saving with today's date comes first.
+   */
+  stale: { since: string; saveAsDay: string; preferred: boolean } | null;
+  /** Which save is under way. */
+  finishing: "now" | "stale" | null;
   discarding: boolean;
   error: string | null;
   onFinish: () => void;
+  onFinishStale: () => void;
   onDiscard: () => void;
   onClose: () => void;
   /** Close the sheet and jump to the incomplete row. */
@@ -47,7 +58,7 @@ export function FinishSheet({
   const [confirmDiscard, setConfirmDiscard] = useState(false);
   const primaryRef = useRef<HTMLButtonElement>(null);
   const recorded = stats.prescribedDone + stats.extrasDone;
-  const busy = finishing || discarding;
+  const busy = finishing !== null || discarding;
 
   // The parent re-renders every second (elapsed clock): read the latest
   // callbacks through a ref so focus and the Esc listener are set up once.
@@ -66,6 +77,25 @@ export function FinishSheet({
 
   const untouched = stats.untouchedExercises;
 
+  /** The two saves of a workout left open: on its own day, or with today's date. */
+  const saveButton = (mode: "now" | "stale", primary: boolean) => (
+    <Button
+      ref={primary ? primaryRef : undefined}
+      size="lg"
+      variant={primary ? "strong" : "secondary"}
+      className="w-full"
+      disabled={busy}
+      onClick={mode === "stale" ? onFinishStale : onFinish}
+    >
+      {primary ? <GCheck className="size-4" /> : null}
+      {finishing === mode
+        ? "Salvando…"
+        : mode === "stale"
+          ? `Salvar como feito em ${stale?.saveAsDay}`
+          : "Salvar com data de hoje"}
+    </Button>
+  );
+
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/45 sm:items-center" onClick={busy ? undefined : onClose}>
       <div
@@ -73,7 +103,8 @@ export function FinishSheet({
         aria-modal="true"
         aria-labelledby="finish-title"
         onClick={(e) => e.stopPropagation()}
-        className="panel-raised max-h-[100dvh] w-full max-w-lg overflow-y-auto overscroll-contain bg-background px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5"
+        // Never taller than the space below the status bar (installed PWA draws under it).
+        className="panel-raised max-h-[calc(100dvh-env(safe-area-inset-top,0px))] w-full max-w-lg overflow-y-auto overscroll-contain bg-background px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5"
       >
         <span className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-accent">Fim do treino</span>
         <h2 id="finish-title" className="text-display mt-1 text-2xl font-extrabold">
@@ -135,6 +166,22 @@ export function FinishSheet({
           </div>
         ) : null}
 
+        {stale && recorded > 0 ? (
+          <p className="mt-3 border-l-2 border-l-warning bg-warning-soft px-3 py-2 text-xs text-foreground/90">
+            {stale.preferred ? (
+              <>
+                <span className="font-semibold">Este treino ficou aberto desde {stale.since}.</span> Salve-o no dia em que
+                foi feito para ele não contar como treino de hoje.
+              </>
+            ) : (
+              <>
+                <span className="font-semibold">Treino aberto desde {stale.since}.</span> Salve com a data de hoje ou como
+                feito em {stale.saveAsDay}.
+              </>
+            )}
+          </p>
+        ) : null}
+
         {error ? (
           <p role="alert" className="mt-3 border-l-2 border-l-danger! bg-danger-soft px-3 py-2 text-xs font-medium text-danger">
             {error}
@@ -142,7 +189,19 @@ export function FinishSheet({
         ) : null}
 
         <div className="mt-5 flex flex-col gap-2">
-          {recorded > 0 ? (
+          {recorded > 0 && stale ? (
+            stale.preferred ? (
+              <>
+                {saveButton("stale", true)}
+                {saveButton("now", false)}
+              </>
+            ) : (
+              <>
+                {saveButton("now", true)}
+                {saveButton("stale", false)}
+              </>
+            )
+          ) : recorded > 0 ? (
             <Button ref={primaryRef} size="lg" variant="strong" className="w-full" disabled={busy} onClick={onFinish}>
               <GCheck className="size-4" />
               {finishing ? "Salvando…" : "Finalizar e salvar"}

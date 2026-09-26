@@ -8,6 +8,7 @@ import { prisma } from "@/lib/db";
 import { sessionVolumeKg, workingSetCount, totalReps } from "@/lib/training/volume";
 import { checkAndRecordPersonalRecords } from "@/lib/training/personal-records";
 import { startOfWeek } from "@/lib/training/week";
+import { MAX_BOUT_SECONDS, assessOpenSession, boutSeconds, setBouts, staleSaveTiming } from "@/lib/training/stale";
 import { resolveSessionDay } from "@/lib/training/day-match";
 
 type Tx = Prisma.TransactionClient;
@@ -51,19 +52,50 @@ async function openSessionForDay(
     const openRows = await tx.workoutSession.findMany({
       where: { userId, status: "IN_PROGRESS" },
       orderBy: { startedAt: "desc" },
-      select: { id: true, name: true, programId: true, programDayId: true, programDayIndex: true },
+      select: {
+        id: true,
+        name: true,
+        startedAt: true,
+        programId: true,
+        programDayId: true,
+        programDayIndex: true,
+        _count: { select: { exerciseLogs: true } },
+      },
     });
-    const withData = new Set(
+    const dataRows =
       openRows.length === 0
         ? []
-        : (
-            await tx.setLog.findMany({
-              where: { sessionId: { in: openRows.map((s) => s.id) }, ...SET_HAS_DATA },
-              select: { sessionId: true },
-              distinct: ["sessionId"],
-            })
-          ).map((s) => s.sessionId),
+        : await tx.setLog.findMany({
+            where: { sessionId: { in: openRows.map((s) => s.id) }, ...SET_HAS_DATA },
+            select: {
+              sessionId: true,
+              isCompleted: true,
+              completedAt: true,
+              updatedAt: true,
+              weightKg: true,
+              reps: true,
+              exerciseLog: { select: { wasSkipped: true } },
+            },
+          });
+    const withData = new Set(dataRows.map((r) => r.sessionId));
+    // A workout left open on an earlier day (Today lists it as "não finalizado",
+    // same rule) neither blocks nor gets discarded: it waits to be saved on its
+    // own day or discarded explicitly. Only live sessions take part below.
+    const now = new Date();
+    const leftOpen = new Set(
+      openRows
+        .filter(
+          (s) =>
+            withData.has(s.id) &&
+            assessOpenSession(
+              s.startedAt,
+              dataRows.filter((r) => r.sessionId === s.id).map((r) => ({ ...r, wasSkipped: r.exerciseLog.wasSkipped })),
+              now,
+            ).leftOpen,
+        )
+        .map((s) => s.id),
     );
+    const liveRows = openRows.filter((s) => !leftOpen.has(s.id));
     // Same day: by id, or (when a program edit recreated the days) by name/position.
     const programDays = openRows.some((s) => s.programDayId === null && s.programId === day.programId)
       ? await tx.userProgramDay.findMany({ where: { programId: day.programId }, select: { id: true, dayIndex: true, name: true } })
@@ -72,13 +104,16 @@ async function openSessionForDay(
       s.programDayId === day.id ||
       (s.programDayId === null && s.programId === day.programId && resolveSessionDay(s, programDays)?.id === day.id);
     const sameDay =
-      openRows.find((s) => isSameDay(s) && withData.has(s.id)) ?? openRows.find((s) => isSameDay(s));
-    if (sameDay) return { sessionId: sameDay.id, blocked: false };
-    const busy = openRows.find((s) => withData.has(s.id));
+      liveRows.find((s) => isSameDay(s) && withData.has(s.id)) ?? liveRows.find((s) => isSameDay(s));
+    // A day opened while it had no exercises is a dead end: once exercises
+    // were added to it (the empty workout links to the editor), start afresh.
+    const emptyShell = sameDay && sameDay._count.exerciseLogs === 0 && day.exercises.length > 0;
+    if (sameDay && !emptyShell) return { sessionId: sameDay.id, blocked: false };
+    const busy = liveRows.find((s) => withData.has(s.id));
     if (busy) return { sessionId: busy.id, blocked: true };
-    if (openRows.length > 0) {
+    if (liveRows.length > 0) {
       await tx.workoutSession.updateMany({
-        where: { id: { in: openRows.map((s) => s.id) }, status: "IN_PROGRESS" },
+        where: { id: { in: liveRows.map((s) => s.id) }, status: "IN_PROGRESS" },
         data: { status: "DISCARDED" },
       });
     }
@@ -175,6 +210,8 @@ export interface LogSetInput {
   reps: number | null;
   rir: number | null;
   notes?: string;
+  /** When ✓ was tapped (client clock, ms): a ✓ replayed after a lost connection keeps its own time. */
+  completedAtMs?: number | null;
 }
 
 /** CLOSED: the session is no longer in progress (finished elsewhere) or the set is gone. */
@@ -201,18 +238,28 @@ function isFilled(v: { weightKg: number | null; reps: number | null }) {
 }
 
 /**
- * Locks (shared) the session a set belongs to and returns what we need if it
- * is the user's and still in progress. finishWorkoutSession locks the same row
- * FOR UPDATE, so a set write and a finish can never interleave: the write
- * either lands before the totals are computed or sees the session closed.
+ * Locks (shared) the session a set belongs to and returns what we need if the
+ * set is the user's (null when it doesn't exist — e.g. an extra removed on
+ * another device). `inProgress` is false once the session was finished or
+ * discarded. finishWorkoutSession locks the same row FOR UPDATE, so a set
+ * write and a finish can never interleave: the write either lands before the
+ * totals are computed or sees the session closed.
  */
-async function lockOpenSet(tx: Tx, userId: string, setLogId: string) {
-  const rows = await tx.$queryRaw<{ sessionId: string; isExtra: boolean }[]>`
-    SELECT l."sessionId", l."isExtra"
+async function lockSet(tx: Tx, userId: string, setLogId: string) {
+  const rows = await tx.$queryRaw<
+    { sessionId: string; isExtra: boolean; isCompleted: boolean; startedAt: Date; inProgress: boolean }[]
+  >`
+    SELECT l."sessionId", l."isExtra", l."isCompleted", s."startedAt", s.status = 'IN_PROGRESS' AS "inProgress"
     FROM "SetLog" l JOIN "WorkoutSession" s ON s.id = l."sessionId"
-    WHERE l.id = ${setLogId} AND l."userId" = ${userId} AND s.status = 'IN_PROGRESS'
+    WHERE l.id = ${setLogId} AND l."userId" = ${userId}
     FOR SHARE OF s`;
   return rows[0] ?? null;
+}
+
+/** lockSet, for a session still in progress only. */
+async function lockOpenSet(tx: Tx, userId: string, setLogId: string) {
+  const row = await lockSet(tx, userId, setLogId);
+  return row?.inProgress ? row : null;
 }
 
 async function lockOpenExerciseLog(tx: Tx, userId: string, exerciseLogId: string) {
@@ -224,30 +271,58 @@ async function lockOpenExerciseLog(tx: Tx, userId: string, exerciseLogId: string
   return rows[0] ?? null;
 }
 
+/**
+ * One write to a set row, the single rule behind ✓, un-✓ and autosave.
+ * `done`: true = ✓ (needs load and reps), false = un-✓, null = values only
+ * (a ✓'d row that loses its load or reps stops counting). Idempotent — the
+ * workout screen resends it until it gets through: a set already ✓'d keeps
+ * its original completion time. CLOSED: the session is no longer in
+ * progress; GONE: the row itself no longer exists (an extra removed).
+ */
+async function writeSet(
+  userId: string,
+  input: LogSetInput,
+  done: boolean | null,
+): Promise<{ ok: true; isCompleted: boolean } | { ok: false; reason: "CLOSED" | "INVALID" | "GONE" }> {
+  if (typeof input?.setLogId !== "string") return { ok: false, reason: "INVALID" };
+  const values = cleanValues(input);
+  if (done === true && !isFilled(values)) return { ok: false, reason: "INVALID" };
+  const notes = typeof input.notes === "string" ? input.notes.slice(0, 2000) : undefined;
+
+  const result = await prisma.$transaction(async (tx) => {
+    const open = await lockSet(tx, userId, input.setLogId);
+    if (!open) return "GONE" as const;
+    if (!open.inProgress) return "CLOSED" as const;
+    const now = Date.now();
+    let completion: { isCompleted: boolean; completedAt?: Date | null } | null = null;
+    if (done === true && !open.isCompleted) {
+      // The tap time, kept within the session (a phone clock can be off).
+      const tapped = clampNum(input.completedAtMs, open.startedAt.getTime(), now) ?? now;
+      completion = { isCompleted: true, completedAt: new Date(tapped) };
+    } else if ((done === false || (done === null && !isFilled(values))) && open.isCompleted) {
+      completion = { isCompleted: false, completedAt: null };
+    }
+    await tx.setLog.update({ where: { id: input.setLogId }, data: { ...values, notes, ...completion } });
+    return { isCompleted: completion ? completion.isCompleted : open.isCompleted };
+  });
+  if (result === "GONE" || result === "CLOSED") return { ok: false, reason: result };
+  return { ok: true, isCompleted: result.isCompleted };
+}
+
+/** The set actions' result: a row that is gone reads as closed, as before GONE existed. */
+function asActionResult(r: Awaited<ReturnType<typeof writeSet>>): SetActionResult {
+  if (r.ok) return { ok: true };
+  return { ok: false, reason: r.reason === "GONE" ? "CLOSED" : r.reason };
+}
+
+// The set writes below don't revalidate the workout page: the workout screen
+// owns their state (optimistic, mirrored locally, resent until confirmed), and
+// a full page re-render on every ✓ made each tap wait on ~19 KB of RSC.
+
 /** Marks a set done with its load/reps (✓ in the set table). */
 export async function logSet(input: LogSetInput): Promise<SetActionResult> {
   const user = await requireUserOrThrow();
-  if (typeof input?.setLogId !== "string") return { ok: false, reason: "INVALID" };
-  const values = cleanValues(input);
-  if (!isFilled(values)) return { ok: false, reason: "INVALID" };
-
-  const sessionId = await prisma.$transaction(async (tx) => {
-    const open = await lockOpenSet(tx, user.id, input.setLogId);
-    if (!open) return null;
-    await tx.setLog.update({
-      where: { id: input.setLogId },
-      data: {
-        ...values,
-        notes: typeof input.notes === "string" ? input.notes.slice(0, 2000) : undefined,
-        isCompleted: true,
-        completedAt: new Date(),
-      },
-    });
-    return open.sessionId;
-  });
-  if (!sessionId) return { ok: false, reason: "CLOSED" };
-  revalidatePath(`/app/workout/${sessionId}`);
-  return { ok: true };
+  return asActionResult(await writeSet(user.id, input, true));
 }
 
 /**
@@ -257,36 +332,47 @@ export async function logSet(input: LogSetInput): Promise<SetActionResult> {
  */
 export async function saveSetValues(input: LogSetInput): Promise<SetActionResult> {
   const user = await requireUserOrThrow();
-  if (typeof input?.setLogId !== "string") return { ok: false, reason: "INVALID" };
-  const values = cleanValues(input);
-  const result = await prisma.$transaction(async (tx) => {
-    const open = await lockOpenSet(tx, user.id, input.setLogId);
-    if (!open) return null;
-    const before = await tx.setLog.findUniqueOrThrow({ where: { id: input.setLogId }, select: { isCompleted: true } });
-    const undo = before.isCompleted && !isFilled(values);
-    await tx.setLog.update({
-      where: { id: input.setLogId },
-      data: undo ? { ...values, isCompleted: false, completedAt: null } : values,
-    });
-    return { sessionId: open.sessionId, undo };
-  });
-  if (!result) return { ok: false, reason: "CLOSED" };
-  if (result.undo) revalidatePath(`/app/workout/${result.sessionId}`);
-  return { ok: true };
+  return asActionResult(await writeSet(user.id, input, null));
 }
 
 export async function uncompleteSet(setLogId: string): Promise<SetActionResult> {
   const user = await requireUserOrThrow();
   if (typeof setLogId !== "string") return { ok: false, reason: "INVALID" };
-  const sessionId = await prisma.$transaction(async (tx) => {
+  const result = await prisma.$transaction(async (tx) => {
     const open = await lockOpenSet(tx, user.id, setLogId);
     if (!open) return null;
     await tx.setLog.update({ where: { id: setLogId }, data: { isCompleted: false, completedAt: null } });
     return open.sessionId;
   });
-  if (!sessionId) return { ok: false, reason: "CLOSED" };
-  revalidatePath(`/app/workout/${sessionId}`);
+  if (!result) return { ok: false, reason: "CLOSED" };
   return { ok: true };
+}
+
+/** A row's state as the workout screen wants it on the server (see writeSet for `done`). */
+export interface SetSyncOp extends LogSetInput {
+  done: boolean | null;
+}
+/** CLOSED: the session is no longer in progress; GONE: the row no longer exists (an extra removed elsewhere). */
+export type SetSyncResult =
+  | { setLogId: string; ok: true; isCompleted: boolean }
+  | { setLogId: string; ok: false; reason: "CLOSED" | "INVALID" | "GONE" };
+
+/**
+ * Applies a batch of row writes from the workout screen's outbox (called by
+ * POST /api/workout/sets). Each row is its own short transaction, so one
+ * closed or invalid row never blocks the rest. `savedAtMs` is taken after the
+ * last commit: a page rendered later already shows these writes.
+ */
+export async function syncSets(ops: SetSyncOp[]): Promise<{ results: SetSyncResult[]; savedAtMs: number }> {
+  const user = await requireUserOrThrow();
+  const results: SetSyncResult[] = [];
+  for (const op of (Array.isArray(ops) ? ops : []).slice(0, 200)) {
+    const setLogId = typeof op?.setLogId === "string" ? op.setLogId : "";
+    const done = op?.done === true || op?.done === false ? op.done : null;
+    const r = await writeSet(user.id, op, done);
+    results.push({ setLogId, ...r });
+  }
+  return { results, savedAtMs: Date.now() };
 }
 
 /** Adds a set beyond the prescription, flagged as extra so it never passes for a prescribed one. */
@@ -358,6 +444,9 @@ export type FinishResult =
   | { ok: true; summaryUrl: string }
   | { ok: false; reason: "EMPTY" | "NOT_FOUND" };
 
+/** Past this much wall time, the clock since "Iniciar" says nothing about the training itself. */
+const LONG_SESSION_MS = MAX_BOUT_SECONDS * 1000;
+
 /**
  * Finishes the session. A row with load and reps is a set the user did: rows
  * typed but never confirmed with ✓ — sent in `pending` from this device, or
@@ -366,47 +455,104 @@ export type FinishResult =
  * no working set recorded is not finished (EMPTY): that used to count as a
  * completed program day and wipe "Último treino". Idempotent: finishing an
  * already finished session just returns its summary.
+ *
+ * A session open for more than 4 h is timed by its last bout of sets (see
+ * lib/training/stale.ts: split where 2 h+ passed between two sets, at most
+ * 4 h) instead of by the clock since it was started — a workout left open on
+ * Monday and continued on Thursday is timed by Thursday's sets, not 72 h.
  */
 export async function finishWorkoutSession(sessionId: string, pending: LogSetInput[] = []): Promise<FinishResult> {
   const user = await requireUserOrThrow();
+  return finishSession(user.id, sessionId, pending, "now");
+}
+
+/**
+ * Finishes a workout that was left open (see lib/training/stale.ts) as done on
+ * its own day: same saving, EMPTY and locking rules as finishWorkoutSession,
+ * but dated and timed by its first bout of sets (staleSaveTiming: the end of
+ * that bout, start + 1 h without set times), and advancing the program as of
+ * that date — so a Monday workout closed on Friday never lands in Friday's
+ * week with a 97-hour duration. Sets added later ("Continuar hoje") still
+ * count in its totals without stretching its date or duration.
+ */
+export async function finishStaleWorkoutSession(sessionId: string, pending: LogSetInput[] = []): Promise<FinishResult> {
+  const user = await requireUserOrThrow();
+  return finishSession(user.id, sessionId, pending, "stale");
+}
+
+async function finishSession(
+  userId: string,
+  sessionId: string,
+  pending: LogSetInput[],
+  mode: "now" | "stale",
+): Promise<FinishResult> {
   if (typeof sessionId !== "string") return { ok: false, reason: "NOT_FOUND" };
   const summaryUrl = `/app/workout/${sessionId}/summary`;
   const drafts = (Array.isArray(pending) ? pending : []).slice(0, 400);
   const now = new Date();
+  let finishedAt = now;
 
   const outcome = await prisma.$transaction(async (tx) => {
     // Lock the session row: concurrent set writes (FOR SHARE) and a second
     // finish from another tab wait here and then see it closed.
-    const [row] = await tx.$queryRaw<{ status: string }[]>`
-      SELECT status::text AS status FROM "WorkoutSession"
-      WHERE id = ${sessionId} AND "userId" = ${user.id}
+    const [row] = await tx.$queryRaw<{ status: string; startedAt: Date }[]>`
+      SELECT status::text AS status, "startedAt" FROM "WorkoutSession"
+      WHERE id = ${sessionId} AND "userId" = ${userId}
       FOR UPDATE`;
     if (!row) return "GONE" as const;
     if (row.status === "COMPLETED") return "ALREADY" as const;
     if (row.status !== "IN_PROGRESS") return "GONE" as const;
 
-    const openRows = { sessionId, userId: user.id, exerciseLog: { wasSkipped: false } };
+    const openRows = { sessionId, userId, exerciseLog: { wasSkipped: false } };
+    /** ✓ taps from this device that hadn't reached the server yet: their sets keep that time. */
+    const tapped = new Map<string, Date>();
+    const draftIds = drafts.filter((d) => d && typeof d.setLogId === "string").map((d) => d.setLogId);
+    const current = new Map(
+      (draftIds.length === 0
+        ? []
+        : await tx.setLog.findMany({
+            where: { sessionId, userId, id: { in: draftIds } },
+            select: {
+              id: true,
+              weightKg: true,
+              reps: true,
+              rir: true,
+              isCompleted: true,
+              exerciseLog: { select: { wasSkipped: true } },
+            },
+          })
+      ).map((r) => [r.id, r]),
+    );
     for (const d of drafts) {
-      if (!d || typeof d.setLogId !== "string") continue;
-      const values = cleanValues(d);
+      const saved = d && typeof d.setLogId === "string" ? current.get(d.setLogId) : undefined;
+      if (!saved) continue;
+      const tap = clampNum(d.completedAtMs, row.startedAt.getTime(), now.getTime());
+      if (tap !== null) tapped.set(d.setLogId, new Date(tap));
       // In a skipped exercise only rows already ✓'d can still be edited.
-      const where = {
-        sessionId,
-        userId: user.id,
-        id: d.setLogId,
-        OR: [{ exerciseLog: { wasSkipped: false } }, { isCompleted: true }],
-      };
-      await tx.setLog.updateMany({ where, data: values });
-      if (!isFilled(values)) {
-        await tx.setLog.updateMany({ where: { ...where, isCompleted: true }, data: { isCompleted: false, completedAt: null } });
-      }
+      if (saved.exerciseLog.wasSkipped && !saved.isCompleted) continue;
+      const values = cleanValues(d);
+      const uncount = saved.isCompleted && !isFilled(values);
+      // Rewriting a row with what it already holds would bump its updatedAt —
+      // the time an unconfirmed row is dated by — to now.
+      const changed = values.weightKg !== saved.weightKg || values.reps !== saved.reps || values.rir !== saved.rir;
+      if (!changed && !uncount) continue;
+      await tx.setLog.update({
+        where: { id: saved.id },
+        data: { ...values, ...(uncount ? { isCompleted: false, completedAt: null } : {}) },
+      });
     }
     // Every filled row of a non-skipped exercise counts, whether or not ✓ was
     // tapped and wherever it was typed (another device, a lost local mirror).
-    await tx.setLog.updateMany({
+    // It is dated by its ✓ tap if one is pending, else when it was last typed —
+    // the best record of when it was done.
+    const unconfirmed = await tx.setLog.findMany({
       where: { ...openRows, isCompleted: false, weightKg: { not: null }, reps: { gte: 1 } },
-      data: { isCompleted: true, completedAt: now },
+      select: { id: true, updatedAt: true },
     });
+    for (const r of unconfirmed) {
+      const completedAt = tapped.get(r.id) ?? (r.updatedAt < now ? r.updatedAt : now);
+      await tx.setLog.update({ where: { id: r.id }, data: { isCompleted: true, completedAt } });
+    }
 
     const session = await tx.workoutSession.findUniqueOrThrow({
       where: { id: sessionId },
@@ -414,12 +560,25 @@ export async function finishWorkoutSession(sessionId: string, pending: LogSetInp
     });
     if (workingSetCount(session.setLogs) === 0) return "EMPTY" as const;
 
+    const startedMs = session.startedAt.getTime();
+    const setTimes = session.setLogs.filter((s) => s.isCompleted && s.completedAt).map((s) => s.completedAt as Date);
+    let durationSeconds = Math.max(0, Math.round((now.getTime() - startedMs) / 1000));
+    if (mode === "stale") {
+      const timing = staleSaveTiming(session.startedAt, setTimes, now);
+      finishedAt = timing.finishedAt;
+      durationSeconds = timing.durationSeconds;
+    } else if (now.getTime() - startedMs > LONG_SESSION_MS) {
+      const bouts = setBouts(setTimes);
+      const last = bouts[bouts.length - 1];
+      durationSeconds = last ? boutSeconds(last) : MAX_BOUT_SECONDS;
+    }
+
     await tx.workoutSession.update({
       where: { id: sessionId },
       data: {
         status: "COMPLETED",
-        finishedAt: now,
-        durationSeconds: Math.max(0, Math.round((now.getTime() - session.startedAt.getTime()) / 1000)),
+        finishedAt,
+        durationSeconds,
         totalVolumeKg: sessionVolumeKg(session.setLogs),
         totalWorkingSets: workingSetCount(session.setLogs),
         totalReps: totalReps(session.setLogs),
@@ -428,12 +587,12 @@ export async function finishWorkoutSession(sessionId: string, pending: LogSetInp
 
     if (session.enrollment && session.enrollment.status === "ACTIVE" && session.programId) {
       await advanceProgram(tx, {
-        userId: user.id,
+        userId,
         sessionId,
         enrollment: session.enrollment,
         programId: session.programId,
         session,
-        now,
+        now: finishedAt,
       });
     }
     return "FLIPPED" as const;
@@ -443,7 +602,11 @@ export async function finishWorkoutSession(sessionId: string, pending: LogSetInp
   if (outcome === "EMPTY") return { ok: false, reason: "EMPTY" };
   if (outcome === "FLIPPED") {
     try {
-      await checkAndRecordPersonalRecords(user.id, sessionId);
+      await checkAndRecordPersonalRecords(userId, sessionId);
+      // Records are stamped "now"; a workout saved on its own day keeps that day.
+      if (finishedAt !== now) {
+        await prisma.exercisePersonalRecord.updateMany({ where: { userId, sessionId }, data: { achievedAt: finishedAt } });
+      }
     } catch (err) {
       // The workout is saved; a PR bookkeeping failure must not look like a failed finish.
       console.error("PR recording failed", sessionId, err);
@@ -464,6 +627,9 @@ export async function finishWorkoutSession(sessionId: string, pending: LogSetInp
  * - The suggested next day rotates for programs that repeat days within a
  *   week (A/B at 3×); otherwise it is the next day not yet done this week,
  *   back to the first day once all of them are.
+ * - `now` is when the workout counts as done: a workout left open and saved
+ *   later on its own day counts in that day's week. If newer workouts already
+ *   moved the program on, it only adds to the count and never winds it back.
  */
 async function advanceProgram(
   tx: Tx,
@@ -491,8 +657,22 @@ async function advanceProgram(
     totalWorkingSets: { gt: 0 },
     id: { not: s.sessionId },
   };
+  const newer = await tx.workoutSession.findFirst({
+    where: { ...finished, finishedAt: { gt: s.now } },
+    select: { programWeek: true },
+    orderBy: { finishedAt: "asc" },
+  });
+  if (newer) {
+    await tx.workoutSession.update({
+      where: { id: s.sessionId },
+      data: { programWeek: newer.programWeek ?? s.enrollment.currentWeek },
+    });
+    await tx.programEnrollment.update({ where: { id: s.enrollment.id }, data: { completedSessions: { increment: 1 } } });
+    return;
+  }
+
   const thisWeek = await tx.workoutSession.findMany({
-    where: { ...finished, finishedAt: { gte: startOfWeek(s.now) } },
+    where: { ...finished, finishedAt: { gte: startOfWeek(s.now), lte: s.now } },
     select: { programDayId: true, programDayIndex: true, name: true },
   });
   let week = s.enrollment.currentWeek;

@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils/cn";
 // Editorial-dossier buttons: sharp (zero radius), no floating drop shadow.
 // Filled variants get an inked "keel" (inset bottom bevel) for letterpress
 // weight and press down on :active; text variants use a measured underline.
+// Outline is a faint ink plate over a visible foreground keel (≥3:1 — it must
+// read as a button, not a heading) that turns accent on hover/press.
 const buttonVariants = cva(
   "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-none text-sm font-semibold tracking-[-0.01em] transition-[background-color,color,box-shadow,transform] duration-150 disabled:pointer-events-none disabled:opacity-40 [&_svg]:size-4 [&_svg]:shrink-0",
   {
@@ -17,7 +19,7 @@ const buttonVariants = cva(
           "bg-accent-strong text-accent-strong-foreground shadow-[inset_0_-2px_0_var(--keel)] hover:brightness-[1.03] active:translate-y-[0.5px] active:brightness-[0.97] active:shadow-none",
         secondary: "bg-surface-2 text-foreground hover:bg-[var(--border)] active:translate-y-[0.5px]",
         outline:
-          "bg-transparent text-foreground border-b-2 border-b-border-strong hover:border-b-accent hover:bg-[var(--ink-4)] active:translate-y-[0.5px]",
+          "bg-[var(--ink-3)] text-foreground border-b-2 border-b-foreground/50 hover:border-b-accent hover:bg-[var(--ink-4)] active:border-b-accent active:bg-[var(--ink-4)] active:translate-y-[0.5px]",
         ghost: "bg-transparent text-foreground hover:bg-surface-2 active:translate-y-[0.5px]",
         danger:
           "bg-danger text-[var(--danger-foreground)] shadow-[inset_0_-2px_0_var(--keel)] hover:brightness-95 active:translate-y-[0.5px] active:shadow-none",

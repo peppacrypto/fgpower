@@ -6,6 +6,7 @@ import {
   finishAndSave,
   gotoMyProgram,
   headerPrescribedCount,
+  isSetSync,
   newUserOnGd1,
   openFinishSheet,
   prescribedKgBoxes,
@@ -143,10 +144,9 @@ test("typed values without ✓ survive a reload and are saved and counted on fin
   // Row 1: typed, then the user moves on to the next box (autosave on leaving the row).
   await page.getByRole("textbox", { name: "Série 1 — kg", exact: true }).fill("42,5");
   await page.getByRole("textbox", { name: "Série 1 — repetições", exact: true }).fill("10");
-  const autosave = page.waitForResponse(
-    (r) => r.request().method() === "POST" && r.url().includes(`/app/workout/${sessionId}`),
-    { timeout: 15_000 },
-  );
+  const autosave = page.waitForResponse((r) => isSetSync(r) && (r.request().postData() ?? "").includes('"reps":10'), {
+    timeout: 15_000,
+  });
   await page.getByRole("textbox", { name: "Série 2 — kg", exact: true }).click();
   await autosave;
 

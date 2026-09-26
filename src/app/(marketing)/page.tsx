@@ -120,7 +120,7 @@ export default async function LandingPage() {
                   size="lg"
                   variant="outline"
                   asChild
-                  className="border-white/20 text-white hover:bg-white/10 hover:border-white/30"
+                  className="border-white/25 bg-white/[0.04] text-white hover:border-white/45 hover:bg-white/10 active:border-white/45 active:bg-white/10"
                 >
                   <Link href="/programs">Explorar programas</Link>
                 </Button>
@@ -185,7 +185,11 @@ export default async function LandingPage() {
               {stats.evidence} estudos e diretrizes verificados um por um. Volume, RIR, frequência, amplitude —
               nada de achismo, tudo com a fonte ao lado.
             </p>
-            <Button variant="outline" className="mt-8 border-white/20 text-white hover:bg-white/10" asChild>
+            <Button
+              variant="outline"
+              className="mt-8 border-white/25 bg-white/[0.04] text-white hover:border-white/45 hover:bg-white/10 active:border-white/45 active:bg-white/10"
+              asChild
+            >
               <Link href="/science">
                 Ver a metodologia
                 <GArrow className="size-4" />

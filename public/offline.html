@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fafafb" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b0c0e" />
+    <meta name="robots" content="noindex" />
+    <title>Sem sinal · FGPOWER</title>
+    <!-- Served by public/sw.js when a page can't be reached. Fully static and
+         self-contained (no build assets, no web fonts): it must render with
+         zero network. Tokens mirror src/app/globals.css. -->
+    <style>
+      :root {
+        color-scheme: light dark;
+        --background: #fafafb;
+        --surface-2: #f3f4f6;
+        --foreground: #1c1d1f;
+        --muted: #5c6672;
+        --warning: #8a6300;
+        --accent: #4d6a06;
+        --accent-strong: #b4e600;
+        --accent-strong-foreground: #14210a;
+        --rule-heavy: #1c1d1f;
+        --keel: rgba(28, 29, 31, 0.16);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --background: #0b0c0e;
+          --surface-2: #1c1e22;
+          --foreground: #f2f3f5;
+          --muted: #9aa0aa;
+          --warning: #f5c14d;
+          --accent: #a3d92e;
+          --accent-strong: #c3ff4d;
+          --accent-strong-foreground: #0e1408;
+          --rule-heavy: #b0b2b6;
+          --keel: rgba(0, 0, 0, 0.3);
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+      }
+      body {
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: max(2.5rem, env(safe-area-inset-top)) 1rem max(2.5rem, env(safe-area-inset-bottom));
+        background: var(--background);
+        color: var(--foreground);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .mono {
+        font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      }
+      main {
+        width: 100%;
+        max-width: 28rem;
+        margin: 0 auto;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 0.625rem;
+        margin-bottom: 1.5rem;
+        font-size: 17px;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+      }
+      .brand img {
+        width: 30px;
+        height: 30px;
+        border-radius: 22%;
+      }
+      .brand b {
+        color: var(--accent-strong);
+        font-weight: 800;
+      }
+      .panel {
+        background: var(--surface-2);
+        border-top: 2px solid var(--rule-heavy);
+        border-bottom: 2px solid var(--rule-heavy);
+        padding: 1.75rem 1.25rem;
+      }
+      .code {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--warning);
+      }
+      h1 {
+        margin: 0.5rem 0 0;
+        font-size: 1.5rem;
+        line-height: 1.2;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+      p {
+        margin: 0.5rem 0 0;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        color: var(--muted);
+      }
+      .saved {
+        margin-top: 1rem;
+        padding: 0.5rem 0.75rem;
+        border-left: 2px solid var(--accent);
+        font-size: 12px;
+        color: var(--foreground);
+      }
+      .actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-top: 1.5rem;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 2.75rem;
+        padding: 0 1.25rem;
+        border: 0;
+        border-radius: 0;
+        font: inherit;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      .btn-strong {
+        background: var(--accent-strong);
+        color: var(--accent-strong-foreground);
+        box-shadow: inset 0 -2px 0 var(--keel);
+      }
+      .btn-strong:active {
+        transform: translateY(0.5px);
+        box-shadow: none;
+      }
+      .btn-outline {
+        background: color-mix(in oklab, var(--foreground) 3.5%, transparent);
+        color: var(--foreground);
+        border-bottom: 2px solid color-mix(in oklab, var(--foreground) 50%, transparent);
+      }
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+      [hidden] {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="brand"><img src="/brand/fgpower-tile.png" alt="" /><span>FG<b>POWER</b></span></div>
+      <div class="panel" role="alert">
+        <span class="code mono">Sem sinal</span>
+        <h1>Seus números estão salvos neste aparelho.</h1>
+        <p>
+          Não deu para abrir esta página sem internet. O que você digitou no treino continua guardado aqui e volta
+          para a tela quando você reabrir o treino com sinal.
+        </p>
+        <div class="saved mono" id="saved" hidden></div>
+        <div class="actions">
+          <button type="button" class="btn btn-strong" id="retry">Tentar de novo</button>
+          <a class="btn btn-outline" id="workout" href="/app/today" hidden>Voltar ao treino</a>
+        </div>
+      </div>
+    </main>
+    <script>
+      (function () {
+        document.getElementById("retry").addEventListener("click", function () {
+          location.reload();
+        });
+        // Come back on our own as soon as the connection does.
+        window.addEventListener("online", function () {
+          location.reload();
+        });
+        // Workout drafts are mirrored under fg:workout-drafts:<sessionId>
+        // (workout-execution-client.tsx) as {v:2, rows:{<rowId>:{values, dirty,
+        // savedAt, …}}}: `dirty` rows are the ones the server hasn't confirmed
+        // yet; confirmed rows newer than the page are mirrored too. The first
+        // format was {<rowId>: values}, all unconfirmed.
+        try {
+          var prefix = "fg:workout-drafts:";
+          var best = null;
+          for (var i = 0; i < localStorage.length; i++) {
+            var key = localStorage.key(i);
+            if (!key || key.indexOf(prefix) !== 0) continue;
+            var id = key.slice(prefix.length);
+            var parsed = null;
+            try {
+              parsed = JSON.parse(localStorage.getItem(key) || "{}");
+            } catch (e) {}
+            if (!id || !parsed || typeof parsed !== "object") continue;
+            var v2 = parsed.v === 2 && parsed.rows && typeof parsed.rows === "object";
+            var rows = v2 ? parsed.rows : parsed;
+            var ids = Object.keys(rows);
+            if (ids.length === 0) continue;
+            var pending = 0;
+            var last = 0;
+            for (var j = 0; j < ids.length; j++) {
+              var row = rows[ids[j]];
+              if (!v2 || (row && row.dirty === true)) pending++;
+              if (row && typeof row.savedAt === "number" && row.savedAt > last) last = row.savedAt;
+              if (row && typeof row.doneAt === "number" && row.doneAt > last) last = row.doneAt;
+            }
+            // Prefer the workout still waiting on the signal, then the most recent.
+            var waiting = pending > 0;
+            var bestWaiting = best !== null && best.pending > 0;
+            if (!best || (waiting && !bestWaiting) || (waiting === bestWaiting && last > best.last)) {
+              best = { id: id, pending: pending, last: last };
+            }
+          }
+          if (best) {
+            var link = document.getElementById("workout");
+            link.href = "/app/workout/" + encodeURIComponent(best.id);
+            link.hidden = false;
+            if (best.pending > 0) {
+              var saved = document.getElementById("saved");
+              saved.textContent =
+                best.pending === 1
+                  ? "1 série guardada aqui, esperando o sinal."
+                  : best.pending + " séries guardadas aqui, esperando o sinal.";
+              saved.hidden = false;
+            }
+          }
+        } catch (e) {
+          /* storage blocked — the generic message still holds */
+        }
+      })();
+    </script>
+  </body>
+</html>

@@ -1,14 +1,23 @@
 import { notFound, redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth/require-user";
+import { getProfile } from "@/lib/data/profile";
 import { getWorkoutSessionForExecution, getPreviousPerformance, getExerciseUserNote } from "@/lib/data/workout-session";
+import { assessOpenSession, formatSpDate, formatSpTime, formatSpWeekdayDate, spDayKey } from "@/lib/training/stale";
 import { WorkoutExecutionClient } from "./workout-execution-client";
 import type { ExecutionSession } from "./types";
+
+/** Reads the session, noting the server time just before the read (ExecutionSession.loadedAtMs). */
+async function load(sessionId: string, userId: string) {
+  const loadedAtMs = Date.now();
+  const [session, profile] = await Promise.all([getWorkoutSessionForExecution(sessionId), getProfile(userId)]);
+  return { loadedAtMs, session, profile };
+}
 
 export default async function WorkoutExecutionPage({ params, searchParams }: PageProps<"/app/workout/[sessionId]">) {
   const { sessionId } = await params;
   const sp = await searchParams;
   const user = await requireUser();
-  const session = await getWorkoutSessionForExecution(sessionId);
+  const { loadedAtMs, session, profile } = await load(sessionId, user.id);
 
   if (!session) notFound();
   if (session.userId !== user.id) notFound();
@@ -53,13 +62,35 @@ export default async function WorkoutExecutionPage({ params, searchParams }: Pag
     }),
   );
 
+  // Same rules as Today's "Treino de … não finalizado" and the stale finish (lib/training/stale.ts).
+  const now = new Date(loadedAtMs);
+  const open = assessOpenSession(
+    session.startedAt,
+    session.exerciseLogs.flatMap((log) => log.sets.map((s) => ({ ...s, wasSkipped: log.wasSkipped }))),
+    now,
+  );
+  let stale: ExecutionSession["stale"] = null;
+  if (open.showSince) {
+    const today = spDayKey(now);
+    const saveAs = open.saveAs.finishedAt;
+    stale = {
+      since: spDayKey(session.startedAt) === today ? formatSpTime(session.startedAt) : formatSpWeekdayDate(session.startedAt),
+      saveAsDay: spDayKey(saveAs) === today ? null : formatSpDate(saveAs),
+      leftOpen: open.leftOpen,
+    };
+  }
+
   const executionSession: ExecutionSession = {
     id: session.id,
     name: session.name,
     startedAtIso: session.startedAt.toISOString(),
+    loadedAtMs,
     notes: session.notes,
     exercises,
     notice: sp.aviso === "em-andamento" ? "em-andamento" : null,
+    programId: session.programId,
+    restTimerSound: profile?.restTimerSound ?? true,
+    stale,
   };
 
   return <WorkoutExecutionClient session={executionSession} />;

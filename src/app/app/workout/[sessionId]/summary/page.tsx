@@ -1,11 +1,9 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Lettermark } from "@/components/ui/glyph";
 import { requireUser } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { formatDecimal } from "@/lib/training/set-plan";
 import { ShareWorkoutForm } from "./share-workout-form";
 
@@ -52,16 +50,15 @@ export default async function WorkoutSummaryPage({ params }: PageProps<"/app/wor
       {session.records.length > 0 ? (
         <div className="mt-6 flex flex-col gap-2">
           {session.records.map((pr) => (
-            <Card key={pr.id} className="border-accent/40 bg-accent-soft">
-              <CardContent className="flex items-center gap-3 py-3">
-                <Lettermark code="PR" className="size-5 shrink-0 text-[9px]" />
-                <div>
+            // Records get the accent tint + a strong left keel so they stand
+            // apart from the plain exercise cards below; one "PR" mark only.
+            <Card key={pr.id} className="rounded-none border-l-4 border-l-accent-strong bg-accent-soft before:hidden after:hidden">
+              <CardContent className="flex items-center gap-3 py-3 pl-4">
+                <div className="min-w-0">
                   <p className="text-sm font-semibold">{pr.exercise.namePt}</p>
-                  <p className="text-xs text-muted">{PR_LABEL[pr.kind]?.(pr.value, pr.weightKg, pr.reps)}</p>
+                  <p className="text-xs text-foreground/75">{PR_LABEL[pr.kind]?.(pr.value, pr.weightKg, pr.reps)}</p>
                 </div>
-                <Badge variant="accent" className="ml-auto">
-                  PR
-                </Badge>
+                <span className="tag tag--mark ml-auto shrink-0">PR</span>
               </CardContent>
             </Card>
           ))}

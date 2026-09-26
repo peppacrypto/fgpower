@@ -4,6 +4,7 @@ import { getCurrentSession } from "@/lib/auth/require-user";
 import { getPublicProfile, getUserPublicActivities } from "@/lib/data/social";
 import { Avatar } from "@/components/ui/misc";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { ActivityCard } from "@/components/social/activity-card";
 import { Wordmark } from "@/components/brand/logo";
 import { FollowButton } from "./follow-button";
@@ -24,6 +25,9 @@ export default async function PublicProfilePage({ params }: PageProps<"/u/[usern
   if (!profile) notFound();
 
   const activities = await getUserPublicActivities(profile.id, viewerId, profile.canViewActivity);
+  // Signed-out visitors (usually from a shared link) sign in and land back here.
+  const returnTo = `/u/${profile.username ?? username}`;
+  const signInHref = `/login?next=${encodeURIComponent(returnTo)}`;
 
   return (
     <div className="flex min-h-dvh flex-col bg-background">
@@ -46,7 +50,8 @@ export default async function PublicProfilePage({ params }: PageProps<"/u/[usern
 
         <div className="mt-3 flex gap-4 text-sm text-muted">
           <span>
-            <strong className="text-foreground">{profile.followerCount}</strong> seguidores
+            <strong className="text-foreground">{profile.followerCount}</strong>{" "}
+            {profile.followerCount === 1 ? "seguidor" : "seguidores"}
           </span>
           <span>
             <strong className="text-foreground">{profile.followingCount}</strong> seguindo
@@ -69,6 +74,13 @@ export default async function PublicProfilePage({ params }: PageProps<"/u/[usern
             />
           </div>
         ) : null}
+        {!viewerId ? (
+          <div className="mt-4">
+            <Button asChild>
+              <Link href={signInHref}>Entre para seguir</Link>
+            </Button>
+          </div>
+        ) : null}
 
         <div className="mt-8">
           <h2 className="mb-3 text-sm font-bold uppercase tracking-wide text-muted">Atividade</h2>
@@ -82,13 +94,15 @@ export default async function PublicProfilePage({ params }: PageProps<"/u/[usern
                 <ActivityCard
                   key={a.id}
                   currentUsername={session?.user.username}
+                  isOwn={viewerId === profile.id}
+                  signInReturnTo={viewerId ? undefined : returnTo}
                   activity={{
                     id: a.id,
                     sessionId: a.sessionId,
                     caption: a.caption,
                     createdAt: a.createdAt,
                     fgCount: a.fgCount,
-                    hasGivenFg: false,
+                    hasGivenFg: a.hasGivenFg,
                     user: { name: profile.name, username: profile.username, image: profile.image },
                     summary: a.summary as unknown as WorkoutActivitySummary,
                   }}

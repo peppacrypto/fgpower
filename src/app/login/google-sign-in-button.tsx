@@ -27,7 +27,7 @@ function GoogleIcon() {
   );
 }
 
-export function GoogleSignInButton({ googleConfigured }: { googleConfigured: boolean }) {
+export function GoogleSignInButton({ googleConfigured, next }: { googleConfigured: boolean; next?: string | null }) {
   const [loading, setLoading] = useState(false);
 
   if (!googleConfigured) {
@@ -50,7 +50,8 @@ export function GoogleSignInButton({ googleConfigured }: { googleConfigured: boo
         setLoading(true);
         await authClient.signIn.social({
           provider: "google",
-          callbackURL: "/app/today",
+          // `next` was validated server-side (safeNextPath): an app path only.
+          callbackURL: next ?? "/app/today",
           newUserCallbackURL: "/onboarding",
           errorCallbackURL: "/login?error=1",
         });

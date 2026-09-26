@@ -7,8 +7,10 @@ import { Avatar } from "@/components/ui/misc";
 import { Badge } from "@/components/ui/badge";
 import { Lettermark } from "@/components/ui/glyph";
 import { giveFg, removeFg } from "@/lib/actions/social";
+import { formatAppDate } from "@/lib/training/week";
 import { cn } from "@/lib/utils/cn";
 import type { WorkoutActivitySummary } from "@/lib/social/activity-summary";
+import { runAction } from "./run-action";
 
 export interface ActivityCardData {
   id: string;
@@ -21,11 +23,43 @@ export interface ActivityCardData {
   summary: WorkoutActivitySummary;
 }
 
-export function ActivityCard({ activity, currentUsername }: { activity: ActivityCardData; currentUsername?: string | null }) {
+export function ActivityCard({
+  activity,
+  currentUsername,
+  isOwn: isOwnProp,
+  signInReturnTo,
+}: {
+  activity: ActivityCardData;
+  currentUsername?: string | null;
+  /** Whether the viewer wrote this activity (preferred over the username match). */
+  isOwn?: boolean;
+  /** Set when the viewer is signed out: FG becomes a sign-in link that returns here. */
+  signInReturnTo?: string;
+}) {
   const [fgCount, setFgCount] = useState(activity.fgCount);
   const [given, setGiven] = useState(activity.hasGivenFg);
+  const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
-  const isOwn = activity.user.username === currentUsername;
+  const isOwn = isOwnProp ?? (currentUsername != null && activity.user.username === currentUsername);
+
+  function toggleFg() {
+    const before = { given, fgCount };
+    const next = !given;
+    // Optimistic; rolled back below if the server says no or the call fails.
+    setGiven(next);
+    setFgCount((c) => c + (next ? 1 : -1));
+    setError(null);
+    startTransition(async () => {
+      const result = await runAction(() => (next ? giveFg(activity.id) : removeFg(activity.id)));
+      if (result.ok) {
+        setFgCount(result.fgCount);
+      } else {
+        setGiven(before.given);
+        setFgCount(before.fgCount);
+        setError(result.error);
+      }
+    });
+  }
 
   return (
     <div className="reg-frame p-4">
@@ -42,7 +76,7 @@ export function ActivityCard({ activity, currentUsername }: { activity: Activity
             )}
           </p>
           <p className="text-xs text-muted">
-            {new Date(activity.createdAt).toLocaleDateString("pt-BR", { day: "2-digit", month: "short" })}
+            {formatAppDate(activity.createdAt, { day: "2-digit", month: "short" })}
           </p>
         </div>
       </div>
@@ -62,40 +96,52 @@ export function ActivityCard({ activity, currentUsername }: { activity: Activity
         </p>
         {activity.summary.prs.length > 0 ? (
           <div className="mt-2 flex flex-wrap gap-1.5">
-            {activity.summary.prs.map((pr, i) => (
-              <Badge key={i} variant="accent" className="gap-1">
+            {/* One chip per exercise (a session can set several record kinds on the same lift). */}
+            {[...new Set(activity.summary.prs.map((pr) => pr.exerciseName))].map((name) => (
+              <Badge key={name} variant="accent" className="max-w-full gap-1">
                 <Lettermark code="PR" plain className="text-[9px]" />
-                {pr.exerciseName}
+                <span className="truncate">{name}</span>
               </Badge>
             ))}
           </div>
         ) : null}
       </div>
 
-      <div className="mt-3 flex items-center gap-3">
-        <button
-          disabled={pending || isOwn}
-          onClick={() => {
-            const next = !given;
-            setGiven(next);
-            setFgCount((c) => c + (next ? 1 : -1));
-            startTransition(async () => {
-              if (next) await giveFg(activity.id);
-              else await removeFg(activity.id);
-            });
-          }}
-          className={cn(
-            "flex items-center gap-1.5 rounded-[2px] border px-3 py-1.5 text-sm font-semibold transition-colors",
-            given ? "border-accent bg-accent-soft text-accent" : "border-border text-muted hover:bg-surface-2",
-            isOwn && "opacity-50",
-          )}
-        >
-          <Heart className="size-4" fill={given ? "currentColor" : "none"} />
-          FG {fgCount > 0 ? fgCount : ""}
-        </button>
+      <div className="mt-3 flex flex-wrap items-center gap-3">
+        {signInReturnTo ? (
+          <Link
+            href={`/login?next=${encodeURIComponent(signInReturnTo)}`}
+            className="flex items-center gap-1.5 rounded-[2px] border border-border px-3 py-1.5 text-sm font-semibold text-muted hover:bg-surface-2"
+          >
+            <Heart className="size-4" />
+            Entre para dar FG
+            {fgCount > 0 ? <span className="font-mono tabular-nums">· {fgCount}</span> : null}
+          </Link>
+        ) : (
+          <button
+            type="button"
+            disabled={pending || isOwn}
+            aria-pressed={given}
+            aria-label={given ? `Remover FG (${fgCount})` : `Dar FG (${fgCount})`}
+            onClick={toggleFg}
+            className={cn(
+              "flex items-center gap-1.5 rounded-[2px] border px-3 py-1.5 text-sm font-semibold transition-colors",
+              given ? "border-accent bg-accent-soft text-accent" : "border-border text-muted hover:bg-surface-2",
+              isOwn && "opacity-50",
+            )}
+          >
+            <Heart className="size-4" fill={given ? "currentColor" : "none"} />
+            FG {fgCount > 0 ? fgCount : ""}
+          </button>
+        )}
         <Link href={`/app/activity/${activity.id}`} className="text-xs text-muted hover:text-foreground">
           Ver detalhes
         </Link>
+        {error ? (
+          <p role="alert" className="basis-full text-xs text-danger">
+            {error}
+          </p>
+        ) : null}
       </div>
     </div>
   );

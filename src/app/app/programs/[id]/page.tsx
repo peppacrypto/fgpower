@@ -3,16 +3,17 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { AlertTriangle, Info } from "lucide-react";
-import { GLoad } from "@/components/ui/glyph";
+import { GArrow, GLoad } from "@/components/ui/glyph";
 import { requireUser } from "@/lib/auth/require-user";
-import { getUserProgram } from "@/lib/data/user-programs";
+import { enrollmentProgress, getUserProgram } from "@/lib/data/user-programs";
 import { getActiveEnrollment, getDaysDoneThisWeek, getInProgressSessions } from "@/lib/data/dashboard";
 import { analyzeUserProgram } from "@/lib/programming/analyze";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { startProgram, archiveProgram, duplicateProgram } from "@/lib/actions/programs";
-import { DayActions, DayStatus, dayStates } from "@/components/workout/day-actions";
+import { DayActions, DayStatus, dayStates, exerciseCount } from "@/components/workout/day-actions";
+import { SwitchProgramButton } from "@/components/programs/switch-program-button";
 
 export async function generateMetadata({ params }: PageProps<"/app/programs/[id]">): Promise<Metadata> {
   const { id } = await params;
@@ -37,8 +38,13 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
   const doneThisWeek = ownEnrollment
     ? (await getDaysDoneThisWeek(user.id, ownEnrollment.id, program.days)).byDayId
     : new Map<string, string>();
-  const states = dayStates(program.days, inProgress, doneThisWeek);
-  const openWithData = inProgress.find((s) => s.hasData);
+  // A workout left open on an earlier day (and untouched since) doesn't lock
+  // the plan: Today offers to close it.
+  const open = inProgress.filter((s) => !s.stale);
+  const states = dayStates(program.days, open, doneThisWeek);
+  const openWithData = open.find((s) => s.hasData);
+  const hasExercises = program.days.some((d) => d.exercises.length > 0);
+  const editHref = `/app/programs/${program.id}/edit`;
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
@@ -66,10 +72,19 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
         <Button variant="outline" asChild>
           <Link href={`/app/programs/${program.id}/edit`}>Editar</Link>
         </Button>
-        {!isActive ? (
-          <form action={startProgram.bind(null, program.id)}>
-            <SubmitButton pendingLabel="Iniciando…">Iniciar este programa</SubmitButton>
-          </form>
+        {!isActive && hasExercises ? (
+          <SwitchProgramButton
+            action={startProgram.bind(null, program.id)}
+            label="Iniciar este programa"
+            pendingLabel="Iniciando…"
+            size="md"
+            active={otherActive ? { name: otherActive.program.name, progress: enrollmentProgress(otherActive) } : null}
+          />
+        ) : null}
+        {!isActive && !hasExercises ? (
+          <Button disabled aria-describedby="start-needs-exercises">
+            Iniciar este programa
+          </Button>
         ) : null}
         <form action={duplicateProgram.bind(null, program.id)}>
           <SubmitButton variant="outline" pendingLabel="Duplicando…">
@@ -85,10 +100,12 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
         ) : null}
       </div>
 
-      {!isActive && otherActive ? (
-        <p className="mt-2 text-xs text-muted">
-          Iniciar este programa encerra seu programa ativo atual (
-          <span className="font-medium text-foreground">{otherActive.program.name}</span>).
+      {!isActive && !hasExercises ? (
+        <p id="start-needs-exercises" className="mt-2 text-xs text-muted">
+          Adicione ao menos um exercício para iniciar.{" "}
+          <Link href={editHref} className="font-semibold text-accent hover:underline">
+            Editar programa
+          </Link>
         </p>
       ) : null}
 
@@ -131,31 +148,39 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
                 <h3 className="font-semibold wrap-break-word">{day.name}</h3>
                 {isActive ? (
                   <p className="text-xs text-muted">
-                    {day.exercises.length} exercícios
+                    {exerciseCount(day.exercises.length)}
                     <DayStatus state={states.get(day.id) ?? { kind: "idle" }} suggested={false} />
                   </p>
                 ) : null}
               </div>
               {isActive ? (
-                <DayActions dayId={day.id} state={states.get(day.id) ?? { kind: "idle" }} locked={!!openWithData} />
+                <DayActions
+                  dayId={day.id}
+                  state={states.get(day.id) ?? { kind: "idle" }}
+                  locked={!!openWithData}
+                  editHref={day.exercises.length === 0 ? editHref : undefined}
+                />
               ) : null}
             </div>
             <ul className="mt-3 flex flex-col divide-y divide-border">
               {day.exercises.map((ex) => (
-                <li key={ex.id} className="flex items-center gap-3 py-2 text-sm">
-                  <div className="relative size-9 shrink-0 overflow-hidden rounded-[3px] bg-surface-2">
-                    {ex.exercise.media?.[0]?.url ? (
-                      <Image src={ex.exercise.media[0].url} alt="" fill sizes="36px" className="object-cover" />
-                    ) : (
-                      <div className="flex h-full items-center justify-center text-muted">
-                        <GLoad className="size-4" />
-                      </div>
-                    )}
-                  </div>
-                  <span className="min-w-0 flex-1 truncate">{ex.exercise.namePt}</span>
-                  <span className="shrink-0 font-mono tabular-nums text-muted">
-                    {ex.sets}×{ex.repMin === ex.repMax ? ex.repMin : `${ex.repMin}-${ex.repMax}`}
-                  </span>
+                <li key={ex.id}>
+                  <Link href={`/app/exercises/${ex.exercise.slug}`} className="group flex items-center gap-3 py-2 text-sm">
+                    <div className="relative size-9 shrink-0 overflow-hidden rounded-[3px] bg-surface-2">
+                      {ex.exercise.media?.[0]?.url ? (
+                        <Image src={ex.exercise.media[0].url} alt="" fill sizes="36px" className="object-cover" />
+                      ) : (
+                        <div className="flex h-full items-center justify-center text-muted">
+                          <GLoad className="size-4" />
+                        </div>
+                      )}
+                    </div>
+                    <span className="min-w-0 flex-1 truncate group-hover:text-accent">{ex.exercise.namePt}</span>
+                    <span className="shrink-0 font-mono tabular-nums text-muted">
+                      {ex.sets}×{ex.repMin === ex.repMax ? ex.repMin : `${ex.repMin}-${ex.repMax}`}
+                    </span>
+                    <GArrow className="size-3.5 shrink-0 text-muted" />
+                  </Link>
                 </li>
               ))}
             </ul>

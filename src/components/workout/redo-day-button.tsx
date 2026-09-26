@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { startAdHocWorkoutSession } from "@/lib/actions/workouts";
+import { InlineActionForm } from "./inline-action-form";
 
 /**
  * "Refazer" for a day already trained this week. Asks first — one stray tap
@@ -20,9 +21,11 @@ export function RedoDayButton({ dayId }: { dayId: string }) {
     );
   }
   return (
-    <form
+    <InlineActionForm
       action={startAdHocWorkoutSession.bind(null, dayId)}
+      failText="Não foi possível abrir o treino. Tente de novo."
       className="flex w-full basis-full flex-wrap items-center justify-end gap-2"
+      errorClassName="w-full text-right"
     >
       <p className="w-full text-right text-xs text-muted">Treinar este dia de novo? O treino salvo continua salvo.</p>
       <SubmitButton pendingLabel="Abrindo…" className="px-3.5">
@@ -31,6 +34,6 @@ export function RedoDayButton({ dayId }: { dayId: string }) {
       <Button variant="ghost" className="px-3.5" onClick={() => setArmed(false)}>
         Não
       </Button>
-    </form>
+    </InlineActionForm>
   );
 }

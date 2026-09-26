@@ -13,7 +13,8 @@ export function MarketingHeader({ onDark = false }: { onDark?: boolean }) {
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 border-b backdrop-blur",
+        // The header's own background also covers the status-bar inset.
+        "sticky top-0 z-40 border-b pt-[env(safe-area-inset-top,0px)] backdrop-blur",
         onDark ? "border-white/10 bg-black/60" : "border-border bg-background/85",
       )}
     >

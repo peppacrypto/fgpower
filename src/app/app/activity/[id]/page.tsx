@@ -9,8 +9,10 @@ import { Avatar } from "@/components/ui/misc";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import type { WorkoutActivitySummary } from "@/lib/social/activity-summary";
+import { formatAppDate } from "@/lib/training/week";
 import { GiveFgButton } from "./give-fg-button";
 import { ReportButton } from "./report-button";
+import { formatDecimal } from "@/lib/training/set-plan";
 
 export const metadata: Metadata = { title: "Atividade" };
 
@@ -47,7 +49,7 @@ export default async function ActivityDetailPage({ params }: PageProps<"/app/act
               activity.user.name
             )}
           </p>
-          <p className="text-xs text-muted">{new Date(activity.createdAt).toLocaleDateString("pt-BR", { dateStyle: "long" })}</p>
+          <p className="text-xs text-muted">{formatAppDate(activity.createdAt, { dateStyle: "long" })}</p>
         </div>
       </div>
 
@@ -64,10 +66,10 @@ export default async function ActivityDetailPage({ params }: PageProps<"/app/act
 
           {summary.prs.length > 0 ? (
             <div className="mt-4 flex flex-col gap-2">
-              {summary.prs.map((pr, i) => (
-                <div key={i} className="flex items-center gap-2 rounded-[var(--radius-sm)] bg-accent-soft px-3 py-2 text-sm text-accent">
-                  <Lettermark code="PR" className="size-5 text-[9px]" />
-                  {pr.exerciseName}
+              {[...new Set(summary.prs.map((pr) => pr.exerciseName))].map((name) => (
+                <div key={name} className="flex items-center gap-2 rounded-[var(--radius-sm)] bg-accent-soft px-3 py-2 text-sm text-accent">
+                  <Lettermark code="PR" className="size-5 shrink-0 text-[9px]" />
+                  <span className="min-w-0">{name}</span>
                 </div>
               ))}
             </div>
@@ -76,10 +78,11 @@ export default async function ActivityDetailPage({ params }: PageProps<"/app/act
           {summary.exercises.length > 0 ? (
             <div className="mt-4 flex flex-col gap-1.5">
               {summary.exercises.map((ex, i) => (
-                <div key={i} className="flex items-center justify-between text-sm">
-                  <span>{ex.name}</span>
-                  <span className="text-muted">
-                    {ex.workingSets} séries{ex.bestSet ? ` · ${ex.bestSet.weightKg}kg × ${ex.bestSet.reps}` : ""}
+                <div key={i} className="flex items-start justify-between gap-3 text-sm">
+                  <span className="min-w-0">{ex.name}</span>
+                  <span className="shrink-0 whitespace-nowrap text-muted">
+                    {ex.workingSets} {ex.workingSets === 1 ? "série" : "séries"}
+                    {ex.bestSet ? ` · ${formatDecimal(ex.bestSet.weightKg) || "—"}kg × ${ex.bestSet.reps}` : ""}
                   </span>
                 </div>
               ))}

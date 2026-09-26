@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { startTemplate, customizeTemplate } from "@/lib/actions/programs";
 import { TemplateDossier } from "@/components/programs/template-dossier";
+import { SwitchProgramButton } from "@/components/programs/switch-program-button";
+import { enrollmentProgress } from "@/lib/data/user-programs";
 
 export async function generateMetadata({ params }: PageProps<"/app/programs/templates/[slug]">): Promise<Metadata> {
   const { slug } = await params;
@@ -24,22 +26,30 @@ export default async function TemplateDetailPage({ params }: PageProps<"/app/pro
   // Already following this template: "Ativar" again would fork a fresh copy
   // and reset the program to week 1 — send the user to their workouts instead.
   const alreadyActive = activeEnrollment?.program.sourceTemplateId === template.id;
+  // With another program running, activating is a switch: both the masthead
+  // and the sticky bar say so and ask first (each is its own two-step button).
   const enrollForm = alreadyActive ? (
     <Button size="lg" variant="strong" asChild>
       <Link href="/app/today">Programa ativo · ir para Hoje</Link>
     </Button>
   ) : (
-    <form action={startTemplate.bind(null, template.slug)}>
-      <SubmitButton size="lg" variant="strong" pendingLabel="Ativando…">
-        Ativar programa
-      </SubmitButton>
-    </form>
+    <SwitchProgramButton
+      action={startTemplate.bind(null, template.slug)}
+      label="Ativar programa"
+      pendingLabel="Ativando…"
+      active={
+        activeEnrollment
+          ? { name: activeEnrollment.program.name, progress: enrollmentProgress(activeEnrollment) }
+          : null
+      }
+    />
   );
 
   return (
     <TemplateDossier
       template={template}
       scienceHref="/app/science"
+      exerciseHref="/app/exercises"
       actions={
         <>
           {enrollForm}
@@ -48,12 +58,6 @@ export default async function TemplateDetailPage({ params }: PageProps<"/app/pro
               Personalizar
             </SubmitButton>
           </form>
-          {activeEnrollment && !alreadyActive ? (
-            <p className="w-full text-xs text-muted">
-              Isto encerra seu programa ativo atual (
-              <span className="font-medium text-foreground">{activeEnrollment.program.name}</span>).
-            </p>
-          ) : null}
         </>
       }
       stickyActions={enrollForm}

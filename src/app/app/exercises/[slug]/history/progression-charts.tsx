@@ -27,10 +27,10 @@ export function ProgressionChart({
       <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted">{label}</p>
       <div className="h-48 w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data} margin={{ top: 5, right: 10, bottom: 0, left: -20 }}>
+          <LineChart data={data} margin={{ top: 5, right: 10, bottom: 0, left: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
             <XAxis dataKey="dateLabel" tick={AXIS_STYLE} axisLine={{ stroke: "var(--border)" }} tickLine={false} />
-            <YAxis tick={AXIS_STYLE} axisLine={false} tickLine={false} width={40} />
+            <YAxis tick={AXIS_STYLE} axisLine={false} tickLine={false} width={44} />
             <Tooltip
               formatter={(value) => [`${value}${unit}`, label]}
               contentStyle={{

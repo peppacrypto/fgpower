@@ -1,50 +1,14 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { Select } from "@/components/ui/input";
 import { updatePrivacySettings, type PrivacySettings } from "@/lib/actions/profile";
-
-function Toggle({
-  label,
-  description,
-  checked,
-  onChange,
-}: {
-  label: string;
-  description?: string;
-  checked: boolean;
-  onChange: (v: boolean) => void;
-}) {
-  return (
-    <label className="flex items-center justify-between gap-4 py-3">
-      <span>
-        <span className="block text-sm font-medium">{label}</span>
-        {description ? <span className="block text-xs text-muted">{description}</span> : null}
-      </span>
-      <input
-        type="checkbox"
-        role="switch"
-        checked={checked}
-        onChange={(e) => onChange(e.target.checked)}
-        className="size-5 accent-accent"
-      />
-    </label>
-  );
-}
+import { SaveStatus } from "./save-status";
+import { Toggle } from "./toggle";
+import { useAutosave } from "./use-autosave";
 
 export function PrivacyForm({ initial }: { initial: PrivacySettings }) {
-  const [settings, setSettings] = useState(initial);
-  const [pending, startTransition] = useTransition();
-  const [saved, setSaved] = useState(true);
-
-  function update(patch: Partial<PrivacySettings>) {
-    const next = { ...settings, ...patch };
-    setSettings(next);
-    setSaved(false);
-    startTransition(async () => {
-      await updatePrivacySettings(next);
-      setSaved(true);
-    });
-  }
+  // A failed save rolls back and shows its message on the row that was tapped.
+  const { value: settings, pending, savedAt, update, errorFor } = useAutosave(initial, updatePrivacySettings);
 
   return (
     <div className="divide-y divide-border">
@@ -53,52 +17,63 @@ export function PrivacyForm({ initial }: { initial: PrivacySettings }) {
         description="Outros usuários podem encontrar seu perfil e ver sua atividade pública."
         checked={settings.isPublicAccount}
         onChange={(v) => update({ isPublicAccount: v })}
+        error={errorFor("isPublicAccount")}
       />
       <Toggle
         label="Permitir que sua conta seja descoberta"
         description="Aparecer em buscas e sugestões."
         checked={settings.discoverable}
         onChange={(v) => update({ discoverable: v })}
+        error={errorFor("discoverable")}
       />
       <Toggle
         label="Mostrar cargas publicamente por padrão"
         description="Fica desligado por padrão mesmo em treinos públicos."
         checked={settings.showLoadsPublicly}
         onChange={(v) => update({ showLoadsPublicly: v })}
+        error={errorFor("showLoadsPublicly")}
       />
       <Toggle
         label="Mostrar medidas corporais publicamente"
         description="Peso e outras medidas nunca ficam públicas por padrão."
         checked={settings.showBodyMetricsPublicly}
         onChange={(v) => update({ showBodyMetricsPublicly: v })}
+        error={errorFor("showBodyMetricsPublicly")}
       />
       <Toggle
         label="Mostrar programa atual no perfil"
         checked={settings.showCurrentProgram}
         onChange={(v) => update({ showCurrentProgram: v })}
+        error={errorFor("showCurrentProgram")}
       />
       <Toggle
         label="Compartilhar recordes automaticamente"
         description="Novos PRs viram atividades no feed."
         checked={settings.autoShareAchievements}
         onChange={(v) => update({ autoShareAchievements: v })}
+        error={errorFor("autoShareAchievements")}
       />
       <div className="pt-3">
         <label htmlFor="defaultWorkoutVisibility" className="text-sm font-medium">
           Visibilidade padrão dos treinos
         </label>
-        <select
+        <Select
           id="defaultWorkoutVisibility"
           value={settings.defaultWorkoutVisibility}
           onChange={(e) => update({ defaultWorkoutVisibility: e.target.value as PrivacySettings["defaultWorkoutVisibility"] })}
-          className="mt-1.5 h-11 w-full rounded-[3px] border border-border bg-surface px-3.5 text-sm"
+          className="mt-1.5"
         >
           <option value="PRIVATE">Privado</option>
           <option value="FOLLOWERS">Seguidores</option>
           <option value="PUBLIC">Público</option>
-        </select>
+        </Select>
+        {errorFor("defaultWorkoutVisibility") ? (
+          <p role="alert" className="mt-1 text-xs font-medium text-danger">
+            {errorFor("defaultWorkoutVisibility")}
+          </p>
+        ) : null}
       </div>
-      <p className="pt-3 text-xs text-muted">{pending ? "Salvando…" : saved ? "Salvo automaticamente" : ""}</p>
+      <SaveStatus pending={pending} savedAt={savedAt} idleText="Salvo automaticamente" className="pt-3" />
     </div>
   );
 }

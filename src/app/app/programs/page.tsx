@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Plus } from "lucide-react";
+import { GArrow } from "@/components/ui/glyph";
 import { requireUser } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 import { listTemplates } from "@/lib/data/templates";
 import { Button } from "@/components/ui/button";
 import { SectionHead } from "@/components/ui/section-head";
 import { ProtocolLibrary } from "@/components/programs/protocol-library";
+import { splitToken } from "@/components/programs/protocol-card";
 
 export const metadata: Metadata = { title: "Programas" };
 
@@ -34,6 +36,14 @@ export default async function ProgramsPage() {
         <div>
           <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-muted">Sua estante</span>
           <h1 className="text-display mt-1 text-4xl font-extrabold sm:text-5xl">Programas</h1>
+          {/* The principles every protocol is built on (the evidence library). */}
+          <Link
+            href="/app/science"
+            className="mt-1 -mb-2 inline-flex items-center gap-1 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
+          >
+            Ciência dos protocolos
+            <GArrow className="size-3" />
+          </Link>
         </div>
         <Button variant="strong" asChild>
           <Link href="/app/programs/new">
@@ -73,7 +83,7 @@ export default async function ProgramsPage() {
               <span className="text-sm text-muted">Do zero, ou personalize um pronto da biblioteca abaixo.</span>
             </Link>
           ) : (
-            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
               {myPrograms.map((p, i) => (
                 <Link
                   key={p.id}
@@ -98,7 +108,7 @@ export default async function ProgramsPage() {
                           key={d.id}
                           className="bg-surface-2 px-1.5 py-1 font-mono text-[10px] text-foreground/70"
                         >
-                          {d.name.replace(/^(dia|sess(ã|a)o)\s+/i, "").slice(0, 10).toUpperCase()}
+                          {splitToken(d.name)}
                         </span>
                       ))}
                     </div>

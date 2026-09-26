@@ -54,26 +54,40 @@ export function ExercisePicker({
       className="m-0 h-dvh max-h-dvh w-dvw max-w-dvw bg-transparent p-0 backdrop:bg-black/50 sm:m-auto sm:h-auto sm:max-h-[85vh] sm:w-full sm:max-w-lg sm:rounded-[3px]"
     >
       <div className="flex h-dvh flex-col bg-surface sm:h-auto sm:max-h-[85vh] sm:rounded-[3px] sm:border-t-2 sm:border-t-[var(--rule-heavy)]">
-        <div className="flex items-center gap-2 border-b border-border p-4">
+        {/* Full screen on phones: clear the status bar / notch (installed PWA
+            draws under it) and keep the search at 16px so iOS doesn't zoom. */}
+        <div className="flex items-center gap-2 border-b border-border p-4 pt-[max(1rem,env(safe-area-inset-top))] sm:pt-4">
           <div className="relative flex-1">
             <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted" />
             <Input
               autoFocus
+              type="search"
+              enterKeyHint="search"
+              aria-label="Buscar exercício"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
+              // A search box eats the first Escape to clear itself; one Escape
+              // should close the picker, as it does with the box empty.
+              onKeyDown={(e) => {
+                if (e.key === "Escape" && !e.nativeEvent.isComposing) {
+                  e.preventDefault();
+                  onClose();
+                }
+              }}
               placeholder="Buscar exercício…"
-              className="pl-9"
+              className="pl-9 text-base sm:text-sm [&::-webkit-search-cancel-button]:hidden"
             />
           </div>
           <button
+            type="button"
             onClick={onClose}
             aria-label="Fechar"
-            className="flex size-9 shrink-0 items-center justify-center rounded-[3px] hover:bg-surface-2"
+            className="flex size-11 shrink-0 items-center justify-center rounded-[3px] hover:bg-surface-2 sm:size-9"
           >
             <X className="size-4" />
           </button>
         </div>
-        <div className="flex-1 overflow-y-auto p-3">
+        <div className="flex-1 overflow-y-auto p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:pb-3">
           {pending ? (
             <p className="p-4 text-center text-sm text-muted">Buscando…</p>
           ) : results.length === 0 ? (
@@ -83,6 +97,7 @@ export function ExercisePicker({
               {results.map((ex) => (
                 <button
                   key={ex.id}
+                  type="button"
                   onClick={() => {
                     onSelect(ex);
                     onClose();

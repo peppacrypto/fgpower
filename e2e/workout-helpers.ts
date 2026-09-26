@@ -1,4 +1,4 @@
-import { expect, type Locator, type Page } from "@playwright/test";
+import { expect, type Locator, type Page, type Response } from "@playwright/test";
 import { loginAsTestUser } from "./fixtures";
 import { completeOnboarding } from "./onboarding-helper";
 
@@ -92,10 +92,23 @@ export async function recordSet(page: Page, n: number, kg: string, reps: string)
   await page.getByLabel(`Série ${n} — kg`, { exact: true }).fill(kg);
   await page.getByLabel(`Série ${n} — repetições`, { exact: true }).fill(reps);
   await page.getByRole("button", { name: `Concluir série ${n}`, exact: true }).click();
-  const done = page.getByRole("button", { name: `Série ${n} feita — toque para desfazer`, exact: true });
+  await expectSetSaved(page, `Série ${n}`);
+}
+
+/**
+ * The ✓ shows (and the rest starts) on the tap; the row's `data-sync` stays
+ * set until the server has confirmed it ("sending", or "pending" after a
+ * failed try that will be resent).
+ */
+export async function expectSetSaved(page: Page, name: string) {
+  const done = page.getByRole("button", { name: `${name} feita — toque para desfazer`, exact: true });
   await expect(done).toBeVisible({ timeout: 15_000 });
-  // The optimistic ✓ shows immediately; wait for the save round-trip to finish.
-  await expect(done).toBeEnabled({ timeout: 15_000 });
+  await expect(done).not.toHaveAttribute("data-sync", /.+/, { timeout: 15_000 });
+}
+
+/** A POST of the workout screen's set outbox (✓, un-✓ and typed values go through it). */
+export function isSetSync(r: Response) {
+  return r.request().method() === "POST" && r.url().includes("/api/workout/sets") && r.ok();
 }
 
 /** Header "Finalizar" → the finish sheet dialog. */

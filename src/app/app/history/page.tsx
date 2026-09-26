@@ -3,6 +3,15 @@ import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { requireUser } from "@/lib/auth/require-user";
 import { listSessionsInRange, listAllSessions } from "@/lib/data/history";
+import {
+  currentMonth,
+  daysInMonth as countDaysInMonth,
+  firstWeekdayOfMonth,
+  formatAppDate,
+  monthBounds,
+  wallClock,
+} from "@/lib/training/week";
+import { MIN_HISTORY_YEAR, parseMonthParams } from "./params";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/misc";
@@ -26,39 +35,40 @@ export default async function HistoryPage({ searchParams }: PageProps<"/app/hist
   const sp = await searchParams;
   const user = await requireUser();
 
-  const now = new Date();
-  const year = typeof sp.year === "string" ? Number(sp.year) : now.getFullYear();
-  const month = typeof sp.month === "string" ? Number(sp.month) : now.getMonth(); // 0-indexed
+  // Month navigation and day buckets follow the São Paulo calendar (the
+  // server runs in UTC — a 22:00 workout must not land on tomorrow's cell).
+  const today = currentMonth();
+  const { year, month0: month } = parseMonthParams(sp, today);
+  const { start, end } = monthBounds(year, month);
 
-  const firstOfMonth = new Date(year, month, 1);
-  const firstOfNextMonth = new Date(year, month + 1, 1);
   const [sessions, recent] = await Promise.all([
-    listSessionsInRange(user.id, firstOfMonth, firstOfNextMonth),
+    listSessionsInRange(user.id, start, end),
     listAllSessions(user.id, 1, 10),
   ]);
 
   const sessionsByDay = new Map<number, typeof sessions>();
   for (const s of sessions) {
     if (!s.finishedAt) continue;
-    const day = s.finishedAt.getDate();
+    const day = wallClock(s.finishedAt).day;
     const list = sessionsByDay.get(day) ?? [];
     list.push(s);
     sessionsByDay.set(day, list);
   }
 
-  const startWeekday = firstOfMonth.getDay();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const startWeekday = firstWeekdayOfMonth(year, month);
+  const daysInMonth = countDaysInMonth(year, month);
   const cells: (number | null)[] = [
     ...Array.from({ length: startWeekday }, () => null),
     ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
   ];
 
   function monthHref(delta: number) {
-    const d = new Date(year, month + delta, 1);
-    return `/app/history?year=${d.getFullYear()}&month=${d.getMonth()}`;
+    const total = year * 12 + month + delta;
+    return `/app/history?year=${Math.floor(total / 12)}&month=${total % 12}`;
   }
 
-  const isCurrentMonth = year === now.getFullYear() && month === now.getMonth();
+  const isCurrentMonth = year === today.year && month === today.month0;
+  const isFirstMonth = year === MIN_HISTORY_YEAR && month === 0;
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
@@ -67,7 +77,16 @@ export default async function HistoryPage({ searchParams }: PageProps<"/app/hist
       <Card className="mt-6">
         <CardContent className="pt-5">
           <div className="flex items-center justify-between">
-            <Link href={monthHref(-1)} className="flex size-8 items-center justify-center rounded-[3px] hover:bg-surface-2">
+            <Link
+              href={monthHref(-1)}
+              aria-label="Mês anterior"
+              aria-disabled={isFirstMonth}
+              className={
+                isFirstMonth
+                  ? "pointer-events-none flex size-8 items-center justify-center rounded-[3px] opacity-30"
+                  : "flex size-8 items-center justify-center rounded-[3px] hover:bg-surface-2"
+              }
+            >
               <ChevronLeft className="size-4" />
             </Link>
             <h2 className="font-semibold">
@@ -75,6 +94,7 @@ export default async function HistoryPage({ searchParams }: PageProps<"/app/hist
             </h2>
             <Link
               href={monthHref(1)}
+              aria-label="Próximo mês"
               aria-disabled={isCurrentMonth}
               className={
                 isCurrentMonth
@@ -129,15 +149,16 @@ export default async function HistoryPage({ searchParams }: PageProps<"/app/hist
             {recent.items.map((s) => (
               <Link key={s.id} href={`/app/workout/${s.id}/summary`}>
                 <Card className="is-link">
-                  <CardContent className="flex items-center justify-between py-3.5">
-                    <div>
+                  <CardContent className="flex items-center justify-between gap-3 py-3.5">
+                    <div className="min-w-0">
                       <p className="text-sm font-semibold">{s.name}</p>
                       <p className="text-xs text-muted">
-                        {s.finishedAt?.toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" })}
+                        {s.finishedAt ? formatAppDate(s.finishedAt, { day: "2-digit", month: "short", year: "numeric" }) : null}
                       </p>
                     </div>
-                    <p className="text-xs text-muted">
-                      {formatDuration(s.durationSeconds)} · {s.totalWorkingSets ?? 0} séries
+                    <p className="shrink-0 whitespace-nowrap text-xs text-muted">
+                      {formatDuration(s.durationSeconds)} · {s.totalWorkingSets ?? 0}{" "}
+                      {s.totalWorkingSets === 1 ? "série" : "séries"}
                     </p>
                   </CardContent>
                 </Card>

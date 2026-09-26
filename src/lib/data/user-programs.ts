@@ -19,3 +19,8 @@ export async function getUserProgram(id: string) {
     },
   });
 }
+
+/** Where an enrollment stands, as the switch warning says it: "semana 3 de 13". */
+export function enrollmentProgress(e: { currentWeek: number; program: { durationWeeks: number | null } }) {
+  return e.program.durationWeeks ? `semana ${e.currentWeek} de ${e.program.durationWeeks}` : `semana ${e.currentWeek}`;
+}

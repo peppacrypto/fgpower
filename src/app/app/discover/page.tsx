@@ -19,7 +19,7 @@ export default async function DiscoverPage({ searchParams }: PageProps<"/app/dis
       <h1 className="text-2xl font-bold tracking-tight">Descobrir</h1>
 
       <form className="mt-4" action="/app/discover">
-        <Input name="q" defaultValue={q} placeholder="Buscar por nome ou usuário…" />
+        <Input type="search" name="q" defaultValue={q} placeholder="Buscar por nome ou usuário…" />
       </form>
 
       <div className="mt-6 flex flex-col gap-2">

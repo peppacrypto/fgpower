@@ -62,11 +62,21 @@ export async function getUserPublicActivities(userId: string, viewerId: string |
       ? ["PUBLIC", "FOLLOWERS"]
       : ["PUBLIC"];
 
-  return prisma.activity.findMany({
+  const activities = await prisma.activity.findMany({
     where: { userId, visibility: { in: visibilities } },
     orderBy: { createdAt: "desc" },
     take: 20,
   });
+  // Which of these the viewer already gave FG — so the heart renders filled
+  // and a tap removes it instead of silently re-giving.
+  const given = viewerId
+    ? await prisma.activityFG.findMany({
+        where: { userId: viewerId, activityId: { in: activities.map((a) => a.id) } },
+        select: { activityId: true },
+      })
+    : [];
+  const givenIds = new Set(given.map((f) => f.activityId));
+  return activities.map((a) => ({ ...a, hasGivenFg: givenIds.has(a.id) }));
 }
 
 export async function getFeed(userId: string, cursor?: string, pageSize = 15) {

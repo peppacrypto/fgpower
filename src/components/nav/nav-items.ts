@@ -15,8 +15,14 @@ export interface NavItem {
  * Uses the FGPOWER keyline glyph family, not clichéd pictographic icons. */
 export const NAV_ITEMS: NavItem[] = [
   { href: "/app/today", label: "Hoje", icon: GToday, activePaths: ["/app/workout", "/app/history"] },
-  { href: "/app/programs", label: "Programas", icon: GProgram },
+  // The science library backs the protocols: it lives under Programas.
+  { href: "/app/programs", label: "Programas", icon: GProgram, activePaths: ["/app/science"] },
   { href: "/app/exercises", label: "Exercícios", icon: GLoad },
   { href: "/app/progress", label: "Progresso", icon: GProgress },
-  { href: "/app/profile", label: "Perfil", icon: GProfile, activePaths: ["/app/settings", "/app/feed", "/app/notifications"] },
+  {
+    href: "/app/profile",
+    label: "Perfil",
+    icon: GProfile,
+    activePaths: ["/app/settings", "/app/feed", "/app/notifications", "/app/discover", "/app/activity"],
+  },
 ];

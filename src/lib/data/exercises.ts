@@ -1,6 +1,6 @@
 import "server-only";
 import { prisma } from "@/lib/db";
-import { normalizeText } from "@/lib/utils/normalize-text";
+import { exerciseSearchWhere } from "@/lib/data/exercise-query";
 
 const CARD_SELECT = {
   id: true,
@@ -30,12 +30,13 @@ export interface ExerciseFilters {
 }
 
 export async function listExercises(filters: ExerciseFilters = {}) {
-  const page = filters.page ?? 1;
+  const requestedPage = filters.page && Number.isSafeInteger(filters.page) && filters.page >= 1 ? filters.page : 1;
   const pageSize = filters.pageSize ?? 24;
 
   const where = {
     isPublished: true,
-    ...(filters.q ? { searchText: { contains: normalizeText(filters.q) } } : {}),
+    // Every word of the query must match (in any order), with light plural stemming.
+    ...(filters.q ? exerciseSearchWhere(filters.q) : {}),
     ...(filters.equipmentId ? { equipmentId: filters.equipmentId } : {}),
     ...(filters.movementPatternId ? { movementPatternId: filters.movementPatternId } : {}),
     ...(filters.difficulty ? { difficulty: filters.difficulty as never } : {}),
@@ -44,16 +45,29 @@ export async function listExercises(filters: ExerciseFilters = {}) {
       : {}),
   };
 
-  const [items, total] = await Promise.all([
+  const findPage = (page: number) =>
     prisma.exercise.findMany({
       where,
       select: CARD_SELECT,
       orderBy: [{ isCurated: "desc" }, { popularity: "desc" }, { namePt: "asc" }],
       skip: (page - 1) * pageSize,
       take: pageSize,
-    }),
-    prisma.exercise.count({ where }),
-  ]);
+    });
+
+  // Page 1 (the library's first view, the builder picker) always exists, so
+  // both queries run together. Past it, count first so a page beyond the end
+  // (an old link, a hand-edited URL) serves the last page instead of
+  // "Página 999 de 37" and nothing.
+  let total: number;
+  let page = requestedPage;
+  let items: Awaited<ReturnType<typeof findPage>>;
+  if (page === 1) {
+    [items, total] = await Promise.all([findPage(1), prisma.exercise.count({ where })]);
+  } else {
+    total = await prisma.exercise.count({ where });
+    page = Math.min(page, Math.max(1, Math.ceil(total / pageSize)));
+    items = await findPage(page);
+  }
 
   return { items, total, page, pageSize, totalPages: Math.max(1, Math.ceil(total / pageSize)) };
 }

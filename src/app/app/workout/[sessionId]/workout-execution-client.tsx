@@ -1,22 +1,23 @@
 "use client";
 
-import { useEffect, useMemo, useOptimistic, useRef, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, unstable_isUnrecognizedActionError } from "next/navigation";
-import { ChevronLeft, ChevronRight, Info, SkipForward, Undo2, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Info, Plus, SkipForward, Undo2, X } from "lucide-react";
 import { GLoad, GNotes, GCheck } from "@/components/ui/glyph";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils/cn";
 import {
   addExtraSet,
   discardWorkoutSession,
+  finishStaleWorkoutSession,
   finishWorkoutSession,
-  logSet,
   removeSet,
-  saveSetValues,
   skipExercise,
-  uncompleteSet,
   type LogSetInput,
+  type SetSyncOp,
+  type SetSyncResult,
 } from "@/lib/actions/workouts";
 import { saveExerciseNote } from "@/lib/actions/exercise-notes";
 import {
@@ -27,33 +28,60 @@ import {
   suggestFor,
   type SuggestedValues,
 } from "@/lib/training/set-plan";
+import { DRAFTS_KEY_PREFIX, REST_KEY_PREFIX, draftsKey, restKey } from "@/components/workout/local-workout";
 import { FIELD_LABEL, SetTable, rowName, type DraftField, type SetTableRowModel } from "./set-table";
 import { FinishSheet, type FinishStats } from "./finish-sheet";
-import { RestTimerBar, useRestTimer } from "./rest-timer";
+import { RestTimerBar, clearStoredRestTimer, useRestTimer } from "./rest-timer";
+import { unlockRestAudio } from "./rest-audio";
+import { useWakeLock } from "./use-wake-lock";
 import type { ExecutionExerciseLog, ExecutionSession, ExecutionSetLog } from "./types";
 
 type RowValues = Record<DraftField, string>;
 /**
- * What the user typed in a row (untouched fields show the saved value).
- * `dirty` = not yet confirmed by the server: only those are resent (autosave,
- * finish), mirrored locally and restored. A confirmed draft keeps showing
- * until fresh server data arrives — `basis` is the session prop it was
- * confirmed against — and then the server copy wins, so a correction made on
- * another device shows up here instead of being overwritten from here.
+ * The screen's own copy of a row: what the user typed and whether it is ✓'d.
+ * The screen owns this state — set writes don't re-render the page — and
+ * sends it through an outbox (/api/workout/sets) that retries until the
+ * server has it.
+ *
+ * `dirty` = not yet confirmed by the server: resent (outbox, finish),
+ * mirrored locally and restored after a reload. A confirmed draft stays in
+ * force while the data on screen is older than its confirmation (`savedAt`
+ * vs the session's `loadedAtMs` — e.g. a page restored from the back/forward
+ * cache); once fresher server data arrives, the server copy wins, so a
+ * correction made on another device shows up here instead of being
+ * overwritten from here.
  */
 interface Draft {
+  /** Typed values; untouched fields show the saved value. */
   values: Partial<RowValues>;
+  /** Local ✓ state; undefined = the server's. */
+  done?: boolean;
+  /** When ✓ was tapped: a ✓ that reaches the server late keeps its own time. */
+  doneAt?: number;
   dirty: boolean;
-  basis: ExecutionSession | null;
+  /** Server time the write was confirmed. */
+  savedAt: number | null;
+  /** Bumped on every local change: a confirmation only settles the revision it was sent with. */
+  rev: number;
 }
 type Drafts = Record<string, Draft>;
-type StoredDrafts = Record<string, Partial<RowValues>>;
+type StoredDraft = Omit<Draft, "rev">;
 
 const FIELDS: DraftField[] = ["weight", "reps", "rir"];
-const SAVE_FAILED = "Não salvou — sem conexão? Toque ✓ de novo.";
+const RETRY_MIN_MS = 4000;
+const RETRY_MAX_MS = 30_000;
+const SEND_TIMEOUT_MS = 12_000;
 
-function useElapsedTime(startedAtIso: string) {
-  const [elapsed, setElapsed] = useState(0);
+let revCounter = 0;
+const nextRev = () => ++revCounter;
+
+function formatRest(seconds: number) {
+  return seconds >= 60 ? `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}` : `${seconds}s`;
+}
+
+/** The header clock, isolated so its per-second tick doesn't re-render the whole screen. */
+function ElapsedClock({ startedAtIso }: { startedAtIso: string }) {
+  const [elapsed, setElapsed] = useState<number | null>(null);
   useEffect(() => {
     const start = new Date(startedAtIso).getTime();
     const tick = () => setElapsed(Math.max(0, Math.floor((Date.now() - start) / 1000)));
@@ -61,51 +89,120 @@ function useElapsedTime(startedAtIso: string) {
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
   }, [startedAtIso]);
+  if (elapsed === null) return <span className="tabular-nums">0:00</span>;
   const h = Math.floor(elapsed / 3600);
   const m = Math.floor((elapsed % 3600) / 60);
   const s = elapsed % 60;
-  return h > 0 ? `${h}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}` : `${m}:${String(s).padStart(2, "0")}`;
+  const text = h > 0 ? `${h}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}` : `${m}:${String(s).padStart(2, "0")}`;
+  return <span className="tabular-nums">{text}</span>;
 }
 
-function formatRest(seconds: number) {
-  return seconds >= 60 ? `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}` : `${seconds}s`;
+// Drafts are mirrored locally so a reload, a dead tab or a lost connection
+// never costs what the user already entered or ✓'d.
+const storageKey = draftsKey;
+
+function cleanStoredValues(v: unknown): Partial<RowValues> {
+  const out: Partial<RowValues> = {};
+  if (v && typeof v === "object") {
+    for (const f of FIELDS) {
+      const x = (v as Record<string, unknown>)[f];
+      if (typeof x === "string") out[f] = x.slice(0, 20);
+    }
+  }
+  return out;
 }
 
-// Typed values are mirrored locally so a reload, a dead tab or a lost
-// connection never costs what the user already entered.
-const storageKey = (sessionId: string) => `fg:workout-drafts:${sessionId}`;
-function readStoredDrafts(sessionId: string): StoredDrafts {
+function readStoredDrafts(sessionId: string): Record<string, StoredDraft> {
   try {
-    const parsed = JSON.parse(window.localStorage.getItem(storageKey(sessionId)) ?? "{}");
-    return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? (parsed as StoredDrafts) : {};
+    const parsed = JSON.parse(window.localStorage.getItem(storageKey(sessionId)) ?? "{}") as unknown;
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return {};
+    const out: Record<string, StoredDraft> = {};
+    const p = parsed as { v?: unknown; rows?: unknown };
+    if (p.v === 2 && p.rows && typeof p.rows === "object") {
+      for (const [id, raw] of Object.entries(p.rows as Record<string, Record<string, unknown>>)) {
+        if (!raw || typeof raw !== "object") continue;
+        out[id] = {
+          values: cleanStoredValues(raw.values),
+          done: typeof raw.done === "boolean" ? raw.done : undefined,
+          doneAt: typeof raw.doneAt === "number" ? raw.doneAt : undefined,
+          dirty: raw.dirty === true,
+          savedAt: typeof raw.savedAt === "number" ? raw.savedAt : null,
+        };
+      }
+    } else {
+      // First version: only the unconfirmed typed values.
+      for (const [id, values] of Object.entries(parsed as Record<string, unknown>)) {
+        out[id] = { values: cleanStoredValues(values), dirty: true, savedAt: null };
+      }
+    }
+    return out;
   } catch {
     return {};
   }
 }
-/** Mirrors only the unconfirmed edits. */
-function writeStoredDrafts(sessionId: string, drafts: Drafts) {
+
+/** Mirrors what the server doesn't have yet, and confirmed rows newer than the data on screen. */
+function writeStoredDrafts(sessionId: string, drafts: Drafts, loadedAtMs: number) {
   try {
-    const dirty: StoredDrafts = {};
-    for (const [id, d] of Object.entries(drafts)) if (d.dirty) dirty[id] = d.values;
-    if (Object.keys(dirty).length === 0) window.localStorage.removeItem(storageKey(sessionId));
-    else window.localStorage.setItem(storageKey(sessionId), JSON.stringify(dirty));
+    const rows: Record<string, StoredDraft> = {};
+    for (const [id, d] of Object.entries(drafts)) {
+      if (!d.dirty && !(d.savedAt !== null && d.savedAt > loadedAtMs)) continue;
+      rows[id] = { values: d.values, done: d.done, doneAt: d.doneAt, dirty: d.dirty, savedAt: d.savedAt };
+    }
+    if (Object.keys(rows).length === 0) window.localStorage.removeItem(storageKey(sessionId));
+    else window.localStorage.setItem(storageKey(sessionId), JSON.stringify({ v: 2, rows }));
   } catch {
     /* storage unavailable (private mode) — drafts still live in memory */
   }
 }
 
+function clearStoredDrafts(sessionId: string) {
+  try {
+    window.localStorage.removeItem(storageKey(sessionId));
+  } catch {
+    /* ignore */
+  }
+}
+
+/**
+ * Drops what other workouts left on this device once they can't need it: their
+ * rest timers, and draft mirrors holding nothing unsent (a workout finished on
+ * another device or closed from Today). A mirror with unsent rows is kept —
+ * only its own workout screen can send them.
+ */
+function pruneOtherWorkouts(sessionId: string) {
+  try {
+    const ls = window.localStorage;
+    const keys = Array.from({ length: ls.length }, (_, i) => ls.key(i)).filter((k): k is string => k !== null);
+    for (const key of keys) {
+      if (key.startsWith(REST_KEY_PREFIX) && key !== restKey(sessionId)) {
+        ls.removeItem(key);
+      } else if (key.startsWith(DRAFTS_KEY_PREFIX) && key !== storageKey(sessionId)) {
+        const other = key.slice(DRAFTS_KEY_PREFIX.length);
+        if (!Object.values(readStoredDrafts(other)).some((d) => d.dirty)) ls.removeItem(key);
+      }
+    }
+  } catch {
+    /* storage unavailable — nothing was kept */
+  }
+}
+
+function inForce(d: Draft | undefined, current: ExecutionSession): d is Draft {
+  return d !== undefined && (d.dirty || (d.savedAt !== null && d.savedAt > current.loadedAtMs));
+}
 function savedValues(set: ExecutionSetLog): RowValues {
   return { weight: formatDecimal(set.weightKg), reps: formatDecimal(set.reps), rir: formatDecimal(set.rir) };
 }
-/** The draft still in force for a row: unconfirmed, or confirmed against the data on screen. */
-function activeDraft(id: string, drafts: Drafts, current: ExecutionSession): Partial<RowValues> | undefined {
-  const d = drafts[id];
-  return d && (d.dirty || d.basis === current) ? d.values : undefined;
-}
 function shownValues(set: ExecutionSetLog, drafts: Drafts, current: ExecutionSession): RowValues {
   const base = savedValues(set);
-  const d = activeDraft(set.id, drafts, current);
-  return d ? { weight: d.weight ?? base.weight, reps: d.reps ?? base.reps, rir: d.rir ?? base.rir } : base;
+  const d = drafts[set.id];
+  return inForce(d, current)
+    ? { weight: d.values.weight ?? base.weight, reps: d.values.reps ?? base.reps, rir: d.values.rir ?? base.rir }
+    : base;
+}
+function shownDone(set: ExecutionSetLog, drafts: Drafts, current: ExecutionSession): boolean {
+  const d = drafts[set.id];
+  return inForce(d, current) && d.done !== undefined ? d.done : set.isCompleted;
 }
 function parseRow(v: RowValues) {
   return { weightKg: parseDecimalInput(v.weight), reps: parseDecimalInput(v.reps), rir: parseDecimalInput(v.rir) };
@@ -113,6 +210,34 @@ function parseRow(v: RowValues) {
 function isFilled(v: RowValues) {
   const p = parseRow(v);
   return p.weightKg !== null && p.reps !== null && p.reps >= 1;
+}
+
+type SyncState = Record<string, "sending" | "failed">;
+
+/** The login expired: resending won't help until the user signs in again. */
+class LoggedOutError extends Error {}
+
+/** One batch to the outbox route; rejects on network errors, timeouts and non-2xx (LoggedOutError on 401). */
+async function postSets(ops: SetSyncOp[]): Promise<{ results: SetSyncResult[]; savedAtMs: number }> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), SEND_TIMEOUT_MS);
+  try {
+    const res = await fetch("/api/workout/sets", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ ops }),
+      signal: controller.signal,
+    });
+    if (res.status === 401) throw new LoggedOutError("UNAUTHORIZED");
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return (await res.json()) as { results: SetSyncResult[]; savedAtMs: number };
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+function focusedRowId() {
+  return document.activeElement?.closest?.("[data-set-row]")?.getAttribute("data-set-row") ?? null;
 }
 
 interface ExerciseRows {
@@ -125,9 +250,9 @@ function buildRows(
   ex: ExecutionExerciseLog,
   drafts: Drafts,
   current: ExecutionSession,
-  done: Record<string, boolean>,
-  saving: Record<string, boolean>,
+  sync: SyncState,
   errors: Record<string, string>,
+  loggedOut: boolean,
 ): ExerciseRows {
   const plan = planRows(ex.sets);
   let above: SuggestedValues | null = null;
@@ -136,9 +261,10 @@ function buildRows(
     const suggestion = suggestFor(r.kind, r.ordinal, above, ex.previousSets);
     const p = parseRow(values);
     if (r.kind !== "WARMUP" && p.weightKg !== null) above = { weightKg: p.weightKg, reps: p.reps ?? suggestion.reps };
-    const isDone = done[r.set.id] ?? r.set.isCompleted;
+    const isDone = shownDone(r.set, drafts, current);
     const hasW = values.weight.trim() !== "";
     const hasR = values.reps.trim() !== "";
+    const unsent = drafts[r.set.id]?.dirty === true;
     return {
       id: r.set.id,
       kind: r.kind,
@@ -146,7 +272,9 @@ function buildRows(
       values,
       suggestion,
       done: isDone,
-      saving: saving[r.set.id] === true,
+      // Every unconfirmed row reads as on its way — also one queued behind a
+      // batch in flight — until the server confirms it or a send fails.
+      sync: !unsent ? null : sync[r.set.id] !== "failed" ? "sending" : loggedOut ? "held" : "pending",
       error: errors[r.set.id] ?? null,
       missing: !isDone && !ex.wasSkipped && hasW !== hasR ? (hasW ? "reps" : "weight") : null,
     };
@@ -164,6 +292,17 @@ function rowsComplete(rows: ExerciseRows, skipped: boolean) {
   return rows.extras.some((r) => r.done);
 }
 
+/** "Série 3 · 60 kg × 10": the next set to do in an exercise, with the numbers to aim for. */
+function upNextText(rows: ExerciseRows): string | null {
+  const row = [...rows.prescribed, ...rows.extras].find((r) => !r.done);
+  if (!row) return null;
+  const kg = row.values.weight.trim() || formatDecimal(row.suggestion.weightKg);
+  const reps = row.values.reps.trim() || formatDecimal(row.suggestion.reps);
+  return `${rowName(row)}${kg && reps ? ` · ${kg} kg × ${reps}` : ""}`;
+}
+
+type NoteStatus = { state: "saving" | "saved" | "error"; text: string };
+
 export function WorkoutExecutionClient({ session }: { session: ExecutionSession }) {
   const router = useRouter();
   const total = session.exercises.length;
@@ -173,10 +312,11 @@ export function WorkoutExecutionClient({ session }: { session: ExecutionSession 
     return i >= 0 ? i : Math.max(0, total - 1);
   });
   const [drafts, setDrafts] = useState<Drafts>({});
-  const [saving, setSaving] = useState<Record<string, boolean>>({});
+  const [sync, setSync] = useState<SyncState>({});
   const [rowErrors, setRowErrors] = useState<Record<string, string>>({});
   const [exerciseError, setExerciseError] = useState<string | null>(null);
   const [noteDrafts, setNoteDrafts] = useState<Record<string, string>>({});
+  const [noteStatus, setNoteStatus] = useState<Record<string, NoteStatus>>({});
   const [addingExtra, setAddingExtra] = useState(false);
   const [confirmSkip, setConfirmSkip] = useState(false);
   const [showOverview, setShowOverview] = useState(false);
@@ -184,68 +324,80 @@ export function WorkoutExecutionClient({ session }: { session: ExecutionSession 
   const [sheetOpen, setSheetOpen] = useState(false);
   const [finishError, setFinishError] = useState<string | null>(null);
   const [finishing, startFinishing] = useTransition();
+  const [finishMode, setFinishMode] = useState<"now" | "stale">("now");
   const [discarding, startDiscarding] = useTransition();
   const [, startTransition] = useTransition();
-  const lastSent = useRef<Record<string, string>>({});
-  /** Set when a background autosave hit a stale build; the next explicit action reloads. */
+  const [announcement, setAnnouncement] = useState({ text: "", n: 0 });
+  /** A send got 401: rows wait for a new login instead of retrying on a timer. */
+  const [loggedOut, setLoggedOut] = useState(false);
+  /** Anything typed or ✓'d on this screen since it loaded (a workout left open is being continued). */
+  const [touched, setTouched] = useState(false);
+  /** Set when a background action hit a stale build; the next explicit action reloads. */
   const staleBuild = useRef(false);
-  const typingTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
   /** A box to bring into view after the next render ("Revisar" in the finish sheet). */
   const pendingFocus = useRef<string | null>(null);
+  /** Bring the exercise's next step into view after the next render (its last set was just ✓'d). */
+  const revealCta = useRef(false);
+  const ctaRef = useRef<HTMLButtonElement>(null);
+  const lastToggle = useRef<Record<string, number>>({});
+  const savedNotes = useRef<Record<string, string>>({});
   const [sheetKey, setSheetKey] = useState(0);
-  const timer = useRestTimer();
-  const elapsed = useElapsedTime(session.startedAtIso);
-
-  const serverDone = useMemo(() => {
-    const map: Record<string, boolean> = {};
-    for (const ex of session.exercises) for (const s of ex.sets) map[s.id] = s.isCompleted;
-    return map;
-  }, [session]);
-  const [done, setDoneOptimistic] = useOptimistic(serverDone, (cur, u: { id: string; value: boolean }) => ({
-    ...cur,
-    [u.id]: u.value,
-  }));
-
-  // Restore anything typed before a reload / tab kill, then keep the mirror current.
-  const restored = useRef(false);
-  useEffect(() => {
-    const stored = readStoredDrafts(session.id);
-    // One-time restore from localStorage, which only exists after hydration.
-    if (Object.keys(stored).length > 0) {
-      const restoredDrafts: Drafts = {};
-      for (const [id, values] of Object.entries(stored)) restoredDrafts[id] = { values, dirty: true, basis: null };
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- syncing from an external store on mount
-      setDrafts((d) => ({ ...restoredDrafts, ...d }));
-    }
-    restored.current = true;
-  }, [session.id]);
-  useEffect(() => {
-    if (restored.current) writeStoredDrafts(session.id, drafts);
-  }, [drafts, session.id]);
-
-  const rowsByExercise = useMemo(
-    () => session.exercises.map((ex) => buildRows(ex, drafts, session, done, saving, rowErrors)),
-    [session, drafts, done, saving, rowErrors],
-  );
+  const rest = useRestTimer(session.id);
+  useWakeLock();
 
   const setById = useMemo(() => {
-    const map = new Map<string, { set: ExecutionSetLog; ex: ExecutionExerciseLog }>();
-    for (const ex of session.exercises) for (const s of ex.sets) map.set(s.id, { set: s, ex });
+    const map = new Map<string, { set: ExecutionSetLog; ex: ExecutionExerciseLog; index: number }>();
+    session.exercises.forEach((ex, index) => {
+      for (const s of ex.sets) map.set(s.id, { set: s, ex, index });
+    });
     return map;
   }, [session.exercises]);
+
+  // The outbox runs from timers and network callbacks: it reads the latest
+  // drafts and session through refs, never a render's stale closure.
+  const draftsRef = useRef<Drafts>({});
+  const sessionRef = useRef(session);
+  const setByIdRef = useRef(setById);
+  /** The local mirror was read back: from then on it may be rewritten. */
+  const restored = useRef(false);
+  useEffect(() => {
+    sessionRef.current = session;
+    setByIdRef.current = setById;
+    // Fresh server data may already hold rows the mirror kept: drop those.
+    if (restored.current) writeStoredDrafts(session.id, draftsRef.current, session.loadedAtMs);
+  }, [session, setById]);
+
+  function updateDrafts(fn: (d: Drafts) => Drafts) {
+    const next = fn(draftsRef.current);
+    if (next === draftsRef.current) return;
+    draftsRef.current = next;
+    setDrafts(next);
+    if (restored.current) writeStoredDrafts(sessionRef.current.id, next, sessionRef.current.loadedAtMs);
+  }
+
+  const rowsByExercise = useMemo(
+    () => session.exercises.map((ex) => buildRows(ex, drafts, session, sync, rowErrors, loggedOut)),
+    [session, drafts, sync, rowErrors, loggedOut],
+  );
 
   const exercise = session.exercises[exerciseIndex];
   const rows = rowsByExercise[exerciseIndex];
 
   useEffect(() => {
     const label = pendingFocus.current;
-    if (!label) return;
-    pendingFocus.current = null;
-    const el = Array.from(document.querySelectorAll<HTMLInputElement>("input[aria-label]")).find(
-      (input) => input.getAttribute("aria-label") === label,
-    );
-    el?.scrollIntoView({ block: "center" });
-    el?.focus({ preventScroll: true });
+    if (label) {
+      pendingFocus.current = null;
+      const el = Array.from(document.querySelectorAll<HTMLInputElement>("input[aria-label]")).find(
+        (input) => input.getAttribute("aria-label") === label,
+      );
+      el?.scrollIntoView({ block: "center" });
+      el?.focus({ preventScroll: true });
+    }
+    if (revealCta.current) {
+      revealCta.current = false;
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      ctaRef.current?.scrollIntoView({ block: "center", behavior: reduce ? "auto" : "smooth" });
+    }
   });
 
   useEffect(() => {
@@ -255,8 +407,8 @@ export function WorkoutExecutionClient({ session }: { session: ExecutionSession 
   }, [confirmSkip]);
 
   /**
-   * A new build was deployed mid-workout: reload to pick it up. Typed values
-   * are already mirrored to localStorage by the effect above and restored.
+   * A new build was deployed mid-workout: reload to pick it up. Drafts are
+   * already mirrored to localStorage and restored.
    */
   function recoverFromStaleBuild(err: unknown) {
     if (unstable_isUnrecognizedActionError(err)) {
@@ -266,16 +418,18 @@ export function WorkoutExecutionClient({ session }: { session: ExecutionSession 
     return false;
   }
 
-  function goTo(i: number) {
-    setExerciseIndex(Math.max(0, Math.min(total - 1, i)));
-    setConfirmSkip(false);
-    setShowOverview(false);
-    setExerciseError(null);
-    window.scrollTo({ top: 0 });
+  function refreshIfOnline() {
+    // Offline, a failed refresh would fall back to a full page load.
+    if (navigator.onLine) router.refresh();
+  }
+
+  function announce(text: string) {
+    setAnnouncement((a) => ({ text, n: a.n + 1 }));
   }
 
   function setRowError(id: string, message: string | null) {
     setRowErrors((e) => {
+      if (!message && !(id in e)) return e;
       const next = { ...e };
       if (message) next[id] = message;
       else delete next[id];
@@ -283,156 +437,296 @@ export function WorkoutExecutionClient({ session }: { session: ExecutionSession 
     });
   }
 
+  // ---------------------------------------------------------------------------
+  // Outbox: every unconfirmed row goes to the server in one batch at a time
+  // (so writes to a row can't overtake each other). A batch that fails leaves
+  // its rows "pending" — kept here and in the local mirror — and is retried by
+  // itself: on reconnect, when the app comes back to the screen, after the
+  // next save that gets through, and on a backoff timer.
+  // ---------------------------------------------------------------------------
+  const inFlight = useRef(false);
+  const flushAgain = useRef(false);
   /**
-   * Sends a row's typed values to the server (not marking it done). `typing`
-   * saves in the background while the user types and leaves a done row that
-   * is momentarily incomplete alone (they may be retyping its reps).
+   * False once the screen is gone: its last send still goes out, but only a
+   * mounted screen settles results and retries — a later screen for the same
+   * workout restores the mirror and takes over.
    */
-  function autosave(id: string, currentDrafts: Drafts, typing = false) {
-    const entry = setById.get(id);
-    const draft = currentDrafts[id];
-    if (!entry || !draft?.dirty || staleBuild.current) return;
-    const values = shownValues(entry.set, currentDrafts, session);
-    const wasDone = done[id] ?? entry.set.isCompleted;
-    if (wasDone && !isFilled(values)) {
-      if (typing) return;
-      setRowError(id, "Preencha kg e reps — sem eles a série deixa de contar.");
+  const alive = useRef(true);
+  const typingTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const retryTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const retryDelay = useRef(RETRY_MIN_MS);
+
+  /** The rows to send. `all` includes a ✓'d row whose boxes are being retyped (held while focused). */
+  function buildOps(all: boolean): { ops: SetSyncOp[]; revs: Record<string, number> } {
+    const current = sessionRef.current;
+    const d = draftsRef.current;
+    const focused = all ? null : focusedRowId();
+    const ops: SetSyncOp[] = [];
+    const revs: Record<string, number> = {};
+    for (const [id, draft] of Object.entries(d)) {
+      if (!draft.dirty) continue;
+      const entry = setByIdRef.current.get(id);
+      if (!entry) continue;
+      const values = shownValues(entry.set, d, current);
+      const filled = isFilled(values);
+      // Don't un-count a ✓'d set under the user's fingers while they retype it.
+      if (id === focused && shownDone(entry.set, d, current) && !filled) continue;
+      let done = draft.done ?? null;
+      if (done === true && !filled) done = false;
+      ops.push({ setLogId: id, ...parseRow(values), done, completedAtMs: done === true ? (draft.doneAt ?? null) : null });
+      revs[id] = draft.rev;
     }
-    const key = FIELDS.map((f) => values[f]).join("|");
-    if (key === lastSent.current[id]) return;
-    lastSent.current[id] = key;
-    const basis = session;
-    saveSetValues({ setLogId: id, ...parseRow(values) })
-      .then((r) => {
-        if (r.ok) confirmDraft(id, draft.values, basis);
-        else if (r.reason === "CLOSED") router.refresh();
+    return { ops, revs };
+  }
+
+  function scheduleRetry() {
+    clearTimeout(retryTimer.current);
+    const delay = retryDelay.current;
+    retryDelay.current = Math.min(RETRY_MAX_MS, delay * 2);
+    retryTimer.current = setTimeout(() => flush(), delay);
+  }
+
+  function flush() {
+    clearTimeout(typingTimer.current);
+    if (inFlight.current) {
+      flushAgain.current = true;
+      return;
+    }
+    const { ops, revs } = buildOps(false);
+    if (ops.length === 0) return;
+    inFlight.current = true;
+    const ids = ops.map((o) => o.setLogId);
+    setSync((s) => {
+      const next = { ...s };
+      for (const id of ids) if (next[id] !== "failed") next[id] = "sending";
+      return next;
+    });
+    postSets(ops)
+      .then(({ results, savedAtMs }) => {
+        if (!alive.current) return;
+        retryDelay.current = RETRY_MIN_MS;
+        clearTimeout(retryTimer.current);
+        setLoggedOut(false);
+        // Finished or discarded elsewhere: nothing of it can be saved any more.
+        if (results.some((r) => !r.ok && r.reason === "CLOSED")) {
+          forgetLocalState();
+          setSync({});
+          refreshIfOnline(); // the page redirects (summary or Today)
+          return;
+        }
+        let gone = false;
+        const invalid: string[] = [];
+        updateDrafts((d) => {
+          const next = { ...d };
+          for (const r of results) {
+            const draft = next[r.setLogId];
+            if (!draft || draft.rev !== revs[r.setLogId]) continue; // changed since: it goes again
+            if (r.ok) {
+              next[r.setLogId] = { ...draft, dirty: false, savedAt: savedAtMs, done: r.isCompleted };
+            } else if (r.reason === "GONE") {
+              gone = true;
+              delete next[r.setLogId];
+            } else {
+              invalid.push(r.setLogId);
+              delete next[r.setLogId];
+            }
+          }
+          return next;
+        });
+        setSync((s) => {
+          const next = { ...s };
+          for (const id of ids) delete next[id];
+          return next;
+        });
+        for (const id of invalid) setRowError(id, "Valores inválidos — confira kg e reps.");
+        // A row removed on another device: show the workout as it is now.
+        if (gone) refreshIfOnline();
+        // The connection works: send whatever else is still waiting.
+        if (Object.values(draftsRef.current).some((d) => d.dirty)) flushAgain.current = true;
       })
       .catch((err) => {
-        delete lastSent.current[id];
-        // Don't reload under the user's fingers mid-field; the next ✓/Finalizar will.
-        if (unstable_isUnrecognizedActionError(err)) staleBuild.current = true;
+        if (!alive.current) return;
+        setSync((s) => {
+          const next = { ...s };
+          for (const id of ids) next[id] = "failed";
+          return next;
+        });
+        if (err instanceof LoggedOutError) {
+          // Kept here and in the mirror; sent again when the app comes back to
+          // the screen (e.g. after signing in in another tab) or on the next change.
+          clearTimeout(retryTimer.current);
+          setLoggedOut(true);
+          return;
+        }
+        scheduleRetry();
+      })
+      .finally(() => {
+        inFlight.current = false;
+        // (Also after the screen is gone: its last edits go out once.)
+        if (flushAgain.current) {
+          flushAgain.current = false;
+          flush();
+        }
       });
   }
 
-  /** The server has these values: stop resending them (unless typed over since). */
-  function confirmDraft(id: string, values: Partial<RowValues>, basis: ExecutionSession) {
-    setDrafts((d) => (d[id]?.values === values ? { ...d, [id]: { values, dirty: false, basis } } : d));
-  }
-
-  function changeField(id: string, field: DraftField, value: string) {
-    const base = activeDraft(id, drafts, session) ?? {};
-    const next: Drafts = { ...drafts, [id]: { values: { ...base, [field]: value }, dirty: true, basis: null } };
-    setDrafts(next);
-    if (rowErrors[id]) setRowError(id, null);
-    clearTimeout(typingTimers.current[id]);
-    typingTimers.current[id] = setTimeout(() => autosave(id, next, true), 1200);
-  }
-
-  function blurRow(id: string) {
-    clearTimeout(typingTimers.current[id]);
-    autosave(id, drafts);
-  }
-
-  // Leaving the app (switching apps, locking the phone, back gesture) saves
-  // whatever is typed, so Today and other devices see it.
-  const flushRef = useRef<() => void>(() => {});
+  // The listeners below outlive renders: they call the latest flush through a ref.
+  const flushRef = useRef(flush);
   const unloadRef = useRef<() => void>(() => {});
   useEffect(() => {
-    flushRef.current = () => {
-      for (const id of Object.keys(drafts)) {
-        if (!drafts[id].dirty) continue;
-        clearTimeout(typingTimers.current[id]);
-        autosave(id, drafts, true);
-      }
-    };
+    flushRef.current = flush;
     unloadRef.current = () => {
-      // A server action can't start while the page unloads; a keepalive request can.
-      const rows = Object.keys(drafts)
-        .filter((id) => drafts[id].dirty && setById.has(id))
-        .map((id) => ({ setLogId: id, ...parseRow(shownValues(setById.get(id)!.set, drafts, session)) }));
-      if (rows.length === 0 || staleBuild.current) return;
+      // A normal request may not survive the page unloading; a keepalive one can.
+      const { ops } = buildOps(true);
+      if (ops.length === 0) return;
       try {
-        void fetch("/api/workout/autosave", {
+        void fetch("/api/workout/sets", {
           method: "POST",
           keepalive: true,
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ rows }),
-        });
+          body: JSON.stringify({ ops }),
+        }).catch(() => {});
       } catch {
         /* the local mirror still has them */
       }
     };
   });
+
+  // Restore anything typed or ✓'d before a reload / tab kill, then send what the server lacks.
   useEffect(() => {
-    const onHide = () => {
-      if (document.visibilityState === "hidden") flushRef.current();
-    };
-    const onPageHide = () => unloadRef.current();
-    document.addEventListener("visibilitychange", onHide);
-    window.addEventListener("pagehide", onPageHide);
-    return () => {
-      document.removeEventListener("visibilitychange", onHide);
-      window.removeEventListener("pagehide", onPageHide);
+    pruneOtherWorkouts(session.id);
+    const stored = readStoredDrafts(session.id);
+    restored.current = true;
+    const merged: Drafts = { ...draftsRef.current };
+    for (const [id, d] of Object.entries(stored)) {
+      // Rows gone from the workout (a removed extra) are dropped.
+      if (!merged[id] && setByIdRef.current.has(id)) merged[id] = { ...d, rev: nextRev() };
+    }
+    if (Object.keys(merged).length === Object.keys(draftsRef.current).length) {
+      writeStoredDrafts(session.id, draftsRef.current, sessionRef.current.loadedAtMs);
+      return;
+    }
+    draftsRef.current = merged;
+    setDrafts(merged);
+    writeStoredDrafts(session.id, merged, sessionRef.current.loadedAtMs);
+    flushRef.current();
+  }, [session.id]);
+
+  useEffect(() => {
+    alive.current = true;
+    const onVisibility = () => flushRef.current();
+    const onOnline = () => {
+      retryDelay.current = RETRY_MIN_MS;
       flushRef.current();
     };
+    const onPageHide = () => unloadRef.current();
+    document.addEventListener("visibilitychange", onVisibility);
+    window.addEventListener("online", onOnline);
+    window.addEventListener("pagehide", onPageHide);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("online", onOnline);
+      window.removeEventListener("pagehide", onPageHide);
+      clearTimeout(retryTimer.current);
+      // Leaving the screen ("Ver técnica", back): send what's typed.
+      flushRef.current();
+      alive.current = false;
+    };
   }, []);
+
+  function goTo(i: number) {
+    saveNote(exercise?.exerciseId, exercise?.persistentNote ?? null);
+    setExerciseIndex(Math.max(0, Math.min(total - 1, i)));
+    setConfirmSkip(false);
+    setShowOverview(false);
+    setExerciseError(null);
+    window.scrollTo({ top: 0 });
+  }
+
+  function changeField(id: string, field: DraftField, value: string) {
+    setTouched(true);
+    updateDrafts((d) => {
+      const prev = d[id];
+      const base = inForce(prev, sessionRef.current) ? prev : undefined;
+      return {
+        ...d,
+        [id]: {
+          values: { ...base?.values, [field]: value },
+          done: base?.done,
+          doneAt: base?.doneAt,
+          dirty: true,
+          savedAt: null,
+          rev: nextRev(),
+        },
+      };
+    });
+    if (rowErrors[id]) setRowError(id, null);
+    clearTimeout(typingTimer.current);
+    typingTimer.current = setTimeout(() => flush(), 1200);
+  }
+
+  function blurRow(id: string) {
+    // After the focus has moved: a tap on this row's ✓ or next box keeps it
+    // in one request with the ✓, and a ✓'d row left without kg or reps is flagged.
+    setTimeout(() => {
+      const entry = setByIdRef.current.get(id);
+      const d = draftsRef.current;
+      if (entry && d[id]?.dirty && focusedRowId() !== id) {
+        const current = sessionRef.current;
+        if (shownDone(entry.set, d, current) && !isFilled(shownValues(entry.set, d, current))) {
+          setRowError(id, "Preencha kg e reps — sem eles a série deixa de contar.");
+        }
+      }
+      flushRef.current();
+    }, 0);
+  }
 
   function toggleRow(id: string) {
     const entry = setById.get(id);
     const row = [...rows.warmups, ...rows.prescribed, ...rows.extras].find((r) => r.id === id);
-    if (!entry || !row || row.saving) return;
-    clearTimeout(typingTimers.current[id]);
+    if (!entry || !row) return;
+    const now = Date.now();
+    // A double tap must not log the set and undo it at once.
+    if (now - (lastToggle.current[id] ?? 0) < 400) return;
+    lastToggle.current[id] = now;
+    clearTimeout(typingTimer.current);
     setRowError(id, null);
+    setTouched(true);
+    const current = sessionRef.current;
+    const values = shownValues(entry.set, draftsRef.current, current);
 
-    if (row.done) {
-      startTransition(async () => {
-        setDoneOptimistic({ id, value: false });
-        try {
-          const r = await uncompleteSet(id);
-          if (!r.ok) router.refresh();
-        } catch (err) {
-          if (!recoverFromStaleBuild(err)) setRowError(id, "Não foi possível desfazer — sem conexão?");
-        }
-      });
+    if (shownDone(entry.set, draftsRef.current, current)) {
+      updateDrafts((d) => ({ ...d, [id]: { values, done: false, dirty: true, savedAt: null, rev: nextRev() } }));
+      if (rest.timer?.setId === id) rest.dismiss();
+      flush();
       return;
     }
 
     // ✓ on an empty box takes the grey suggestion (last time / the row above).
-    const typed = parseRow(row.values);
+    const typed = parseRow(values);
     const weightKg = typed.weightKg ?? row.suggestion.weightKg;
     const reps = typed.reps ?? row.suggestion.reps;
     if (weightKg === null || reps === null || reps < 1) {
       setRowError(id, "Preencha kg e reps.");
       return;
     }
-    const committed = { weight: formatDecimal(weightKg), reps: formatDecimal(Math.round(reps)), rir: row.values.rir };
-    const basis = session;
-    setDrafts((d) => ({ ...d, [id]: { values: committed, dirty: true, basis: null } }));
-    lastSent.current[id] = FIELDS.map((f) => committed[f]).join("|");
-    setSaving((s) => ({ ...s, [id]: true }));
-    startTransition(async () => {
-      setDoneOptimistic({ id, value: true });
-      try {
-        const r = await logSet({ setLogId: id, weightKg, reps: Math.round(reps), rir: typed.rir });
-        if (r.ok) {
-          confirmDraft(id, committed, basis);
-          if (row.kind !== "WARMUP") timer.start(entry.ex.restSeconds);
-        } else if (r.reason === "CLOSED") {
-          router.refresh();
-        } else {
-          setRowError(id, "Valores inválidos — confira kg e reps.");
-        }
-      } catch (err) {
-        delete lastSent.current[id];
-        if (!recoverFromStaleBuild(err)) setRowError(id, SAVE_FAILED);
-      } finally {
-        setSaving((s) => {
-          const next = { ...s };
-          delete next[id];
-          return next;
-        });
-      }
-    });
+    const committed = { weight: formatDecimal(weightKg), reps: formatDecimal(Math.round(reps)), rir: values.rir };
+    updateDrafts((d) => ({
+      ...d,
+      [id]: { values: committed, done: true, doneAt: now, dirty: true, savedAt: null, rev: nextRev() },
+    }));
+    // The rest starts on the tap itself — never after a server round trip.
+    if (row.kind !== "WARMUP") {
+      if (session.restTimerSound) unlockRestAudio();
+      rest.start({ seconds: entry.ex.restSeconds, after: entry.ex.exerciseName, exerciseIndex: entry.index, setId: id });
+      const finishesExercise =
+        !entry.ex.wasSkipped &&
+        (rows.prescribed.length > 0
+          ? rows.prescribed.every((r) => r.id === id || r.done)
+          : !rows.extras.some((r) => r.id !== id && r.done));
+      if (finishesExercise) revealCta.current = true;
+    }
+    flush();
   }
 
   function runExerciseAction(action: () => Promise<{ ok: boolean; reason?: string }>, failure: string, after?: () => void) {
@@ -441,7 +735,7 @@ export function WorkoutExecutionClient({ session }: { session: ExecutionSession 
       try {
         const r = await action();
         if (!r.ok) {
-          if (r.reason === "CLOSED") router.refresh();
+          if (r.reason === "CLOSED") refreshIfOnline();
           else setExerciseError(failure);
         }
       } catch (err) {
@@ -461,12 +755,31 @@ export function WorkoutExecutionClient({ session }: { session: ExecutionSession 
   }
 
   function removeExtra(id: string) {
-    setDrafts((d) => {
+    // Like un-✓: a rest started by this set ends with it.
+    if (rest.timer?.setId === id) rest.dismiss();
+    updateDrafts((d) => {
       const next = { ...d };
       delete next[id];
       return next;
     });
     runExerciseAction(() => removeSet(id), "Não foi possível remover a série extra.");
+  }
+
+  function saveNote(exerciseId: string | undefined, persisted: string | null) {
+    if (!exerciseId) return;
+    const text = noteDrafts[exerciseId];
+    const last = savedNotes.current[exerciseId] ?? persisted ?? "";
+    if (text === undefined || text === last || staleBuild.current) return;
+    setNoteStatus((s) => ({ ...s, [exerciseId]: { state: "saving", text } }));
+    saveExerciseNote(exerciseId, text)
+      .then(() => {
+        savedNotes.current[exerciseId] = text;
+        setNoteStatus((s) => ({ ...s, [exerciseId]: { state: "saved", text } }));
+      })
+      .catch((err) => {
+        if (unstable_isUnrecognizedActionError(err)) staleBuild.current = true;
+        setNoteStatus((s) => ({ ...s, [exerciseId]: { state: "error", text } }));
+      });
   }
 
   /**
@@ -477,11 +790,16 @@ export function WorkoutExecutionClient({ session }: { session: ExecutionSession 
    */
   function collectPending(): LogSetInput[] {
     const pending: LogSetInput[] = [];
-    for (const id of Object.keys(drafts)) {
+    const d = draftsRef.current;
+    for (const [id, draft] of Object.entries(d)) {
       const entry = setById.get(id);
-      if (!entry || !drafts[id].dirty) continue;
-      if (entry.ex.wasSkipped && !(done[id] ?? entry.set.isCompleted)) continue;
-      pending.push({ setLogId: id, ...parseRow(shownValues(entry.set, drafts, session)) });
+      if (!entry || !draft.dirty) continue;
+      if (entry.ex.wasSkipped && !shownDone(entry.set, d, session)) continue;
+      pending.push({
+        setLogId: id,
+        ...parseRow(shownValues(entry.set, d, session)),
+        completedAtMs: draft.done === true ? (draft.doneAt ?? null) : null,
+      });
     }
     return pending;
   }
@@ -531,18 +849,31 @@ export function WorkoutExecutionClient({ session }: { session: ExecutionSession 
   /** Opens the finish sheet on fresh data (sets may have been saved from another device). */
   function openSheet() {
     setFinishError(null);
-    router.refresh();
+    refreshIfOnline();
     setSheetOpen(true);
   }
 
-  function finish() {
+  /** The workout is closed: nothing of it should linger on this device. */
+  function forgetLocalState() {
+    clearTimeout(typingTimer.current);
+    clearTimeout(retryTimer.current);
+    draftsRef.current = {};
+    clearStoredDrafts(session.id);
+    clearStoredRestTimer(session.id);
+  }
+
+  function finish(mode: "now" | "stale") {
     setFinishError(null);
+    setFinishMode(mode);
     const pending = collectPending();
     startFinishing(async () => {
       try {
-        const r = await finishWorkoutSession(session.id, pending);
+        const r =
+          mode === "stale"
+            ? await finishStaleWorkoutSession(session.id, pending)
+            : await finishWorkoutSession(session.id, pending);
         if (r.ok) {
-          writeStoredDrafts(session.id, {});
+          forgetLocalState();
           router.replace(r.summaryUrl);
         } else if (r.reason === "EMPTY") {
           setFinishError("Nenhuma série com kg e reps — preencha pelo menos uma para salvar.");
@@ -557,7 +888,8 @@ export function WorkoutExecutionClient({ session }: { session: ExecutionSession 
     });
   }
 
-  function discard() {
+  /** Abandons the workout; `then` is where to go afterwards (Today, with a one-time "Treino descartado."). */
+  function discard(then = "/app/today?descartado=1") {
     setFinishError(null);
     // When this screen shows nothing recorded, never throw away sets that were
     // saved meanwhile from another device.
@@ -568,24 +900,57 @@ export function WorkoutExecutionClient({ session }: { session: ExecutionSession 
         if (!r.ok && r.reason === "HAS_SETS") {
           setFinishError("Este treino tem séries salvas (talvez de outro aparelho). Atualizamos a tela — confira antes de descartar.");
           setSheetKey((k) => k + 1);
-          router.refresh();
+          refreshIfOnline();
           return;
         }
-        writeStoredDrafts(session.id, {});
-        router.replace("/app/today");
+        forgetLocalState();
+        router.replace(then);
       } catch (err) {
         if (!recoverFromStaleBuild(err)) setFinishError("Não foi possível descartar — sem conexão?");
       }
     });
   }
 
+  const liveRegion = (
+    <p role="status" aria-live="polite" className="sr-only" data-workout-announcer>
+      {announcement.text}
+      {/* Alternating padding makes a repeated message count as new. */}
+      {announcement.n % 2 ? " " : ""}
+    </p>
+  );
+
   if (!exercise || !rows) {
     return (
-      <div className="flex min-h-[60dvh] flex-col items-center justify-center gap-4 px-4 text-center">
-        <p className="text-lg font-semibold">Nenhum exercício neste treino.</p>
-        <Button asChild>
-          <Link href="/app/today">Voltar</Link>
-        </Button>
+      <div className="mx-auto flex min-h-[70dvh] w-full max-w-md flex-col justify-center gap-4 px-4 py-10">
+        <span className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-accent">Treino vazio</span>
+        <h1 className="text-display text-2xl font-extrabold leading-tight">Nenhum exercício neste treino.</h1>
+        <p className="text-sm text-muted">
+          {session.programId
+            ? `“${session.name}” ainda não tem exercícios. Adicione-os no editor do programa e inicie o dia de novo — ou descarte este treino.`
+            : "Este treino não tem exercícios. Descarte-o para voltar a Hoje."}
+        </p>
+        {finishError ? (
+          <p role="alert" className="border-l-2 border-l-danger bg-danger-soft px-3 py-2 text-xs font-medium text-danger">
+            {finishError}
+          </p>
+        ) : null}
+        <div className="mt-2 flex flex-col gap-2">
+          {session.programId ? (
+            <Button size="lg" className="w-full" disabled={discarding} onClick={() => discard(`/app/programs/${session.programId}/edit`)}>
+              <Plus className="size-4" />
+              Adicionar exercícios
+            </Button>
+          ) : null}
+          <Button
+            size="lg"
+            variant={session.programId ? "secondary" : "primary"}
+            className="w-full"
+            disabled={discarding}
+            onClick={() => discard()}
+          >
+            {discarding ? "Descartando…" : "Descartar treino"}
+          </Button>
+        </div>
       </div>
     );
   }
@@ -593,10 +958,22 @@ export function WorkoutExecutionClient({ session }: { session: ExecutionSession 
   const complete = rowsComplete(rows, exercise.wasSkipped);
   const isLast = exerciseIndex === total - 1;
   const noteValue = noteDrafts[exercise.exerciseId] ?? exercise.persistentNote ?? "";
+  const note = noteStatus[exercise.exerciseId];
+  const waiting = Object.keys(sync).filter((id) => sync[id] === "failed" && drafts[id]?.dirty).length;
+  const waitingText = waiting === 1 ? "1 série" : `${waiting} séries`;
+  const restNext =
+    rest.timer && rest.timer.exerciseIndex === exerciseIndex && complete && !isLast
+      ? { name: session.exercises[exerciseIndex + 1].exerciseName, onGo: () => goTo(exerciseIndex + 1) }
+      : null;
+  const staleSave = session.stale?.saveAsDay
+    ? { since: session.stale.since, saveAsDay: session.stale.saveAsDay, preferred: session.stale.leftOpen && !touched }
+    : null;
 
   return (
     <div className="flex min-h-dvh flex-col pb-40">
-      <header className="sticky top-0 z-20 border-b border-border bg-background/95 px-4 py-3 backdrop-blur">
+      {liveRegion}
+      {/* Sticks below the status-bar inset the app shell paints (installed PWA draws under it). */}
+      <header className="sticky top-[env(safe-area-inset-top,0px)] z-20 border-b border-border bg-background/95 px-4 py-3 backdrop-blur">
         <div className="mx-auto flex max-w-3xl items-center justify-between gap-3">
           <div className="min-w-0">
             <p className="truncate text-sm font-semibold">{session.name}</p>
@@ -607,7 +984,12 @@ export function WorkoutExecutionClient({ session }: { session: ExecutionSession 
               className="-mx-1 -my-1.5 inline-flex min-h-11 items-center gap-1 rounded-[3px] px-1 text-xs text-muted hover:text-foreground"
             >
               <span className="text-left">
-                Exercício {exerciseIndex + 1} de {total} · {elapsed}{" "}
+                Exercício {exerciseIndex + 1} de {total} ·{" "}
+                {session.stale ? (
+                  <span className="font-semibold text-warning">Aberto desde {session.stale.since}</span>
+                ) : (
+                  <ElapsedClock startedAtIso={session.startedAtIso} />
+                )}{" "}
                 <span className="whitespace-nowrap font-semibold text-accent">
                   · ver todos
                   <ChevronRight
@@ -620,6 +1002,19 @@ export function WorkoutExecutionClient({ session }: { session: ExecutionSession 
           <Button variant="secondary" className="-my-1 shrink-0 px-4" onClick={openSheet}>
             Finalizar
           </Button>
+        </div>
+        <div role="status" className="mx-auto max-w-3xl">
+          {waiting > 0 && loggedOut ? (
+            <p className="mt-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-warning">
+              Sessão expirada —{" "}
+              <Link href="/login" className="-my-3 inline-block py-3 text-accent underline underline-offset-2">
+                entre de novo
+              </Link>{" "}
+              para enviar {waitingText}
+            </p>
+          ) : waiting > 0 ? (
+            <p className="tag tag--status tag--warn mt-1.5 font-mono">{waitingText} aguardando conexão</p>
+          ) : null}
         </div>
 
         {showOverview ? (
@@ -646,7 +1041,7 @@ export function WorkoutExecutionClient({ session }: { session: ExecutionSession 
                       </span>
                       <span className="min-w-0 flex-1 truncate text-sm font-medium">{ex.exerciseName}</span>
                       {ex.wasSkipped ? (
-                        <span className="tag tag--mark shrink-0 text-[9px]">Pulado</span>
+                        <span className="tag tag--mark shrink-0">Pulado</span>
                       ) : rowsComplete(r, false) ? (
                         <GCheck className="size-4 shrink-0 text-accent" />
                       ) : (
@@ -722,7 +1117,10 @@ export function WorkoutExecutionClient({ session }: { session: ExecutionSession 
           <button
             onClick={() => goTo(exerciseIndex + 1)}
             disabled={isLast}
-            className="flex size-11 shrink-0 items-center justify-center rounded-[3px] border border-border disabled:opacity-30"
+            className={cn(
+              "flex size-11 shrink-0 items-center justify-center rounded-[3px] border disabled:opacity-30",
+              complete && !isLast ? "border-accent bg-accent-soft text-accent" : "border-border",
+            )}
             aria-label="Próximo exercício"
           >
             <ChevronRight className="size-5" />
@@ -812,16 +1210,22 @@ export function WorkoutExecutionClient({ session }: { session: ExecutionSession 
           </p>
         ) : null}
 
+        {/* Clears the rest bar when brought into view after the last set. */}
         {isLast ? (
-          <Button className="mt-6 w-full" size="lg" variant="strong" onClick={openSheet}>
+          <Button ref={ctaRef} className="mt-6 w-full scroll-mb-40" size="lg" variant="strong" onClick={openSheet}>
             <GCheck className="size-4" />
             Finalizar treino
           </Button>
         ) : (
           <Button
-            className="mt-6 w-full"
+            ref={ctaRef}
+            className={cn(
+              "mt-6 w-full scroll-mb-40",
+              // Until the exercise is done: a quieter but clearly tappable button (not a bare underline).
+              !complete && "border border-foreground/25 shadow-[inset_0_-2px_0_var(--keel)]",
+            )}
             size="lg"
-            variant={complete ? "primary" : "outline"}
+            variant={complete ? "primary" : "secondary"}
             onClick={() => goTo(exerciseIndex + 1)}
           >
             Próximo exercício
@@ -835,30 +1239,58 @@ export function WorkoutExecutionClient({ session }: { session: ExecutionSession 
             Nota do exercício/máquina
           </label>
           <textarea
+            key={exercise.exerciseId}
             id="exercise-note"
             value={noteValue}
-            onChange={(e) => setNoteDrafts((n) => ({ ...n, [exercise.exerciseId]: e.target.value }))}
-            onBlur={() => {
-              const draft = noteDrafts[exercise.exerciseId];
-              if (draft === undefined || draft === (exercise.persistentNote ?? "") || staleBuild.current) return;
-              saveExerciseNote(exercise.exerciseId, draft).catch((err) => {
-                if (unstable_isUnrecognizedActionError(err)) staleBuild.current = true;
-              });
+            onChange={(e) => {
+              const text = e.target.value;
+              setNoteDrafts((n) => ({ ...n, [exercise.exerciseId]: text }));
+              if (note && note.state !== "saving") {
+                setNoteStatus((s) => {
+                  const next = { ...s };
+                  delete next[exercise.exerciseId];
+                  return next;
+                });
+              }
             }}
+            onBlur={() => saveNote(exercise.exerciseId, exercise.persistentNote)}
             placeholder="Ex.: banco na posição 4"
-            className="mt-1.5 w-full rounded-[3px] border border-border bg-surface px-3 py-2 text-sm"
+            // 16px on phones: iOS zooms into smaller fields on focus.
+            className="mt-1.5 w-full rounded-[3px] border border-foreground/50 bg-surface px-3 py-2 text-base sm:text-sm"
             rows={2}
           />
+          <div aria-live="polite" className="mt-1 flex min-h-5 items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.14em]">
+            {note?.state === "saving" ? (
+              <span className="text-muted">Salvando nota…</span>
+            ) : note?.state === "saved" && note.text === noteValue ? (
+              <span className="text-success">Nota salva</span>
+            ) : note?.state === "error" ? (
+              <>
+                <span className="text-danger">Nota não salva — sem conexão?</span>
+                <button
+                  type="button"
+                  onClick={() => saveNote(exercise.exerciseId, exercise.persistentNote)}
+                  className="-my-3 min-h-11 px-1 uppercase text-accent underline underline-offset-2"
+                >
+                  Tentar de novo
+                </button>
+              </>
+            ) : null}
+          </div>
         </div>
       </div>
 
-      {timer.isRunning && timer.secondsLeft !== null ? (
+      {rest.timer ? (
         <RestTimerBar
-          secondsLeft={timer.secondsLeft}
-          paused={timer.paused}
-          onAdd={timer.addSeconds}
-          onSkip={timer.skip}
-          onTogglePause={timer.togglePause}
+          key={rest.timer.id}
+          timer={rest.timer}
+          sound={session.restTimerSound}
+          next={restNext}
+          upNext={upNextText(rows)}
+          onAdjust={rest.adjust}
+          onTogglePause={rest.togglePause}
+          onDismiss={rest.dismiss}
+          onAnnounce={announce}
         />
       ) : null}
 
@@ -866,11 +1298,13 @@ export function WorkoutExecutionClient({ session }: { session: ExecutionSession 
         <FinishSheet
           key={sheetKey}
           stats={stats}
-          finishing={finishing}
+          stale={staleSave}
+          finishing={finishing ? finishMode : null}
           discarding={discarding}
           error={finishError}
-          onFinish={finish}
-          onDiscard={discard}
+          onFinish={() => finish("now")}
+          onFinishStale={() => finish("stale")}
+          onDiscard={() => discard()}
           onReview={({ exerciseIndex: i, inputLabel }) => {
             setSheetOpen(false);
             goTo(i);

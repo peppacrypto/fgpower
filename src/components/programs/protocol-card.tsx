@@ -18,7 +18,7 @@ export interface ProtocolCardData {
 }
 
 /** Abbreviate a day name to a compact split-map token: "Push A" -> "PUSH·A", "Sessão A" -> "A". */
-function splitToken(name: string): string {
+export function splitToken(name: string): string {
   const cleaned = name.replace(/^(sess(ã|a)o|dia|day|treino)\s+/i, "").trim();
   return cleaned.length <= 10 ? cleaned.toUpperCase() : cleaned.slice(0, 9).toUpperCase() + "…";
 }

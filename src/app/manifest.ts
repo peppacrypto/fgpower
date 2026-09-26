@@ -8,8 +8,11 @@ export default function manifest(): MetadataRoute.Manifest {
       "Programas de musculação baseados em evidência, execução de treino e progressão registrada.",
     start_url: "/app/today",
     display: "standalone",
-    background_color: "#0a0a0b",
-    theme_color: "#0a0a0b",
+    // The light --background: the app is light-first, so the Android splash
+    // and title bar match what most users land on (the <meta theme-color>
+    // in layout.tsx still switches per color scheme once the page loads).
+    background_color: "#fafafb",
+    theme_color: "#fafafb",
     orientation: "portrait-primary",
     icons: [
       { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
