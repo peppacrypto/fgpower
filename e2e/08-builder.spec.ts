@@ -1,12 +1,28 @@
+import { execSync } from "node:child_process";
 import { test, expect, devices, type Page } from "@playwright/test";
 import { loginAsTestUser } from "./fixtures";
 import { completeOnboarding } from "./onboarding-helper";
-import { uniqueEmail } from "./workout-helpers";
+import { SEGUNDA, finishAndSave, newUserOnGd1, recordSet, startDayFromToday, uniqueEmail } from "./workout-helpers";
 
 /**
- * Program builder on a phone (Batch 1: W-005, W-037, W-038, W-107, W-113).
- * Each test uses a fresh account and a fresh custom program.
+ * Program builder on a phone (Batch 1: W-005, W-037, W-038, W-107, W-113;
+ * Batch 2: W-114). Each test uses a fresh account and a fresh program.
  */
+
+/** Runs SQL on the local dev database (docker compose's fgpower-postgres). */
+function sql(query: string): string {
+  return execSync(`docker exec -i fgpower-postgres sh -c 'psql -U "$POSTGRES_USER" -d fgpower -At -v ON_ERROR_STOP=1'`, {
+    encoding: "utf8",
+    input: query,
+  }).trim();
+}
+const hasDb = (() => {
+  try {
+    return sql("SELECT 1") === "1";
+  } catch {
+    return false;
+  }
+})();
 
 // Drop defaultBrowserType (WebKit): only Chromium is installed for the suite.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -301,4 +317,53 @@ test("one Escape closes the picker, and the leave sheet keeps focus inside", asy
   await expect(sheet).toHaveCount(0);
   await expect(page).toHaveURL(/\/edit$/);
   await expect(rows(page)).toHaveCount(1);
+});
+
+test("saving keeps each exercise row: logged workouts stay linked and unedited settings survive", async ({ page }) => {
+  test.skip(!hasDb, "needs the local dev database");
+  test.setTimeout(150_000);
+  await newUserOnGd1(page, "builder-rows");
+  // A logged workout on Monday's rows.
+  const sessionId = await startDayFromToday(page, SEGUNDA);
+  await recordSet(page, 1, "40", "10");
+  await finishAndSave(page);
+
+  const programId = sql(`SELECT "programId" FROM "WorkoutSession" WHERE id = '${sessionId}'`);
+  const dayId = sql(`SELECT "programDayId" FROM "WorkoutSession" WHERE id = '${sessionId}'`);
+  const rowIds = () => sql(`SELECT id FROM "UserProgramExercise" WHERE "dayId" = '${dayId}' ORDER BY "sortOrder"`).split("\n");
+  const before = rowIds();
+  // Settings a template fork carries but the builder shows no box for.
+  sql(`UPDATE "UserProgramExercise" SET tempo = '3-1-1-0', "progressionStrategy" = 'DOUBLE', "loadIncrementKg" = 2.5 WHERE id = '${before[0]}'`);
+  const linked = () => sql(`SELECT count(*) FROM "WorkoutExerciseLog" WHERE "sessionId" = '${sessionId}' AND "programExerciseId" IS NOT NULL`);
+  const linkedBefore = linked();
+  expect(Number(linkedBefore)).toBeGreaterThan(0);
+
+  await page.goto(`/app/programs/${programId}/edit`);
+  await page.getByRole("button", { name: SEGUNDA, exact: true }).click();
+  await field(page, 0, "sets").fill("5");
+  await field(page, 0, "sets").blur();
+  await save(page);
+
+  expect(rowIds()).toEqual(before);
+  expect(linked()).toBe(linkedBefore);
+  expect(sql(`SELECT sets, tempo, "progressionStrategy", "loadIncrementKg" FROM "UserProgramExercise" WHERE id = '${before[0]}'`)).toBe(
+    "5|3-1-1-0|DOUBLE|2.5",
+  );
+
+  // A duplicate is a new row that keeps the source's settings; the source keeps its id.
+  await rows(page).first().getByRole("button", { name: "Duplicar" }).click();
+  await save(page);
+  const after = rowIds();
+  expect(after).toHaveLength(before.length + 1);
+  expect(after[0]).toBe(before[0]);
+  expect(after.slice(2)).toEqual(before.slice(1));
+  expect(sql(`SELECT sets, tempo, "progressionStrategy", "loadIncrementKg" FROM "UserProgramExercise" WHERE id = '${after[1]}'`)).toBe(
+    "5|3-1-1-0|DOUBLE|2.5",
+  );
+  // A second save (with the ids the first one handed back) rewrites nothing.
+  await field(page, 1, "sets").fill("4");
+  await field(page, 1, "sets").blur();
+  await save(page);
+  expect(rowIds()).toEqual(after);
+  expect(linked()).toBe(linkedBefore);
 });

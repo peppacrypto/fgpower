@@ -1,5 +1,21 @@
 @import "tailwindcss";
 
+/* Touch screens have no hover (Tailwind v4 applies hover: only where the
+   device can hover), so a tap on a card, row or link showed nothing until the
+   next page arrived. Every hover: style — group-hover: included — also
+   applies while the element is pressed, so the finger gets the pointer's
+   feedback. Explicit active: utilities come later and still win. */
+@custom-variant hover {
+  @media (hover: hover) {
+    &:hover {
+      @slot;
+    }
+  }
+  &:active {
+    @slot;
+  }
+}
+
 /* ---------------------------------------------------------------------
    FGPOWER design tokens.
    Light-first, precision SaaS identity — an Attio-style disciplined type
@@ -284,11 +300,19 @@ body {
   }
   .reg-frame.is-link:hover::before,
   .reg-frame.is-link:hover::after,
+  .reg-frame.is-link:active::before,
+  .reg-frame.is-link:active::after,
   .reg-frame[data-active="true"]::before,
   .reg-frame[data-active="true"]::after {
     width: 16px;
     height: 16px;
     border-color: var(--accent);
+  }
+  /* Pressed: the marks extend as on hover, and the panel takes a faint ink
+     plate over its surface (an image layer, so a bg-* utility still sets the
+     base) — the touch equivalent of the hover state. */
+  .reg-frame.is-link:active {
+    background-image: linear-gradient(var(--ink-3), var(--ink-3));
   }
 
   /* PANEL-RAISED — a level-2 hero band: a --surface-2 tonal step bracketed by
@@ -369,7 +393,42 @@ body {
   }
 }
 
+/* SKELETON — the placeholder bones of a route's loading screen
+   (components/ui/skeleton.tsx): a --surface-2 bar with a slow sheen sweeping
+   across it. Still when the user asks for reduced motion. */
+@layer components {
+  .sk {
+    --sk-sheen: color-mix(in oklab, var(--surface) 80%, transparent);
+    /* --surface-2, a touch darker so a bone still reads on the page background. */
+    background-color: color-mix(in oklab, var(--surface-2), var(--foreground) 3%);
+    background-image: linear-gradient(90deg, transparent 20%, var(--sk-sheen) 50%, transparent 80%);
+    background-size: 200% 100%;
+    background-repeat: no-repeat;
+    animation: sk-sheen 1.6s ease-in-out infinite;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .sk {
+    --sk-sheen: color-mix(in oklab, var(--foreground) 6%, transparent);
+  }
+}
+:root[data-theme="dark"] .sk {
+  --sk-sheen: color-mix(in oklab, var(--foreground) 6%, transparent);
+}
+@keyframes sk-sheen {
+  from {
+    background-position: 150% 0;
+  }
+  to {
+    background-position: -50% 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .sk {
+    animation: none;
+    background-image: none;
+  }
   *,
   *::before,
   *::after {

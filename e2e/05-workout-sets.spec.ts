@@ -9,10 +9,12 @@ import {
   isSetSync,
   newUserOnGd1,
   openFinishSheet,
+  openWarmups,
   prescribedKgBoxes,
   programDayCard,
   recordSet,
   sessionIdFromUrl,
+  setText,
   startDayFromToday,
   todayDayRow,
   waitForWorkoutScreen,
@@ -58,8 +60,14 @@ test("GD 1 Quinta opens one kg/reps box per prescribed set, plus warm-up rows", 
     await expect(page.getByRole("button", { name: `Concluir série ${n}`, exact: true })).toBeVisible();
   }
 
-  // Warm-ups are their own block, above the prescribed sets.
-  await expect(page.getByRole("region", { name: "Aquecimento" })).toBeVisible();
+  // Warm-ups are their own optional block, above the prescribed sets: folded
+  // into one line until the user chooses to log them.
+  const warmups = page.getByRole("region", { name: "Aquecimento" });
+  await expect(warmups).toBeVisible();
+  await expect(warmups).toContainText("opcional");
+  await expect(warmups).toContainText("2 séries leves");
+  await expect(warmupKgBoxes(page)).toHaveCount(0);
+  await openWarmups(page);
   await expect(warmupKgBoxes(page)).toHaveCount(2);
 
   // No extra rows until the user asks for one; the button says it's beyond the prescription.
@@ -133,8 +141,8 @@ test("'Adicionar série extra' adds a row labelled as extra (E1) that can be rem
   ]);
   await expect(page.getByText("Treino concluído")).toBeVisible();
   await expect(page.getByText(/2 séries de trabalho/)).toBeVisible();
-  await expect(page.locator("span").filter({ hasText: /^extra\s*30kg × 15$/ })).toBeVisible();
-  await expect(page.locator("span").filter({ hasText: /^40kg × 10$/ })).toBeVisible();
+  await expect(page.locator("span").filter({ hasText: setText("30", 15, "extra\\s*") })).toBeVisible();
+  await expect(page.locator("span").filter({ hasText: setText("40", 10) })).toBeVisible();
 });
 
 test("typed values without ✓ survive a reload and are saved and counted on finish", async ({ page, browser, baseURL }) => {
@@ -190,8 +198,8 @@ test("typed values without ✓ survive a reload and are saved and counted on fin
   ]);
   await expect(page.getByText("Treino concluído")).toBeVisible();
   await expect(page.getByText(/2 séries de trabalho/)).toBeVisible();
-  await expect(page.getByText("42,5kg × 10", { exact: true })).toBeVisible();
-  await expect(page.getByText("45kg × 8", { exact: true })).toBeVisible();
+  await expect(page.getByText(setText("42,5", 10))).toBeVisible();
+  await expect(page.getByText(setText("45", 8))).toBeVisible();
 });
 
 test("after finishing, Today marks the day done, 'Ver' opens its summary, and nothing stays in progress", async ({
@@ -217,7 +225,7 @@ test("after finishing, Today marks the day done, 'Ver' opens its summary, and no
     row.getByRole("link", { name: "Ver", exact: true }).click(),
   ]);
   await expect(page.getByText("Treino concluído")).toBeVisible();
-  await expect(page.getByText("50kg × 9", { exact: true })).toBeVisible();
+  await expect(page.getByText(setText("50", 9))).toBeVisible();
 
   // Reopening the workout itself lands on the saved result — never a blank "Finalizar" screen.
   await page.goto(`/app/workout/${sessionId}`);
@@ -256,13 +264,17 @@ test("'Refazer' asks first, then opens a new session that shows last time's load
   const second = sessionIdFromUrl(page.url());
   expect(second).not.toBe(first);
 
-  await expect(page.getByText("Último treino", { exact: true })).toBeVisible();
-  await expect(page.getByText("50kg × 9", { exact: true })).toBeVisible();
-  // The empty box suggests last time's numbers.
+  const lastTime = page.locator("[data-last-time]");
+  await expect(lastTime).toContainText("Último treino");
+  await expect(lastTime.getByText(setText("50", 9))).toBeVisible();
+  // The empty box suggests what to lift today: last time's load, one more rep
+  // (9 reps inside an 8–12 range — double progression).
+  await expect(lastTime.locator("[data-advice]")).toContainText("Mantenha 50");
+  await expect(lastTime.locator("[data-advice]")).toContainText("busque 10 reps");
   await expect(page.getByRole("textbox", { name: "Série 1 — kg", exact: true })).toHaveAttribute("placeholder", "50");
   await expect(page.getByRole("textbox", { name: "Série 1 — repetições", exact: true })).toHaveAttribute(
     "placeholder",
-    "9",
+    "10",
   );
 });
 

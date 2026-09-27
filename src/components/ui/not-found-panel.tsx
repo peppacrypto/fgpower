@@ -2,6 +2,9 @@ import Link from "next/link";
 import type { Route } from "next";
 import { Button } from "./button";
 
+/** The page title of every 404 (metadata fallbacks use it too, so no two <title>s disagree). */
+export const NOT_FOUND_TITLE = "Página não encontrada";
+
 /**
  * The 404 body shared by the root and /app not-found pages: a mono dossier
  * code, a plain-language headline and two ways back in (the installed PWA has
@@ -14,7 +17,7 @@ export function NotFoundPanel({ programsHref }: { programsHref: Route }) {
           root; a page calling notFound() keeps the layout's default title.
           React inserts this <title> ahead of the head's first one, so it is
           the document title either way (the default's tag stays behind it). */}
-      <title>Página não encontrada · FGPOWER</title>
+      <title>{`${NOT_FOUND_TITLE} · FGPOWER`}</title>
       <div className="panel-raised px-5 py-7">
         <span className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-muted">
           404 · Fora do mapa

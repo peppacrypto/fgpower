@@ -43,7 +43,7 @@ async function onboardWith(page: Page, opts: { name: string; days?: string[]; li
   if (opts.limitations) await page.getByLabel(/Limitações/).fill(opts.limitations);
   await Promise.all([
     page.waitForURL(/\/app\/today/, { timeout: 30_000 }),
-    page.getByRole("button", { name: "Concluir" }).click(),
+    page.getByRole("button", { name: "Ver meu plano" }).click(),
   ]);
 }
 
@@ -54,9 +54,8 @@ async function newUser(browser: Browser, label: string, name: string) {
   const email = uniqueEmail(label);
   await loginAsTestUser(page, email);
   await onboardWith(page, { name });
+  // Social surfaces show the onboarding display name (not the account's "E2E Test").
   const id = await userIdByEmail(email);
-  // Social surfaces show the account name (the test login sets "E2E Test").
-  await db.query(`update "user" set name = $2 where id = $1`, [id, name]);
   return { context, page, id };
 }
 

@@ -7,7 +7,9 @@ import { getProgressSummary, getExerciseProgressDeltas, type ProgressPeriod } fr
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/misc";
-import { formatDecimal } from "@/lib/training/set-plan";
+import { describeRecord } from "@/lib/training/personal-records-core";
+import { formatAppDate } from "@/lib/training/week";
+import { formatKg } from "@/lib/utils/format";
 
 export const metadata: Metadata = { title: "Progresso" };
 
@@ -19,13 +21,6 @@ const PERIODS: { value: ProgressPeriod; label: string }[] = [
   { value: "1y", label: "1 ano" },
   { value: "all", label: "Tudo" },
 ];
-
-const PR_LABEL: Record<string, (v: number, w: number | null, r: number | null) => string> = {
-  MAX_WEIGHT: (v) => `${formatDecimal(v)}kg`,
-  ESTIMATED_1RM: (v) => `1RM ~${formatDecimal(Math.round(v * 10) / 10)}kg`,
-  MAX_REPS_AT_WEIGHT: (_v, w, r) => `${formatDecimal(w) || "—"}kg × ${r}`,
-  SESSION_VOLUME: (v) => `${Math.round(v)}kg de volume`,
-};
 
 export default async function ProgressPage({ searchParams }: PageProps<"/app/progress">) {
   const sp = await searchParams;
@@ -113,11 +108,13 @@ export default async function ProgressPage({ searchParams }: PageProps<"/app/pro
             {deltas.map((d) => (
               <Link key={d.slug} href={`/app/exercises/${d.slug}/history`}>
                 <Card className="is-link">
-                  <CardContent className="flex items-center justify-between py-3.5">
-                    <span className="text-sm font-medium">{d.namePt}</span>
-                    <span className="font-mono text-sm font-semibold tabular-nums text-success">
-                      {d.deltaKg > 0 ? "+" : ""}
-                      {d.deltaKg}kg
+                  <CardContent className="flex items-center justify-between gap-3 py-3.5">
+                    <span className="min-w-0 text-sm font-medium">{d.namePt}</span>
+                    <span
+                      className={`shrink-0 whitespace-nowrap font-mono text-sm font-semibold tabular-nums ${d.deltaKg > 0 ? "text-success" : "text-muted"}`}
+                    >
+                      {d.deltaKg > 0 ? "+" : "−"}
+                      {formatKg(Math.abs(d.deltaKg))}
                     </span>
                   </CardContent>
                 </Card>
@@ -137,14 +134,21 @@ export default async function ProgressPage({ searchParams }: PageProps<"/app/pro
         ) : (
           <div className="flex flex-col gap-2">
             {summary.recentPrs.map((pr) => (
-              <Card key={pr.id}>
-                <CardContent className="flex items-center justify-between gap-3 py-3.5">
-                  <span className="min-w-0 flex-1 text-sm font-medium">{pr.exercise.namePt}</span>
-                  <span className="shrink-0 whitespace-nowrap font-mono text-sm tabular-nums text-muted">
-                    {PR_LABEL[pr.kind]?.(pr.value, pr.weightKg, pr.reps)}
-                  </span>
-                </CardContent>
-              </Card>
+              <Link key={pr.exerciseId} href={`/app/exercises/${pr.slug}/history`}>
+                <Card className="is-link">
+                  <CardContent className="py-3.5">
+                    <div className="flex items-baseline justify-between gap-3">
+                      <span className="min-w-0 flex-1 text-sm font-medium">{pr.namePt}</span>
+                      <span className="shrink-0 font-mono text-[11px] tabular-nums text-muted">
+                        {formatAppDate(pr.achievedAt, { day: "2-digit", month: "short" })}
+                      </span>
+                    </div>
+                    <p className="mt-0.5 text-xs tabular-nums text-muted">
+                      {pr.records.map((r) => describeRecord(r)).join(" · ")}
+                    </p>
+                  </CardContent>
+                </Card>
+              </Link>
             ))}
           </div>
         )}

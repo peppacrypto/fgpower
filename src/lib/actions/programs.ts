@@ -6,6 +6,7 @@ import { requireUserOrThrow } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 import { getTemplateBySlug } from "@/lib/data/templates";
 import { findUndoableSwitch } from "@/lib/data/dashboard";
+import { startAdHocWorkoutSession } from "@/lib/actions/workouts";
 import type { Prisma } from "@/generated/prisma/client";
 
 /** A set "has data" once it is completed or holds a typed load/reps (as in workouts.ts). */
@@ -101,6 +102,32 @@ export async function startTemplate(templateSlug: string) {
   const program = await forkTemplateToProgram(templateSlug, user.id);
   const started = await startProgramInternal(user.id, program.id);
   redirect(started.ok ? activatedUrl(started.previousEnrollmentId) : "/app/today");
+}
+
+/**
+ * "Ativar e começar": activates the template (same rules as startTemplate)
+ * and opens its first day's workout right away — the one-tap path from a
+ * recommendation to the first set. The workout opens exactly as Today's
+ * "Iniciar treino" would open it (startAdHocWorkoutSession: linked to the new
+ * enrollment, resumes/blocks like any start). If this tap also ended another
+ * program (a stale page), it lands on Today instead, where the switch can be
+ * undone.
+ */
+export async function startTemplateAndBegin(templateSlug: string) {
+  const user = await requireUserOrThrow();
+  const program = await forkTemplateToProgram(templateSlug, user.id);
+  const started = await startProgramInternal(user.id, program.id);
+  if (!started.ok) redirect("/app/today");
+  if (started.previousEnrollmentId) redirect(activatedUrl(started.previousEnrollmentId));
+  // The day Today would suggest first on a fresh enrollment: the first one with exercises.
+  const firstDay = await prisma.userProgramDay.findFirst({
+    where: { programId: program.id, exercises: { some: {} } },
+    orderBy: { dayIndex: "asc" },
+    select: { id: true },
+  });
+  if (!firstDay) redirect(activatedUrl(null));
+  // Redirects into the workout.
+  await startAdHocWorkoutSession(firstDay.id);
 }
 
 export async function customizeTemplate(templateSlug: string) {

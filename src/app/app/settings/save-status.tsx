@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils/cn";
+import { ActionErrorText } from "@/components/social/session-expired";
 
 /** Danger border + ring for an input carrying aria-invalid="true". */
 export const INVALID_FIELD =
@@ -30,7 +31,12 @@ export function SaveStatus({
 }) {
   let content: React.ReactNode = idleText ? <span className="text-muted">{idleText}</span> : null;
   if (pending) content = <span className="text-muted">Salvando…</span>;
-  else if (error) content = <span className="font-sans text-sm font-medium normal-case tracking-normal text-danger">{error}</span>;
+  else if (error)
+    content = (
+      <span className="font-sans text-sm font-medium normal-case tracking-normal text-danger">
+        <ActionErrorText error={error} />
+      </span>
+    );
   else if (savedAt) content = <SavedFlash key={savedAt} idleText={idleText} />;
 
   return (

@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { followUser, unfollowUser } from "@/lib/actions/social";
 import { runAction } from "@/components/social/run-action";
+import { ActionErrorText } from "@/components/social/session-expired";
 
 type FollowState = "NONE" | "REQUESTED" | "FOLLOWING";
 
@@ -65,7 +66,7 @@ export function FollowButton({
       {button}
       {error ? (
         <p role="alert" className="text-xs text-danger">
-          {error}
+          <ActionErrorText error={error} />
         </p>
       ) : null}
     </div>

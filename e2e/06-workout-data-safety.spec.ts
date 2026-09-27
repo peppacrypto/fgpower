@@ -6,6 +6,7 @@ import {
   newUserOnGd1,
   openFinishSheet,
   recordSet,
+  setText,
   startDayFromToday,
   todayDayRow,
   waitForWorkoutScreen,
@@ -40,8 +41,8 @@ test("a correction made on another device is not overwritten by a stale screen",
 
   // The first phone (still showing 40) finishes: the 50 must survive.
   await finishAndSave(page);
-  await expect(page.getByText("50kg × 10", { exact: true })).toBeVisible();
-  await expect(page.getByText("40kg × 10", { exact: true })).toHaveCount(0);
+  await expect(page.getByText(setText("50", 10))).toBeVisible();
+  await expect(page.getByText(setText("40", 10))).toHaveCount(0);
 });
 
 test("an incomplete row is reported at finish and 'Revisar' takes you to its empty box", async ({ page }) => {

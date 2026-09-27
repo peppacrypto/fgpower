@@ -10,6 +10,7 @@ import {
   EQUIPMENT_ACCESS_OPTIONS,
 } from "@/lib/validation/onboarding";
 import { runAction } from "@/components/social/run-action";
+import { ActionErrorText } from "@/components/social/session-expired";
 import { cn } from "@/lib/utils/cn";
 import { INVALID_FIELD, SaveStatus } from "./save-status";
 
@@ -19,6 +20,7 @@ const GOAL_LABEL: Record<string, string> = {
   GENERAL_FITNESS: "Fitness geral",
   STRENGTH_HYPERTROPHY: "Força + Hipertrofia",
   SPORTS_PERFORMANCE: "Performance esportiva",
+  FAT_LOSS: "Emagrecer / definir",
 };
 const EXPERIENCE_LABEL: Record<string, string> = {
   BEGINNER: "Iniciante",
@@ -107,7 +109,7 @@ export function FormError({ error }: { error?: string }) {
   if (!error) return null;
   return (
     <p role="alert" className="border-l-2 border-l-danger bg-danger-soft px-3.5 py-2.5 text-sm text-danger">
-      {error}
+      <ActionErrorText error={error} />
     </p>
   );
 }
@@ -142,9 +144,13 @@ export function ProfileForm({ initial }: Props) {
           required
           maxLength={60}
           autoComplete="nickname"
+          aria-describedby={displayName.error ? "displayName-error displayName-hint" : "displayName-hint"}
           className={cn("mt-1.5", INVALID_FIELD)}
         />
         <FieldError name="displayName" error={displayName.error} />
+        <p id="displayName-hint" className="mt-1 text-xs text-muted">
+          É assim que outras pessoas veem você no feed e no seu perfil.
+        </p>
       </div>
 
       <div>
@@ -153,7 +159,8 @@ export function ProfileForm({ initial }: Props) {
         <FieldError name="bio" error={bio.error} />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      {/* Stacked on phones: half a phone's width cut "Emagrecer / definir" to "Emagrec". */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <Label htmlFor="goal">Objetivo</Label>
           <Select {...goal.props} defaultValue={initial.goal} className={cn("mt-1.5", INVALID_FIELD)}>

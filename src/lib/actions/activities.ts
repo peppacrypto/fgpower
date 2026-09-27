@@ -5,6 +5,8 @@ import { requireUserOrThrow } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 import { buildWorkoutActivitySummary } from "@/lib/social/activity-summary";
 
+const VISIBILITIES: readonly ShareWorkoutInput["visibility"][] = ["PRIVATE", "FOLLOWERS", "PUBLIC"];
+
 export interface ShareWorkoutInput {
   sessionId: string;
   visibility: "PRIVATE" | "FOLLOWERS" | "PUBLIC";
@@ -15,10 +17,17 @@ export interface ShareWorkoutInput {
 /**
  * Publishes (or updates) a completed workout as a social Activity built
  * strictly from the session's own real data (spec §46.5 — never
- * frontend-fabricated performance values).
+ * frontend-fabricated performance values). PRIVATE keeps (or turns) it
+ * visible to its owner only. Returns the activity's id, for "Copiar link".
  */
-export async function shareWorkoutSession(input: ShareWorkoutInput) {
+export async function shareWorkoutSession(input: ShareWorkoutInput): Promise<{ activityId: string }> {
   const user = await requireUserOrThrow();
+
+  // Server actions take any client input: accept only what the form can send.
+  if (typeof input?.sessionId !== "string" || !VISIBILITIES.includes(input.visibility)) throw new Error("INVALID");
+  const visibility = input.visibility;
+  const showDetailedLoads = input.showDetailedLoads === true;
+  const caption = typeof input.caption === "string" ? input.caption.trim().slice(0, 280) || null : null;
 
   const session = await prisma.workoutSession.findUniqueOrThrow({
     where: { id: input.sessionId },
@@ -32,36 +41,29 @@ export async function shareWorkoutSession(input: ShareWorkoutInput) {
 
   await prisma.workoutSession.update({
     where: { id: session.id },
-    data: {
-      visibility: input.visibility,
-      showDetailedLoads: input.showDetailedLoads,
-      caption: input.caption?.slice(0, 280) || null,
-    },
+    data: { visibility, showDetailedLoads, caption },
   });
 
-  const summary = buildWorkoutActivitySummary(session, input.showDetailedLoads);
+  const summary = buildWorkoutActivitySummary(session, showDetailedLoads);
 
-  await prisma.activity.upsert({
+  const activity = await prisma.activity.upsert({
     where: { sessionId: session.id },
     create: {
       userId: user.id,
       type: "WORKOUT",
       sessionId: session.id,
-      caption: input.caption?.slice(0, 280) || null,
-      visibility: input.visibility,
-      showDetailedLoads: input.showDetailedLoads,
+      caption,
+      visibility,
+      showDetailedLoads,
       summary: summary as never,
     },
-    update: {
-      caption: input.caption?.slice(0, 280) || null,
-      visibility: input.visibility,
-      showDetailedLoads: input.showDetailedLoads,
-      summary: summary as never,
-    },
+    update: { caption, visibility, showDetailedLoads, summary: summary as never },
+    select: { id: true },
   });
 
   revalidatePath("/app/feed");
   revalidatePath(`/app/workout/${session.id}/summary`);
+  return { activityId: activity.id };
 }
 
 export async function setActivityVisibility(sessionId: string, visibility: "PRIVATE" | "FOLLOWERS" | "PUBLIC") {

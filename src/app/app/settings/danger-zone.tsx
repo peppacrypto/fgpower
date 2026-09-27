@@ -11,6 +11,9 @@ export function DangerZone() {
   const [confirming, setConfirming] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Deleting needs a sign-in from the last 24 h; /login would just bounce a
+  // signed-in user back, so the way through is sign out → sign in → here.
+  const [needsFreshLogin, setNeedsFreshLogin] = useState(false);
 
   return (
     <div className="flex flex-col gap-4">
@@ -41,7 +44,26 @@ export function DangerZone() {
         ) : (
           <div className="mt-3 flex flex-col gap-2">
             <p className="text-sm text-danger">Tem certeza? Isso é permanente.</p>
-            {error ? <p className="text-xs text-danger">{error}</p> : null}
+            {error ? (
+              <p role="alert" className="text-xs text-danger">
+                {error}
+              </p>
+            ) : null}
+            {needsFreshLogin ? (
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-fit"
+                onClick={() =>
+                  authClient
+                    .signOut()
+                    .catch(() => null)
+                    .then(() => router.push("/login?next=%2Fapp%2Fsettings"))
+                }
+              >
+                Sair e entrar de novo
+              </Button>
+            ) : null}
             <div className="flex flex-wrap gap-2">
               <Button
                 variant="danger"
@@ -53,7 +75,8 @@ export function DangerZone() {
                   const { error: deleteError } = await authClient.deleteUser({});
                   if (deleteError) {
                     if (deleteError.code === "SESSION_EXPIRED") {
-                      setError("Sua sessão precisa ser recente para excluir a conta. Entre novamente e tente de novo.");
+                      setNeedsFreshLogin(true);
+                      setError("Por segurança, excluir a conta pede um login recente. Saia, entre de novo e volte aqui.");
                     } else {
                       setError(deleteError.message ?? "Não foi possível excluir a conta.");
                     }

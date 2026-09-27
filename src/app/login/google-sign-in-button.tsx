@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth/auth-client";
 import { Button } from "@/components/ui/button";
 
@@ -27,8 +27,32 @@ function GoogleIcon() {
   );
 }
 
+/** Where Google sends the user back, keeping `next` through every branch. */
+function callbackUrls(next: string | null | undefined) {
+  const withNext = (path: string) => (next ? `${path}?next=${encodeURIComponent(next)}` : path);
+  return {
+    callbackURL: next ?? "/app/today",
+    // New accounts onboard first, then the wizard continues to `next` (a
+    // sign-in restarted mid-wizard already points there).
+    newUserCallbackURL: next?.startsWith("/onboarding") ? next : withNext("/onboarding"),
+    // better-auth appends `error=<code>`; /login turns it into a message.
+    errorCallbackURL: withNext("/login"),
+  };
+}
+
 export function GoogleSignInButton({ googleConfigured, next }: { googleConfigured: boolean; next?: string | null }) {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Coming back from Google with the browser's back button restores this page
+  // from the back/forward cache, still saying "Redirecionando…".
+  useEffect(() => {
+    function onPageShow(e: PageTransitionEvent) {
+      if (e.persisted) setLoading(false);
+    }
+    window.addEventListener("pageshow", onPageShow);
+    return () => window.removeEventListener("pageshow", onPageShow);
+  }, []);
 
   if (!googleConfigured) {
     return (
@@ -40,25 +64,38 @@ export function GoogleSignInButton({ googleConfigured, next }: { googleConfigure
     );
   }
 
+  async function signIn() {
+    setLoading(true);
+    setError(null);
+    const failed = () => {
+      setLoading(false);
+      setError(
+        typeof navigator !== "undefined" && navigator.onLine === false
+          ? "Sem conexão. Tente de novo quando o sinal voltar."
+          : "Não foi possível abrir o login do Google. Tente de novo.",
+      );
+    };
+    try {
+      // `next` was validated server-side (safeNextPath): an app path only.
+      const result = await authClient.signIn.social({ provider: "google", ...callbackUrls(next) });
+      // On success the browser is already leaving for Google; keep "Redirecionando…".
+      if (result?.error) failed();
+    } catch {
+      failed();
+    }
+  }
+
   return (
-    <Button
-      variant="secondary"
-      size="lg"
-      className="w-full"
-      disabled={loading}
-      onClick={async () => {
-        setLoading(true);
-        await authClient.signIn.social({
-          provider: "google",
-          // `next` was validated server-side (safeNextPath): an app path only.
-          callbackURL: next ?? "/app/today",
-          newUserCallbackURL: "/onboarding",
-          errorCallbackURL: "/login?error=1",
-        });
-      }}
-    >
-      <GoogleIcon />
-      {loading ? "Redirecionando…" : "Continuar com Google"}
-    </Button>
+    <div className="flex flex-col gap-2">
+      <Button variant="secondary" size="lg" className="w-full" disabled={loading} onClick={signIn}>
+        <GoogleIcon />
+        {loading ? "Redirecionando…" : "Continuar com Google"}
+      </Button>
+      {error ? (
+        <p role="alert" className="text-sm text-danger">
+          {error}
+        </p>
+      ) : null}
+    </div>
   );
 }

@@ -94,8 +94,9 @@ test("the app main clears the bottom nav exactly (--nav-h)", async ({ page }) =>
 
 test("a missing /app page is a pt-BR 404 inside the app shell, with ways back", async ({ page }) => {
   await onboardedUser(page, "shell-404");
-  const res = await page.goto("/app/programs/does-not-exist");
-  expect(res?.status()).toBe(404);
+  // Routes with a loading skeleton stream their 404 (status 200, marked noindex).
+  await page.goto("/app/programs/does-not-exist");
+  await expect(page.locator('meta[name="robots"][content*="noindex"]').first()).toBeAttached();
   await expect(page.getByRole("heading", { name: "Esta página não existe (ou saiu do ar)." })).toBeVisible();
   await expect(page.getByText("404 · Fora do mapa")).toBeVisible();
   await expect(page.getByRole("navigation", { name: "Navegação principal" })).toBeVisible();
@@ -112,8 +113,8 @@ test("a missing /app page is a pt-BR 404 inside the app shell, with ways back", 
 
   // A stale workout link 404s at a focus-mode path (where the nav normally
   // hides): the nav comes back, exactly once.
-  const workout = await page.goto("/app/workout/00000000-0000-0000-0000-000000000000");
-  expect(workout?.status()).toBe(404);
+  await page.goto("/app/workout/00000000-0000-0000-0000-000000000000");
+  await expect(page.locator('meta[name="robots"][content*="noindex"]').first()).toBeAttached();
   await expect(page.getByText("404 · Fora do mapa")).toBeVisible();
   await expect(page.getByRole("navigation", { name: "Navegação principal" })).toHaveCount(1);
   await expect(page.getByRole("navigation", { name: "Navegação principal" })).toBeVisible();

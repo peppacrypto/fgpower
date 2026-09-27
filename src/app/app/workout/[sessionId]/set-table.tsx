@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Check, Plus, Trash2 } from "lucide-react";
+import { Check, ChevronDown, Info, Plus, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { formatDecimal, type SetKind } from "@/lib/training/set-plan";
+import { formatKg, plural } from "@/lib/utils/format";
 
 export type DraftField = "weight" | "reps" | "rir";
 
@@ -29,12 +30,18 @@ export interface SetTableRowModel {
 /** Accessible names of the boxes ("Série 2 — kg"). */
 export const FIELD_LABEL: Record<DraftField, string> = { weight: "kg", reps: "repetições", rir: "RIR" };
 
+/** A box's accessible name word; a timed hold's reps box holds seconds ("Série 1 — segundos"). */
+export function fieldLabel(field: DraftField, timed = false): string {
+  return field === "reps" && timed ? "segundos" : FIELD_LABEL[field];
+}
+
 const GRID = "grid grid-cols-[2.25rem_minmax(0,1fr)_minmax(0,1fr)_3rem_2.75rem] items-center gap-1.5";
 
 /**
  * Every set the program prescribes is an open row of boxes (kg · reps · RIR ·
- * ✓), so the whole exercise can be filled at a glance. Warm-ups sit in their
- * own block above; sets beyond the prescription live in a separate, clearly
+ * ✓), so the whole exercise can be filled at a glance. Warm-ups are optional:
+ * folded into one line with their suggested loads until the user opens them
+ * to log them. Sets beyond the prescription live in a separate, clearly
  * labelled "Séries extras" block and are only created on demand.
  */
 export function SetTable({
@@ -42,57 +49,142 @@ export function SetTable({
   prescribed,
   extras,
   prescribedCount,
+  hint,
   onChange,
   onBlurRow,
   onToggle,
   onRemoveExtra,
   onAddExtra,
   addingExtra,
+  warmupsOpen,
+  onToggleWarmups,
+  onExplainRir,
+  timed = false,
 }: {
   warmups: SetTableRowModel[];
   prescribed: SetTableRowModel[];
   extras: SetTableRowModel[];
   prescribedCount: number;
+  /**
+   * What the grey numbers are. `shown`: explained above the rows; `folded`:
+   * behind an (i) once the user has used them a few times (`open` while
+   * unfolded); `none`: a first time, explained by the callout above instead.
+   * Decided outside of typing: it must not appear or vanish under the finger.
+   */
+  hint: { mode: "shown" | "folded" | "none"; source: "progression" | "last-time"; open: boolean; onToggle: () => void };
   onChange: (id: string, field: DraftField, value: string) => void;
   onBlurRow: (id: string) => void;
   onToggle: (id: string) => void;
   onRemoveExtra: (id: string) => void;
   onAddExtra: () => void;
   addingExtra: boolean;
+  warmupsOpen: boolean;
+  onToggleWarmups: () => void;
+  /** The RIR column header explains RIR (a sheet with the 0–4 scale). */
+  onExplainRir: () => void;
+  /** A hold: the reps column holds seconds ("seg"). */
+  timed?: boolean;
 }) {
-  const rowProps = { onChange, onBlurRow, onToggle };
+  const rowProps = { onChange, onBlurRow, onToggle, timed };
+  // Rows holding something stay open: a logged warm-up is never hidden.
+  const warmupsHaveData = warmups.some((r) => r.done || r.values.weight.trim() !== "" || r.values.reps.trim() !== "");
+  const showWarmupRows = warmupsOpen || warmupsHaveData;
+  const ramp = warmups
+    .filter((r) => r.suggestion.weightKg !== null && r.suggestion.reps !== null)
+    .map((r) => `~${formatKg(r.suggestion.weightKg)} × ${r.suggestion.reps}`);
+  const hintText = (
+    <p className="mb-2 text-[11px] text-muted">
+      Números em cinza <span className="italic">em itálico</span> são sugestões
+      {hint.source === "progression" ? " (a progressão de hoje)" : " (último treino / série de cima)"}. Toque ✓ para
+      usá-los ou digite os seus.
+    </p>
+  );
+  // The column names sit right above the first rows on screen.
+  const columns = (
+    <div className={cn(GRID, "px-1 pb-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted")}>
+      <span>Série</span>
+      <span className="text-center">kg</span>
+      <span className="text-center">{timed ? "seg" : "reps"}</span>
+      <button
+        type="button"
+        onClick={onExplainRir}
+        aria-haspopup="dialog"
+        aria-label="O que é RIR?"
+        className="-my-3 inline-flex items-center justify-center gap-0.5 py-3 uppercase underline decoration-dotted underline-offset-2 hover:text-foreground"
+      >
+        RIR <Info className="size-3" />
+      </button>
+      <span className="text-center" aria-hidden>
+        ✓
+      </span>
+    </div>
+  );
   return (
     <div className="flex flex-col">
-      {/* Always rendered: toggling it while typing shifted the rows under the finger. */}
-      <p className="mb-2 text-[11px] text-muted">
-        Números em cinza <span className="italic">em itálico</span> são sugestões (último treino / série de cima).
-        Toque ✓ para usá-los ou digite os seus.
-      </p>
-      <div className={cn(GRID, "px-1 pb-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted")}>
-        <span>Série</span>
-        <span className="text-center">kg</span>
-        <span className="text-center">reps</span>
-        <span className="text-center">RIR</span>
-        <span className="text-center" aria-hidden>
-          ✓
-        </span>
-      </div>
+      {hint.mode === "shown" ? hintText : null}
 
       {warmups.length > 0 ? (
         <section aria-label="Aquecimento" className="mb-3">
-          <BlockLabel>Aquecimento</BlockLabel>
-          <div className="flex flex-col gap-1.5">
-            {warmups.map((row) => (
-              <SetRowInputs key={row.id} row={row} {...rowProps} />
-            ))}
+          <div className="flex items-center justify-between gap-3">
+            <BlockLabel className="mb-0">
+              Aquecimento · <span className="text-foreground/70">opcional</span>
+            </BlockLabel>
+            {warmupsHaveData ? null : (
+              <button
+                type="button"
+                onClick={onToggleWarmups}
+                aria-expanded={showWarmupRows}
+                aria-label={showWarmupRows ? "Ocultar aquecimento" : "Registrar aquecimento"}
+                className="-my-3 inline-flex min-h-11 shrink-0 items-center gap-1 px-1 text-xs font-semibold text-accent"
+              >
+                {showWarmupRows ? "Ocultar" : "Registrar"}
+                <ChevronDown className={cn("size-3.5 transition-transform", showWarmupRows && "rotate-180")} />
+              </button>
+            )}
           </div>
+          {showWarmupRows ? (
+            <div className="mt-1.5">
+              {columns}
+              <div className="flex flex-col gap-1.5">
+                {warmups.map((row) => (
+                  <SetRowInputs key={row.id} row={row} {...rowProps} />
+                ))}
+              </div>
+            </div>
+          ) : (
+            <p className="mt-0.5 text-xs text-muted tabular-nums">
+              {plural(warmups.length, "série leve", "séries leves")}
+              {ramp.length > 0 ? (
+                <>
+                  : <span className="font-mono text-foreground/80">{ramp.join(" · ")}</span>
+                </>
+              ) : (
+                " antes da 1ª série — sem registrar, se preferir"
+              )}
+            </p>
+          )}
         </section>
       ) : null}
 
       <section aria-label="Séries prescritas">
-        <BlockLabel>
-          Séries do treino <span className="text-foreground">· {prescribedCount}</span>
-        </BlockLabel>
+        <div className="flex items-start justify-between gap-2">
+          <BlockLabel>
+            Séries do treino <span className="text-foreground">· {prescribedCount}</span>
+          </BlockLabel>
+          {hint.mode === "folded" ? (
+            <button
+              type="button"
+              onClick={hint.onToggle}
+              aria-expanded={hint.open}
+              aria-label="Como funcionam os números em cinza"
+              className="-my-3 -mr-2 flex size-11 shrink-0 items-center justify-center text-muted hover:text-foreground"
+            >
+              <Info className="size-4" />
+            </button>
+          ) : null}
+        </div>
+        {hint.mode === "folded" && hint.open ? hintText : null}
+        {warmups.length > 0 && showWarmupRows ? null : columns}
         <div className="flex flex-col gap-1.5">
           {prescribed.map((row) => (
             <SetRowInputs key={row.id} row={row} {...rowProps} />
@@ -165,9 +257,11 @@ function RemoveExtraButton({ row, onRemove }: { row: SetTableRowModel; onRemove:
   );
 }
 
-function BlockLabel({ children }: { children: React.ReactNode }) {
+function BlockLabel({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <p className="mb-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted">{children}</p>
+    <p className={cn("mb-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted", className)}>
+      {children}
+    </p>
   );
 }
 
@@ -188,11 +282,13 @@ function SetRowInputs({
   onChange,
   onBlurRow,
   onToggle,
+  timed,
 }: {
   row: SetTableRowModel;
   onChange: (id: string, field: DraftField, value: string) => void;
   onBlurRow: (id: string) => void;
   onToggle: (id: string) => void;
+  timed: boolean;
 }) {
   const name = rowName(row);
   const repsRef = useRef<HTMLInputElement>(null);
@@ -249,7 +345,7 @@ function SetRowInputs({
           {rowLabel(row)}
         </span>
         {field("weight", FIELD_LABEL.weight, formatDecimal(row.suggestion.weightKg), "decimal")}
-        {field("reps", FIELD_LABEL.reps, formatDecimal(row.suggestion.reps), "numeric")}
+        {field("reps", fieldLabel("reps", timed), formatDecimal(row.suggestion.reps), "numeric")}
         {field("rir", "RIR", "–", "decimal")}
         <button
           type="button"

@@ -130,6 +130,8 @@ enum TrainingGoal {
   GENERAL_FITNESS
   STRENGTH_HYPERTROPHY
   SPORTS_PERFORMANCE
+  /// "Emagrecer / definir" (profile only; programs map it to general fitness)
+  FAT_LOSS
 }
 
 enum ExperienceLevel {

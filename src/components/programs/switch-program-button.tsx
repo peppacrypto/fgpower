@@ -33,6 +33,7 @@ export function SwitchProgramButton({
   pendingLabel,
   active,
   size = "lg",
+  variant = "strong",
 }: {
   /** The start server action, bound (kept as the form's own action: works before hydration). */
   action: (formData: FormData) => void | Promise<void>;
@@ -42,13 +43,15 @@ export function SwitchProgramButton({
   /** The program running now, if any: "GD 1", "semana 3 de 13". */
   active?: { name: string; progress: string } | null;
   size?: "md" | "lg";
+  /** Look of the one-tap button (a switch always asks with the strong one). */
+  variant?: "strong" | "outline";
 }) {
   const detailsRef = useRef<HTMLDetailsElement>(null);
 
   if (!active) {
     return (
       <InlineActionForm action={action} failText="Não foi possível ativar. Tente de novo." errorClassName="mt-1.5">
-        <SubmitButton size={size} variant="strong" pendingLabel={pendingLabel}>
+        <SubmitButton size={size} variant={variant} pendingLabel={pendingLabel}>
           {label}
         </SubmitButton>
       </InlineActionForm>
@@ -65,7 +68,7 @@ export function SwitchProgramButton({
   return (
     <details
       ref={detailsRef}
-      className="group open:w-full open:basis-full"
+      className="group max-w-full open:w-full open:basis-full"
       // The summary hides once open: move focus to the confirmation's answer.
       onToggle={(e) => {
         if (e.currentTarget.open) e.currentTarget.querySelector<HTMLButtonElement>("button[type=submit]")?.focus();
@@ -75,6 +78,8 @@ export function SwitchProgramButton({
         className={cn(
           buttonVariants({ size, variant: "strong" }),
           "cursor-pointer list-none select-none group-open:hidden [&::-webkit-details-marker]:hidden",
+          // Wraps inside itself on a 320px phone instead of spilling out of the masthead.
+          size === "lg" && "h-auto min-h-13 whitespace-normal py-3 text-center text-balance max-sm:px-5",
         )}
       >
         Trocar para este programa

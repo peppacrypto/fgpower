@@ -79,6 +79,7 @@ function toState(name: string, description: string, days: EditableDay[]): Progra
       name: d.name,
       focus: d.focus,
       exercises: d.exercises.map((e) => ({
+        id: e.id,
         exerciseId: e.exerciseId,
         exerciseName: e.exerciseName,
         groupKey: e.groupKey,
@@ -90,6 +91,10 @@ function toState(name: string, description: string, days: EditableDay[]): Progra
         warmupSets: e.warmupSets,
         loadTargetKg: e.loadTargetKg,
         notes: e.notes,
+        rpeTarget: e.rpeTarget,
+        tempo: e.tempo,
+        progressionStrategy: e.progressionStrategy,
+        loadIncrementKg: e.loadIncrementKg,
       })),
     })),
   };
@@ -427,7 +432,9 @@ export function ProgramBuilder({
       const idx = list.findIndex((e) => e.rowId === rowId);
       if (idx === -1) return list;
       const next = [...list];
-      next.splice(idx + 1, 0, { ...list[idx], rowId: copyId });
+      // A new row (no id) that keeps everything else, including the
+      // prescription the builder carries without showing.
+      next.splice(idx + 1, 0, { ...list[idx], id: undefined, rowId: copyId });
       return next;
     });
   }
@@ -566,10 +573,19 @@ export function ProgramBuilder({
       return false;
     }
 
-    // New days got ids: adopt them so the next save updates them in place.
+    // New days and rows got ids: adopt them so the next save updates them in
+    // place (a row saved without its id would be deleted and recreated).
     const idByKey = new Map(snapshot.map((d, i) => [d.key, result.dayIds[i]]));
-    const savedDays = snapshot.map((d) => ({ ...d, id: idByKey.get(d.key) }));
-    setDays((prev) => prev.map((d) => (idByKey.has(d.key) ? { ...d, id: idByKey.get(d.key) } : d)));
+    const idByRow = new Map(
+      snapshot.flatMap((d, i) => d.exercises.map((e, j) => [e.rowId, result.exerciseIds[i]?.[j]] as const)),
+    );
+    const adoptIds = (d: EditableDay): EditableDay => ({
+      ...d,
+      id: idByKey.get(d.key) ?? d.id,
+      exercises: d.exercises.map((e) => (idByRow.get(e.rowId) ? { ...e, id: idByRow.get(e.rowId) } : e)),
+    });
+    const savedDays = snapshot.map(adoptIds);
+    setDays((prev) => prev.map(adoptIds));
     // Show what was stored (trimmed) unless the user kept typing meanwhile.
     setName((n) => (n === payload.name ? result.name : n));
     setDescription((d) => (d === payload.description ? result.description : d));

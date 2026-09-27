@@ -25,6 +25,10 @@ export const auth = betterAuth({
   // without needing a real Google account. No UI ever exposes it.
   emailAndPassword: { enabled: process.env.NODE_ENV !== "production" },
 
+  // OAuth failures (cancelled consent, state mismatch…) land on the login page,
+  // which explains them, instead of better-auth's bare error page.
+  onAPIError: { errorURL: "/login" },
+
   socialProviders: {
     google: process.env.GOOGLE_CLIENT_ID
       ? {

@@ -39,6 +39,8 @@ export type ProgressionReasonKey =
   | "below-rep-range"
   | "within-rep-range-add-reps"
   | "at-rep-range-ceiling-with-target-rir"
+  | "at-ceiling-rir-below-target"
+  | "uneven-loads"
   | "rir-lower-than-target-keep-load"
   | "rir-higher-than-target-add-load"
   | "rir-at-target-keep-load"
@@ -96,6 +98,23 @@ function suggestDouble(
   const rirTarget = prescribed.rirTarget;
   const rirOk = rirTarget == null || sets.every((s) => s.rir == null || s.rir >= rirTarget - 0.5);
 
+  // The top of the range only counts when every set was done with the load
+  // that's being raised (a lighter back-off set didn't earn it).
+  if (allAtCeiling && !sameLoad(sets, load)) {
+    return { strategy: "DOUBLE", progressionAvailable: false, suggestedLoadKg: null, reasonKey: "uneven-loads" };
+  }
+  if (allAtCeiling && !rirOk && rirTarget != null) {
+    const logged = sets.filter((s) => s.rir != null);
+    const avgRir = logged.reduce((sum, s) => sum + (s.rir as number), 0) / Math.max(1, logged.length);
+    return {
+      strategy: "DOUBLE",
+      progressionAvailable: false,
+      suggestedLoadKg: null,
+      reasonKey: "at-ceiling-rir-below-target",
+      reasonData: { repMax: prescribed.repMax, avgRir: round(avgRir), targetRir: rirTarget },
+    };
+  }
+
   if (allAtCeiling && rirOk) {
     return {
       strategy: "DOUBLE",
@@ -120,7 +139,7 @@ function suggestLinear(
   load: number,
   increment: number,
 ): ProgressionSuggestion {
-  const hitPrescription = sets.every((s) => (s.reps as number) >= prescribed.repMin);
+  const hitPrescription = sets.every((s) => (s.reps as number) >= prescribed.repMin) && sameLoad(sets, load);
   if (hitPrescription) {
     return {
       strategy: "LINEAR_LOAD",
@@ -175,6 +194,11 @@ function suggestRirBased(
     reasonKey: "rir-at-target-keep-load",
     reasonData: { avgRir: round(avgRir), targetRir },
   };
+}
+
+/** Every set was done with `load` (the top load of the session). */
+function sameLoad(sets: PerformedSet[], load: number): boolean {
+  return sets.every((s) => Math.abs((s.weightKg ?? 0) - load) < 1e-6);
 }
 
 function round(n: number): number {

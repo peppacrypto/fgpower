@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronRight, Minus, Pause, Play, Plus, X } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { plural } from "@/lib/utils/format";
 import { restKey } from "@/components/workout/local-workout";
 import { playRestBeep, vibrateRestEnd } from "./rest-audio";
 
@@ -154,9 +155,10 @@ function ago(ms: number) {
 function spokenDuration(seconds: number) {
   const m = Math.floor(seconds / 60);
   const s = seconds % 60;
-  if (m === 0) return `${s} segundos`;
-  const mins = m === 1 ? "1 minuto" : `${m} minutos`;
-  return s === 0 ? mins : `${mins} e ${s} segundos`;
+  const secs = plural(s, "segundo", "segundos");
+  if (m === 0) return secs;
+  const mins = plural(m, "minuto", "minutos");
+  return s === 0 ? mins : `${mins} e ${secs}`;
 }
 
 const BAR_BUTTON = "flex h-11 items-center justify-center gap-0.5 rounded-[3px] bg-black/10 text-sm font-semibold hover:bg-black/20";

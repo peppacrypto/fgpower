@@ -18,19 +18,30 @@ export default async function DiscoverPage({ searchParams }: PageProps<"/app/dis
     <div className="mx-auto max-w-xl px-4 py-6 sm:px-6 sm:py-8">
       <h1 className="text-2xl font-bold tracking-tight">Descobrir</h1>
 
-      <form className="mt-4" action="/app/discover">
-        <Input type="search" name="q" defaultValue={q} placeholder="Buscar por nome ou usuário…" />
+      <form className="mt-4" action="/app/discover" role="search">
+        <Input
+          type="search"
+          name="q"
+          defaultValue={q}
+          placeholder="Buscar por nome ou @usuário…"
+          aria-label="Buscar pessoas por nome ou @usuário"
+        />
       </form>
 
       <div className="mt-6 flex flex-col gap-2">
-        {q && users.length === 0 ? <p className="text-sm text-muted">Nenhum usuário encontrado.</p> : null}
+        {q && users.length === 0 ? (
+          <p className="text-sm text-muted">
+            Ninguém encontrado para “{q}”. Tente o nome ou o @usuário exato — contas que desligaram a descoberta não
+            aparecem.
+          </p>
+        ) : null}
         {users.map((u) => (
           <Link key={u.id} href={u.username ? `/u/${u.username}` : "#"}>
             <Card className="transition-colors hover:border-accent/50">
               <CardContent className="flex items-center gap-3 py-3.5">
                 <Avatar src={u.image} name={u.name} size={40} />
-                <div>
-                  <p className="text-sm font-semibold">{u.name}</p>
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold">{u.name}</p>
                   {u.username ? <p className="text-xs text-muted">@{u.username}</p> : null}
                 </div>
               </CardContent>

@@ -19,9 +19,13 @@ import { SubmitButton } from "@/components/ui/submit-button";
 import { SectionHead } from "@/components/ui/section-head";
 import { DayActions, DayStatus, dayStates, exerciseCount } from "@/components/workout/day-actions";
 import { InlineActionForm } from "@/components/workout/inline-action-form";
-import { formatDecimal } from "@/lib/training/set-plan";
+import { formatKg, plural, pluralWord } from "@/lib/utils/format";
+import { listTemplates, recommendProfileOf, toCatalogItem } from "@/lib/data/templates";
+import { recommendTemplates } from "@/lib/programming/recommend";
+import { RecommendedPanel } from "@/components/programs/recommended-panel";
 import { cn } from "@/lib/utils/cn";
 import { APP_TIME_ZONE, wallClock } from "@/lib/training/week";
+import { planWeek } from "@/lib/training/day-rotation";
 import { formatSpDate } from "@/lib/training/stale";
 import { DiscardSessionButton } from "@/components/workout/discard-session-button";
 import { startAdHocWorkoutSession } from "@/lib/actions/workouts";
@@ -45,18 +49,23 @@ function greeting(hour: number) {
   return "Boa noite";
 }
 
+/** What each record kind is called in a PR row ("Carga · 1RM estimado"). */
 const PR_TEXT: Record<string, string> = {
-  MAX_WEIGHT: "Recorde de carga",
+  MAX_WEIGHT: "Carga",
   ESTIMATED_1RM: "1RM estimado",
-  MAX_REPS_AT_WEIGHT: "Recorde de repetições",
-  SESSION_VOLUME: "Volume da sessão",
+  MAX_REPS_AT_WEIGHT: "Repetições",
 };
 const PR_VALUE: Record<string, (v: number, w: number | null, r: number | null) => string> = {
-  MAX_WEIGHT: (v) => `${formatDecimal(v)}kg`,
-  ESTIMATED_1RM: (v) => `${formatDecimal(v)}kg`,
-  MAX_REPS_AT_WEIGHT: (_v, w, r) => `${formatDecimal(w) || "—"}×${r}`,
-  SESSION_VOLUME: (v) => `${Math.round(v)}kg`,
+  MAX_WEIGHT: (v) => formatKg(v),
+  ESTIMATED_1RM: (v) => formatKg(v),
+  // Bodyweight (0 kg) rep records read "15 reps", with "peso corporal" on the kinds line.
+  MAX_REPS_AT_WEIGHT: (v, w, r) => (w === 0 ? plural(r ?? v, "rep", "reps") : `${formatKg(w)} × ${r ?? v}`),
 };
+/** The kinds line of a PR row: "1RM estimado · Repetições", "Repetições · peso corporal". */
+function prKinds(pr: { kind: string; kinds: string[]; weightKg: number | null }) {
+  const text = pr.kinds.map((k) => PR_TEXT[k]).filter(Boolean);
+  return pr.kind === "MAX_REPS_AT_WEIGHT" && pr.weightKg === 0 ? [...text, "peso corporal"] : text;
+}
 
 export default async function TodayPage({ searchParams }: PageProps<"/app/today">) {
   const sp = await searchParams;
@@ -74,7 +83,7 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
     getRecentPersonalRecords(user.id),
   ]);
   const days = enrollment?.program.days ?? [];
-  const [done, undo, saved] = await Promise.all([
+  const [done, undo, saved, templates] = await Promise.all([
     enrollment
       ? getDaysDoneThisWeek(user.id, enrollment.id, days)
       : { byDayId: new Map<string, string>(), sessionCount: 0 },
@@ -87,6 +96,8 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
           select: { id: true, finishedAt: true },
         })
       : null,
+    // No program yet: what to start with, from the onboarding answers.
+    enrollment ? null : listTemplates(),
   ]);
   const doneThisWeek = done.byDayId;
 
@@ -99,56 +110,51 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
   const open = inProgress.filter((s) => !s.stale);
 
   const firstName = (profile?.displayName ?? user.name).split(" ")[0];
-  // The hero suggests the next day not yet trained this week, starting from
-  // the program's pointer. A program can prescribe more sessions a week than
-  // it has days (A/B at 3×/week): once every day is done, keep offering the
-  // pointer day until the weekly frequency is met; then the week is complete.
-  // Plans named by weekday (Seg…Sex) start each week over from the first day,
-  // even if last week ended early; rotating A/B plans keep their pointer.
-  // Days without exercises are never suggested (they'd open a blank workout).
-  // Whether the plan repeats days is the server's rule (advanceProgram counts
-  // every day, empty or not), so Today and the pointer agree on the rotation.
-  const trainable = days.filter((d) => d.exercises.length > 0);
-  const daysPerWeek = enrollment?.program.daysPerWeek ?? 0;
-  const repeatsDays = daysPerWeek > days.length;
-  const pointer =
-    !repeatsDays && done.sessionCount === 0
-      ? 0
-      : Math.max(0, days.findIndex((d) => d.dayIndex === enrollment?.nextDayIndex));
-  const rotation = days.map((_, i) => days[(pointer + i) % days.length]).filter((d) => d.exercises.length > 0);
-  // A plan that doesn't repeat days is done once each trainable day is: an
-  // emptied day neither counts toward the week nor gets repeated in its place.
-  const weeklyGoal = repeatsDays ? Math.max(trainable.length, daysPerWeek) : trainable.length;
-  // A day left open on an earlier date is handled by its own row above (save
-  // it on its day, continue or discard) — never suggested again next to it,
-  // which would start a second copy of the same day.
+  // The hero suggests the next day not yet trained this week (lib/training/
+  // day-rotation: the same rule the workout summary's "Próximo treino" uses to
+  // promise a day for a later date). A day left open on an earlier date is
+  // handled by its own row above (save it on its day, continue or discard) —
+  // never suggested again next to it, which would start a second copy.
   const staleDayIds = new Set(
     [...dayStates(days, stale, new Map()).entries()].filter(([, st]) => st.kind === "in-progress").map(([id]) => id),
   );
-  const suggestable = rotation.filter((d) => !staleDayIds.has(d.id));
-  const nextDay =
-    suggestable.find((d) => !doneThisWeek.has(d.id)) ?? (done.sessionCount < weeklyGoal ? suggestable[0] : undefined);
-  const weekComplete = trainable.length > 0 && !nextDay && staleDayIds.size === 0;
+  const plan = planWeek({
+    days,
+    isTrainable: (d) => d.exercises.length > 0,
+    nextDayIndex: enrollment?.nextDayIndex,
+    daysPerWeek: enrollment?.program.daysPerWeek ?? 0,
+    doneDayIds: doneThisWeek,
+    sessionCount: done.sessionCount,
+    skipDayIds: staleDayIds,
+  });
+  const nextDay = plan.nextDay ?? undefined;
+  const weekComplete = plan.weekComplete;
   // Only a workout with something logged blocks starting another day (the
   // server discards untouched open sessions when a new day starts).
   const locked = open.some((s) => s.hasData);
   // With a plan, "Esta semana" counts what the plan counts: distinct days, plus
   // repeats only where the plan repeats days (A/B at 3×) — a redo isn't a new workout.
-  const hasPlan = trainable.length > 0;
-  const weeklyTarget = hasPlan ? weeklyGoal : (profile?.daysPerWeek ?? 3);
-  // Capped: a day trained this week and emptied since still shows as done in its row.
-  const weeklyDone = hasPlan
-    ? Math.min(
-        weeklyGoal,
-        doneThisWeek.size + Math.max(0, Math.min(done.sessionCount - doneThisWeek.size, weeklyGoal - trainable.length)),
-      )
-    : weeklyCount;
+  const hasPlan = days.some((d) => d.exercises.length > 0);
+  const weeklyTarget = hasPlan ? plan.weeklyTarget : (profile?.daysPerWeek ?? 3);
+  const weeklyDone = hasPlan ? plan.weeklyDone : weeklyCount;
   // Stale sessions included: their day's row continues that session instead
   // of offering a fresh "Iniciar".
   const states = dayStates(days, [...open, ...stale], doneThisWeek);
   const wall = wallClock(now, APP_TIME_ZONE);
   const dateStr = `${WEEKDAYS[wall.weekday]} · ${String(wall.day).padStart(2, "0")} ${MONTHS[wall.month - 1]}`;
   const editHref = enrollment ? `/app/programs/${enrollment.programId}/edit` : "/app/programs";
+  const answers = recommendProfileOf(profile);
+  const picks =
+    templates && answers
+      ? recommendTemplates(answers, templates.map(toCatalogItem))
+          .slice(0, 3)
+          .map((r) => ({
+            slug: r.template.slug,
+            namePt: r.template.namePt,
+            taglinePt: r.template.taglinePt,
+            reasons: r.reasons,
+          }))
+      : [];
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
@@ -239,7 +245,8 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
               <h2 className="text-display mt-2 text-3xl font-extrabold sm:text-4xl">{nextDay.name}</h2>
               <div className="mt-3 flex items-center gap-4 font-mono text-sm text-muted">
                 <span>
-                  <span className="font-bold text-foreground">{nextDay.exercises.length}</span> exercícios
+                  <span className="font-bold text-foreground">{nextDay.exercises.length}</span>{" "}
+                  {nextDay.exercises.length === 1 ? "exercício" : "exercícios"}
                 </span>
                 {nextDay.estimatedMinutes ? (
                   <span>
@@ -289,8 +296,12 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
                       nextDay.exercises.length <= PREVIEW_WIDE && "sm:hidden",
                     )}
                   >
-                    <span className="sm:hidden">+{nextDay.exercises.length - PREVIEW_PHONE}</span>
-                    <span className="hidden sm:inline">+{nextDay.exercises.length - PREVIEW_WIDE}</span> exercícios
+                    <span className="sm:hidden">
+                      +{plural(nextDay.exercises.length - PREVIEW_PHONE, "exercício", "exercícios")}
+                    </span>
+                    <span className="hidden sm:inline">
+                      +{plural(nextDay.exercises.length - PREVIEW_WIDE, "exercício", "exercícios")}
+                    </span>
                   </li>
                 ) : null}
               </ol>
@@ -306,12 +317,18 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
             <h2 className="text-display mt-2 text-2xl font-extrabold sm:text-3xl">Todos os treinos da semana feitos.</h2>
             <p className="mt-2 text-sm text-muted">Descanse. Os resultados de cada dia estão logo abaixo.</p>
           </div>
+        ) : enrollment && hasPlan ? (
+          // Every day with exercises is left open: the rows above save, continue or discard them.
+          <p className="px-1 text-sm text-muted">
+            Salve ou descarte {stale.length === 1 ? "o treino não finalizado" : "os treinos não finalizados"} para seguir o
+            programa.
+          </p>
         ) : enrollment ? (
           <div className="border-y-2 border-y-[var(--rule-heavy)] bg-surface-2 p-8 text-center">
             <p className="text-display text-2xl font-bold">Programa sem exercícios.</p>
             <p className="mx-auto mt-2 max-w-sm text-sm text-muted">
               {enrollment.program.name} ainda não tem nada para treinar. Adicione ao menos um exercício, ou escolha um
-              protocolo pronto.
+              programa pronto.
             </p>
             <div className="mt-5 flex flex-wrap justify-center gap-2">
               <Button variant="strong" asChild>
@@ -322,11 +339,14 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
               </Button>
             </div>
           </div>
+        ) : picks.length > 0 ? (
+          // No program yet: the onboarding answers pay off — one pick, why, and one tap to the first set.
+          <RecommendedPanel picks={picks} fatLoss={answers?.goal === "FAT_LOSS"} showLinks />
         ) : (
           <div className="border-y-2 border-y-[var(--rule-heavy)] bg-surface-2 p-8 text-center">
             <p className="text-display text-2xl font-bold">Sem programa ativo.</p>
             <p className="mx-auto mt-2 max-w-sm text-sm text-muted">
-              Escolha um protocolo pronto ou monte o seu para começar a treinar.
+              Escolha um programa pronto ou monte o seu para começar a treinar.
             </p>
             <div className="mt-5 flex flex-wrap justify-center gap-2">
               <Button variant="strong" asChild>
@@ -343,7 +363,7 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
       {/* Every day of the program, with where it stands this week */}
       {enrollment && days.length > 0 ? (
         <section className="mt-6">
-          <SectionHead label="Treinos do programa" count={`${days.length} ${days.length === 1 ? "dia" : "dias"}`} />
+          <SectionHead label="Treinos do programa" count={plural(days.length, "dia", "dias")} />
           {locked ? (
             <p className="mt-2 text-xs text-muted">Finalize ou descarte o treino em andamento para iniciar outro dia.</p>
           ) : null}
@@ -402,7 +422,9 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
                     />
                   ))}
                 </div>
-                <span className="mt-1.5 block text-[10px] uppercase tracking-wider text-muted">semanas</span>
+                <span className="mt-1.5 block text-[10px] uppercase tracking-wider text-muted">
+                  {pluralWord(enrollment.program.durationWeeks, "semana", "semanas")}
+                </span>
               </>
             ) : null}
           </div>
@@ -450,11 +472,11 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
                 <Lettermark code="PR" className="size-5 shrink-0 text-[9px]" />
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-semibold">{pr.exercise.namePt}</p>
-                  <p className="text-[11px] uppercase tracking-wider text-muted">
-                    {PR_TEXT[pr.kind]}
+                  <p className="truncate text-[11px] uppercase tracking-wider text-muted">
+                    {prKinds(pr).join(" · ")}
                   </p>
                 </div>
-                <span className="font-mono text-lg font-bold tabular-nums">
+                <span className="shrink-0 font-mono text-lg font-bold tabular-nums">
                   {PR_VALUE[pr.kind]?.(pr.value, pr.weightKg, pr.reps)}
                 </span>
               </Link>
@@ -503,7 +525,7 @@ function InProgressBlock({
       <span className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-warning">Treino em andamento</span>
       <h2 className="text-display mt-1.5 text-2xl font-extrabold sm:text-3xl">{name}</h2>
       <p className="mt-1.5 font-mono text-xs text-muted">
-        {setsDone === 1 ? "1 série registrada" : `${setsDone} séries registradas`} · {started}
+        {plural(setsDone, "série registrada", "séries registradas")} · {started}
       </p>
       <div className="mt-5 flex flex-wrap items-center gap-2">
         <Button size="lg" asChild>

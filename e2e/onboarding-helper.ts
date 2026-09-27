@@ -10,6 +10,6 @@ export async function completeOnboarding(page: Page) {
   await page.getByRole("button", { name: "Continuar" }).click();
   await Promise.all([
     page.waitForURL(/\/app\/today/, { timeout: 15_000 }),
-    page.getByRole("button", { name: "Concluir" }).click(),
+    page.getByRole("button", { name: "Ver meu plano" }).click(),
   ]);
 }

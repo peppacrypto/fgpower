@@ -49,12 +49,37 @@ export async function getWeeklyProgress(userId: string) {
   return count;
 }
 
+/** Which record leads an exercise's row when one workout broke several. */
+const PR_PRIORITY: Record<string, number> = { MAX_WEIGHT: 0, ESTIMATED_1RM: 1, MAX_REPS_AT_WEIGHT: 2 };
+
+/**
+ * Today's "Recordes recentes": one row per exercise (its most recent
+ * record-breaking workout), newest first. A workout often breaks several
+ * records of one exercise at once — load, estimated 1RM, reps — which used to
+ * fill all three rows with the same exercise; they now share one row, led by
+ * the load record, with `kinds` listing them all. Session-volume records are
+ * not shown as PRs.
+ */
 export async function getRecentPersonalRecords(userId: string, limit = 3) {
-  return prisma.exercisePersonalRecord.findMany({
-    where: { userId },
+  const rows = await prisma.exercisePersonalRecord.findMany({
+    where: { userId, kind: { not: "SESSION_VOLUME" } },
     orderBy: { achievedAt: "desc" },
-    take: limit,
+    // several records per exercise per workout: read enough to find `limit` exercises
+    take: limit * 12,
     include: { exercise: { select: { namePt: true, slug: true } } },
+  });
+  const byExercise = new Map<string, typeof rows>();
+  for (const r of rows) {
+    const list = byExercise.get(r.exerciseId);
+    if (!list) {
+      if (byExercise.size < limit) byExercise.set(r.exerciseId, [r]);
+    } else if (r.sessionId !== null && r.sessionId === list[0].sessionId) {
+      list.push(r);
+    }
+  }
+  return [...byExercise.values()].map((list) => {
+    const ordered = [...list].sort((a, b) => (PR_PRIORITY[a.kind] ?? 9) - (PR_PRIORITY[b.kind] ?? 9));
+    return { ...ordered[0], kinds: [...new Set(ordered.map((r) => r.kind))] };
   });
 }
 

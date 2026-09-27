@@ -7,19 +7,26 @@ test("choose a ready-made program, start a workout, record a set, and finish", a
   await loginAsTestUser(page, email);
   await completeOnboarding(page);
 
-  // Choose program: browse the library and start the flagship template.
+  // Choose program: browse the library (every program, not just the profile's
+  // picks) and open the flagship template.
   await page.goto("/app/programs");
-  await page.getByText("Adaptação FGPOWER").first().click();
-  await expect(page.getByRole("heading", { name: /Adaptação FGPOWER/i })).toBeVisible();
+  const clearFilters = page.getByRole("group", { name: "Filtros" }).getByRole("button", { name: "Limpar" });
+  if (await clearFilters.isVisible()) await clearFilters.click();
+  await page
+    .locator('a[href="/app/programs/templates/fgpower-adaptation"]')
+    .filter({ hasText: "Adaptação FGPOWER" })
+    .first()
+    .click();
   // Every exercise of the plan opens its technique page.
   await page.waitForURL(/\/app\/programs\/templates\//);
+  await expect(page.getByRole("heading", { level: 1, name: /Adaptação FGPOWER/i })).toBeVisible();
   const planRows = page.locator("#estrutura li a");
   await expect(planRows.first()).toHaveAttribute("href", /^\/app\/exercises\/[^/]+$/);
   expect(await planRows.count()).toBeGreaterThan(5);
 
   await Promise.all([
     page.waitForURL(/\/app\/today/, { timeout: 15_000 }),
-    // "Ativar programa" appears in both the masthead and the sticky start bar.
+    // Plain activation (next to "Ativar e iniciar Sessão A") lands on Today.
     page.getByRole("button", { name: "Ativar programa" }).first().click(),
   ]);
 
@@ -54,7 +61,7 @@ test("choose a ready-made program, start a workout, record a set, and finish", a
     sheet.getByRole("button", { name: "Finalizar e salvar" }).click(),
   ]);
   await expect(page.getByText("Treino concluído")).toBeVisible();
-  await expect(page.getByText("60kg × 8", { exact: true })).toBeVisible();
+  await expect(page.getByText(/^60\s?kg × 8$/)).toBeVisible();
 
   // History shows the completed session.
   await page.goto("/app/history");
@@ -100,8 +107,8 @@ test("a program without exercises can't be started, and says why", async ({ page
   await expect(page.getByText("Adicione ao menos um exercício para iniciar.")).toBeVisible();
   await expect(page.getByRole("link", { name: "Editar programa" })).toHaveAttribute("href", /\/edit$/);
 
-  // Today never shows the half-started "Sem programa ativo" + "PROGRAMA · Vazio" mix.
+  // Today never shows the half-started program: with nothing running it recommends one.
   await page.goto("/app/today");
-  await expect(page.getByText("Sem programa ativo.")).toBeVisible();
+  await expect(page.getByTestId("recommended-panel")).toBeVisible();
   await expect(page.getByText("Programa vazio E2E")).toHaveCount(0);
 });

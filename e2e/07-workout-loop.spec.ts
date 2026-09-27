@@ -429,13 +429,34 @@ test("a workout with no exercises offers adding them in the program editor, or d
   expect(rows[0].status).toBe("DISCARDED");
 });
 
-test("the exercise note says when it is saved", async ({ page }) => {
+test("the exercise note sits under the prescription as a chip that says when it is saved", async ({ page, context }) => {
   await newUserOnGd1(page, "loop-note");
   await startDayFromToday(page, QUINTA);
+  await page.getByRole("button", { name: "Adicionar nota do exercício/máquina" }).click();
   const note = page.getByLabel("Nota do exercício/máquina");
+  await expect(note).toBeFocused();
   await note.fill("Banco na posição 4");
   await page.getByRole("heading", { level: 1 }).click();
   await expect(page.getByText("Nota salva")).toBeVisible({ timeout: 15_000 });
+  // Above the set table, not after "Próximo exercício".
+  const chip = page.getByRole("button", { name: /^Nota do exercício\/máquina: Banco na posição 4/ });
+  await expect(chip).toBeVisible();
+  const chipBox = await chip.boundingBox();
+  const firstRow = await page.getByLabel("Série 1 — kg", { exact: true }).boundingBox();
+  expect(chipBox!.y).toBeLessThan(firstRow!.y);
+
   await page.reload();
-  await expect(page.getByLabel("Nota do exercício/máquina")).toHaveValue("Banco na posição 4");
+  await expect(chip).toBeVisible();
+
+  // Saving without connection says so and offers to try again.
+  await chip.click();
+  await context.setOffline(true);
+  await page.getByLabel("Nota do exercício/máquina").fill("Banco na posição 5");
+  await page.getByRole("heading", { level: 1 }).click();
+  await expect(page.getByText("Nota não salva")).toBeVisible({ timeout: 15_000 });
+  await context.setOffline(false);
+  await page.getByRole("button", { name: "Tentar de novo" }).click();
+  await expect(page.getByText("Nota salva")).toBeVisible({ timeout: 15_000 });
+  await page.reload();
+  await expect(page.getByRole("button", { name: /^Nota do exercício\/máquina: Banco na posição 5/ })).toBeVisible();
 });

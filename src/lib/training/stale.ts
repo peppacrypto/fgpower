@@ -163,3 +163,23 @@ export function formatSpTime(date: Date): string {
   const w = wallClock(date);
   return `${String(w.hour).padStart(2, "0")}:${String(w.minute).padStart(2, "0")}`;
 }
+
+/** Whole São Paulo calendar days from `date` to `now` (0 = same day). */
+export function spDaysBetween(date: Date, now: Date): number {
+  const [a, b] = [spDayKey(date), spDayKey(now)].map((k) => {
+    const [y, m, d] = k.split("-").map(Number);
+    return Date.UTC(y, m - 1, d);
+  });
+  return Math.round((b - a) / 86_400_000);
+}
+
+/** "hoje", "ontem", "há 9 dias", "há 3 semanas", "há 2 meses" — by São Paulo calendar day. */
+export function formatSpDaysAgo(date: Date, now: Date = new Date()): string {
+  const days = Math.max(0, spDaysBetween(date, now));
+  if (days === 0) return "hoje";
+  if (days === 1) return "ontem";
+  if (days < 14) return `há ${days} dias`;
+  if (days < 60) return `há ${Math.floor(days / 7)} semanas`;
+  const months = Math.floor(days / 30);
+  return months < 12 ? `há ${months} meses` : months < 24 ? "há mais de 1 ano" : `há ${Math.floor(months / 12)} anos`;
+}

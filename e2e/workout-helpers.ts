@@ -13,9 +13,14 @@ export function uniqueEmail(label: string) {
 
 /** Logs a brand-new user in, onboards them and activates the GD 1 template. */
 export async function newUserOnGd1(page: Page, label: string) {
+  await newUserOnTemplate(page, label, "gd-1");
+}
+
+/** Logs a brand-new user in, onboards them and activates a template ("calisthenics": bodyweight only). */
+export async function newUserOnTemplate(page: Page, label: string, slug: string) {
   await loginAsTestUser(page, uniqueEmail(label));
   await completeOnboarding(page);
-  await page.goto("/app/programs/templates/gd-1");
+  await page.goto(`/app/programs/templates/${slug}`);
   await Promise.all([
     page.waitForURL(/\/app\/today/, { timeout: 30_000 }),
     // "Ativar programa" appears in both the masthead and the sticky start bar.
@@ -109,6 +114,21 @@ export async function expectSetSaved(page: Page, name: string) {
 /** A POST of the workout screen's set outbox (✓, un-✓ and typed values go through it). */
 export function isSetSync(r: Response) {
   return r.request().method() === "POST" && r.url().includes("/api/workout/sets") && r.ok();
+}
+
+/**
+ * A set as the app prints it ("42,5 kg × 10"): a regular or non-breaking
+ * space (or none, on older screens) between the number and "kg".
+ */
+export function setText(kg: string, reps: number | string, prefix = "") {
+  return new RegExp(`^${prefix}${kg.replace(/[.]/g, "\\.")}\\s?kg\\s×\\s${reps}$`);
+}
+
+/** Opens the warm-up rows (they start folded into one line: optional). */
+export async function openWarmups(page: Page) {
+  const toggle = page.getByRole("button", { name: "Registrar aquecimento" });
+  if (await toggle.isVisible()) await toggle.click();
+  await expect(page.getByRole("textbox", { name: "Aquecimento 1 — kg", exact: true })).toBeVisible();
 }
 
 /** Header "Finalizar" → the finish sheet dialog. */

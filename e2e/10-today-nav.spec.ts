@@ -14,6 +14,8 @@ import {
 
 // Phone-first: the daily loop happens on a phone (Chromium with iPhone 13 metrics).
 test.use({ ...devices["iPhone 13"], defaultBrowserType: "chromium" });
+// Several round trips per test (activate, switch, start, undo) on a dev server.
+test.describe.configure({ timeout: 90_000 });
 
 /** Runs SQL on the local dev database (docker compose's fgpower-postgres). */
 function sql(query: string): string {
@@ -230,8 +232,12 @@ test("switching program asks first, and Today can undo it with the old progress 
 
   await page.goto("/app/programs/templates/gd-2");
   await expect(page.getByRole("button", { name: "Ativar programa" })).toHaveCount(0);
-  // Masthead and sticky bar both say what the tap does.
+  await expect(page.getByRole("button", { name: /Ativar e iniciar/ })).toHaveCount(0);
+  // Masthead and sticky bar both say what the tap does; the sticky bar only
+  // shows once the masthead's buttons have scrolled away.
   const switchButtons = switchToggles(page).filter({ visible: true });
+  await expect(switchButtons).toHaveCount(1);
+  await page.evaluate(() => document.getElementById("estrutura")!.scrollIntoView());
   await expect(switchButtons).toHaveCount(2);
   await switchButtons.last().click();
   await expect(
@@ -243,12 +249,14 @@ test("switching program asks first, and Today can undo it with the old progress 
   await expect(switchButtons).toHaveCount(2);
   await expect(page.getByText(/^Isso encerra GD 1/).filter({ visible: true })).toHaveCount(0);
 
-  // The sticky start bar sits on top of the bottom nav, never under it.
+  // The sticky start bar sits on top of the bottom nav, never under it, with "Personalizar".
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight / 2));
   const bar = await switchButtons.last().boundingBox();
   const nav = await bottomNav(page).boundingBox();
   expect(bar && nav && bar.y + bar.height <= nav.y).toBeTruthy();
+  await expect(page.getByTestId("dossier-sticky-actions").getByRole("button", { name: "Personalizar" })).toBeVisible();
 
+  await page.evaluate(() => window.scrollTo(0, 0));
   await switchButtons.first().click();
   await Promise.all([
     page.waitForURL(/\/app\/today/, { timeout: 30_000 }),
@@ -300,12 +308,15 @@ test("undoing a switch drops a day opened in the new program, and a stale undo l
 
 test("the switch confirmation works before the page hydrates", async ({ page, browser }) => {
   await newUserOnGd1(page, "today-switch-nojs");
+  // "Before hydration" = the app's scripts never arrive (a slow first load).
+  // Scripts stay enabled: the streamed page (loading.tsx) swaps its content
+  // in with tiny inline scripts that run long before the bundles.
   const nojs = await browser.newContext({
     ...devices["iPhone 13"],
-    javaScriptEnabled: false,
     baseURL: test.info().project.use.baseURL,
     storageState: await page.context().storageState(),
   });
+  await nojs.route(/\/_next\/static\/.*\.js(\?.*)?$/, (route) => route.abort());
   try {
     const p = await nojs.newPage();
     await p.goto("/app/programs/templates/gd-2");
@@ -335,7 +346,7 @@ test("history and the science library are reachable and light the right tab", as
   await expect(page.getByRole("link", { name: /treinos — ver histórico/ })).toHaveAttribute("href", "/app/history");
 
   await page.goto("/app/programs");
-  await Promise.all([page.waitForURL(/\/app\/science$/), page.getByRole("link", { name: "Ciência dos protocolos" }).click()]);
+  await Promise.all([page.waitForURL(/\/app\/science$/), page.getByRole("link", { name: "Ciência dos programas" }).click()]);
   await expect(activeTab(page)).toHaveText("Programas");
 
   await page.goto("/app/discover");

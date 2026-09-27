@@ -1,73 +1,72 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { headers } from "next/headers";
-import { auth } from "@/lib/auth/auth";
+import { refreshSessionCache } from "@/lib/auth/refresh-session";
 import { requireUserOrThrow } from "@/lib/auth/require-user";
+import { SESSION_EXPIRED_ERROR } from "@/lib/auth/session-expired";
+import { findAvailableUsername, isUsernameTaken } from "@/lib/data/profile";
 import { prisma } from "@/lib/db";
 import {
   EQUIPMENT_ACCESS_OPTIONS,
   EXPERIENCE_LEVELS,
   TRAINING_GOALS,
 } from "@/lib/validation/onboarding";
+import { slugifyUsername, usernameError, USERNAME_TAKEN } from "@/lib/validation/username";
 import { z } from "zod";
 
-const RESERVED_USERNAMES = new Set([
-  "admin", "api", "app", "fgpower", "settings", "login", "logout", "onboarding",
-  "programs", "exercises", "workout", "history", "progress", "profile", "feed",
-  "u", "science", "privacy", "terms", "support", "help", "root", "null", "undefined",
-]);
-
 const GENERIC_ERROR = "Não foi possível salvar agora. Tente de novo.";
-
-const usernameSchema = z
-  .string()
-  .trim()
-  .min(3, "Mínimo de 3 caracteres.")
-  .max(24, "Máximo de 24 caracteres.")
-  .regex(/^[a-zA-Z0-9_]+$/, "Use apenas letras, números e underline.");
 
 export type UsernameResult = { ok: true; username: string } | { ok: false; error: string };
 
 export async function claimUsername(displayUsername: string): Promise<UsernameResult> {
   const user = await requireUserOrThrow().catch(() => null);
-  if (!user) return { ok: false, error: "Sua sessão expirou. Entre novamente." };
-  const parsed = usernameSchema.safeParse(displayUsername);
-  if (!parsed.success) {
-    return { ok: false, error: parsed.error.issues[0]?.message ?? "Nome de usuário inválido." };
-  }
-  const normalized = parsed.data.toLowerCase();
-  if (RESERVED_USERNAMES.has(normalized)) {
-    return { ok: false, error: "Este nome de usuário não está disponível." };
-  }
+  if (!user) return { ok: false, error: SESSION_EXPIRED_ERROR };
+  const value = String(displayUsername ?? "").trim();
+  const invalid = usernameError(value);
+  if (invalid) return { ok: false, error: invalid };
+  const normalized = value.toLowerCase();
 
-  const existing = await prisma.user.findUnique({ where: { username: normalized } });
-  if (existing && existing.id !== user.id) {
-    return { ok: false, error: "Este nome de usuário já está em uso." };
+  if (await isUsernameTaken(normalized, user.id)) {
+    return { ok: false, error: USERNAME_TAKEN };
   }
 
   try {
     await prisma.user.update({
       where: { id: user.id },
-      data: { username: normalized, displayUsername: parsed.data },
+      data: { username: normalized, displayUsername: value },
     });
   } catch (err) {
     // Lost a race for the same name between the check above and the write.
-    if ((err as { code?: string }).code === "P2002") return { ok: false, error: "Este nome de usuário já está em uso." };
+    if ((err as { code?: string }).code === "P2002") return { ok: false, error: USERNAME_TAKEN };
     console.error("claimUsername failed", err);
     return { ok: false, error: GENERIC_ERROR };
   }
-  // The session cookie cache still carries the old handle (pages that read
-  // session.user.username would show it for up to 5 min). Re-reading the
-  // session past the cache rewrites that cookie via nextCookies().
-  try {
-    await auth.api.getSession({ headers: await headers(), query: { disableCookieCache: true } });
-  } catch (err) {
-    console.warn("claimUsername: session cache refresh failed", err);
-  }
+  await refreshSessionCache();
   revalidatePath("/app/settings");
   revalidatePath("/app/profile");
-  return { ok: true, username: parsed.data };
+  return { ok: true, username: value };
+}
+
+/**
+ * Onboarding's "@usuário" prefill: the first free handle derived from the
+ * name being typed ("Maria" → "maria", or "maria2" when taken).
+ */
+export async function suggestUsername(displayName: string): Promise<UsernameResult> {
+  const user = await requireUserOrThrow().catch(() => null);
+  if (!user) return { ok: false, error: SESSION_EXPIRED_ERROR };
+  const username = await findAvailableUsername(slugifyUsername(String(displayName ?? "").slice(0, 60)), user.id);
+  return { ok: true, username };
+}
+
+/** Checks a handle the user typed (format, reserved, taken) without claiming it. */
+export async function checkUsername(displayUsername: string): Promise<UsernameResult> {
+  const user = await requireUserOrThrow().catch(() => null);
+  if (!user) return { ok: false, error: SESSION_EXPIRED_ERROR };
+  const value = String(displayUsername ?? "").trim();
+  const invalid = usernameError(value);
+  if (invalid) return { ok: false, error: invalid };
+  if (await isUsernameTaken(value.toLowerCase(), user.id)) return { ok: false, error: USERNAME_TAKEN };
+  return { ok: true, username: value };
 }
 
 // Every field is optional: updateProfile only writes what the submitting
@@ -138,7 +137,7 @@ function readProfileForm(formData: FormData): Record<string, unknown> {
 
 export async function updateProfile(_prev: ProfileUpdateState, formData: FormData): Promise<ProfileUpdateState> {
   const user = await requireUserOrThrow().catch(() => null);
-  if (!user) return { ok: false, error: "Sua sessão expirou. Entre novamente." };
+  if (!user) return { ok: false, error: SESSION_EXPIRED_ERROR };
 
   const parsed = profileUpdateSchema.safeParse(readProfileForm(formData));
   if (!parsed.success) {
@@ -200,7 +199,7 @@ export type SettingsSaveResult = { ok: true; savedAt: string } | { ok: false; er
 
 export async function updatePrivacySettings(settings: PrivacySettings): Promise<SettingsSaveResult> {
   const user = await requireUserOrThrow().catch(() => null);
-  if (!user) return { ok: false, error: "Sua sessão expirou. Entre novamente." };
+  if (!user) return { ok: false, error: SESSION_EXPIRED_ERROR };
   // Validate the shape: the client object goes straight into the update, so
   // unknown keys must never reach Prisma.
   const parsed = privacySettingsSchema.safeParse(settings);
@@ -222,7 +221,7 @@ export type WorkoutPreferences = z.infer<typeof workoutPreferencesSchema>;
 /** Workout-screen preferences (autosaved toggles in Settings → Treino). */
 export async function updateWorkoutPreferences(prefs: WorkoutPreferences): Promise<SettingsSaveResult> {
   const user = await requireUserOrThrow().catch(() => null);
-  if (!user) return { ok: false, error: "Sua sessão expirou. Entre novamente." };
+  if (!user) return { ok: false, error: SESSION_EXPIRED_ERROR };
   const parsed = workoutPreferencesSchema.safeParse(prefs);
   if (!parsed.success) return { ok: false, error: GENERIC_ERROR };
   try {

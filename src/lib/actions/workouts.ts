@@ -1,6 +1,6 @@
 "use server";
 
-import { redirect } from "next/navigation";
+import { RedirectType, redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import type { Prisma } from "@/generated/prisma/client";
 import { requireUserOrThrow } from "@/lib/auth/require-user";
@@ -10,6 +10,7 @@ import { checkAndRecordPersonalRecords } from "@/lib/training/personal-records";
 import { startOfWeek } from "@/lib/training/week";
 import { MAX_BOUT_SECONDS, assessOpenSession, boutSeconds, setBouts, staleSaveTiming } from "@/lib/training/stale";
 import { resolveSessionDay } from "@/lib/training/day-match";
+import { restartsEachWeek } from "@/lib/training/day-rotation";
 
 type Tx = Prisma.TransactionClient;
 
@@ -443,6 +444,8 @@ export async function setWorkoutNote(sessionId: string, notes: string) {
 export type FinishResult =
   | { ok: true; summaryUrl: string }
   | { ok: false; reason: "EMPTY" | "NOT_FOUND" };
+/** A finish that opens the summary itself: it only comes back when it didn't go through. */
+export type FinishFailure = Extract<FinishResult, { ok: false }>;
 
 /** Past this much wall time, the clock since "Iniciar" says nothing about the training itself. */
 const LONG_SESSION_MS = MAX_BOUT_SECONDS * 1000;
@@ -454,16 +457,17 @@ const LONG_SESSION_MS = MAX_BOUT_SECONDS * 1000;
  * silently dropped (skipped exercises keep only what was ✓'d). A session with
  * no working set recorded is not finished (EMPTY): that used to count as a
  * completed program day and wipe "Último treino". Idempotent: finishing an
- * already finished session just returns its summary.
+ * already finished session just opens its summary. On success it opens the
+ * summary itself (see openSummary); only a failure comes back.
  *
  * A session open for more than 4 h is timed by its last bout of sets (see
  * lib/training/stale.ts: split where 2 h+ passed between two sets, at most
  * 4 h) instead of by the clock since it was started — a workout left open on
  * Monday and continued on Thursday is timed by Thursday's sets, not 72 h.
  */
-export async function finishWorkoutSession(sessionId: string, pending: LogSetInput[] = []): Promise<FinishResult> {
+export async function finishWorkoutSession(sessionId: string, pending: LogSetInput[] = []): Promise<FinishFailure> {
   const user = await requireUserOrThrow();
-  return finishSession(user.id, sessionId, pending, "now");
+  return openSummary(await finishSession(user.id, sessionId, pending, "now"));
 }
 
 /**
@@ -473,11 +477,29 @@ export async function finishWorkoutSession(sessionId: string, pending: LogSetInp
  * that bout, start + 1 h without set times), and advancing the program as of
  * that date — so a Monday workout closed on Friday never lands in Friday's
  * week with a 97-hour duration. Sets added later ("Continuar hoje") still
- * count in its totals without stretching its date or duration.
+ * count in its totals without stretching its date or duration. Returns its
+ * result (Today's "Salvar como feito em …" stays on Today); the workout
+ * screen uses finishStaleWorkoutSessionAndOpen.
  */
 export async function finishStaleWorkoutSession(sessionId: string, pending: LogSetInput[] = []): Promise<FinishResult> {
   const user = await requireUserOrThrow();
   return finishSession(user.id, sessionId, pending, "stale");
+}
+
+/** finishStaleWorkoutSession from the workout screen: opens the summary like finishWorkoutSession. */
+export async function finishStaleWorkoutSessionAndOpen(sessionId: string, pending: LogSetInput[] = []): Promise<FinishFailure> {
+  const user = await requireUserOrThrow();
+  return openSummary(await finishSession(user.id, sessionId, pending, "stale"));
+}
+
+/**
+ * A finished workout goes straight to its summary from inside the action: the
+ * summary arrives in the action's own response (one round trip, instead of
+ * the action and then the summary's fetch). Failures come back to the screen.
+ */
+function openSummary(r: FinishResult): FinishFailure {
+  if (r.ok) redirect(r.summaryUrl, RedirectType.replace);
+  return r;
 }
 
 async function finishSession(
@@ -690,7 +712,11 @@ async function advanceProgram(
     } else {
       const doneIds = new Set(thisWeek.map((x) => resolveSessionDay(x, days)?.id));
       doneIds.add(thisDay.id);
-      nextDayIndex = (order.find((d) => !doneIds.has(d.id)) ?? days[0]).dayIndex;
+      // Week done: a weekday-named plan starts again on its first day; any other
+      // rotation (Sessão A/B/C) just continues after the day trained, so a week
+      // begun at B doesn't end up with A twice in a row.
+      const weekDone = restartsEachWeek(days, program.daysPerWeek) ? days[0] : order[0];
+      nextDayIndex = (order.find((d) => !doneIds.has(d.id)) ?? weekDone).dayIndex;
     }
   }
 

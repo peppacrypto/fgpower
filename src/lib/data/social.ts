@@ -2,6 +2,37 @@ import "server-only";
 import { prisma } from "@/lib/db";
 import { isBlocked, isFollowing } from "@/lib/social/authorization";
 
+/**
+ * Prisma `select` for a user shown to other people. Pair with `toPublicUser`,
+ * which puts the display name the user chose (Profile.displayName) in `name`
+ * and falls back to the account (Google) name — so every public surface and
+ * avatar shows "Carlinha", not "Carla Mendes".
+ */
+export const PUBLIC_USER_SELECT = {
+  id: true,
+  name: true,
+  username: true,
+  image: true,
+  profile: { select: { displayName: true } },
+} as const;
+
+export function toPublicUser(user: {
+  id: string;
+  name: string;
+  username: string | null;
+  image: string | null;
+  profile: { displayName: string } | null;
+}) {
+  return {
+    id: user.id,
+    name: user.profile?.displayName?.trim() || user.name,
+    username: user.username,
+    image: user.image,
+  };
+}
+
+export type PublicUser = ReturnType<typeof toPublicUser>;
+
 export async function getPublicProfile(username: string, viewerId: string | null) {
   const user = await prisma.user.findUnique({
     where: { username: username.toLowerCase() },
@@ -37,7 +68,7 @@ export async function getPublicProfile(username: string, viewerId: string | null
 
   return {
     id: user.id,
-    name: user.name,
+    name: user.profile.displayName.trim() || user.name,
     username: user.username,
     image: user.image,
     bio: user.profile.bio,
@@ -93,7 +124,7 @@ export async function getFeed(userId: string, cursor?: string, pageSize = 15) {
     orderBy: { createdAt: "desc" },
     take: pageSize + 1,
     ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
-    include: { user: { select: { id: true, name: true, username: true, image: true } } },
+    include: { user: { select: PUBLIC_USER_SELECT } },
   });
 
   const hasMore = activities.length > pageSize;
@@ -106,48 +137,61 @@ export async function getFeed(userId: string, cursor?: string, pageSize = 15) {
   const givenFgActivityIds = new Set(activityFgs.map((f) => f.activityId));
 
   return {
-    items: items.map((a) => ({ ...a, hasGivenFg: givenFgActivityIds.has(a.id) })),
+    items: items.map((a) => ({ ...a, user: toPublicUser(a.user), hasGivenFg: givenFgActivityIds.has(a.id) })),
     nextCursor: hasMore ? items[items.length - 1]?.id : null,
   };
 }
 
 export async function searchUsers(query: string, viewerId: string | null) {
+  // "@maria" and "maria" find the same person.
+  const q = query.trim().replace(/^@+/, "");
+  if (q === "") return [];
   const users = await prisma.user.findMany({
     where: {
       profile: { discoverable: true },
       // Only surface users with a public username — the rest have no openable
       // profile, so their cards would be dead taps (href="#").
       username: { not: null },
-      OR: [{ username: { contains: query.toLowerCase() } }, { name: { contains: query, mode: "insensitive" } }],
+      // By @handle and the display name people see — never by the Google
+      // account name hidden behind it ("Carla Mendes" mustn't find
+      // "Carlinha"). The account name only counts while no display name is set.
+      OR: [
+        { username: { contains: q.toLowerCase() } },
+        { profile: { displayName: { contains: q, mode: "insensitive" } } },
+        { AND: [{ profile: { displayName: "" } }, { name: { contains: q, mode: "insensitive" } }] },
+      ],
     },
     take: 20,
-    select: { id: true, name: true, username: true, image: true },
+    select: PUBLIC_USER_SELECT,
   });
-  if (!viewerId) return users;
+  const people = users.map(toPublicUser);
+  if (!viewerId) return people;
   const blocks = await prisma.userBlock.findMany({
     where: { OR: [{ blockerId: viewerId }, { blockedId: viewerId }] },
   });
   const blockedIds = new Set(blocks.flatMap((b) => [b.blockerId, b.blockedId]));
-  return users.filter((u) => !blockedIds.has(u.id));
+  return people.filter((u) => !blockedIds.has(u.id));
 }
 
 export async function getNotifications(userId: string) {
-  return prisma.notification.findMany({
+  const notifications = await prisma.notification.findMany({
     where: { recipientId: userId },
     orderBy: { createdAt: "desc" },
     take: 50,
     include: {
-      actor: { select: { name: true, username: true, image: true } },
+      actor: { select: PUBLIC_USER_SELECT },
       activity: { select: { id: true, sessionId: true } },
       followRequest: { select: { id: true, status: true } },
     },
   });
+  return notifications.map((n) => ({ ...n, actor: n.actor ? toPublicUser(n.actor) : null }));
 }
 
 export async function getPendingFollowRequests(userId: string) {
-  return prisma.followRequest.findMany({
+  const requests = await prisma.followRequest.findMany({
     where: { targetId: userId, status: "PENDING" },
     orderBy: { createdAt: "desc" },
-    include: { requester: { select: { name: true, username: true, image: true } } },
+    include: { requester: { select: PUBLIC_USER_SELECT } },
   });
+  return requests.map((r) => ({ ...r, requester: toPublicUser(r.requester) }));
 }

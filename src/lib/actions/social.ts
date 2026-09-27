@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { requireUserOrThrow } from "@/lib/auth/require-user";
+import { SESSION_EXPIRED_ERROR } from "@/lib/auth/session-expired";
 import { prisma } from "@/lib/db";
 import { isBlocked, canViewActivity } from "@/lib/social/authorization";
 
@@ -18,7 +19,8 @@ type NotificationType =
 export type SocialResult<T extends object = object> = ({ ok: true } & T) | { ok: false; error: string };
 
 const ERROR_TEXT: Record<string, string> = {
-  UNAUTHORIZED: "Entre na sua conta para continuar.",
+  // Only signed-in screens call these, so a missing session means it expired.
+  UNAUTHORIZED: SESSION_EXPIRED_ERROR,
   FORBIDDEN: "Você não tem acesso a isso.",
   BLOCKED: "Não é possível interagir com esta conta.",
   NOT_FOUND: "Isso não existe mais.",

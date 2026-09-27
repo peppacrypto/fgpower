@@ -3,6 +3,7 @@ import {
   assessOpenSession,
   boutSeconds,
   formatSpDate,
+  formatSpDaysAgo,
   formatSpTime,
   formatSpWeekdayDate,
   isStaleSession,
@@ -179,5 +180,22 @@ describe("assessOpenSession", () => {
     expect(s.leftOpen).toBe(true);
     expect(s.lastActivity?.toISOString()).toBe("2026-09-21T11:30:00.000Z");
     expect(s.saveAs.finishedAt.toISOString()).toBe("2026-09-21T10:00:00.000Z");
+  });
+});
+
+describe("formatSpDaysAgo (America/Sao_Paulo)", () => {
+  const now = new Date("2026-09-25T20:00:00Z"); // Friday 17:00 in São Paulo
+
+  it("counts São Paulo calendar days, not 24-hour spans", () => {
+    expect(formatSpDaysAgo(new Date("2026-09-25T12:00:00Z"), now)).toBe("hoje");
+    // Thursday 22:30 in São Paulo is 01:30 UTC on Friday: still "ontem".
+    expect(formatSpDaysAgo(new Date("2026-09-26T01:30:00Z"), new Date("2026-09-26T20:00:00Z"))).toBe("ontem");
+    expect(formatSpDaysAgo(new Date("2026-09-16T12:00:00Z"), now)).toBe("há 9 dias");
+  });
+
+  it("switches to weeks, months and years for older sessions", () => {
+    expect(formatSpDaysAgo(new Date("2026-09-04T12:00:00Z"), now)).toBe("há 3 semanas");
+    expect(formatSpDaysAgo(new Date("2026-06-25T12:00:00Z"), now)).toBe("há 3 meses");
+    expect(formatSpDaysAgo(new Date("2025-06-25T12:00:00Z"), now)).toBe("há mais de 1 ano");
   });
 });

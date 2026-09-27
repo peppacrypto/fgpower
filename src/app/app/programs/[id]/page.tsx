@@ -14,11 +14,14 @@ import { SubmitButton } from "@/components/ui/submit-button";
 import { startProgram, archiveProgram, duplicateProgram } from "@/lib/actions/programs";
 import { DayActions, DayStatus, dayStates, exerciseCount } from "@/components/workout/day-actions";
 import { SwitchProgramButton } from "@/components/programs/switch-program-button";
+import { LimitationsNote } from "@/components/programs/limitations-note";
+import { getProfile } from "@/lib/data/profile";
+import { NOT_FOUND_TITLE } from "@/components/ui/not-found-panel";
 
 export async function generateMetadata({ params }: PageProps<"/app/programs/[id]">): Promise<Metadata> {
   const { id } = await params;
   const program = await getUserProgram(id);
-  return program ? { title: program.name } : {};
+  return program ? { title: program.name } : { title: NOT_FOUND_TITLE };
 }
 
 export default async function UserProgramPage({ params }: PageProps<"/app/programs/[id]">) {
@@ -27,11 +30,13 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
   const program = await getUserProgram(id);
   if (!program || program.userId !== user.id) notFound();
 
-  const [feedback, activeEnrollment, inProgress] = await Promise.all([
+  const [feedback, activeEnrollment, inProgress, profile] = await Promise.all([
     analyzeUserProgram(id),
     getActiveEnrollment(user.id),
     getInProgressSessions(user.id),
+    getProfile(user.id),
   ]);
+  const limitations = profile?.limitations?.trim();
   const isActive = program.status === "ACTIVE";
   const otherActive = activeEnrollment && activeEnrollment.programId !== program.id ? activeEnrollment : null;
   const ownEnrollment = activeEnrollment && activeEnrollment.programId === program.id ? activeEnrollment : null;
@@ -138,6 +143,13 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
             <Link href={`/app/workout/${openWithData.id}`}>Continuar</Link>
           </Button>
         </div>
+      ) : null}
+
+      {limitations ? (
+        <LimitationsNote
+          text={limitations}
+          fix={<>Algum exercício não serve para você? Toque em “Editar” para trocá-lo.</>}
+        />
       ) : null}
 
       <div className="mt-6 flex flex-col gap-3">

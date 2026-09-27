@@ -4,7 +4,10 @@ import { ExternalLink } from "lucide-react";
 import { GArrow, GLoad } from "@/components/ui/glyph";
 import { Markdown } from "@/components/markdown";
 import { SectionHead } from "@/components/ui/section-head";
-import { GOAL_LABEL, EXPERIENCE_LABEL, STYLE_LABEL, GOAL_HUE } from "@/lib/constants/program-labels";
+import { GOAL_LABEL, EXPERIENCE_LABEL, STYLE_LABEL, GOAL_HUE, EQUIPMENT_LABEL } from "@/lib/constants/program-labels";
+import { glossaryFor } from "@/lib/programming/glossary";
+import { formatNumber, formatRir, plural, pluralWord } from "@/lib/utils/format";
+import { OpenSectionsOnHash, StickyActionsBar } from "./dossier-client";
 
 interface DossierTemplate {
   namePt: string;
@@ -16,6 +19,7 @@ interface DossierTemplate {
   goal: string;
   experienceLevel: string;
   trainingStyle: string;
+  equipmentAccess?: string;
   daysPerWeek: number;
   durationWeeks: number;
   sessionMinutes: number;
@@ -47,20 +51,23 @@ interface DossierTemplate {
  * sheets with indexed exercises, a weekly progression timeline, and cited
  * evidence. Long prose sections (description, science) are collapsible so the
  * actual plan sits near the top. `actions` is the masthead CTA (start/customize
- * in-app, or login on the public page); `stickyActions`, when given, also pins a
- * start CTA to the bottom of the (very tall) page, just above the mobile nav.
- * `scienceHref` prefixes principle links and `exerciseHref` the exercise
- * technique pages each plan row opens. */
+ * in-app, or login on the public page); `stickyActions`, when given, pins them
+ * to the bottom of the (very tall) page, just above the mobile nav, once the
+ * masthead's own buttons have scrolled away. `note` sits right above the plan
+ * (the user's own limitations note). `scienceHref` prefixes principle links
+ * and `exerciseHref` the exercise technique pages each plan row opens. */
 export function TemplateDossier({
   template,
   actions,
   stickyActions,
+  note,
   scienceHref,
   exerciseHref = "/exercises",
 }: {
   template: DossierTemplate;
   actions: React.ReactNode;
   stickyActions?: React.ReactNode;
+  note?: React.ReactNode;
   scienceHref: string;
   exerciseHref?: string;
 }) {
@@ -68,20 +75,26 @@ export function TemplateDossier({
   const weekly = Array.isArray(template.weeklyGuidance)
     ? (template.weeklyGuidance as Array<{ week: number; rirTarget: number; setsNotePt: string; notePt?: string }>)
     : [];
+  const exercises = template.days.flatMap((d) => d.exercises);
+  const glossary = glossaryFor(exercises.map((ex) => ex.notesPt));
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
+      <OpenSectionsOnHash />
       {/* Masthead */}
       <div className="relative overflow-hidden panel-raised p-6 sm:p-8">
         <span className="absolute left-0 top-0 h-full w-1.5" style={{ background: hue.spine }} aria-hidden />
         <div className="flex flex-wrap items-center gap-1.5">
           <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted">
-            {STYLE_LABEL[template.trainingStyle] ?? "Protocolo"}
+            {STYLE_LABEL[template.trainingStyle] ?? "Programa"}
           </span>
           <span className="tag tag--field" style={{ color: hue.fg }}>
             {GOAL_LABEL[template.goal] ?? template.goal}
           </span>
           <span className="tag tag--spec">{EXPERIENCE_LABEL[template.experienceLevel] ?? template.experienceLevel}</span>
+          {template.equipmentAccess && template.equipmentAccess !== "FULL_GYM" ? (
+            <span className="tag tag--spec">{EQUIPMENT_LABEL[template.equipmentAccess]}</span>
+          ) : null}
           {template.isFlagship ? <span className="tag tag--mark">Destaque</span> : null}
         </div>
         <h1 className="text-display mt-2 text-3xl font-extrabold sm:text-4xl">{template.namePt}</h1>
@@ -89,11 +102,16 @@ export function TemplateDossier({
 
         <div className="mt-6 grid grid-cols-3 divide-x divide-border border-y border-border py-3 text-center">
           <MastheadStat value={`${template.daysPerWeek}×`} label="/ semana" />
-          <MastheadStat value={String(template.durationWeeks)} label="semanas" />
+          <MastheadStat
+            value={String(template.durationWeeks)}
+            label={pluralWord(template.durationWeeks, "semana", "semanas")}
+          />
           <MastheadStat value={`${template.sessionMinutes}′`} label="por sessão" />
         </div>
 
-        <div className="mt-6 flex flex-wrap gap-2">{actions}</div>
+        <div id="dossier-actions" className="mt-6 flex flex-wrap gap-2">
+          {actions}
+        </div>
       </div>
 
       {/* Jump nav — reach the plan without scrolling the prose */}
@@ -118,9 +136,28 @@ export function TemplateDossier({
         <p className="text-sm text-foreground/90">{template.audiencePt}</p>
       </Section>
 
+      {note}
+
       {/* Day sheets — the actual plan, kept expanded and high on the page */}
       <section id="estrutura" className="mt-10 scroll-mt-4">
-        <SectionHead label="Estrutura semanal" count={`${template.days.length} dias`} />
+        <SectionHead label="Estrutura semanal" count={plural(template.days.length, "dia", "dias")} />
+        <PlanLegend exercises={exercises} rirHref={`${scienceHref}/rir`} />
+        {glossary.length > 0 ? (
+          <details className="group mt-2 border-b border-border">
+            <summary className="flex min-h-10 cursor-pointer list-none items-center justify-between gap-3 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted [&::-webkit-details-marker]:hidden">
+              Termos deste plano ({glossary.length})
+              <GArrow className="size-3.5 shrink-0 transition-transform group-open:rotate-90" />
+            </summary>
+            <dl className="flex flex-col gap-2 pb-3 text-xs">
+              {glossary.map((g) => (
+                <div key={g.term}>
+                  <dt className="inline font-semibold">{g.term}</dt>
+                  <dd className="inline text-muted"> — {g.meaning}</dd>
+                </div>
+              ))}
+            </dl>
+          </details>
+        ) : null}
         <div className="mt-4 flex flex-col gap-3">
           {template.days.map((day, i) => (
             <div key={day.id} className="overflow-hidden border-t-2 border-t-[var(--rule-heavy)] bg-surface">
@@ -161,8 +198,8 @@ export function TemplateDossier({
                           <span className="font-semibold tabular-nums text-foreground">
                             {ex.sets}×{ex.repMin === ex.repMax ? ex.repMin : `${ex.repMin}-${ex.repMax}`}
                           </span>
-                          {ex.rirTarget != null ? <span>RIR {ex.rirTarget}</span> : null}
-                          {ex.warmupSets > 0 ? <span>+{ex.warmupSets} aq</span> : null}
+                          {ex.rirTarget != null ? <span>{formatRir(ex.rirTarget)}</span> : null}
+                          {ex.warmupSets > 0 ? <span>+{ex.warmupSets} aquec.</span> : null}
                         </div>
                         {ex.notesPt ? <p className="mt-1 text-xs text-muted">{ex.notesPt}</p> : null}
                       </div>
@@ -193,7 +230,7 @@ export function TemplateDossier({
                 <div className="pb-5">
                   <div className="flex items-center gap-2">
                     <span className="rounded-[2px] bg-accent-soft px-2 py-0.5 font-mono text-[11px] font-semibold text-accent">
-                      RIR ~{w.rirTarget}
+                      RIR ~{formatNumber(w.rirTarget)}
                     </span>
                     <span className="text-[10px] uppercase tracking-wider text-muted">Semana {w.week}</span>
                   </div>
@@ -254,12 +291,54 @@ export function TemplateDossier({
         ) : null}
       </CollapsibleSection>
 
-      {stickyActions ? (
-        <div className="sticky bottom-[var(--nav-h)] z-30 mt-10 panel-raised p-3 sm:bottom-4">
-          <div className="flex flex-wrap gap-2">{stickyActions}</div>
-        </div>
-      ) : null}
+      {stickyActions ? <StickyActionsBar watchId="dossier-actions">{stickyActions}</StickyActionsBar> : null}
     </div>
+  );
+}
+
+/**
+ * One line that reads the plan's notation, using this plan's own first
+ * prescription: "3×8-12 = 3 séries de 8 a 12 reps · RIR 2 = pare com ~2 reps
+ * sobrando · +1 aquec. = 1 série leve antes".
+ */
+function PlanLegend({
+  exercises,
+  rirHref,
+}: {
+  exercises: { sets: number; repMin: number; repMax: number; rirTarget: number | null; warmupSets: number }[];
+  rirHref: string;
+}) {
+  const ex = exercises.find((e) => e.rirTarget != null) ?? exercises[0];
+  if (!ex) return null;
+  const reps = ex.repMin === ex.repMax ? `${ex.repMin}` : `${ex.repMin}-${ex.repMax}`;
+  const repsText = ex.repMin === ex.repMax ? `${ex.repMin} reps` : `${ex.repMin} a ${ex.repMax} reps`;
+  const rir = exercises.find((e) => e.rirTarget != null)?.rirTarget ?? null;
+  const warmup = exercises.find((e) => e.warmupSets > 0)?.warmupSets ?? 0;
+  const code = (s: string) => <span className="font-bold text-foreground">{s}</span>;
+  return (
+    <p className="mt-3 border-l-2 border-l-accent bg-surface-2 px-3 py-2 font-mono text-[11px] leading-relaxed text-muted">
+      {code(`${ex.sets}×${reps}`)} = {plural(ex.sets, "série", "séries")} de {repsText}
+      {rir != null ? (
+        <>
+          {" · "}
+          {code(formatRir(rir))} = pare com ~{formatNumber(rir)} {pluralWord(rir, "rep", "reps")} sobrando
+        </>
+      ) : null}
+      {warmup > 0 ? (
+        <>
+          {" · "}
+          {code(`+${warmup} aquec.`)} = {plural(warmup, "série leve", "séries leves")} antes
+        </>
+      ) : null}
+      {rir != null ? (
+        <>
+          {" · "}
+          <Link href={rirHref} className="whitespace-nowrap font-bold text-accent hover:underline">
+            Entenda o RIR →
+          </Link>
+        </>
+      ) : null}
+    </p>
   );
 }
 

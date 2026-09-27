@@ -1,5 +1,6 @@
 import "server-only";
 import { prisma } from "@/lib/db";
+import { SHOWN_PR_KINDS } from "@/lib/training/personal-records-core";
 
 export type ProgressPeriod = "4w" | "8w" | "3m" | "6m" | "1y" | "all";
 
@@ -29,13 +30,27 @@ export async function getProgressSummary(userId: string, period: ProgressPeriod)
     ...(start ? { finishedAt: { gte: start } } : {}),
   };
 
-  const [sessionCount, recentPrs, activeEnrollment] = await Promise.all([
+  const [sessionCount, prRows, activeEnrollment] = await Promise.all([
     prisma.workoutSession.count({ where }),
     prisma.exercisePersonalRecord.findMany({
-      where: { userId, ...(start ? { achievedAt: { gte: start } } : {}) },
+      where: {
+        userId,
+        kind: { in: [...SHOWN_PR_KINDS] },
+        ...(start ? { achievedAt: { gte: start } } : {}),
+      },
       orderBy: { achievedAt: "desc" },
-      take: 8,
-      include: { exercise: { select: { namePt: true, slug: true } } },
+      take: 60,
+      select: {
+        id: true,
+        exerciseId: true,
+        sessionId: true,
+        kind: true,
+        value: true,
+        weightKg: true,
+        reps: true,
+        achievedAt: true,
+        exercise: { select: { namePt: true, slug: true } },
+      },
     }),
     prisma.programEnrollment.findFirst({
       where: { userId, status: "ACTIVE" },
@@ -49,7 +64,42 @@ export async function getProgressSummary(userId: string, period: ProgressPeriod)
   const expected = weeks && profile ? Math.round(weeks * profile.daysPerWeek) : null;
   const consistencyPct = expected && expected > 0 ? Math.min(100, Math.round((sessionCount / expected) * 100)) : null;
 
-  return { sessionCount, recentPrs, activeEnrollment, consistencyPct };
+  return { sessionCount, recentPrs: latestRecordsPerExercise(prRows, 8), activeEnrollment, consistencyPct };
+}
+
+/**
+ * One entry per exercise, most recent first: the records it set in its latest
+ * record-setting workout (weight, e1RM, reps together, in display order) —
+ * never three rows for the same lift pushing every other exercise off the list.
+ */
+function latestRecordsPerExercise<
+  R extends {
+    exerciseId: string;
+    sessionId: string | null;
+    kind: string;
+    achievedAt: Date;
+    exercise: { namePt: string; slug: string };
+  },
+>(rows: R[], limit: number) {
+  const out: { exerciseId: string; namePt: string; slug: string; achievedAt: Date; records: R[] }[] = [];
+  for (const r of rows) {
+    const entry = out.find((e) => e.exerciseId === r.exerciseId);
+    if (!entry) {
+      if (out.length < limit) {
+        const { namePt, slug } = r.exercise;
+        out.push({ exerciseId: r.exerciseId, namePt, slug, achievedAt: r.achievedAt, records: [r] });
+      }
+    } else if (
+      r.sessionId !== null &&
+      entry.records[0].sessionId === r.sessionId &&
+      !entry.records.some((x) => x.kind === r.kind)
+    ) {
+      entry.records.push(r);
+    }
+  }
+  const rank = (kind: string) => (SHOWN_PR_KINDS as readonly string[]).indexOf(kind);
+  for (const e of out) e.records.sort((a, b) => rank(a.kind) - rank(b.kind));
+  return out;
 }
 
 /** For each exercise the user has trained in the period, the first vs. most recent best weight (a simple, honest progress delta). */

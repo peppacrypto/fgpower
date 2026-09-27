@@ -6,6 +6,7 @@ import { Avatar } from "@/components/ui/misc";
 import { Button } from "@/components/ui/button";
 import { respondToFollowRequest } from "@/lib/actions/social";
 import { runAction } from "@/components/social/run-action";
+import { ActionErrorText } from "@/components/social/session-expired";
 import { formatAppDate } from "@/lib/training/week";
 
 const TYPE_TEXT: Record<string, (actor: string) => string> = {
@@ -74,7 +75,7 @@ export function NotificationItem({ notification }: { notification: NotificationD
           </div>
           {error ? (
             <p role="alert" className="mt-2 text-xs text-danger">
-              {error}
+              <ActionErrorText error={error} />
             </p>
           ) : null}
         </div>

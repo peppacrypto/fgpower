@@ -11,6 +11,7 @@ import { ExerciseCard } from "@/components/exercises/exercise-card";
 import { FavoriteButton } from "./favorite-button";
 import { getCurrentSession } from "@/lib/auth/require-user";
 import { isFavorite } from "@/lib/data/favorites";
+import { NOT_FOUND_TITLE } from "@/components/ui/not-found-panel";
 
 const DIFFICULTY_LABEL: Record<string, string> = {
   BEGINNER: "Iniciante",
@@ -33,7 +34,7 @@ const EVIDENCE_LEVEL_LABEL: Record<string, string> = {
 export async function generateMetadata({ params }: PageProps<"/app/exercises/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const exercise = await getExerciseBySlug(slug);
-  if (!exercise) return {};
+  if (!exercise) return { title: NOT_FOUND_TITLE };
   return { title: exercise.namePt };
 }
 

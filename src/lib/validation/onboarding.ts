@@ -6,6 +6,7 @@ export const TRAINING_GOALS = [
   "GENERAL_FITNESS",
   "STRENGTH_HYPERTROPHY",
   "SPORTS_PERFORMANCE",
+  "FAT_LOSS",
 ] as const;
 
 export const EXPERIENCE_LEVELS = ["BEGINNER", "INTERMEDIATE", "ADVANCED"] as const;

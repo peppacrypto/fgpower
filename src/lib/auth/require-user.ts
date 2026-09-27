@@ -2,6 +2,10 @@ import "server-only";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/auth";
+import { PATH_HEADER } from "@/lib/auth/path-header";
+import { safeNextPath } from "@/lib/auth/safe-next";
+import { hadSessionCookie } from "@/lib/auth/session-cookie";
+import { loginAgainHref } from "@/lib/auth/session-expired";
 
 /**
  * The authoritative session check. Every protected server action, route
@@ -12,13 +16,32 @@ export async function getCurrentSession() {
   return auth.api.getSession({ headers: await headers() });
 }
 
-/** Redirects to /login if there is no session. Use in RSC pages. */
+/**
+ * Redirects to /login if there is no session. Use in RSC pages. The login
+ * page comes back here afterwards, and says "your session expired" when the
+ * browser still held a session cookie that no longer works.
+ */
 export async function requireUser() {
   const session = await getCurrentSession();
   if (!session) {
-    redirect("/login");
+    const h = await headers();
+    const here = h.get(PATH_HEADER) ?? refererPath(h.get("referer"));
+    if (await hadSessionCookie()) redirect(loginAgainHref(here));
+    const next = safeNextPath(here);
+    redirect(next ? `/login?next=${encodeURIComponent(next)}` : "/login");
   }
   return session.user;
+}
+
+/** The path of a same-site Referer (server actions re-render the page they came from). */
+function refererPath(referer: string | null): string | null {
+  if (!referer) return null;
+  try {
+    const url = new URL(referer);
+    return url.pathname + url.search;
+  } catch {
+    return null;
+  }
 }
 
 /** Throws instead of redirecting. Use in server actions and route handlers. */

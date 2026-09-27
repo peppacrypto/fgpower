@@ -32,7 +32,7 @@ export function ExerciseCard({ exercise, href }: { exercise: ExerciseCardData; h
         )}
         {exercise.isCurated ? (
           <Badge variant="accent" className="absolute left-2 top-2">
-            Curado
+            Guia completo
           </Badge>
         ) : null}
       </div>

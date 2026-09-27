@@ -18,6 +18,7 @@ export default async function EditProgramPage({ params }: PageProps<"/app/progra
     name: day.name,
     focus: day.focus,
     exercises: day.exercises.map((ex) => ({
+      id: ex.id,
       exerciseId: ex.exerciseId,
       exerciseName: ex.exercise.namePt,
       groupKey: ex.groupKey,
@@ -29,6 +30,10 @@ export default async function EditProgramPage({ params }: PageProps<"/app/progra
       warmupSets: ex.warmupSets,
       loadTargetKg: ex.loadTargetKg,
       notes: ex.notes,
+      rpeTarget: ex.rpeTarget,
+      tempo: ex.tempo,
+      progressionStrategy: ex.progressionStrategy,
+      loadIncrementKg: ex.loadIncrementKg,
     })),
   }));
 

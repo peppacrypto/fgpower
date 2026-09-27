@@ -4,8 +4,17 @@ import { revalidatePath } from "next/cache";
 import { getCurrentSession } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 import { validateBuilderProgram, type BuilderFieldError } from "@/lib/validation/program-builder";
+import type { ProgressionStrategy } from "@/lib/training/progression";
+import type { Prisma } from "@/generated/prisma/client";
 
 export interface BuilderExercise {
+  /**
+   * The saved row's id (UserProgramExercise). A save updates that row in
+   * place, so logged workouts stay linked to it (WorkoutExerciseLog.
+   * programExerciseId) and fields the builder doesn't edit survive. New and
+   * duplicated rows have none until saved.
+   */
+  id?: string;
   exerciseId: string;
   /** Display only, not persisted — optional so callers can omit it before saving. */
   exerciseName?: string;
@@ -18,6 +27,13 @@ export interface BuilderExercise {
   warmupSets: number;
   loadTargetKg: number | null;
   notes: string | null;
+  // Carried, not edited: shown nowhere in the builder, only copied onto a new
+  // row (a duplicate keeps its source's). A save never writes them onto an
+  // existing row, which keeps its own.
+  rpeTarget?: number | null;
+  tempo?: string | null;
+  progressionStrategy?: ProgressionStrategy | null;
+  loadIncrementKg?: number | null;
 }
 
 export interface BuilderDay {
@@ -36,17 +52,41 @@ export type SaveProgramResult =
       description: string;
       /** Final day ids in order — new days get theirs here, so a second save keeps them. */
       dayIds: string[];
+      /** Final exercise row ids, per day and in order (new rows get theirs here too). */
+      exerciseIds: string[][];
     }
   | { ok: false; errors: BuilderFieldError[]; message: string | null };
+
+/** The exercise columns the builder edits — the only ones a save writes on an existing row. */
+const EDITED_SELECT = {
+  dayId: true,
+  exerciseId: true,
+  sortOrder: true,
+  groupKey: true,
+  sets: true,
+  repMin: true,
+  repMax: true,
+  rirTarget: true,
+  restSeconds: true,
+  warmupSets: true,
+  loadTargetKg: true,
+  notes: true,
+} as const satisfies Prisma.UserProgramExerciseSelect;
+type EditedRow = Prisma.UserProgramExerciseGetPayload<{ select: typeof EDITED_SELECT }>;
+const EDITED_FIELDS = Object.keys(EDITED_SELECT) as (keyof EditedRow)[];
 
 /**
  * Saves the whole program — name, description and the day/exercise
  * structure — in one transaction, so a failed save never leaves a half-saved
  * program (the rename used to commit before the days failed). Never throws
  * for bad input: invalid values come back as `errors` pinned to their field,
- * and the editor keeps its state. Days keep their ids; past logged workouts
- * reference their own immutable snapshot data, so replacing the structure
- * never rewrites history (spec §43.10).
+ * and the editor keeps its state. Days and exercise rows keep their ids: rows
+ * are updated in place (only when something changed), new ones created and
+ * removed ones deleted — never all deleted and recreated, which unlinked
+ * every logged workout from its row and dropped the fields the builder
+ * doesn't edit (tempo, RPE, progression). Past logged workouts reference
+ * their own immutable snapshot data, so changing the structure never
+ * rewrites history (spec §43.10).
  */
 export async function saveProgram(
   programId: string,
@@ -65,14 +105,22 @@ export async function saveProgram(
   if (!parsed.ok) return { ok: false, errors: parsed.errors, message: null };
   const { name, description, days: safeDays } = parsed.data;
 
-  let dayIds: string[];
+  let saved: { dayIds: string[]; exerciseIds: string[][] };
   try {
-    dayIds = await prisma.$transaction(async (tx) => {
+    saved = await prisma.$transaction(async (tx) => {
       const oldDays = await tx.userProgramDay.findMany({
         where: { programId },
         select: { id: true, dayIndex: true, name: true },
       });
       const oldIds = new Set(oldDays.map((d) => d.id));
+      // Every exercise row of this program — an id from the payload counts
+      // only if it is one of these (never another program's row).
+      const oldRows = await tx.userProgramExercise.findMany({
+        where: { day: { programId } },
+        select: { id: true, ...EDITED_SELECT },
+      });
+      const oldRowById = new Map(oldRows.map((r) => [r.id, r]));
+      const keptRowIds = new Set<string>();
 
       // A plan that repeats its days within the week (A/B at 3×) keeps its
       // frequency; otherwise the frequency follows the number of days.
@@ -95,12 +143,28 @@ export async function saveProgram(
       // current rows outside the (programId, dayIndex) unique range first.
       await tx.userProgramDay.updateMany({ where: { programId }, data: { dayIndex: { increment: 1000 } } });
       const newIdByOldId = new Map<string, string>();
-      const finalDays: { id: string; name: string }[] = [];
+      const finalDays: { id: string; name: string; exerciseIds: string[] }[] = [];
       for (let dayIndex = 0; dayIndex < safeDays.length; dayIndex++) {
         const day = safeDays[dayIndex];
         const dayName = day.name.trim() || `Dia ${dayIndex + 1}`;
-        const exercises = {
-          create: day.exercises.map((ex, sortOrder) => ({
+        let dayId: string;
+        if (day.id && oldIds.has(day.id) && !newIdByOldId.has(day.id)) {
+          await tx.userProgramDay.update({ where: { id: day.id }, data: { dayIndex, name: dayName, focus: day.focus } });
+          newIdByOldId.set(day.id, day.id);
+          dayId = day.id;
+        } else {
+          const created = await tx.userProgramDay.create({
+            data: { programId, dayIndex, name: dayName, focus: day.focus },
+            select: { id: true },
+          });
+          dayId = created.id;
+        }
+
+        const exerciseIds: string[] = [];
+        for (let sortOrder = 0; sortOrder < day.exercises.length; sortOrder++) {
+          const ex = day.exercises[sortOrder];
+          const edited: EditedRow = {
+            dayId,
             exerciseId: ex.exerciseId,
             sortOrder,
             groupKey: ex.groupKey,
@@ -112,24 +176,36 @@ export async function saveProgram(
             warmupSets: ex.warmupSets,
             loadTargetKg: ex.loadTargetKg,
             notes: ex.notes,
-          })),
-        };
-        if (day.id && oldIds.has(day.id) && !newIdByOldId.has(day.id)) {
-          await tx.userProgramExercise.deleteMany({ where: { dayId: day.id } });
-          await tx.userProgramDay.update({
-            where: { id: day.id },
-            data: { dayIndex, name: dayName, focus: day.focus, exercises },
-          });
-          newIdByOldId.set(day.id, day.id);
-          finalDays.push({ id: day.id, name: dayName });
-        } else {
-          const created = await tx.userProgramDay.create({
-            data: { programId, dayIndex, name: dayName, focus: day.focus, exercises },
-            select: { id: true },
-          });
-          finalDays.push({ id: created.id, name: dayName });
+          };
+          // The first row claiming an id keeps it; a second one (a stale
+          // duplicate) becomes a new row.
+          const old = ex.id && !keptRowIds.has(ex.id) ? oldRowById.get(ex.id) : undefined;
+          if (old) {
+            keptRowIds.add(old.id);
+            if (EDITED_FIELDS.some((f) => old[f] !== edited[f])) {
+              await tx.userProgramExercise.update({ where: { id: old.id }, data: edited });
+            }
+            exerciseIds.push(old.id);
+          } else {
+            const created = await tx.userProgramExercise.create({
+              data: {
+                ...edited,
+                rpeTarget: ex.rpeTarget ?? null,
+                tempo: ex.tempo ?? null,
+                progressionStrategy: ex.progressionStrategy ?? null,
+                loadIncrementKg: ex.loadIncrementKg ?? null,
+              },
+              select: { id: true },
+            });
+            exerciseIds.push(created.id);
+          }
         }
+        finalDays.push({ id: dayId, name: dayName, exerciseIds });
       }
+      // Rows no longer in the program go (their logged workouts keep their
+      // own snapshot), then removed days, still parked.
+      const removedRowIds = oldRows.filter((r) => !keptRowIds.has(r.id)).map((r) => r.id);
+      if (removedRowIds.length) await tx.userProgramExercise.deleteMany({ where: { id: { in: removedRowIds } } });
       // Removed days (still parked) go now.
       await tx.userProgramDay.deleteMany({ where: { programId, dayIndex: { gte: 1000 } } });
 
@@ -160,7 +236,7 @@ export async function saveProgram(
           status: program.status === "ARCHIVED" ? "DRAFT" : program.status,
         },
       });
-      return finalDays.map((d) => d.id);
+      return { dayIds: finalDays.map((d) => d.id), exerciseIds: finalDays.map((d) => d.exerciseIds) };
     });
   } catch (err) {
     // e.g. an exercise removed from the catalog meanwhile (FK) or a lost
@@ -173,5 +249,5 @@ export async function saveProgram(
   revalidatePath(`/app/programs/${programId}/edit`);
   revalidatePath("/app/programs");
   revalidatePath("/app/today");
-  return { ok: true, name, description, dayIds };
+  return { ok: true, name, description, ...saved };
 }

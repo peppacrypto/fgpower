@@ -4,10 +4,11 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label, Select, Textarea } from "@/components/ui/input";
 import { cn } from "@/lib/utils/cn";
+import { formatDuration } from "@/lib/utils/format";
+import { DaysMatchNote, WeekdayChips } from "@/app/onboarding/weekday-chips";
 import { FieldError, FormError, useProfileSave } from "./profile-form";
 import { INVALID_FIELD, SaveStatus } from "./save-status";
 
-const WEEKDAYS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 const SESSION_MINUTES = [30, 45, 60, 75, 90, 120];
 
 interface Props {
@@ -26,6 +27,7 @@ export function RoutineForm({ initial }: Props) {
   const { state, pending, onSubmit, onChange, field, formError, saveError } = useProfileSave();
   const [preferredDays, setPreferredDays] = useState<number[]>(initial.preferredDays);
   const [doesEndurance, setDoesEndurance] = useState(initial.doesEndurance);
+  const [daysPerWeekValue, setDaysPerWeekValue] = useState(initial.daysPerWeek);
   const daysPerWeek = field("daysPerWeek");
   const sessionMinutes = field("sessionMinutes");
   const preferred = field("preferredDays");
@@ -44,13 +46,18 @@ export function RoutineForm({ initial }: Props) {
     <form onSubmit={onSubmit} onChange={onChange} noValidate className="flex flex-col gap-4">
       <FormError error={formError} />
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 min-[400px]:grid-cols-2">
         <div>
           <Label htmlFor="daysPerWeek">Dias por semana</Label>
-          <Select {...daysPerWeek.props} defaultValue={initial.daysPerWeek} className={cn("mt-1.5", INVALID_FIELD)}>
+          <Select
+            {...daysPerWeek.props}
+            value={daysPerWeekValue}
+            onChange={(e) => setDaysPerWeekValue(Number(e.target.value))}
+            className={cn("mt-1.5", INVALID_FIELD)}
+          >
             {[1, 2, 3, 4, 5, 6, 7].map((d) => (
               <option key={d} value={d}>
-                {d}x
+                {d}x/semana
               </option>
             ))}
           </Select>
@@ -61,7 +68,7 @@ export function RoutineForm({ initial }: Props) {
           <Select {...sessionMinutes.props} defaultValue={initial.sessionMinutes} className={cn("mt-1.5", INVALID_FIELD)}>
             {minuteOptions.map((m) => (
               <option key={m} value={m}>
-                ~{m} min
+                ~{formatDuration(m * 60)}
               </option>
             ))}
           </Select>
@@ -71,25 +78,14 @@ export function RoutineForm({ initial }: Props) {
 
       <fieldset aria-describedby={preferred.error ? "preferredDays-error" : undefined}>
         <legend className="text-sm font-medium">Dias preferidos (opcional)</legend>
-        <div className="mt-2 flex flex-wrap gap-2">
-          {WEEKDAYS.map((label, i) => {
-            const on = preferredDays.includes(i);
-            return (
-              <button
-                type="button"
-                key={label}
-                onClick={() => toggleDay(i)}
-                aria-pressed={on}
-                className={cn(
-                  "h-11 w-12 rounded-[var(--radius-sm)] border text-sm font-medium",
-                  on ? "border-accent bg-accent-soft text-accent" : "border-border text-muted hover:bg-surface-2",
-                )}
-              >
-                {label}
-              </button>
-            );
-          })}
+        <div className="mt-2">
+          <WeekdayChips value={preferredDays} onToggle={toggleDay} />
         </div>
+        <DaysMatchNote
+          daysPerWeek={daysPerWeekValue}
+          preferredCount={preferredDays.length}
+          onUseCount={() => setDaysPerWeekValue(preferredDays.length)}
+        />
         {/* Sentinel: tells the server this form owns preferredDays even when none are picked. */}
         <input type="hidden" name="preferredDays" value="" />
         {preferredDays.map((d) => (

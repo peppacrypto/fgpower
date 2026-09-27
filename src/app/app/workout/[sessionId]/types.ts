@@ -28,7 +28,35 @@ export interface ExecutionExerciseLog {
   notes: string | null;
   persistentNote: string | null;
   sets: ExecutionSetLog[];
+  /** Last time's completed working sets, in order (empty: never done before). */
   previousSets: { weightKg: number | null; reps: number | null; rir: number | null; isExtra: boolean }[];
+  /** When that was, on the São Paulo calendar: { date: "16/09", ago: "há 9 dias" }. */
+  lastTime: { date: string; ago: string } | null;
+  /**
+   * What to lift today, from last time's sets (lib/training/next-load via
+   * adviceFromLastTime): the grey load/reps in the boxes and the chip under
+   * "Último treino". Null without history or a load to judge.
+   */
+  advice: {
+    kind: "increase" | "hold";
+    loadKg: number;
+    targetReps: number | null;
+    headline: string;
+    reason: string;
+    /** "por quê?": the science page of the exercise's progression strategy. */
+    whyHref: string | null;
+  } | null;
+  /** Progression rule of the program exercise (program's default, then double progression). */
+  strategy: "DOUBLE" | "LINEAR_LOAD" | "REPETITION" | "RIR_BASED" | "MANUAL";
+  /** The load step for this exercise (warm-up loads are rounded to it). */
+  loadIncrementKg: number;
+  /**
+   * Done with the body's own weight (set-plan isBodyweightEquipment): kg is
+   * extra load, 0 by default, so ✓ needs only the reps.
+   */
+  bodyweight: boolean;
+  /** A hold whose "reps" are seconds (set-plan isTimedHold): "45 s", never "× 45". */
+  timed: boolean;
 }
 
 export interface ExecutionSession {
@@ -49,6 +77,13 @@ export interface ExecutionSession {
   programId: string | null;
   /** Play a short beep when a rest ends (Profile.restTimerSound). */
   restTimerSound: boolean;
+  /** No workout finished yet: this is the user's very first. */
+  firstWorkout: boolean;
+  /**
+   * What the user wrote about injuries/limitations at onboarding, echoed at
+   * the top of their first few workouts; null afterwards or when empty.
+   */
+  limitations: string | null;
   /**
    * Open since an earlier day or for over 8 h, and not a live session still
    * under 8 h (lib/training/stale.ts assessOpenSession showSince): the header

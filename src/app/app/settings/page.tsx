@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { requireUser } from "@/lib/auth/require-user";
-import { getProfile, getPublicHandle } from "@/lib/data/profile";
+import { getProfile, getPublicHandle, getPublicProfileOrigin } from "@/lib/data/profile";
 import { Card, CardContent } from "@/components/ui/card";
 import { ProfileForm } from "./profile-form";
 import { RoutineForm } from "./routine-form";
@@ -11,18 +11,13 @@ import { DangerZone } from "./danger-zone";
 
 export const metadata: Metadata = { title: "Configurações" };
 
-/** Host shown in the public-profile hint (fgpower.monster in production). */
-function publicHost() {
-  try {
-    return new URL(process.env.NEXT_PUBLIC_APP_URL ?? "").host || "fgpower.monster";
-  } catch {
-    return "fgpower.monster";
-  }
-}
-
 export default async function SettingsPage() {
   const user = await requireUser();
-  const [profile, handle] = await Promise.all([getProfile(user.id), getPublicHandle(user.id)]);
+  const [profile, handle, publicOrigin] = await Promise.all([
+    getProfile(user.id),
+    getPublicHandle(user.id),
+    getPublicProfileOrigin(),
+  ]);
   if (!profile) throw new Error("Profile not found");
 
   return (
@@ -59,10 +54,10 @@ export default async function SettingsPage() {
       </Section>
 
       <Section title="Usuário público">
-        <UsernameForm initialUsername={handle} publicHost={publicHost()} />
+        <UsernameForm initialUsername={handle} publicOrigin={publicOrigin} />
       </Section>
 
-      <Section title="Privacidade">
+      <Section id="privacidade" title="Privacidade">
         <PrivacyForm
           initial={{
             isPublicAccount: profile.isPublicAccount,
@@ -83,9 +78,19 @@ export default async function SettingsPage() {
   );
 }
 
-function Section({ title, description, children }: { title: string; description?: string; children: React.ReactNode }) {
+function Section({
+  id,
+  title,
+  description,
+  children,
+}: {
+  id?: string;
+  title: string;
+  description?: string;
+  children: React.ReactNode;
+}) {
   return (
-    <section className="mt-8">
+    <section id={id} className="mt-8 scroll-mt-4">
       <h2 className="text-sm font-bold uppercase tracking-wide text-muted">{title}</h2>
       {description ? <p className="mt-0.5 text-xs text-muted">{description}</p> : null}
       <Card className="mt-3">

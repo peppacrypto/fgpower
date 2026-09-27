@@ -16,6 +16,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/misc";
 import { CalendarClock } from "lucide-react";
+import { formatDuration, plural } from "@/lib/utils/format";
 
 export const metadata: Metadata = { title: "Histórico" };
 
@@ -24,12 +25,6 @@ const MONTH_LABELS = [
   "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
   "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
 ];
-
-function formatDuration(seconds: number | null) {
-  if (!seconds) return "";
-  const m = Math.round(seconds / 60);
-  return `${m} min`;
-}
 
 export default async function HistoryPage({ searchParams }: PageProps<"/app/history">) {
   const sp = await searchParams;
@@ -157,8 +152,8 @@ export default async function HistoryPage({ searchParams }: PageProps<"/app/hist
                       </p>
                     </div>
                     <p className="shrink-0 whitespace-nowrap text-xs text-muted">
-                      {formatDuration(s.durationSeconds)} · {s.totalWorkingSets ?? 0}{" "}
-                      {s.totalWorkingSets === 1 ? "série" : "séries"}
+                      {s.durationSeconds ? `${formatDuration(s.durationSeconds)} · ` : ""}
+                      {plural(s.totalWorkingSets ?? 0, "série", "séries")}
                     </p>
                   </CardContent>
                 </Card>

@@ -1,5 +1,7 @@
 "use client";
 
+import { ActionErrorText } from "@/components/social/session-expired";
+
 /** A labelled on/off switch row used by the autosaving Settings blocks. */
 export function Toggle({
   label,
@@ -24,7 +26,7 @@ export function Toggle({
         {description ? <span className="block text-xs text-muted">{description}</span> : null}
         {error ? (
           <span role="alert" className="mt-1 block text-xs font-medium text-danger">
-            {error}
+            <ActionErrorText error={error} />
           </span>
         ) : null}
       </span>

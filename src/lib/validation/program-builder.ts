@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { parseDecimalInput } from "@/lib/training/set-plan";
+import type { ProgressionStrategy } from "@/lib/training/progression";
 
 /**
  * One set of bounds for the program builder, shared by the number boxes and
@@ -41,8 +42,26 @@ const bounded = (field: BuilderNumberField) => {
   return BUILDER_LIMITS[field].step === 1 ? n.int() : n;
 };
 
+export const PROGRESSION_STRATEGIES = [
+  "DOUBLE",
+  "LINEAR_LOAD",
+  "REPETITION",
+  "RIR_BASED",
+  "MANUAL",
+] as const satisfies readonly ProgressionStrategy[];
+
+/**
+ * Prescription the builder shows no box for but carries along, so a
+ * duplicated row keeps it. Only ever used to create a row — saving never
+ * writes these onto an existing one — and a bad value is dropped rather than
+ * blocking the save, since the user could not fix it on screen.
+ */
+const carried = <T extends z.ZodType>(schema: T) => schema.nullable().optional().catch(undefined);
+
 export const builderExerciseSchema = z
   .object({
+    /** The saved row's id (UserProgramExercise), so a save updates it in place. */
+    id: z.string().min(1).max(64).optional(),
     exerciseId: z.string().min(1).max(64),
     exerciseName: z.string().max(200).optional(),
     groupKey: z.string().max(24).nullable(),
@@ -54,6 +73,10 @@ export const builderExerciseSchema = z
     warmupSets: bounded("warmupSets"),
     loadTargetKg: z.coerce.number().min(0).max(2000).nullable(),
     notes: z.string().max(2000).nullable(),
+    rpeTarget: carried(z.number().min(0).max(10)),
+    tempo: carried(z.string().max(32)),
+    progressionStrategy: carried(z.enum(PROGRESSION_STRATEGIES)),
+    loadIncrementKg: carried(z.number().min(0).max(100)),
   })
   .refine((ex) => ex.repMin <= ex.repMax, { path: ["repMin"], params: { rule: "rep-range" } });
 

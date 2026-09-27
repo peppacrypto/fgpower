@@ -28,10 +28,23 @@ export default async function PublicTemplateDetailPage({ params }: PageProps<"/p
         template={template}
         scienceHref="/science"
         actions={
-          <Button variant="strong" size="lg" asChild>
-            <Link href="/login">
-              Iniciar com Google
-              <ArrowRight className="size-4" />
+          // Signing in keeps the choice: login → (onboarding →) this program's page in the app.
+          // Full width and wrapping on a phone: at 320px it ran past the masthead's padding.
+          <Button
+            variant="strong"
+            size="lg"
+            asChild
+            className="h-auto min-h-13 w-full whitespace-normal py-3 text-center text-balance max-sm:px-4 sm:w-auto"
+          >
+            <Link href={`/login?next=${encodeURIComponent(`/app/programs/templates/${template.slug}`)}`}>
+              {/* The arrow rides the last word if the label wraps. */}
+              <span>
+                Começar este{" "}
+                <span className="whitespace-nowrap">
+                  programa
+                  <ArrowRight className="ml-2 inline-block align-[-0.15em]" />
+                </span>
+              </span>
             </Link>
           </Button>
         }

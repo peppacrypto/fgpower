@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getCurrentSession } from "@/lib/auth/require-user";
+import { hadSessionCookie } from "@/lib/auth/session-cookie";
+import { loginAgainHref, SESSION_EXPIRED_ERROR } from "@/lib/auth/session-expired";
 import { getPublicProfile, getUserPublicActivities } from "@/lib/data/social";
 import { Avatar } from "@/components/ui/misc";
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +12,7 @@ import { Wordmark } from "@/components/brand/logo";
 import { FollowButton } from "./follow-button";
 import type { WorkoutActivitySummary } from "@/lib/social/activity-summary";
 import Link from "next/link";
+import { formatNumber, pluralWord } from "@/lib/utils/format";
 
 export async function generateMetadata({ params }: PageProps<"/u/[username]">): Promise<Metadata> {
   const { username } = await params;
@@ -28,6 +31,10 @@ export default async function PublicProfilePage({ params }: PageProps<"/u/[usern
   // Signed-out visitors (usually from a shared link) sign in and land back here.
   const returnTo = `/u/${profile.username ?? username}`;
   const signInHref = `/login?next=${encodeURIComponent(returnTo)}`;
+  // Signed out, but the browser still sent a session cookie: the session ended
+  // (another device signed out, or it expired on the server) — typically
+  // found by a tap on Seguir, whose re-render lands here. Say so.
+  const sessionEnded = !viewerId && (await hadSessionCookie());
 
   return (
     <div className="flex min-h-dvh flex-col bg-background">
@@ -40,9 +47,9 @@ export default async function PublicProfilePage({ params }: PageProps<"/u/[usern
       <main className="mx-auto w-full max-w-xl flex-1 px-4 py-8 sm:px-6">
         <div className="flex items-center gap-4">
           <Avatar src={profile.image} name={profile.name} size={72} />
-          <div className="flex-1">
+          <div className="min-w-0 flex-1">
             <h1 className="text-xl font-bold">{profile.name}</h1>
-            <p className="text-sm text-muted">@{profile.username}</p>
+            <p className="truncate text-sm text-muted">@{profile.username}</p>
           </div>
         </div>
 
@@ -50,11 +57,11 @@ export default async function PublicProfilePage({ params }: PageProps<"/u/[usern
 
         <div className="mt-3 flex gap-4 text-sm text-muted">
           <span>
-            <strong className="text-foreground">{profile.followerCount}</strong>{" "}
-            {profile.followerCount === 1 ? "seguidor" : "seguidores"}
+            <strong className="text-foreground">{formatNumber(profile.followerCount, 0)}</strong>{" "}
+            {pluralWord(profile.followerCount, "seguidor", "seguidores")}
           </span>
           <span>
-            <strong className="text-foreground">{profile.followingCount}</strong> seguindo
+            <strong className="text-foreground">{formatNumber(profile.followingCount, 0)}</strong> seguindo
           </span>
         </div>
 
@@ -75,9 +82,16 @@ export default async function PublicProfilePage({ params }: PageProps<"/u/[usern
           </div>
         ) : null}
         {!viewerId ? (
-          <div className="mt-4">
+          <div className="mt-4 flex flex-col items-start gap-2">
+            {sessionEnded ? (
+              <p role="alert" className="border-l-2 border-l-danger bg-danger-soft px-3.5 py-2.5 text-sm text-danger">
+                {SESSION_EXPIRED_ERROR}
+              </p>
+            ) : null}
             <Button asChild>
-              <Link href={signInHref}>Entre para seguir</Link>
+              <Link href={sessionEnded ? loginAgainHref(returnTo) : signInHref}>
+                {sessionEnded ? "Entrar de novo" : "Entre para seguir"}
+              </Link>
             </Button>
           </div>
         ) : null}

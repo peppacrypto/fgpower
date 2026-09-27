@@ -7,6 +7,7 @@ import { formatAppDate } from "@/lib/training/week";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/misc";
+import { formatDuration, plural } from "@/lib/utils/format";
 import { parsePageParam } from "../params";
 
 export const metadata: Metadata = { title: "Todo o histórico" };
@@ -33,7 +34,7 @@ export default async function AllHistoryPage({ searchParams }: PageProps<"/app/h
         <div className="mt-6 flex flex-col gap-2">
           {items.map((s) => (
             <Link key={s.id} href={`/app/workout/${s.id}/summary`}>
-              <Card className="transition-colors hover:border-accent/50">
+              <Card className="is-link">
                 <CardContent className="flex items-center justify-between gap-3 py-3.5">
                   <div className="min-w-0">
                     <p className="text-sm font-semibold">{s.name}</p>
@@ -42,7 +43,8 @@ export default async function AllHistoryPage({ searchParams }: PageProps<"/app/h
                     </p>
                   </div>
                   <p className="shrink-0 whitespace-nowrap text-xs text-muted">
-                    {s.totalWorkingSets ?? 0} {s.totalWorkingSets === 1 ? "série" : "séries"}
+                    {s.durationSeconds ? `${formatDuration(s.durationSeconds)} · ` : ""}
+                    {plural(s.totalWorkingSets ?? 0, "série", "séries")}
                   </p>
                 </CardContent>
               </Card>
