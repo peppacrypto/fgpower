@@ -3,7 +3,9 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { Play } from "lucide-react";
 import { GArrow } from "@/components/ui/glyph";
-import { requireUser } from "@/lib/auth/require-user";
+import { getCurrentSession, requireUser } from "@/lib/auth/require-user";
+import { prisma } from "@/lib/db";
+import { NOT_FOUND_TITLE } from "@/components/ui/not-found-panel";
 import { Button } from "@/components/ui/button";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { SectionHead } from "@/components/ui/section-head";
@@ -11,6 +13,7 @@ import { InlineActionForm } from "@/components/workout/inline-action-form";
 import { startAdHocWorkoutSession } from "@/lib/actions/workouts";
 import { describeRecord, type RecordLike } from "@/lib/training/personal-records-core";
 import { adviceInSeconds, formatSet, isTimedHold } from "@/lib/training/set-plan";
+import { formatSpTime } from "@/lib/training/stale";
 import { formatDuration, formatKg, formatNumber, formatVolume, plural } from "@/lib/utils/format";
 import { cn } from "@/lib/utils/cn";
 import { isWorkoutMilestone } from "@/lib/programming/milestones";
@@ -19,8 +22,19 @@ import { InstallAppCard } from "@/components/pwa/install-app-card";
 import { formatDayNumber, formatSpShortDate, type LastTimeDelta } from "./dossier";
 import { loadWorkoutSummary, type WorkoutSummary } from "./summary-data";
 import { ShareWorkoutForm } from "./share-workout-form";
+import { SummaryMenu } from "./summary-menu";
+import { KeepSwapButton } from "./keep-swap-button";
+import { ClearParams } from "@/app/app/today/clear-params";
 
-export const metadata: Metadata = { title: "Resumo do treino" };
+export async function generateMetadata({ params }: PageProps<"/app/workout/[sessionId]/summary">): Promise<Metadata> {
+  const { sessionId } = await params;
+  const auth = await getCurrentSession();
+  const workout = auth
+    ? await prisma.workoutSession.findUnique({ where: { id: sessionId }, select: { name: true, userId: true } })
+    : null;
+  // "Resumo · Segunda — Superior" in the tab and the app switcher (W-172).
+  return workout && workout.userId === auth?.user.id ? { title: `Resumo · ${workout.name}` } : { title: NOT_FOUND_TITLE };
+}
 
 /** Mono micro-caps: the dossier's field labels. */
 const FIELD = "font-mono text-[10px] font-bold uppercase tracking-[0.16em]";
@@ -31,8 +45,9 @@ const FIELD = "font-mono text-[10px] font-bold uppercase tracking-[0.16em]";
  * what to aim for next, and — for the latest workout — the week and the next
  * workout with a strong way into it.
  */
-export default async function WorkoutSummaryPage({ params }: PageProps<"/app/workout/[sessionId]/summary">) {
+export default async function WorkoutSummaryPage({ params, searchParams }: PageProps<"/app/workout/[sessionId]/summary">) {
   const { sessionId } = await params;
+  const corrected = (await searchParams).corrigido === "1";
   const user = await requireUser();
 
   const data = await loadWorkoutSummary(user.id, sessionId);
@@ -42,7 +57,7 @@ export default async function WorkoutSummaryPage({ params }: PageProps<"/app/wor
   if (data.status !== "COMPLETED") notFound();
 
   // `next` and `blockDone` are only there for the latest workout (see loadWorkoutSummary).
-  const { session, ordinal, exercises, recordGroups, allBaseline, share, next, blockDone } = data;
+  const { session, ordinal, exercises, recordGroups, allBaseline, share, next, blockDone, correctableUntil, fresh } = data;
   // Program weeks as the block counts them: a short entry week is its own thing, never "Semana 14/13".
   const counted = session.countedWeek;
   const week =
@@ -72,22 +87,40 @@ export default async function WorkoutSummaryPage({ params }: PageProps<"/app/wor
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-6 sm:px-6 sm:py-10">
-      {/* Masthead */}
-      <p className={cn(FIELD, "flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] tracking-[0.14em] text-success")}>
-        <span>Treino concluído</span>
-        <span aria-hidden className="text-muted">
-          ·
-        </span>
-        <span>Salvo no histórico ✓</span>
-      </p>
-      <p className={cn(FIELD, "mt-3 text-muted")}>
-        Treino nº {ordinal} · {formatSpShortDate(session.finishedAt)}
-        {week ? ` · ${week}` : ""}
-      </p>
-      <h1 className="text-display mt-1.5 text-3xl font-extrabold tracking-tight sm:text-4xl">{session.name}</h1>
-      <p className="mt-2 text-sm tabular-nums text-muted">{stats.join(" · ")}</p>
-      {ordinal === 1 && next ? <p className="mt-3 text-sm">{firstSessionLine(exercises)}</p> : null}
-      {milestone ? <DossierStamp ordinal={ordinal} /> : null}
+      {corrected ? <ClearParams keys={["corrigido"]} /> : null}
+      {/* Masthead (W-098): the dossier's raised panel with its accent rule, like Today's heroes. */}
+      <header className="relative panel-raised" data-summary-masthead>
+        <span className="absolute left-0 top-0 h-full w-1.5 bg-accent" aria-hidden />
+        <div className="py-5 pl-6 pr-3 sm:py-7 sm:pl-8 sm:pr-5">
+          <div className="flex items-start justify-between gap-3">
+            <p className={cn(FIELD, "min-w-0 pt-1 text-xs tracking-[0.18em] text-accent")}>
+              Treino concluído · <span className="whitespace-nowrap">{formatSpShortDate(session.finishedAt)}</span>
+            </p>
+            {correctableUntil ? (
+              <SummaryMenu
+                sessionId={session.id}
+                sessionName={session.name}
+                until={formatSpShortDate(correctableUntil)}
+                untilTime={formatSpTime(correctableUntil)}
+                latest={fresh}
+              />
+            ) : null}
+          </div>
+          <p className={cn(FIELD, "mt-2 text-xs tracking-[0.14em] text-muted")}>
+            Treino nº {ordinal}
+            {week ? ` · ${week}` : ""}
+          </p>
+          <h1 className="text-display mt-1.5 text-3xl font-extrabold tracking-tight wrap-break-word sm:text-4xl">
+            {session.name}
+          </h1>
+          <p className="mt-2 text-sm tabular-nums text-muted">{stats.join(" · ")}</p>
+          <p role="status" className={cn(FIELD, "mt-3 text-xs tracking-[0.14em] text-success")}>
+            {corrected ? "Correções salvas · recordes recalculados ✓" : "Salvo no histórico ✓"}
+          </p>
+          {ordinal === 1 && next ? <p className="mt-3 text-sm">{firstSessionLine(exercises)}</p> : null}
+          {milestone ? <DossierStamp ordinal={ordinal} /> : null}
+        </div>
+      </header>
 
       {/* Who sees it — near the top, compact; the workout itself is already saved. */}
       <section aria-label="Compartilhar treino" className="mt-5 border-y border-border py-3">
@@ -132,8 +165,20 @@ export default async function WorkoutSummaryPage({ params }: PageProps<"/app/wor
             <div key={ex.logId} className="reg-frame p-4">
               <div className="flex items-baseline gap-3">
                 <span className="w-5 shrink-0 font-mono text-xs text-foreground/30">{String(i + 1).padStart(2, "0")}</span>
-                <p className="min-w-0 flex-1 text-sm font-semibold">{ex.name}</p>
+                <p className="min-w-0 flex-1 text-sm font-semibold wrap-break-word">{ex.name}</p>
               </div>
+              {ex.swap ? (
+                <div className="mt-1 flex flex-wrap items-center gap-x-3 pl-8 text-xs text-muted" data-swap>
+                  <span>
+                    <span className="font-mono font-bold uppercase tracking-[0.12em]">Trocado</span> · no lugar de{" "}
+                    {ex.swap.fromName}
+                  </span>
+                  {/* The same element either way: the refresh after "Usar no programa" keeps its confirmation. */}
+                  {next && (ex.swap.canUseInProgram || ex.swap.inProgram) ? (
+                    <KeepSwapButton exerciseLogId={ex.logId} inProgram={ex.swap.inProgram} />
+                  ) : null}
+                </div>
+              ) : null}
               <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 pl-8 font-mono text-sm tabular-nums text-muted">
                 {ex.sets.map((s) => (
                   <span key={s.id} className={s.isExtra ? "text-foreground/70" : undefined}>

@@ -120,14 +120,14 @@ export function RecommendedPanel({
           <div className="mt-4 flex flex-wrap gap-x-5">
             <Link
               href="/app/programs"
-              className="inline-flex min-h-10 items-center gap-1 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
+              className="inline-flex min-h-11 items-center gap-1 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
             >
               Ver todos os programas
               <GArrow className="size-3" />
             </Link>
             <Link
               href="/app/programs/new"
-              className="inline-flex min-h-10 items-center font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted hover:text-foreground"
+              className="inline-flex min-h-11 items-center font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted hover:text-foreground"
             >
               Criar do zero
             </Link>

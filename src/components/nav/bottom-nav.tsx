@@ -78,8 +78,10 @@ function TabFace({
       data-pending={pending ? "true" : undefined}
       data-lit={on ? "true" : undefined}
       className={cn(
-        "relative flex w-full flex-col items-center justify-center gap-1 text-[11px] font-medium transition-colors duration-100",
-        on ? "text-accent" : "text-muted",
+        // Lit is more than a hue (accent vs muted is ~1.1:1 in light mode):
+        // a bolder label and the keel below carry it for colour-blind eyes and in glare.
+        "relative flex w-full flex-col items-center justify-center gap-1 text-[11px] transition-colors duration-100",
+        on ? "font-bold text-accent" : "font-medium text-muted",
         pending && "bg-[var(--ink-3)]",
       )}
     >

@@ -52,12 +52,13 @@ test("first workout: saved and dated, one baseline line instead of records, next
   await recordSet(page, 3, "40", "9");
   await finishAndSave(page);
 
-  // Masthead: saved, numbered, dated, program week.
+  // Masthead: saved, dated, numbered, program week.
   await expect(page.getByText("Salvo no histórico ✓")).toBeVisible();
+  await expect(page.getByText(/^Treino concluído · (dom|seg|ter|qua|qui|sex|sáb) \d{2} [a-z]{3}$/)).toBeVisible();
   // A program started Thursday–Sunday is in its entry week, which isn't one of its 13.
-  await expect(
-    page.getByText(/^Treino nº 1 · (dom|seg|ter|qua|qui|sex|sáb) \d{2} [a-z]{3} · (Semana 1\/13|Semana de entrada)$/),
-  ).toBeVisible();
+  await expect(page.getByText(/^Treino nº 1 · (Semana 1\/13|Semana de entrada)$/)).toBeVisible();
+  // The tab says which workout this is (W-172).
+  await expect(page).toHaveTitle(/^Resumo · Quinta — Puxar \(moderado\) · FGPOWER$/);
   await expect(page.getByText(/3 séries de trabalho/)).toBeVisible();
   await expect(page.getByText("Primeira sessão registrada. Na próxima, sugerimos suas cargas.")).toBeVisible();
   await expectNoSideScroll(page);
@@ -106,7 +107,7 @@ test("first workout: saved and dated, one baseline line instead of records, next
   await recordSet(page, 3, "40", "12");
   await finishAndSave(page);
 
-  await expect(page.getByText(/^Treino nº 2 · /)).toBeVisible();
+  await expect(page.getByText(/^Treino nº 2\b/)).toBeVisible();
   await expect(page.getByText("Primeira sessão registrada", { exact: false })).toHaveCount(0);
   await expect(page.getByText(/^Marca inicial/)).toHaveCount(0);
   const records = page.getByRole("link").filter({ hasText: EXERCISE });
@@ -120,7 +121,7 @@ test("first workout: saved and dated, one baseline line instead of records, next
 
   // Opened later from the history, the first workout is a dated record: no "what's next".
   await page.goto(`/app/workout/${first}/summary`);
-  await expect(page.getByText(/^Treino nº 1 · /)).toBeVisible();
+  await expect(page.getByText(/^Treino nº 1\b/)).toBeVisible();
   await expect(page.getByText("Na próxima")).toHaveCount(0);
   await expect(page.getByText(/^Próximo treino/)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Ver histórico" })).toBeVisible();

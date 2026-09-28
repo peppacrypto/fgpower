@@ -75,8 +75,10 @@ test("editing the active program keeps the day that was trained marked as done",
   await page.goto("/app/programs");
   await page.getByRole("link", { name: /GD 1/ }).first().click();
   await page.getByRole("link", { name: "Editar" }).click();
-  await page.getByRole("button", { name: /Quinta/ }).first().click();
-  await page.getByRole("button", { name: "Mover dia para cima" }).click();
+  // The builder's day tabs (Batch 4): the day's "⋯" moves it.
+  await page.getByRole("tab", { name: /^Quinta/ }).click();
+  await page.getByRole("button", { name: /^Opções do dia Quinta/ }).click();
+  await page.getByRole("button", { name: "Mover dia para antes" }).click();
   await page.getByRole("button", { name: /Salvar/ }).first().click();
   await page.waitForTimeout(2_000);
 

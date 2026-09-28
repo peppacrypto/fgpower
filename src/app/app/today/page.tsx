@@ -53,6 +53,7 @@ import { ResumeProgramPanel } from "@/components/programs/resume-program-panel";
 import { formatSpDate, formatSpDaysAgo, spDaysBetween } from "@/lib/training/stale";
 import { restorePreviousProgram } from "@/lib/actions/programs";
 import { StaleSessionRow } from "./stale-session-row";
+import { ResumeWorkout } from "./resume-workout";
 import { ClearParams } from "./clear-params";
 import { BlockCompletedHero, InProgressBlock, NextWorkoutHero, RestDayHero, WeekCompleteHero } from "./heroes";
 import { ProgramCard, ThisWeekCard, streakText } from "./week-cards";
@@ -66,7 +67,9 @@ export const metadata: Metadata = { title: "Hoje" };
 const WEEKDAYS = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SÁB"];
 const MONTHS = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ"];
 /** One-time notice params, cleared from the URL once shown. */
-const NOTICE_PARAMS = ["ativado", "anterior", "descartado", "salvo", "retomado"];
+const NOTICE_PARAMS = ["ativado", "anterior", "descartado", "salvo", "retomado", "excluido"];
+/** A workout touched this recently is the one to go back to when the app reopens on Today (W-097). */
+const RESUME_WITHIN_MS = 3 * 60 * 60 * 1000;
 
 function greeting(hour: number) {
   if (hour < 12) return "Bom dia";
@@ -161,6 +164,12 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
   // still holds sets typed offline for it.
   const stale = inProgress.filter((s) => s.stale);
   const open = inProgress.filter((s) => !s.stale);
+  // The app reopened mid-workout (W-097): the first Today of the visit goes back to the one
+  // workout being logged in the last few hours — never over a one-time notice.
+  const resumable = open.filter(
+    (s) => s.hasData && s.lastActivityAt && now.getTime() - s.lastActivityAt.getTime() < RESUME_WITHIN_MS,
+  );
+  const resumeId = resumable.length === 1 && !NOTICE_PARAMS.some((k) => param(k) !== undefined) ? resumable[0].id : null;
 
   const firstName = (profile?.displayName ?? user.name).split(" ")[0];
 
@@ -303,6 +312,7 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
       <ClearParams keys={NOTICE_PARAMS} />
+      {resumeId ? <ResumeWorkout sessionId={resumeId} /> : null}
       {/* Masthead */}
       <div>
         <span className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-muted">{dateStr}</span>
@@ -319,6 +329,7 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
 
       {/* One-time outcome notices (the params are cleared once shown) */}
       {param("descartado") === "1" ? <Notice>Treino descartado.</Notice> : null}
+      {param("excluido") === "1" ? <Notice>Treino excluído do histórico.</Notice> : null}
       {saved?.finishedAt ? (
         <Notice>
           <span>Treino de {formatSpDate(saved.finishedAt)} salvo no histórico.</span>
@@ -610,7 +621,7 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
                   className="reg-frame flex flex-wrap items-center gap-x-3 gap-y-2 p-3"
                   data-active={suggested ? "true" : undefined}
                 >
-                  <span className="w-5 shrink-0 font-mono text-xs text-foreground/30">
+                  <span className="w-5 shrink-0 font-mono text-xs text-muted">
                     {String(day.dayIndex + 1).padStart(2, "0")}
                   </span>
                   <div className="min-w-[7rem] flex-1">
@@ -650,7 +661,8 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
               >
                 <Lettermark code="PR" className="size-5 shrink-0 text-[9px]" />
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-semibold">{pr.exercise.namePt}</p>
+                  {/* Two lines: variants share a long prefix and differ at the end ("… - Pegada Aberta"). */}
+                  <p className="line-clamp-2 text-sm font-semibold leading-snug wrap-break-word">{pr.exercise.namePt}</p>
                   <p className="truncate text-[11px] uppercase tracking-wider text-muted">
                     {prKinds(pr).join(" · ")}
                   </p>

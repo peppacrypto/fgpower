@@ -1,4 +1,4 @@
-import { Bone, BoneRow, SkeletonScreen, SkeletonTitle } from "@/components/ui/skeleton";
+import { Bone, BoneRow, SkeletonMasthead, SkeletonScreen } from "@/components/ui/skeleton";
 import { NestedSkeleton } from "@/components/ui/skeleton-client";
 import { AllHistorySkeleton } from "./all/loading";
 
@@ -6,7 +6,7 @@ import { AllHistorySkeleton } from "./all/loading";
 function HistorySkeleton() {
   return (
     <SkeletonScreen label="o histórico" className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
-      <SkeletonTitle>Histórico</SkeletonTitle>
+      <SkeletonMasthead kicker="Seus treinos" title="Histórico" lead={false} />
       <div className="reg-frame mt-6 px-3 pt-3 pb-4 sm:px-5">
         <div className="flex items-center justify-between">
           <Bone className="size-11" />

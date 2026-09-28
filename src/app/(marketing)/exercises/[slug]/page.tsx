@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { ExternalLink } from "lucide-react";
-import { GArrow, GLoad } from "@/components/ui/glyph";
+import { ChevronLeft, ExternalLink } from "lucide-react";
+import { GArrow } from "@/components/ui/glyph";
+import { TechniqueFrames } from "@/components/exercises/technique-frames";
 import { getCurrentSession } from "@/lib/auth/require-user";
 import { getExerciseBySlug, type ExerciseCard as ExerciseCardData } from "@/lib/data/exercises";
 import { parseExerciseContent, parseInstructions } from "@/lib/exercises/content";
@@ -38,10 +38,8 @@ export async function generateMetadata({ params }: PageProps<"/exercises/[slug]"
 
 export default async function PublicExerciseDetailPage({ params }: PageProps<"/exercises/[slug]">) {
   const { slug } = await params;
-  const session = await getCurrentSession();
+  const [session, exercise] = await Promise.all([getCurrentSession(), getExerciseBySlug(slug)]);
   if (session) redirect(`/app/exercises/${slug}`);
-
-  const exercise = await getExerciseBySlug(slug);
   if (!exercise) notFound();
 
   const content = parseExerciseContent(exercise.contentPt);
@@ -56,20 +54,15 @@ export default async function PublicExerciseDetailPage({ params }: PageProps<"/e
   return (
     <MarketingShell>
       <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16">
+      <Link
+        href="/exercises"
+        className="-mt-2 -ml-1 mb-2 inline-flex min-h-11 items-center gap-0.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted hover:text-foreground"
+      >
+        <ChevronLeft className="size-3.5" aria-hidden />
+        Exercícios
+      </Link>
       <div className="grid gap-6 sm:grid-cols-2">
-        <div className="flex gap-2 reg-frame">
-          {exercise.media.length > 0 ? (
-            exercise.media.map((m) => (
-              <div key={m.id} className="relative aspect-[3/4] flex-1">
-                <Image src={m.url} alt={exercise.namePt} fill className="object-cover" sizes="50vw" priority />
-              </div>
-            ))
-          ) : (
-            <div className="flex aspect-[3/4] w-full items-center justify-center text-muted">
-              <GLoad className="size-10" />
-            </div>
-          )}
-        </div>
+        <TechniqueFrames name={exercise.namePt} media={exercise.media} />
 
         <div className="flex flex-col gap-4">
           <h1 className="text-display text-2xl font-semibold">{exercise.namePt}</h1>
@@ -87,10 +80,12 @@ export default async function PublicExerciseDetailPage({ params }: PageProps<"/e
               <dt className="text-muted">Equipamento</dt>
               <dd className="font-medium">{exercise.equipment?.namePt ?? "Nenhum"}</dd>
             </div>
-            <div>
-              <dt className="text-muted">Padrão de movimento</dt>
-              <dd className="font-medium">{exercise.movementPattern?.namePt ?? "—"}</dd>
-            </div>
+            {exercise.movementPattern ? (
+              <div>
+                <dt className="text-muted">Padrão de movimento</dt>
+                <dd className="font-medium">{exercise.movementPattern.namePt}</dd>
+              </div>
+            ) : null}
             <div>
               <dt className="text-muted">Dificuldade</dt>
               <dd className="font-medium">{DIFFICULTY_LABEL[exercise.difficulty]}</dd>

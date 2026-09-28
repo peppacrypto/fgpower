@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Bell, BookOpen, Heart, History, Settings, ExternalLink } from "lucide-react";
+import { SectionHead } from "@/components/ui/section-head";
 import { GArrow, GCohort } from "@/components/ui/glyph";
 import { requireUser } from "@/lib/auth/require-user";
 import { getOwnIdentity, getProfile, getPublicProfileOrigin } from "@/lib/data/profile";
@@ -11,9 +12,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ExerciseCard } from "@/components/exercises/exercise-card";
-import { formatNumber, pluralWord } from "@/lib/utils/format";
+import { formatNumber, plural, pluralWord } from "@/lib/utils/format";
 import { publicProfileLabel } from "@/lib/validation/username";
-import { LogoutButton } from "./logout-button";
 
 export const metadata: Metadata = { title: "Perfil" };
 
@@ -43,20 +43,19 @@ export default async function ProfilePage() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-6 sm:px-6 sm:py-8">
+      {/* Masthead. Only the gear here: signing out lives in Configurações → Dados e conta. */}
       <div className="flex items-center gap-4">
         <Avatar src={user.image} name={name} size={64} />
         <div className="min-w-0 flex-1">
-          <h1 className="text-xl font-bold tracking-tight">{name}</h1>
-          {identity?.handle ? <p className="truncate text-sm text-muted">@{identity.handle}</p> : null}
+          <span className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-muted">Perfil</span>
+          <h1 className="text-display text-2xl font-extrabold [overflow-wrap:anywhere]">{name}</h1>
+          {identity?.handle ? <p className="truncate font-mono text-xs text-muted">@{identity.handle}</p> : null}
         </div>
-        <div className="flex shrink-0 items-center gap-2">
-          <Button variant="outline" size="icon" asChild>
-            <Link href="/app/settings" aria-label="Configurações">
-              <Settings className="size-4" />
-            </Link>
-          </Button>
-          <LogoutButton />
-        </div>
+        <Button variant="outline" size="icon" asChild className="shrink-0">
+          <Link href="/app/settings" aria-label="Configurações">
+            <Settings className="size-4" />
+          </Link>
+        </Button>
       </div>
 
       {profile?.bio ? <p className="mt-3 text-sm text-foreground/90">{profile.bio}</p> : null}
@@ -69,12 +68,15 @@ export default async function ProfilePage() {
       {username ? (
         <Link
           href={`/u/${username}`}
-          className="mt-3 inline-flex items-center gap-1 text-sm text-accent hover:underline"
+          className="mt-1 -mb-2 inline-flex min-h-11 items-center gap-1 text-sm font-medium text-accent underline decoration-[color-mix(in_oklab,var(--accent)_35%,transparent)] underline-offset-[3px] hover:decoration-accent"
         >
-          Ver perfil público <ExternalLink className="size-3.5" />
+          Ver perfil público <ExternalLink aria-hidden className="size-3.5" />
         </Link>
       ) : (
-        <Link href="/app/settings" className="mt-3 inline-block text-sm text-accent hover:underline">
+        <Link
+          href="/app/settings"
+          className="mt-1 -mb-2 inline-flex min-h-11 items-center text-sm font-medium text-accent underline decoration-[color-mix(in_oklab,var(--accent)_35%,transparent)] underline-offset-[3px] hover:decoration-accent"
+        >
           Escolha seu @usuário para ser encontrado e seguido
         </Link>
       )}
@@ -155,11 +157,12 @@ export default async function ProfilePage() {
         </Card>
       </div>
 
-      <div className="mt-8">
-        <h2 className="mb-3 flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-muted">
-          <Heart className="size-4" />
-          Favoritos
-        </h2>
+      <section className="mt-8">
+        <SectionHead
+          label="Favoritos"
+          count={favorites.length > 0 ? plural(favorites.length, "exercício", "exercícios") : undefined}
+          className="mb-3"
+        />
         {favorites.length === 0 ? (
           <div className="border-l-2 border-l-border-strong bg-surface-2 px-3.5 py-3 text-sm">
             <p className="font-medium">Nenhum exercício favoritado ainda.</p>
@@ -198,7 +201,7 @@ export default async function ProfilePage() {
             ))}
           </div>
         )}
-      </div>
+      </section>
     </div>
   );
 }

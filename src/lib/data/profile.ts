@@ -1,11 +1,16 @@
 import "server-only";
+import { cache } from "react";
 import { headers } from "next/headers";
 import { prisma } from "@/lib/db";
 import { publicProfileOrigin, RESERVED_USERNAMES, USERNAME_MAX, usernameCandidate } from "@/lib/validation/username";
 
-export async function getProfile(userId: string) {
+/**
+ * The user's Profile row. React cache(): the /app layout (onboarding gate)
+ * and most pages read it in the same render.
+ */
+export const getProfile = cache(async (userId: string) => {
   return prisma.profile.findUnique({ where: { userId } });
-}
+});
 
 export async function hasCompletedOnboarding(userId: string) {
   const profile = await getProfile(userId);

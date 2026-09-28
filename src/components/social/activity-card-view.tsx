@@ -70,33 +70,43 @@ export function ActivityCardView({
     });
   }
 
+  const detailsHref = `/app/activity/${activity.id}`;
+  const workout = activity.summary.workoutName;
+  // Signed in, the whole card opens the workout (a stretched "Ver detalhes"
+  // link); the profile link and FG sit above it and keep their own taps.
+  const stretched = !signInReturnTo;
+  const person = (
+    <>
+      <Avatar src={activity.user.image} name={activity.user.name} size={36} />
+      <span className="min-w-0 flex-1">
+        <span className="block truncate text-sm font-semibold">{activity.user.name}</span>
+        <span className="block text-xs text-muted">
+          {formatAppDate(activity.createdAt, { day: "2-digit", month: "short" })}
+        </span>
+      </span>
+    </>
+  );
+
   return (
-    <div className="reg-frame p-4">
-      <div className="flex items-center gap-2.5">
-        <Avatar src={activity.user.image} name={activity.user.name} size={36} />
-        <div className="flex-1 min-w-0">
-          <p className="truncate text-sm font-semibold">
-            {activity.user.username ? (
-              <Link href={`/u/${activity.user.username}`} className="hover:underline">
-                {activity.user.name}
-              </Link>
-            ) : (
-              activity.user.name
-            )}
-          </p>
-          <p className="text-xs text-muted">
-            {formatAppDate(activity.createdAt, { day: "2-digit", month: "short" })}
-          </p>
-        </div>
-      </div>
+    <article className={cn("reg-frame relative p-4", stretched && "is-link")} aria-label={`${activity.user.name}: ${workout}`}>
+      {activity.user.username ? (
+        <Link
+          href={`/u/${activity.user.username}`}
+          className="relative z-10 -my-1 flex min-h-11 items-center gap-2.5 hover:[&_span.font-semibold]:underline"
+        >
+          {person}
+        </Link>
+      ) : (
+        <div className="flex min-h-11 items-center gap-2.5">{person}</div>
+      )}
 
       {activity.caption ? <p className="mt-3 text-sm text-foreground/90">{activity.caption}</p> : null}
 
-      <div className="mt-3 rounded-[var(--radius-md)] bg-surface-2 p-3.5">
-        <div className="flex items-center justify-between">
-          <p className="font-semibold">{activity.summary.workoutName}</p>
+      <div className="mt-3 border-l-2 border-l-accent bg-surface-2 p-3.5">
+        <div className="flex items-center justify-between gap-3">
+          <p className="min-w-0 font-semibold [overflow-wrap:anywhere]">{workout}</p>
           {activity.summary.durationSeconds ? (
-            <span className="shrink-0 text-xs text-muted">{formatDuration(activity.summary.durationSeconds)}</span>
+            <span className="shrink-0 font-mono text-xs tabular-nums text-muted">{formatDuration(activity.summary.durationSeconds)}</span>
           ) : null}
         </div>
         <p className="mt-1 text-xs text-muted">
@@ -121,11 +131,11 @@ export function ActivityCardView({
         ) : null}
       </div>
 
-      <div className="mt-3 flex flex-wrap items-center gap-3">
+      <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1">
         {signInReturnTo ? (
           <Link
             href={`/login?next=${encodeURIComponent(signInReturnTo)}`}
-            className="flex items-center gap-1.5 rounded-[2px] border border-border px-3 py-1.5 text-sm font-semibold text-muted hover:bg-surface-2"
+            className="relative z-10 flex min-h-11 items-center gap-1.5 rounded-[2px] border border-border px-3 text-sm font-semibold text-muted hover:bg-surface-2"
           >
             <Heart className="size-4" />
             Entre para dar FG
@@ -136,27 +146,40 @@ export function ActivityCardView({
             type="button"
             disabled={pending || isOwn}
             aria-pressed={given}
-            aria-label={given ? `Remover FG (${fgCount})` : `Dar FG (${fgCount})`}
+            aria-label={
+              isOwn
+                ? `FGs no seu treino ${workout} (${fgCount})`
+                : given
+                  ? `Remover FG do treino ${workout} de ${activity.user.name} (${fgCount})`
+                  : `Dar FG no treino ${workout} de ${activity.user.name} (${fgCount})`
+            }
             onClick={toggleFg}
             className={cn(
-              "flex items-center gap-1.5 rounded-[2px] border px-3 py-1.5 text-sm font-semibold transition-colors",
+              "relative z-10 flex min-h-11 items-center gap-1.5 rounded-[2px] border px-3 text-sm font-semibold transition-colors",
               given ? "border-accent bg-accent-soft text-accent" : "border-border text-muted hover:bg-surface-2",
               isOwn && "opacity-50",
             )}
           >
             <Heart className="size-4" fill={given ? "currentColor" : "none"} />
-            FG {fgCount > 0 ? fgCount : ""}
+            FG {fgCount > 0 ? <span className="font-mono tabular-nums">{fgCount}</span> : ""}
           </button>
         )}
-        <Link href={`/app/activity/${activity.id}`} className="text-xs text-muted hover:text-foreground">
-          Ver detalhes
+        <Link
+          href={detailsHref}
+          className={cn(
+            "inline-flex min-h-11 items-center font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted hover:text-foreground",
+            // Stretched: its hit area is the whole card.
+            stretched && "after:absolute after:inset-0 after:content-['']",
+          )}
+        >
+          Ver detalhes<span className="sr-only">: {workout}</span>
         </Link>
         {error ? (
-          <p role="alert" className="basis-full text-xs text-danger">
+          <p role="alert" className="relative z-10 basis-full text-xs text-danger">
             {error}
           </p>
         ) : null}
       </div>
-    </div>
+    </article>
   );
 }

@@ -12,8 +12,8 @@ const ITEM =
   "flex min-h-11 w-full items-center justify-start px-3.5 text-left text-sm font-medium text-foreground hover:bg-surface-2";
 
 /**
- * The program page's "⋯": the actions that aren't the main one — Duplicar,
- * Arquivar and, for a program never trained, Excluir. Arquivar on the active
+ * The program page's "⋯": the actions that aren't the main one — Duplicar
+ * (opens the copy in the builder), Arquivar and, for a program never trained, Excluir. Arquivar on the active
  * program asks first ("Isto encerra o programa ativo e sua semana atual"), and
  * so does Excluir. Native <details> all the way down, so it opens and confirms
  * before the page has hydrated; a tap outside or Esc closes it.
@@ -140,12 +140,12 @@ function Confirm({
           {text}
         </p>
         <div className="flex flex-wrap gap-2">
-          <SubmitButton size="sm" variant={danger ? "danger" : "strong"} pendingLabel={pending}>
+          <SubmitButton size="sm" className="h-11" variant={danger ? "danger" : "strong"} pendingLabel={pending}>
             {confirm}
           </SubmitButton>
           <button
             type="button"
-            className="h-9 px-3.5 text-[13px] font-semibold hover:bg-surface-2"
+            className="h-11 px-3.5 text-[13px] font-semibold hover:bg-surface-2"
             onClick={(e) => {
               const details = e.currentTarget.closest("details");
               if (details) details.open = false;

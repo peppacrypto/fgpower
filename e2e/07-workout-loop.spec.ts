@@ -111,8 +111,16 @@ test("✓ starts the rest at once on a slow connection; the rest survives a relo
   expect(afterReload).toBeGreaterThan(left - 30);
   await expect(doneButton(page, 1)).toBeVisible();
 
-  // So does a trip to "Ver técnica" and back.
-  await Promise.all([page.waitForURL(/\/app\/exercises\//), page.getByRole("link", { name: "Ver técnica" }).click()]);
+  // "Ver técnica" opens over the workout: the rest keeps running behind it (W-025).
+  await page.getByRole("button", { name: "Ver técnica", exact: true }).click();
+  const technique = page.getByRole("dialog", { name: "Puxada Alta Unilateral no Pulley" });
+  await expect(technique).toBeVisible();
+  await expect(restBar(page)).toBeVisible();
+  // So does a trip to the full technique page and back.
+  await Promise.all([
+    page.waitForURL(/\/app\/exercises\//),
+    technique.getByRole("link", { name: "Ver página completa" }).click(),
+  ]);
   await page.goBack();
   await expect(page.getByText(/Séries do treino/).first()).toBeVisible({ timeout: 30_000 });
   await expect(restBar(page)).toBeVisible();
@@ -315,6 +323,9 @@ test("a workout left open days ago shows since when, and saves on its own day wi
   // First to last set: about 5 minutes, not 72 hours.
   expect(rows[0].durationSeconds).toBeGreaterThanOrEqual(60);
   expect(rows[0].durationSeconds).toBeLessThan(10 * 60);
+  // Dated days ago but saved just now: it can still be corrected for a day (W-088).
+  await page.getByRole("button", { name: "Opções do treino" }).click();
+  await expect(page.getByText(/^Correções até /)).toBeVisible();
 });
 
 test("finishing a workout left open as today's still times it by its sets, not by the days it stayed open", async ({

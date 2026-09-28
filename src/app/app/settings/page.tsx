@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { requireUser } from "@/lib/auth/require-user";
 import { getProfile, getPublicHandle, getPublicProfileOrigin } from "@/lib/data/profile";
 import { Card, CardContent } from "@/components/ui/card";
+import { Masthead } from "@/components/ui/masthead";
+import { SectionHead } from "@/components/ui/section-head";
 import { ProfileForm } from "./profile-form";
 import { RoutineForm } from "./routine-form";
 import { WorkoutPreferencesForm } from "./workout-preferences-form";
@@ -22,7 +24,7 @@ export default async function SettingsPage() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-6 sm:px-6 sm:py-8">
-      <h1 className="text-2xl font-bold tracking-tight">Configurações</h1>
+      <Masthead kicker="Sua conta" title="Configurações" />
 
       <Section title="Perfil">
         <ProfileForm
@@ -91,8 +93,8 @@ function Section({
 }) {
   return (
     <section id={id} className="mt-8 scroll-mt-4">
-      <h2 className="text-sm font-bold uppercase tracking-wide text-muted">{title}</h2>
-      {description ? <p className="mt-0.5 text-xs text-muted">{description}</p> : null}
+      <SectionHead label={title} />
+      {description ? <p className="mt-1.5 text-xs text-muted">{description}</p> : null}
       <Card className="mt-3">
         <CardContent className="pt-5">{children}</CardContent>
       </Card>

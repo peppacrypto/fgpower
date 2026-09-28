@@ -91,7 +91,7 @@ export default async function ProgressPage({ searchParams }: PageProps<"/app/pro
         {/* Every past workout, by date and on the calendar. */}
         <Link
           href="/app/history"
-          className="-my-2 inline-flex items-center gap-1 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
+          className="-my-2 inline-flex min-h-11 items-center gap-1 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
         >
           Histórico
           <GArrow className="size-3" />

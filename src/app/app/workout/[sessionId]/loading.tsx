@@ -4,6 +4,7 @@ import { NestedSkeleton } from "@/components/ui/skeleton-client";
 import { LimitationsBone } from "./limitations-bone";
 import { LIMITATIONS_ECHO_COOKIE, echoPx } from "./limitations-echo";
 import { SummarySkeleton } from "./summary/loading";
+import { EditSetsSkeleton } from "./summary/editar/loading";
 
 /** The set table's columns (set-table.tsx GRID): Série · kg · reps · RIR · ✓. */
 const GRID = "grid grid-cols-[2.25rem_minmax(0,1fr)_minmax(0,1fr)_3rem_2.75rem] items-center gap-1.5";
@@ -62,11 +63,12 @@ function WorkoutSkeleton({ limitationsPx }: { limitationsPx: number }) {
           </div>
           <Bone className="size-11 shrink-0" />
         </div>
-        {/* Ver técnica · Pular exercício · Nota */}
+        {/* Ver técnica · Trocar · Pular exercício · Nota */}
         <div className="mt-3 flex h-11 items-center gap-4">
+          <Bone className="h-3.5 w-20" />
+          <Bone className="h-3.5 w-14" />
           <Bone className="h-3.5 w-24" />
-          <Bone className="h-3.5 w-28" />
-          <Bone className="h-3.5 w-12" />
+          <Bone className="h-3.5 w-10" />
         </div>
         {/* The program's note (folded to two lines). */}
         <Bone className="mt-3 h-12 w-full" />
@@ -85,7 +87,7 @@ function WorkoutSkeleton({ limitationsPx }: { limitationsPx: number }) {
           </div>
           {/* Séries do treino · N */}
           <Bone className="mb-3 h-3 w-36" />
-          <div className={`${GRID} px-1 pb-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted`}>
+          <div className={`${GRID} px-1 pb-1.5 font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted`}>
             <span>Série</span>
             <span className="text-center">kg</span>
             <span className="text-center">reps</span>
@@ -120,7 +122,10 @@ export default async function WorkoutLoading() {
   return (
     <NestedSkeleton
       own={<WorkoutSkeleton limitationsPx={limitationsPx} />}
-      routes={[["/app/workout/*/summary", <SummarySkeleton key="summary" />]]}
+      routes={[
+        ["/app/workout/*/summary", <SummarySkeleton key="summary" />],
+        ["/app/workout/*/summary/editar", <EditSetsSkeleton key="edit" />],
+      ]}
     />
   );
 }

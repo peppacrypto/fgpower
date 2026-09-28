@@ -40,7 +40,7 @@
   --accent-soft: #eef3d8;
   --accent-strong: #b4e600;
   --accent-strong-foreground: #14210a;
-  --danger: #d8322f;
+  --danger: #c0282a; /* 5.1:1 on --danger-soft, 5.9:1 on white (AA for the small print that explains a deletion) */
   --danger-soft: #fdeceb;
   --danger-foreground: #ffffff;
   --success: #077a48;
@@ -321,6 +321,24 @@ body {
     background: var(--surface-2);
     border-top: 2px solid var(--rule-heavy);
     border-bottom: 2px solid var(--rule-heavy);
+  }
+
+  /* HIT — a touch target of at least 44×44 px around a control that looks
+     smaller (a 36px sm button, a one-line text link): an invisible ::after
+     centered on it takes the tap. Position is a component default, so an
+     `absolute` utility on the same element still wins. Not for .reg-frame,
+     which draws its corner marks with ::after. */
+  .hit {
+    position: relative;
+  }
+  .hit::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
   }
 
   /* TAGS — editorial, square, no pill. Meaning carried by shape + label. */

@@ -41,7 +41,9 @@ export async function shareWorkoutSession(input: ShareWorkoutInput): Promise<{ a
 
   await prisma.workoutSession.update({
     where: { id: session.id },
-    data: { visibility, showDetailedLoads, caption },
+    // Sharing isn't an edit: keep updatedAt so the 24 h correction window
+    // (summary "Editar séries") still counts from when the workout was saved.
+    data: { visibility, showDetailedLoads, caption, updatedAt: session.updatedAt },
   });
 
   const summary = buildWorkoutActivitySummary(session, showDetailedLoads);

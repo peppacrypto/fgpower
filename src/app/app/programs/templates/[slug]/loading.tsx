@@ -1,4 +1,6 @@
 import { Bone, BoneLines, SkeletonScreen } from "@/components/ui/skeleton";
+import { NestedSkeleton } from "@/components/ui/skeleton-client";
+import { AdaptSkeleton } from "./adapt/loading";
 
 /** A program's dossier: the masthead band with its stats and actions, then the day sheets. */
 export function TemplateSkeleton() {
@@ -46,4 +48,9 @@ export function TemplateSkeleton() {
   );
 }
 
-export default TemplateSkeleton;
+/** Also the fallback for "Adaptar" below it, until that page's own arrives. */
+export default function TemplateLoading() {
+  return (
+    <NestedSkeleton own={<TemplateSkeleton />} routes={[["/app/programs/templates/*/adapt", <AdaptSkeleton key="adapt" />]]} />
+  );
+}

@@ -6,6 +6,9 @@ import { getFeed } from "@/lib/data/social";
 import { ActivityCard } from "@/components/social/activity-card";
 import { EmptyState } from "@/components/ui/misc";
 import { Button } from "@/components/ui/button";
+import { Masthead } from "@/components/ui/masthead";
+import { SectionHead } from "@/components/ui/section-head";
+import { plural } from "@/lib/utils/format";
 import type { WorkoutActivitySummary } from "@/lib/social/activity-summary";
 
 export const metadata: Metadata = { title: "Feed" };
@@ -16,15 +19,18 @@ export default async function FeedPage() {
 
   return (
     <div className="mx-auto max-w-xl px-4 py-6 sm:px-6 sm:py-8">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">Feed</h1>
-        <Button variant="outline" size="sm" asChild>
-          <Link href="/app/discover">
-            <GCohort className="size-4" />
-            Descobrir
-          </Link>
-        </Button>
-      </div>
+      <Masthead
+        kicker="Quem você segue"
+        title="Feed"
+        action={
+          <Button variant="outline" size="sm" asChild>
+            <Link href="/app/discover">
+              <GCohort className="size-4" />
+              Descobrir
+            </Link>
+          </Button>
+        }
+      />
 
       {items.length === 0 ? (
         <div className="mt-8">
@@ -40,7 +46,9 @@ export default async function FeedPage() {
           />
         </div>
       ) : (
-        <div className="mt-6 flex flex-col gap-4">
+        <section className="mt-8">
+          <SectionHead label="Treinos recentes" count={plural(items.length, "atividade", "atividades")} />
+          <div className="mt-4 flex flex-col gap-4">
           {items.map((a) => (
             <ActivityCard
               key={a.id}
@@ -58,7 +66,8 @@ export default async function FeedPage() {
               }}
             />
           ))}
-        </div>
+          </div>
+        </section>
       )}
     </div>
   );

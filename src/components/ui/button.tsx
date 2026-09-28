@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils/cn";
 // weight and press down on :active; text variants use a measured underline.
 // Outline is a faint ink plate over a visible foreground keel (≥3:1 — it must
 // read as a button, not a heading) that turns accent on hover/press.
+// `sm` keeps its 36px look but takes a 44px touch target (.hit, globals.css).
 const buttonVariants = cva(
   "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-none text-sm font-semibold tracking-[-0.01em] transition-[background-color,color,box-shadow,transform] duration-150 disabled:pointer-events-none disabled:opacity-40 [&_svg]:size-4 [&_svg]:shrink-0",
   {
@@ -26,7 +27,7 @@ const buttonVariants = cva(
         link: "h-auto px-0 bg-transparent text-accent underline decoration-2 underline-offset-[3px] decoration-[color-mix(in_oklab,var(--accent)_35%,transparent)] hover:decoration-accent",
       },
       size: {
-        sm: "h-9 px-3.5 text-[13px]",
+        sm: "hit h-9 px-3.5 text-[13px]",
         md: "h-11 px-5",
         lg: "h-13 px-7 text-base",
         icon: "size-11",

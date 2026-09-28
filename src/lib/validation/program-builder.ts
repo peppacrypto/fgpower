@@ -27,8 +27,50 @@ export const BUILDER_FIELD_LABELS: Record<BuilderNumberField, string> = {
   repMax: "Rep. máx",
   rirTarget: "RIR",
   restSeconds: "Descanso (s)",
-  warmupSets: "Aquec.",
+  warmupSets: "Aquecimento",
 };
+
+/** The rest chips (seconds): people think in "2 min", not "120". */
+export const REST_PRESETS = [60, 90, 120, 150, 180, 240] as const;
+
+/** 120 → "2:00", 90 → "1:30", 45 → "0:45". */
+export function formatRestClock(seconds: number): string {
+  const s = Math.max(0, Math.round(seconds));
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+}
+
+export interface Prescription {
+  sets: number;
+  repMin: number;
+  repMax: number;
+  rirTarget: number | null;
+  restSeconds: number;
+  warmupSets: number;
+}
+
+/**
+ * What a newly added exercise starts with, by its mechanics: a compound lift
+ * heavier and with longer rests (and one ramp-up set), an isolation lighter
+ * and closer to failure with shorter rests. A calf raise and a deadlift no
+ * longer both start at 3×8–12 / 120 s. Unknown mechanics keep that old middle.
+ */
+export function defaultPrescription(mechanics: string | null | undefined): Prescription {
+  if (mechanics === "COMPOUND") return { sets: 3, repMin: 6, repMax: 10, rirTarget: 2, restSeconds: 150, warmupSets: 1 };
+  if (mechanics === "ISOLATION") return { sets: 3, repMin: 10, repMax: 15, rirTarget: 1, restSeconds: 90, warmupSets: 0 };
+  return { sets: 3, repMin: 8, repMax: 12, rirTarget: 2, restSeconds: 120, warmupSets: 0 };
+}
+
+/** A row's prescription in one line: "3 × 8–12 · RIR 2 · 2:00 · +1 aquec.". */
+export function prescriptionLine(p: Prescription): string {
+  const reps = p.repMin === p.repMax ? `${p.repMin}` : `${p.repMin}–${p.repMax}`;
+  const rir = p.rirTarget === null ? null : `RIR ${String(p.rirTarget).replace(".", ",")}`;
+  const warmup = p.warmupSets > 0 ? `+${p.warmupSets} aquec.` : null;
+  return [`${p.sets} × ${reps}`, rir, formatRestClock(p.restSeconds), warmup].filter(Boolean).join(" · ");
+}
+
+/** Longest day focus ("Peito e tríceps, pesado") — matches the save schema. */
+export const DAY_FOCUS_MAX = 200;
+export const EXERCISE_NOTE_MAX = 2000;
 
 /**
  * The program's own numbers (the builder header's stat chips). Weekly
@@ -89,7 +131,7 @@ export const builderExerciseSchema = z
     restSeconds: bounded("restSeconds"),
     warmupSets: bounded("warmupSets"),
     loadTargetKg: z.coerce.number().min(0).max(2000).nullable(),
-    notes: z.string().max(2000).nullable(),
+    notes: z.string().max(EXERCISE_NOTE_MAX).nullable(),
     rpeTarget: carried(z.number().min(0).max(10)),
     tempo: carried(z.string().max(32)),
     progressionStrategy: carried(z.enum(PROGRESSION_STRATEGIES)),
@@ -106,7 +148,7 @@ export const builderProgramSchema = z
         z.object({
           id: z.string().max(64).optional(),
           name: z.string().max(DAY_NAME_MAX),
-          focus: z.string().max(200).nullable(),
+          focus: z.string().max(DAY_FOCUS_MAX).nullable(),
           exercises: z.array(builderExerciseSchema).max(MAX_DAY_EXERCISES),
         }),
       )
@@ -195,6 +237,9 @@ function issueToFieldError(issue: z.core.$ZodIssue): BuilderFieldError {
   if (path[2] === "name") {
     return { dayIndex, exerciseIndex: null, field: "dayName", message: `Nome do dia longo demais (máx. ${DAY_NAME_MAX}).` };
   }
+  if (path[2] === "focus") {
+    return { dayIndex, exerciseIndex: null, field: "dayFocus", message: `Foco do dia longo demais (máx. ${DAY_FOCUS_MAX}).` };
+  }
   if (path[2] === "exercises" && path.length === 3) {
     return { dayIndex, exerciseIndex: null, field: "exercises", message: `Máximo de ${MAX_DAY_EXERCISES} exercícios por dia.` };
   }
@@ -205,6 +250,9 @@ function issueToFieldError(issue: z.core.$ZodIssue): BuilderFieldError {
   }
   if (field in BUILDER_LIMITS) {
     return { dayIndex, exerciseIndex, field, message: rangeMessage(field as BuilderNumberField) };
+  }
+  if (field === "notes") {
+    return { dayIndex, exerciseIndex, field, message: `Nota longa demais (máx. ${EXERCISE_NOTE_MAX} caracteres).` };
   }
   return { dayIndex, exerciseIndex, field, message: "Valor inválido." };
 }

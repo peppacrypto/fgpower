@@ -354,7 +354,7 @@ test("the builder sets workouts per week (at least one per day) and an optional 
   expect(sql(`SELECT "daysPerWeek" || '|' || "durationWeeks" FROM "UserProgram" WHERE id = '${programId}'`)).toBe("3|8");
 
   // Four days: at least four a week; fewer can't be picked.
-  for (let i = 0; i < 3; i++) await page.getByRole("button", { name: "Dia", exact: true }).click();
+  for (let i = 0; i < 3; i++) await page.getByRole("button", { name: "Adicionar dia", exact: true }).click();
   await expect(perWeek).toHaveValue("4");
   await expect(page.getByRole("button", { name: "Menos um treino por semana" })).toBeDisabled();
   await page.getByRole("button", { name: "Mais um treino por semana" }).click();

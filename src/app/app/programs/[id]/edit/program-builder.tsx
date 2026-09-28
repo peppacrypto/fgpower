@@ -12,13 +12,29 @@ import {
   TouchSensor,
   useSensor,
   useSensors,
+  type Announcements,
   type DragEndEvent,
+  type ScreenReaderInstructions,
 } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy, arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
-import { ArrowDown, ArrowLeft, ArrowUp, Plus, Trash2 } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowLeft,
+  ArrowRight,
+  ArrowUp,
+  CalendarRange,
+  Copy,
+  MoreHorizontal,
+  Plus,
+  Trash2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input, Textarea } from "@/components/ui/input";
+import { Input } from "@/components/ui/input";
+import { SubmitButton } from "@/components/ui/submit-button";
+import { InlineActionForm } from "@/components/workout/inline-action-form";
+import { SwitchProgramButton } from "@/components/programs/switch-program-button";
 import { cn } from "@/lib/utils/cn";
+import { plural } from "@/lib/utils/format";
 import {
   saveProgram,
   type BuilderDay,
@@ -26,23 +42,30 @@ import {
   type SaveProgramResult,
 } from "@/lib/actions/program-builder";
 import {
-  BUILDER_FIELD_LABELS,
   BUILDER_LIMITS,
+  DAY_FOCUS_MAX,
   DAY_NAME_MAX,
   MAX_DAY_EXERCISES,
   MAX_PROGRAM_DAYS,
   PROGRAM_DESCRIPTION_MAX,
   PROGRAM_LIMITS,
   PROGRAM_NAME_MAX,
+  defaultPrescription,
   frequencyRange,
   validateBuilderProgram,
   type BuilderFieldError,
-  type BuilderNumberField,
 } from "@/lib/validation/program-builder";
 import { parseDecimalInput } from "@/lib/training/set-plan";
-import { ExercisePicker, type PickerExercise } from "./exercise-picker";
-import { ExerciseRow, type RowErrors } from "./exercise-row";
+import { dayTokens } from "@/lib/programming/day-tokens";
+import { analyzeProgram, type ProgramRuleDay } from "@/lib/programming/rules";
+import { weeklyVolume } from "@/lib/programming/weekly-volume";
+import type { PickerExercise } from "@/lib/programming/exercise-facets";
+import { ExercisePicker } from "./exercise-picker";
+import { ExerciseRow, ROW_FIELD_LABELS, type RowErrors, type RowField } from "./exercise-row";
 import { LeaveSheet } from "./leave-sheet";
+import { ActionSheet, SheetItem } from "./action-sheet";
+import { VolumeStrip } from "./volume-strip";
+import { AutoGrowText } from "./auto-grow";
 
 interface EditableExercise extends BuilderExercise {
   rowId: string;
@@ -181,7 +204,7 @@ type ErrorRef =
   | { kind: "description" }
   | { kind: "cadence"; field: CadenceField }
   | { kind: "day"; key: string }
-  | { kind: "row"; rowId: string; field: BuilderNumberField }
+  | { kind: "row"; rowId: string; field: RowField }
   /** Form-level problem: only the next save clears it. */
   | { kind: "form" };
 
@@ -227,6 +250,31 @@ const NAME_REQUIRED = "Dê um nome ao programa.";
 
 const draftTime = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
 
+/** The sheet open over the builder: one row's actions, one day's, or a confirm. */
+type Sheet =
+  | { kind: "row"; rowId: string }
+  | { kind: "move"; rowId: string }
+  | { kind: "day" }
+  | { kind: "remove-day" }
+  | { kind: "discard" };
+
+/** The last removal/move, undoable for a few seconds from the save bar. */
+interface Undo {
+  id: number;
+  text: string;
+  restore: () => void;
+}
+const UNDO_MS = 6000;
+
+// Drag and drop, told in Portuguese (dnd-kit's defaults are English).
+const DRAG_INSTRUCTIONS: ScreenReaderInstructions = {
+  draggable:
+    "Para mover um exercício, pressione espaço ou Enter, use as setas para cima e para baixo e pressione espaço ou Enter de novo para soltar. Esc cancela.",
+};
+
+/** A new Undo id: a fresh toast restarts its timer even with the same text. */
+let undoSeq = 0;
+
 export function ProgramBuilder({
   programId,
   programName,
@@ -235,6 +283,18 @@ export function ProgramBuilder({
   programDurationWeeks,
   initialDays,
   version,
+  status,
+  sourceTemplate,
+  canDiscard,
+  exercises,
+  machineNotes,
+  equipmentAccess,
+  openSession,
+  switchFrom,
+  start,
+  startFromPage = false,
+  discard,
+  notice,
 }: {
   programId: string;
   programName: string;
@@ -245,6 +305,29 @@ export function ProgramBuilder({
   initialDays: BuilderDay[];
   /** The program's updatedAt (ISO), to tell whether a local draft predates a save. */
   version: string;
+  status: "DRAFT" | "ACTIVE" | "ARCHIVED";
+  /** The template it was copied from ("Cópia de GD 1 · o original não muda"). */
+  sourceTemplate: { name: string; slug: string } | null;
+  /** A draft never trained: "Descartar rascunho" deletes it. */
+  canDiscard: boolean;
+  /** Thumbnails, equipment and muscles of the exercises already in the program. */
+  exercises: PickerExercise[];
+  /** The user's machine notes, by exercise id. */
+  machineNotes: Record<string, string>;
+  /** Profile.equipmentAccess: the picker's default equipment chip. */
+  equipmentAccess: string | null;
+  /** This program's workout still open, which an edit never changes. */
+  openSession: { id: string; name: string } | null;
+  /** Another program running now: starting this one is a switch that ends it. */
+  switchFrom: { name: string; progress: string } | null;
+  /** startProgram, bound to this program. */
+  start: (formData: FormData) => void | Promise<void>;
+  /** Trained before (stopped or finished): after a save, send to its page, which offers resuming. */
+  startFromPage?: boolean;
+  /** discardDraft, bound to this program. */
+  discard: (formData: FormData) => void | Promise<void>;
+  /** How the builder was reached: a "Duplicar" copy or an "Adaptar" fork. */
+  notice: { kind: "copy" } | { kind: "adapted"; swaps: number } | null;
 }) {
   const router = useRouter();
   const [initial] = useState(() => {
@@ -264,11 +347,26 @@ export function ProgramBuilder({
   const [baseline, setBaseline] = useState(initial.key);
   const [activeDayIndex, setActiveDayIndex] = useState(0);
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [pickerMuscle, setPickerMuscle] = useState<string | null>(null);
   const [saving, startSaving] = useTransition();
-  const [savedOnce, setSavedOnce] = useState(false);
+  // "Salvo": saved in this visit — or a draft opened clean with exercises (an "Adaptar"
+  // copy lands already saved), which can start right away instead of asking for a save
+  // that changes nothing. Any edit, or unsaved edits from an earlier visit, clear it.
+  const [savedOnce, setSavedOnce] = useState(
+    () => status === "DRAFT" && !startFromPage && initial.days.some((d) => d.exercises.length > 0),
+  );
   const [errors, setErrors] = useState<BuilderErrors>(NO_ERRORS);
   const [draftOffer, setDraftOffer] = useState<StoredDraft | null>(null);
   const [leaveTo, setLeaveTo] = useState<string | null>(null);
+  const [meta, setMeta] = useState<Record<string, PickerExercise>>(() =>
+    Object.fromEntries(exercises.map((e) => [e.id, e])),
+  );
+  const [expanded, setExpanded] = useState<ReadonlySet<string>>(() => new Set());
+  const [sheet, setSheet] = useState<Sheet | null>(null);
+  const [undo, setUndo] = useState<Undo | null>(null);
+  const [noticeOpen, setNoticeOpen] = useState(notice !== null);
+  // A save moves an archived program back to the shelf as a draft.
+  const [currentStatus, setCurrentStatus] = useState(status);
 
   const current = useMemo(() => toState(name, description, days, cadence), [name, description, days, cadence]);
   const currentKey = useMemo(() => JSON.stringify(current), [current]);
@@ -284,8 +382,13 @@ export function ProgramBuilder({
   /** Mount-time draft read done; a draft still waiting for restore/discard. */
   const draftChecked = useRef(false);
   const pendingDraft = useRef<StoredDraft | null>(null);
-  /** CSS selector to focus after the next render (error field, moved row). */
+  /** CSS selector to focus after the next render (error field, moved row, the control a sheet came from). */
   const pendingFocus = useRef<string | null>(null);
+  const focusTries = useRef(0);
+  /** Row to bring on screen after the next render (the first one just added). */
+  const pendingScroll = useRef<string | null>(null);
+  /** Exercise ids whose details were already asked for. */
+  const metaRequested = useRef(new Set<string>());
   const idSeq = useRef(0);
   const newId = (prefix: string) => `${prefix}-n${++idSeq.current}`;
 
@@ -299,6 +402,21 @@ export function ProgramBuilder({
   );
 
   const activeDay = days[activeDayIndex] ?? days[0];
+  const exerciseName = (rowId: string) => {
+    for (const d of days) {
+      const ex = d.exercises.find((e) => e.rowId === rowId);
+      if (ex) return ex.exerciseName ?? meta[ex.exerciseId]?.namePt ?? "exercício";
+    }
+    return "exercício";
+  };
+  const announcements: Announcements = {
+    onDragStart: ({ active }) => `${exerciseName(String(active.id))} selecionado.`,
+    onDragOver: ({ active, over }) =>
+      over ? `${exerciseName(String(active.id))} sobre a posição de ${exerciseName(String(over.id))}.` : undefined,
+    onDragEnd: ({ active, over }) =>
+      over ? `${exerciseName(String(active.id))} solto na posição de ${exerciseName(String(over.id))}.` : `${exerciseName(String(active.id))} solto.`,
+    onDragCancel: ({ active }) => `Movimento cancelado. ${exerciseName(String(active.id))} voltou ao lugar.`,
+  };
 
   // One-time look for unsaved edits from an earlier visit.
   useEffect(() => {
@@ -307,6 +425,7 @@ export function ProgramBuilder({
       pendingDraft.current = stored;
       // eslint-disable-next-line react-hooks/set-state-in-effect -- syncing from an external store on mount
       setDraftOffer(stored);
+      setSavedOnce(false);
     } else if (stored) {
       clearDraft(programId);
     }
@@ -355,13 +474,62 @@ export function ProgramBuilder({
 
   useEffect(() => {
     const selector = pendingFocus.current;
-    if (!selector) return;
-    pendingFocus.current = null;
-    const el = document.querySelector<HTMLElement>(selector);
-    if (!el) return;
-    if (el.matches("input, textarea")) el.scrollIntoView({ block: "center" });
-    el.focus({ preventScroll: !el.matches("input, textarea") });
+    if (selector) {
+      const el = document.querySelector<HTMLElement>(selector);
+      // The target may appear a render later (a row opening to show an error,
+      // the save transition committing after its pending render): wait a few.
+      if (el || ++focusTries.current > 4) {
+        pendingFocus.current = null;
+        focusTries.current = 0;
+      }
+      if (el) {
+        if (el.matches("input, textarea")) el.scrollIntoView({ block: "center" });
+        el.focus({ preventScroll: !el.matches("input, textarea") });
+      }
+    }
+    const row = pendingScroll.current;
+    if (row) {
+      pendingScroll.current = null;
+      document.querySelector(`[data-row-id="${row}"]`)?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    }
   });
+
+  // The day tab in view when the day changes (the row scrolls sideways).
+  useEffect(() => {
+    document.getElementById(`day-tab-${activeDay?.key}`)?.scrollIntoView({ block: "nearest", inline: "nearest" });
+  }, [activeDay?.key]);
+
+  // "?copia=1" / "?adaptado=N" say it once: a reload doesn't bring the notice back.
+  useEffect(() => {
+    if (!notice || !window.location.search) return;
+    window.history.replaceState(window.history.state, "", window.location.pathname + window.location.hash);
+  }, [notice]);
+
+  // An undo offer lasts a few seconds.
+  useEffect(() => {
+    if (!undo) return;
+    const handle = setTimeout(() => setUndo((u) => (u?.id === undo.id ? null : u)), UNDO_MS);
+    return () => clearTimeout(handle);
+  }, [undo]);
+
+  // Details (thumbnail, muscles) for exercises the page didn't load: a draft
+  // restored from another visit carries only their ids.
+  useEffect(() => {
+    const missing = [
+      ...new Set(days.flatMap((d) => d.exercises.map((e) => e.exerciseId)).filter((id) => !meta[id] && !metaRequested.current.has(id))),
+    ];
+    if (!missing.length) return;
+    for (const id of missing) metaRequested.current.add(id);
+    const controller = new AbortController();
+    fetch(`/api/exercises/search?ids=${missing.map(encodeURIComponent).join(",")}`, { signal: controller.signal })
+      .then((r) => (r.ok ? (r.json() as Promise<{ items: PickerExercise[] }>) : { items: [] }))
+      .then(({ items }) => {
+        if (items.length) setMeta((m) => ({ ...m, ...Object.fromEntries(items.map((e) => [e.id, e])) }));
+      })
+      .catch(() => {
+        for (const id of missing) metaRequested.current.delete(id);
+      });
+  }, [days, meta]);
 
   // ---------------------------------------------------------------- edits
 
@@ -370,9 +538,21 @@ export function ProgramBuilder({
     setSavedOnce(false);
   }
 
-  function patchActiveExercises(fn: (list: EditableExercise[]) => EditableExercise[]) {
-    const key = activeDay.key;
+  function patchDay(key: string, fn: (list: EditableExercise[]) => EditableExercise[]) {
     patchDays((prev) => prev.map((d) => (d.key === key ? { ...d, exercises: fn(d.exercises) } : d)));
+  }
+
+  function patchActiveExercises(fn: (list: EditableExercise[]) => EditableExercise[]) {
+    patchDay(activeDay.key, fn);
+  }
+
+  function offerUndo(text: string, restore: () => void) {
+    setUndo({ id: ++undoSeq, text, restore });
+  }
+
+  function selectDay(index: number, focusTab = false) {
+    setActiveDayIndex(index);
+    if (focusTab && days[index]) pendingFocus.current = `#day-tab-${days[index].key}`;
   }
 
   function renameDay(value: string) {
@@ -381,14 +561,54 @@ export function ProgramBuilder({
     if (errors.days[key]) setErrors((e) => ({ ...e, days: omit(e.days, key) }));
   }
 
+  function changeFocus(value: string) {
+    const key = activeDay.key;
+    patchDays((prev) => prev.map((d) => (d.key === key ? { ...d, focus: value === "" ? null : value } : d)));
+    if (errors.days[key]) setErrors((e) => ({ ...e, days: omit(e.days, key) }));
+  }
+
+  /** At least one workout a week per day of the program. */
+  function ensureFrequency(dayCount: number) {
+    setCadence((c) => (c.daysPerWeek < dayCount ? { ...c, daysPerWeek: dayCount } : c));
+    if (errors.cadence.daysPerWeek) setErrors((e) => ({ ...e, cadence: omitKey(e.cadence, "daysPerWeek") }));
+  }
+
   function addDay() {
     if (days.length >= MAX_PROGRAM_DAYS) return;
     const key = newId("day");
     patchDays((prev) => [...prev, { key, name: `Dia ${prev.length + 1}`, focus: null, exercises: [] }]);
     setActiveDayIndex(days.length);
-    // At least one workout a week per day of the program.
-    setCadence((c) => (c.daysPerWeek < days.length + 1 ? { ...c, daysPerWeek: days.length + 1 } : c));
-    if (errors.cadence.daysPerWeek) setErrors((e) => ({ ...e, cadence: omitKey(e.cadence, "daysPerWeek") }));
+    ensureFrequency(days.length + 1);
+    pendingFocus.current = "#day-name";
+  }
+
+  /** "Duplicar dia": an A/B/A or upper/lower ×2 without re-adding every exercise. */
+  function duplicateDay() {
+    if (days.length >= MAX_PROGRAM_DAYS) return;
+    const source = activeDay;
+    const key = newId("day");
+    // A named day copies right after itself as "… (cópia)". A generic "Dia 1"
+    // copies as the next free "Dia N" at the end, so the number matches its tab
+    // (inserted after Dia 1 it read Dia 1, Dia 4, Dia 2, Dia 3).
+    let name = `${source.name} (cópia)`.slice(0, DAY_NAME_MAX);
+    let at = activeDayIndex + 1;
+    if (/^dia \d+$/i.test(source.name.trim()) || !source.name.trim()) {
+      const taken = new Set(days.map((d) => d.name.trim().toLowerCase()));
+      let n = days.length + 1;
+      while (taken.has(`dia ${n}`)) n++;
+      name = `Dia ${n}`;
+      at = days.length;
+    }
+    const copy: EditableDay = {
+      key,
+      name,
+      focus: source.focus,
+      exercises: source.exercises.map((e) => ({ ...e, id: undefined, rowId: newId("row") })),
+    };
+    patchDays((prev) => [...prev.slice(0, at), copy, ...prev.slice(at)]);
+    setActiveDayIndex(at);
+    ensureFrequency(days.length + 1);
+    pendingFocus.current = "#day-name";
   }
 
   function changeCadence(patch: Partial<Cadence>) {
@@ -406,49 +626,56 @@ export function ProgramBuilder({
 
   function removeDay(index: number) {
     const removed = days[index];
-    patchDays((prev) => prev.filter((_, i) => i !== index));
+    if (!removed || days.length <= 1) return;
+    patchDays((prev) => prev.filter((d) => d.key !== removed.key));
     setActiveDayIndex((i) => Math.max(0, Math.min(days.length - 2, i)));
     // A program longer than a week keeps one workout per day; back within a week, at most 7.
     const { max } = frequencyRange(days.length - 1);
     setCadence((c) => (c.daysPerWeek > max ? { ...c, daysPerWeek: max } : c));
     // Its errors go with it (and so do their save-bar lines).
-    if (removed && dayHasErrors(removed)) {
+    if (dayHasErrors(removed)) {
       setErrors((e) => {
         const rows = { ...e.rows };
         for (const ex of removed.exercises) delete rows[ex.rowId];
         return { ...e, rows, days: omit(e.days, removed.key) };
       });
     }
+    offerUndo(`Dia “${removed.name || `Dia ${index + 1}`}” removido`, () => {
+      patchDays((prev) => (prev.some((d) => d.key === removed.key) ? prev : insertAt(prev, index, removed)));
+      setActiveDayIndex(index);
+      ensureFrequency(days.length);
+    });
+    pendingFocus.current = "[data-day-actions]";
   }
 
   function moveDay(index: number, delta: number) {
+    const target = index + delta;
+    if (target < 0 || target >= days.length) return;
     patchDays((prev) => {
-      const target = index + delta;
-      if (target < 0 || target >= prev.length) return prev;
       const next = [...prev];
       [next[index], next[target]] = [next[target], next[index]];
       return next;
     });
-    setActiveDayIndex((i) => (i === index ? Math.max(0, Math.min(days.length - 1, i + delta)) : i));
+    setActiveDayIndex(target);
   }
 
-  function addExercise(picked: PickerExercise) {
-    if (activeDay.exercises.length >= MAX_DAY_EXERCISES) return;
-    const newEx: EditableExercise = {
+  function addExercises(picked: PickerExercise[]) {
+    const room = MAX_DAY_EXERCISES - activeDay.exercises.length;
+    const list = picked.slice(0, Math.max(0, room));
+    if (!list.length) return;
+    const rows: EditableExercise[] = list.map((p) => ({
       rowId: newId("row"),
-      exerciseId: picked.id,
-      exerciseName: picked.namePt,
+      exerciseId: p.id,
+      exerciseName: p.namePt,
       groupKey: null,
-      sets: 3,
-      repMin: 8,
-      repMax: 12,
-      rirTarget: 2,
-      restSeconds: 120,
-      warmupSets: 0,
+      ...defaultPrescription(p.mechanics),
       loadTargetKg: null,
       notes: null,
-    };
-    patchActiveExercises((list) => [...list, newEx]);
+    }));
+    patchActiveExercises((ex) => [...ex, ...rows]);
+    setMeta((m) => ({ ...m, ...Object.fromEntries(list.map((p) => [p.id, p])) }));
+    pendingScroll.current = rows[0].rowId;
+    pendingFocus.current = `[data-row-id="${rows[0].rowId}"] [data-row-toggle]`;
   }
 
   function updateExercise(rowId: string, patch: Partial<BuilderExercise>) {
@@ -459,7 +686,7 @@ export function ProgramBuilder({
     const after = { ...before, ...patch };
     // Editing a field clears its error (blur settles the value). The range
     // error sits on the min, so it also clears once the max puts it right.
-    const fixed = (Object.keys(rowErrors) as BuilderNumberField[]).filter(
+    const fixed = (Object.keys(rowErrors) as RowField[]).filter(
       (f) => f in patch || (f === "repMin" && "repMax" in patch && after.repMin <= after.repMax),
     );
     if (!fixed.length) return;
@@ -472,8 +699,18 @@ export function ProgramBuilder({
   }
 
   function removeExercise(rowId: string) {
-    patchActiveExercises((list) => list.filter((e) => e.rowId !== rowId));
+    const dayKey = activeDay.key;
+    const index = activeDay.exercises.findIndex((e) => e.rowId === rowId);
+    const removed = activeDay.exercises[index];
+    if (!removed) return;
+    patchDay(dayKey, (list) => list.filter((e) => e.rowId !== rowId));
     if (errors.rows[rowId]) setErrors((e) => ({ ...e, rows: omit(e.rows, rowId) }));
+    offerUndo(`${removed.exerciseName ?? "Exercício"} removido`, () =>
+      patchDay(dayKey, (list) => (list.some((e) => e.rowId === rowId) ? list : insertAt(list, index, removed))),
+    );
+    // Focus the next row's "⋯" (or the add button) instead of losing it to the page.
+    const next = activeDay.exercises[index + 1] ?? activeDay.exercises[index - 1];
+    pendingFocus.current = next ? `[data-row-id="${next.rowId}"] [data-row-actions]` : "[data-add-exercises]";
   }
 
   function duplicateExercise(rowId: string) {
@@ -488,6 +725,7 @@ export function ProgramBuilder({
       next.splice(idx + 1, 0, { ...list[idx], id: undefined, rowId: copyId });
       return next;
     });
+    pendingFocus.current = `[data-row-id="${copyId}"] [data-row-actions]`;
   }
 
   function moveExercise(rowId: string, delta: -1 | 1) {
@@ -497,12 +735,49 @@ export function ProgramBuilder({
       if (from === -1 || to < 0 || to >= list.length) return list;
       return arrayMove(list, from, to);
     });
-    // Keep focus on the arrow that was pressed (the row's DOM node moves);
-    // at the edge the arrow disables, so fall back to the other one.
-    const index = activeDay.exercises.findIndex((e) => e.rowId === rowId) + delta;
-    const atEdge = index <= 0 || index >= activeDay.exercises.length - 1;
-    const dir = delta < 0 ? (atEdge ? "down" : "up") : atEdge ? "up" : "down";
-    pendingFocus.current = `[data-row-id="${rowId}"] [data-move="${dir}"]`;
+    pendingFocus.current = `[data-row-id="${rowId}"] [data-row-actions]`;
+  }
+
+  /** "Mover para…": the row keeps its id, so its logged workouts stay linked. */
+  function moveExerciseToDay(rowId: string, targetKey: string) {
+    const fromKey = activeDay.key;
+    const index = activeDay.exercises.findIndex((e) => e.rowId === rowId);
+    const row = activeDay.exercises[index];
+    const target = days.find((d) => d.key === targetKey);
+    if (!row || !target || target.key === fromKey || target.exercises.length >= MAX_DAY_EXERCISES) return;
+    patchDays((prev) =>
+      prev.map((d) =>
+        d.key === fromKey
+          ? { ...d, exercises: d.exercises.filter((e) => e.rowId !== rowId) }
+          : d.key === targetKey
+            ? { ...d, exercises: [...d.exercises, row] }
+            : d,
+      ),
+    );
+    offerUndo(`${row.exerciseName ?? "Exercício"} movido para “${target.name}”`, () =>
+      patchDays((prev) => {
+        const there = prev.find((d) => d.key === targetKey)?.exercises.find((e) => e.rowId === rowId);
+        if (!there || !prev.some((d) => d.key === fromKey)) return prev;
+        return prev.map((d) =>
+          d.key === targetKey
+            ? { ...d, exercises: d.exercises.filter((e) => e.rowId !== rowId) }
+            : d.key === fromKey
+              ? { ...d, exercises: insertAt(d.exercises, index, there) }
+              : d,
+        );
+      }),
+    );
+    const next = activeDay.exercises[index + 1] ?? activeDay.exercises[index - 1];
+    pendingFocus.current = next ? `[data-row-id="${next.rowId}"] [data-row-actions]` : "[data-add-exercises]";
+  }
+
+  function toggleRow(rowId: string) {
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      if (next.has(rowId)) next.delete(rowId);
+      else next.add(rowId);
+      return next;
+    });
   }
 
   function handleDragEnd(event: DragEndEvent) {
@@ -513,6 +788,16 @@ export function ProgramBuilder({
       const newIndex = list.findIndex((e) => e.rowId === over.id);
       return oldIndex === -1 || newIndex === -1 ? list : arrayMove(list, oldIndex, newIndex);
     });
+  }
+
+  function openPicker(muscle: string | null = null) {
+    setPickerMuscle(muscle);
+    setPickerOpen(true);
+  }
+
+  function closeSheet(focus?: string) {
+    setSheet(null);
+    if (focus) pendingFocus.current = focus;
   }
 
   // ---------------------------------------------------------------- draft
@@ -529,8 +814,10 @@ export function ProgramBuilder({
     }));
     setDays(toEditable(p.days, newId));
     setActiveDayIndex(0);
+    setExpanded(new Set());
     setErrors(NO_ERRORS);
     setSavedOnce(false);
+    setUndo(null);
     pendingDraft.current = null;
     setDraftOffer(null);
   }
@@ -552,6 +839,7 @@ export function ProgramBuilder({
   function showErrors(list: BuilderFieldError[], snapshot: EditableDay[]) {
     const next: BuilderErrors = { ...NO_ERRORS, rows: {}, days: {}, cadence: {}, items: [] };
     let focus: { selector: string; dayKey?: string } | null = null;
+    const open = new Set<string>();
     for (const err of list) {
       if (err.field === "name" || err.field === "description") {
         next[err.field] = err.message;
@@ -568,19 +856,24 @@ export function ProgramBuilder({
       }
       const day = err.dayIndex !== null ? snapshot[err.dayIndex] : undefined;
       const row = day && err.exerciseIndex !== null ? day.exercises[err.exerciseIndex] : undefined;
-      if (day && row && err.field in BUILDER_LIMITS) {
-        const field = err.field as BuilderNumberField;
+      if (day && row && (err.field in BUILDER_LIMITS || err.field === "notes")) {
+        const field = err.field as RowField;
         next.rows[row.rowId] = { ...next.rows[row.rowId], [field]: err.message };
         next.items.push({
           ref: { kind: "row", rowId: row.rowId, field },
-          text: `${BUILDER_FIELD_LABELS[field]} em ${row.exerciseName ?? "exercício"}: ${err.message}`,
+          text: `${ROW_FIELD_LABELS[field]} em ${row.exerciseName ?? "exercício"}: ${err.message}`,
         });
-        focus ??= { selector: `[data-row-id="${row.rowId}"] input[data-field="${field}"]`, dayKey: day.key };
+        // The row opens so the field is there to fix.
+        open.add(row.rowId);
+        focus ??= {
+          selector: `[data-row-id="${row.rowId}"] ${field === "notes" ? "textarea" : "input"}[data-field="${field}"]`,
+          dayKey: day.key,
+        };
         continue;
       }
       if (day) {
         next.days[day.key] = err.message;
-        focus ??= { selector: "#day-name", dayKey: day.key };
+        focus ??= { selector: err.field === "dayFocus" ? "#day-focus" : "#day-name", dayKey: day.key };
       }
       next.items.push({
         ref: day ? { kind: "day", key: day.key } : { kind: "form" },
@@ -589,6 +882,7 @@ export function ProgramBuilder({
     }
     if (!next.items.length) next.message = "Não foi possível salvar.";
     setErrors(next);
+    if (open.size) setExpanded((prev) => new Set([...prev, ...open]));
     if (focus) {
       const { selector, dayKey } = focus;
       const dayIndex = dayKey ? latest.current.days.findIndex((d) => d.key === dayKey) : -1;
@@ -658,6 +952,7 @@ export function ProgramBuilder({
     setBaseline(JSON.stringify(toState(result.name, result.description, savedDays, stored)));
     setErrors(NO_ERRORS);
     setSavedOnce(true);
+    setCurrentStatus((s) => (s === "ARCHIVED" ? "DRAFT" : s));
     // Another tab's unsaved edits may sit in the slot; leave those.
     clearDraftIf(programId, (d) => isOwnDraft(d) || JSON.stringify(d.program) === JSON.stringify(payload));
     pendingDraft.current = null;
@@ -694,25 +989,144 @@ export function ProgramBuilder({
     if (href) router.push(href);
   }
 
-  // ---------------------------------------------------------------- render
+  // ---------------------------------------------------------------- derived
 
   const dayHasErrors = (day: EditableDay) =>
     !!errors.days[day.key] || day.exercises.some((e) => errors.rows[e.rowId]);
   const draftIsStale = draftOffer ? draftOffer.base !== version : false;
   const summary = saveBarSummary(errors);
+  const tokens = dayTokens(days.map((d, i) => d.name || `Dia ${i + 1}`));
+  const hasExercises = days.some((d) => d.exercises.length > 0);
+  const room = MAX_DAY_EXERCISES - activeDay.exercises.length;
+  // Nothing unsaved and nothing touched since the last save (or a clean open, see savedOnce).
+  const settled = !dirty && savedOnce;
+
+  const volume = useMemo(
+    () =>
+      weeklyVolume(
+        days.map((d) => ({
+          exercises: d.exercises.map((e) => ({
+            sets: e.sets,
+            primaryMuscleIds: meta[e.exerciseId]?.primaryMuscleIds ?? null,
+            secondaryMuscleIds: meta[e.exerciseId]?.secondaryMuscleIds ?? null,
+          })),
+        })),
+        cadence.daysPerWeek,
+      ),
+    [days, meta, cadence.daysPerWeek],
+  );
+  // The program rules the strip doesn't already say (volume is the strip itself).
+  const ruleNotes = useMemo(() => {
+    const ruleDays: ProgramRuleDay[] = days.map((d, i) => ({
+      dayIndex: i,
+      nameEn: d.name,
+      namePt: d.name || `Dia ${i + 1}`,
+      exercises: d.exercises.map((e) => ({
+        exerciseId: e.exerciseId,
+        nameEn: e.exerciseName ?? "",
+        namePt: e.exerciseName ?? meta[e.exerciseId]?.namePt ?? "",
+        primaryMuscleGroups: (meta[e.exerciseId]?.primaryGroups ?? []) as ProgramRuleDay["exercises"][number]["primaryMuscleGroups"],
+        movementPattern: meta[e.exerciseId]?.movementPattern ?? null,
+        sets: e.sets,
+      })),
+    }));
+    return analyzeProgram(ruleDays)
+      .filter((f) => !/^(low|high)-volume-/.test(f.code))
+      .map((f) => f.messagePt);
+  }, [days, meta]);
+
+  const sheetRow =
+    sheet && (sheet.kind === "row" || sheet.kind === "move")
+      ? activeDay.exercises.find((e) => e.rowId === sheet.rowId) ?? null
+      : null;
+  const sheetRowIndex = sheetRow ? activeDay.exercises.indexOf(sheetRow) : -1;
+  const activeDayLabel = activeDay.name || `Dia ${activeDayIndex + 1}`;
+
+  // ---------------------------------------------------------------- render
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
-      <Link
-        href={`/app/programs/${programId}`}
-        className="-ml-1 mb-3 inline-flex min-h-11 items-center gap-1.5 px-1 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-muted hover:text-foreground"
-      >
-        <ArrowLeft className="size-3.5" />
-        Programa
-      </Link>
+    <div className="mx-auto max-w-3xl px-4 pb-6 pt-3 sm:px-6 sm:py-8">
+      <div className="flex items-center justify-between gap-2">
+        <Link
+          href={`/app/programs/${programId}`}
+          className="-ml-1 inline-flex min-h-11 items-center gap-1.5 px-1 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-muted hover:text-foreground"
+        >
+          <ArrowLeft className="size-3.5" />
+          Programa
+        </Link>
+        {canDiscard ? (
+          <button
+            type="button"
+            onClick={() => setSheet({ kind: "discard" })}
+            className="-mr-2 min-h-11 px-2 text-xs font-medium text-muted hover:text-danger"
+          >
+            Descartar rascunho
+          </button>
+        ) : null}
+      </div>
+
+      <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1">
+        <h1 className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-foreground">Editar programa</h1>
+        <span
+          className={cn(
+            "font-mono text-[10px] font-bold uppercase tracking-[0.14em]",
+            currentStatus === "ACTIVE" ? "text-accent" : "text-muted",
+          )}
+        >
+          · {currentStatus === "ACTIVE" ? "Ativo" : currentStatus === "DRAFT" ? "Rascunho" : "Arquivado"}
+        </span>
+      </div>
+      {sourceTemplate ? (
+        <p className="mt-0.5 text-xs text-muted">
+          Sua cópia de{" "}
+          <Link href={`/app/programs/templates/${sourceTemplate.slug}`} className="font-semibold text-accent hover:underline">
+            {sourceTemplate.name}
+          </Link>{" "}
+          — o original não muda.
+        </p>
+      ) : null}
+
+      {currentStatus === "ACTIVE" ? (
+        <div className="mt-3 border-l-2 border-l-accent bg-surface-2 px-3 py-2" data-testid="active-program-note">
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-accent">Programa ativo</p>
+          <p className="mt-0.5 text-sm text-foreground/90">
+            As mudanças valem a partir do próximo treino.
+            {openSession ? (
+              <>
+                {" "}
+                O treino aberto (<span className="font-semibold">{openSession.name}</span>) continua como começou.
+              </>
+            ) : null}
+          </p>
+        </div>
+      ) : null}
+
+      {notice && noticeOpen ? (
+        <div role="status" className="mt-3 flex items-start gap-3 border-l-2 border-l-success bg-surface-2 px-3 py-2">
+          <div className="min-w-0 flex-1">
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-success">
+              {notice.kind === "copy" ? "Cópia criada" : "Adaptado ao seu equipamento"}
+            </p>
+            <p className="mt-0.5 text-sm text-foreground/90">
+              {notice.kind === "copy"
+                ? "Você está editando a cópia. O original continua como estava."
+                : notice.swaps > 0
+                  ? `${plural(notice.swaps, "exercício trocado", "exercícios trocados")}. Ajuste o que quiser e comece quando estiver pronto.`
+                  : "Nenhum exercício precisou de troca."}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setNoticeOpen(false)}
+            className="-my-1 -mr-2 min-h-11 px-2 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted hover:text-foreground"
+          >
+            OK
+          </button>
+        </div>
+      ) : null}
 
       {draftOffer ? (
-        <div role="status" className="mb-4 border-l-2 border-l-warning bg-warning-soft px-3.5 py-3">
+        <div role="status" className="mt-3 border-l-2 border-l-warning bg-warning-soft px-3.5 py-3">
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-warning">
             Rascunho neste aparelho · {draftTime.format(draftOffer.savedAt)}
           </p>
@@ -749,7 +1163,7 @@ export function ProgramBuilder({
         }}
         placeholder="Nome do programa"
         className={cn(
-          "rounded-none border-0 border-b-2 border-b-transparent px-0 text-2xl font-bold tracking-tight shadow-none focus-visible:border-b-accent focus-visible:outline-none",
+          "mt-2 rounded-none border-0 border-b-2 border-b-transparent px-0 text-2xl font-bold tracking-tight shadow-none focus-visible:border-b-accent focus-visible:outline-none",
           errors.name && "border-b-danger",
         )}
       />
@@ -758,19 +1172,20 @@ export function ProgramBuilder({
           {errors.name}
         </p>
       ) : null}
-      <Textarea
+      {/* Grows with the text: a GD block's long tagline is read whole, not cut at two lines. */}
+      <AutoGrowText
         id="program-description"
         value={description}
         maxLength={PROGRAM_DESCRIPTION_MAX}
+        maxHeight={220}
         aria-label="Descrição"
-        onChange={(e) => {
-          setDescription(e.target.value);
+        onValueChange={(value) => {
+          setDescription(value);
           setSavedOnce(false);
           if (errors.description) setErrors((er) => ({ ...er, description: null }));
         }}
         placeholder="Descrição (opcional)"
-        rows={2}
-        className="mt-1 border-none px-0 text-base text-muted shadow-none focus-visible:outline-none sm:text-sm"
+        className="mt-1 min-h-11 rounded-[3px] border border-transparent bg-transparent px-0 py-2 text-base leading-snug text-muted placeholder:text-muted/80 hover:border-foreground/20 focus-visible:outline-none sm:text-sm"
       />
       {errors.description ? (
         <p role="alert" className="mt-1 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-danger">
@@ -780,140 +1195,447 @@ export function ProgramBuilder({
 
       <CadenceChips cadence={cadence} dayCount={days.length} errors={errors.cadence} onChange={changeCadence} />
 
-      <div className="mt-4 flex flex-wrap items-center gap-2">
-        {days.map((day, i) => (
-          <button
-            key={day.key}
-            type="button"
-            onClick={() => setActiveDayIndex(i)}
-            aria-pressed={i === activeDayIndex}
-            className={cn(
-              "flex min-h-10 items-center gap-1.5 rounded-[2px] border px-3 py-1.5 text-sm",
-              i === activeDayIndex
-                ? "border-accent bg-accent-soft font-semibold text-accent"
-                : "border-border text-muted hover:bg-surface-2",
-            )}
-          >
-            {day.name || `Dia ${i + 1}`}
-            {dayHasErrors(day) ? (
-              <span className="font-mono text-xs font-bold text-danger" aria-label="com erro">
-                !
-              </span>
-            ) : null}
-          </button>
-        ))}
+      <VolumeStrip
+        volume={volume}
+        notes={ruleNotes}
+        dayFull={room <= 0 ? activeDay.name || `Dia ${activeDayIndex + 1}` : null}
+        onAddFor={(key) => {
+          if (room > 0) openPicker(key);
+        }}
+      />
+
+      {/* Day tabs: one row that scrolls sideways ("D1 SEG · SUP"), full names in the box below. */}
+      <div className="-mx-4 mt-4 flex items-center gap-1 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:-mx-6 sm:px-6 [&::-webkit-scrollbar]:hidden">
+        <div
+          role="tablist"
+          aria-label="Dias do programa"
+          className="flex items-center gap-1"
+          onKeyDown={(e) => {
+            const last = days.length - 1;
+            // From the tab that has focus (normally the selected one: roving tabindex).
+            const focused = days.findIndex((d) => `day-tab-${d.key}` === (e.target as HTMLElement).id);
+            const from = focused >= 0 ? focused : activeDayIndex;
+            const to =
+              e.key === "ArrowRight"
+                ? Math.min(last, from + 1)
+                : e.key === "ArrowLeft"
+                  ? Math.max(0, from - 1)
+                  : e.key === "Home"
+                    ? 0
+                    : e.key === "End"
+                      ? last
+                      : null;
+            if (to === null) return;
+            e.preventDefault();
+            selectDay(to, true);
+          }}
+        >
+          {days.map((day, i) => {
+            const token = tokens[i];
+            const label = day.name || `Dia ${i + 1}`;
+            const selected = i === activeDayIndex;
+            return (
+              <button
+                key={day.key}
+                id={`day-tab-${day.key}`}
+                type="button"
+                role="tab"
+                aria-selected={selected}
+                aria-controls="day-panel"
+                aria-label={`${label}${dayHasErrors(day) ? " (com erro)" : ""}`}
+                tabIndex={selected ? 0 : -1}
+                title={label}
+                onClick={() => selectDay(i)}
+                className={cn(
+                  "flex h-11 shrink-0 items-center gap-1.5 whitespace-nowrap border-b-2 px-3 font-mono text-[11px] font-bold uppercase tracking-[0.06em]",
+                  selected
+                    ? "border-b-accent bg-surface-2 text-foreground"
+                    : "border-b-transparent text-muted hover:bg-surface-2 hover:text-foreground",
+                )}
+              >
+                <span className={selected ? "text-accent" : undefined}>D{i + 1}</span>
+                {token && token !== String(i + 1) ? <span>{token}</span> : null}
+                {dayHasErrors(day) ? <span className="text-danger">!</span> : null}
+              </button>
+            );
+          })}
+        </div>
         <button
           type="button"
           onClick={addDay}
           disabled={days.length >= MAX_PROGRAM_DAYS}
-          className="flex min-h-10 items-center gap-1 rounded-[2px] border border-dashed border-border px-3 py-1.5 text-sm text-muted hover:bg-surface-2 disabled:opacity-40"
+          aria-label="Adicionar dia"
+          className="flex h-11 shrink-0 items-center gap-1 border border-dashed border-border-strong px-3 font-mono text-[11px] font-bold uppercase tracking-[0.06em] text-muted hover:bg-surface-2 hover:text-foreground disabled:opacity-40"
         >
           <Plus className="size-3.5" />
           Dia
         </button>
       </div>
 
-      <div className="mt-4 flex items-center gap-1 rounded-[var(--radius-md)] bg-surface-2 py-2 pl-3.5 pr-2">
-        <Input
-          id="day-name"
-          value={activeDay.name}
-          maxLength={DAY_NAME_MAX}
-          aria-label="Nome do dia"
-          onChange={(e) => renameDay(e.target.value)}
-          className="h-10 flex-1 bg-transparent text-base sm:h-8 sm:text-sm"
-        />
-        <button
-          type="button"
-          onClick={() => moveDay(activeDayIndex, -1)}
-          disabled={activeDayIndex === 0}
-          className="flex size-10 items-center justify-center rounded-[3px] text-muted hover:bg-surface disabled:opacity-30 sm:size-8"
-          aria-label="Mover dia para cima"
-        >
-          <ArrowUp className="size-4" />
-        </button>
-        <button
-          type="button"
-          onClick={() => moveDay(activeDayIndex, 1)}
-          disabled={activeDayIndex === days.length - 1}
-          className="flex size-10 items-center justify-center rounded-[3px] text-muted hover:bg-surface disabled:opacity-30 sm:size-8"
-          aria-label="Mover dia para baixo"
-        >
-          <ArrowDown className="size-4" />
-        </button>
-        {days.length > 1 ? (
-          <button
-            type="button"
-            onClick={() => removeDay(activeDayIndex)}
-            className="flex size-10 items-center justify-center rounded-[3px] text-muted hover:bg-surface hover:text-danger sm:size-8"
-            aria-label="Remover dia"
-          >
-            <Trash2 className="size-4" />
-          </button>
-        ) : null}
-      </div>
-      {errors.days[activeDay.key] ? (
-        <p role="alert" className="mt-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-danger">
-          {errors.days[activeDay.key]}
-        </p>
-      ) : null}
-
-      <div className="mt-4">
-        {activeDay.exercises.length === 0 ? (
-          <p className="border-y-2 border-y-[var(--rule-heavy)] bg-surface-2 p-6 text-center text-sm text-muted">
-            Nenhum exercício neste dia ainda.
+      <div id="day-panel" role="tabpanel" aria-labelledby={`day-tab-${activeDay.key}`}>
+        <div className="bg-surface-2 px-3 py-2.5">
+          <div className="flex items-center gap-1">
+            <label htmlFor="day-name" className="sr-only">
+              Nome do dia
+            </label>
+            <AutoGrowText
+              id="day-name"
+              singleLine
+              value={activeDay.name}
+              maxLength={DAY_NAME_MAX}
+              aria-invalid={errors.days[activeDay.key] ? true : undefined}
+              onValueChange={renameDay}
+              className="min-h-11 flex-1 rounded-[3px] border border-transparent bg-transparent px-1.5 py-2 text-base font-semibold leading-snug hover:border-foreground/30 sm:text-sm"
+            />
+            <button
+              type="button"
+              data-day-actions
+              onClick={() => setSheet({ kind: "day" })}
+              aria-haspopup="dialog"
+              aria-label={`Opções do dia ${activeDayLabel}`}
+              className="flex size-11 shrink-0 items-center justify-center text-muted hover:bg-surface hover:text-foreground"
+            >
+              <MoreHorizontal className="size-5" />
+            </button>
+          </div>
+          <label htmlFor="day-focus" className="sr-only">
+            Foco do dia
+          </label>
+          <AutoGrowText
+            id="day-focus"
+            singleLine
+            value={activeDay.focus ?? ""}
+            maxLength={DAY_FOCUS_MAX}
+            onValueChange={changeFocus}
+            placeholder="Foco do dia (opcional)"
+            className="min-h-11 rounded-[3px] border border-transparent bg-transparent px-1.5 py-2.5 text-base leading-snug text-muted placeholder:text-muted/80 hover:border-foreground/30 sm:text-sm"
+          />
+        </div>
+        {errors.days[activeDay.key] ? (
+          <p role="alert" className="mt-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-danger">
+            {errors.days[activeDay.key]}
           </p>
-        ) : (
-          <DndContext id="program-builder" sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-            <SortableContext items={activeDay.exercises.map((e) => e.rowId)} strategy={verticalListSortingStrategy}>
-              <div className="flex flex-col gap-2.5">
-                {activeDay.exercises.map((ex, i) => (
-                  <ExerciseRow
-                    key={ex.rowId}
-                    id={ex.rowId}
-                    index={i}
-                    count={activeDay.exercises.length}
-                    exercise={ex}
-                    errors={errors.rows[ex.rowId]}
-                    onChange={(patch) => updateExercise(ex.rowId, patch)}
-                    onEdit={() => setSavedOnce(false)}
-                    onMove={(delta) => moveExercise(ex.rowId, delta)}
-                    onRemove={() => removeExercise(ex.rowId)}
-                    onDuplicate={() => duplicateExercise(ex.rowId)}
-                  />
-                ))}
+        ) : null}
+
+        <div className="mt-4">
+          {activeDay.exercises.length === 0 ? (
+            <p className="border-y-2 border-y-[var(--rule-heavy)] bg-surface-2 p-6 text-center text-sm text-muted">
+              Nenhum exercício neste dia ainda.
+            </p>
+          ) : (
+            <>
+              <div className="mb-2 flex items-center justify-between gap-3">
+                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
+                  {plural(activeDay.exercises.length, "exercício", "exercícios")}
+                </span>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="h-11 px-3"
+                  data-add-exercises
+                  disabled={room <= 0}
+                  onClick={() => openPicker()}
+                >
+                  <Plus className="size-4" />
+                  Adicionar exercícios
+                </Button>
               </div>
-            </SortableContext>
-          </DndContext>
-        )}
+              <DndContext
+                id="program-builder"
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+                accessibility={{ screenReaderInstructions: DRAG_INSTRUCTIONS, announcements }}
+              >
+                <SortableContext items={activeDay.exercises.map((e) => e.rowId)} strategy={verticalListSortingStrategy}>
+                  <div className="flex flex-col gap-2">
+                    {activeDay.exercises.map((ex) => (
+                      <ExerciseRow
+                        key={ex.rowId}
+                        id={ex.rowId}
+                        exercise={ex}
+                        meta={meta[ex.exerciseId]}
+                        machineNote={machineNotes[ex.exerciseId] ?? null}
+                        expanded={expanded.has(ex.rowId)}
+                        onToggle={() => toggleRow(ex.rowId)}
+                        errors={errors.rows[ex.rowId]}
+                        onChange={(patch) => updateExercise(ex.rowId, patch)}
+                        onEdit={() => setSavedOnce(false)}
+                        onOpenActions={() => setSheet({ kind: "row", rowId: ex.rowId })}
+                      />
+                    ))}
+                  </div>
+                </SortableContext>
+              </DndContext>
+            </>
+          )}
 
-        <Button
-          variant="outline"
-          className="mt-3 w-full"
-          disabled={activeDay.exercises.length >= MAX_DAY_EXERCISES}
-          onClick={() => setPickerOpen(true)}
-        >
-          <Plus className="size-4" />
-          Adicionar exercício
-        </Button>
-      </div>
-
-      <div className="sticky bottom-[var(--nav-h)] z-20 mt-8 border-t border-border bg-background py-3 sm:bottom-0">
-        {summary ? (
-          <p role="alert" className="mb-2.5 border-l-2 border-l-danger bg-danger-soft px-3 py-2 text-xs font-medium text-danger">
-            {summary}
-          </p>
-        ) : null}
-        <div className="flex items-center justify-between gap-3">
-          <p aria-live="polite" className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-warning">
-            {dirty && !saving ? "Alterações não salvas" : ""}
-          </p>
-          <Button onClick={handleSave} disabled={saving} size="lg">
-            {saving ? "Salvando…" : !dirty && savedOnce ? "Salvo" : "Salvar programa"}
+          <Button
+            variant="outline"
+            className="mt-3 w-full"
+            data-add-exercises={activeDay.exercises.length === 0 ? true : undefined}
+            disabled={room <= 0}
+            onClick={() => openPicker()}
+          >
+            <Plus className="size-4" />
+            {activeDay.exercises.length === 0 ? "Adicionar exercícios" : "Adicionar mais exercícios"}
           </Button>
         </div>
       </div>
 
-      <ExercisePicker open={pickerOpen} onClose={() => setPickerOpen(false)} onSelect={addExercise} />
+      <div className="sticky bottom-[var(--nav-h)] z-20 -mx-4 mt-6 border-t-2 border-t-[var(--rule-heavy)] bg-background px-4 py-2 sm:bottom-0 sm:-mx-6 sm:px-6">
+        {undo ? (
+          <div role="status" className="mb-2 flex items-center gap-3 border-l-2 border-l-accent bg-surface-2 py-0.5 pl-3 pr-1">
+            <span className="min-w-0 flex-1 text-sm leading-snug">{undo.text}</span>
+            <button
+              type="button"
+              onClick={() => {
+                undo.restore();
+                setUndo(null);
+              }}
+              className="min-h-11 shrink-0 px-3 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
+            >
+              Desfazer
+            </button>
+          </div>
+        ) : null}
+        {summary ? (
+          <p role="alert" className="mb-2 border-l-2 border-l-danger bg-danger-soft px-3 py-2 text-xs font-medium text-danger">
+            {summary}
+          </p>
+        ) : null}
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          {settled && hasExercises && !saving ? (
+            currentStatus === "ACTIVE" ? (
+              <Button asChild variant="strong">
+                <Link href="/app/today">Ir para Hoje</Link>
+              </Button>
+            ) : startFromPage ? (
+              <Button asChild variant="strong">
+                <Link href={`/app/programs/${programId}`}>Retomar ou recomeçar</Link>
+              </Button>
+            ) : (
+              <SwitchProgramButton
+                action={start}
+                label="Iniciar este programa"
+                switchLabel="Iniciar este programa"
+                pendingLabel="Iniciando…"
+                size="md"
+                active={switchFrom}
+              />
+            )
+          ) : (
+            <p aria-live="polite" className="mr-auto font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-warning">
+              {dirty && !saving ? "Alterações não salvas" : ""}
+            </p>
+          )}
+          <Button
+            onClick={handleSave}
+            disabled={saving}
+            variant={settled ? "ghost" : "primary"}
+            className={cn(settled && "text-success")}
+          >
+            {saving ? "Salvando…" : settled ? "Salvo" : "Salvar programa"}
+          </Button>
+        </div>
+      </div>
+
+      <ExercisePicker
+        open={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        onAdd={addExercises}
+        inDayIds={activeDay.exercises.map((e) => e.exerciseId)}
+        maxSelect={room}
+        initialMuscle={pickerMuscle}
+        equipmentAccess={equipmentAccess}
+        title={`Adicionar ao dia ${activeDayIndex + 1}`}
+      />
+
+      {sheet?.kind === "row" && sheetRow ? (
+        <ActionSheet
+          title={sheetRow.exerciseName ?? "Exercício"}
+          subtitle={activeDayLabel}
+          onClose={() => closeSheet(`[data-row-id="${sheetRow.rowId}"] [data-row-actions]`)}
+        >
+          <SheetItem
+            icon={<ArrowUp />}
+            disabled={sheetRowIndex <= 0}
+            onClick={() => {
+              closeSheet();
+              moveExercise(sheetRow.rowId, -1);
+            }}
+          >
+            Mover para cima
+          </SheetItem>
+          <SheetItem
+            icon={<ArrowDown />}
+            disabled={sheetRowIndex >= activeDay.exercises.length - 1}
+            onClick={() => {
+              closeSheet();
+              moveExercise(sheetRow.rowId, 1);
+            }}
+          >
+            Mover para baixo
+          </SheetItem>
+          {days.length > 1 ? (
+            <SheetItem icon={<CalendarRange />} onClick={() => setSheet({ kind: "move", rowId: sheetRow.rowId })}>
+              Mover para outro dia…
+            </SheetItem>
+          ) : null}
+          <SheetItem
+            icon={<Copy />}
+            disabled={activeDay.exercises.length >= MAX_DAY_EXERCISES}
+            onClick={() => {
+              closeSheet();
+              duplicateExercise(sheetRow.rowId);
+            }}
+          >
+            Duplicar
+          </SheetItem>
+          <SheetItem
+            icon={<Trash2 />}
+            danger
+            onClick={() => {
+              closeSheet();
+              removeExercise(sheetRow.rowId);
+            }}
+          >
+            Remover
+          </SheetItem>
+        </ActionSheet>
+      ) : null}
+
+      {sheet?.kind === "move" && sheetRow ? (
+        <ActionSheet
+          title="Mover para qual dia?"
+          subtitle={sheetRow.exerciseName}
+          onClose={() => closeSheet(`[data-row-id="${sheetRow.rowId}"] [data-row-actions]`)}
+        >
+          {days.map((d, i) =>
+            d.key === activeDay.key ? null : (
+              <SheetItem
+                key={d.key}
+                disabled={d.exercises.length >= MAX_DAY_EXERCISES}
+                onClick={() => {
+                  closeSheet();
+                  moveExerciseToDay(sheetRow.rowId, d.key);
+                }}
+              >
+                <span className="font-mono text-xs font-bold text-muted">D{i + 1}</span> {d.name || `Dia ${i + 1}`}
+              </SheetItem>
+            ),
+          )}
+          <SheetItem icon={<ArrowLeft />} onClick={() => setSheet({ kind: "row", rowId: sheetRow.rowId })}>
+            Voltar
+          </SheetItem>
+        </ActionSheet>
+      ) : null}
+
+      {sheet?.kind === "day" ? (
+        <ActionSheet
+          title={activeDayLabel}
+          subtitle={`Dia ${activeDayIndex + 1} de ${days.length}`}
+          onClose={() => closeSheet("[data-day-actions]")}
+        >
+          <SheetItem
+            icon={<ArrowLeft />}
+            disabled={activeDayIndex === 0}
+            onClick={() => {
+              closeSheet("[data-day-actions]");
+              moveDay(activeDayIndex, -1);
+            }}
+          >
+            Mover dia para antes
+          </SheetItem>
+          <SheetItem
+            icon={<ArrowRight />}
+            disabled={activeDayIndex === days.length - 1}
+            onClick={() => {
+              closeSheet("[data-day-actions]");
+              moveDay(activeDayIndex, 1);
+            }}
+          >
+            Mover dia para depois
+          </SheetItem>
+          <SheetItem
+            icon={<Copy />}
+            disabled={days.length >= MAX_PROGRAM_DAYS}
+            onClick={() => {
+              closeSheet();
+              duplicateDay();
+            }}
+          >
+            Duplicar dia
+          </SheetItem>
+          {days.length > 1 ? (
+            <SheetItem
+              icon={<Trash2 />}
+              danger
+              onClick={() => {
+                if (activeDay.exercises.length > 0) return setSheet({ kind: "remove-day" });
+                closeSheet();
+                removeDay(activeDayIndex);
+              }}
+            >
+              Remover dia
+            </SheetItem>
+          ) : null}
+        </ActionSheet>
+      ) : null}
+
+      {sheet?.kind === "remove-day" ? (
+        <ActionSheet
+          title={`Remover “${activeDayLabel}”?`}
+          subtitle={`${plural(activeDay.exercises.length, "exercício sai", "exercícios saem")} deste dia. Dá para desfazer logo em seguida.`}
+          onClose={() => closeSheet("[data-day-actions]")}
+        >
+          <SheetItem
+            icon={<Trash2 />}
+            danger
+            onClick={() => {
+              closeSheet();
+              removeDay(activeDayIndex);
+            }}
+          >
+            Remover dia
+          </SheetItem>
+          <SheetItem onClick={() => closeSheet("[data-day-actions]")}>Cancelar</SheetItem>
+        </ActionSheet>
+      ) : null}
+
+      {sheet?.kind === "discard" ? (
+        <ActionSheet
+          title="Descartar este rascunho?"
+          subtitle={
+            sourceTemplate
+              ? `Sua cópia é apagada de vez. ${sourceTemplate.name} continua na biblioteca.`
+              : "O programa é apagado de vez. Ele nunca foi treinado, então nenhum histórico se perde."
+          }
+          onClose={() => closeSheet()}
+        >
+          <InlineActionForm
+            action={discard}
+            failText="Não foi possível descartar. Tente de novo."
+            className="flex flex-col gap-2 px-5 py-3"
+          >
+            <SubmitButton
+              variant="danger"
+              className="w-full"
+              pendingLabel="Descartando…"
+              onClick={() => {
+                // Leaving on purpose: no guard, no local copy left behind.
+                leaving.current = true;
+                clearDraft(programId);
+              }}
+            >
+              Descartar rascunho
+            </SubmitButton>
+            <Button variant="ghost" className="w-full" onClick={() => closeSheet()}>
+              Continuar editando
+            </Button>
+          </InlineActionForm>
+        </ActionSheet>
+      ) : null}
 
       {leaveTo ? (
         <LeaveSheet
@@ -939,9 +1661,14 @@ function omitKey<K extends string, T>(record: Partial<Record<K, T>>, key: K): Pa
   return next;
 }
 
+function insertAt<T>(list: T[], index: number, item: T): T[] {
+  const at = Math.max(0, Math.min(list.length, index));
+  return [...list.slice(0, at), item, ...list.slice(at)];
+}
+
 const CHIP_LABEL = "font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted";
 const STEP_BUTTON =
-  "flex size-9 shrink-0 items-center justify-center rounded-[2px] border border-border font-mono text-base font-bold text-foreground/80 hover:bg-surface-2 disabled:opacity-30 sm:size-8";
+  "flex h-11 w-10 shrink-0 items-center justify-center rounded-[2px] border border-border font-mono text-base font-bold text-foreground/80 hover:bg-surface-2 disabled:opacity-30";
 
 /**
  * The header's stat chips: "Treinos por semana" (at least one per day; more
@@ -1082,7 +1809,7 @@ function NumberBox({
           if (e.key === "Enter") e.currentTarget.blur();
         }}
         className={cn(
-          "h-9 w-12 px-1.5 text-center font-mono text-lg font-bold tabular-nums sm:h-8",
+          "h-11 w-12 px-1.5 text-center font-mono text-lg font-bold tabular-nums",
           invalid && "border-danger",
         )}
       />

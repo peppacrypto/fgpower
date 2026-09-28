@@ -120,9 +120,9 @@ export default async function ProgramsPage({ searchParams }: PageProps<"/app/pro
   const createCard = (
     <Link
       href="/app/programs/new"
-      className="mt-4 flex flex-col items-start gap-1 rounded-[var(--radius-lg)] border border-dashed border-border-strong p-6 transition-colors hover:border-accent hover:bg-accent-soft/30"
+      className="mt-4 flex flex-col items-start gap-1 border border-dashed border-foreground/35 p-6 transition-colors hover:border-accent hover:bg-accent-soft/30"
     >
-      <span className="font-mono text-2xl font-bold text-foreground/20">＋</span>
+      <span aria-hidden className="font-mono text-2xl font-bold text-muted">＋</span>
       <span className="mt-1 font-semibold">Monte seu próprio programa</span>
       <span className="text-sm text-muted">Do zero, ou abra um pronto e toque em “Personalizar”.</span>
     </Link>

@@ -4,12 +4,34 @@ import { ArrowLeft, ArrowRight, ExternalLink } from "lucide-react";
 import { GArrow, GLoad } from "@/components/ui/glyph";
 import { Markdown } from "@/components/markdown";
 import { SectionHead } from "@/components/ui/section-head";
-import { GOAL_LABEL, STYLE_LABEL, GOAL_HUE, EQUIPMENT_LABEL } from "@/lib/constants/program-labels";
+import {
+  EQUIPMENT_LABEL,
+  EQUIPMENT_SHORT_LABEL,
+  EXPERIENCE_LABEL,
+  GOAL_HUE,
+  GOAL_LABEL,
+  STYLE_LABEL,
+} from "@/lib/constants/program-labels";
+import { joinPt, needLabels } from "@/lib/programming/equipment-needs";
 import { glossaryFor } from "@/lib/programming/glossary";
 import { formatNumber, formatRir, plural, pluralWord } from "@/lib/utils/format";
 import { seriesLevelLabel, splitSeriesTagline, type SeriesBlock } from "@/lib/programming/gd-series";
 import { OpenSectionsOnHash, StickyActionsBar } from "./dossier-client";
 import { SeriesRail } from "./gd-series-rail";
+
+/** A close alternative listed under "Parecidos" (and in the compare table). */
+export interface SimilarProgram {
+  slug: string;
+  namePt: string;
+  href: string;
+  goal: string;
+  experienceLevel: string;
+  trainingStyle: string;
+  equipmentAccess: string;
+  daysPerWeek: number;
+  durationWeeks: number;
+  sessionMinutes: number;
+}
 
 /** A GD block's place in the series, for its dossier's rail and prev/next links. */
 export interface DossierSeries {
@@ -49,7 +71,7 @@ interface DossierTemplate {
       restSeconds: number;
       warmupSets: number;
       notesPt?: string | null;
-      exercise: { namePt: string; slug: string; media?: { url: string }[] };
+      exercise: { namePt: string; slug: string; equipmentId?: string | null; media?: { url: string }[] };
     }[];
   }[];
   evidence: { sourceId: string; source: { url: string; title: string; journal: string; publicationYear: number } }[];
@@ -72,6 +94,8 @@ export function TemplateDossier({
   actions,
   stickyActions,
   note,
+  adapt,
+  similar = [],
   scienceHref,
   exerciseHref = "/exercises",
   series,
@@ -80,6 +104,10 @@ export function TemplateDossier({
   actions: React.ReactNode;
   stickyActions?: React.ReactNode;
   note?: React.ReactNode;
+  /** Under the masthead: this program needs gear the user lacks — "Adaptar para halteres". */
+  adapt?: React.ReactNode;
+  /** "Parecidos": close alternatives, compared side by side. */
+  similar?: SimilarProgram[];
   scienceHref: string;
   exerciseHref?: string;
   series?: DossierSeries | null;
@@ -92,6 +120,9 @@ export function TemplateDossier({
     : [];
   const exercises = template.days.flatMap((d) => d.exercises);
   const glossary = glossaryFor(exercises.map((ex) => ex.notesPt));
+  // "Requer: máquinas, cabos e barra" — what the exercises actually use.
+  const needs = needLabels(exercises.map((ex) => ex.exercise.equipmentId ?? "").filter(Boolean));
+  const equipment = template.equipmentAccess ?? null;
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
@@ -107,9 +138,7 @@ export function TemplateDossier({
             {GOAL_LABEL[template.goal] ?? template.goal}
           </span>
           <span className="tag tag--spec">{seriesLevelLabel(series?.current ?? "", template.experienceLevel)}</span>
-          {template.equipmentAccess && template.equipmentAccess !== "FULL_GYM" ? (
-            <span className="tag tag--spec">{EQUIPMENT_LABEL[template.equipmentAccess]}</span>
-          ) : null}
+          {equipment ? <span className="tag tag--spec">{EQUIPMENT_LABEL[equipment] ?? equipment}</span> : null}
           {template.isFlagship ? <span className="tag tag--mark">Destaque</span> : null}
         </div>
         <h1 className="text-display mt-2 text-3xl font-extrabold sm:text-4xl">{template.namePt}</h1>
@@ -127,28 +156,33 @@ export function TemplateDossier({
           />
           <MastheadStat value={`${template.sessionMinutes}′`} label="por sessão" />
         </div>
+        {exercises.length > 0 ? (
+          <p className="mt-3 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-muted" data-testid="dossier-requires">
+            {needs.length > 0 ? (
+              <>
+                Requer: <span className="text-foreground">{joinPt(needs)}</span>
+              </>
+            ) : (
+              "Só o peso do corpo"
+            )}
+          </p>
+        ) : null}
 
         <div id="dossier-actions" className="mt-6 flex flex-wrap gap-2">
           {actions}
         </div>
       </div>
 
+      {adapt}
+
       {/* Jump nav — reach the plan without scrolling the prose */}
-      <nav aria-label="Seções" className="mt-4 flex flex-wrap gap-1.5">
-        <a href="#estrutura" className="tag tag--mark hover:brightness-95">
-          Estrutura
-        </a>
-        {weekly.length > 0 ? (
-          <a href="#progressao" className="tag tag--mark hover:brightness-95">
-            Progressão
-          </a>
-        ) : null}
-        <a href="#descricao" className="tag tag--mark hover:brightness-95">
-          Descrição
-        </a>
-        <a href="#ciencia" className="tag tag--mark hover:brightness-95">
-          Ciência
-        </a>
+      {/* Each link is a 44px target around its small mark. */}
+      <nav aria-label="Seções" className="mt-2 flex flex-wrap gap-x-1">
+        <JumpLink href="#estrutura">Estrutura</JumpLink>
+        {weekly.length > 0 ? <JumpLink href="#progressao">Progressão</JumpLink> : null}
+        <JumpLink href="#descricao">Descrição</JumpLink>
+        <JumpLink href="#ciencia">Ciência</JumpLink>
+        {similar.length > 0 ? <JumpLink href="#parecidos">Parecidos</JumpLink> : null}
       </nav>
 
       <Section title="Para quem é">
@@ -163,7 +197,7 @@ export function TemplateDossier({
         <PlanLegend exercises={exercises} rirHref={`${scienceHref}/rir`} />
         {glossary.length > 0 ? (
           <details className="group mt-2 border-b border-border">
-            <summary className="flex min-h-10 cursor-pointer list-none items-center justify-between gap-3 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted [&::-webkit-details-marker]:hidden">
+            <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted [&::-webkit-details-marker]:hidden">
               Termos deste plano ({glossary.length})
               <GArrow className="size-3.5 shrink-0 transition-transform group-open:rotate-90" />
             </summary>
@@ -182,7 +216,7 @@ export function TemplateDossier({
             <div key={day.id} className="overflow-hidden border-t-2 border-t-[var(--rule-heavy)] bg-surface">
               <div className="flex items-baseline justify-between gap-3 border-b border-border bg-surface-2/60 px-4 py-3">
                 <div className="flex min-w-0 items-baseline gap-3">
-                  <span className="font-mono text-sm font-bold text-foreground/30">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="font-mono text-sm font-bold text-muted">{String(i + 1).padStart(2, "0")}</span>
                   <h3 className="font-bold">{day.namePt}</h3>
                 </div>
                 {day.estimatedMinutes ? (
@@ -301,7 +335,7 @@ export function TemplateDossier({
               <Link
                 key={tp.principleId}
                 href={`${scienceHref}/${tp.principle.slug}`}
-                className="inline-flex min-h-9 items-center rounded-[2px] bg-accent-soft px-3 text-xs font-medium text-accent hover:brightness-95"
+                className="inline-flex min-h-11 items-center rounded-[2px] bg-accent-soft px-3 text-xs font-medium text-accent hover:brightness-95"
               >
                 {tp.principle.titlePt}
               </Link>
@@ -310,8 +344,145 @@ export function TemplateDossier({
         ) : null}
       </CollapsibleSection>
 
+      {similar.length > 0 ? (
+        <SimilarSection
+          current={{
+            slug: "",
+            namePt: template.namePt,
+            href: "",
+            goal: template.goal,
+            experienceLevel: template.experienceLevel,
+            trainingStyle: template.trainingStyle,
+            equipmentAccess: equipment ?? "FULL_GYM",
+            daysPerWeek: template.daysPerWeek,
+            durationWeeks: template.durationWeeks,
+            sessionMinutes: template.sessionMinutes,
+          }}
+          similar={similar}
+        />
+      ) : null}
+
       {stickyActions ? <StickyActionsBar watchId="dossier-actions">{stickyActions}</StickyActionsBar> : null}
     </div>
+  );
+}
+
+function JumpLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <a href={href} className="inline-flex min-h-11 items-center px-1 hover:brightness-95">
+      <span className="tag tag--mark">{children}</span>
+    </a>
+  );
+}
+
+/** "4× · 8 sem · 60′" — a program's spec in one mono line. */
+function specLine(t: SimilarProgram) {
+  return `${t.daysPerWeek}× · ${t.durationWeeks} sem · ${t.sessionMinutes}′`;
+}
+
+/**
+ * "Parecidos": close alternatives (same goal, nearby level) as compact spec
+ * rows, what differs in bold, and a side-by-side table for anyone torn
+ * between them — no more opening three dossiers and remembering numbers.
+ */
+function SimilarSection({ current, similar }: { current: SimilarProgram; similar: SimilarProgram[] }) {
+  const columns = [current, ...similar];
+  const rows: { label: string; value: (t: SimilarProgram) => string }[] = [
+    { label: "Nível", value: (t) => EXPERIENCE_LABEL[t.experienceLevel] ?? t.experienceLevel },
+    { label: "Treinos", value: (t) => `${t.daysPerWeek}× / semana` },
+    { label: "Duração", value: (t) => plural(t.durationWeeks, "semana", "semanas") },
+    { label: "Sessão", value: (t) => `${t.sessionMinutes} min` },
+    { label: "Divisão", value: (t) => STYLE_LABEL[t.trainingStyle] ?? t.trainingStyle },
+    { label: "Onde", value: (t) => EQUIPMENT_SHORT_LABEL[t.equipmentAccess] ?? t.equipmentAccess },
+  ];
+  const differs = (t: SimilarProgram, key: "daysPerWeek" | "durationWeeks" | "sessionMinutes" | "equipmentAccess") =>
+    t[key] !== current[key];
+  return (
+    <section id="parecidos" className="mt-10 scroll-mt-4" data-testid="dossier-similar">
+      <SectionHead label="Parecidos" count={String(similar.length)} />
+      <p className="mt-1.5 text-xs text-muted">Mesmo objetivo e nível próximo — muda o que está em destaque.</p>
+      <ul className="mt-3 flex flex-col divide-y divide-border border-y border-border">
+        {similar.map((t) => (
+          <li key={t.slug}>
+            <Link href={t.href} className="group flex min-h-14 items-center gap-3 py-2.5 hover:bg-[var(--ink-2)]">
+              <span className="min-w-0 flex-1">
+                <span className="block text-sm font-semibold leading-snug group-hover:text-accent">{t.namePt}</span>
+                <span className="mt-0.5 flex flex-wrap gap-x-2 font-mono text-[11px] tabular-nums text-muted">
+                  <span className={differs(t, "daysPerWeek") ? "font-bold text-foreground" : undefined}>{t.daysPerWeek}×</span>
+                  <span aria-hidden>·</span>
+                  <span className={differs(t, "durationWeeks") ? "font-bold text-foreground" : undefined}>
+                    {t.durationWeeks} sem
+                  </span>
+                  <span aria-hidden>·</span>
+                  <span className={differs(t, "sessionMinutes") ? "font-bold text-foreground" : undefined}>
+                    {t.sessionMinutes}′
+                  </span>
+                  <span aria-hidden>·</span>
+                  <span className={differs(t, "equipmentAccess") ? "font-bold text-foreground" : undefined}>
+                    {EQUIPMENT_SHORT_LABEL[t.equipmentAccess] ?? t.equipmentAccess}
+                  </span>
+                  <span className="sr-only">({specLine(t)})</span>
+                </span>
+              </span>
+              <GArrow className="size-3.5 shrink-0 text-muted transition-transform group-hover:translate-x-0.5" />
+            </Link>
+          </li>
+        ))}
+      </ul>
+      <details className="group mt-3">
+        <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted [&::-webkit-details-marker]:hidden">
+          Comparar lado a lado
+          <GArrow className="size-3.5 shrink-0 transition-transform group-open:rotate-90" />
+        </summary>
+        {/* Scrolls sideways inside itself on a phone, never the page. */}
+        <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+          <table className="w-full min-w-[34rem] border-collapse text-left text-xs">
+            <caption className="sr-only">Este programa comparado com os parecidos</caption>
+            <thead>
+              <tr className="border-b-2 border-b-[var(--rule-heavy)]">
+                <th scope="col" className="w-20 py-2 pr-2 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted">
+                  <span className="sr-only">Item</span>
+                </th>
+                {columns.map((t, i) => (
+                  <th key={t.slug || "current"} scope="col" className="px-2 py-2 align-bottom text-xs font-bold leading-snug">
+                    {i === 0 ? (
+                      <>
+                        <span className="block font-mono text-[9px] uppercase tracking-[0.14em] text-accent">Este</span>
+                        {t.namePt}
+                      </>
+                    ) : (
+                      <Link href={t.href} className="hover:text-accent hover:underline">
+                        {t.namePt}
+                      </Link>
+                    )}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row) => (
+                <tr key={row.label} className="border-b border-border">
+                  <th scope="row" className="py-2 pr-2 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted">
+                    {row.label}
+                  </th>
+                  {columns.map((t, i) => {
+                    const value = row.value(t);
+                    return (
+                      <td
+                        key={t.slug || "current"}
+                        className={`px-2 py-2 font-mono tabular-nums ${i > 0 && value !== row.value(current) ? "font-bold text-foreground" : "text-foreground/80"}`}
+                      >
+                        {value}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </section>
   );
 }
 
@@ -355,7 +526,7 @@ function SeriesPlace({ series }: { series: DossierSeries }) {
           fit side by side (320 px), the next one moves under the first, still on the right. */}
       <nav aria-label="Blocos do Plano GD" className="mt-3 flex flex-wrap items-center justify-between gap-x-3 text-sm">
         {prev ? (
-          <Link href={prev.href} className="inline-flex min-h-10 items-center gap-1.5 whitespace-nowrap font-semibold hover:text-accent">
+          <Link href={prev.href} className="inline-flex min-h-11 items-center gap-1.5 whitespace-nowrap font-semibold hover:text-accent">
             <ArrowLeft className="size-3.5" aria-hidden />
             {prev.name}
           </Link>
@@ -365,7 +536,7 @@ function SeriesPlace({ series }: { series: DossierSeries }) {
         {next ? (
           <Link
             href={next.href}
-            className="ml-auto inline-flex min-h-10 items-center gap-1.5 whitespace-nowrap text-right font-semibold hover:text-accent"
+            className="ml-auto inline-flex min-h-11 items-center gap-1.5 whitespace-nowrap text-right font-semibold hover:text-accent"
           >
             Depois: {next.name}
             <ArrowRight className="size-3.5" aria-hidden />
@@ -438,8 +609,8 @@ function Section({ title, children }: { title: string; children: React.ReactNode
  * the editorial field-label + a keyline GArrow that rotates when open. */
 function CollapsibleSection({ title, id, children }: { title: string; id: string; children: React.ReactNode }) {
   return (
-    <details id={id} className="group mt-8 scroll-mt-4 border-t border-border pt-3">
-      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
+    <details id={id} className="group mt-6 scroll-mt-4 border-t border-border pt-1">
+      <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
         <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-muted">{title}</span>
         <GArrow className="size-4 shrink-0 text-muted transition-transform group-open:rotate-90" />
       </summary>

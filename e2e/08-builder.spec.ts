@@ -6,7 +6,8 @@ import { SEGUNDA, finishAndSave, newUserOnGd1, recordSet, startDayFromToday, uni
 
 /**
  * Program builder on a phone (Batch 1: W-005, W-037, W-038, W-107, W-113;
- * Batch 2: W-114). Each test uses a fresh account and a fresh program.
+ * Batch 2: W-114; Batch 4: rows fold to one line, actions in a ⋯ sheet,
+ * multi-select picker). Each test uses a fresh account and a fresh program.
  */
 
 /** Runs SQL on the local dev database (docker compose's fgpower-postgres). */
@@ -42,20 +43,37 @@ async function newCustomProgram(page: Page, label: string, name = "Meu PPL") {
   return page.url().match(/\/app\/programs\/([^/]+)\/edit$/)![1];
 }
 
+/** Picks the first exercise matching `query` in the picker and adds it (the picker takes several at once). */
 async function addExercise(page: Page, query: string) {
-  await page.getByRole("button", { name: "Adicionar exercício" }).click();
+  await page.getByRole("button", { name: "Adicionar exercícios", exact: true }).click();
   const dialog = page.locator("dialog[open]");
   await dialog.getByRole("searchbox", { name: "Buscar exercício" }).fill(query);
-  const first = dialog.locator("button.reg-frame").filter({ hasText: new RegExp(query, "i") }).first();
+  const first = dialog
+    .locator("button[data-exercise-id]")
+    .filter({ hasText: new RegExp(query, "i") })
+    .first();
   await expect(first).toBeVisible({ timeout: 15_000 });
   await first.click();
+  await dialog.getByRole("button", { name: "Adicionar 1 exercício" }).click();
   await expect(page.locator("dialog[open]")).toHaveCount(0);
 }
 
 const rows = (page: Page) => page.locator("[data-row-id]");
+/** A row's number box; rows start folded to one line, so this opens the row first. */
 const field = (page: Page, row: number, name: string) => rows(page).nth(row).locator(`input[data-field="${name}"]`);
+async function expand(page: Page, row: number) {
+  const r = rows(page).nth(row);
+  if ((await r.getAttribute("data-expanded")) === null) await r.locator("[data-row-toggle]").click();
+  await expect(r).toHaveAttribute("data-expanded", "true");
+}
+/** A row's "⋯" sheet action ("Mover para baixo", "Duplicar"…). */
+async function rowAction(page: Page, row: number, action: string) {
+  await rows(page).nth(row).locator("[data-row-actions]").click();
+  await page.locator("dialog[open]").getByRole("button", { name: action, exact: true }).click();
+  await expect(page.locator("dialog[open]")).toHaveCount(0);
+}
 const rowNames = async (page: Page) =>
-  (await rows(page).locator("p.font-semibold").allTextContents()).map((s) => s.trim());
+  (await rows(page).locator("[data-row-name]").allTextContents()).map((s) => s.trim());
 
 async function save(page: Page) {
   await page.getByRole("button", { name: /Salvar programa|Salvo/ }).click();
@@ -67,6 +85,7 @@ test("clearing a number never becomes 0 and saving never hits the error page", a
   await addExercise(page, "supino");
   await addExercise(page, "remada");
 
+  await expand(page, 0);
   const sets = field(page, 0, "sets");
   await sets.fill("");
   await expect(sets).toHaveValue(""); // raw text kept while typing
@@ -83,6 +102,7 @@ test("clearing a number never becomes 0 and saving never hits the error page", a
 
   await save(page);
   await page.reload();
+  await expand(page, 0);
   await expect(field(page, 0, "sets")).toHaveValue("30");
   await expect(rows(page)).toHaveCount(2);
 });
@@ -91,6 +111,7 @@ test("an inverted rep range is fixed on blur and flagged", async ({ page }) => {
   await newCustomProgram(page, "builder-range");
   await addExercise(page, "supino");
 
+  await expand(page, 0);
   await field(page, 0, "repMin").fill("15");
   await field(page, 0, "repMin").blur();
   await expect(field(page, 0, "repMax")).toHaveValue("15");
@@ -104,6 +125,7 @@ test("an inverted rep range is fixed on blur and flagged", async ({ page }) => {
 
   await save(page);
   await page.reload();
+  await expand(page, 0);
   await expect(field(page, 0, "repMin")).toHaveValue("15");
   await expect(field(page, 0, "repMax")).toHaveValue("20");
 });
@@ -161,21 +183,23 @@ test("leaving with unsaved changes asks first, and a reload offers the draft bac
   await expect(page.getByRole("button", { name: "Restaurar alterações não salvas" })).toHaveCount(0);
 });
 
-test("exercises reorder with the arrows and with a touch drag on the grip", async ({ page, context }) => {
+test("exercises reorder from the row's ⋯ sheet and with a touch drag on the grip", async ({ page, context }) => {
   await newCustomProgram(page, "builder-order");
   await addExercise(page, "supino");
   await addExercise(page, "remada");
   await addExercise(page, "agachamento");
   const [a, b, c] = await rowNames(page);
 
-  await rows(page).first().getByRole("button", { name: /para baixo$/ }).tap();
+  await rowAction(page, 0, "Mover para baixo");
   expect(await rowNames(page)).toEqual([b, a, c]);
-  await rows(page).last().getByRole("button", { name: /para cima$/ }).tap();
+  // Focus comes back to the moved row's ⋯.
+  await expect(rows(page).nth(1).locator("[data-row-actions]")).toBeFocused();
+  await rowAction(page, 2, "Mover para cima");
   expect(await rowNames(page)).toEqual([b, c, a]);
 
   // Long-press the first grip and drag it below the second row (CDP touch;
   // both grips must be on screen, above the sticky save bar).
-  const grips = page.getByRole("button", { name: "Arrastar para reordenar" });
+  const grips = page.getByRole("button", { name: /^Arrastar .+ para reordenar$/ });
   await expect(grips.first()).toHaveCSS("touch-action", "none");
   await rows(page).first().evaluate((el) => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - 16));
   const from = (await grips.first().boundingBox())!;
@@ -259,6 +283,7 @@ test("saving while a number box still has focus saves what the box shows", async
   await addExercise(page, "supino");
   await save(page);
 
+  await expand(page, 0);
   const sets = field(page, 0, "sets");
   await sets.fill("35");
   await expect(sets).toBeFocused();
@@ -269,6 +294,7 @@ test("saving while a number box still has focus saves what the box shows", async
   await expect(page.getByRole("button", { name: "Salvo" })).toBeVisible({ timeout: 15_000 });
   await expect(sets).toHaveValue("30");
   await page.reload();
+  await expand(page, 0);
   await expect(field(page, 0, "sets")).toHaveValue("30");
 });
 
@@ -289,7 +315,7 @@ test("a save in another tab keeps this tab's unsaved draft", async ({ page, cont
 
 test("one Escape closes the picker, and the leave sheet keeps focus inside", async ({ page }) => {
   await newCustomProgram(page, "builder-keys");
-  await page.getByRole("button", { name: "Adicionar exercício" }).click();
+  await page.getByRole("button", { name: "Adicionar exercícios", exact: true }).click();
   const search = page.locator("dialog[open]").getByRole("searchbox", { name: "Buscar exercício" });
   await search.fill("supino");
   await search.press("Escape");
@@ -339,7 +365,8 @@ test("saving keeps each exercise row: logged workouts stay linked and unedited s
   expect(Number(linkedBefore)).toBeGreaterThan(0);
 
   await page.goto(`/app/programs/${programId}/edit`);
-  await page.getByRole("button", { name: SEGUNDA, exact: true }).click();
+  await page.getByRole("tab", { name: SEGUNDA, exact: true }).click();
+  await expand(page, 0);
   await field(page, 0, "sets").fill("5");
   await field(page, 0, "sets").blur();
   await save(page);
@@ -351,7 +378,7 @@ test("saving keeps each exercise row: logged workouts stay linked and unedited s
   );
 
   // A duplicate is a new row that keeps the source's settings; the source keeps its id.
-  await rows(page).first().getByRole("button", { name: "Duplicar" }).click();
+  await rowAction(page, 0, "Duplicar");
   await save(page);
   const after = rowIds();
   expect(after).toHaveLength(before.length + 1);
@@ -361,6 +388,7 @@ test("saving keeps each exercise row: logged workouts stay linked and unedited s
     "5|3-1-1-0|DOUBLE|2.5",
   );
   // A second save (with the ids the first one handed back) rewrites nothing.
+  await expand(page, 1);
   await field(page, 1, "sets").fill("4");
   await field(page, 1, "sets").blur();
   await save(page);

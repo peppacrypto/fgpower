@@ -5,8 +5,10 @@ import { revalidatePath } from "next/cache";
 import { requireUserOrThrow } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 import { getTemplateBySlug } from "@/lib/data/templates";
+import { adaptRowKey } from "@/lib/data/alternatives";
 import { findUndoableSwitch } from "@/lib/data/dashboard";
 import { applyWeekLayout, getProgramRestart } from "@/lib/data/program-lifecycle";
+import { isUntouchedFork } from "@/lib/data/user-programs";
 import { startAdHocWorkoutSession } from "@/lib/actions/workouts";
 import { seriesPosition } from "@/lib/training/program-calendar";
 import type { Prisma } from "@/generated/prisma/client";
@@ -22,14 +24,19 @@ const SET_HAS_DATA: Prisma.SetLogWhereInput = {
  * (spec §9: "Customize creates a user-owned fork rather than modifying the
  * canonical template").
  */
-async function forkTemplateToProgram(templateSlug: string, userId: string) {
+async function forkTemplateToProgram(
+  templateSlug: string,
+  userId: string,
+  /** "Adaptar": swaps by template row (adaptRowKey), and the copy's name. */
+  adapt?: { swaps: Map<string, { exerciseId: string; replaces: string }>; name: string },
+) {
   const template = await getTemplateBySlug(templateSlug);
   if (!template) throw new Error("TEMPLATE_NOT_FOUND");
 
   const program = await prisma.userProgram.create({
     data: {
       userId,
-      name: template.namePt,
+      name: adapt?.name ?? template.namePt,
       description: template.taglinePt,
       sourceTemplateId: template.id,
       sourceTemplateVersion: template.version,
@@ -46,22 +53,27 @@ async function forkTemplateToProgram(templateSlug: string, userId: string) {
           focus: day.focusPt,
           estimatedMinutes: day.estimatedMinutes,
           exercises: {
-            create: day.exercises.map((ex) => ({
-              exerciseId: ex.exerciseId,
-              sortOrder: ex.sortOrder,
-              groupKey: ex.groupKey,
-              sets: ex.sets,
-              repMin: ex.repMin,
-              repMax: ex.repMax,
-              rirTarget: ex.rirTarget,
-              rpeTarget: ex.rpeTarget,
-              restSeconds: ex.restSeconds,
-              tempo: ex.tempo,
-              warmupSets: ex.warmupSets,
-              progressionStrategy: ex.progressionStrategy,
-              loadIncrementKg: ex.loadIncrementKg,
-              notes: ex.notesPt,
-            })),
+            create: day.exercises.map((ex) => {
+              // "Adaptar para halteres": the swapped-in exercise keeps the row's
+              // prescription; its cue was written for the original, so it says so.
+              const swap = adapt?.swaps.get(adaptRowKey(day.dayIndex, ex));
+              return {
+                exerciseId: swap?.exerciseId ?? ex.exerciseId,
+                sortOrder: ex.sortOrder,
+                groupKey: ex.groupKey,
+                sets: ex.sets,
+                repMin: ex.repMin,
+                repMax: ex.repMax,
+                rirTarget: ex.rirTarget,
+                rpeTarget: ex.rpeTarget,
+                restSeconds: ex.restSeconds,
+                tempo: ex.tempo,
+                warmupSets: ex.warmupSets,
+                progressionStrategy: ex.progressionStrategy,
+                loadIncrementKg: ex.loadIncrementKg,
+                notes: swap ? `No lugar de ${swap.replaces}.${ex.notesPt ? ` ${ex.notesPt}` : ""}` : ex.notesPt,
+              };
+            }),
           },
         })),
       },
@@ -132,10 +144,104 @@ export async function startTemplateAndBegin(templateSlug: string) {
   await startAdHocWorkoutSession(firstDay.id);
 }
 
+/**
+ * "Personalizar": the user's own copy of a template, in the editor. It used to
+ * fork a fresh draft on every tap — peeking twice left two "Rascunho" copies,
+ * and on the template already running it made a second one that restarted at
+ * week 1. Now: the running program is edited in place; an untouched copy from
+ * an earlier tap (same template version, never saved or trained) is reopened;
+ * only otherwise is a new copy made.
+ */
 export async function customizeTemplate(templateSlug: string) {
   const user = await requireUserOrThrow();
+  const template = await prisma.workoutTemplate.findUnique({
+    where: { slug: String(templateSlug) },
+    select: { id: true, version: true, namePt: true },
+  });
+  if (!template) redirect("/app/programs");
+
+  const running = await prisma.programEnrollment.findFirst({
+    where: { userId: user.id, status: "ACTIVE", program: { sourceTemplateId: template.id } },
+    orderBy: { startedAt: "desc" },
+    select: { programId: true },
+  });
+  if (running) redirect(`/app/programs/${running.programId}/edit`);
+
+  const untouched = await findUntouchedCopy(user.id, template);
+  if (untouched) redirect(`/app/programs/${untouched}/edit`);
+
   const program = await forkTemplateToProgram(templateSlug, user.id);
   redirect(`/app/programs/${program.id}/edit`);
+}
+
+/**
+ * A copy of the template made by an earlier "Personalizar" and never saved or
+ * trained since. Only a plain copy counts: "Adaptar" and "Duplicar" copies
+ * carry the template too, but under their own name ("… (adaptado)",
+ * "… (cópia)") and with the user's choices in them.
+ */
+async function findUntouchedCopy(userId: string, template: { id: string; version: number; namePt: string }) {
+  const drafts = await prisma.userProgram.findMany({
+    where: {
+      userId,
+      sourceTemplateId: template.id,
+      sourceTemplateVersion: template.version,
+      name: template.namePt,
+      status: "DRAFT",
+      sessions: { none: {} },
+    },
+    orderBy: { createdAt: "desc" },
+    take: 10,
+    select: { id: true, createdAt: true, updatedAt: true },
+  });
+  return drafts.find(isUntouchedFork)?.id ?? null;
+}
+
+/**
+ * "Adaptar para halteres" (the dossier's review page): a copy of the template
+ * with the exercises the user's equipment can't do swapped for the ones they
+ * chose on the review — `swap:<row>` = the exercise to use, or "keep". Only
+ * published exercises are taken. Lands in the builder.
+ *
+ * A row is named by its day, place and exercise (adaptRowKey), not by its
+ * WorkoutTemplateExercise id, which every reseed recreates. A name the
+ * template no longer has (it changed while the review was open) sends the
+ * user back to review it again rather than saving a copy without their swaps.
+ */
+export async function adaptTemplate(templateSlug: string, formData: FormData) {
+  const user = await requireUserOrThrow();
+  const template = await getTemplateBySlug(String(templateSlug));
+  if (!template) redirect("/app/programs");
+
+  const rows = new Map(template.days.flatMap((d) => d.exercises.map((ex) => [adaptRowKey(d.dayIndex, ex), ex] as const)));
+  const wanted = new Map<string, string>();
+  for (const [key, value] of formData.entries()) {
+    if (!key.startsWith("swap:") || typeof value !== "string") continue;
+    const rowKey = key.slice(5);
+    const row = rows.get(rowKey);
+    if (!row) redirect(`/app/programs/templates/${template.slug}/adapt?mudou=1`);
+    if (value && value !== "keep" && value !== row.exerciseId) wanted.set(rowKey, value.slice(0, 64));
+  }
+  const valid = new Set(
+    (
+      await prisma.exercise.findMany({
+        where: { id: { in: [...new Set(wanted.values())] }, isPublished: true },
+        select: { id: true },
+      })
+    ).map((e) => e.id),
+  );
+  const swaps = new Map<string, { exerciseId: string; replaces: string }>();
+  for (const [rowKey, exerciseId] of wanted) {
+    const row = rows.get(rowKey);
+    if (row && valid.has(exerciseId)) swaps.set(rowKey, { exerciseId, replaces: row.exercise.namePt });
+  }
+
+  const program = await forkTemplateToProgram(template.slug, user.id, {
+    swaps,
+    name: `${template.namePt} (adaptado)`.slice(0, 120),
+  });
+  revalidatePath("/app/programs");
+  redirect(`/app/programs/${program.id}/edit?adaptado=${swaps.size}`);
 }
 
 /**
@@ -238,7 +344,9 @@ export async function restorePreviousProgram(enrollmentId: string) {
       const program = await tx.userProgram.findUnique({
         where: { id: enrollment.programId },
         select: {
+          name: true,
           sourceTemplateId: true,
+          sourceTemplate: { select: { namePt: true } },
           createdAt: true,
           updatedAt: true,
           // Discarded starts (just above, or earlier) don't make it a trained program.
@@ -246,12 +354,21 @@ export async function restorePreviousProgram(enrollmentId: string) {
         },
       });
       if (!program) continue;
+      // The program row as the start read it — before the start itself rewrote updatedAt.
+      const snapshot = (
+        await tx.programEnrollment.findUnique({ where: { id: enrollment.id }, select: { programSnapshot: true } })
+      )?.programSnapshot as { createdAt?: string; updatedAt?: string } | null;
       const started = enrollment.startedAt.getTime();
       const untouched = program._count.sessions === 0;
-      // Forked by "Ativar" in the same request as the switch, and never edited since.
+      // Forked by "Ativar" in the same request as the switch, and never edited since: a plain
+      // copy of the template (not "(adaptado)" / "(cópia)" — those hold the user's choices),
+      // never written between its insert and the start (a builder save rewrites updatedAt).
       const throwaway =
         untouched &&
         program.sourceTemplateId !== null &&
+        program.name === program.sourceTemplate?.namePt &&
+        !!snapshot?.createdAt &&
+        snapshot.createdAt === snapshot.updatedAt &&
         started - program.createdAt.getTime() < SAME_REQUEST_MS &&
         program.updatedAt.getTime() - started < SAME_REQUEST_MS;
       if (throwaway) {
@@ -309,11 +426,14 @@ export async function duplicateProgram(programId: string) {
   });
   if (original.userId !== user.id) throw new Error("FORBIDDEN");
 
-  await prisma.userProgram.create({
+  const copy = await prisma.userProgram.create({
     data: {
       userId: user.id,
-      name: `${original.name} (cópia)`,
+      name: `${original.name} (cópia)`.slice(0, 120),
       description: original.description,
+      // Still "Baseado em GD 1" (its GD series place and test weeks come from it).
+      sourceTemplateId: original.sourceTemplateId,
+      sourceTemplateVersion: original.sourceTemplateVersion,
       goal: original.goal,
       daysPerWeek: original.daysPerWeek,
       durationWeeks: original.durationWeeks,
@@ -347,8 +467,51 @@ export async function duplicateProgram(programId: string) {
         })),
       },
     },
+    select: { id: true },
   });
   revalidatePath("/app/programs");
+  // Straight into the copy, saying so — the page used to stay on the original
+  // with no sign anything happened, so people tapped again and again.
+  redirect(`/app/programs/${copy.id}/edit?copia=1`);
+}
+
+/**
+ * "Descartar rascunho" in the builder: a draft never trained is deleted, and
+ * the user lands where they came from — the template it copied, or the
+ * programs list. Anything else (running, trained, archived) is left alone.
+ */
+export async function discardDraft(programId: string) {
+  const user = await requireUserOrThrow();
+  if (typeof programId !== "string") redirect("/app/programs");
+  const program = await prisma.userProgram.findFirst({
+    where: { id: programId, userId: user.id },
+    select: {
+      status: true,
+      sourceTemplate: { select: { slug: true } },
+      _count: { select: { sessions: { where: { status: { not: "DISCARDED" } } } } },
+    },
+  });
+  if (!program) redirect("/app/programs");
+  if (program.status !== "DRAFT" || program._count.sessions > 0) redirect(`/app/programs/${programId}`);
+  // Never one with a running enrollment, whatever its status says: a block
+  // in progress must not lose its program. The checks above are repeated in
+  // the delete itself, so a workout started meanwhile keeps it too.
+  const deleted = await prisma.userProgram.deleteMany({
+    where: {
+      id: programId,
+      userId: user.id,
+      status: "DRAFT",
+      enrollments: { none: { status: "ACTIVE" } },
+      sessions: { none: { status: { not: "DISCARDED" } } },
+    },
+  });
+  if (deleted.count === 0) redirect(`/app/programs/${programId}`);
+  revalidatePath("/app/programs");
+  redirect(
+    program.sourceTemplate
+      ? `/app/programs/templates/${program.sourceTemplate.slug}?descartado=1`
+      : "/app/programs?excluido=1",
+  );
 }
 
 /**

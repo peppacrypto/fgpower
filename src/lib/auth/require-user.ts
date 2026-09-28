@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/auth";
@@ -11,10 +12,15 @@ import { loginAgainHref } from "@/lib/auth/session-expired";
  * The authoritative session check. Every protected server action, route
  * handler and RSC page must call one of these — `proxy.ts` only checks
  * whether a session cookie exists, which is not a security boundary.
+ *
+ * Wrapped in React cache(): the /app layout, the page and its
+ * generateMetadata each ask within one render, and each ask was a session
+ * lookup. The cache lives for one server request (render or action), so a
+ * sign-out or a revoked session is still seen by the next one.
  */
-export async function getCurrentSession() {
+export const getCurrentSession = cache(async () => {
   return auth.api.getSession({ headers: await headers() });
-}
+});
 
 /**
  * Redirects to /login if there is no session. Use in RSC pages. The login

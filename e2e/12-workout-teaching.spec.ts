@@ -201,8 +201,7 @@ test("the second time: 'Último treino' with date and RIR, and the progression's
   await expect(lastTime).toContainText(/Último treino · \d{2}\/\d{2} · hoje/i);
   await expect(lastTime).toContainText("× 12 · 12 · 12");
   await expect(lastTime).toContainText("RIR 3 · 3 · 3");
-  const slug = await page.getByRole("link", { name: "Ver técnica" }).getAttribute("href");
-  await expect(lastTime.getByRole("link").first()).toHaveAttribute("href", `${slug}/history`);
+  await expect(lastTime.getByRole("link").first()).toHaveAttribute("href", /^\/app\/exercises\/[^/]+\/history$/);
 
   // The engine's verdict, not a copy of last week.
   const advice = lastTime.locator("[data-advice]");

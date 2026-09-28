@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { AlertTriangle, Info } from "lucide-react";
 import { GArrow, GLoad } from "@/components/ui/glyph";
-import { requireUser } from "@/lib/auth/require-user";
+import { getCurrentSession, requireUser } from "@/lib/auth/require-user";
 import { getEnrollmentProgress, getUserProgram } from "@/lib/data/user-programs";
 import { getActiveEnrollment, getDaysDoneThisWeek, getInProgressSessions } from "@/lib/data/dashboard";
 import { analyzeUserProgram } from "@/lib/programming/analyze";
@@ -30,8 +30,9 @@ import { NOT_FOUND_TITLE } from "@/components/ui/not-found-panel";
 
 export async function generateMetadata({ params }: PageProps<"/app/programs/[id]">): Promise<Metadata> {
   const { id } = await params;
-  const program = await getUserProgram(id);
-  return program ? { title: program.name } : { title: NOT_FOUND_TITLE };
+  const [program, session] = await Promise.all([getUserProgram(id), getCurrentSession()]);
+  // Someone else's program is "not found" in the tab too, as on the page.
+  return program && program.userId === session?.user.id ? { title: program.name } : { title: NOT_FOUND_TITLE };
 }
 
 export default async function UserProgramPage({ params }: PageProps<"/app/programs/[id]">) {
@@ -89,7 +90,7 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
           {program.sourceTemplate ? (
             <p className="mt-1 text-sm text-muted">
               Baseado em{" "}
-              <Link href={`/app/programs/templates/${program.sourceTemplate.slug}`} className="text-accent hover:underline">
+              <Link href={`/app/programs/templates/${program.sourceTemplate.slug}`} className="text-accent underline underline-offset-2">
                 {program.sourceTemplate.namePt}
               </Link>
             </p>
@@ -188,7 +189,7 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
       {!isActive && !hasExercises ? (
         <p id="start-needs-exercises" className="mt-2 text-xs text-muted">
           Adicione ao menos um exercício para iniciar.{" "}
-          <Link href={editHref} className="font-semibold text-accent hover:underline">
+          <Link href={editHref} className="inline-flex min-h-11 items-center font-semibold text-accent hover:underline">
             Editar programa
           </Link>
         </p>
@@ -257,7 +258,7 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
             <ul className="mt-3 flex flex-col divide-y divide-border">
               {day.exercises.map((ex) => (
                 <li key={ex.id}>
-                  <Link href={`/app/exercises/${ex.exercise.slug}`} className="group flex items-center gap-3 py-2 text-sm">
+                  <Link href={`/app/exercises/${ex.exercise.slug}`} className="group flex min-h-12 items-center gap-3 py-1.5 text-sm">
                     <div className="relative size-9 shrink-0 overflow-hidden rounded-[3px] bg-surface-2">
                       {ex.exercise.media?.[0]?.url ? (
                         <Image src={ex.exercise.media[0].url} alt="" fill sizes="36px" className="object-cover" />

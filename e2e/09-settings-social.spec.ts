@@ -266,7 +266,11 @@ test("signed-out visitors get a sign-in link for FG; FG failures roll back", asy
   const fan = await newUser(browser, "fg-fan", "Carla Fã");
   await fan.page.goto(`/u/bruno_${tag}`);
   const fg = fan.page.getByRole("button", { name: /FG/ });
-  await fg.click();
+  // The count shows at once (optimistic): wait for the server to take the FG before reloading.
+  await Promise.all([
+    fan.page.waitForResponse((r) => r.request().method() === "POST" && r.request().headers()["next-action"] !== undefined),
+    fg.click(),
+  ]);
   await expect(fg).toHaveAttribute("aria-pressed", "true");
   await expect(fg).toContainText("1");
   await fan.page.reload();

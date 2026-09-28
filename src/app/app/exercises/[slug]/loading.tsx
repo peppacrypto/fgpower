@@ -6,6 +6,10 @@ import { ExerciseHistorySkeleton } from "./history/loading";
 export function ExerciseSkeleton() {
   return (
     <SkeletonScreen label="o exercício" className="mx-auto max-w-4xl px-4 py-6 sm:px-6 sm:py-8">
+      {/* "‹ Exercícios" */}
+      <div className="-mt-2 mb-2 flex h-11 items-center">
+        <Bone className="h-3 w-24" />
+      </div>
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="reg-frame flex gap-2">
           <Bone className="aspect-[3/4] flex-1" />

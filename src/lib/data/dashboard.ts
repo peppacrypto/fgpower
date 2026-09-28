@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { prisma } from "@/lib/db";
 import { startOfWeek } from "@/lib/training/week";
 import { resolveSessionDay } from "@/lib/training/day-match";
@@ -16,7 +17,7 @@ import { entryWeekTrained as entryWeekHadWorkout, streakWeeksFrom, summarizeStre
  * UserProgramDay.weekday) — so changing the training days in the settings
  * moves Today's schedule and the summary's next date at once.
  */
-export async function getActiveEnrollment(userId: string) {
+export const getActiveEnrollment = cache(async (userId: string) => {
   const enrollment = await prisma.programEnrollment.findFirst({
     where: { userId, status: "ACTIVE" },
     include: {
@@ -46,7 +47,7 @@ export async function getActiveEnrollment(userId: string) {
     ...rest,
     program: { ...rest.program, days: rest.program.days.map((d, i) => ({ ...d, weekday: layout.weekdays[i] ?? null })) },
   };
-}
+});
 
 export async function getRecentSessions(userId: string, limit = 5) {
   return prisma.workoutSession.findMany({
@@ -153,7 +154,12 @@ export async function getInProgressSessions(userId: string, now: Date = new Date
       own.map((x) => ({ ...x, wasSkipped: x.exerciseLog.wasSkipped })),
       now,
     );
-    return { ...s, registered, hasData: own.length > 0, stale: state.leftOpen, saveAs: state.saveAs };
+    // The last time anything was typed or ✓'d in it (Today's resume after the app was killed, W-097).
+    const lastActivityAt = own.reduce<Date | null>((latest, x) => {
+      const t = x.completedAt && x.completedAt > x.updatedAt ? x.completedAt : x.updatedAt;
+      return !latest || t > latest ? t : latest;
+    }, null);
+    return { ...s, registered, hasData: own.length > 0, stale: state.leftOpen, saveAs: state.saveAs, lastActivityAt };
   });
 }
 

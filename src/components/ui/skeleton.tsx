@@ -58,6 +58,17 @@ export function SkeletonTitle({ className, children }: { className?: string; chi
   return <div className={cn("text-2xl font-bold tracking-tight", className)}>{children}</div>;
 }
 
+/** A Masthead (ui/masthead.tsx) while its page loads: the kicker and title as the page draws them. */
+export function SkeletonMasthead({ kicker, title, lead = true }: { kicker: string; title: string; lead?: boolean }) {
+  return (
+    <div>
+      <span className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-muted">{kicker}</span>
+      <div className="text-display mt-1 text-3xl font-extrabold sm:text-4xl">{title}</div>
+      {lead ? <Bone className="mt-2.5 h-3.5 w-4/5 max-w-md" /> : null}
+    </div>
+  );
+}
+
 /** Text lines: full width, then shorter, like a paragraph's ragged edge. */
 export function BoneLines({ lines = 2, className, lineClassName }: { lines?: number; className?: string; lineClassName?: string }) {
   const widths = ["w-full", "w-11/12", "w-4/5", "w-2/3", "w-3/5"];

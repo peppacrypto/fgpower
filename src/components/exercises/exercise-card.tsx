@@ -20,7 +20,8 @@ export function ExerciseCard({ exercise, href }: { exercise: ExerciseCardData; h
         {media ? (
           <Image
             src={media.url}
-            alt={exercise.namePt}
+            // Decorative here: the name is the card's heading right below.
+            alt=""
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 240px"
             className="object-cover"
@@ -42,7 +43,7 @@ export function ExerciseCard({ exercise, href }: { exercise: ExerciseCardData; h
           {primaryMuscle ? <span>{primaryMuscle.namePt}</span> : null}
           {exercise.equipment ? (
             <>
-              <span aria-hidden>·</span>
+              {primaryMuscle ? <span aria-hidden>·</span> : null}
               <span>{exercise.equipment.namePt}</span>
             </>
           ) : null}

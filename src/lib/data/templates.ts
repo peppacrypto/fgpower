@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { prisma } from "@/lib/db";
 import type { CatalogItem } from "@/lib/programming/catalog";
 import type { RecommendProfile } from "@/lib/programming/recommend";
@@ -84,7 +85,7 @@ export async function listSeriesTemplates(slugs: readonly string[]) {
   });
 }
 
-export async function getTemplateBySlug(slug: string) {
+export const getTemplateBySlug = cache(async (slug: string) => {
   return prisma.workoutTemplate.findUnique({
     where: { slug },
     include: {
@@ -105,4 +106,4 @@ export async function getTemplateBySlug(slug: string) {
       principles: { include: { principle: true }, orderBy: { sortOrder: "asc" } },
     },
   });
-}
+});

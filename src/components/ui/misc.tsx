@@ -17,9 +17,9 @@ export function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivEl
 export function ProgressBar({ value, className }: { value: number; className?: string }) {
   const clamped = Math.max(0, Math.min(100, value));
   return (
-    <div className={cn("h-2 w-full overflow-hidden rounded-full bg-surface-2", className)}>
+    <div className={cn("h-2 w-full overflow-hidden bg-surface-2", className)}>
       <div
-        className="h-full rounded-full bg-accent transition-[width] duration-300"
+        className="h-full bg-accent transition-[width] duration-300"
         style={{ width: `${clamped}%` }}
         role="progressbar"
         aria-valuenow={clamped}

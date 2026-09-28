@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { Check, ChevronDown, Info, Plus, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { formatDecimal, type SetKind } from "@/lib/training/set-plan";
@@ -63,6 +63,9 @@ export function SetTable({
   onExplainRir,
   timed = false,
   flashRowId = null,
+  loadCheck = null,
+  onConfirmLoad,
+  onFixLoad,
 }: {
   warmups: SetTableRowModel[];
   prescribed: SetTableRowModel[];
@@ -89,8 +92,12 @@ export function SetTable({
   timed?: boolean;
   /** The row whose "PR" mark was just earned: it pops in (once per tap). */
   flashRowId?: { id: string; n: number } | null;
+  /** A ✓ held back because its load is far from the reference ("225 kg? Último: 22,5 kg"). */
+  loadCheck?: { id: string; text: string } | null;
+  onConfirmLoad?: (id: string) => void;
+  onFixLoad?: (id: string) => void;
 }) {
-  const rowProps = { onChange, onBlurRow, onToggle, timed, flashRowId };
+  const rowProps = { onChange, onBlurRow, onToggle, timed, flashRowId, loadCheck, onConfirmLoad, onFixLoad };
   // Rows holding something stay open: a logged warm-up is never hidden.
   const warmupsHaveData = warmups.some((r) => r.done || r.values.weight.trim() !== "" || r.values.reps.trim() !== "");
   const showWarmupRows = warmupsOpen || warmupsHaveData;
@@ -98,7 +105,7 @@ export function SetTable({
     .filter((r) => r.suggestion.weightKg !== null && r.suggestion.reps !== null)
     .map((r) => `~${formatKg(r.suggestion.weightKg)} × ${r.suggestion.reps}`);
   const hintText = (
-    <p className="mb-2 text-[11px] text-muted">
+    <p className="mb-2 text-xs text-muted">
       Números em cinza <span className="italic">em itálico</span> são sugestões
       {hint.source === "progression" ? " (a progressão de hoje)" : " (último treino / série de cima)"}. Toque ✓ para
       usá-los ou digite os seus.
@@ -106,7 +113,7 @@ export function SetTable({
   );
   // The column names sit right above the first rows on screen.
   const columns = (
-    <div className={cn(GRID, "px-1 pb-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted")}>
+    <div className={cn(GRID, "px-1 pb-1.5 font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted")}>
       <span>Série</span>
       <span className="text-center">kg</span>
       <span className="text-center">{timed ? "seg" : "reps"}</span>
@@ -264,7 +271,7 @@ function RemoveExtraButton({ row, onRemove }: { row: SetTableRowModel; onRemove:
 
 function BlockLabel({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <p className={cn("mb-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted", className)}>
+    <p className={cn("mb-1.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted", className)}>
       {children}
     </p>
   );
@@ -289,6 +296,9 @@ function SetRowInputs({
   onToggle,
   timed,
   flashRowId,
+  loadCheck,
+  onConfirmLoad,
+  onFixLoad,
 }: {
   row: SetTableRowModel;
   onChange: (id: string, field: DraftField, value: string) => void;
@@ -296,8 +306,18 @@ function SetRowInputs({
   onToggle: (id: string) => void;
   timed: boolean;
   flashRowId: { id: string; n: number } | null;
+  loadCheck: { id: string; text: string } | null;
+  onConfirmLoad?: (id: string) => void;
+  onFixLoad?: (id: string) => void;
 }) {
   const name = rowName(row);
+  const missingId = useId();
+  /**
+   * The row has focus: its "Falta reps" line waits until the user leaves it —
+   * typing kg and moving on to reps must not push the rows below up and down.
+   */
+  const [focused, setFocused] = useState(false);
+  const checking = loadCheck?.id === row.id ? loadCheck : null;
   const repsRef = useRef<HTMLInputElement>(null);
   const markRef = useRef<HTMLSpanElement>(null);
   const flashN = flashRowId?.id === row.id ? flashRowId.n : null;
@@ -342,16 +362,42 @@ function SetRowInputs({
       onChange={(e) => onChange(row.id, f, e.target.value)}
       onBlur={() => onBlurRow(row.id)}
       onKeyDown={onEnter(f)}
+      // Only kg or only reps: the empty box is flagged in words too (W-170), not by its border alone.
+      aria-invalid={row.missing === f || (f === "weight" && checking !== null) ? true : undefined}
+      aria-describedby={row.missing === f && !row.error ? missingId : undefined}
       className={cn(
         "h-11 w-full min-w-0 rounded-[3px] border bg-surface px-1 text-center font-mono text-base font-semibold tabular-nums placeholder:font-normal placeholder:italic placeholder:text-muted",
         // `!`: the global `* { border-color }` rule is unlayered and would win.
-        row.done ? "border-accent!" : row.missing === f ? "border-warning! border-2" : "border-foreground/50!",
+        row.done
+          ? "border-accent!"
+          : row.missing === f || (f === "weight" && checking)
+            ? "border-warning! border-2"
+            : "border-foreground/50!",
       )}
     />
   );
 
+  // What the empty box means: ✓ fills it with the grey suggestion when there is one; otherwise the set won't count.
+  const missingText =
+    row.missing === "weight"
+      ? row.suggestion.weightKg !== null
+        ? `Falta kg · ✓ preenche ${formatKg(row.suggestion.weightKg)}`
+        : "Falta kg · a série não conta"
+      : row.missing === "reps"
+        ? row.suggestion.reps !== null
+          ? `Falta ${timed ? "segundos" : "reps"} · ✓ preenche ${formatDecimal(row.suggestion.reps)}`
+          : `Falta ${timed ? "segundos" : "reps"} · a série não conta`
+        : null;
   return (
-    <div data-set-row={row.id}>
+    <div
+      data-set-row={row.id}
+      // Brought into view with its load question (W-088): clear of the fixed rest bar.
+      className="scroll-mb-40"
+      onFocus={() => setFocused(true)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setFocused(false);
+      }}
+    >
       <div
         className={cn(
           GRID,
@@ -395,13 +441,43 @@ function SetRowInputs({
           <Check className={cn("size-5", row.sync === "sending" ? "animate-pulse" : "")} strokeWidth={3} />
         </button>
       </div>
-      {row.error ? (
-        <p role="alert" className="px-1 pt-1 text-[11px] font-medium text-danger">
+      {checking ? (
+        // A load far from the reference (a typo: "225" for 22,5) is asked about before it counts (W-088).
+        <div role="alert" className="mt-1 flex flex-wrap items-center gap-x-3 border-l-2 border-l-warning! bg-warning-soft px-2 py-1 text-xs">
+          <span className="min-w-0 flex-1 font-semibold text-foreground">{checking.text}</span>
+          <span className="flex shrink-0 gap-1">
+            <button
+              type="button"
+              onClick={() => onFixLoad?.(row.id)}
+              className="min-h-11 px-2 font-semibold text-accent underline underline-offset-2"
+            >
+              Corrigir
+            </button>
+            <button
+              type="button"
+              onClick={() => onConfirmLoad?.(row.id)}
+              className="min-h-11 px-2 font-semibold text-foreground underline underline-offset-2"
+            >
+              Está certo
+            </button>
+          </span>
+        </div>
+      ) : row.error ? (
+        <p role="alert" className="px-1 pt-1 text-xs font-medium text-danger">
           {row.error}
         </p>
       ) : row.sync === "pending" || row.sync === "held" ? (
-        <p className="px-1 pt-1 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-warning">
+        <p className="px-1 pt-1 font-mono text-xs font-bold uppercase tracking-[0.12em] text-warning">
           {row.sync === "held" ? "Pendente · entre de novo" : "Pendente · reenviando"}
+        </p>
+      ) : null}
+      {/* Always in the DOM for aria-describedby; shown once the user leaves the half-filled row. */}
+      {missingText && !row.error && !checking ? (
+        <p
+          id={missingId}
+          className={cn("px-1 pt-1 font-mono text-xs font-bold uppercase tracking-[0.12em] text-warning", focused && "sr-only")}
+        >
+          {missingText}
         </p>
       ) : null}
     </div>

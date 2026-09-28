@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { GArrow } from "@/components/ui/glyph";
-import { GOAL_LABEL, EXPERIENCE_LABEL, STYLE_LABEL, GOAL_HUE } from "@/lib/constants/program-labels";
+import { GOAL_LABEL, EXPERIENCE_LABEL, STYLE_LABEL, GOAL_HUE, EQUIPMENT_SHORT_LABEL } from "@/lib/constants/program-labels";
 import type { CatalogItem } from "@/lib/programming/catalog";
 import { dayTokens } from "@/lib/programming/day-tokens";
 import { splitSeriesTagline } from "@/lib/programming/gd-series";
@@ -66,8 +66,14 @@ export function ProtocolCard({ data }: { data: ProtocolCardData }) {
       </div>
 
       <div className="mt-3 flex items-center justify-between gap-3">
-        <span className="font-mono text-[10px] uppercase tracking-wider text-muted">
-          {EXPERIENCE_LABEL[data.experienceLevel]}
+        {/* Level and where it's trained: 43 of 48 programs need a full gym, and a home user must see that here. */}
+        <span className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+          <span className="font-mono text-[10px] uppercase tracking-wider text-muted">
+            {EXPERIENCE_LABEL[data.experienceLevel]}
+          </span>
+          <span className="tag tag--spec text-[10px] uppercase tracking-[0.06em]" data-testid="card-equipment">
+            {EQUIPMENT_SHORT_LABEL[data.equipmentAccess] ?? data.equipmentAccess}
+          </span>
         </span>
         <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-foreground/70 group-hover:text-foreground">
           Ver programa

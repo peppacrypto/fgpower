@@ -345,7 +345,8 @@ test.describe.serial("a lifter four weeks into GD 1", () => {
     await page.goto("/app/history");
     await expect(page.locator("[data-month-summary]")).toContainText("treinos");
     const today = page.locator("a[data-today]");
-    await expect(today).toHaveAttribute("aria-label", /2 treinos \(hoje\)$/);
+    // The day says what opening it shows: "Ver 2 treinos de 28 de setembro, segunda (hoje)".
+    await expect(today).toHaveAttribute("aria-label", /^Ver 2 treinos de \d+ de .+ \(hoje\)(, com recorde)?$/);
     await today.click();
     await expect(page).toHaveURL(/day=\d+/);
     await expect(page.getByRole("heading", { name: /^Treinos de \d+ de / })).toBeVisible();

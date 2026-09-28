@@ -1,20 +1,23 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, useTransition } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, useTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, unstable_isUnrecognizedActionError, unstable_rethrow } from "next/navigation";
-import { ChevronDown, ChevronLeft, ChevronRight, Info, Pencil, Plus, SkipForward, Undo2, X } from "lucide-react";
+import { ArrowLeftRight, ChevronDown, ChevronLeft, ChevronRight, Info, Pencil, Plus, SkipForward, Undo2, X } from "lucide-react";
 import { GLoad, GNotes, GCheck } from "@/components/ui/glyph";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils/cn";
 import {
+  addExerciseToWorkout,
   addExtraSet,
   discardWorkoutSession,
   finishStaleWorkoutSessionAndOpen,
   finishWorkoutSession,
   removeSet,
   skipExercise,
+  swapExercise,
+  type ExerciseChangeResult,
   type LogSetInput,
   type SetSyncOp,
   type SetSyncResult,
@@ -54,7 +57,11 @@ import { unlockRestAudio } from "./rest-audio";
 import { useWakeLock } from "./use-wake-lock";
 import { rememberLimitationsEcho } from "./limitations-bone";
 import { recordRows } from "./pr-moment";
+import { ExerciseSwapSheet, type SwapSheetMode } from "./exercise-swap-sheet";
+import { TechniqueSheet } from "./technique-sheet";
+import { markWorkoutVisited, readShownExercise, rememberShownExercise } from "./workout-visit";
 import type { ExecutionExerciseLog, ExecutionSession, ExecutionSetLog } from "./types";
+import type { ExerciseOption } from "@/lib/data/workout-session";
 
 type RowValues = Record<DraftField, string>;
 /**
@@ -287,13 +294,21 @@ function buildRows(
     prescribedReps: firstTimeReps(ex.repMin, ex.repMax),
     bodyweight: ex.bodyweight,
   };
+  // A typed load far from last time's that isn't ✓'d yet ("225" for 22,5) is
+  // kept out of the grey loads below it and the warm-up ramp (W-088): a ✓ on
+  // an empty box would otherwise log the typo unasked. Once ✓'d, it counts.
+  const lastTop = Math.max(0, ...ex.previousSets.map((s) => s.weightKg ?? 0));
+  const carries = (kg: number, done: boolean) =>
+    done || kg <= 0 || lastTop === 0 || (kg <= lastTop * LOAD_JUMP_UP && kg >= lastTop * LOAD_JUMP_DOWN);
   let above: SuggestedValues | null = null;
   const toModel = (r: (typeof plan.prescribed)[number], given?: SuggestedValues): SetTableRowModel => {
     const values = shownValues(r.set, drafts, current);
     const suggestion = given ?? suggestFor(r.kind, r.ordinal, above, ctx);
     const p = parseRow(values, ex.bodyweight);
-    if (r.kind !== "WARMUP" && p.weightKg !== null) above = { weightKg: p.weightKg, reps: p.reps ?? suggestion.reps };
     const isDone = shownDone(r.set, drafts, current);
+    if (r.kind !== "WARMUP" && p.weightKg !== null && carries(p.weightKg, isDone)) {
+      above = { weightKg: p.weightKg, reps: p.reps ?? suggestion.reps };
+    }
     const hasW = values.weight.trim() !== "";
     const hasR = values.reps.trim() !== "";
     const unsent = drafts[r.set.id]?.dirty === true;
@@ -320,7 +335,12 @@ function buildRows(
   for (const r of [...prescribed, ...extras]) if (records.has(r.id)) r.record = true;
   // Warm-ups ramp up to the first working set: what is typed there, else its grey load.
   const first = prescribed[0];
-  const workingLoad = first ? (parseDecimalInput(first.values.weight) ?? first.suggestion.weightKg) : null;
+  const typedFirst = first ? parseDecimalInput(first.values.weight) : null;
+  const workingLoad = first
+    ? typedFirst !== null && carries(typedFirst, first.done)
+      ? typedFirst
+      : first.suggestion.weightKg
+    : null;
   const ramp = warmupSuggestions(plan.warmups.length, workingLoad, ex.loadIncrementKg);
   return {
     warmups: plan.warmups.map((r, i) => toModel(r, ramp[i])),
@@ -334,6 +354,44 @@ function workingRowsForRecords(rows: SetTableRowModel[]) {
   return rows
     .filter((r) => r.done)
     .map((r) => ({ id: r.id, weightKg: parseDecimalInput(r.values.weight), reps: parseDecimalInput(r.values.reps) }));
+}
+
+/** A load this far from the reference is asked about before it counts ("225 kg? Último: 22,5 kg"). */
+const LOAD_JUMP_UP = 1.5;
+const LOAD_JUMP_DOWN = 0.5;
+
+/**
+ * What a typed load is checked against (W-088): last time's heaviest working
+ * set, or — a first time — the first other ✓'d working set of this exercise
+ * today. Null when there is nothing to compare with.
+ */
+function loadReference(ex: ExecutionExerciseLog, rows: ExerciseRows, rowId: string): { kg: number; label: string } | null {
+  const last = Math.max(0, ...ex.previousSets.map((s) => s.weightKg ?? 0));
+  if (last > 0) return { kg: last, label: "Último" };
+  for (const r of [...rows.prescribed, ...rows.extras]) {
+    if (r.id === rowId || !r.done) continue;
+    const kg = parseDecimalInput(r.values.weight);
+    if (kg !== null && kg > 0) return { kg, label: rowName(r) };
+  }
+  return null;
+}
+
+/**
+ * A typed load this far from the reference ("225" for 22,5): the question to
+ * ask ("225 kg? Último: 22,5 kg") — null when it is close enough, there is
+ * nothing to compare with, or this row's number was already confirmed.
+ */
+function loadJump(
+  ex: ExecutionExerciseLog,
+  rows: ExerciseRows,
+  rowId: string,
+  kg: number | null,
+  confirmed: Record<string, number>,
+): { kg: number; text: string } | null {
+  if (kg === null || kg <= 0 || confirmed[rowId] === kg) return null;
+  const ref = loadReference(ex, rows, rowId);
+  if (!ref || (kg <= ref.kg * LOAD_JUMP_UP && kg >= ref.kg * LOAD_JUMP_DOWN)) return null;
+  return { kg, text: `${formatKg(kg)}? ${ref.label}: ${formatKg(ref.kg)}` };
 }
 
 function rowsComplete(rows: ExerciseRows, skipped: boolean) {
@@ -417,7 +475,7 @@ function LimitationsEcho({
   onClose: () => void;
 }) {
   const tag = (
-    <span className="mr-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-warning">Você informou</span>
+    <span className="mr-1.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-warning">Você informou</span>
   );
   const closeButton = (
     <button
@@ -481,14 +539,19 @@ function LimitationsEcho({
 export function WorkoutExecutionClient({
   session,
   devicePrefs,
+  initialExerciseLogId = null,
 }: {
   session: ExecutionSession;
   /** This device's prefs as the page read them (cookie mirror of local-workout prefs). */
   devicePrefs: WorkoutDevicePrefs;
+  /** The exercise on screen when the page was left (?ex=): back from "Ver página completa", a reload. */
+  initialExerciseLogId?: string | null;
 }) {
   const router = useRouter();
   const total = session.exercises.length;
   const [exerciseIndex, setExerciseIndex] = useState(() => {
+    const kept = initialExerciseLogId ? session.exercises.findIndex((ex) => ex.id === initialExerciseLogId) : -1;
+    if (kept >= 0) return kept;
     // Reopening a workout lands on the first exercise still to do.
     const i = session.exercises.findIndex((ex) => !isExerciseDone(ex.sets, ex.wasSkipped));
     return i >= 0 ? i : Math.max(0, total - 1);
@@ -523,6 +586,12 @@ export function WorkoutExecutionClient({
   const pendingFocus = useRef<string | null>(null);
   /** Bring the exercise's next step into view after the next render (its last set was just ✓'d). */
   const revealCta = useRef(false);
+  /**
+   * A row whose load question (W-088) ✓ just raised: brought into view after
+   * the next render. The question opens below the row — under the fixed rest
+   * bar when the row sits just above it — and ✓ would look like it did nothing.
+   */
+  const revealRow = useRef<string | null>(null);
   const ctaRef = useRef<HTMLButtonElement>(null);
   const lastToggle = useRef<Record<string, number>>({});
   const savedNotes = useRef<Record<string, string>>({});
@@ -558,6 +627,29 @@ export function WorkoutExecutionClient({
     : "";
   /** The row whose "PR" was just earned (W-122): its mark pops in once. */
   const [prFlash, setPrFlash] = useState<{ id: string; n: number } | null>(null);
+  /** "Trocar" / "Adicionar exercício" (W-006): the open sheet, the pick being saved and its failure. */
+  const [swapSheet, setSwapSheet] = useState<SwapSheetMode | null>(null);
+  const [swapBusy, setSwapBusy] = useState<string | null>(null);
+  const [swapError, setSwapError] = useState<string | null>(null);
+  /** The exercise to show once the page's fresh data has it (a pick added after the current one). */
+  const pendingExercise = useRef<string | null>(null);
+  /** The technique sheet (W-025) is open over the workout. */
+  const [techniqueOpen, setTechniqueOpen] = useState(false);
+  /**
+   * A load far from the reference, waiting to be confirmed (W-088): asked on
+   * ✓ (`toggle`: "Está certo" then ✓'s the row) or on leaving the row with it
+   * typed (then "Está certo" only confirms the number).
+   */
+  const [loadCheck, setLoadCheck] = useState<{ id: string; text: string; kg: number; toggle: boolean } | null>(null);
+  /**
+   * Loads already confirmed per row: never asked twice for the same number.
+   * The ref serves the ✓ right after "Está certo"; the state, the finish sheet.
+   */
+  const confirmedLoads = useRef<Record<string, number>>({});
+  const [confirmed, setConfirmed] = useState<Record<string, number>>({});
+  /** The exercise's name takes focus after an exercise change (W-161). */
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const focusHeading = useRef(false);
   const rest = useRestTimer(session.id);
   useWakeLock();
 
@@ -600,6 +692,11 @@ export function WorkoutExecutionClient({
   const rows = rowsByExercise[exerciseIndex];
 
   useEffect(() => {
+    // A new exercise on screen: screen-reader and keyboard focus go to its name (not left at the bottom).
+    if (focusHeading.current) {
+      focusHeading.current = false;
+      headingRef.current?.focus({ preventScroll: true });
+    }
     const label = pendingFocus.current;
     if (label) {
       pendingFocus.current = null;
@@ -614,6 +711,13 @@ export function WorkoutExecutionClient({
       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       ctaRef.current?.scrollIntoView({ block: "center", behavior: reduce ? "auto" : "smooth" });
     }
+    if (revealRow.current) {
+      const row = document.querySelector<HTMLElement>(`[data-set-row="${revealRow.current}"]`);
+      revealRow.current = null;
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      // "nearest": a row already clear of the bottom (its scroll margin clears the rest bar) doesn't move.
+      row?.scrollIntoView({ block: "nearest", behavior: reduce ? "auto" : "smooth" });
+    }
   });
 
   useEffect(() => {
@@ -621,6 +725,32 @@ export function WorkoutExecutionClient({
     const t = setTimeout(() => setConfirmSkip(false), 4000);
     return () => clearTimeout(t);
   }, [confirmSkip]);
+
+  // This visit has a workout open: Today no longer sends it back here (W-097).
+  // Back on this workout (a back step from the technique page, a reload,
+  // Today's "Continuar"): the exercise that was on screen in this visit —
+  // before the first paint of a client-side return. A link's ?ex= is the
+  // fallback (a new tab, blocked storage).
+  useLayoutEffect(() => {
+    markWorkoutVisited();
+    const kept = readShownExercise(session.id);
+    const i = kept ? session.exercises.findIndex((ex) => ex.id === kept) : -1;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sessionStorage is only readable after hydration
+    if (i >= 0) setExerciseIndex(i);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- once per screen
+  }, [session.id]);
+
+  // A pick added after the current exercise shows once the page's fresh data has it.
+  useEffect(() => {
+    const id = pendingExercise.current;
+    if (!id) return;
+    const i = session.exercises.findIndex((ex) => ex.id === id);
+    if (i < 0) return;
+    pendingExercise.current = null;
+    focusHeading.current = true;
+    rememberShownExercise(session.id, id);
+    setExerciseIndex(i);
+  }, [session.id, session.exercises]);
 
   /**
    * A new build was deployed mid-workout: reload to pick it up. Drafts are
@@ -884,7 +1014,16 @@ export function WorkoutExecutionClient({
 
   function goTo(i: number) {
     saveNote(exercise?.exerciseId, exercise?.persistentNote ?? null);
-    setExerciseIndex(Math.max(0, Math.min(total - 1, i)));
+    const next = Math.max(0, Math.min(total - 1, i));
+    if (next !== exerciseIndex) {
+      focusHeading.current = true;
+      announce(`${session.exercises[next]?.exerciseName ?? ""}, exercício ${next + 1} de ${total}`);
+    }
+    // Kept for coming back to it (only on a change the user made: never overwritten by a mount).
+    const nextId = session.exercises[next]?.id;
+    if (nextId) rememberShownExercise(session.id, nextId);
+    setExerciseIndex(next);
+    setLoadCheck(null);
     setConfirmSkip(false);
     setShowOverview(false);
     setExerciseError(null);
@@ -904,6 +1043,7 @@ export function WorkoutExecutionClient({
 
   function changeField(id: string, field: DraftField, value: string) {
     setTouched(true);
+    if (field === "weight" && loadCheck?.id === id) setLoadCheck(null);
     updateDrafts((d) => {
       const prev = d[id];
       const base = inForce(prev, sessionRef.current) ? prev : undefined;
@@ -930,8 +1070,8 @@ export function WorkoutExecutionClient({
     setTimeout(() => {
       const entry = setByIdRef.current.get(id);
       const d = draftsRef.current;
+      const current = sessionRef.current;
       if (entry && d[id]?.dirty && focusedRowId() !== id) {
-        const current = sessionRef.current;
         if (shownDone(entry.set, d, current) && !isFilled(shownValues(entry.set, d, current), entry.ex.bodyweight)) {
           setRowError(
             id,
@@ -940,6 +1080,22 @@ export function WorkoutExecutionClient({
               : "Preencha kg e reps — sem eles a série deixa de contar.",
           );
         }
+      }
+      // A row left with a load far from the reference and no ✓: asked about now —
+      // saved at the finish as typed, a typo would become a record (W-088).
+      const exRows = entry ? rowsByExercise[entry.index] : undefined;
+      if (
+        entry &&
+        exRows &&
+        entry.set.setType !== "WARMUP" &&
+        !entry.ex.wasSkipped &&
+        focusedRowId() !== id &&
+        !shownDone(entry.set, d, current)
+      ) {
+        const kg = parseDecimalInput(shownValues(entry.set, d, current).weight);
+        const jump = loadJump(entry.ex, exRows, id, kg, confirmedLoads.current);
+        // The same question already asked on ✓ keeps its ✓ ("Está certo" then logs the set).
+        if (jump) setLoadCheck((c) => (c?.id === id && c.kg === jump.kg ? c : { id, kg: jump.kg, text: jump.text, toggle: false }));
       }
       flushRef.current();
     }, 0);
@@ -971,6 +1127,17 @@ export function WorkoutExecutionClient({
     const typed = parseRow(values, entry.ex.bodyweight);
     const weightKg = typed.weightKg ?? row.suggestion.weightKg;
     const reps = typed.reps ?? row.suggestion.reps;
+    // A typed load far from the reference ("225" for 22,5) is asked about before it counts:
+    // a typo would otherwise become a record every later set has to beat (W-088).
+    if (row.kind !== "WARMUP" && reps !== null && reps >= 1) {
+      const jump = loadJump(entry.ex, rows, id, typed.weightKg, confirmedLoads.current);
+      if (jump) {
+        setLoadCheck({ id, kg: jump.kg, text: jump.text, toggle: true });
+        revealRow.current = id;
+        return;
+      }
+    }
+    if (loadCheck?.id === id) setLoadCheck(null);
     if (weightKg === null || reps === null || reps < 1) {
       if (weightKg === null && reps !== null && reps >= 1) {
         // A first time: the reps come from the program, the load is the user's call.
@@ -1066,6 +1233,90 @@ export function WorkoutExecutionClient({
     runExerciseAction(() => removeSet(id), "Não foi possível remover a série extra.");
   }
 
+  /**
+   * The sheet's pick (W-006): swapped in place, added after the current
+   * exercise (it already has sets) or at the end. The action refreshes the
+   * page's data; the screen then shows the exercise it returned. Offline, the
+   * sheet stays open with the reason — nothing changed.
+   */
+  function pickExercise(option: ExerciseOption, how: "swap" | "after" | "end") {
+    const mode = swapSheet;
+    if (!mode || swapBusy) return;
+    const logId = mode.kind === "swap" ? mode.exerciseLogId : null;
+    setSwapBusy(option.id);
+    setSwapError(null);
+    startTransition(async () => {
+      try {
+        let r: ExerciseChangeResult;
+        if (how === "swap" && logId) r = await swapExercise(logId, option.id);
+        else if (how === "after" && logId) r = await addExerciseToWorkout(session.id, option.id, { after: logId, replacing: true });
+        else r = await addExerciseToWorkout(session.id, option.id);
+        if (r.ok) {
+          pendingExercise.current = r.exerciseLogId;
+          focusHeading.current = true;
+          setSwapSheet(null);
+          announce(how === "swap" ? `Trocado por ${option.namePt}` : `${option.namePt} adicionado ao treino`);
+        } else if (r.reason === "HAS_DATA" && mode.kind === "swap") {
+          // Sets were saved meanwhile (another device): the pick can only go after it.
+          setSwapSheet({ ...mode, hasLocalData: true });
+          setSwapError("Este exercício ganhou séries salvas — toque de novo para adicionar o escolhido depois dele.");
+        } else if (r.reason === "CLOSED") {
+          setSwapSheet(null);
+          refreshIfOnline();
+        } else if (r.reason === "DUPLICATE") {
+          setSwapError(`${option.namePt} já está neste treino — para fazer mais dele, use “Adicionar série extra”.`);
+        } else {
+          setSwapError(how === "swap" ? "Não foi possível trocar o exercício." : "Não foi possível adicionar o exercício.");
+        }
+      } catch (err) {
+        if (!recoverFromStaleBuild(err)) setSwapError("Sem conexão — nada mudou no treino. Tente de novo quando o sinal voltar.");
+      } finally {
+        setSwapBusy(null);
+      }
+    });
+  }
+
+  function openSwap() {
+    if (!exercise || !rows) return;
+    const anyValue = [...rows.warmups, ...rows.prescribed, ...rows.extras].some(
+      (r) => r.done || r.values.weight.trim() !== "" || r.values.reps.trim() !== "",
+    );
+    setSwapError(null);
+    setSwapSheet({ kind: "swap", exerciseLogId: exercise.id, exerciseName: exercise.exerciseName, hasLocalData: anyValue });
+  }
+
+  function openAdd() {
+    setSwapError(null);
+    setShowOverview(false);
+    setSwapSheet({ kind: "add" });
+  }
+
+  /** "Corrigir" on a load that was asked about: its kg box, selected for retyping. */
+  function fixLoad(id: string) {
+    setLoadCheck(null);
+    const row = rows ? [...rows.prescribed, ...rows.extras].find((r) => r.id === id) : undefined;
+    if (!row) return;
+    const el = Array.from(document.querySelectorAll<HTMLInputElement>("input[aria-label]")).find(
+      (input) => input.getAttribute("aria-label") === `${rowName(row)} — ${FIELD_LABEL.weight}`,
+    );
+    el?.focus();
+    el?.select();
+  }
+
+  /** This row's load is right as typed: never asked about again (and no longer flagged at the finish). */
+  function confirmKg(id: string, kg: number) {
+    confirmedLoads.current = { ...confirmedLoads.current, [id]: kg };
+    setConfirmed(confirmedLoads.current);
+  }
+
+  /** "Está certo": the number stands — and, asked on ✓, the row is ✓'d. */
+  function confirmLoad(id: string) {
+    const check = loadCheck?.id === id ? loadCheck : null;
+    if (check) confirmKg(id, check.kg);
+    setLoadCheck(null);
+    if (!check || check.toggle) toggleRow(id);
+  }
+
   function saveNote(exerciseId: string | undefined, persisted: string | null) {
     if (!exerciseId) return;
     const text = noteDrafts[exerciseId];
@@ -1113,6 +1364,7 @@ export function WorkoutExecutionClient({
       unconfirmed: 0,
       incomplete: 0,
       firstIncomplete: null,
+      implausible: null,
       untouchedExercises: [],
     };
     session.exercises.forEach((ex, i) => {
@@ -1140,12 +1392,26 @@ export function WorkoutExecutionClient({
         recorded++;
         if (row.kind === "EXTRA") s.extrasDone++;
         else s.prescribedDone++;
-        if (!row.done) s.unconfirmed++;
+        if (!row.done) {
+          s.unconfirmed++;
+          // Saved as typed without ✓ ever asking: a load far from the reference is asked about here (W-088).
+          const jump = s.implausible ? null : loadJump(ex, r, row.id, parseDecimalInput(row.values.weight), confirmed);
+          if (jump) {
+            s.implausible = {
+              exerciseIndex: i,
+              inputLabel: `${rowName(row)} — ${FIELD_LABEL.weight}`,
+              rowId: row.id,
+              kg: jump.kg,
+              text: jump.text,
+              where: `${ex.exerciseName} · ${rowName(row)}`,
+            };
+          }
+        }
       }
       if (recorded === 0 && !typed && !ex.wasSkipped) s.untouchedExercises.push(ex.exerciseName);
     });
     return s;
-  }, [session.exercises, rowsByExercise]);
+  }, [session.exercises, rowsByExercise, confirmed]);
 
   /** Opens the finish sheet on fresh data (sets may have been saved from another device). */
   function openSheet() {
@@ -1235,7 +1501,7 @@ export function WorkoutExecutionClient({
   if (!exercise || !rows) {
     return (
       <div className="mx-auto flex min-h-[70dvh] w-full max-w-md flex-col justify-center gap-4 px-4 py-10">
-        <span className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-accent">Treino vazio</span>
+        <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent">Treino vazio</span>
         <h1 className="text-display text-2xl font-extrabold leading-tight">Nenhum exercício neste treino.</h1>
         <p className="text-sm text-muted">
           {session.programId
@@ -1341,7 +1607,7 @@ export function WorkoutExecutionClient({
               // reaches 16px down, outside the layout (clear of "ver todos" above) —
               // so a chip that wraps on a narrow phone still pushes the header down
               // instead of running into its edge.
-              className="relative -my-1 inline-flex min-h-7 max-w-full flex-wrap items-center gap-x-1.5 gap-y-0.5 py-1 text-left font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted after:absolute after:inset-x-0 after:top-0 after:-bottom-4 after:content-[''] hover:text-foreground"
+              className="relative -my-1 inline-flex min-h-7 max-w-full flex-wrap items-center gap-x-1.5 gap-y-0.5 py-1 text-left font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted after:absolute after:inset-x-0 after:top-0 after:-bottom-4 after:content-[''] hover:text-foreground"
             >
               <span className="whitespace-nowrap bg-surface-2 px-1.5 py-0.5 text-foreground">{weekChip}</span>
               <span className="whitespace-nowrap text-accent">
@@ -1355,7 +1621,7 @@ export function WorkoutExecutionClient({
         ) : null}
         {session.week && weekOpen ? (
           <div className="mx-auto mt-2 max-w-3xl border-l-2 border-l-accent bg-surface-2 px-3 py-2.5 text-xs" data-week-guidance>
-            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted">
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted">
               {session.week.title}
               {session.week.test ? " · semana de teste" : session.week.deload ? " · deload" : ""}
               {session.week.rirTarget != null ? ` · RIR alvo ${formatDecimal(session.week.rirTarget)}` : ""}
@@ -1368,7 +1634,7 @@ export function WorkoutExecutionClient({
             {session.week.notePt ? <p className="mt-1.5 leading-relaxed text-foreground/90">{session.week.notePt}</p> : null}
             {session.week.setsNotePt ? (
               <p className="mt-1.5 leading-relaxed text-foreground/90">
-                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted">Séries · </span>
+                <span className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted">Séries · </span>
                 {session.week.setsNotePt}
               </p>
             ) : null}
@@ -1383,7 +1649,7 @@ export function WorkoutExecutionClient({
         ) : null}
         <div role="status" className="mx-auto max-w-3xl">
           {waiting > 0 && loggedOut ? (
-            <p className="mt-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-warning">
+            <p className="mt-1.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-warning">
               Sessão expirada —{" "}
               <Link href="/login" className="-my-3 inline-block py-3 text-accent underline underline-offset-2">
                 entre de novo
@@ -1414,16 +1680,19 @@ export function WorkoutExecutionClient({
                         i === exerciseIndex ? "bg-accent-soft" : ""
                       }`}
                     >
-                      <span className="w-5 shrink-0 font-mono text-xs text-foreground/30">
+                      <span className="w-5 shrink-0 font-mono text-xs text-muted">
                         {String(i + 1).padStart(2, "0")}
                       </span>
-                      <span className="min-w-0 flex-1 truncate text-sm font-medium">{ex.exerciseName}</span>
+                      {/* Two lines: long names differ only at the end (grip, cable position). */}
+                      <span className="line-clamp-2 min-w-0 flex-1 text-sm font-medium leading-snug wrap-break-word">
+                        {ex.exerciseName}
+                      </span>
                       {ex.wasSkipped ? (
                         <span className="tag tag--mark shrink-0">Pulado</span>
                       ) : rowsComplete(r, false) ? (
                         <GCheck className="size-4 shrink-0 text-accent" />
                       ) : (
-                        <span className="shrink-0 font-mono text-[11px] text-muted">
+                        <span className="shrink-0 font-mono text-xs text-muted">
                           {doneCount}/{r.prescribed.length}
                           {extrasDone > 0 ? ` +${extrasDone}` : ""}
                         </span>
@@ -1432,6 +1701,17 @@ export function WorkoutExecutionClient({
                   </li>
                 );
               })}
+              <li>
+                <button
+                  type="button"
+                  onClick={openAdd}
+                  aria-haspopup="dialog"
+                  className="flex min-h-11 w-full items-center gap-3 px-4 py-2.5 text-left text-sm font-semibold text-accent hover:bg-surface-2"
+                >
+                  <Plus className="size-4 w-5 shrink-0" />
+                  Adicionar exercício
+                </button>
+              </li>
             </ul>
           </div>
         ) : null}
@@ -1471,7 +1751,20 @@ export function WorkoutExecutionClient({
         ) : null}
 
         {/* Full width: long names differ only at the end (grip, cable position). */}
-        <h1 className="mb-3 text-xl font-bold leading-tight wrap-break-word">{exercise.exerciseName}</h1>
+        <h1
+          ref={headingRef}
+          tabIndex={-1}
+          className={cn("text-xl font-bold leading-tight wrap-break-word outline-none", exercise.substitutedFromName ? "mb-1" : "mb-3")}
+        >
+          {exercise.exerciseName}
+        </h1>
+        {exercise.substitutedFromName ? (
+          <p className="mb-3 font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted" data-substituted>
+            <ArrowLeftRight aria-hidden className="mr-1 inline size-3.5 align-[-2px] text-accent" />
+            Trocado ·{" "}
+            <span className="font-sans font-medium normal-case tracking-normal">no lugar de {exercise.substitutedFromName}</span>
+          </p>
+        ) : null}
 
         <div className="flex items-center justify-between gap-2">
           <button
@@ -1483,15 +1776,22 @@ export function WorkoutExecutionClient({
             <ChevronLeft className="size-5" />
           </button>
           <div className="flex min-w-0 flex-1 items-center gap-3 px-1">
-            <div className="relative size-14 shrink-0 overflow-hidden rounded-[var(--radius-md)] bg-surface-2">
+            {/* The photo opens the technique sheet too (W-025). */}
+            <button
+              type="button"
+              onClick={() => setTechniqueOpen(true)}
+              aria-haspopup="dialog"
+              aria-label={`Ver técnica de ${exercise.exerciseName}`}
+              className="relative size-14 shrink-0 overflow-hidden rounded-[var(--radius-md)] bg-surface-2"
+            >
               {exercise.imageUrl ? (
-                <Image src={exercise.imageUrl} alt={exercise.exerciseName} fill sizes="56px" className="object-cover" />
+                <Image src={exercise.imageUrl} alt="" fill sizes="56px" className="object-cover" />
               ) : (
-                <div className="flex h-full items-center justify-center text-muted">
+                <span className="flex h-full items-center justify-center text-muted">
                   <GLoad className="size-5" />
-                </div>
+                </span>
               )}
-            </div>
+            </button>
             <p className="flex min-w-0 flex-1 flex-wrap gap-x-2 gap-y-0.5 text-xs text-muted">
               <span className="text-sm font-semibold text-foreground">
                 <span className="whitespace-nowrap">{plural(exercise.prescribedSets, "série", "séries")}</span>{" "}
@@ -1525,13 +1825,25 @@ export function WorkoutExecutionClient({
         </div>
 
         <div className="mt-3 flex flex-wrap items-center gap-x-3">
-          <Link
-            href={`/app/exercises/${exercise.exerciseSlug}`}
+          <button
+            type="button"
+            onClick={() => setTechniqueOpen(true)}
+            aria-haspopup="dialog"
             className="-mx-2 inline-flex min-h-11 items-center gap-1 px-2 text-xs text-accent hover:underline"
           >
             <Info className="size-3.5" />
             Ver técnica
-          </Link>
+          </button>
+          {/* The machine is taken, the gym has no such equipment: do something else in its place (W-006). */}
+          <button
+            type="button"
+            onClick={openSwap}
+            aria-haspopup="dialog"
+            className="-mx-2 inline-flex min-h-11 items-center gap-1 px-2 text-xs text-accent hover:underline"
+          >
+            <ArrowLeftRight className="size-3.5" />
+            Trocar
+          </button>
           {exercise.wasSkipped ? null : (
             <button
               onClick={() => {
@@ -1542,12 +1854,25 @@ export function WorkoutExecutionClient({
                   setConfirmSkip(true);
                 }
               }}
+              // Under 360px the four actions keep one line with the short words ("Pular"); the name stays whole.
+              aria-label={confirmSkip ? "Confirmar pular?" : "Pular exercício"}
               className={`-mx-2 inline-flex min-h-11 items-center gap-1 px-2 text-xs ${
                 confirmSkip ? "font-semibold text-danger" : "text-muted hover:text-foreground"
               }`}
             >
               <SkipForward className="size-3.5" />
-              {confirmSkip ? "Confirmar pular?" : "Pular exercício"}
+              {confirmSkip ? (
+                <>
+                  <span className="max-[359px]:hidden">Confirmar pular?</span>
+                  <span aria-hidden className="hidden max-[359px]:inline">
+                    Pular?
+                  </span>
+                </>
+              ) : (
+                <>
+                  Pular<span className="max-[359px]:hidden"> exercício</span>
+                </>
+              )}
             </button>
           )}
           {!editingNote && noteValue.trim() === "" ? (
@@ -1568,7 +1893,7 @@ export function WorkoutExecutionClient({
           <div className="mt-1">
             <label
               htmlFor="exercise-note"
-              className="flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted"
+              className="flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted"
             >
               <GNotes className="size-3.5" />
               Nota do exercício/máquina
@@ -1599,7 +1924,7 @@ export function WorkoutExecutionClient({
               rows={2}
             />
             <div className="flex items-center justify-between gap-2">
-              <p className="text-[11px] text-muted">Fica salva para as próximas vezes neste exercício.</p>
+              <p className="text-xs text-muted">Fica salva para as próximas vezes neste exercício.</p>
               {/* Tapping it blurs the box, which saves. */}
               <button type="button" className="-my-2 min-h-11 shrink-0 px-2 text-xs font-semibold text-accent">
                 OK
@@ -1618,10 +1943,11 @@ export function WorkoutExecutionClient({
             <Pencil className="size-3.5 shrink-0 text-muted" />
           </button>
         ) : null}
+        {/* The note's save line is announced (W-172). */}
         <div
-          aria-live="polite"
+          role="status"
           className={cn(
-            "flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.14em]",
+            "flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.12em]",
             note ? "mt-1 min-h-5" : "",
           )}
         >
@@ -1685,7 +2011,7 @@ export function WorkoutExecutionClient({
             <Link
               href={`/app/exercises/${exercise.exerciseSlug}/history`}
               aria-label={`Último treino${exercise.lastTime ? `, ${exercise.lastTime.date}, ${exercise.lastTime.ago}` : ""} — ver o histórico do exercício`}
-              className="flex min-h-10 items-center justify-between gap-2 px-3.5 pt-1 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-muted hover:text-foreground"
+              className="flex min-h-10 items-center justify-between gap-2 px-3.5 pt-1 font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted hover:text-foreground"
             >
               <span>
                 Último treino
@@ -1748,7 +2074,7 @@ export function WorkoutExecutionClient({
         ) : !exercise.wasSkipped ? (
           <div className="mt-3 border-l-2 border-l-accent bg-accent-soft px-3 py-2.5 text-xs text-foreground/90" data-first-time>
             <p>
-              <span className="mr-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-accent">
+              <span className="mr-1.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent">
                 {session.firstWorkout ? "Primeiro treino" : "Primeira vez neste exercício"}
               </span>
               {exercise.bodyweight ? (
@@ -1828,6 +2154,9 @@ export function WorkoutExecutionClient({
             onExplainRir={() => setRirSheetOpen(true)}
             timed={exercise.timed}
             flashRowId={prFlash}
+            loadCheck={loadCheck && rows.prescribed.concat(rows.extras).some((r) => r.id === loadCheck.id) ? loadCheck : null}
+            onConfirmLoad={confirmLoad}
+            onFixLoad={fixLoad}
           />
         </div>
 
@@ -1839,10 +2168,21 @@ export function WorkoutExecutionClient({
 
         {/* Clears the rest bar when brought into view after the last set. */}
         {isLast ? (
-          <Button ref={ctaRef} className="mt-6 w-full scroll-mb-40" size="lg" variant="strong" onClick={openSheet}>
-            <GCheck className="size-4" />
-            Finalizar treino
-          </Button>
+          <>
+            <button
+              type="button"
+              onClick={openAdd}
+              aria-haspopup="dialog"
+              className="mt-6 flex min-h-11 w-full items-center justify-center gap-2 px-3 text-sm font-semibold text-accent hover:underline"
+            >
+              <Plus className="size-4" />
+              Adicionar exercício
+            </button>
+            <Button ref={ctaRef} className="mt-2 w-full scroll-mb-40" size="lg" variant="strong" onClick={openSheet}>
+              <GCheck className="size-4" />
+              Finalizar treino
+            </Button>
+          </>
         ) : (
           <Button
             ref={ctaRef}
@@ -1883,6 +2223,29 @@ export function WorkoutExecutionClient({
         />
       ) : null}
 
+      {techniqueOpen ? (
+        <TechniqueSheet
+          exercise={{ exerciseId: exercise.exerciseId, name: exercise.exerciseName, imageUrl: exercise.imageUrl }}
+          // The full page, and the way back to this exercise of this workout.
+          fullHref={`/app/exercises/${exercise.exerciseSlug}?from=${encodeURIComponent(`/app/workout/${session.id}?ex=${exercise.id}`)}`}
+          onClose={() => setTechniqueOpen(false)}
+        />
+      ) : null}
+
+      {swapSheet ? (
+        <ExerciseSwapSheet
+          sessionId={session.id}
+          mode={swapSheet}
+          busyId={swapBusy}
+          error={swapError}
+          onPick={pickExercise}
+          onClose={() => {
+            setSwapSheet(null);
+            setSwapError(null);
+          }}
+        />
+      ) : null}
+
       {sheetOpen ? (
         <FinishSheet
           key={sheetKey}
@@ -1899,6 +2262,14 @@ export function WorkoutExecutionClient({
             goTo(i);
             pendingFocus.current = inputLabel;
           }}
+          onReviewLoad={({ exerciseIndex: i, inputLabel, rowId, kg, text }) => {
+            setSheetOpen(false);
+            goTo(i);
+            pendingFocus.current = inputLabel;
+            // The row says it too, with "Corrigir" / "Está certo".
+            setLoadCheck({ id: rowId, kg, text, toggle: false });
+          }}
+          onConfirmLoad={confirmKg}
           onClose={() => {
             setSheetOpen(false);
             setFinishError(null);

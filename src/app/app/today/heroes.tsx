@@ -132,7 +132,7 @@ export function NextWorkoutHero({
                     </div>
                   )}
                 </div>
-                <span className="min-w-0 flex-1 truncate text-sm font-medium group-hover:text-accent">
+                <span className="line-clamp-2 min-w-0 flex-1 text-sm font-medium leading-snug wrap-break-word group-hover:text-accent">
                   {ex.exercise.namePt}
                 </span>
                 <GArrow className="size-3.5 shrink-0 text-muted transition-transform group-hover:translate-x-0.5" />
@@ -369,7 +369,10 @@ export function BlockCompletedHero({ block }: { block: CompletedBlock }) {
         <ul className="mt-4 flex flex-col border-y border-border" aria-label="1RM estimado, do início ao fim do bloco">
           {block.anchorProgress.map((a) => (
             <li key={a.slug} className="flex items-baseline justify-between gap-3 border-t border-border py-2 first:border-t-0">
-              <Link href={`/app/exercises/${a.slug}/history`} className="min-w-0 truncate text-sm font-medium hover:text-accent">
+              <Link
+                href={`/app/exercises/${a.slug}/history`}
+                className="line-clamp-2 min-w-0 text-sm font-medium leading-snug wrap-break-word hover:text-accent"
+              >
                 {a.exerciseName}
               </Link>
               <span className="shrink-0 font-mono text-sm tabular-nums">

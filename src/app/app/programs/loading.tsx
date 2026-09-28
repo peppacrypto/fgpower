@@ -4,6 +4,7 @@ import { BuilderSkeleton } from "./[id]/edit/loading";
 import { ProgramSkeleton } from "./[id]/loading";
 import { NewProgramSkeleton } from "./new/loading";
 import { TemplateSkeleton } from "./templates/[slug]/loading";
+import { AdaptSkeleton } from "./templates/[slug]/adapt/loading";
 
 /** Program cards: a heavy top rule, the name, the day tokens and the spec stats. */
 function ProgramCardBone() {
@@ -52,6 +53,7 @@ export default function ProgramsLoading() {
       own={<ProgramsSkeleton />}
       routes={[
         ["/app/programs/new", <NewProgramSkeleton key="new" />],
+        ["/app/programs/templates/*/adapt", <AdaptSkeleton key="adapt" />],
         ["/app/programs/templates/*", <TemplateSkeleton key="template" />],
         ["/app/programs/*/edit", <BuilderSkeleton key="edit" />],
         ["/app/programs/*", <ProgramSkeleton key="program" />],

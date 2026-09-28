@@ -34,7 +34,7 @@ const EXPERIENCE = [
 const EQUIPMENT = [
   { value: "FULL_GYM", label: "Academia completa", desc: "Barras, halteres, máquinas e cabos" },
   { value: "HOME_DUMBBELLS", label: "Halteres em casa", desc: "Halteres e talvez um banco" },
-  { value: "HOME_BODYWEIGHT", label: "Só peso do corpo", desc: "Sem equipamento" },
+  { value: "HOME_BODYWEIGHT", label: "Só peso do corpo", desc: "Sem equipamento, ou só uma barra fixa" },
   { value: "MINIMAL", label: "Equipamento mínimo", desc: "Faixas elásticas, kettlebell etc." },
 ];
 
@@ -678,7 +678,8 @@ function RadioCards({
           key={opt.value}
           className={cn(
             "flex cursor-pointer items-center justify-between gap-3 rounded-[3px] border px-4 py-3.5 text-sm transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-accent",
-            value === opt.value ? "border-accent bg-accent-soft" : "border-border hover:bg-surface-2",
+            // The picked card carries the accent keel on its left edge, not only a tint.
+            value === opt.value ? "border-accent bg-accent-soft shadow-[inset_3px_0_0_var(--accent)]" : "border-border hover:bg-surface-2",
           )}
         >
           <span>

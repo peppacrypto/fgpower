@@ -228,7 +228,7 @@ export function ProgramCard({
         href={`/app/programs/${programId}`}
         className="group mt-1.5 flex items-center gap-1.5 text-sm font-semibold hover:text-accent"
       >
-        <span className="min-w-0 truncate">{name}</span>
+        <span className="line-clamp-2 min-w-0 wrap-break-word">{name}</span>
         <GArrow className="size-3 shrink-0 text-muted transition-transform group-hover:translate-x-0.5" />
       </Link>
       {/* Each part stays whole; the line breaks at the separator (320px: "Semana 13 de 13 ·" / "Semana de teste"). */}

@@ -85,7 +85,7 @@ async function seedTaxonomy() {
   console.log(`Taxonomy: ${MUSCLES.length} muscles, ${EQUIPMENT.length} equipment, ${MOVEMENT_PATTERNS.length} movement patterns.`);
 }
 
-function normalizeSearchText(ex: GeneratedExercise, aliases: string[]) {
+function normalizeSearchText(ex: Pick<GeneratedExercise, "nameEn" | "namePt">, aliases: string[]) {
   return normalizeText([ex.nameEn, ex.namePt, ...aliases].join(" "));
 }
 
@@ -486,6 +486,151 @@ async function seedCuratedExerciseContent() {
   console.log(`Curated exercise content: applied to ${count} exercises.`);
 }
 
+async function exerciseIdsBySlug() {
+  const rows = await prisma.exercise.findMany({ select: { id: true, slug: true } });
+  return new Map(rows.map((r) => [r.slug, r.id]));
+}
+
+interface GeneratedRelation {
+  slug: string;
+  relatedSlug: string;
+  kind: "REGRESSION" | "PROGRESSION" | "ALTERNATIVE";
+  sortOrder: number;
+}
+
+/**
+ * Curated regression / progression / alternative links. Rows are upserted on
+ * (exercise, related, kind); for every exercise the file covers, links it no
+ * longer lists are removed so the DB mirrors the file after an edit.
+ */
+async function seedExerciseRelations() {
+  const file = path.join(SEED_DATA_DIR, "exercise-relations.generated.json");
+  let relations: GeneratedRelation[];
+  try {
+    relations = JSON.parse(await readFile(file, "utf8"));
+  } catch {
+    console.warn(`No exercise relations at ${file} — skipping.`);
+    return;
+  }
+
+  const ids = await exerciseIdsBySlug();
+  const kept = new Map<string, string[]>(); // exerciseId -> relation row ids in the file
+  let count = 0;
+  let skipped = 0;
+  for (const r of relations) {
+    const exerciseId = ids.get(r.slug);
+    const relatedExerciseId = ids.get(r.relatedSlug);
+    if (!exerciseId || !relatedExerciseId) {
+      const missing = exerciseId ? r.relatedSlug : r.slug;
+      console.warn(`  relation ${r.slug} -> ${r.relatedSlug} (${r.kind}): exercise slug "${missing}" not found, skipping.`);
+      skipped++;
+      continue;
+    }
+    if (exerciseId === relatedExerciseId) {
+      console.warn(`  relation ${r.slug} -> itself (${r.kind}): skipping.`);
+      skipped++;
+      continue;
+    }
+    const row = await prisma.exerciseRelation.upsert({
+      where: { exerciseId_relatedExerciseId_kind: { exerciseId, relatedExerciseId, kind: r.kind } },
+      create: { exerciseId, relatedExerciseId, kind: r.kind, sortOrder: r.sortOrder },
+      update: { sortOrder: r.sortOrder },
+      select: { id: true },
+    });
+    kept.set(exerciseId, [...(kept.get(exerciseId) ?? []), row.id]);
+    count++;
+  }
+
+  let pruned = 0;
+  for (const [exerciseId, keepIds] of kept) {
+    const res = await prisma.exerciseRelation.deleteMany({ where: { exerciseId, id: { notIn: keepIds } } });
+    pruned += res.count;
+  }
+  console.log(`Exercise relations: upserted ${count} across ${kept.size} exercises (skipped ${skipped}, pruned ${pruned}).`);
+}
+
+interface GeneratedAliases {
+  slug: string;
+  aliases: string[];
+}
+
+const ALIAS_LOCALE = "pt-BR";
+
+/**
+ * Gym names people search by ("puxada alta", "leg 45"). Upserted per exercise,
+ * stale pt-BR aliases of covered exercises removed, then searchText is rebuilt
+ * as names + aliases so the plain `contains` search finds them too.
+ */
+async function seedExerciseAliases() {
+  const file = path.join(SEED_DATA_DIR, "exercise-aliases.generated.json");
+  let entries: GeneratedAliases[];
+  try {
+    entries = JSON.parse(await readFile(file, "utf8"));
+  } catch {
+    console.warn(`No exercise aliases at ${file} — skipping.`);
+    return;
+  }
+
+  const ids = await exerciseIdsBySlug();
+  const covered: string[] = [];
+  let count = 0;
+  let pruned = 0;
+  for (const entry of entries) {
+    const exerciseId = ids.get(entry.slug);
+    if (!exerciseId) {
+      console.warn(`  aliases: exercise slug "${entry.slug}" not found, skipping.`);
+      continue;
+    }
+    covered.push(exerciseId);
+    const aliases = [...new Set(entry.aliases.map((a) => a.trim()).filter(Boolean))];
+    for (const alias of aliases) {
+      await prisma.exerciseAlias.upsert({
+        where: { exerciseId_alias_locale: { exerciseId, alias, locale: ALIAS_LOCALE } },
+        create: { exerciseId, alias, locale: ALIAS_LOCALE },
+        update: {},
+      });
+      count++;
+    }
+    const res = await prisma.exerciseAlias.deleteMany({
+      where: { exerciseId, locale: ALIAS_LOCALE, alias: { notIn: aliases } },
+    });
+    pruned += res.count;
+  }
+
+  const toIndex = await prisma.exercise.findMany({
+    where: { OR: [{ aliases: { some: {} } }, { id: { in: covered } }] },
+    select: { id: true, nameEn: true, namePt: true, searchText: true, aliases: { select: { alias: true }, orderBy: { alias: "asc" } } },
+  });
+  let reindexed = 0;
+  for (const ex of toIndex) {
+    const searchText = normalizeSearchText(ex, ex.aliases.map((a) => a.alias));
+    if (searchText === ex.searchText) continue;
+    await prisma.exercise.update({ where: { id: ex.id }, data: { searchText } });
+    reindexed++;
+  }
+  console.log(`Exercise aliases: upserted ${count} for ${covered.length} exercises (pruned ${pruned}); searchText rebuilt on ${reindexed}.`);
+}
+
+/**
+ * popularity = how many exercise slots of published templates use the
+ * exercise (0 when none). Library, search and alternatives sort by it.
+ */
+async function seedExercisePopularity() {
+  const usage = await prisma.workoutTemplateExercise.groupBy({
+    by: ["exerciseId"],
+    where: { day: { template: { isPublished: true } } },
+    _count: { _all: true },
+  });
+  const reset = await prisma.exercise.updateMany({
+    where: { id: { notIn: usage.map((u) => u.exerciseId) }, popularity: { not: 0 } },
+    data: { popularity: 0 },
+  });
+  for (const u of usage) {
+    await prisma.exercise.update({ where: { id: u.exerciseId }, data: { popularity: u._count._all } });
+  }
+  console.log(`Exercise popularity: set on ${usage.length} exercises used by published templates (reset ${reset.count} to 0).`);
+}
+
 async function seedExercises() {
   const file = path.join(SEED_DATA_DIR, "exercises.generated.json");
   let exercises: GeneratedExercise[];
@@ -575,19 +720,27 @@ async function main() {
   await seedEvidence();
   await seedPrinciples();
   await seedCuratedExerciseContent();
+  await seedExerciseRelations();
+  await seedExerciseAliases();
   await seedFlagshipProgram();
   await seedGeneratedPrograms();
+  await seedExercisePopularity();
 
-  const [muscles, equipment, patterns, exercises, evidence, principles, templates] = await Promise.all([
-    prisma.muscle.count(),
-    prisma.equipment.count(),
-    prisma.movementPattern.count(),
-    prisma.exercise.count(),
-    prisma.evidenceSource.count(),
-    prisma.trainingPrinciple.count(),
-    prisma.workoutTemplate.count(),
-  ]);
-  console.log({ muscles, equipment, patterns, exercises, evidence, principles, templates });
+  const [muscles, equipment, patterns, exercises, curated, relations, aliases, evidence, evidencePt, principles, templates] =
+    await Promise.all([
+      prisma.muscle.count(),
+      prisma.equipment.count(),
+      prisma.movementPattern.count(),
+      prisma.exercise.count(),
+      prisma.exercise.count({ where: { isCurated: true } }),
+      prisma.exerciseRelation.count(),
+      prisma.exerciseAlias.count(),
+      prisma.evidenceSource.count(),
+      prisma.evidenceSource.count({ where: { summaryPt: { not: null } } }),
+      prisma.trainingPrinciple.count(),
+      prisma.workoutTemplate.count(),
+    ]);
+  console.log({ muscles, equipment, patterns, exercises, curated, relations, aliases, evidence, evidencePt, principles, templates });
 }
 
 main()

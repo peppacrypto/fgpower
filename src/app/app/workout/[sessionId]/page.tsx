@@ -39,7 +39,8 @@ export async function generateMetadata({ params }: PageProps<"/app/workout/[sess
   const workout = session
     ? await prisma.workoutSession.findUnique({ where: { id: sessionId }, select: { name: true, userId: true } })
     : null;
-  return workout && workout.userId === session?.user.id ? { title: workout.name } : { title: NOT_FOUND_TITLE };
+  // "Treino · Segunda — Superior" in the tab and the app switcher (W-172).
+  return workout && workout.userId === session?.user.id ? { title: `Treino · ${workout.name}` } : { title: NOT_FOUND_TITLE };
 }
 
 /** Onboarding limitations are echoed on the user's first workouts only. */
@@ -109,6 +110,7 @@ export default async function WorkoutExecutionPage({ params, searchParams }: Pag
       rirTarget,
       restSeconds: log.restSeconds,
       wasSkipped: log.wasSkipped,
+      substitutedFromName: log.substitutedFrom?.namePt ?? null,
       notes: log.notes,
       persistentNote: notes.get(log.exerciseId) ?? null,
       sets: log.sets.map((s) => ({
@@ -187,5 +189,12 @@ export default async function WorkoutExecutionPage({ params, searchParams }: Pag
   const prefs = parseWorkoutPrefsCookie((await cookies()).get(WORKOUT_PREFS_COOKIE)?.value);
   const devicePrefs = devicePrefsFrom((name) => prefs[name], session.id);
 
-  return <WorkoutExecutionClient session={executionSession} devicePrefs={devicePrefs} />;
+  return (
+    <WorkoutExecutionClient
+      session={executionSession}
+      devicePrefs={devicePrefs}
+      // The exercise that was on screen (W-025: back from the technique page, a reload).
+      initialExerciseLogId={typeof sp.ex === "string" ? sp.ex : null}
+    />
+  );
 }

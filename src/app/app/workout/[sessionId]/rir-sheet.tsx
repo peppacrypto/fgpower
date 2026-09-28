@@ -83,7 +83,7 @@ export function RirSheet({
         onClick={(e) => e.stopPropagation()}
         className="panel-raised max-h-[calc(100dvh-env(safe-area-inset-top,0px))] w-full max-w-lg overflow-y-auto overscroll-contain bg-background px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5"
       >
-        <span className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-accent">
+        <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent">
           RIR · repetições em reserva
         </span>
         <h2 id="rir-title" className="text-display mt-1 text-2xl font-extrabold">

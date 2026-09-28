@@ -45,14 +45,15 @@ export interface Recommendation<T> {
 }
 
 /**
- * What each kind of access can run. A gym has everything; dumbbells at home
- * cover dumbbell and bodyweight plans; bands/kettlebell cover the minimal and
- * bodyweight ones; bodyweight only covers bodyweight.
+ * What each kind of access can run. A gym has everything; the home levels run
+ * their own plans only. The bodyweight plan hangs from a pull-up bar (barra
+ * fixa, elevação de pernas na barra), which "halteres e talvez um banco" and
+ * "faixas, kettlebell" don't include (lib/data/alternatives EQUIPMENT_FOR_ACCESS).
  */
 const CAN_RUN: Record<string, string[]> = {
   FULL_GYM: ["FULL_GYM", "HOME_DUMBBELLS", "MINIMAL", "HOME_BODYWEIGHT"],
-  HOME_DUMBBELLS: ["HOME_DUMBBELLS", "HOME_BODYWEIGHT"],
-  MINIMAL: ["MINIMAL", "HOME_BODYWEIGHT"],
+  HOME_DUMBBELLS: ["HOME_DUMBBELLS"],
+  MINIMAL: ["MINIMAL"],
   HOME_BODYWEIGHT: ["HOME_BODYWEIGHT"],
 };
 

@@ -13,6 +13,8 @@ import { resolveSessionDay } from "@/lib/training/day-match";
 import { planWeek, restartsEachWeek } from "@/lib/training/day-rotation";
 import { blockEnds, countedWeeks } from "@/lib/programming/block-progress";
 import { closeBlock, entryWeekWasTrained, recordWorkoutMilestone } from "@/lib/data/program-lifecycle";
+import { isStillEditable } from "@/lib/data/workout-session";
+import { buildWorkoutActivitySummary } from "@/lib/social/activity-summary";
 
 type Tx = Prisma.TransactionClient;
 
@@ -220,6 +222,14 @@ export interface LogSetInput {
 /** CLOSED: the session is no longer in progress (finished elsewhere) or the set is gone. */
 export type SetActionResult = { ok: true } | { ok: false; reason: "CLOSED" | "INVALID" };
 
+/**
+ * A swap or an added exercise (W-006): the exercise log to show next. HAS_DATA:
+ * the exercise being swapped already has sets — add the pick after it instead.
+ */
+export type ExerciseChangeResult =
+  | { ok: true; exerciseLogId: string }
+  | { ok: false; reason: "CLOSED" | "INVALID" | "HAS_DATA" | "DUPLICATE" };
+
 /** Clamp a client-supplied number into a finite range, or null for nullish/NaN/Infinity. */
 function clampNum(v: number | null | undefined, min: number, max: number): number | null {
   if (v === null || v === undefined || typeof v !== "number" || !Number.isFinite(v)) return null;
@@ -265,13 +275,29 @@ async function lockOpenSet(tx: Tx, userId: string, setLogId: string) {
   return row?.inProgress ? row : null;
 }
 
-async function lockOpenExerciseLog(tx: Tx, userId: string, exerciseLogId: string) {
-  const rows = await tx.$queryRaw<{ sessionId: string; exerciseId: string }[]>`
-    SELECT e."sessionId", e."exerciseId"
-    FROM "WorkoutExerciseLog" e JOIN "WorkoutSession" s ON s.id = e."sessionId"
-    WHERE e.id = ${exerciseLogId} AND e."userId" = ${userId} AND s.status = 'IN_PROGRESS'
-    FOR SHARE OF s`;
-  return rows[0] ?? null;
+/**
+ * Locks the session of one of the user's exercise logs while it is in
+ * progress (null otherwise), like lockSet. `exclusive` (FOR UPDATE) is for
+ * changing the exercise itself: it waits for the set writes in flight (FOR
+ * SHARE) and holds new ones back, so "has data" and "already in the workout"
+ * are judged on what is committed. The exercise is read after the lock: a
+ * swap that committed while this waited has changed it.
+ */
+async function lockOpenExerciseLog(tx: Tx, userId: string, exerciseLogId: string, exclusive = false) {
+  const rows = exclusive
+    ? await tx.$queryRaw<{ sessionId: string }[]>`
+        SELECT e."sessionId"
+        FROM "WorkoutExerciseLog" e JOIN "WorkoutSession" s ON s.id = e."sessionId"
+        WHERE e.id = ${exerciseLogId} AND e."userId" = ${userId} AND s.status = 'IN_PROGRESS'
+        FOR UPDATE OF s`
+    : await tx.$queryRaw<{ sessionId: string }[]>`
+        SELECT e."sessionId"
+        FROM "WorkoutExerciseLog" e JOIN "WorkoutSession" s ON s.id = e."sessionId"
+        WHERE e.id = ${exerciseLogId} AND e."userId" = ${userId} AND s.status = 'IN_PROGRESS'
+        FOR SHARE OF s`;
+  if (!rows[0]) return null;
+  const log = await tx.workoutExerciseLog.findUniqueOrThrow({ where: { id: exerciseLogId }, select: { exerciseId: true } });
+  return { sessionId: rows[0].sessionId, exerciseId: log.exerciseId };
 }
 
 /**
@@ -421,6 +447,209 @@ export async function removeSet(setLogId: string): Promise<SetActionResult> {
   return { ok: true };
 }
 
+/**
+ * "Trocar" mid-workout (W-006: the machine is taken, the gym has no such
+ * equipment): the exercise log now holds `newExerciseId`, with its untouched
+ * set rows — same ids, same prescription — so history, records, "Último
+ * treino" and the progression all read the exercise actually performed.
+ * `substitutedFromExerciseId` keeps the program's exercise (swapping back to it
+ * clears it). The program's note for its exercise ("Cada série = braço D +
+ * E", "segure 30 s" — which also makes the column seconds) doesn't carry over
+ * to a stand-in; swapping back brings it back. Only while none of its sets
+ * holds data: HAS_DATA sends the screen to addExerciseToWorkout (the pick
+ * goes in after it) instead, so a logged set never changes exercise under the
+ * user. DUPLICATE: the pick is already one of the workout's exercises — the
+ * program's own too, when it was added elsewhere in the workout after this
+ * one was swapped away from it.
+ */
+export async function swapExercise(exerciseLogId: string, newExerciseId: string): Promise<ExerciseChangeResult> {
+  const user = await requireUserOrThrow();
+  if (typeof exerciseLogId !== "string" || typeof newExerciseId !== "string") return { ok: false, reason: "INVALID" };
+  const result = await prisma.$transaction(async (tx) => {
+    // Exclusive: a set typed on another device lands before the count below
+    // (HAS_DATA), never under the swap onto the new exercise.
+    const open = await lockOpenExerciseLog(tx, user.id, exerciseLogId, true);
+    if (!open) return "CLOSED" as const;
+    const target = await tx.exercise.findFirst({ where: { id: newExerciseId, isPublished: true }, select: { id: true } });
+    if (!target) return "INVALID" as const;
+    if (open.exerciseId === newExerciseId) return { sessionId: open.sessionId };
+    const withData = await tx.setLog.count({ where: { exerciseLogId, ...SET_HAS_DATA } });
+    if (withData > 0) return "HAS_DATA" as const;
+    const log = await tx.workoutExerciseLog.findUniqueOrThrow({
+      where: { id: exerciseLogId },
+      select: { substitutedFromExerciseId: true, programExercise: { select: { notes: true } } },
+    });
+    const original = log.substitutedFromExerciseId ?? open.exerciseId;
+    const back = newExerciseId === original;
+    // This log doesn't hold the pick yet (checked above): any count is another copy of it.
+    if ((await tx.workoutExerciseLog.count({ where: { sessionId: open.sessionId, exerciseId: newExerciseId } })) > 0) {
+      return "DUPLICATE" as const;
+    }
+    await tx.workoutExerciseLog.update({
+      where: { id: exerciseLogId },
+      data: {
+        exerciseId: newExerciseId,
+        substitutedFromExerciseId: back ? null : original,
+        notes: back ? (log.programExercise?.notes ?? null) : null,
+        // A skipped exercise swapped for another: the stand-in is there to be done.
+        wasSkipped: false,
+      },
+    });
+    await tx.setLog.updateMany({ where: { exerciseLogId }, data: { exerciseId: newExerciseId } });
+    return { sessionId: open.sessionId };
+  });
+  if (typeof result === "string") return { ok: false, reason: result };
+  revalidatePath(`/app/workout/${result.sessionId}`);
+  return { ok: true, exerciseLogId };
+}
+
+/** What a new exercise asks for when nothing else says so ("Adicionar exercício" at the end). */
+const ADDED_EXERCISE_DEFAULTS = { prescribedSets: 3, repMin: 8, repMax: 12, rirTarget: 2, restSeconds: 90 };
+/** A workout never grows past this many exercises. */
+const MAX_WORKOUT_EXERCISES = 40;
+
+/**
+ * Adds an exercise to a workout in progress (W-006). With `after`, it goes
+ * right after that exercise: `replacing` it (the swap of an exercise that
+ * already has sets — "Adicionar como novo exercício") it takes that
+ * exercise's prescription for the sets still to do and records it as the
+ * stand-in (substitutedFromExerciseId); otherwise it copies nothing but the
+ * rest. Without `after`, it goes at the end with a plain 3 × 8–12. Its set
+ * rows are created like a started day's (see openSessionForDay). It isn't
+ * part of the program (no program exercise): the program's default
+ * progression applies. DUPLICATE: it is already one of the workout's
+ * exercises — more of it goes there (extra sets), not in a second copy.
+ */
+export async function addExerciseToWorkout(
+  sessionId: string,
+  exerciseId: string,
+  opts: { after?: string | null; replacing?: boolean } = {},
+): Promise<ExerciseChangeResult> {
+  const user = await requireUserOrThrow();
+  if (typeof sessionId !== "string" || typeof exerciseId !== "string") return { ok: false, reason: "INVALID" };
+  const afterId = typeof opts?.after === "string" ? opts.after : null;
+  const result = await prisma.$transaction(async (tx) => {
+    // Exclusive (see lockOpenExerciseLog): a second add of the same pick, from
+    // another tap or device, waits for this one and then finds it (DUPLICATE).
+    const [open] = await tx.$queryRaw<{ id: string }[]>`
+      SELECT id FROM "WorkoutSession"
+      WHERE id = ${sessionId} AND "userId" = ${user.id} AND status = 'IN_PROGRESS'
+      FOR UPDATE`;
+    if (!open) return "CLOSED" as const;
+    const target = await tx.exercise.findFirst({ where: { id: exerciseId, isPublished: true }, select: { id: true } });
+    if (!target) return "INVALID" as const;
+    const logs = await tx.workoutExerciseLog.findMany({
+      where: { sessionId },
+      select: {
+        id: true,
+        exerciseId: true,
+        substitutedFromExerciseId: true,
+        sortOrder: true,
+        prescribedSets: true,
+        repMin: true,
+        repMax: true,
+        rirTarget: true,
+        rpeTarget: true,
+        restSeconds: true,
+        tempo: true,
+        sets: { where: { setType: { not: "WARMUP" }, isExtra: false, ...SET_HAS_DATA }, select: { id: true } },
+      },
+    });
+    if (logs.length >= MAX_WORKOUT_EXERCISES) return "INVALID" as const;
+    if (logs.some((l) => l.exerciseId === exerciseId)) return "DUPLICATE" as const;
+    const after = afterId ? logs.find((l) => l.id === afterId) : undefined;
+    if (afterId && !after) return "INVALID" as const;
+    const replacing = opts?.replacing === true && after !== undefined;
+    const sortOrder = after ? after.sortOrder + 1 : Math.max(-1, ...logs.map((l) => l.sortOrder)) + 1;
+    if (after) {
+      await tx.workoutExerciseLog.updateMany({
+        where: { sessionId, sortOrder: { gt: after.sortOrder } },
+        data: { sortOrder: { increment: 1 } },
+      });
+    }
+    const prescription = replacing
+      ? {
+          // The sets still to do move over: 1 of 3 done on the leg press leaves 2 for the hack.
+          prescribedSets: Math.max(1, after.prescribedSets - after.sets.length),
+          repMin: after.repMin,
+          repMax: after.repMax,
+          rirTarget: after.rirTarget,
+          rpeTarget: after.rpeTarget,
+          restSeconds: after.restSeconds,
+          tempo: after.tempo,
+        }
+      : { ...ADDED_EXERCISE_DEFAULTS, restSeconds: after?.restSeconds ?? ADDED_EXERCISE_DEFAULTS.restSeconds };
+    const log = await tx.workoutExerciseLog.create({
+      data: {
+        sessionId,
+        userId: user.id,
+        exerciseId,
+        sortOrder,
+        ...prescription,
+        warmupSets: 0,
+        substitutedFromExerciseId: replacing ? (after.substitutedFromExerciseId ?? after.exerciseId) : null,
+      },
+      select: { id: true },
+    });
+    await tx.setLog.createMany({
+      data: Array.from({ length: prescription.prescribedSets }, (_, i) => ({
+        userId: user.id,
+        sessionId,
+        exerciseLogId: log.id,
+        exerciseId,
+        setNumber: i + 1,
+        setType: "WORKING" as const,
+      })),
+    });
+    return { logId: log.id };
+  });
+  if (typeof result === "string") return { ok: false, reason: result };
+  revalidatePath(`/app/workout/${sessionId}`);
+  return { ok: true, exerciseLogId: result.logId };
+}
+
+/**
+ * "Usar no programa" on a finished workout's swap (W-006): the program day
+ * asks for the exercise done in its place from now on — when it still asks
+ * for the one that was swapped out (idempotent: a second tap, or a program
+ * already changed, does nothing). The day's note for the old exercise goes
+ * (it would coach the wrong movement — and a "segure 30 s" would time the new
+ * one in seconds). Workouts already open keep their snapshot. The program
+ * counts as saved now: a builder draft kept on this device from before reads
+ * as older than the program, not as its latest version.
+ */
+export async function keepSwapInProgram(exerciseLogId: string): Promise<{ ok: boolean }> {
+  const user = await requireUserOrThrow();
+  if (typeof exerciseLogId !== "string") return { ok: false };
+  const log = await prisma.workoutExerciseLog.findFirst({
+    where: { id: exerciseLogId, userId: user.id, session: { status: "COMPLETED" } },
+    select: {
+      sessionId: true,
+      exerciseId: true,
+      substitutedFromExerciseId: true,
+      programExercise: { select: { id: true, exerciseId: true, day: { select: { programId: true, program: { select: { userId: true } } } } } },
+    },
+  });
+  const pe = log?.programExercise;
+  if (!log || !pe || pe.day.program.userId !== user.id || !log.substitutedFromExerciseId) return { ok: false };
+  const from = log.substitutedFromExerciseId;
+  const updated = await prisma.$transaction(async (tx) => {
+    const changed = await tx.userProgramExercise.updateMany({
+      where: { id: pe.id, exerciseId: from },
+      data: { exerciseId: log.exerciseId, notes: null },
+    });
+    // The builder's local draft is judged against the program's updatedAt (draftIsStale).
+    if (changed.count > 0) await tx.userProgram.update({ where: { id: pe.day.programId }, data: { updatedAt: new Date() } });
+    return changed;
+  });
+  if (updated.count > 0) {
+    revalidatePath(`/app/programs/${pe.day.programId}`);
+    revalidatePath("/app/today");
+  }
+  revalidatePath(`/app/workout/${log.sessionId}/summary`);
+  return { ok: updated.count > 0 || pe.exerciseId === log.exerciseId };
+}
+
 /** Skips (or un-skips) an exercise. Sets already ✓'d before skipping still count; the rest don't. */
 export async function skipExercise(exerciseLogId: string, skipped = true): Promise<SetActionResult> {
   const user = await requireUserOrThrow();
@@ -434,13 +663,6 @@ export async function skipExercise(exerciseLogId: string, skipped = true): Promi
   if (!sessionId) return { ok: false, reason: "CLOSED" };
   revalidatePath(`/app/workout/${sessionId}`);
   return { ok: true };
-}
-
-export async function setWorkoutNote(sessionId: string, notes: string) {
-  const user = await requireUserOrThrow();
-  const session = await prisma.workoutSession.findUniqueOrThrow({ where: { id: sessionId } });
-  if (session.userId !== user.id) throw new Error("FORBIDDEN");
-  await prisma.workoutSession.update({ where: { id: sessionId }, data: { notes } });
 }
 
 export type FinishResult =
@@ -734,22 +956,7 @@ async function advanceProgram(
   }
 
   const thisDay = resolveSessionDay(s.session, days);
-  let nextDayIndex = s.enrollment.nextDayIndex;
-  if (thisDay) {
-    const pos = days.indexOf(thisDay);
-    const order = days.map((_, i) => days[(pos + 1 + i) % days.length]);
-    if (program.daysPerWeek > days.length) {
-      nextDayIndex = order[0].dayIndex;
-    } else {
-      const doneIds = new Set(thisWeek.map((x) => resolveSessionDay(x, days)?.id));
-      doneIds.add(thisDay.id);
-      // Week done: a weekday-named plan starts again on its first day; any other
-      // rotation (Sessão A/B/C) just continues after the day trained, so a week
-      // begun at B doesn't end up with A twice in a row.
-      const weekDone = restartsEachWeek(days, program.daysPerWeek) ? days[0] : order[0];
-      nextDayIndex = (order.find((d) => !doneIds.has(d.id)) ?? weekDone).dayIndex;
-    }
-  }
+  const nextDayIndex = thisDay ? nextDayAfter(days, program.daysPerWeek, thisDay, thisWeek) : s.enrollment.nextDayIndex;
 
   await tx.workoutSession.update({ where: { id: s.sessionId }, data: { programWeek: week } });
   await tx.programEnrollment.update({
@@ -775,14 +982,345 @@ async function advanceProgram(
   return closeBlock(tx, { userId: s.userId, enrollmentId: s.enrollment.id, now: s.now });
 }
 
-/** Permanently deletes a completed session and all its logs (spec §43.15). */
-export async function deleteWorkoutSession(sessionId: string) {
+/**
+ * The program day suggested after `thisDay` was trained, with `weekSoFar` the
+ * other workouts finished in its calendar week (advanceProgram's rule):
+ * - programs that repeat days within a week (A/B at 3×) just rotate;
+ * - otherwise the next day not yet done this week — once all of them are, a
+ *   weekday-named plan starts again on its first day, and any other rotation
+ *   (Sessão A/B/C) continues after the day trained, so a week begun at B
+ *   doesn't end up with A twice in a row.
+ */
+function nextDayAfter<D extends { id: string; dayIndex: number; name: string }>(
+  days: D[],
+  daysPerWeek: number,
+  thisDay: D,
+  weekSoFar: { programDayId: string | null; programDayIndex: number | null; name: string }[],
+): number {
+  const pos = days.indexOf(thisDay);
+  const order = days.map((_, i) => days[(pos + 1 + i) % days.length]);
+  if (daysPerWeek > days.length) return order[0].dayIndex;
+  const doneIds = new Set(weekSoFar.map((x) => resolveSessionDay(x, days)?.id));
+  doneIds.add(thisDay.id);
+  const weekDone = restartsEachWeek(days, daysPerWeek) ? days[0] : order[0];
+  return (order.find((d) => !doneIds.has(d.id)) ?? weekDone).dayIndex;
+}
+
+// ---------------------------------------------------------------------------
+// Correcting a finished workout (W-088): its sets can be edited, or the whole
+// workout deleted, for FINISHED_EDIT_WINDOW_MS after it was saved (savedAt:
+// a workout saved later "como feito em 20/09" too). Records, the week's count
+// and the program's counters follow, by the same rules that made them at the
+// finish.
+// ---------------------------------------------------------------------------
+
+/** One row of "Editar séries": new values for a set that counted, or `remove` to take it out. */
+export interface FinishedSetEdit {
+  setLogId: string;
+  weightKg: number | null;
+  reps: number | null;
+  rir: number | null;
+  remove?: boolean;
+}
+
+/**
+ * EXPIRED: past the correction window; EMPTY: the edit would leave no working
+ * set (delete the workout instead); INVALID: a row without load and reps, or
+ * not one of the workout's sets.
+ */
+export type FinishedEditResult = { ok: false; reason: "NOT_FOUND" | "EXPIRED" | "EMPTY" | "INVALID" };
+
+/**
+ * Locks a finished workout of the user's for a correction: NOT_FOUND when it
+ * isn't one, EXPIRED once the window since it was saved closed (savedAt).
+ */
+async function lockFinished(tx: Tx, userId: string, sessionId: string) {
+  const [row] = await tx.$queryRaw<{ status: string; finishedAt: Date | null; updatedAt: Date }[]>`
+    SELECT status::text AS status, "finishedAt", "updatedAt" FROM "WorkoutSession"
+    WHERE id = ${sessionId} AND "userId" = ${userId}
+    FOR UPDATE`;
+  if (!row || row.status !== "COMPLETED" || !row.finishedAt) return "NOT_FOUND" as const;
+  if (!isStillEditable({ finishedAt: row.finishedAt, updatedAt: row.updatedAt })) return "EXPIRED" as const;
+  return { finishedAt: row.finishedAt, updatedAt: row.updatedAt };
+}
+
+/**
+ * Re-judges the records of finished workouts — each against the workouts
+ * finished before it (checkAndRecordPersonalRecords, idempotent) — dated on
+ * their own finish, as the finish dates them. Run on a corrected workout and
+ * on the later ones that share an exercise with it: a typo's "record" no
+ * longer stands in their way, and a record measured against a deleted
+ * workout is measured again. Each one's shared card is rebuilt after it (a
+ * card lists the workout's records, and its totals after an edit), so the
+ * feed never shows a record that no longer stands or misses one that does.
+ */
+async function rescoreRecords(userId: string, sessionIds: string[]) {
+  for (const id of sessionIds) {
+    try {
+      await checkAndRecordPersonalRecords(userId, id);
+      const s = await prisma.workoutSession.findUnique({ where: { id }, select: { finishedAt: true } });
+      if (s?.finishedAt) {
+        await prisma.exercisePersonalRecord.updateMany({ where: { userId, sessionId: id }, data: { achievedAt: s.finishedAt } });
+      }
+    } catch (err) {
+      // The correction is saved; a record bookkeeping failure must not look like a failed save.
+      console.error("PR rescoring failed", id, err);
+    }
+    try {
+      // Outside the rescoring's try: an edited workout's card still gets its corrected totals.
+      await refreshSharedCard(id);
+    } catch (err) {
+      console.error("Shared card refresh failed", id, err);
+    }
+  }
+}
+
+/** Finished workouts after `finishedAt` that have one of `exerciseIds`, oldest first. */
+function laterWorkoutsWith(userId: string, exerciseIds: string[], finishedAt: Date) {
+  if (exerciseIds.length === 0) return Promise.resolve([] as string[]);
+  return prisma.workoutSession
+    .findMany({
+      where: {
+        userId,
+        status: "COMPLETED",
+        finishedAt: { gt: finishedAt },
+        exerciseLogs: { some: { exerciseId: { in: exerciseIds } } },
+      },
+      orderBy: { finishedAt: "asc" },
+      select: { id: true },
+    })
+    .then((rows) => rows.map((r) => r.id));
+}
+
+/**
+ * "Editar séries" on a finished workout: each row keeps its load, reps and
+ * RIR as corrected (a row needs load and reps), or is taken out. The totals,
+ * the shared card and the records follow; the program's counters don't move
+ * (the day is still done) — which is why an edit may not leave the workout
+ * without a working set: that is "Excluir treino". Opens the summary on
+ * success; only a failure comes back.
+ */
+export async function editFinishedWorkout(sessionId: string, edits: FinishedSetEdit[]): Promise<FinishedEditResult> {
   const user = await requireUserOrThrow();
-  const session = await prisma.workoutSession.findUniqueOrThrow({ where: { id: sessionId } });
-  if (session.userId !== user.id) throw new Error("FORBIDDEN");
-  await prisma.workoutSession.delete({ where: { id: sessionId } });
+  if (typeof sessionId !== "string" || !Array.isArray(edits)) return { ok: false, reason: "INVALID" };
+  const rows = edits.filter((e) => e && typeof e.setLogId === "string").slice(0, 400);
+
+  const outcome = await prisma
+    .$transaction(async (tx) => {
+      const locked = await lockFinished(tx, user.id, sessionId);
+      if (typeof locked === "string") return locked;
+      const sets = await tx.setLog.findMany({
+        where: { sessionId, userId: user.id, id: { in: rows.map((r) => r.setLogId) } },
+        select: { id: true, setType: true, isCompleted: true, weightKg: true, reps: true, rir: true, exerciseId: true },
+      });
+      const byId = new Map(sets.map((s) => [s.id, s]));
+      for (const edit of rows) {
+        const set = byId.get(edit.setLogId);
+        // Only the sets the summary lists: working sets that counted.
+        if (!set || set.setType === "WARMUP" || !set.isCompleted) return "INVALID" as const;
+        if (edit.remove === true) {
+          await tx.setLog.update({
+            where: { id: set.id },
+            data: { isCompleted: false, completedAt: null, weightKg: null, reps: null, rir: null },
+          });
+          continue;
+        }
+        const values = cleanValues(edit);
+        if (!isFilled(values)) return "INVALID" as const;
+        if (values.weightKg === set.weightKg && values.reps === set.reps && values.rir === set.rir) continue;
+        await tx.setLog.update({ where: { id: set.id }, data: values });
+      }
+      const all = await tx.setLog.findMany({ where: { sessionId } });
+      if (workingSetCount(all) === 0) throw new EmptyEdit();
+      await tx.workoutSession.update({
+        where: { id: sessionId },
+        data: {
+          totalVolumeKg: sessionVolumeKg(all),
+          totalWorkingSets: workingSetCount(all),
+          totalReps: totalReps(all),
+          // Kept: it dates the save the correction window runs from (savedAt) — a correction doesn't extend it.
+          updatedAt: locked.updatedAt,
+        },
+      });
+      return { finishedAt: locked.finishedAt, exerciseIds: [...new Set(sets.map((s) => s.exerciseId))] };
+    })
+    .catch((err) => {
+      if (err instanceof EmptyEdit) return "EMPTY" as const;
+      throw err;
+    });
+  if (typeof outcome === "string") return { ok: false, reason: outcome };
+
+  // Its own card is rebuilt there too, with the corrected totals.
+  await rescoreRecords(user.id, [sessionId, ...(await laterWorkoutsWith(user.id, outcome.exerciseIds, outcome.finishedAt))]);
+  revalidateFinished(sessionId);
+  redirect(`/app/workout/${sessionId}/summary?corrigido=1`, RedirectType.replace);
+}
+
+/** Thrown inside the edit's transaction to roll it back when no working set would be left. */
+class EmptyEdit extends Error {}
+
+/** A shared workout's card is built from its sets and records (activities.ts): rebuilt after a correction. */
+async function refreshSharedCard(sessionId: string) {
+  // Most rescored workouts were never shared: those load nothing.
+  const session = await prisma.workoutSession.findFirst({
+    where: { id: sessionId, activity: { isNot: null } },
+    include: {
+      exerciseLogs: { include: { exercise: true, sets: true }, orderBy: { sortOrder: "asc" } },
+      records: { include: { exercise: true } },
+      activity: { select: { id: true, showDetailedLoads: true } },
+    },
+  });
+  if (!session?.activity) return;
+  const summary = buildWorkoutActivitySummary(session, session.activity.showDetailedLoads);
+  await prisma.activity.update({ where: { id: session.activity.id }, data: { summary: summary as never } });
+}
+
+function revalidateFinished(sessionId: string) {
+  revalidatePath(`/app/workout/${sessionId}/summary`);
+  revalidatePath("/app/today");
   revalidatePath("/app/history");
-  redirect("/app/history");
+  revalidatePath("/app/progress");
+  revalidatePath("/app/feed");
+  revalidatePath("/app/programs");
+}
+
+/**
+ * "Excluir treino" (W-088): deletes a finished workout — its sets, records
+ * and shared card go with it (cascade) — and puts back what finishing it
+ * moved: the program's workout count, and, when it was the program's latest
+ * workout, the program week and the suggested next day as they stand after
+ * the workout before it (advanceProgram's own rule, nextDayAfter; with no
+ * workout before it, the block's first day is next again, as when it was
+ * started — and the week stays: a first workout never moves it). A block
+ * this workout closed is open again when nothing else became active since.
+ * A workout that alone took its program week takes that week with it: the
+ * later ones go back one (see rollBackProgram). Its milestone stamp goes too.
+ * The later workouts' records are judged again without it, and their shared
+ * cards follow. Opens Today on success; only a failure comes back.
+ */
+export async function deleteWorkoutSession(sessionId: string): Promise<FinishedEditResult> {
+  const user = await requireUserOrThrow();
+  if (typeof sessionId !== "string") return { ok: false, reason: "NOT_FOUND" };
+
+  const outcome = await prisma.$transaction(async (tx) => {
+    const locked = await lockFinished(tx, user.id, sessionId);
+    if (typeof locked === "string") return locked;
+    const session = await tx.workoutSession.findUniqueOrThrow({
+      where: { id: sessionId },
+      select: { id: true, enrollmentId: true, programWeek: true, exerciseLogs: { select: { exerciseId: true } } },
+    });
+    if (session.enrollmentId) await rollBackProgram(tx, user.id, { ...session, finishedAt: locked.finishedAt });
+    await tx.activity.deleteMany({
+      where: { userId: user.id, type: "MILESTONE", summary: { path: ["sessionId"], equals: sessionId } },
+    });
+    await tx.workoutSession.delete({ where: { id: sessionId } });
+    return { finishedAt: locked.finishedAt, exerciseIds: [...new Set(session.exerciseLogs.map((l) => l.exerciseId))] };
+  });
+  if (typeof outcome === "string") return { ok: false, reason: outcome };
+
+  await rescoreRecords(user.id, await laterWorkoutsWith(user.id, outcome.exerciseIds, outcome.finishedAt));
+  revalidateFinished(sessionId);
+  redirect("/app/today?excluido=1", RedirectType.replace);
+}
+
+/**
+ * Undoes what advanceProgram did for a deleted workout (see
+ * deleteWorkoutSession). The workout count is counted again — the block's
+ * finished workouts without this one (program-lifecycle FINISHED, as block
+ * progress counts them) — instead of taken down by one: a workout finished
+ * after its enrollment stopped was linked to it but never added.
+ */
+async function rollBackProgram(
+  tx: Tx,
+  userId: string,
+  s: { id: string; enrollmentId: string | null; finishedAt: Date; programWeek: number | null },
+) {
+  if (!s.enrollmentId) return;
+  const enrollment = await tx.programEnrollment.findFirst({
+    where: { id: s.enrollmentId, userId },
+    select: { id: true, status: true, endedAt: true, programId: true, currentWeek: true, nextDayIndex: true },
+  });
+  if (!enrollment) return;
+  // userId keeps these on the (userId, …) indexes.
+  const finished = {
+    userId,
+    enrollmentId: enrollment.id,
+    status: "COMPLETED" as const,
+    totalWorkingSets: { gt: 0 },
+    id: { not: s.id },
+  };
+  const data: Prisma.ProgramEnrollmentUpdateInput = { completedSessions: await tx.workoutSession.count({ where: finished }) };
+
+  // Closed by this workout (closeBlock stamps the workout's own finish) and
+  // nothing started since: the block goes on — and its program is the running
+  // one again, whatever it became meanwhile ("Restaurar" or a builder save
+  // make an archived program a draft, which "Descartar rascunho" would delete).
+  let active = enrollment.status === "ACTIVE";
+  if (
+    enrollment.status === "COMPLETED" &&
+    enrollment.endedAt &&
+    Math.abs(enrollment.endedAt.getTime() - s.finishedAt.getTime()) < 1000 &&
+    (await tx.programEnrollment.count({ where: { userId, status: "ACTIVE" } })) === 0
+  ) {
+    active = true;
+    data.status = "ACTIVE";
+    data.endedAt = null;
+    await tx.userProgram.updateMany({
+      where: { id: enrollment.programId, userId, status: { not: "ACTIVE" } },
+      data: { status: "ACTIVE", archivedAt: null },
+    });
+    await tx.activity.deleteMany({
+      where: { userId, type: "PROGRAM_COMPLETED", summary: { path: ["enrollmentId"], equals: enrollment.id } },
+    });
+  }
+
+  if (active) {
+    const newer = await tx.workoutSession.findFirst({ where: { ...finished, finishedAt: { gt: s.finishedAt } }, select: { id: true } });
+    if (newer) {
+      // A later workout already moved the program on from where this one left
+      // it — past this one's week, though, only because this one was there,
+      // when it alone took that week (the first and only workout of its
+      // calendar week: the block's first, or the one that moved the counter
+      // on). Without it that week was never trained: the later workouts and
+      // the counter go back one, as they would stand had it never been saved
+      // (a Sunday workout deleted after Monday's). One that shares its week —
+      // a redo, a late save that took a newer workout's week, a late workout
+      // kept in the block's last week — moved nothing.
+      const week = s.programWeek;
+      if (week != null && (await tx.workoutSession.count({ where: { ...finished, programWeek: week } })) === 0) {
+        // Raw SQL keeps their updatedAt: their own correction window runs from it.
+        await tx.$executeRaw`
+          UPDATE "WorkoutSession" SET "programWeek" = "programWeek" - 1
+          WHERE "userId" = ${userId} AND "enrollmentId" = ${enrollment.id} AND status = 'COMPLETED'
+            AND id <> ${s.id} AND "finishedAt" > ${s.finishedAt} AND "programWeek" > ${week}`;
+        if (enrollment.currentWeek > week) data.currentWeek = Math.max(1, enrollment.currentWeek - 1);
+      }
+    } else {
+      const program = await tx.userProgram.findUnique({
+        where: { id: enrollment.programId },
+        select: { daysPerWeek: true, days: { orderBy: { dayIndex: "asc" }, select: { id: true, dayIndex: true, name: true } } },
+      });
+      const days = program?.days ?? [];
+      const before = await tx.workoutSession.findFirst({
+        where: { ...finished, finishedAt: { lt: s.finishedAt } },
+        orderBy: { finishedAt: "desc" },
+        select: { programWeek: true, programDayId: true, programDayIndex: true, name: true, finishedAt: true },
+      });
+      const beforeDay = before ? resolveSessionDay(before, days) : undefined;
+      if (before && program && beforeDay && before.finishedAt) {
+        const weekSoFar = await tx.workoutSession.findMany({
+          where: { ...finished, finishedAt: { gte: startOfWeek(before.finishedAt), lt: before.finishedAt } },
+          select: { programDayId: true, programDayIndex: true, name: true },
+        });
+        data.nextDayIndex = nextDayAfter(days, program.daysPerWeek, beforeDay, weekSoFar);
+      } else if (!before && days.length > 0) {
+        // The block's first workout: next is where the block started (startProgramInternal).
+        data.nextDayIndex = days[0].dayIndex;
+      }
+      if (before?.programWeek != null) data.currentWeek = before.programWeek;
+    }
+  }
+  await tx.programEnrollment.update({ where: { id: enrollment.id }, data });
 }
 
 /**

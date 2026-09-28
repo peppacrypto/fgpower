@@ -119,7 +119,7 @@ export function ProtocolLibrary({
           <button
             type="button"
             onClick={() => setQuery("")}
-            className="absolute right-1.5 top-1/2 flex size-9 -translate-y-1/2 items-center justify-center text-muted hover:text-foreground"
+            className="absolute right-0 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center text-muted hover:text-foreground"
             aria-label="Limpar busca"
           >
             <X className="size-4" />
@@ -160,7 +160,7 @@ export function ProtocolLibrary({
             <button
               type="button"
               onClick={() => setFilters(NO_FILTERS)}
-              className="mt-2 inline-flex min-h-9 items-center font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
+              className="mt-2 inline-flex min-h-11 items-center font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
             >
               Limpar filtros
             </button>
@@ -174,6 +174,7 @@ export function ProtocolLibrary({
                 return (
                   <section key={group.key} aria-label={group.label} className="mt-10 first:mt-8">
                     <SectionHead
+                      as="h3"
                       label={group.label}
                       count={filtersOn ? `${group.items.length} de ${total} blocos` : `${total} blocos`}
                     />
@@ -195,7 +196,7 @@ export function ProtocolLibrary({
               const restId = `shelf-${group.key}-rest`;
               return (
                 <section key={group.key} aria-label={group.label} className="mt-10 first:mt-8">
-                  <SectionHead label={group.label} count={String(group.items.length)} />
+                  <SectionHead as="h3" label={group.label} count={String(group.items.length)} />
                   <p className="mt-1.5 text-xs text-muted">{group.blurb}</p>
                   {collapsible ? (
                     <>
@@ -295,7 +296,7 @@ function FilterChips({
                   aria-label={"ariaLabel" in opt ? opt.ariaLabel : undefined}
                   onClick={() => onChange({ ...filters, [facet.key]: selected ? null : opt.value } as LibraryFilters)}
                   className={cn(
-                    "h-8 shrink-0 px-2.5 font-mono text-[11px] font-semibold uppercase tracking-[0.06em] transition-colors",
+                    "h-11 shrink-0 px-2.5 font-mono text-[11px] font-semibold uppercase tracking-[0.06em] transition-colors",
                     selected
                       ? "bg-foreground text-background"
                       : "bg-surface-2 text-foreground/75 hover:bg-[var(--border)] hover:text-foreground",
@@ -317,7 +318,7 @@ function FilterChips({
         {count > 0 ? (
           <>
             <span aria-hidden>·</span>
-            <button type="button" onClick={() => onChange(NO_FILTERS)} className="py-1 uppercase text-accent hover:underline">
+            <button type="button" onClick={() => onChange(NO_FILTERS)} className="min-h-11 px-1 uppercase text-accent hover:underline">
               Limpar
             </button>
           </>
@@ -325,7 +326,7 @@ function FilterChips({
         {canRestore ? (
           <>
             {count > 0 ? <span aria-hidden>·</span> : null}
-            <button type="button" onClick={() => onChange(preset)} className="py-1 uppercase text-accent hover:underline">
+            <button type="button" onClick={() => onChange(preset)} className="min-h-11 px-1 uppercase text-accent hover:underline">
               Usar meu perfil
             </button>
           </>
@@ -359,7 +360,7 @@ function EmptySearch({
             key={s}
             type="button"
             onClick={() => onPick(s)}
-            className="h-8 bg-surface-2 px-2.5 font-mono text-[11px] font-semibold uppercase tracking-[0.06em] text-foreground/80 hover:bg-[var(--border)]"
+            className="h-11 bg-surface-2 px-2.5 font-mono text-[11px] font-semibold uppercase tracking-[0.06em] text-foreground/80 hover:bg-[var(--border)]"
           >
             {s}
           </button>

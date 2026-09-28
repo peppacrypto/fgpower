@@ -1,32 +1,43 @@
 import { Bone, SkeletonScreen } from "@/components/ui/skeleton";
 import { SectionHead } from "@/components/ui/section-head";
+import { NestedSkeleton } from "@/components/ui/skeleton-client";
+import { EditSetsSkeleton } from "./editar/loading";
 
 /**
  * The post-workout dossier (summary/page.tsx), drawn as it lays out: the
- * left-aligned masthead (saved kicker, "Treino nº · date", the day's title,
- * the stats line), the "Quem vê" row between rules, one panel for the records
- * or the baseline, then the exercise cards. Keep in step with the page.
+ * masthead panel (kicker with the date, "Treino nº · week", the day's title,
+ * the stats line, the saved line), the "Quem vê" row between rules, one panel
+ * for the records or the baseline, then the exercise cards. Keep in step with
+ * the page.
  */
 export function SummarySkeleton() {
   return (
     <SkeletonScreen label="o resumo do treino" className="mx-auto max-w-2xl px-4 py-6 sm:px-6 sm:py-10">
-      {/* TREINO CONCLUÍDO · SALVO NO HISTÓRICO ✓ (two lines below a 366px screen, as the page wraps it) */}
-      <div className="flex h-[17px] flex-col justify-around max-[366px]:h-[37px]">
-        <Bone className="h-3 w-2/3 max-w-72" />
-        <Bone className="hidden h-3 w-1/2 max-[366px]:block" />
-      </div>
-      {/* Treino nº 1 · 26 set · Semana 1/8 */}
-      <div className="mt-3 flex h-[15px] items-center">
-        <Bone className="h-2.5 w-1/2 max-w-56" />
-      </div>
-      {/* The day's name: text-3xl, two lines of 36px on a phone ("Quinta — Puxar (moderado)"), one from sm. */}
-      <div className="mt-1.5 flex h-18 flex-col justify-around sm:h-10">
-        <Bone className="h-7 w-3/4 sm:w-1/2" />
-        <Bone className="h-7 w-1/2 sm:hidden" />
-      </div>
-      {/* 42 min · 12 séries de trabalho · 3.210 kg de volume */}
-      <div className="mt-2 flex h-5 items-center">
-        <Bone className="h-3.5 w-3/4" />
+      {/* The masthead panel (accent rule): TREINO CONCLUÍDO · date and "⋯", Treino nº · week,
+          the day's title (two lines of 36px on a phone), the stats line, SALVO NO HISTÓRICO ✓. */}
+      <div className="relative panel-raised">
+        <span className="absolute left-0 top-0 h-full w-1.5 bg-accent" aria-hidden />
+        <div className="py-5 pl-6 pr-3 sm:py-7 sm:pl-8 sm:pr-5">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex h-[22px] items-center">
+              <Bone className="h-3 w-52" />
+            </div>
+            <span className="-mr-1 -mt-1.5 size-11 shrink-0" />
+          </div>
+          <div className="mt-2 flex h-4 items-center">
+            <Bone className="h-3 w-40" />
+          </div>
+          <div className="mt-1.5 flex h-18 flex-col justify-around sm:h-10">
+            <Bone className="h-7 w-3/4 sm:w-1/2" />
+            <Bone className="h-7 w-1/2 sm:hidden" />
+          </div>
+          <div className="mt-2 flex h-5 items-center">
+            <Bone className="h-3.5 w-3/4" />
+          </div>
+          <div className="mt-3 flex h-4 items-center">
+            <Bone className="h-3 w-40" />
+          </div>
+        </div>
       </div>
 
       {/* Quem vê: label and the three-way switch (stacked in a column under
@@ -69,4 +80,9 @@ export function SummarySkeleton() {
   );
 }
 
-export default SummarySkeleton;
+/** The summary's own boundary also stands in for "Editar séries" below it until that arrives. */
+export default function SummaryLoading() {
+  return (
+    <NestedSkeleton own={<SummarySkeleton />} routes={[["/app/workout/*/summary/editar", <EditSetsSkeleton key="edit" />]]} />
+  );
+}

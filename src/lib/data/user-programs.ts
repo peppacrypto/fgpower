@@ -1,10 +1,20 @@
 import "server-only";
+import { cache } from "react";
 import { prisma } from "@/lib/db";
 import { entryWeekWasTrained } from "@/lib/data/program-lifecycle";
 import { programWeekNow } from "@/lib/programming/block-progress";
 import { startOfWeek } from "@/lib/training/week";
 
-export async function getUserProgram(id: string) {
+/**
+ * A program row never written since it was inserted: a template fork is one
+ * insert (createdAt === updatedAt to the millisecond), and every builder save,
+ * start or archive rewrites updatedAt.
+ */
+export function isUntouchedFork(p: { createdAt: Date; updatedAt: Date }) {
+  return p.updatedAt.getTime() === p.createdAt.getTime();
+}
+
+export const getUserProgram = cache(async (id: string) => {
   return prisma.userProgram.findUnique({
     where: { id },
     include: {
@@ -21,7 +31,7 @@ export async function getUserProgram(id: string) {
       sourceTemplate: { select: { namePt: true, slug: true } },
     },
   });
-}
+});
 
 /**
  * Where an enrollment stands, as the switch and archive warnings and Today's

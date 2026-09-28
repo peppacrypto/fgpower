@@ -1,17 +1,23 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ExternalLink } from "lucide-react";
-import { GLoad, GProgress } from "@/components/ui/glyph";
+import { ChevronLeft, ExternalLink } from "lucide-react";
+import { GArrow, GProgress } from "@/components/ui/glyph";
 import { Button } from "@/components/ui/button";
-import { getExerciseBySlug, type ExerciseCard as ExerciseCardData } from "@/lib/data/exercises";
+import {
+  getExerciseBySlug,
+  getProgramUsesBySlug,
+  isFavoriteSlug,
+  type ExerciseCard as ExerciseCardData,
+  type ProgramUse,
+} from "@/lib/data/exercises";
 import { parseExerciseContent, parseInstructions } from "@/lib/exercises/content";
+import { isTimedHold } from "@/lib/training/set-plan";
 import { Badge } from "@/components/ui/badge";
 import { ExerciseCard } from "@/components/exercises/exercise-card";
+import { TechniqueFrames } from "@/components/exercises/technique-frames";
 import { FavoriteButton } from "./favorite-button";
 import { getCurrentSession } from "@/lib/auth/require-user";
-import { isFavorite } from "@/lib/data/favorites";
 import { NOT_FOUND_TITLE } from "@/components/ui/not-found-panel";
 
 const DIFFICULTY_LABEL: Record<string, string> = {
@@ -39,16 +45,32 @@ export async function generateMetadata({ params }: PageProps<"/app/exercises/[sl
   return { title: exercise.namePt };
 }
 
-export default async function ExerciseDetailPage({ params }: PageProps<"/app/exercises/[slug]">) {
+/** "Ver página completa" from the workout's technique sheet: `/app/workout/<id>?ex=<log>`, nothing else. */
+const WORKOUT_RETURN = /^\/app\/workout\/[\w-]+(\?ex=[\w-]+)?$/;
+
+export default async function ExerciseDetailPage({ params, searchParams }: PageProps<"/app/exercises/[slug]">) {
   const { slug } = await params;
-  const [exercise, session] = await Promise.all([getExerciseBySlug(slug), getCurrentSession()]);
+  const from = (await searchParams).from;
+  // Back to the same exercise of the open workout (W-025), not the library.
+  const backToWorkout = typeof from === "string" && WORKOUT_RETURN.test(from) ? from : null;
+  // The user's side (favorite, where it sits in their program) keys on the
+  // slug, so it loads alongside the exercise instead of after it.
+  const mine = getCurrentSession().then(async (session) => {
+    if (!session) return null;
+    const [favorited, uses] = await Promise.all([
+      isFavoriteSlug(session.user.id, slug),
+      getProgramUsesBySlug(session.user.id, slug),
+    ]);
+    return { favorited, uses };
+  });
+  const [exercise, user] = await Promise.all([getExerciseBySlug(slug), mine]);
   if (!exercise) notFound();
 
   const content = parseExerciseContent(exercise.contentPt);
   const instructions = parseInstructions(exercise.instructionsPt);
   const primaryMuscles = exercise.muscles.filter((m) => m.role === "PRIMARY").map((m) => m.muscle);
   const secondaryMuscles = exercise.muscles.filter((m) => m.role === "SECONDARY").map((m) => m.muscle);
-  const favorited = session ? await isFavorite(session.user.id, exercise.id) : false;
+  const uses = user?.uses ?? [];
 
   const regressions = exercise.relationsFrom.filter((r) => r.kind === "REGRESSION");
   const progressions = exercise.relationsFrom.filter((r) => r.kind === "PROGRESSION");
@@ -56,30 +78,27 @@ export default async function ExerciseDetailPage({ params }: PageProps<"/app/exe
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-6 sm:px-6 sm:py-8">
+      <Link
+        href={backToWorkout ?? "/app/exercises"}
+        className="-mt-2 -ml-1 mb-2 inline-flex min-h-11 items-center gap-0.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted hover:text-foreground"
+      >
+        <ChevronLeft className="size-3.5" aria-hidden />
+        {backToWorkout ? "Voltar ao treino" : "Exercícios"}
+      </Link>
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="flex gap-2 reg-frame">
-          {exercise.media.length > 0 ? (
-            exercise.media.map((m) => (
-              <div key={m.id} className="relative aspect-[3/4] flex-1">
-                <Image src={m.url} alt={exercise.namePt} fill className="object-cover" sizes="50vw" priority />
-              </div>
-            ))
-          ) : (
-            <div className="flex aspect-[3/4] w-full items-center justify-center text-muted">
-              <GLoad className="size-10" />
-            </div>
-          )}
-        </div>
+        <TechniqueFrames name={exercise.namePt} media={exercise.media} />
 
         <div className="flex flex-col gap-4">
           <div className="flex items-start justify-between gap-3">
-            <h1 className="min-w-0 break-words text-2xl font-bold tracking-tight">{exercise.namePt}</h1>
-            {session ? (
+            <h1 className="text-display min-w-0 break-words text-2xl font-extrabold">{exercise.namePt}</h1>
+            {user ? (
               <div className="flex shrink-0 items-center gap-2">
-                <FavoriteButton exerciseId={exercise.id} initialFavorited={favorited} />
+                <FavoriteButton exerciseId={exercise.id} initialFavorited={user.favorited} />
               </div>
             ) : null}
           </div>
+
+          {uses.length > 0 ? <InYourProgram uses={uses} slug={exercise.slug} /> : null}
 
           {/* The way into this exercise's charts, records and sessions. */}
           <Button variant="outline" size="sm" asChild className="min-h-11 self-start">
@@ -102,10 +121,13 @@ export default async function ExerciseDetailPage({ params }: PageProps<"/app/exe
               <dt className="text-muted">Equipamento</dt>
               <dd className="font-medium">{exercise.equipment?.namePt ?? "Nenhum"}</dd>
             </div>
-            <div>
-              <dt className="text-muted">Padrão de movimento</dt>
-              <dd className="font-medium">{exercise.movementPattern?.namePt ?? "—"}</dd>
-            </div>
+            {/* Not every exercise has a pattern classified yet: no row rather than "—". */}
+            {exercise.movementPattern ? (
+              <div>
+                <dt className="text-muted">Padrão de movimento</dt>
+                <dd className="font-medium">{exercise.movementPattern.namePt}</dd>
+              </div>
+            ) : null}
             <div>
               <dt className="text-muted">Dificuldade</dt>
               <dd className="font-medium">{DIFFICULTY_LABEL[exercise.difficulty]}</dd>
@@ -225,6 +247,42 @@ export default async function ExerciseDetailPage({ params }: PageProps<"/app/exe
           </p>
         </Section>
       ) : null}
+    </div>
+  );
+}
+
+/**
+ * "No seu programa": the days of the running program that do this exercise,
+ * with their prescription — the page answers "how much do I do of it?".
+ */
+function InYourProgram({ uses, slug }: { uses: ProgramUse[]; slug: string }) {
+  return (
+    <div className="border-l-2 border-l-accent bg-surface-2 px-3.5 py-3">
+      <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
+        No seu programa · <span className="text-foreground">{uses[0].programName}</span>
+      </p>
+      <ul className="mt-1.5 flex flex-col gap-1 text-sm">
+        {uses.map((u, i) => {
+          const timed = isTimedHold({ slug, notes: u.notes });
+          const reps = u.repMin === u.repMax ? `${u.repMin}` : `${u.repMin}-${u.repMax}`;
+          return (
+            <li key={i} className="flex flex-wrap items-baseline justify-between gap-x-3">
+              <span className="font-medium">{u.dayName}</span>
+              <span className="font-mono text-xs tabular-nums text-muted">
+                {u.sets}×{reps}
+                {timed ? " s" : ""}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+      <Link
+        href={`/app/programs/${uses[0].programId}`}
+        className="-mb-2 inline-flex min-h-11 items-center gap-1 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
+      >
+        Ver programa
+        <GArrow className="size-3" />
+      </Link>
     </div>
   );
 }

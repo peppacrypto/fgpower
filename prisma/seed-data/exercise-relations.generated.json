@@ -1,0 +1,5834 @@
+[
+ {
+  "slug": "ab-crunch-machine",
+  "relatedSlug": "cable-crunch",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "ab-crunch-machine",
+  "relatedSlug": "rope-crunch",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "ab-crunch-machine",
+  "relatedSlug": "cable-reverse-crunch",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "ab-crunch-machine",
+  "relatedSlug": "crunches",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "ab-crunch-machine",
+  "relatedSlug": "hanging-leg-raise",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "alternate-incline-dumbbell-curl",
+  "relatedSlug": "preacher-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "alternate-incline-dumbbell-curl",
+  "relatedSlug": "dumbbell-bicep-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "alternate-incline-dumbbell-curl",
+  "relatedSlug": "standing-biceps-cable-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "alternate-incline-dumbbell-curl",
+  "relatedSlug": "machine-bicep-curl",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "alternate-incline-dumbbell-curl",
+  "relatedSlug": "seated-dumbbell-curl",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "alternate-incline-dumbbell-curl",
+  "relatedSlug": "incline-dumbbell-curl",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "alternating-renegade-row",
+  "relatedSlug": "one-arm-dumbbell-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "alternating-renegade-row",
+  "relatedSlug": "alternating-kettlebell-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "alternating-renegade-row",
+  "relatedSlug": "seated-one-arm-cable-pulley-rows",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "alternating-renegade-row",
+  "relatedSlug": "one-arm-kettlebell-row",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "arnold-dumbbell-press",
+  "relatedSlug": "barbell-shoulder-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "arnold-dumbbell-press",
+  "relatedSlug": "kettlebell-arnold-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "arnold-dumbbell-press",
+  "relatedSlug": "seated-cable-shoulder-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "arnold-dumbbell-press",
+  "relatedSlug": "machine-shoulder-military-press",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "arnold-dumbbell-press",
+  "relatedSlug": "seated-dumbbell-press",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "arnold-dumbbell-press",
+  "relatedSlug": "standing-dumbbell-press",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "backward-medicine-ball-throw",
+  "relatedSlug": "medicine-ball-scoop-throw",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "backward-medicine-ball-throw",
+  "relatedSlug": "one-arm-kettlebell-swings",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "backward-medicine-ball-throw",
+  "relatedSlug": "standing-long-jump",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "backward-medicine-ball-throw",
+  "relatedSlug": "pull-through",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "backward-medicine-ball-throw",
+  "relatedSlug": "hang-clean",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "band-assisted-pull-up",
+  "relatedSlug": "wide-grip-lat-pulldown",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "band-assisted-pull-up",
+  "relatedSlug": "full-range-of-motion-lat-pulldown",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "band-assisted-pull-up",
+  "relatedSlug": "close-grip-front-lat-pulldown",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "band-assisted-pull-up",
+  "relatedSlug": "inverted-row",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "band-assisted-pull-up",
+  "relatedSlug": "pullups",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "band-assisted-pull-up",
+  "relatedSlug": "chin-up",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "barbell-ab-rollout-on-knees",
+  "relatedSlug": "ab-roller",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "barbell-ab-rollout-on-knees",
+  "relatedSlug": "suspended-fallout",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "barbell-ab-rollout-on-knees",
+  "relatedSlug": "plank",
+  "kind": "REGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "barbell-ab-rollout-on-knees",
+  "relatedSlug": "dead-bug",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "barbell-ab-rollout-on-knees",
+  "relatedSlug": "barbell-ab-rollout",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "barbell-bench-press-medium-grip",
+  "relatedSlug": "dumbbell-bench-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "barbell-bench-press-medium-grip",
+  "relatedSlug": "barbell-incline-bench-press-medium-grip",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "barbell-bench-press-medium-grip",
+  "relatedSlug": "smith-machine-bench-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "barbell-bench-press-medium-grip",
+  "relatedSlug": "machine-bench-press",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "barbell-bench-press-medium-grip",
+  "relatedSlug": "pushups",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "barbell-bench-press-medium-grip",
+  "relatedSlug": "bench-press-powerlifting",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "barbell-curl",
+  "relatedSlug": "ez-bar-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "barbell-curl",
+  "relatedSlug": "dumbbell-bicep-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "barbell-curl",
+  "relatedSlug": "preacher-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "barbell-curl",
+  "relatedSlug": "machine-bicep-curl",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "barbell-curl",
+  "relatedSlug": "standing-biceps-cable-curl",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "barbell-curl",
+  "relatedSlug": "incline-dumbbell-curl",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "barbell-deadlift",
+  "relatedSlug": "sumo-deadlift",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "barbell-deadlift",
+  "relatedSlug": "romanian-deadlift",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "barbell-deadlift",
+  "relatedSlug": "hyperextensions-back-extensions",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "barbell-deadlift",
+  "relatedSlug": "trap-bar-deadlift",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "barbell-deadlift",
+  "relatedSlug": "rack-pulls",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "barbell-deadlift",
+  "relatedSlug": "deficit-deadlift",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "barbell-deadlift",
+  "relatedSlug": "stiff-legged-dumbbell-deadlift",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 6
+ },
+ {
+  "slug": "barbell-full-squat",
+  "relatedSlug": "front-barbell-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "barbell-full-squat",
+  "relatedSlug": "hack-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "barbell-full-squat",
+  "relatedSlug": "leg-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "barbell-full-squat",
+  "relatedSlug": "smith-machine-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 3
+ },
+ {
+  "slug": "barbell-full-squat",
+  "relatedSlug": "goblet-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "barbell-full-squat",
+  "relatedSlug": "box-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "barbell-hip-thrust",
+  "relatedSlug": "barbell-glute-bridge",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "barbell-hip-thrust",
+  "relatedSlug": "pull-through",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "barbell-hip-thrust",
+  "relatedSlug": "one-legged-cable-kickback",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "barbell-hip-thrust",
+  "relatedSlug": "butt-lift-bridge",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "barbell-incline-bench-press-medium-grip",
+  "relatedSlug": "incline-dumbbell-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "barbell-incline-bench-press-medium-grip",
+  "relatedSlug": "smith-machine-incline-bench-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "barbell-incline-bench-press-medium-grip",
+  "relatedSlug": "barbell-bench-press-medium-grip",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "barbell-incline-bench-press-medium-grip",
+  "relatedSlug": "leverage-incline-chest-press",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "barbell-shoulder-press",
+  "relatedSlug": "dumbbell-shoulder-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "barbell-shoulder-press",
+  "relatedSlug": "arnold-dumbbell-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "barbell-shoulder-press",
+  "relatedSlug": "smith-machine-overhead-shoulder-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "barbell-shoulder-press",
+  "relatedSlug": "machine-shoulder-military-press",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "barbell-shoulder-press",
+  "relatedSlug": "leverage-shoulder-press",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "barbell-shoulder-press",
+  "relatedSlug": "standing-military-press",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "barbell-shrug",
+  "relatedSlug": "dumbbell-shrug",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "barbell-shrug",
+  "relatedSlug": "smith-machine-behind-the-back-shrug",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "barbell-shrug",
+  "relatedSlug": "leverage-shrug",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "barbell-shrug",
+  "relatedSlug": "cable-shrugs",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "barbell-shrug",
+  "relatedSlug": "clean-shrug",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "barbell-squat",
+  "relatedSlug": "front-barbell-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "barbell-squat",
+  "relatedSlug": "hack-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "barbell-squat",
+  "relatedSlug": "leg-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "barbell-squat",
+  "relatedSlug": "box-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 3
+ },
+ {
+  "slug": "barbell-squat",
+  "relatedSlug": "goblet-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "barbell-squat",
+  "relatedSlug": "dumbbell-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "barbell-step-ups",
+  "relatedSlug": "split-squat-with-dumbbells",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "barbell-step-ups",
+  "relatedSlug": "dumbbell-rear-lunge",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "barbell-step-ups",
+  "relatedSlug": "barbell-lunge",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "barbell-step-ups",
+  "relatedSlug": "dumbbell-step-ups",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "barbell-step-ups",
+  "relatedSlug": "step-up-with-knee-raise",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "bench-dips",
+  "relatedSlug": "triceps-pushdown",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "bench-dips",
+  "relatedSlug": "close-grip-barbell-bench-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "bench-dips",
+  "relatedSlug": "push-ups-close-triceps-position",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "bench-dips",
+  "relatedSlug": "dip-machine",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "bench-dips",
+  "relatedSlug": "incline-push-up-close-grip",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "bench-dips",
+  "relatedSlug": "dips-triceps-version",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "bench-dips",
+  "relatedSlug": "weighted-bench-dip",
+  "kind": "PROGRESSION",
+  "sortOrder": 6
+ },
+ {
+  "slug": "bench-press-powerlifting",
+  "relatedSlug": "barbell-bench-press-medium-grip",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "bench-press-powerlifting",
+  "relatedSlug": "close-grip-barbell-bench-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "bench-press-powerlifting",
+  "relatedSlug": "dumbbell-bench-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "bench-press-powerlifting",
+  "relatedSlug": "machine-bench-press",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "bench-press-powerlifting",
+  "relatedSlug": "smith-machine-bench-press",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "bent-over-barbell-row",
+  "relatedSlug": "t-bar-row-with-handle",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "bent-over-barbell-row",
+  "relatedSlug": "seated-cable-rows",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "bent-over-barbell-row",
+  "relatedSlug": "bent-over-two-dumbbell-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "bent-over-barbell-row",
+  "relatedSlug": "dumbbell-incline-row",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "bent-over-barbell-row",
+  "relatedSlug": "inverted-row",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "bent-over-two-dumbbell-row",
+  "relatedSlug": "bent-over-barbell-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "bent-over-two-dumbbell-row",
+  "relatedSlug": "two-arm-kettlebell-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "bent-over-two-dumbbell-row",
+  "relatedSlug": "seated-cable-rows",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "bent-over-two-dumbbell-row",
+  "relatedSlug": "one-arm-dumbbell-row",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "bent-over-two-dumbbell-row",
+  "relatedSlug": "dumbbell-incline-row",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "bicycling-stationary",
+  "relatedSlug": "elliptical-trainer",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "bicycling-stationary",
+  "relatedSlug": "rowing-stationary",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "bicycling-stationary",
+  "relatedSlug": "walking-treadmill",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "bicycling-stationary",
+  "relatedSlug": "recumbent-bike",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "bodyweight-squat",
+  "relatedSlug": "leg-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "bodyweight-squat",
+  "relatedSlug": "dumbbell-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "bodyweight-squat",
+  "relatedSlug": "sit-squats",
+  "kind": "REGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "bodyweight-squat",
+  "relatedSlug": "bodyweight-walking-lunge",
+  "kind": "PROGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "bodyweight-squat",
+  "relatedSlug": "goblet-squat",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "bodyweight-walking-lunge",
+  "relatedSlug": "dumbbell-rear-lunge",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "bodyweight-walking-lunge",
+  "relatedSlug": "split-squat-with-dumbbells",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "bodyweight-walking-lunge",
+  "relatedSlug": "step-up-with-knee-raise",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "bodyweight-walking-lunge",
+  "relatedSlug": "bodyweight-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "bodyweight-walking-lunge",
+  "relatedSlug": "crossover-reverse-lunge",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "bodyweight-walking-lunge",
+  "relatedSlug": "dumbbell-lunges",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "box-squat",
+  "relatedSlug": "barbell-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "box-squat",
+  "relatedSlug": "front-barbell-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "box-squat",
+  "relatedSlug": "barbell-squat-to-a-bench",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "box-squat",
+  "relatedSlug": "goblet-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "box-squat",
+  "relatedSlug": "dumbbell-squat-to-a-bench",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "box-squat",
+  "relatedSlug": "box-squat-with-bands",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "butt-lift-bridge",
+  "relatedSlug": "physioball-hip-bridge",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "butt-lift-bridge",
+  "relatedSlug": "one-legged-cable-kickback",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "butt-lift-bridge",
+  "relatedSlug": "hip-lift-with-band",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "butt-lift-bridge",
+  "relatedSlug": "pelvic-tilt-into-bridge",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "butt-lift-bridge",
+  "relatedSlug": "single-leg-glute-bridge",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "butt-lift-bridge",
+  "relatedSlug": "barbell-hip-thrust",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "butterfly",
+  "relatedSlug": "cable-crossover",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "butterfly",
+  "relatedSlug": "dumbbell-flyes",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "butterfly",
+  "relatedSlug": "flat-bench-cable-flyes",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "butterfly",
+  "relatedSlug": "machine-bench-press",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "cable-crossover",
+  "relatedSlug": "dumbbell-flyes",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "cable-crossover",
+  "relatedSlug": "flat-bench-cable-flyes",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "cable-crossover",
+  "relatedSlug": "low-cable-crossover",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "cable-crossover",
+  "relatedSlug": "butterfly",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "cable-crunch",
+  "relatedSlug": "ab-crunch-machine",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "cable-crunch",
+  "relatedSlug": "cable-seated-crunch",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "cable-crunch",
+  "relatedSlug": "standing-rope-crunch",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "cable-crunch",
+  "relatedSlug": "crunches",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "cable-hammer-curls-rope-attachment",
+  "relatedSlug": "hammer-curls",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "cable-hammer-curls-rope-attachment",
+  "relatedSlug": "incline-hammer-curls",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "cable-hammer-curls-rope-attachment",
+  "relatedSlug": "cross-body-hammer-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "cable-hammer-curls-rope-attachment",
+  "relatedSlug": "reverse-cable-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 3
+ },
+ {
+  "slug": "cable-hammer-curls-rope-attachment",
+  "relatedSlug": "preacher-hammer-dumbbell-curl",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "cable-rear-delt-fly",
+  "relatedSlug": "reverse-flyes",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "cable-rear-delt-fly",
+  "relatedSlug": "face-pull",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "cable-rear-delt-fly",
+  "relatedSlug": "cable-rope-rear-delt-rows",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "cable-rear-delt-fly",
+  "relatedSlug": "reverse-machine-flyes",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "cable-rear-delt-fly",
+  "relatedSlug": "band-pull-apart",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "cable-reverse-crunch",
+  "relatedSlug": "reverse-crunch",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "cable-reverse-crunch",
+  "relatedSlug": "cable-crunch",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "cable-reverse-crunch",
+  "relatedSlug": "suspended-reverse-crunch",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "cable-reverse-crunch",
+  "relatedSlug": "decline-reverse-crunch",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 3
+ },
+ {
+  "slug": "cable-reverse-crunch",
+  "relatedSlug": "hanging-leg-raise",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "cable-rope-overhead-triceps-extension",
+  "relatedSlug": "standing-dumbbell-triceps-extension",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "cable-rope-overhead-triceps-extension",
+  "relatedSlug": "seated-triceps-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "cable-rope-overhead-triceps-extension",
+  "relatedSlug": "standing-low-pulley-one-arm-triceps-extension",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "cable-rope-overhead-triceps-extension",
+  "relatedSlug": "triceps-pushdown-rope-attachment",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "cable-rope-rear-delt-rows",
+  "relatedSlug": "face-pull",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "cable-rope-rear-delt-rows",
+  "relatedSlug": "cable-rear-delt-fly",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "cable-rope-rear-delt-rows",
+  "relatedSlug": "reverse-flyes",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "cable-rope-rear-delt-rows",
+  "relatedSlug": "reverse-machine-flyes",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "cable-rope-rear-delt-rows",
+  "relatedSlug": "barbell-rear-delt-row",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "cable-seated-lateral-raise",
+  "relatedSlug": "side-lateral-raise",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "cable-seated-lateral-raise",
+  "relatedSlug": "standing-low-pulley-deltoid-raise",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "cable-seated-lateral-raise",
+  "relatedSlug": "one-arm-incline-lateral-raise",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "cable-seated-lateral-raise",
+  "relatedSlug": "seated-side-lateral-raise",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 3
+ },
+ {
+  "slug": "cable-seated-lateral-raise",
+  "relatedSlug": "lateral-raise-with-bands",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "cable-shrugs",
+  "relatedSlug": "barbell-shrug",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "cable-shrugs",
+  "relatedSlug": "dumbbell-shrug",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "cable-shrugs",
+  "relatedSlug": "smith-machine-behind-the-back-shrug",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "cable-shrugs",
+  "relatedSlug": "leverage-shrug",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "calf-press-on-the-leg-press-machine",
+  "relatedSlug": "standing-calf-raises",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "calf-press-on-the-leg-press-machine",
+  "relatedSlug": "smith-machine-calf-raise",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "calf-press-on-the-leg-press-machine",
+  "relatedSlug": "standing-dumbbell-calf-raise",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "calf-press-on-the-leg-press-machine",
+  "relatedSlug": "donkey-calf-raises",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 3
+ },
+ {
+  "slug": "calf-press-on-the-leg-press-machine",
+  "relatedSlug": "calf-raises-with-bands",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "chin-up",
+  "relatedSlug": "close-grip-front-lat-pulldown",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "chin-up",
+  "relatedSlug": "underhand-cable-pulldowns",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "chin-up",
+  "relatedSlug": "v-bar-pullup",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "chin-up",
+  "relatedSlug": "band-assisted-pull-up",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "chin-up",
+  "relatedSlug": "inverted-row",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "chin-up",
+  "relatedSlug": "weighted-pull-ups",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "chin-up",
+  "relatedSlug": "pullups",
+  "kind": "PROGRESSION",
+  "sortOrder": 6
+ },
+ {
+  "slug": "chin-up",
+  "relatedSlug": "one-arm-dumbbell-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 7
+ },
+ {
+  "slug": "close-grip-barbell-bench-press",
+  "relatedSlug": "close-grip-dumbbell-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "close-grip-barbell-bench-press",
+  "relatedSlug": "dips-triceps-version",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "close-grip-barbell-bench-press",
+  "relatedSlug": "floor-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "close-grip-barbell-bench-press",
+  "relatedSlug": "smith-machine-close-grip-bench-press",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "close-grip-barbell-bench-press",
+  "relatedSlug": "push-ups-close-triceps-position",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "close-grip-front-lat-pulldown",
+  "relatedSlug": "wide-grip-lat-pulldown",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "close-grip-front-lat-pulldown",
+  "relatedSlug": "underhand-cable-pulldowns",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "close-grip-front-lat-pulldown",
+  "relatedSlug": "full-range-of-motion-lat-pulldown",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "close-grip-front-lat-pulldown",
+  "relatedSlug": "v-bar-pulldown",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "close-grip-front-lat-pulldown",
+  "relatedSlug": "chin-up",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "close-grip-front-lat-pulldown",
+  "relatedSlug": "v-bar-pullup",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "close-grip-front-lat-pulldown",
+  "relatedSlug": "one-arm-dumbbell-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 6
+ },
+ {
+  "slug": "crunches",
+  "relatedSlug": "exercise-ball-crunch",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "crunches",
+  "relatedSlug": "reverse-crunch",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "crunches",
+  "relatedSlug": "crunch-legs-on-exercise-ball",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "crunches",
+  "relatedSlug": "dead-bug",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "crunches",
+  "relatedSlug": "cable-crunch",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "crunches",
+  "relatedSlug": "weighted-crunches",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "dead-bug",
+  "relatedSlug": "plank",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "dead-bug",
+  "relatedSlug": "pallof-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "dead-bug",
+  "relatedSlug": "side-bridge",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "dead-bug",
+  "relatedSlug": "pelvic-tilt-into-bridge",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "dead-bug",
+  "relatedSlug": "barbell-ab-rollout-on-knees",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "dead-bug",
+  "relatedSlug": "ab-roller",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "dips-triceps-version",
+  "relatedSlug": "close-grip-barbell-bench-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "dips-triceps-version",
+  "relatedSlug": "dip-machine",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "dips-triceps-version",
+  "relatedSlug": "bench-dips",
+  "kind": "REGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "dips-triceps-version",
+  "relatedSlug": "push-ups-close-triceps-position",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "dips-triceps-version",
+  "relatedSlug": "ring-dips",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "dumbbell-bench-press",
+  "relatedSlug": "barbell-bench-press-medium-grip",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "dumbbell-bench-press",
+  "relatedSlug": "incline-dumbbell-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "dumbbell-bench-press",
+  "relatedSlug": "leverage-chest-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "dumbbell-bench-press",
+  "relatedSlug": "machine-bench-press",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "dumbbell-bench-press",
+  "relatedSlug": "dumbbell-floor-press",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "dumbbell-bench-press",
+  "relatedSlug": "one-arm-dumbbell-bench-press",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "dumbbell-bicep-curl",
+  "relatedSlug": "barbell-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "dumbbell-bicep-curl",
+  "relatedSlug": "standing-biceps-cable-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "dumbbell-bicep-curl",
+  "relatedSlug": "hammer-curls",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "dumbbell-bicep-curl",
+  "relatedSlug": "machine-bicep-curl",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "dumbbell-bicep-curl",
+  "relatedSlug": "seated-dumbbell-curl",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "dumbbell-bicep-curl",
+  "relatedSlug": "incline-dumbbell-curl",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "dumbbell-flyes",
+  "relatedSlug": "flat-bench-cable-flyes",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "dumbbell-flyes",
+  "relatedSlug": "cable-crossover",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "dumbbell-flyes",
+  "relatedSlug": "incline-dumbbell-flyes",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "dumbbell-flyes",
+  "relatedSlug": "butterfly",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "dumbbell-incline-row",
+  "relatedSlug": "one-arm-dumbbell-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "dumbbell-incline-row",
+  "relatedSlug": "lying-t-bar-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "dumbbell-incline-row",
+  "relatedSlug": "seated-cable-rows",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "dumbbell-incline-row",
+  "relatedSlug": "leverage-iso-row",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "dumbbell-incline-row",
+  "relatedSlug": "bent-over-two-dumbbell-row",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "dumbbell-one-arm-triceps-extension",
+  "relatedSlug": "cable-rope-overhead-triceps-extension",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "dumbbell-one-arm-triceps-extension",
+  "relatedSlug": "standing-low-pulley-one-arm-triceps-extension",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "dumbbell-one-arm-triceps-extension",
+  "relatedSlug": "lying-dumbbell-tricep-extension",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "dumbbell-one-arm-triceps-extension",
+  "relatedSlug": "seated-triceps-press",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "dumbbell-one-arm-triceps-extension",
+  "relatedSlug": "triceps-pushdown",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "dumbbell-rear-lunge",
+  "relatedSlug": "dumbbell-lunges",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "dumbbell-rear-lunge",
+  "relatedSlug": "dumbbell-step-ups",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "dumbbell-rear-lunge",
+  "relatedSlug": "barbell-lunge",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "dumbbell-rear-lunge",
+  "relatedSlug": "goblet-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "dumbbell-rear-lunge",
+  "relatedSlug": "split-squat-with-dumbbells",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "dumbbell-rear-lunge",
+  "relatedSlug": "elevated-back-lunge",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "dumbbell-shoulder-press",
+  "relatedSlug": "standing-military-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "dumbbell-shoulder-press",
+  "relatedSlug": "arnold-dumbbell-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "dumbbell-shoulder-press",
+  "relatedSlug": "two-arm-kettlebell-military-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "dumbbell-shoulder-press",
+  "relatedSlug": "machine-shoulder-military-press",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "dumbbell-shoulder-press",
+  "relatedSlug": "standing-dumbbell-press",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "dumbbell-shrug",
+  "relatedSlug": "barbell-shrug",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "dumbbell-shrug",
+  "relatedSlug": "cable-shrugs",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "dumbbell-shrug",
+  "relatedSlug": "smith-machine-behind-the-back-shrug",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "dumbbell-shrug",
+  "relatedSlug": "leverage-shrug",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "dumbbell-squat",
+  "relatedSlug": "goblet-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "dumbbell-squat",
+  "relatedSlug": "leg-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "dumbbell-squat",
+  "relatedSlug": "smith-machine-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "dumbbell-squat",
+  "relatedSlug": "bodyweight-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "dumbbell-squat",
+  "relatedSlug": "dumbbell-squat-to-a-bench",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "dumbbell-squat",
+  "relatedSlug": "barbell-squat",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "dumbbell-squat",
+  "relatedSlug": "split-squat-with-dumbbells",
+  "kind": "PROGRESSION",
+  "sortOrder": 6
+ },
+ {
+  "slug": "dumbbell-step-ups",
+  "relatedSlug": "dumbbell-rear-lunge",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "dumbbell-step-ups",
+  "relatedSlug": "split-squat-with-dumbbells",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "dumbbell-step-ups",
+  "relatedSlug": "dumbbell-lunges",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "dumbbell-step-ups",
+  "relatedSlug": "step-up-with-knee-raise",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "dumbbell-step-ups",
+  "relatedSlug": "goblet-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "dumbbell-step-ups",
+  "relatedSlug": "barbell-step-ups",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "external-rotation-with-cable",
+  "relatedSlug": "external-rotation",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "external-rotation-with-cable",
+  "relatedSlug": "face-pull",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "external-rotation-with-cable",
+  "relatedSlug": "reverse-flyes-with-external-rotation",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "external-rotation-with-cable",
+  "relatedSlug": "external-rotation-with-band",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "external-rotation-with-cable",
+  "relatedSlug": "cuban-press",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "ez-bar-curl",
+  "relatedSlug": "barbell-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "ez-bar-curl",
+  "relatedSlug": "dumbbell-bicep-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "ez-bar-curl",
+  "relatedSlug": "standing-biceps-cable-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "ez-bar-curl",
+  "relatedSlug": "preacher-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 3
+ },
+ {
+  "slug": "ez-bar-curl",
+  "relatedSlug": "machine-bicep-curl",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "ez-bar-skullcrusher",
+  "relatedSlug": "lying-dumbbell-tricep-extension",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "ez-bar-skullcrusher",
+  "relatedSlug": "cable-rope-overhead-triceps-extension",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "ez-bar-skullcrusher",
+  "relatedSlug": "incline-barbell-triceps-extension",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "ez-bar-skullcrusher",
+  "relatedSlug": "triceps-pushdown",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "ez-bar-skullcrusher",
+  "relatedSlug": "lying-close-grip-barbell-triceps-extension-behind-the-head",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "face-pull",
+  "relatedSlug": "cable-rear-delt-fly",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "face-pull",
+  "relatedSlug": "reverse-machine-flyes",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "face-pull",
+  "relatedSlug": "reverse-flyes",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "face-pull",
+  "relatedSlug": "cable-rope-rear-delt-rows",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 3
+ },
+ {
+  "slug": "face-pull",
+  "relatedSlug": "band-pull-apart",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "face-pull",
+  "relatedSlug": "reverse-flyes-with-external-rotation",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "farmers-walk",
+  "relatedSlug": "rickshaw-carry",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "farmers-walk",
+  "relatedSlug": "plate-pinch",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "farmers-walk",
+  "relatedSlug": "dumbbell-shrug",
+  "kind": "REGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "finger-curls",
+  "relatedSlug": "seated-palm-up-barbell-wrist-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "finger-curls",
+  "relatedSlug": "cable-wrist-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "finger-curls",
+  "relatedSlug": "wrist-roller",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "finger-curls",
+  "relatedSlug": "palms-up-dumbbell-wrist-curl-over-a-bench",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "finger-curls",
+  "relatedSlug": "standing-palms-up-barbell-behind-the-back-wrist-curl",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "flat-bench-cable-flyes",
+  "relatedSlug": "dumbbell-flyes",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "flat-bench-cable-flyes",
+  "relatedSlug": "cable-crossover",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "flat-bench-cable-flyes",
+  "relatedSlug": "incline-cable-flye",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "flat-bench-cable-flyes",
+  "relatedSlug": "butterfly",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "front-barbell-squat",
+  "relatedSlug": "barbell-full-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "front-barbell-squat",
+  "relatedSlug": "hack-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "front-barbell-squat",
+  "relatedSlug": "front-squats-with-two-kettlebells",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "front-barbell-squat",
+  "relatedSlug": "goblet-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "front-barbell-squat",
+  "relatedSlug": "front-barbell-squat-to-a-bench",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "front-barbell-squat",
+  "relatedSlug": "overhead-squat",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "front-box-jump",
+  "relatedSlug": "standing-long-jump",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "front-box-jump",
+  "relatedSlug": "freehand-jump-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "front-box-jump",
+  "relatedSlug": "bodyweight-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "front-box-jump",
+  "relatedSlug": "step-up-with-knee-raise",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "front-box-jump",
+  "relatedSlug": "weighted-jump-squat",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "front-cable-raise",
+  "relatedSlug": "front-dumbbell-raise",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "front-cable-raise",
+  "relatedSlug": "front-incline-dumbbell-raise",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "front-cable-raise",
+  "relatedSlug": "front-two-dumbbell-raise",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "front-cable-raise",
+  "relatedSlug": "front-plate-raise",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "front-cone-hops-or-hurdle-hops",
+  "relatedSlug": "hurdle-hops",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "front-cone-hops-or-hurdle-hops",
+  "relatedSlug": "lateral-cone-hops",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "front-cone-hops-or-hurdle-hops",
+  "relatedSlug": "box-jump-multiple-response",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "front-cone-hops-or-hurdle-hops",
+  "relatedSlug": "rope-jumping",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "front-cone-hops-or-hurdle-hops",
+  "relatedSlug": "front-box-jump",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "front-cone-hops-or-hurdle-hops",
+  "relatedSlug": "single-leg-hop-progression",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "front-cone-hops-or-hurdle-hops",
+  "relatedSlug": "linear-depth-jump",
+  "kind": "PROGRESSION",
+  "sortOrder": 6
+ },
+ {
+  "slug": "front-squats-with-two-kettlebells",
+  "relatedSlug": "front-barbell-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "front-squats-with-two-kettlebells",
+  "relatedSlug": "dumbbell-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "front-squats-with-two-kettlebells",
+  "relatedSlug": "hack-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "front-squats-with-two-kettlebells",
+  "relatedSlug": "goblet-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "front-squats-with-two-kettlebells",
+  "relatedSlug": "bodyweight-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "front-squats-with-two-kettlebells",
+  "relatedSlug": "kettlebell-thruster",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "full-range-of-motion-lat-pulldown",
+  "relatedSlug": "one-arm-lat-pulldown",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "full-range-of-motion-lat-pulldown",
+  "relatedSlug": "close-grip-front-lat-pulldown",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "full-range-of-motion-lat-pulldown",
+  "relatedSlug": "underhand-cable-pulldowns",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "full-range-of-motion-lat-pulldown",
+  "relatedSlug": "wide-grip-lat-pulldown",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "full-range-of-motion-lat-pulldown",
+  "relatedSlug": "band-assisted-pull-up",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "full-range-of-motion-lat-pulldown",
+  "relatedSlug": "pullups",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "full-range-of-motion-lat-pulldown",
+  "relatedSlug": "one-arm-dumbbell-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 6
+ },
+ {
+  "slug": "glute-ham-raise",
+  "relatedSlug": "seated-leg-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "glute-ham-raise",
+  "relatedSlug": "standing-leg-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "glute-ham-raise",
+  "relatedSlug": "lying-leg-curls",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "glute-ham-raise",
+  "relatedSlug": "ball-leg-curl",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "glute-ham-raise",
+  "relatedSlug": "natural-glute-ham-raise",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "glute-ham-raise",
+  "relatedSlug": "floor-glute-ham-raise",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "goblet-squat",
+  "relatedSlug": "front-squats-with-two-kettlebells",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "goblet-squat",
+  "relatedSlug": "dumbbell-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "goblet-squat",
+  "relatedSlug": "leg-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "goblet-squat",
+  "relatedSlug": "bodyweight-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "goblet-squat",
+  "relatedSlug": "dumbbell-squat-to-a-bench",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "goblet-squat",
+  "relatedSlug": "front-barbell-squat",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "goblet-squat",
+  "relatedSlug": "barbell-squat",
+  "kind": "PROGRESSION",
+  "sortOrder": 6
+ },
+ {
+  "slug": "hack-squat",
+  "relatedSlug": "leg-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "hack-squat",
+  "relatedSlug": "smith-machine-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "hack-squat",
+  "relatedSlug": "front-barbell-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "hack-squat",
+  "relatedSlug": "goblet-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "hack-squat",
+  "relatedSlug": "barbell-squat",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "hammer-curls",
+  "relatedSlug": "cable-hammer-curls-rope-attachment",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "hammer-curls",
+  "relatedSlug": "cross-body-hammer-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "hammer-curls",
+  "relatedSlug": "reverse-barbell-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "hammer-curls",
+  "relatedSlug": "preacher-hammer-dumbbell-curl",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "hammer-curls",
+  "relatedSlug": "incline-hammer-curls",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "hang-clean",
+  "relatedSlug": "clean-from-blocks",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "hang-clean",
+  "relatedSlug": "dumbbell-clean",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "hang-clean",
+  "relatedSlug": "weighted-jump-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "hang-clean",
+  "relatedSlug": "clean-pull",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "hang-clean",
+  "relatedSlug": "power-clean",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "hang-clean",
+  "relatedSlug": "clean",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "hanging-leg-raise",
+  "relatedSlug": "cable-reverse-crunch",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "hanging-leg-raise",
+  "relatedSlug": "reverse-crunch",
+  "kind": "REGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "hanging-leg-raise",
+  "relatedSlug": "suspended-reverse-crunch",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "hanging-leg-raise",
+  "relatedSlug": "decline-reverse-crunch",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 3
+ },
+ {
+  "slug": "hanging-leg-raise",
+  "relatedSlug": "flat-bench-lying-leg-raise",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "hanging-leg-raise",
+  "relatedSlug": "hanging-pike",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "hyperextensions-back-extensions",
+  "relatedSlug": "weighted-ball-hyperextension",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "hyperextensions-back-extensions",
+  "relatedSlug": "hyperextensions-with-no-hyperextension-bench",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "hyperextensions-back-extensions",
+  "relatedSlug": "romanian-deadlift",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "hyperextensions-back-extensions",
+  "relatedSlug": "superman",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "hyperextensions-back-extensions",
+  "relatedSlug": "good-morning",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "hyperextensions-with-no-hyperextension-bench",
+  "relatedSlug": "hyperextensions-back-extensions",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "hyperextensions-with-no-hyperextension-bench",
+  "relatedSlug": "weighted-ball-hyperextension",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "hyperextensions-with-no-hyperextension-bench",
+  "relatedSlug": "band-good-morning",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "hyperextensions-with-no-hyperextension-bench",
+  "relatedSlug": "superman",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "hyperextensions-with-no-hyperextension-bench",
+  "relatedSlug": "good-morning",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "incline-barbell-triceps-extension",
+  "relatedSlug": "ez-bar-skullcrusher",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "incline-barbell-triceps-extension",
+  "relatedSlug": "cable-rope-overhead-triceps-extension",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "incline-barbell-triceps-extension",
+  "relatedSlug": "standing-dumbbell-triceps-extension",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "incline-barbell-triceps-extension",
+  "relatedSlug": "lying-dumbbell-tricep-extension",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "incline-barbell-triceps-extension",
+  "relatedSlug": "triceps-pushdown-rope-attachment",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "incline-cable-flye",
+  "relatedSlug": "incline-dumbbell-flyes",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "incline-cable-flye",
+  "relatedSlug": "low-cable-crossover",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "incline-cable-flye",
+  "relatedSlug": "cable-crossover",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "incline-cable-flye",
+  "relatedSlug": "butterfly",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "incline-dumbbell-curl",
+  "relatedSlug": "preacher-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "incline-dumbbell-curl",
+  "relatedSlug": "dumbbell-bicep-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "incline-dumbbell-curl",
+  "relatedSlug": "incline-hammer-curls",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "incline-dumbbell-curl",
+  "relatedSlug": "seated-dumbbell-curl",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "incline-dumbbell-curl",
+  "relatedSlug": "machine-bicep-curl",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "incline-dumbbell-curl",
+  "relatedSlug": "lying-supine-dumbbell-curl",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "incline-dumbbell-flyes",
+  "relatedSlug": "incline-cable-flye",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "incline-dumbbell-flyes",
+  "relatedSlug": "low-cable-crossover",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "incline-dumbbell-flyes",
+  "relatedSlug": "dumbbell-flyes",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "incline-dumbbell-flyes",
+  "relatedSlug": "butterfly",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "incline-dumbbell-press",
+  "relatedSlug": "barbell-incline-bench-press-medium-grip",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "incline-dumbbell-press",
+  "relatedSlug": "smith-machine-incline-bench-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "incline-dumbbell-press",
+  "relatedSlug": "incline-cable-chest-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "incline-dumbbell-press",
+  "relatedSlug": "leverage-incline-chest-press",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "incline-hammer-curls",
+  "relatedSlug": "cable-hammer-curls-rope-attachment",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "incline-hammer-curls",
+  "relatedSlug": "incline-dumbbell-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "incline-hammer-curls",
+  "relatedSlug": "preacher-hammer-dumbbell-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "incline-hammer-curls",
+  "relatedSlug": "hammer-curls",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "inverted-row",
+  "relatedSlug": "lying-t-bar-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "inverted-row",
+  "relatedSlug": "seated-cable-rows",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "inverted-row",
+  "relatedSlug": "one-arm-dumbbell-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "inverted-row",
+  "relatedSlug": "suspended-row",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "isometric-neck-exercise-front-and-back",
+  "relatedSlug": "isometric-neck-exercise-sides",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "isometric-neck-exercise-front-and-back",
+  "relatedSlug": "seated-head-harness-neck-resistance",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "isometric-neck-exercise-front-and-back",
+  "relatedSlug": "chin-to-chest-stretch",
+  "kind": "REGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "isometric-neck-exercise-front-and-back",
+  "relatedSlug": "lying-face-up-plate-neck-resistance",
+  "kind": "PROGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "isometric-neck-exercise-front-and-back",
+  "relatedSlug": "lying-face-down-plate-neck-resistance",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "kettlebell-halo",
+  "relatedSlug": "kettlebell-pirate-ships",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "kettlebell-halo",
+  "relatedSlug": "band-pull-apart",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "kettlebell-halo",
+  "relatedSlug": "arm-circles",
+  "kind": "REGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "kettlebell-halo",
+  "relatedSlug": "kettlebell-halo-with-overhead-extension",
+  "kind": "PROGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "kettlebell-one-legged-deadlift",
+  "relatedSlug": "romanian-deadlift",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "kettlebell-one-legged-deadlift",
+  "relatedSlug": "stiff-legged-barbell-deadlift",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "kettlebell-one-legged-deadlift",
+  "relatedSlug": "band-good-morning-pull-through",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "kettlebell-one-legged-deadlift",
+  "relatedSlug": "stiff-legged-dumbbell-deadlift",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "kettlebell-one-legged-deadlift",
+  "relatedSlug": "single-leg-glute-bridge",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "kettlebell-sumo-high-pull",
+  "relatedSlug": "standing-dumbbell-upright-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "kettlebell-sumo-high-pull",
+  "relatedSlug": "upright-cable-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "kettlebell-sumo-high-pull",
+  "relatedSlug": "clean-shrug",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "kettlebell-sumo-high-pull",
+  "relatedSlug": "sumo-deadlift",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "kettlebell-sumo-high-pull",
+  "relatedSlug": "one-arm-kettlebell-snatch",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "kettlebell-thruster",
+  "relatedSlug": "push-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "kettlebell-thruster",
+  "relatedSlug": "double-kettlebell-push-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "kettlebell-thruster",
+  "relatedSlug": "one-arm-kettlebell-push-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "kettlebell-thruster",
+  "relatedSlug": "front-squats-with-two-kettlebells",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "kettlebell-turkish-get-up-lunge-style",
+  "relatedSlug": "kettlebell-windmill",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "kettlebell-turkish-get-up-lunge-style",
+  "relatedSlug": "one-arm-overhead-kettlebell-squats",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "kettlebell-turkish-get-up-lunge-style",
+  "relatedSlug": "side-bridge",
+  "kind": "REGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "kettlebell-turkish-get-up-lunge-style",
+  "relatedSlug": "kettlebell-turkish-get-up-squat-style",
+  "kind": "PROGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "kettlebell-turkish-get-up-squat-style",
+  "relatedSlug": "kettlebell-windmill",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "kettlebell-turkish-get-up-squat-style",
+  "relatedSlug": "one-arm-overhead-kettlebell-squats",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "kettlebell-turkish-get-up-squat-style",
+  "relatedSlug": "kettlebell-turkish-get-up-lunge-style",
+  "kind": "REGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "kettlebell-turkish-get-up-squat-style",
+  "relatedSlug": "side-bridge",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "kettlebell-windmill",
+  "relatedSlug": "kettlebell-turkish-get-up-lunge-style",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "kettlebell-windmill",
+  "relatedSlug": "dumbbell-side-bend",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "kettlebell-windmill",
+  "relatedSlug": "side-bridge",
+  "kind": "REGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "kettlebell-windmill",
+  "relatedSlug": "double-kettlebell-windmill",
+  "kind": "PROGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "kettlebell-windmill",
+  "relatedSlug": "bent-press",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "landmine-180s",
+  "relatedSlug": "standing-cable-wood-chop",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "landmine-180s",
+  "relatedSlug": "pallof-press-with-rotation",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "landmine-180s",
+  "relatedSlug": "medicine-ball-full-twist",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "landmine-180s",
+  "relatedSlug": "pallof-press",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "leg-extensions",
+  "relatedSlug": "single-leg-leg-extension",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "leg-extensions",
+  "relatedSlug": "leg-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "leg-extensions",
+  "relatedSlug": "hack-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "leg-extensions",
+  "relatedSlug": "bodyweight-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "leg-press",
+  "relatedSlug": "hack-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "leg-press",
+  "relatedSlug": "smith-machine-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "leg-press",
+  "relatedSlug": "goblet-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "leg-press",
+  "relatedSlug": "leg-extensions",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "leg-press",
+  "relatedSlug": "barbell-squat",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "leg-press",
+  "relatedSlug": "split-squat-with-dumbbells",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "leverage-chest-press",
+  "relatedSlug": "machine-bench-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "leverage-chest-press",
+  "relatedSlug": "leverage-incline-chest-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "leverage-chest-press",
+  "relatedSlug": "cable-chest-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "leverage-chest-press",
+  "relatedSlug": "incline-push-up",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "leverage-chest-press",
+  "relatedSlug": "dumbbell-bench-press",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "leverage-chest-press",
+  "relatedSlug": "barbell-bench-press-medium-grip",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "leverage-incline-chest-press",
+  "relatedSlug": "smith-machine-incline-bench-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "leverage-incline-chest-press",
+  "relatedSlug": "incline-cable-chest-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "leverage-incline-chest-press",
+  "relatedSlug": "leverage-chest-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "leverage-incline-chest-press",
+  "relatedSlug": "machine-bench-press",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "leverage-incline-chest-press",
+  "relatedSlug": "incline-dumbbell-press",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "leverage-incline-chest-press",
+  "relatedSlug": "barbell-incline-bench-press-medium-grip",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "leverage-iso-row",
+  "relatedSlug": "seated-cable-rows",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "leverage-iso-row",
+  "relatedSlug": "lying-t-bar-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "leverage-iso-row",
+  "relatedSlug": "dumbbell-incline-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "leverage-iso-row",
+  "relatedSlug": "one-arm-dumbbell-row",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "leverage-iso-row",
+  "relatedSlug": "bent-over-barbell-row",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "leverage-shoulder-press",
+  "relatedSlug": "machine-shoulder-military-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "leverage-shoulder-press",
+  "relatedSlug": "smith-machine-overhead-shoulder-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "leverage-shoulder-press",
+  "relatedSlug": "shoulder-press-with-bands",
+  "kind": "REGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "leverage-shoulder-press",
+  "relatedSlug": "seated-dumbbell-press",
+  "kind": "PROGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "leverage-shoulder-press",
+  "relatedSlug": "standing-military-press",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "low-cable-crossover",
+  "relatedSlug": "incline-cable-flye",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "low-cable-crossover",
+  "relatedSlug": "cable-crossover",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "low-cable-crossover",
+  "relatedSlug": "incline-dumbbell-flyes",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "low-cable-crossover",
+  "relatedSlug": "butterfly",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "lunge-pass-through",
+  "relatedSlug": "dumbbell-lunges",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "lunge-pass-through",
+  "relatedSlug": "dumbbell-step-ups",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "lunge-pass-through",
+  "relatedSlug": "dumbbell-rear-lunge",
+  "kind": "REGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "lunge-pass-through",
+  "relatedSlug": "bodyweight-walking-lunge",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "lunge-pass-through",
+  "relatedSlug": "split-squat-with-dumbbells",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "lying-dumbbell-tricep-extension",
+  "relatedSlug": "ez-bar-skullcrusher",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "lying-dumbbell-tricep-extension",
+  "relatedSlug": "seated-triceps-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "lying-dumbbell-tricep-extension",
+  "relatedSlug": "cable-lying-triceps-extension",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "lying-dumbbell-tricep-extension",
+  "relatedSlug": "triceps-pushdown",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "lying-dumbbell-tricep-extension",
+  "relatedSlug": "incline-barbell-triceps-extension",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "lying-leg-curls",
+  "relatedSlug": "seated-leg-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "lying-leg-curls",
+  "relatedSlug": "standing-leg-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "lying-leg-curls",
+  "relatedSlug": "ball-leg-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "lying-leg-curls",
+  "relatedSlug": "seated-band-hamstring-curl",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "lying-leg-curls",
+  "relatedSlug": "glute-ham-raise",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "lying-t-bar-row",
+  "relatedSlug": "seated-cable-rows",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "lying-t-bar-row",
+  "relatedSlug": "one-arm-dumbbell-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "lying-t-bar-row",
+  "relatedSlug": "seated-one-arm-cable-pulley-rows",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "lying-t-bar-row",
+  "relatedSlug": "dumbbell-incline-row",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "lying-t-bar-row",
+  "relatedSlug": "t-bar-row-with-handle",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "lying-t-bar-row",
+  "relatedSlug": "bent-over-barbell-row",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "machine-bench-press",
+  "relatedSlug": "leverage-chest-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "machine-bench-press",
+  "relatedSlug": "smith-machine-bench-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "machine-bench-press",
+  "relatedSlug": "cable-chest-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "machine-bench-press",
+  "relatedSlug": "incline-push-up",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "machine-bench-press",
+  "relatedSlug": "dumbbell-bench-press",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "machine-bench-press",
+  "relatedSlug": "barbell-bench-press-medium-grip",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "machine-bicep-curl",
+  "relatedSlug": "machine-preacher-curls",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "machine-bicep-curl",
+  "relatedSlug": "standing-biceps-cable-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "machine-bicep-curl",
+  "relatedSlug": "dumbbell-bicep-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "machine-bicep-curl",
+  "relatedSlug": "concentration-curls",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "machine-bicep-curl",
+  "relatedSlug": "barbell-curl",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "machine-preacher-curls",
+  "relatedSlug": "cable-preacher-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "machine-preacher-curls",
+  "relatedSlug": "one-arm-dumbbell-preacher-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "machine-preacher-curls",
+  "relatedSlug": "machine-bicep-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "machine-preacher-curls",
+  "relatedSlug": "dumbbell-bicep-curl",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "machine-preacher-curls",
+  "relatedSlug": "preacher-curl",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "machine-shoulder-military-press",
+  "relatedSlug": "leverage-shoulder-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "machine-shoulder-military-press",
+  "relatedSlug": "smith-machine-overhead-shoulder-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "machine-shoulder-military-press",
+  "relatedSlug": "dumbbell-shoulder-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "machine-shoulder-military-press",
+  "relatedSlug": "shoulder-press-with-bands",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "machine-shoulder-military-press",
+  "relatedSlug": "standing-military-press",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "medicine-ball-chest-pass",
+  "relatedSlug": "chest-push-single-response",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "medicine-ball-chest-pass",
+  "relatedSlug": "chest-push-multiple-response",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "medicine-ball-chest-pass",
+  "relatedSlug": "supine-chest-throw",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "medicine-ball-chest-pass",
+  "relatedSlug": "pushups",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "medicine-ball-chest-pass",
+  "relatedSlug": "chest-push-from-3-point-stance",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "medicine-ball-chest-pass",
+  "relatedSlug": "plyo-push-up",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "narrow-stance-leg-press",
+  "relatedSlug": "hack-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "narrow-stance-leg-press",
+  "relatedSlug": "narrow-stance-hack-squats",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "narrow-stance-leg-press",
+  "relatedSlug": "smith-machine-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "narrow-stance-leg-press",
+  "relatedSlug": "leg-press",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "narrow-stance-leg-press",
+  "relatedSlug": "front-barbell-squat",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "one-arm-dumbbell-row",
+  "relatedSlug": "seated-one-arm-cable-pulley-rows",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "one-arm-dumbbell-row",
+  "relatedSlug": "leverage-iso-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "one-arm-dumbbell-row",
+  "relatedSlug": "one-arm-kettlebell-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "one-arm-dumbbell-row",
+  "relatedSlug": "dumbbell-incline-row",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "one-arm-dumbbell-row",
+  "relatedSlug": "bent-over-barbell-row",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "one-arm-dumbbell-row",
+  "relatedSlug": "alternating-renegade-row",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "one-arm-incline-lateral-raise",
+  "relatedSlug": "side-lateral-raise",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "one-arm-incline-lateral-raise",
+  "relatedSlug": "cable-seated-lateral-raise",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "one-arm-incline-lateral-raise",
+  "relatedSlug": "lying-one-arm-lateral-raise",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "one-arm-incline-lateral-raise",
+  "relatedSlug": "seated-side-lateral-raise",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "one-arm-incline-lateral-raise",
+  "relatedSlug": "lateral-raise-with-bands",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "one-arm-kettlebell-floor-press",
+  "relatedSlug": "alternating-floor-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "one-arm-kettlebell-floor-press",
+  "relatedSlug": "pushups",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "one-arm-kettlebell-floor-press",
+  "relatedSlug": "dumbbell-bench-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "one-arm-kettlebell-floor-press",
+  "relatedSlug": "dumbbell-floor-press",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "one-arm-kettlebell-floor-press",
+  "relatedSlug": "one-arm-dumbbell-bench-press",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "one-arm-kettlebell-push-press",
+  "relatedSlug": "push-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "one-arm-kettlebell-push-press",
+  "relatedSlug": "double-kettlebell-push-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "one-arm-kettlebell-push-press",
+  "relatedSlug": "dumbbell-one-arm-shoulder-press",
+  "kind": "REGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "one-arm-kettlebell-push-press",
+  "relatedSlug": "single-arm-linear-jammer",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "one-arm-kettlebell-push-press",
+  "relatedSlug": "one-arm-kettlebell-jerk",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "one-arm-kettlebell-row",
+  "relatedSlug": "alternating-kettlebell-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "one-arm-kettlebell-row",
+  "relatedSlug": "two-arm-kettlebell-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "one-arm-kettlebell-row",
+  "relatedSlug": "seated-one-arm-cable-pulley-rows",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "one-arm-kettlebell-row",
+  "relatedSlug": "one-arm-dumbbell-row",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "one-arm-kettlebell-row",
+  "relatedSlug": "alternating-renegade-row",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "one-arm-kettlebell-snatch",
+  "relatedSlug": "power-snatch",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "one-arm-kettlebell-snatch",
+  "relatedSlug": "one-arm-kettlebell-clean-and-jerk",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "one-arm-kettlebell-snatch",
+  "relatedSlug": "one-arm-kettlebell-swings",
+  "kind": "REGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "one-arm-kettlebell-snatch",
+  "relatedSlug": "one-arm-kettlebell-clean",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "one-arm-kettlebell-snatch",
+  "relatedSlug": "double-kettlebell-snatch",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "one-arm-kettlebell-swings",
+  "relatedSlug": "vertical-swing",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "one-arm-kettlebell-swings",
+  "relatedSlug": "pull-through",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "one-arm-kettlebell-swings",
+  "relatedSlug": "romanian-deadlift",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "one-arm-kettlebell-swings",
+  "relatedSlug": "stiff-legged-dumbbell-deadlift",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "one-arm-kettlebell-swings",
+  "relatedSlug": "one-arm-kettlebell-clean",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "one-arm-kettlebell-swings",
+  "relatedSlug": "one-arm-kettlebell-snatch",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "one-arm-lat-pulldown",
+  "relatedSlug": "full-range-of-motion-lat-pulldown",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "one-arm-lat-pulldown",
+  "relatedSlug": "wide-grip-lat-pulldown",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "one-arm-lat-pulldown",
+  "relatedSlug": "kneeling-single-arm-high-pulley-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "one-arm-lat-pulldown",
+  "relatedSlug": "close-grip-front-lat-pulldown",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "one-arm-lat-pulldown",
+  "relatedSlug": "pullups",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "one-arm-lat-pulldown",
+  "relatedSlug": "one-arm-dumbbell-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 5
+ },
+ {
+  "slug": "one-arm-medicine-ball-slam",
+  "relatedSlug": "standing-cable-wood-chop",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "one-arm-medicine-ball-slam",
+  "relatedSlug": "landmine-180s",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "one-arm-medicine-ball-slam",
+  "relatedSlug": "sledgehammer-swings",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "one-arm-medicine-ball-slam",
+  "relatedSlug": "overhead-slam",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "one-legged-cable-kickback",
+  "relatedSlug": "hip-extension-with-bands",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "one-legged-cable-kickback",
+  "relatedSlug": "pull-through",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "one-legged-cable-kickback",
+  "relatedSlug": "barbell-hip-thrust",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "one-legged-cable-kickback",
+  "relatedSlug": "glute-kickback",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "one-legged-cable-kickback",
+  "relatedSlug": "butt-lift-bridge",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "pallof-press",
+  "relatedSlug": "side-bridge",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "pallof-press",
+  "relatedSlug": "dead-bug",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "pallof-press",
+  "relatedSlug": "standing-cable-wood-chop",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "pallof-press",
+  "relatedSlug": "plank",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "pallof-press",
+  "relatedSlug": "pallof-press-with-rotation",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "parallel-bar-dip",
+  "relatedSlug": "close-grip-barbell-bench-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "parallel-bar-dip",
+  "relatedSlug": "dip-machine",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "parallel-bar-dip",
+  "relatedSlug": "push-ups-close-triceps-position",
+  "kind": "REGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "parallel-bar-dip",
+  "relatedSlug": "bench-dips",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "parallel-bar-dip",
+  "relatedSlug": "ring-dips",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "plank",
+  "relatedSlug": "side-bridge",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "plank",
+  "relatedSlug": "pallof-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "plank",
+  "relatedSlug": "dead-bug",
+  "kind": "REGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "plank",
+  "relatedSlug": "barbell-ab-rollout-on-knees",
+  "kind": "PROGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "plank",
+  "relatedSlug": "suspended-fallout",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "plate-pinch",
+  "relatedSlug": "farmers-walk",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "plate-pinch",
+  "relatedSlug": "finger-curls",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "plate-pinch",
+  "relatedSlug": "wrist-roller",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "plate-pinch",
+  "relatedSlug": "standing-olympic-plate-hand-squeeze",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "plie-dumbbell-squat",
+  "relatedSlug": "goblet-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "plie-dumbbell-squat",
+  "relatedSlug": "dumbbell-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "plie-dumbbell-squat",
+  "relatedSlug": "leg-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "plie-dumbbell-squat",
+  "relatedSlug": "bodyweight-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "plie-dumbbell-squat",
+  "relatedSlug": "wide-stance-barbell-squat",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "plyo-push-up",
+  "relatedSlug": "medicine-ball-chest-pass",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "plyo-push-up",
+  "relatedSlug": "supine-chest-throw",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "plyo-push-up",
+  "relatedSlug": "pushups",
+  "kind": "REGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "plyo-push-up",
+  "relatedSlug": "incline-push-up",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "plyo-push-up",
+  "relatedSlug": "plyo-kettlebell-pushups",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "power-clean",
+  "relatedSlug": "power-clean-from-blocks",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "power-clean",
+  "relatedSlug": "dumbbell-clean",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "power-clean",
+  "relatedSlug": "two-arm-kettlebell-clean",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "power-clean",
+  "relatedSlug": "hang-clean",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "power-clean",
+  "relatedSlug": "clean-pull",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "power-clean",
+  "relatedSlug": "clean",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "preacher-curl",
+  "relatedSlug": "cable-preacher-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "preacher-curl",
+  "relatedSlug": "one-arm-dumbbell-preacher-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "preacher-curl",
+  "relatedSlug": "spider-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "preacher-curl",
+  "relatedSlug": "concentration-curls",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 3
+ },
+ {
+  "slug": "preacher-curl",
+  "relatedSlug": "machine-preacher-curls",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "pullups",
+  "relatedSlug": "chin-up",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "pullups",
+  "relatedSlug": "wide-grip-lat-pulldown",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "pullups",
+  "relatedSlug": "full-range-of-motion-lat-pulldown",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "pullups",
+  "relatedSlug": "band-assisted-pull-up",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "pullups",
+  "relatedSlug": "inverted-row",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "pullups",
+  "relatedSlug": "weighted-pull-ups",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "pullups",
+  "relatedSlug": "one-arm-dumbbell-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 6
+ },
+ {
+  "slug": "push-press",
+  "relatedSlug": "one-arm-kettlebell-push-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "push-press",
+  "relatedSlug": "double-kettlebell-push-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "push-press",
+  "relatedSlug": "kettlebell-thruster",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "push-press",
+  "relatedSlug": "standing-military-press",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "push-press",
+  "relatedSlug": "power-jerk",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "push-press",
+  "relatedSlug": "split-jerk",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "push-up-wide",
+  "relatedSlug": "pushups",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "push-up-wide",
+  "relatedSlug": "dumbbell-bench-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "push-up-wide",
+  "relatedSlug": "wide-grip-barbell-bench-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "push-up-wide",
+  "relatedSlug": "incline-push-up-wide",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "push-up-wide",
+  "relatedSlug": "push-ups-with-feet-elevated",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "push-ups-close-triceps-position",
+  "relatedSlug": "close-grip-barbell-bench-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "push-ups-close-triceps-position",
+  "relatedSlug": "bench-dips",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "push-ups-close-triceps-position",
+  "relatedSlug": "close-grip-dumbbell-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "push-ups-close-triceps-position",
+  "relatedSlug": "incline-push-up-close-grip",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "push-ups-close-triceps-position",
+  "relatedSlug": "dips-triceps-version",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "push-ups-with-feet-elevated",
+  "relatedSlug": "incline-dumbbell-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "push-ups-with-feet-elevated",
+  "relatedSlug": "barbell-incline-bench-press-medium-grip",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "push-ups-with-feet-elevated",
+  "relatedSlug": "leverage-incline-chest-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "push-ups-with-feet-elevated",
+  "relatedSlug": "pushups",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "push-ups-with-feet-elevated",
+  "relatedSlug": "push-ups-with-feet-on-an-exercise-ball",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "pushups",
+  "relatedSlug": "barbell-bench-press-medium-grip",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "pushups",
+  "relatedSlug": "dumbbell-bench-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "pushups",
+  "relatedSlug": "push-up-wide",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "pushups",
+  "relatedSlug": "incline-push-up",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "pushups",
+  "relatedSlug": "push-ups-with-feet-elevated",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "pushups",
+  "relatedSlug": "plyo-push-up",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "reverse-barbell-curl",
+  "relatedSlug": "standing-dumbbell-reverse-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "reverse-barbell-curl",
+  "relatedSlug": "reverse-cable-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "reverse-barbell-curl",
+  "relatedSlug": "hammer-curls",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "reverse-barbell-curl",
+  "relatedSlug": "zottman-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 3
+ },
+ {
+  "slug": "reverse-barbell-curl",
+  "relatedSlug": "reverse-barbell-preacher-curls",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "reverse-crunch",
+  "relatedSlug": "cable-reverse-crunch",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "reverse-crunch",
+  "relatedSlug": "crunches",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "reverse-crunch",
+  "relatedSlug": "ab-crunch-machine",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "reverse-crunch",
+  "relatedSlug": "dead-bug",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "reverse-crunch",
+  "relatedSlug": "decline-reverse-crunch",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "reverse-crunch",
+  "relatedSlug": "hanging-leg-raise",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "reverse-flyes",
+  "relatedSlug": "cable-rear-delt-fly",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "reverse-flyes",
+  "relatedSlug": "face-pull",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "reverse-flyes",
+  "relatedSlug": "cable-rope-rear-delt-rows",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "reverse-flyes",
+  "relatedSlug": "reverse-machine-flyes",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "reverse-flyes",
+  "relatedSlug": "band-pull-apart",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "reverse-flyes",
+  "relatedSlug": "seated-bent-over-rear-delt-raise",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "reverse-machine-flyes",
+  "relatedSlug": "reverse-flyes",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "reverse-machine-flyes",
+  "relatedSlug": "cable-rear-delt-fly",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "reverse-machine-flyes",
+  "relatedSlug": "face-pull",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "reverse-machine-flyes",
+  "relatedSlug": "band-pull-apart",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "reverse-machine-flyes",
+  "relatedSlug": "seated-bent-over-rear-delt-raise",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "romanian-deadlift",
+  "relatedSlug": "stiff-legged-barbell-deadlift",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "romanian-deadlift",
+  "relatedSlug": "smith-machine-stiff-legged-deadlift",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "romanian-deadlift",
+  "relatedSlug": "good-morning",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "romanian-deadlift",
+  "relatedSlug": "stiff-legged-dumbbell-deadlift",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "romanian-deadlift",
+  "relatedSlug": "pull-through",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "romanian-deadlift",
+  "relatedSlug": "romanian-deadlift-from-deficit",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "romanian-deadlift",
+  "relatedSlug": "kettlebell-one-legged-deadlift",
+  "kind": "PROGRESSION",
+  "sortOrder": 6
+ },
+ {
+  "slug": "romanian-deadlift-from-deficit",
+  "relatedSlug": "stiff-legged-barbell-deadlift",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "romanian-deadlift-from-deficit",
+  "relatedSlug": "stiff-legged-dumbbell-deadlift",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "romanian-deadlift-from-deficit",
+  "relatedSlug": "good-morning",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "romanian-deadlift-from-deficit",
+  "relatedSlug": "romanian-deadlift",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "rope-crunch",
+  "relatedSlug": "cable-crunch",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "rope-crunch",
+  "relatedSlug": "ab-crunch-machine",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "rope-crunch",
+  "relatedSlug": "weighted-crunches",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "rope-crunch",
+  "relatedSlug": "crunches",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "rope-straight-arm-pulldown",
+  "relatedSlug": "straight-arm-pulldown",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "rope-straight-arm-pulldown",
+  "relatedSlug": "bent-arm-barbell-pullover",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "rope-straight-arm-pulldown",
+  "relatedSlug": "wide-grip-lat-pulldown",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "rope-straight-arm-pulldown",
+  "relatedSlug": "cable-incline-pushdown",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "rowing-stationary",
+  "relatedSlug": "bicycling-stationary",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "rowing-stationary",
+  "relatedSlug": "elliptical-trainer",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "rowing-stationary",
+  "relatedSlug": "stairmaster",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "rowing-stationary",
+  "relatedSlug": "recumbent-bike",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "russian-twist",
+  "relatedSlug": "cable-russian-twists",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "russian-twist",
+  "relatedSlug": "standing-cable-wood-chop",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "russian-twist",
+  "relatedSlug": "pallof-press",
+  "kind": "REGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "russian-twist",
+  "relatedSlug": "plate-twist",
+  "kind": "PROGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "russian-twist",
+  "relatedSlug": "landmine-180s",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "seated-barbell-military-press",
+  "relatedSlug": "seated-dumbbell-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "seated-barbell-military-press",
+  "relatedSlug": "leverage-shoulder-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "seated-barbell-military-press",
+  "relatedSlug": "arnold-dumbbell-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "seated-barbell-military-press",
+  "relatedSlug": "machine-shoulder-military-press",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "seated-barbell-military-press",
+  "relatedSlug": "smith-machine-overhead-shoulder-press",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "seated-barbell-military-press",
+  "relatedSlug": "standing-military-press",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "seated-cable-rows",
+  "relatedSlug": "seated-one-arm-cable-pulley-rows",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "seated-cable-rows",
+  "relatedSlug": "one-arm-dumbbell-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "seated-cable-rows",
+  "relatedSlug": "lying-t-bar-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "seated-cable-rows",
+  "relatedSlug": "leverage-iso-row",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "seated-cable-rows",
+  "relatedSlug": "bent-over-barbell-row",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "seated-cable-rows",
+  "relatedSlug": "t-bar-row-with-handle",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "seated-calf-raise",
+  "relatedSlug": "barbell-seated-calf-raise",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "seated-calf-raise",
+  "relatedSlug": "standing-calf-raises",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "seated-calf-raise",
+  "relatedSlug": "dumbbell-seated-one-leg-calf-raise",
+  "kind": "REGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "seated-dumbbell-press",
+  "relatedSlug": "seated-barbell-military-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "seated-dumbbell-press",
+  "relatedSlug": "arnold-dumbbell-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "seated-dumbbell-press",
+  "relatedSlug": "leverage-shoulder-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "seated-dumbbell-press",
+  "relatedSlug": "machine-shoulder-military-press",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "seated-dumbbell-press",
+  "relatedSlug": "standing-dumbbell-press",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "seated-leg-curl",
+  "relatedSlug": "lying-leg-curls",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "seated-leg-curl",
+  "relatedSlug": "standing-leg-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "seated-leg-curl",
+  "relatedSlug": "ball-leg-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "seated-leg-curl",
+  "relatedSlug": "seated-band-hamstring-curl",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "seated-leg-curl",
+  "relatedSlug": "glute-ham-raise",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "seated-leg-curl",
+  "relatedSlug": "natural-glute-ham-raise",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "seated-one-arm-cable-pulley-rows",
+  "relatedSlug": "one-arm-dumbbell-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "seated-one-arm-cable-pulley-rows",
+  "relatedSlug": "seated-cable-rows",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "seated-one-arm-cable-pulley-rows",
+  "relatedSlug": "dumbbell-incline-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "seated-one-arm-cable-pulley-rows",
+  "relatedSlug": "leverage-iso-row",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "seated-one-arm-cable-pulley-rows",
+  "relatedSlug": "alternating-renegade-row",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "seated-triceps-press",
+  "relatedSlug": "cable-rope-overhead-triceps-extension",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "seated-triceps-press",
+  "relatedSlug": "dumbbell-one-arm-triceps-extension",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "seated-triceps-press",
+  "relatedSlug": "ez-bar-skullcrusher",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "seated-triceps-press",
+  "relatedSlug": "triceps-pushdown-rope-attachment",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "seated-triceps-press",
+  "relatedSlug": "standing-dumbbell-triceps-extension",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "side-bridge",
+  "relatedSlug": "pallof-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "side-bridge",
+  "relatedSlug": "dumbbell-side-bend",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "side-bridge",
+  "relatedSlug": "plank",
+  "kind": "REGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "side-bridge",
+  "relatedSlug": "push-up-to-side-plank",
+  "kind": "PROGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "side-lateral-raise",
+  "relatedSlug": "cable-seated-lateral-raise",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "side-lateral-raise",
+  "relatedSlug": "standing-low-pulley-deltoid-raise",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "side-lateral-raise",
+  "relatedSlug": "one-arm-incline-lateral-raise",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "side-lateral-raise",
+  "relatedSlug": "seated-side-lateral-raise",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "side-lateral-raise",
+  "relatedSlug": "lateral-raise-with-bands",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "side-lateral-raise",
+  "relatedSlug": "one-arm-side-laterals",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "single-leg-glute-bridge",
+  "relatedSlug": "one-legged-cable-kickback",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "single-leg-glute-bridge",
+  "relatedSlug": "barbell-glute-bridge",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "single-leg-glute-bridge",
+  "relatedSlug": "hip-lift-with-band",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "single-leg-glute-bridge",
+  "relatedSlug": "butt-lift-bridge",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "single-leg-glute-bridge",
+  "relatedSlug": "barbell-hip-thrust",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "sled-push",
+  "relatedSlug": "sled-drag-harness",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "sled-push",
+  "relatedSlug": "backward-drag",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "sled-push",
+  "relatedSlug": "stairmaster",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "sled-push",
+  "relatedSlug": "bicycling-stationary",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "sled-push",
+  "relatedSlug": "prowler-sprint",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "smith-machine-squat",
+  "relatedSlug": "hack-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "smith-machine-squat",
+  "relatedSlug": "leg-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "smith-machine-squat",
+  "relatedSlug": "goblet-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "smith-machine-squat",
+  "relatedSlug": "bodyweight-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "smith-machine-squat",
+  "relatedSlug": "barbell-squat",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "smith-machine-squat",
+  "relatedSlug": "smith-single-leg-split-squat",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "speed-squats",
+  "relatedSlug": "barbell-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "speed-squats",
+  "relatedSlug": "speed-box-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "speed-squats",
+  "relatedSlug": "weighted-jump-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "speed-squats",
+  "relatedSlug": "box-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "speed-squats",
+  "relatedSlug": "squat-with-bands",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "speed-squats",
+  "relatedSlug": "squat-with-chains",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "split-squat-with-dumbbells",
+  "relatedSlug": "smith-single-leg-split-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "split-squat-with-dumbbells",
+  "relatedSlug": "dumbbell-step-ups",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "split-squat-with-dumbbells",
+  "relatedSlug": "dumbbell-lunges",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "split-squat-with-dumbbells",
+  "relatedSlug": "dumbbell-rear-lunge",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "split-squat-with-dumbbells",
+  "relatedSlug": "goblet-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "split-squat-with-dumbbells",
+  "relatedSlug": "one-leg-barbell-squat",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "standing-biceps-cable-curl",
+  "relatedSlug": "barbell-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "standing-biceps-cable-curl",
+  "relatedSlug": "ez-bar-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "standing-biceps-cable-curl",
+  "relatedSlug": "standing-one-arm-cable-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "standing-biceps-cable-curl",
+  "relatedSlug": "machine-bicep-curl",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "standing-biceps-cable-curl",
+  "relatedSlug": "machine-preacher-curls",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "standing-cable-wood-chop",
+  "relatedSlug": "pallof-press-with-rotation",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "standing-cable-wood-chop",
+  "relatedSlug": "landmine-180s",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "standing-cable-wood-chop",
+  "relatedSlug": "cable-russian-twists",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "standing-cable-wood-chop",
+  "relatedSlug": "pallof-press",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "standing-cable-wood-chop",
+  "relatedSlug": "medicine-ball-full-twist",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "standing-calf-raises",
+  "relatedSlug": "calf-press-on-the-leg-press-machine",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "standing-calf-raises",
+  "relatedSlug": "smith-machine-calf-raise",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "standing-calf-raises",
+  "relatedSlug": "donkey-calf-raises",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "standing-calf-raises",
+  "relatedSlug": "standing-dumbbell-calf-raise",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "standing-dumbbell-calf-raise",
+  "relatedSlug": "standing-calf-raises",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "standing-dumbbell-calf-raise",
+  "relatedSlug": "calf-press-on-the-leg-press-machine",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "standing-dumbbell-calf-raise",
+  "relatedSlug": "smith-machine-calf-raise",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "standing-dumbbell-calf-raise",
+  "relatedSlug": "calf-raises-with-bands",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "standing-dumbbell-press",
+  "relatedSlug": "standing-military-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "standing-dumbbell-press",
+  "relatedSlug": "arnold-dumbbell-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "standing-dumbbell-press",
+  "relatedSlug": "two-arm-kettlebell-military-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "standing-dumbbell-press",
+  "relatedSlug": "seated-dumbbell-press",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "standing-dumbbell-press",
+  "relatedSlug": "machine-shoulder-military-press",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "standing-dumbbell-press",
+  "relatedSlug": "standing-palm-in-one-arm-dumbbell-press",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "standing-dumbbell-triceps-extension",
+  "relatedSlug": "cable-rope-overhead-triceps-extension",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "standing-dumbbell-triceps-extension",
+  "relatedSlug": "dumbbell-one-arm-triceps-extension",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "standing-dumbbell-triceps-extension",
+  "relatedSlug": "ez-bar-skullcrusher",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "standing-dumbbell-triceps-extension",
+  "relatedSlug": "seated-triceps-press",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "standing-dumbbell-triceps-extension",
+  "relatedSlug": "triceps-pushdown-rope-attachment",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "standing-leg-curl",
+  "relatedSlug": "seated-leg-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "standing-leg-curl",
+  "relatedSlug": "ball-leg-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "standing-leg-curl",
+  "relatedSlug": "lying-leg-curls",
+  "kind": "REGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "standing-leg-curl",
+  "relatedSlug": "natural-glute-ham-raise",
+  "kind": "PROGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "standing-leg-curl",
+  "relatedSlug": "glute-ham-raise",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "standing-long-jump",
+  "relatedSlug": "freehand-jump-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "standing-long-jump",
+  "relatedSlug": "side-standing-long-jump",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "standing-long-jump",
+  "relatedSlug": "front-box-jump",
+  "kind": "REGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "standing-long-jump",
+  "relatedSlug": "front-cone-hops-or-hurdle-hops",
+  "kind": "PROGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "standing-long-jump",
+  "relatedSlug": "alternate-leg-diagonal-bound",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "standing-low-pulley-deltoid-raise",
+  "relatedSlug": "side-lateral-raise",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "standing-low-pulley-deltoid-raise",
+  "relatedSlug": "cable-seated-lateral-raise",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "standing-low-pulley-deltoid-raise",
+  "relatedSlug": "one-arm-incline-lateral-raise",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "standing-low-pulley-deltoid-raise",
+  "relatedSlug": "seated-side-lateral-raise",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "standing-low-pulley-deltoid-raise",
+  "relatedSlug": "lateral-raise-with-bands",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "standing-low-pulley-one-arm-triceps-extension",
+  "relatedSlug": "cable-rope-overhead-triceps-extension",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "standing-low-pulley-one-arm-triceps-extension",
+  "relatedSlug": "dumbbell-one-arm-triceps-extension",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "standing-low-pulley-one-arm-triceps-extension",
+  "relatedSlug": "standing-dumbbell-triceps-extension",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "standing-low-pulley-one-arm-triceps-extension",
+  "relatedSlug": "kneeling-cable-triceps-extension",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "standing-low-pulley-one-arm-triceps-extension",
+  "relatedSlug": "seated-triceps-press",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "standing-military-press",
+  "relatedSlug": "dumbbell-shoulder-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "standing-military-press",
+  "relatedSlug": "standing-dumbbell-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "standing-military-press",
+  "relatedSlug": "two-arm-kettlebell-military-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "standing-military-press",
+  "relatedSlug": "seated-barbell-military-press",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "standing-military-press",
+  "relatedSlug": "machine-shoulder-military-press",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "standing-military-press",
+  "relatedSlug": "push-press",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "standing-two-arm-overhead-throw",
+  "relatedSlug": "overhead-slam",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "standing-two-arm-overhead-throw",
+  "relatedSlug": "backward-medicine-ball-throw",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "standing-two-arm-overhead-throw",
+  "relatedSlug": "medicine-ball-scoop-throw",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "standing-two-arm-overhead-throw",
+  "relatedSlug": "supine-two-arm-overhead-throw",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "standing-two-arm-overhead-throw",
+  "relatedSlug": "catch-and-overhead-throw",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "step-up-with-knee-raise",
+  "relatedSlug": "split-squat-with-dumbbells",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "step-up-with-knee-raise",
+  "relatedSlug": "dumbbell-rear-lunge",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "step-up-with-knee-raise",
+  "relatedSlug": "bodyweight-walking-lunge",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "step-up-with-knee-raise",
+  "relatedSlug": "bodyweight-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "step-up-with-knee-raise",
+  "relatedSlug": "dumbbell-step-ups",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "step-up-with-knee-raise",
+  "relatedSlug": "barbell-step-ups",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "stiff-legged-barbell-deadlift",
+  "relatedSlug": "romanian-deadlift",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "stiff-legged-barbell-deadlift",
+  "relatedSlug": "stiff-legged-dumbbell-deadlift",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "stiff-legged-barbell-deadlift",
+  "relatedSlug": "smith-machine-stiff-legged-deadlift",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "stiff-legged-barbell-deadlift",
+  "relatedSlug": "pull-through",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "stiff-legged-barbell-deadlift",
+  "relatedSlug": "romanian-deadlift-from-deficit",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "stiff-legged-barbell-deadlift",
+  "relatedSlug": "kettlebell-one-legged-deadlift",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "stiff-legged-dumbbell-deadlift",
+  "relatedSlug": "stiff-legged-barbell-deadlift",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "stiff-legged-dumbbell-deadlift",
+  "relatedSlug": "smith-machine-stiff-legged-deadlift",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "stiff-legged-dumbbell-deadlift",
+  "relatedSlug": "pull-through",
+  "kind": "REGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "stiff-legged-dumbbell-deadlift",
+  "relatedSlug": "romanian-deadlift",
+  "kind": "PROGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "stiff-legged-dumbbell-deadlift",
+  "relatedSlug": "kettlebell-one-legged-deadlift",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "straight-arm-dumbbell-pullover",
+  "relatedSlug": "bent-arm-barbell-pullover",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "straight-arm-dumbbell-pullover",
+  "relatedSlug": "straight-arm-pulldown",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "straight-arm-dumbbell-pullover",
+  "relatedSlug": "rope-straight-arm-pulldown",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "straight-arm-dumbbell-pullover",
+  "relatedSlug": "bent-arm-dumbbell-pullover",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "straight-arm-pulldown",
+  "relatedSlug": "rope-straight-arm-pulldown",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "straight-arm-pulldown",
+  "relatedSlug": "straight-arm-dumbbell-pullover",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "straight-arm-pulldown",
+  "relatedSlug": "bent-arm-barbell-pullover",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "straight-arm-pulldown",
+  "relatedSlug": "cable-incline-pushdown",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "t-bar-row-with-handle",
+  "relatedSlug": "bent-over-barbell-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "t-bar-row-with-handle",
+  "relatedSlug": "seated-cable-rows",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "t-bar-row-with-handle",
+  "relatedSlug": "bent-over-two-dumbbell-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "t-bar-row-with-handle",
+  "relatedSlug": "lying-t-bar-row",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "t-bar-row-with-handle",
+  "relatedSlug": "dumbbell-incline-row",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "thigh-abductor",
+  "relatedSlug": "monster-walk",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "thigh-abductor",
+  "relatedSlug": "single-leg-glute-bridge",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "thigh-abductor",
+  "relatedSlug": "butt-lift-bridge",
+  "kind": "REGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "thigh-abductor",
+  "relatedSlug": "kettlebell-one-legged-deadlift",
+  "kind": "PROGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "thigh-adductor",
+  "relatedSlug": "cable-hip-adduction",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "thigh-adductor",
+  "relatedSlug": "plie-dumbbell-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "thigh-adductor",
+  "relatedSlug": "wide-stance-barbell-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "thigh-adductor",
+  "relatedSlug": "band-hip-adductions",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "trap-bar-deadlift",
+  "relatedSlug": "sumo-deadlift",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "trap-bar-deadlift",
+  "relatedSlug": "leverage-deadlift",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "trap-bar-deadlift",
+  "relatedSlug": "barbell-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "trap-bar-deadlift",
+  "relatedSlug": "cable-deadlifts",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "trap-bar-deadlift",
+  "relatedSlug": "barbell-deadlift",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "trap-bar-deadlift",
+  "relatedSlug": "stiff-legged-dumbbell-deadlift",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 5
+ },
+ {
+  "slug": "triceps-pushdown",
+  "relatedSlug": "triceps-pushdown-rope-attachment",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "triceps-pushdown",
+  "relatedSlug": "triceps-pushdown-v-bar-attachment",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "triceps-pushdown",
+  "relatedSlug": "ez-bar-skullcrusher",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "triceps-pushdown",
+  "relatedSlug": "machine-triceps-extension",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "triceps-pushdown",
+  "relatedSlug": "cable-rope-overhead-triceps-extension",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "triceps-pushdown",
+  "relatedSlug": "close-grip-barbell-bench-press",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "triceps-pushdown-rope-attachment",
+  "relatedSlug": "triceps-pushdown",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "triceps-pushdown-rope-attachment",
+  "relatedSlug": "triceps-pushdown-v-bar-attachment",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "triceps-pushdown-rope-attachment",
+  "relatedSlug": "ez-bar-skullcrusher",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "triceps-pushdown-rope-attachment",
+  "relatedSlug": "machine-triceps-extension",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "triceps-pushdown-rope-attachment",
+  "relatedSlug": "cable-rope-overhead-triceps-extension",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "triceps-pushdown-rope-attachment",
+  "relatedSlug": "close-grip-barbell-bench-press",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "triceps-pushdown-v-bar-attachment",
+  "relatedSlug": "triceps-pushdown-rope-attachment",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "triceps-pushdown-v-bar-attachment",
+  "relatedSlug": "cable-rope-overhead-triceps-extension",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "triceps-pushdown-v-bar-attachment",
+  "relatedSlug": "triceps-pushdown",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "triceps-pushdown-v-bar-attachment",
+  "relatedSlug": "machine-triceps-extension",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "triceps-pushdown-v-bar-attachment",
+  "relatedSlug": "close-grip-barbell-bench-press",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "triceps-pushdown-v-bar-attachment",
+  "relatedSlug": "dips-triceps-version",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "two-arm-kettlebell-clean",
+  "relatedSlug": "dumbbell-clean",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "two-arm-kettlebell-clean",
+  "relatedSlug": "power-clean",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "two-arm-kettlebell-clean",
+  "relatedSlug": "double-kettlebell-alternating-hang-clean",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "two-arm-kettlebell-clean",
+  "relatedSlug": "one-arm-kettlebell-swings",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "two-arm-kettlebell-clean",
+  "relatedSlug": "one-arm-kettlebell-clean",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "two-arm-kettlebell-clean",
+  "relatedSlug": "double-kettlebell-snatch",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "two-arm-kettlebell-military-press",
+  "relatedSlug": "standing-dumbbell-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "two-arm-kettlebell-military-press",
+  "relatedSlug": "standing-military-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "two-arm-kettlebell-military-press",
+  "relatedSlug": "alternating-kettlebell-press",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "two-arm-kettlebell-military-press",
+  "relatedSlug": "seated-dumbbell-press",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "two-arm-kettlebell-military-press",
+  "relatedSlug": "double-kettlebell-push-press",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "two-arm-kettlebell-row",
+  "relatedSlug": "bent-over-two-dumbbell-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "two-arm-kettlebell-row",
+  "relatedSlug": "bent-over-barbell-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "two-arm-kettlebell-row",
+  "relatedSlug": "seated-cable-rows",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "two-arm-kettlebell-row",
+  "relatedSlug": "dumbbell-incline-row",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "two-arm-kettlebell-row",
+  "relatedSlug": "one-arm-dumbbell-row",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "two-arm-kettlebell-row",
+  "relatedSlug": "alternating-renegade-row",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "underhand-cable-pulldowns",
+  "relatedSlug": "wide-grip-lat-pulldown",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "underhand-cable-pulldowns",
+  "relatedSlug": "v-bar-pulldown",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "underhand-cable-pulldowns",
+  "relatedSlug": "one-arm-lat-pulldown",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "underhand-cable-pulldowns",
+  "relatedSlug": "straight-arm-pulldown",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "underhand-cable-pulldowns",
+  "relatedSlug": "chin-up",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "walking-treadmill",
+  "relatedSlug": "bicycling-stationary",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "walking-treadmill",
+  "relatedSlug": "elliptical-trainer",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "walking-treadmill",
+  "relatedSlug": "recumbent-bike",
+  "kind": "REGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "walking-treadmill",
+  "relatedSlug": "jogging-treadmill",
+  "kind": "PROGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "weighted-jump-squat",
+  "relatedSlug": "front-box-jump",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "weighted-jump-squat",
+  "relatedSlug": "hang-clean",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "weighted-jump-squat",
+  "relatedSlug": "freehand-jump-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "weighted-pull-ups",
+  "relatedSlug": "wide-grip-lat-pulldown",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "weighted-pull-ups",
+  "relatedSlug": "underhand-cable-pulldowns",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "weighted-pull-ups",
+  "relatedSlug": "pullups",
+  "kind": "REGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "weighted-pull-ups",
+  "relatedSlug": "band-assisted-pull-up",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "wide-grip-lat-pulldown",
+  "relatedSlug": "close-grip-front-lat-pulldown",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "wide-grip-lat-pulldown",
+  "relatedSlug": "underhand-cable-pulldowns",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "wide-grip-lat-pulldown",
+  "relatedSlug": "one-arm-lat-pulldown",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "wide-grip-lat-pulldown",
+  "relatedSlug": "v-bar-pulldown",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "wide-grip-lat-pulldown",
+  "relatedSlug": "band-assisted-pull-up",
+  "kind": "PROGRESSION",
+  "sortOrder": 4
+ },
+ {
+  "slug": "wide-grip-lat-pulldown",
+  "relatedSlug": "pullups",
+  "kind": "PROGRESSION",
+  "sortOrder": 5
+ },
+ {
+  "slug": "wide-grip-lat-pulldown",
+  "relatedSlug": "one-arm-dumbbell-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 6
+ },
+ {
+  "slug": "wrist-roller",
+  "relatedSlug": "palms-up-barbell-wrist-curl-over-a-bench",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 0
+ },
+ {
+  "slug": "wrist-roller",
+  "relatedSlug": "palms-down-wrist-curl-over-a-bench",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "wrist-roller",
+  "relatedSlug": "farmers-walk",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "wrist-roller",
+  "relatedSlug": "wrist-rotations-with-straight-bar",
+  "kind": "REGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "wrist-roller",
+  "relatedSlug": "seated-dumbbell-palms-up-wrist-curl",
+  "kind": "REGRESSION",
+  "sortOrder": 4
+ }
+]

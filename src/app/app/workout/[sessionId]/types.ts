@@ -25,6 +25,8 @@ export interface ExecutionExerciseLog {
   rirTarget: number | null;
   restSeconds: number;
   wasSkipped: boolean;
+  /** Swapped mid-workout ("Trocar", W-006): the name of the exercise the program asked for. */
+  substitutedFromName: string | null;
   notes: string | null;
   persistentNote: string | null;
   sets: ExecutionSetLog[];

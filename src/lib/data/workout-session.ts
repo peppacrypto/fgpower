@@ -14,7 +14,10 @@ import {
 } from "@/lib/training/week-guidance";
 import { isTimedHold } from "@/lib/training/set-plan";
 import { countedWeeks } from "@/lib/programming/block-progress";
+import { parseExerciseContent, parseInstructions } from "@/lib/exercises/content";
 import { entryWeekWasTrained } from "./program-lifecycle";
+import { getAlternatives, mainGearFirst, type AlternativeExercise } from "./alternatives";
+import { listExercises } from "./exercises";
 
 /**
  * The workout screen's data in a fixed number of queries, whatever the number
@@ -50,6 +53,8 @@ export async function getWorkoutSessionForExecution(sessionId: string) {
           restSeconds: true,
           wasSkipped: true,
           notes: true,
+          // "Trocado · no lugar de …" (W-006): the exercise the program asked for.
+          substitutedFrom: { select: { namePt: true } },
           exercise: {
             select: {
               slug: true,
@@ -338,4 +343,202 @@ export async function getRecordBars(userId: string, sessionId: string) {
     byExercise.set(r.exerciseId, list);
   }
   return byExercise;
+}
+
+// ---------------------------------------------------------------------------
+// Adapting the workout to the gym (W-006) and the technique sheet (W-025)
+// ---------------------------------------------------------------------------
+
+/** An exercise offered by the workout's "Trocar" / "Adicionar exercício" sheet. */
+export interface ExerciseOption {
+  id: string;
+  slug: string;
+  namePt: string;
+  imageUrl: string | null;
+  equipment: string | null;
+  /**
+   * Why it is offered: a curated relation or the same muscle (+ movement) —
+   * alternatives.ts —, "ORIGINAL" for the program's own exercise after a
+   * swap (to swap back), "SEARCH" for a search hit, "POPULAR" for the
+   * library's first picks when there is nothing to match against.
+   */
+  reason: AlternativeExercise["reason"] | "ORIGINAL" | "SEARCH" | "POPULAR";
+}
+
+export interface ExerciseOptions {
+  options: ExerciseOption[];
+  /**
+   * The exercise being swapped already holds data on the server (a set typed
+   * or ✓'d): it can't be replaced — the pick is added after it instead.
+   */
+  hasData: boolean;
+}
+
+type CardLike = {
+  id: string;
+  slug: string;
+  namePt: string;
+  equipment: { namePt: string } | null;
+  media: { url: string }[];
+};
+function optionOf(e: CardLike, reason: ExerciseOption["reason"]): ExerciseOption {
+  return {
+    id: e.id,
+    slug: e.slug,
+    namePt: e.namePt,
+    imageUrl: e.media[0]?.url ?? null,
+    equipment: e.equipment?.namePt ?? null,
+    reason,
+  };
+}
+
+/**
+ * What the sheet lists for one of the user's workouts in progress: with a
+ * query, the library's search; without one, the stand-ins for the exercise
+ * being swapped (alternatives.ts: curated relations first, then the same
+ * primary muscle and movement, on the equipment the profile has — judged
+ * against the program's exercise when it was already swapped, which comes
+ * first to swap back), or, when adding at the end, the library's first
+ * picks. Exercises already in the workout are never listed, searched or not
+ * (swapExercise / addExerciseToWorkout refuse them too) — the program's own,
+ * to swap back, only while it isn't one of them (added elsewhere after the
+ * swap). Null when the workout isn't the user's or is closed.
+ */
+export async function getExerciseOptions(
+  userId: string,
+  p: { sessionId: string; exerciseLogId?: string | null; q?: string | null },
+): Promise<ExerciseOptions | null> {
+  const session = await prisma.workoutSession.findFirst({
+    where: { id: p.sessionId, userId, status: "IN_PROGRESS" },
+    select: { exerciseLogs: { select: { id: true, exerciseId: true, substitutedFromExerciseId: true } } },
+  });
+  if (!session) return null;
+  const log = p.exerciseLogId ? session.exerciseLogs.find((l) => l.id === p.exerciseLogId) : undefined;
+  if (p.exerciseLogId && !log) return null;
+  const inWorkout = session.exerciseLogs.map((l) => l.exerciseId);
+  const hasData = log
+    ? (await prisma.setLog.count({
+        where: {
+          exerciseLogId: log.id,
+          OR: [{ isCompleted: true }, { weightKg: { not: null } }, { reps: { not: null } }],
+        },
+      })) > 0
+    : false;
+
+  const q = (p.q ?? "").trim().slice(0, 80);
+  if (q.length >= 2) {
+    const { items } = await listExercises({ q, pageSize: 20 });
+    // Never one already in the workout (a second copy of it). The program's own, swapped away
+    // from, isn't in it — unless it was added elsewhere since, and then swapping back is refused.
+    return {
+      options: items
+        .filter((e) => !inWorkout.includes(e.id))
+        .map((e) => optionOf(e, e.id === log?.substitutedFromExerciseId ? "ORIGINAL" : "SEARCH")),
+      hasData,
+    };
+  }
+
+  if (!log) {
+    const { items } = await listExercises({ pageSize: 20 });
+    return { options: items.filter((e) => !inWorkout.includes(e.id)).map((e) => optionOf(e, "POPULAR")), hasData };
+  }
+
+  const profile = await prisma.profile.findUnique({ where: { userId }, select: { equipmentAccess: true } });
+  const base = log.substitutedFromExerciseId ?? log.exerciseId;
+  const [original, alternatives] = await Promise.all([
+    log.substitutedFromExerciseId && !inWorkout.includes(log.substitutedFromExerciseId)
+      ? prisma.exercise.findUnique({
+          where: { id: log.substitutedFromExerciseId },
+          select: {
+            id: true,
+            slug: true,
+            namePt: true,
+            equipment: { select: { namePt: true } },
+            media: { take: 1, orderBy: { sortOrder: "asc" }, select: { url: true } },
+          },
+        })
+      : null,
+    // At home the user's main gear leads (dumbbells for "Halteres em casa"), as in "Adaptar".
+    getAlternatives(base, { equipmentAccess: profile?.equipmentAccess ?? null, limit: 12, excludeIds: inWorkout }).then(
+      (options) => mainGearFirst(options, profile?.equipmentAccess ?? null),
+    ),
+  ]);
+  const options: ExerciseOption[] = original ? [optionOf(original, "ORIGINAL")] : [];
+  for (const a of alternatives) {
+    options.push({
+      id: a.id,
+      slug: a.slug,
+      namePt: a.namePt,
+      imageUrl: a.imageUrl,
+      equipment: a.equipmentNamePt,
+      reason: a.reason,
+    });
+  }
+  return { options, hasData };
+}
+
+/** The in-workout technique sheet (W-025): the start/end frames and the three cues to keep in mind. */
+export interface TechniqueSheet {
+  slug: string;
+  namePt: string;
+  images: { start: string | null; end: string | null };
+  cues: string[];
+  /** Where the cues come from: curated coaching cues, or the imported step-by-step. */
+  source: "coaching" | "instructions" | null;
+}
+
+/**
+ * Three key cues: the curated content's coaching cues (Exercise.contentPt),
+ * else the first steps of the imported instructions. Unpublished exercises
+ * too: the sheet opens on an exercise of the user's own workout, which an
+ * exercise taken out of the library can still be (its full page opens too).
+ */
+export async function getTechniqueSheet(exerciseId: string): Promise<TechniqueSheet | null> {
+  const e = await prisma.exercise.findUnique({
+    where: { id: exerciseId },
+    select: {
+      slug: true,
+      namePt: true,
+      contentPt: true,
+      instructionsPt: true,
+      media: { orderBy: { sortOrder: "asc" }, select: { url: true, kind: true } },
+    },
+  });
+  if (!e) return null;
+  const coaching = parseExerciseContent(e.contentPt)?.coachingCues.filter((c) => c.trim() !== "") ?? [];
+  const steps = parseInstructions(e.instructionsPt).filter((c) => c.trim() !== "");
+  const cues = coaching.length > 0 ? coaching : steps;
+  const start = e.media.find((m) => m.kind === "IMAGE_START") ?? e.media[0] ?? null;
+  const end = e.media.find((m) => m.kind === "IMAGE_END") ?? e.media.find((m) => m !== start) ?? null;
+  return {
+    slug: e.slug,
+    namePt: e.namePt,
+    images: { start: start?.url ?? null, end: end?.url ?? null },
+    cues: cues.slice(0, 3),
+    source: coaching.length > 0 ? "coaching" : steps.length > 0 ? "instructions" : null,
+  };
+}
+
+/** How long a finished workout can still be corrected or deleted (W-088). */
+export const FINISHED_EDIT_WINDOW_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * When a finished workout was saved — where its correction window starts.
+ * Its `finishedAt`, except for a workout left open and saved later "como
+ * feito em 20/09": that one is dated on its own day, and was saved when its
+ * row was last written (`updatedAt`: the finish; a correction keeps it, see
+ * editFinishedWorkout). Without this, such a workout could never be fixed.
+ */
+export function savedAt(s: { finishedAt: Date; updatedAt: Date }): Date {
+  return s.updatedAt > s.finishedAt ? s.updatedAt : s.finishedAt;
+}
+
+/** Until when a finished workout can be corrected or deleted. */
+export function correctableUntil(s: { finishedAt: Date; updatedAt: Date }): Date {
+  return new Date(savedAt(s).getTime() + FINISHED_EDIT_WINDOW_MS);
+}
+
+/** Whether a finished workout (see savedAt) can still be corrected or deleted. */
+export function isStillEditable(s: { finishedAt: Date; updatedAt: Date }, now: Date = new Date()): boolean {
+  return now.getTime() < correctableUntil(s).getTime();
 }

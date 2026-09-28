@@ -19,8 +19,11 @@ import { MIN_HISTORY_YEAR, parseDayParam, parseMonthParams } from "./params";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/misc";
+import { Masthead } from "@/components/ui/masthead";
+import { SectionHead } from "@/components/ui/section-head";
 import { cn } from "@/lib/utils/cn";
 import { formatDuration, formatVolume, plural } from "@/lib/utils/format";
+import { normalizeText } from "@/lib/utils/normalize-text";
 import { SessionRow } from "./session-row";
 
 export const metadata: Metadata = { title: "Histórico" };
@@ -31,6 +34,8 @@ const MONTH_LABELS = [
   "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
   "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
 ];
+/** Monday-first, spelled out for the day links' names. */
+const WEEKDAY_NAMES = ["segunda", "terça", "quarta", "quinta", "sexta", "sábado", "domingo"];
 const ARROW = "flex size-11 items-center justify-center rounded-[3px]";
 
 export default async function HistoryPage({ searchParams }: PageProps<"/app/history">) {
@@ -104,19 +109,21 @@ export default async function HistoryPage({ searchParams }: PageProps<"/app/hist
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
-      <h1 className="text-2xl font-bold tracking-tight">Histórico</h1>
+      <Masthead kicker="Seus treinos" title="Histórico" />
 
       <Card className="mt-6">
         <CardContent className="px-3 pt-3 pb-4 sm:px-5">
           <div className="flex items-center justify-between">
-            <Link
-              href={monthHref(-1)}
-              aria-label="Mês anterior"
-              aria-disabled={isFirstMonth}
-              className={isFirstMonth ? `${ARROW} pointer-events-none opacity-30` : `${ARROW} hover:bg-surface-2`}
-            >
-              <ChevronLeft className="size-5" />
-            </Link>
+            {/* A month you can't go to is no link at all (a dimmed mark), not a dead one. */}
+            {isFirstMonth ? (
+              <span aria-hidden className={`${ARROW} opacity-30`}>
+                <ChevronLeft className="size-5" />
+              </span>
+            ) : (
+              <Link href={monthHref(-1)} aria-label="Mês anterior" className={`${ARROW} hover:bg-surface-2`}>
+                <ChevronLeft className="size-5" />
+              </Link>
+            )}
             <div className="text-center">
               <h2 className="font-semibold">
                 {MONTH_LABELS[month]} {year}
@@ -135,14 +142,15 @@ export default async function HistoryPage({ searchParams }: PageProps<"/app/hist
                     ))}
               </p>
             </div>
-            <Link
-              href={monthHref(1)}
-              aria-label="Próximo mês"
-              aria-disabled={isCurrentMonth}
-              className={isCurrentMonth ? `${ARROW} pointer-events-none opacity-30` : `${ARROW} hover:bg-surface-2`}
-            >
-              <ChevronRight className="size-5" />
-            </Link>
+            {isCurrentMonth ? (
+              <span aria-hidden className={`${ARROW} opacity-30`}>
+                <ChevronRight className="size-5" />
+              </span>
+            ) : (
+              <Link href={monthHref(1)} aria-label="Próximo mês" className={`${ARROW} hover:bg-surface-2`}>
+                <ChevronRight className="size-5" />
+              </Link>
+            )}
           </div>
 
           <div className="mt-3 grid grid-cols-[repeat(7,minmax(0,1fr))_1rem] gap-1 text-center font-mono text-[10px] tracking-wider text-muted">
@@ -165,10 +173,19 @@ export default async function HistoryPage({ searchParams }: PageProps<"/app/hist
                     const daySessions = day ? (sessionsByDay.get(day) ?? []) : [];
                     const isToday = day != null && day === todayDay;
                     const hasRecord = daySessions.some((s) => s.recordCount > 0);
+                    // "Ver treino de 25 de setembro, quinta — Superior (pesado), com recorde". A day
+                    // named after its weekday ("Sábado — Corpo inteiro") already says it: no "sábado — Sábado".
+                    const saysWeekday =
+                      daySessions.length === 1 && normalizeText(daySessions[0].name).startsWith(normalizeText(WEEKDAY_NAMES[i]));
+                    const when = `${day} de ${MONTH_LABELS[month].toLowerCase()}${saysWeekday ? "" : `, ${WEEKDAY_NAMES[i]}`}${isToday ? " (hoje)" : ""}`;
                     const label =
                       day == null
                         ? ""
-                        : `${day} de ${MONTH_LABELS[month].toLowerCase()}: ${plural(daySessions.length, "treino", "treinos")}${hasRecord ? ", com recorde" : ""}${isToday ? " (hoje)" : ""}`;
+                        : daySessions.length === 1
+                          ? `Ver treino de ${when} — ${daySessions[0].name}${hasRecord ? ", com recorde" : ""}`
+                          : daySessions.length > 1
+                            ? `Ver ${plural(daySessions.length, "treino", "treinos")} de ${when}${hasRecord ? ", com recorde" : ""}`
+                            : `${when}: nenhum treino`;
                     return (
                       <div key={i} className="flex aspect-square items-center justify-center">
                         {day == null ? null : daySessions.length > 0 ? (
@@ -245,17 +262,13 @@ export default async function HistoryPage({ searchParams }: PageProps<"/app/hist
 
       {dayList ? (
         <section className="mt-8" aria-labelledby="dia">
-          <div className="mb-3 flex items-baseline justify-between gap-3">
-            <h2 id="dia" className="text-sm font-bold uppercase tracking-wide text-muted">
-              Treinos de {selectedDay} de {MONTH_LABELS[month].toLowerCase()}
-            </h2>
-            <Link
-              href={`/app/history?year=${year}&month=${month}`}
-              className="-my-2 inline-flex min-h-11 items-center font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
-            >
-              Ver recentes
-            </Link>
-          </div>
+          {/* The way back sits under the list: next to the date and count it pushed the row off a 320px screen. */}
+          <SectionHead
+            id="dia"
+            className="mb-3"
+            label={`Treinos de ${selectedDay} de ${MONTH_LABELS[month].toLowerCase()}`}
+            count={plural(dayList.length, "treino", "treinos")}
+          />
           {dayList.length === 0 ? (
             <p className="text-sm text-muted">Nenhum treino neste dia.</p>
           ) : (
@@ -265,12 +278,17 @@ export default async function HistoryPage({ searchParams }: PageProps<"/app/hist
               ))}
             </div>
           )}
+          <Link
+            href={`/app/history?year=${year}&month=${month}`}
+            className="mt-2 inline-flex min-h-11 items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
+          >
+            <ChevronLeft aria-hidden className="size-3.5" />
+            Ver recentes
+          </Link>
         </section>
       ) : (
         <section className="mt-8" aria-labelledby="recentes">
-          <h2 id="recentes" className="mb-3 text-sm font-bold uppercase tracking-wide text-muted">
-            Treinos recentes
-          </h2>
+          <SectionHead id="recentes" className="mb-3" label="Treinos recentes" />
           {recent.items.length === 0 ? (
             <EmptyState
               icon={<CalendarClock className="size-8" />}

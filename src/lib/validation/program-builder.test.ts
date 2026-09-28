@@ -123,3 +123,37 @@ describe("validateBuilderProgram", () => {
     if (!result.ok) expect(result.errors[0].field).toBe("days");
   });
 });
+
+describe("prescription helpers", () => {
+  it("starts compounds heavier with longer rests than isolations", async () => {
+    const { defaultPrescription } = await import("./program-builder");
+    const compound = defaultPrescription("COMPOUND");
+    const isolation = defaultPrescription("ISOLATION");
+    expect(compound.repMax).toBeLessThan(isolation.repMax);
+    expect(compound.restSeconds).toBeGreaterThan(isolation.restSeconds);
+    expect(defaultPrescription(null)).toEqual({ sets: 3, repMin: 8, repMax: 12, rirTarget: 2, restSeconds: 120, warmupSets: 0 });
+  });
+
+  it("writes rest as a clock and a row in one line", async () => {
+    const { formatRestClock, prescriptionLine } = await import("./program-builder");
+    expect(formatRestClock(120)).toBe("2:00");
+    expect(formatRestClock(90)).toBe("1:30");
+    expect(formatRestClock(45)).toBe("0:45");
+    expect(prescriptionLine({ sets: 3, repMin: 8, repMax: 12, rirTarget: 1.5, restSeconds: 120, warmupSets: 1 })).toBe(
+      "3 × 8–12 · RIR 1,5 · 2:00 · +1 aquec.",
+    );
+    expect(prescriptionLine({ sets: 5, repMin: 5, repMax: 5, rirTarget: null, restSeconds: 180, warmupSets: 0 })).toBe("5 × 5 · 3:00");
+  });
+
+  it("pins a too-long day focus and note to their fields", () => {
+    const long = validateBuilderProgram(
+      program([exercise({ notes: "x".repeat(2001) })], {
+        days: [{ id: "d", name: "Dia 1", focus: "y".repeat(201), exercises: [exercise({ notes: "x".repeat(2001) })] }],
+      }),
+    );
+    expect(long.ok).toBe(false);
+    if (!long.ok) {
+      expect(long.errors.map((e) => e.field).sort()).toEqual(["dayFocus", "notes"]);
+    }
+  });
+});

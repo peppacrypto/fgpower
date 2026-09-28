@@ -19,7 +19,7 @@ import { groupRecordsByExercise } from "@/lib/training/personal-records-core";
 import { adviceFromLastTime } from "@/lib/training/set-plan";
 import { startOfWeek } from "@/lib/training/week";
 import { compareWithLast, setsText, type LastTimeDelta, type LiteSet } from "./dossier";
-import { getSessionRirTargets } from "@/lib/data/workout-session";
+import { correctableUntil as correctionDeadline, getSessionRirTargets, isStillEditable } from "@/lib/data/workout-session";
 
 /**
  * Everything the workout summary shows, for its owner. `fresh` is whether this
@@ -36,6 +36,7 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
       name: true,
       status: true,
       finishedAt: true,
+      updatedAt: true,
       durationSeconds: true,
       totalVolumeKg: true,
       totalWorkingSets: true,
@@ -52,8 +53,10 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
           repMax: true,
           rirTarget: true,
           prescribedSets: true,
+          substitutedFromExerciseId: true,
+          substitutedFrom: { select: { namePt: true } },
           exercise: { select: { namePt: true, slug: true } },
-          programExercise: { select: { progressionStrategy: true, loadIncrementKg: true } },
+          programExercise: { select: { progressionStrategy: true, loadIncrementKg: true, exerciseId: true } },
           sets: {
             orderBy: { setNumber: "asc" },
             select: { id: true, setType: true, isExtra: true, weightKg: true, reps: true, rir: true, isCompleted: true },
@@ -69,6 +72,9 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
     return { status: session.status === "IN_PROGRESS" ? ("IN_PROGRESS" as const) : ("DISCARDED" as const) };
   }
   const finishedAt = session.finishedAt;
+  // Sets can be corrected and the workout deleted for a while after it was saved (W-088).
+  const saved = { finishedAt, updatedAt: session.updatedAt };
+  const correctableUntil = isStillEditable(saved, now) ? correctionDeadline(saved) : null;
 
   const [profile, ordinal, newer, previous, completedBlock, entryWeekTrained, rirTargets] = await Promise.all([
     prisma.profile.findUnique({
@@ -133,6 +139,18 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
         previousText: prev ? setsText(prev.sets) : null,
         previousAt: prev?.doneAt ?? null,
         advice,
+        /**
+         * Swapped mid-workout (W-006): what the program asked for, whether the
+         * program still asks for it — then "Usar no programa" can make the
+         * swap stick — or already asks for the one done (it was made to stick).
+         */
+        swap: log.substitutedFromExerciseId
+          ? {
+              fromName: log.substitutedFrom?.namePt ?? "",
+              canUseInProgram: log.programExercise?.exerciseId === log.substitutedFromExerciseId,
+              inProgram: !!log.programExercise && log.programExercise.exerciseId === log.exerciseId,
+            }
+          : null,
       };
     })
     .filter((e) => e !== null);
@@ -167,6 +185,7 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
     ordinal,
     blockDone,
     fresh,
+    correctableUntil,
     exercises,
     recordGroups,
     /** Every exercise here is logged for the first time: the whole workout is the baseline. */

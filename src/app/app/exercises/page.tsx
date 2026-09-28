@@ -1,87 +1,126 @@
 import type { Metadata } from "next";
-import { listExercises, type ExerciseFilters } from "@/lib/data/exercises";
+import Link from "next/link";
+import {
+  countUnclassifiedPatterns,
+  listActiveProgramExerciseIds,
+  listExercises,
+  listFavoriteExerciseIds,
+} from "@/lib/data/exercises";
 import { listEquipment, listMovementPatterns } from "@/lib/data/taxonomy";
+import { requireUser } from "@/lib/auth/require-user";
 import { MUSCLE_GROUPS, MUSCLE_GROUP_LABEL } from "@/lib/constants/muscle-groups";
 import { ExerciseFilterBar } from "@/components/exercises/exercise-filter-bar";
 import { ExerciseCard } from "@/components/exercises/exercise-card";
+import { hasLibraryFilters, libraryHref, parseLibraryParams } from "@/components/exercises/library-params";
 import { EmptyState } from "@/components/ui/misc";
 import { Button } from "@/components/ui/button";
+import { Masthead } from "@/components/ui/masthead";
 import { GLoad } from "@/components/ui/glyph";
-import Link from "next/link";
 
 export const metadata: Metadata = { title: "Exercícios" };
 
-export default async function ExerciseLibraryPage({
-  searchParams,
-}: PageProps<"/app/exercises">) {
-  const sp = await searchParams;
-  const filters: ExerciseFilters = {
-    q: typeof sp.q === "string" ? sp.q : undefined,
-    muscleGroup: typeof sp.muscleGroup === "string" ? sp.muscleGroup : undefined,
-    equipmentId: typeof sp.equipmentId === "string" ? sp.equipmentId : undefined,
-    movementPatternId: typeof sp.movementPatternId === "string" ? sp.movementPatternId : undefined,
-    page: typeof sp.page === "string" ? Math.max(1, Math.floor(Number(sp.page)) || 1) : 1,
-  };
+const BASE = "/app/exercises";
 
-  const [{ items, page, totalPages }, equipment, movementPatterns] = await Promise.all([
-    listExercises(filters),
+export default async function ExerciseLibraryPage({ searchParams }: PageProps<"/app/exercises">) {
+  const [sp, user] = await Promise.all([searchParams, requireUser()]);
+  const state = parseLibraryParams(sp);
+
+  // "Do meu programa" / "Favoritos" narrow the list to those ids — all in one round.
+  // (Favorites are read only when that list is picked; the program's ids also decide whether its chip shows.)
+  const programIds = listActiveProgramExerciseIds(user.id);
+  const onlyIds =
+    state.lista === "programa" ? programIds : state.lista === "favoritos" ? listFavoriteExerciseIds(user.id) : null;
+  const [{ items, total, page, totalPages }, equipment, movementPatterns, unclassified, inProgram] = await Promise.all([
+    (onlyIds ?? Promise.resolve(undefined)).then((ids) =>
+      listExercises({
+        q: state.q,
+        muscleGroup: state.muscleGroup,
+        equipmentId: state.equipmentId,
+        movementPatternId: state.movementPatternId,
+        difficulty: state.difficulty,
+        onlyIds: ids,
+        page: state.page,
+      }),
+    ),
     listEquipment(),
     listMovementPatterns(),
+    countUnclassifiedPatterns(),
+    programIds,
   ]);
 
   const muscleGroups = MUSCLE_GROUPS.map((group) => ({ group, namePt: MUSCLE_GROUP_LABEL[group].pt }));
+  const filtered = hasLibraryFilters(state);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
-      <h1 className="text-2xl font-bold tracking-tight">Exercícios</h1>
-      <p className="mt-1 text-sm text-muted">Como executar, por que executar, e a ciência por trás.</p>
+      <Masthead kicker="Técnica e ciência" title="Exercícios" lead="Como executar, por que executar, e a ciência por trás." />
 
       <div className="mt-6">
-        <ExerciseFilterBar muscleGroups={muscleGroups} equipment={equipment} movementPatterns={movementPatterns} />
+        <ExerciseFilterBar
+          muscleGroups={muscleGroups}
+          equipment={equipment}
+          movementPatterns={movementPatterns}
+          total={total}
+          lists={{ program: inProgram.length > 0 }}
+          unclassifiedPatterns={unclassified}
+        >
+          {items.length === 0 ? (
+            <div className="mt-6">
+              {state.lista === "favoritos" && !state.q && !state.muscleGroup && !state.equipmentId ? (
+                <EmptyState
+                  icon={<GLoad className="size-8" />}
+                  title="Nenhum favorito ainda"
+                  description="Toque no coração na página de um exercício para guardá-lo aqui."
+                  action={<ClearFilters />}
+                />
+              ) : (
+                <EmptyState
+                  icon={<GLoad className="size-8" />}
+                  title="Nenhum exercício encontrado"
+                  description={
+                    state.q
+                      ? `Nada para “${state.q}”${filtered && hasLibraryFilters({ ...state, q: "" }) ? " com esses filtros" : ""}. Tente outra palavra — o nome, o músculo ou o equipamento.`
+                      : "Nenhum exercício com esses filtros."
+                  }
+                  action={filtered ? <ClearFilters /> : undefined}
+                />
+              )}
+            </div>
+          ) : (
+            <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+              {items.map((ex) => (
+                <ExerciseCard key={ex.id} exercise={ex} href={`${BASE}/${ex.slug}`} />
+              ))}
+            </div>
+          )}
+
+          {totalPages > 1 ? (
+            <nav aria-label="Páginas" className="mt-8 flex items-center justify-center gap-2">
+              {page > 1 ? (
+                <Button variant="outline" size="sm" asChild>
+                  <Link href={libraryHref(BASE, state, page - 1) as never}>Anterior</Link>
+                </Button>
+              ) : null}
+              <span className="px-2 font-mono text-[11px] tabular-nums text-muted">
+                Página {page} de {totalPages}
+              </span>
+              {page < totalPages ? (
+                <Button variant="outline" size="sm" asChild>
+                  <Link href={libraryHref(BASE, state, page + 1) as never}>Próxima</Link>
+                </Button>
+              ) : null}
+            </nav>
+          ) : null}
+        </ExerciseFilterBar>
       </div>
-
-      {items.length === 0 ? (
-        <div className="mt-10">
-          <EmptyState
-            icon={<GLoad className="size-8" />}
-            title="Nenhum exercício encontrado"
-            description="Tente ajustar a busca ou os filtros."
-          />
-        </div>
-      ) : (
-        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-          {items.map((ex) => (
-            <ExerciseCard key={ex.id} exercise={ex} href={`/app/exercises/${ex.slug}`} />
-          ))}
-        </div>
-      )}
-
-      {totalPages > 1 ? (
-        <div className="mt-8 flex items-center justify-center gap-2">
-          {page > 1 ? (
-            <Button variant="outline" size="sm" asChild>
-              <Link href={buildPageHref(sp, page - 1)}>Anterior</Link>
-            </Button>
-          ) : null}
-          <span className="px-2 text-sm text-muted">
-            Página {page} de {totalPages}
-          </span>
-          {page < totalPages ? (
-            <Button variant="outline" size="sm" asChild>
-              <Link href={buildPageHref(sp, page + 1)}>Próxima</Link>
-            </Button>
-          ) : null}
-        </div>
-      ) : null}
     </div>
   );
 }
 
-function buildPageHref(sp: Record<string, string | string[] | undefined>, page: number) {
-  const params = new URLSearchParams();
-  for (const [key, value] of Object.entries(sp)) {
-    if (typeof value === "string" && key !== "page") params.set(key, value);
-  }
-  params.set("page", String(page));
-  return `/app/exercises?${params.toString()}`;
+function ClearFilters() {
+  return (
+    <Button variant="outline" size="sm" asChild className="mt-1">
+      <Link href={BASE}>Limpar filtros</Link>
+    </Button>
+  );
 }

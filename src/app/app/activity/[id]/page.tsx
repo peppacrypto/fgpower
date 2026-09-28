@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 import Link from "next/link";
 import { Lettermark } from "@/components/ui/glyph";
 import { getCurrentSession } from "@/lib/auth/require-user";
@@ -18,31 +19,43 @@ import { NOT_FOUND_TITLE } from "@/components/ui/not-found-panel";
 import { milestoneStampOf, type MilestoneStamp } from "@/components/social/milestone-stamp";
 import { MilestoneStampDetail } from "@/components/social/milestone-stamp-card";
 
+/**
+ * The activity and whether this viewer may see it — one lookup per request,
+ * shared by generateMetadata and the page (React cache()).
+ */
+const loadActivity = cache(async (id: string) => {
+  const [session, activity] = await Promise.all([
+    getCurrentSession(),
+    prisma.activity.findUnique({
+      where: { id },
+      include: {
+        user: {
+          select: { id: true, name: true, username: true, image: true, profile: { select: { displayName: true } } },
+        },
+      },
+    }),
+  ]);
+  const viewerId = session?.user.id ?? null;
+  if (!activity) return { viewerId, activity: null, hasGivenFg: false };
+  const [allowed, fg] = await Promise.all([
+    canViewActivity(viewerId, activity),
+    viewerId
+      ? prisma.activityFG.findUnique({ where: { activityId_userId: { activityId: id, userId: viewerId } } })
+      : null,
+  ]);
+  return { viewerId, activity: allowed ? activity : null, hasGivenFg: Boolean(fg) };
+});
+
 export async function generateMetadata({ params }: PageProps<"/app/activity/[id]">): Promise<Metadata> {
   const { id } = await params;
-  const session = await getCurrentSession();
-  const activity = await prisma.activity.findUnique({ where: { id } });
-  const visible = activity ? await canViewActivity(session?.user.id ?? null, activity) : false;
-  return { title: visible ? "Atividade" : NOT_FOUND_TITLE };
+  const { activity } = await loadActivity(id);
+  return { title: activity ? "Atividade" : NOT_FOUND_TITLE };
 }
 
 export default async function ActivityDetailPage({ params }: PageProps<"/app/activity/[id]">) {
   const { id } = await params;
-  const session = await getCurrentSession();
-  const viewerId = session?.user.id ?? null;
-
-  const activity = await prisma.activity.findUnique({
-    where: { id },
-    include: {
-      user: {
-        select: { id: true, name: true, username: true, image: true, profile: { select: { displayName: true } } },
-      },
-    },
-  });
+  const { viewerId, activity, hasGivenFg } = await loadActivity(id);
   if (!activity) notFound();
-
-  const allowed = await canViewActivity(viewerId, activity);
-  if (!allowed) notFound();
 
   // The name the user chose for the app, not the one from their Google account.
   const name = activity.user.profile?.displayName?.trim() || activity.user.name;
@@ -79,9 +92,6 @@ export default async function ActivityDetailPage({ params }: PageProps<"/app/act
   const summary = activity.summary as unknown as WorkoutActivitySummary;
   // Grouped per exercise (stored in workout order); session-volume entries of older summaries dropped.
   const prGroups = groupRecordsByExercise(summary.prs ?? [], (pr) => pr.exerciseName);
-  const hasGivenFg = viewerId
-    ? Boolean(await prisma.activityFG.findUnique({ where: { activityId_userId: { activityId: id, userId: viewerId } } }))
-    : false;
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-6 sm:px-6 sm:py-8">

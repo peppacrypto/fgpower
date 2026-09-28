@@ -3,6 +3,7 @@ import Link from "next/link";
 import { GArrow } from "@/components/ui/glyph";
 import { prisma } from "@/lib/db";
 import { SectionHead } from "@/components/ui/section-head";
+import { Masthead } from "@/components/ui/masthead";
 import { BEGINNER_PATH, readingOrder } from "@/lib/programming/principle-order";
 import { plural } from "@/lib/utils/format";
 
@@ -15,11 +16,11 @@ export default async function ScienceIndexPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
-      <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-muted">Por trás dos programas</span>
-      <h1 className="text-display mt-1 text-3xl font-extrabold sm:text-4xl">Princípios científicos</h1>
-      <p className="mt-2 text-sm text-muted">
-        Os conceitos que sustentam a programação da FGPOWER, com as evidências reais por trás de cada um.
-      </p>
+      <Masthead
+        kicker="Por trás dos programas"
+        title="Princípios científicos"
+        lead="Os conceitos que sustentam a programação da FGPOWER, com as evidências reais por trás de cada um."
+      />
 
       {path.length > 0 ? (
         <section className="mt-8">

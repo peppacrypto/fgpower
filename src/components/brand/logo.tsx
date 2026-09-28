@@ -2,11 +2,20 @@ import Image from "next/image";
 import { cn } from "@/lib/utils/cn";
 
 /** The metallic FG monogram tile — the compact mark (nav, favicon-adjacent contexts). */
-export function Logomark({ size = 32, className }: { size?: number; className?: string }) {
+export function Logomark({
+  size = 32,
+  className,
+  alt = "FGPOWER",
+}: {
+  size?: number;
+  className?: string;
+  /** "" when the name is printed right beside it (Wordmark), so it isn't read twice. */
+  alt?: string;
+}) {
   return (
     <Image
       src="/brand/fgpower-tile.png"
-      alt="FGPOWER"
+      alt={alt}
       width={size}
       height={size}
       className={cn("rounded-[22%]", className)}
@@ -27,7 +36,7 @@ export function Wordmark({
 }) {
   return (
     <span className={cn("inline-flex items-center gap-2.5 select-none", className)}>
-      <Logomark size={iconSize} />
+      <Logomark size={iconSize} alt="" />
       <span
         className={cn(
           "text-[17px] font-extrabold tracking-tight",

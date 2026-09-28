@@ -80,12 +80,12 @@ test("create a custom program and save it", async ({ page }) => {
     page.getByRole("button", { name: "Continuar" }).click(),
   ]);
 
-  await page.getByRole("button", { name: "Adicionar exercício" }).click();
+  await page.getByRole("button", { name: "Adicionar exercícios", exact: true }).click();
   await page.getByPlaceholder("Buscar exercício…").fill("supino");
-  await page.waitForTimeout(500);
-  await page.locator('dialog button:has-text("Supino")').first().click();
+  await page.locator('dialog[open] button[data-exercise-id]:has-text("Supino")').first().click();
+  await page.getByRole("button", { name: "Adicionar 1 exercício" }).click();
 
-  await expect(page.locator("text=Supino").first()).toBeVisible();
+  await expect(page.locator("[data-row-name]").first()).toContainText("Supino");
   await page.getByRole("button", { name: "Salvar programa" }).click();
   await expect(page.getByRole("button", { name: /Salvo/ })).toBeVisible({ timeout: 10_000 });
 });

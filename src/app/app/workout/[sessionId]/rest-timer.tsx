@@ -249,9 +249,10 @@ export function RestTimerBar({
     <button
       type="button"
       onClick={next.onGo}
-      className="-mx-1 flex min-h-10 w-[calc(100%+0.5rem)] items-center justify-between gap-2 px-1 text-left font-mono text-[11px] font-bold uppercase tracking-[0.14em] hover:underline"
+      className="-mx-1 flex min-h-10 w-[calc(100%+0.5rem)] items-center justify-between gap-2 px-1 text-left font-mono text-xs font-bold uppercase tracking-[0.14em] hover:underline"
     >
-      <span className="truncate">Próximo · {next.name}</span>
+      {/* Two lines, not cut: variants differ only at the end ("… - Pegada Aberta", W-166). */}
+      <span className="line-clamp-2 min-w-0 wrap-break-word">Próximo · {next.name}</span>
       <ChevronRight className="size-4 shrink-0" />
     </button>
   ) : null;
@@ -270,10 +271,10 @@ export function RestTimerBar({
           <>
             <div className="flex items-center justify-between gap-3">
               <div className="min-w-0 py-1">
-                <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em]">
+                <p className="font-mono text-xs font-bold uppercase tracking-[0.16em]">
                   {late ? `Descanso terminou há ${ago(now - timer.endsAt)}` : "Descanso concluído"}
                 </p>
-                {!next && upNext ? <p className="mt-0.5 truncate text-sm font-semibold">{upNext}</p> : null}
+                {!next && upNext ? <p className="mt-0.5 line-clamp-2 text-sm font-semibold wrap-break-word">{upNext}</p> : null}
               </div>
               <button
                 type="button"
@@ -289,18 +290,19 @@ export function RestTimerBar({
         ) : (
           <>
             {nextButton ?? (
-              <p className="truncate py-1.5 text-xs">
-                <span className="font-mono text-[11px] font-bold uppercase tracking-[0.14em]">
+              <p className="line-clamp-2 py-1.5 text-xs wrap-break-word">
+                <span className="font-mono text-xs font-bold uppercase tracking-[0.14em]">
                   {paused ? "Descanso pausado" : "Descanso"}
                 </span>
                 <span className="opacity-85"> · após {timer.after}</span>
               </p>
             )}
             <div className="flex items-center justify-between gap-2">
-              <span aria-hidden className="font-mono text-3xl font-bold tabular-nums">
+              {/* A notch smaller under 360px: the clock and the four buttons share a 320px row. */}
+              <span aria-hidden className="font-mono text-3xl font-bold tabular-nums max-[359px]:text-2xl">
                 {clock(Math.ceil(leftMs / 1000))}
               </span>
-              <div className="flex shrink-0 items-center gap-1.5">
+              <div className="flex shrink-0 items-center gap-1.5 max-[359px]:gap-1">
                 <button type="button" onClick={() => onAdjust(-15)} aria-label="Menos 15 segundos" className={cn(BAR_BUTTON, "px-2.5")}>
                   <Minus className="size-3.5" />
                   15s

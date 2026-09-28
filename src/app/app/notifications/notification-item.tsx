@@ -69,11 +69,15 @@ export function NotificationItem({ notification }: { notification: NotificationD
         // Your own milestones and records: the app's mark, not a "?" avatar.
         <Lettermark code="FG" className="size-9 shrink-0 text-[10px]" />
       )}
-      <div className="flex-1">
-        <p className="text-sm">{text}</p>
+      <div className="min-w-0 flex-1">
+        <p className="text-sm [overflow-wrap:anywhere]">{text}</p>
         <p className="text-xs text-muted">{formatAppDate(notification.createdAt)}</p>
       </div>
-      {!notification.readAt ? <span className="size-2 rounded-full bg-accent" aria-label="Não lida" /> : null}
+      {!notification.readAt ? (
+        <span className="size-2 shrink-0 bg-accent">
+          <span className="sr-only">Não lida</span>
+        </span>
+      ) : null}
     </div>
   );
 

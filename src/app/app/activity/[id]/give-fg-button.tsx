@@ -43,7 +43,13 @@ export function GiveFgButton({
 
   return (
     <div className="flex flex-col gap-1.5">
-      <Button variant={given ? "secondary" : "outline"} disabled={pending || isOwn} aria-pressed={given} onClick={toggle}>
+      <Button
+        variant={given ? "secondary" : "outline"}
+        disabled={pending || isOwn}
+        aria-pressed={given}
+        aria-label={`${isOwn ? "FGs no seu treino" : given ? "Remover seu FG" : "Dar FG neste treino"} (${count})`}
+        onClick={toggle}
+      >
         <Heart className="size-4" fill={given ? "currentColor" : "none"} />
         {count} {count === 1 ? "FG" : "FGs"}
       </Button>

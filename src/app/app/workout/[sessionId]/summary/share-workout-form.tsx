@@ -49,6 +49,8 @@ export function ShareWorkoutForm({
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState<"ok" | "failed" | null>(null);
   const [pending, startTransition] = useTransition();
+  /** What the last save did, for screen readers (W-172): the visible row changes shape instead of saying it. */
+  const [announced, setAnnounced] = useState("");
 
   const isOut = published != null && published.visibility !== "PRIVATE";
   const unchanged =
@@ -60,11 +62,15 @@ export function ShareWorkoutForm({
   function save(next: Visibility) {
     setError(null);
     setCopied(null);
+    setAnnounced("");
     startTransition(async () => {
       try {
         const { activityId } = await shareWorkoutSession({ sessionId, visibility: next, showDetailedLoads, caption });
         setPublished({ id: activityId, visibility: next, showDetailedLoads, caption: caption.trim() || null });
         setVisibility(next);
+        setAnnounced(
+          next === "PRIVATE" ? "Salvo como privado." : next === "PUBLIC" ? "Publicado para todos." : "Publicado para seguidores.",
+        );
       } catch {
         // Keep the choices on screen; a failed publish must not replace the page.
         const offline = typeof navigator !== "undefined" && !navigator.onLine;
@@ -201,7 +207,7 @@ export function ShareWorkoutForm({
 
           {isOut && unchanged ? (
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[11px] font-bold uppercase tracking-[0.14em]">
-              <span role="status" className="inline-flex items-center gap-1 text-success">
+              <span className="inline-flex items-center gap-1 text-success">
                 <GCheck className="size-3.5" />
                 Publicado
               </span>
@@ -235,6 +241,10 @@ export function ShareWorkoutForm({
           {error}
         </p>
       ) : null}
+      {/* Always in the page, so a change is announced (a status region added with its text may not be). */}
+      <p role="status" className="sr-only">
+        {pending ? "Salvando…" : copied === "ok" ? "Link copiado." : announced}
+      </p>
     </div>
   );
 }

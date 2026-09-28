@@ -101,10 +101,11 @@ describe("recommendTemplates", () => {
     expect(top({ ...home, daysPerWeek: 2, sessionMinutes: 90 }, 1)).toEqual(["full-body-express"]);
     expect(top({ ...home, goal: "GENERAL_FITNESS", daysPerWeek: 2 }, 1)).toEqual(["full-body-express"]);
     // 3×: the 3-day dumbbell plan for hypertrophy; for fitness in 45 min, the
-    // one that fits the session leads, and both dumbbell plans beat bodyweight.
+    // one that fits the session leads. Never the bodyweight plan: it needs a
+    // pull-up bar, which "halteres e talvez um banco" doesn't include.
     expect(top({ ...home, daysPerWeek: 3 }, 1)).toEqual(["home-dumbbells"]);
     expect(top({ ...home, daysPerWeek: 3, sessionMinutes: 60 }, 1)).toEqual(["home-dumbbells"]);
-    expect(top({ ...home, goal: "GENERAL_FITNESS" }, 3)).toEqual(["full-body-express", "home-dumbbells", "calisthenics"]);
+    expect(top({ ...home, goal: "GENERAL_FITNESS" }, 3)).toEqual(["full-body-express", "home-dumbbells", "dumbbell-upper-lower"]);
   });
 
   it("offers the 2-day dumbbell plan only to those who own dumbbells or a gym", () => {
