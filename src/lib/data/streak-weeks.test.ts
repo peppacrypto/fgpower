@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { thisWeekRule, programWeekView } from "@/lib/training/week-guidance";
+import { dayNumberOf, mondayOf } from "@/lib/training/day-rotation";
 import { streakWeeksFrom, summarizeStreak, type StreakEnrollment, type StreakSession } from "./streak-weeks";
 
 // São Paulo is UTC−3: 15:00Z is midday there. 2026-09-28 is a Monday.
@@ -96,6 +97,19 @@ describe("weekly streak weeks", () => {
     });
     expect(upcoming.thisWeek).toMatchObject({ deload: true, trained: false });
     expect(summarizeStreak(upcoming).remaining).toBe(1);
+  });
+  it("a week the user applied a deload to counts with any workout (lib/training/deload)", () => {
+    const applied = mondayOf(dayNumberOf(at("2026-09-21")));
+    const rows = streakWeeksFrom({
+      sessions: [...fullWeek("2026-09-14", 1), session(at("2026-09-22"), 0, 2)],
+      enrollments: [{ ...enrollment(at("2026-09-14")), deloadMondays: [applied] }],
+      profileDaysPerWeek: 3,
+      now: at("2026-09-29"),
+    });
+    expect(rows.weeks[1]).toMatchObject({ done: 1, met: false, deload: true, trained: true });
+    expect(summarizeStreak(rows).current).toBe(2);
+    // Only that week: the one before is judged as usual.
+    expect(rows.weeks[0]).toMatchObject({ deload: false });
   });
 
   it("without a program, every workout counts against the profile's days per week", () => {

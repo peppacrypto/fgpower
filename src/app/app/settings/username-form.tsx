@@ -9,7 +9,7 @@ import { runAction } from "@/components/social/run-action";
 import { ActionErrorText } from "@/components/social/session-expired";
 import { publicProfileLabel, USERNAME_RULE } from "@/lib/validation/username";
 import { cn } from "@/lib/utils/cn";
-import { INVALID_FIELD } from "./save-status";
+import { INVALID_FIELD } from "@/components/ui/save-status";
 
 const MONO = "font-mono text-[11px] font-bold uppercase tracking-[0.12em]";
 

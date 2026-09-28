@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ActivityCard } from "@/components/social/activity-card";
 import { Wordmark } from "@/components/brand/logo";
-import { FollowButton } from "./follow-button";
+import { FollowButton } from "@/components/social/follow-button";
 import type { WorkoutActivitySummary } from "@/lib/social/activity-summary";
 import Link from "next/link";
 import { formatNumber, pluralWord } from "@/lib/utils/format";
@@ -75,8 +75,9 @@ export default async function PublicProfilePage({ params }: PageProps<"/u/[usern
           <div className="mt-4">
             <FollowButton
               targetUserId={profile.id}
-              initialFollowing={profile.isFollowing}
-              initialPending={profile.hasPendingRequest}
+              username={profile.username}
+              name={profile.name}
+              initialRelation={profile.isFollowing ? "FOLLOWING" : profile.hasPendingRequest ? "REQUESTED" : "NONE"}
               isPrivate={!profile.isPublicAccount}
             />
           </div>

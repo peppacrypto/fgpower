@@ -7,6 +7,7 @@ import { PATH_HEADER } from "@/lib/auth/path-header";
 import { safeNextPath } from "@/lib/auth/safe-next";
 import { hadSessionCookie } from "@/lib/auth/session-cookie";
 import { loginAgainHref } from "@/lib/auth/session-expired";
+import { isAdminUser } from "@/lib/auth/roles";
 
 /**
  * The authoritative session check. Every protected server action, route
@@ -59,22 +60,14 @@ export async function requireUserOrThrow() {
   return session.user;
 }
 
-function isAdminEmail(email: string) {
-  const admins = (process.env.ADMIN_EMAILS ?? "")
-    .split(",")
-    .map((e) => e.trim().toLowerCase())
-    .filter(Boolean);
-  return admins.includes(email.toLowerCase());
-}
-
 /**
- * Admin gate for content curation routes (section 29). Trusts the
- * `admin` plugin's `role` field OR the ADMIN_EMAILS allowlist, so the very
- * first admin can be granted without a DB write.
+ * Admin gate for content curation and moderation routes (section 29). Trusts
+ * the `admin` plugin's `role` field OR the ADMIN_EMAILS allowlist (roles.ts
+ * isAdminUser), so the very first admin can be granted without a DB write.
  */
 export async function requireAdmin() {
   const user = await requireUser();
-  if (user.role !== "admin" && !isAdminEmail(user.email)) {
+  if (!isAdminUser(user)) {
     redirect("/app/today");
   }
   return user;
@@ -82,7 +75,7 @@ export async function requireAdmin() {
 
 export async function requireAdminOrThrow() {
   const user = await requireUserOrThrow();
-  if (user.role !== "admin" && !isAdminEmail(user.email)) {
+  if (!isAdminUser(user)) {
     throw new Error("FORBIDDEN");
   }
   return user;

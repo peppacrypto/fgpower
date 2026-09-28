@@ -63,7 +63,7 @@ import type { PickerExercise } from "@/lib/programming/exercise-facets";
 import { ExercisePicker } from "./exercise-picker";
 import { ExerciseRow, ROW_FIELD_LABELS, type RowErrors, type RowField } from "./exercise-row";
 import { LeaveSheet } from "./leave-sheet";
-import { ActionSheet, SheetItem } from "./action-sheet";
+import { ActionSheet, SheetItem } from "@/components/ui/action-sheet";
 import { VolumeStrip } from "./volume-strip";
 import { AutoGrowText } from "./auto-grow";
 

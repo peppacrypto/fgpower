@@ -3,6 +3,7 @@ import { dayNumberOf, mondayOf, repeatsDays } from "@/lib/training/day-rotation"
 import { isPartialEntryWeek } from "@/lib/training/program-calendar";
 import { weekCounts, weeklyStreak, type StreakResult, type StreakWeek } from "@/lib/training/streak";
 import { entryWeekTarget, getWeekGuidance } from "@/lib/training/week-guidance";
+import { effectiveDeload } from "@/lib/training/deload";
 
 /**
  * The weekly-streak input, built from the user's finished workouts (pure —
@@ -24,9 +25,10 @@ import { entryWeekTarget, getWeekGuidance } from "@/lib/training/week-guidance";
  *   workout; repeats count only where the plan repeats days), as Today's
  *   meter counts them — never cut to an entry week's cap. Without a program,
  *   every workout.
- * - A planned deload week (its program week's guidance says so) counts with
- *   any workout in it (lib/training/streak) — not a calendar week that holds
- *   only a finished block's late workout (lateBlockWorkout).
+ * - A deload week — planned (its program week's guidance says so) or applied
+ *   by the user (lib/training/deload effectiveDeload) — counts with any
+ *   workout in it (lib/training/streak); not a calendar week that holds only
+ *   a finished block's late workout (lateBlockWorkout).
  * - The entry week of a program activated Thursday–Sunday (and run or
  *   trained past it) is neutral: short of its target, it's never a miss.
  */
@@ -46,6 +48,8 @@ export interface StreakEnrollment {
   endedAt: Date | null;
   /** The enrollment's week counter (dates this week's guidance before its first workout). */
   currentWeek?: number;
+  /** Weeks the user turned into a deload (São Paulo Monday day numbers). */
+  deloadMondays?: number[];
   program: {
     daysPerWeek: number;
     durationWeeks: number | null;
@@ -179,7 +183,7 @@ function judgeWeek(
     done,
     target,
     met: done >= target,
-    deload: (guidance?.deload ?? false) && !lateBlockWorkout(monday, e, own, programWeek, allSessions),
+    deload: effectiveDeload(guidance?.deload, e.deloadMondays, monday) && !lateBlockWorkout(monday, e, own, programWeek, allSessions),
     trained: weekSessions.length > 0,
     enrollmentId: e.id,
   };

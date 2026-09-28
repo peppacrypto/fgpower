@@ -3,7 +3,7 @@
 import { ActionErrorText } from "@/components/social/session-expired";
 
 /**
- * A labelled on/off switch row used by the autosaving Settings blocks. The
+ * A labelled on/off switch row used by the autosaving blocks (Settings). The
  * whole row (at least 44px tall) is the target; the switch is drawn square,
  * Dossiê-style — a ruled track with a square knob that inks accent when on —
  * over a real checkbox (role="switch"), which keeps the keyboard, the checked

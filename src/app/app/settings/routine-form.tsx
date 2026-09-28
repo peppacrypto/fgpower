@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils/cn";
 import { formatDuration } from "@/lib/utils/format";
 import { DaysMatchNote, WeekdayChips } from "@/app/onboarding/weekday-chips";
 import { FieldError, FormError, useProfileSave } from "./profile-form";
-import { INVALID_FIELD, SaveStatus } from "./save-status";
+import { INVALID_FIELD, SaveStatus } from "@/components/ui/save-status";
 
 const SESSION_MINUTES = [30, 45, 60, 75, 90, 120];
 

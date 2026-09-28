@@ -12,7 +12,7 @@ import {
 import { runAction } from "@/components/social/run-action";
 import { ActionErrorText } from "@/components/social/session-expired";
 import { cn } from "@/lib/utils/cn";
-import { INVALID_FIELD, SaveStatus } from "./save-status";
+import { INVALID_FIELD, SaveStatus } from "@/components/ui/save-status";
 
 const GOAL_LABEL: Record<string, string> = {
   HYPERTROPHY: "Hipertrofia",

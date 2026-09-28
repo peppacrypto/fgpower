@@ -15,6 +15,7 @@ import { blockEnds, countedWeeks } from "@/lib/programming/block-progress";
 import { closeBlock, entryWeekWasTrained, recordWorkoutMilestone } from "@/lib/data/program-lifecycle";
 import { isStillEditable } from "@/lib/data/workout-session";
 import { buildWorkoutActivitySummary } from "@/lib/social/activity-summary";
+import { afterFinish, afterRescore } from "@/lib/workouts/finish-hooks";
 
 type Tx = Prisma.TransactionClient;
 
@@ -43,11 +44,16 @@ async function openSessionForDay(
   });
   if (day.program.userId !== userId) throw new Error("FORBIDDEN");
 
-  const enrollment = enrollmentId
-    ? await prisma.programEnrollment.findUniqueOrThrow({ where: { id: enrollmentId } })
-    : await prisma.programEnrollment.findFirst({
-        where: { userId, programId: day.programId, status: "ACTIVE" },
-      });
+  const [enrollment, defaults] = await Promise.all([
+    enrollmentId
+      ? prisma.programEnrollment.findUniqueOrThrow({ where: { id: enrollmentId } })
+      : prisma.programEnrollment.findFirst({
+          where: { userId, programId: day.programId, status: "ACTIVE" },
+        }),
+    // The workout carries the profile's sharing defaults from the start (decision
+    // 10): finishing it publishes it that way (finish-hooks → publishOnFinish).
+    prisma.profile.findUnique({ where: { userId }, select: { defaultWorkoutVisibility: true, showLoadsPublicly: true } }),
+  ]);
   if (enrollment && enrollment.userId !== userId) throw new Error("FORBIDDEN");
 
   return prisma.$transaction(async (tx) => {
@@ -133,6 +139,8 @@ async function openSessionForDay(
         status: "IN_PROGRESS",
         programWeek: enrollment?.currentWeek,
         programDayIndex: day.dayIndex,
+        visibility: defaults?.defaultWorkoutVisibility ?? "PRIVATE",
+        showDetailedLoads: defaults?.showLoadsPublicly ?? false,
         daySnapshot: day as never,
         exerciseLogs: {
           create: day.exercises.map((ex) => ({
@@ -552,6 +560,7 @@ export async function addExerciseToWorkout(
         rpeTarget: true,
         restSeconds: true,
         tempo: true,
+        groupKey: true,
         sets: { where: { setType: { not: "WARMUP" }, isExtra: false, ...SET_HAS_DATA }, select: { id: true } },
       },
     });
@@ -577,6 +586,8 @@ export async function addExerciseToWorkout(
           rpeTarget: after.rpeTarget,
           restSeconds: after.restSeconds,
           tempo: after.tempo,
+          // A stand-in keeps its place in a superset (W-104).
+          groupKey: after.groupKey,
         }
       : { ...ADDED_EXERCISE_DEFAULTS, restSeconds: after?.restSeconds ?? ADDED_EXERCISE_DEFAULTS.restSeconds };
     const log = await tx.workoutExerciseLog.create({
@@ -847,6 +858,7 @@ async function finishSession(
 
   if (outcome === "GONE") return { ok: false, reason: "NOT_FOUND" };
   if (outcome === "EMPTY") return { ok: false, reason: "EMPTY" };
+  let published = false;
   if (outcome === "FLIPPED") {
     try {
       await checkAndRecordPersonalRecords(userId, sessionId);
@@ -858,17 +870,21 @@ async function finishSession(
       // The workout is saved; a PR bookkeeping failure must not look like a failed finish.
       console.error("PR recording failed", sessionId, err);
     }
+    let milestone: number | null = null;
     try {
       // The 10th/25th/50th/100th workout: a private milestone (the summary stamps its number).
-      await recordWorkoutMilestone(userId, sessionId);
+      milestone = await recordWorkoutMilestone(userId, sessionId);
     } catch (err) {
       console.error("Milestone recording failed", sessionId, err);
     }
+    // Publishing and the achievements log, after the records (the card lists them).
+    published = (await afterFinish({ userId, sessionId, finishedAt, now, milestone })).activityId !== null;
   }
 
   revalidatePath("/app/today");
   revalidatePath("/app/history");
   if (blockClosed) revalidatePath("/app/programs");
+  if (published) revalidatePath("/app/feed");
   return { ok: true, summaryUrl };
 }
 
@@ -1151,7 +1167,9 @@ export async function editFinishedWorkout(sessionId: string, edits: FinishedSetE
   if (typeof outcome === "string") return { ok: false, reason: outcome };
 
   // Its own card is rebuilt there too, with the corrected totals.
-  await rescoreRecords(user.id, [sessionId, ...(await laterWorkoutsWith(user.id, outcome.exerciseIds, outcome.finishedAt))]);
+  const rescored = [sessionId, ...(await laterWorkoutsWith(user.id, outcome.exerciseIds, outcome.finishedAt))];
+  await rescoreRecords(user.id, rescored);
+  await afterRescore(user.id, rescored);
   revalidateFinished(sessionId);
   redirect(`/app/workout/${sessionId}/summary?corrigido=1`, RedirectType.replace);
 }
@@ -1218,7 +1236,10 @@ export async function deleteWorkoutSession(sessionId: string): Promise<FinishedE
   });
   if (typeof outcome === "string") return { ok: false, reason: outcome };
 
-  await rescoreRecords(user.id, await laterWorkoutsWith(user.id, outcome.exerciseIds, outcome.finishedAt));
+  const later = await laterWorkoutsWith(user.id, outcome.exerciseIds, outcome.finishedAt);
+  await rescoreRecords(user.id, later);
+  // Its own notifications went with it (Notification.sessionId cascades).
+  await afterRescore(user.id, later);
   revalidateFinished(sessionId);
   redirect("/app/today?excluido=1", RedirectType.replace);
 }

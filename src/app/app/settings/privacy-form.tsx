@@ -2,9 +2,9 @@
 
 import { Select } from "@/components/ui/input";
 import { updatePrivacySettings, type PrivacySettings } from "@/lib/actions/profile";
-import { SaveStatus } from "./save-status";
-import { Toggle } from "./toggle";
-import { useAutosave } from "./use-autosave";
+import { SaveStatus } from "@/components/ui/save-status";
+import { Toggle } from "@/components/ui/toggle";
+import { useAutosave } from "@/components/ui/use-autosave";
 
 export function PrivacyForm({ initial }: { initial: PrivacySettings }) {
   // A failed save rolls back and shows its message on the row that was tapped.

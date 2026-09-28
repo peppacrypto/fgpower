@@ -52,6 +52,15 @@ export const VOLUME_MUSCLES = [
 
 export type VolumeMuscleKey = (typeof VOLUME_MUSCLES)[number]["key"];
 
+/**
+ * Whether an exercise's sets count as training volume: stretches and cardio
+ * don't — in the builder's weekly strip, the program rules, Today's weekly
+ * review, progress charts and the fatigue signal alike.
+ */
+export function countsAsVolume(category: string | null | undefined): boolean {
+  return category !== "STRETCHING" && category !== "CARDIO";
+}
+
 export function volumeMuscle(key: string | null | undefined) {
   return VOLUME_MUSCLES.find((m) => m.key === key) ?? null;
 }

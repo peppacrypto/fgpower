@@ -53,7 +53,10 @@ export async function getWorkoutSessionForExecution(sessionId: string) {
           restSeconds: true,
           wasSkipped: true,
           notes: true,
+          // Supersets / circuits (W-104): adjacent logs sharing a key (lib/programming groups).
+          groupKey: true,
           // "Trocado · no lugar de …" (W-006): the exercise the program asked for.
+          substitutedFromExerciseId: true,
           substitutedFrom: { select: { namePt: true } },
           exercise: {
             select: {
@@ -164,7 +167,7 @@ export async function getWorkoutUserContext(userId: string, firstWorkouts = 3) {
   const [profile, finished] = await Promise.all([
     prisma.profile.findUnique({
       where: { userId },
-      select: { restTimerSound: true, loadIncrementKg: true, limitations: true },
+      select: { restTimerSound: true, hapticsEnabled: true, loadIncrementKg: true, limitations: true },
     }),
     prisma.workoutSession.findMany({
       where: { userId, status: "COMPLETED" },

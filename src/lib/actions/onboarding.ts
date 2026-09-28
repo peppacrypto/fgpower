@@ -8,6 +8,7 @@ import { SESSION_EXPIRED_ERROR } from "@/lib/auth/session-expired";
 import { findAvailableUsername, isUsernameTaken } from "@/lib/data/profile";
 import { prisma } from "@/lib/db";
 import { onboardingSchema } from "@/lib/validation/onboarding";
+import { NEW_PROFILE_SHARING } from "@/lib/social/publish";
 import { slugifyUsername, usernameError, USERNAME_TAKEN } from "@/lib/validation/username";
 
 export interface OnboardingFormState {
@@ -76,7 +77,7 @@ export async function completeOnboarding(
   };
   await prisma.profile.upsert({
     where: { userId: user.id },
-    create: { userId: user.id, ...answers },
+    create: { userId: user.id, ...answers, ...NEW_PROFILE_SHARING },
     update: answers,
   });
   if (handle.changed) await refreshSessionCache();

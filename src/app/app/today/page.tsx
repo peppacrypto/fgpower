@@ -61,6 +61,10 @@ import { nudgeDaysLeft } from "./streak-nudge";
 import { WeekReviewFrame } from "./week-review";
 import { WEEK_REVIEW_COOKIE, WEEK_START_COOKIE, readWeekStart } from "./week-start";
 import { getEnrollmentProgress } from "@/lib/data/user-programs";
+import { NotificationsBell } from "@/components/nav/notifications-bell";
+import { TeamStrip } from "./team-strip";
+import { FatigueCard } from "./fatigue-card";
+import { WeighInRow } from "./weigh-in-row";
 
 export const metadata: Metadata = { title: "Hoje" };
 
@@ -313,18 +317,21 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
       <ClearParams keys={NOTICE_PARAMS} />
       {resumeId ? <ResumeWorkout sessionId={resumeId} /> : null}
-      {/* Masthead */}
-      <div>
-        <span className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-muted">{dateStr}</span>
-        <h1 className="text-display mt-1 text-3xl font-extrabold sm:text-4xl">
-          {greeting(wall.hour)}, {firstName}.
-        </h1>
-        {last ? (
-          <p className="mt-1.5 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-muted" data-last-workout>
-            Último treino · <span className="text-foreground/80">{last.name}</span> ·{" "}
-            <span className="whitespace-nowrap">{formatSpDaysAgo(last.finishedAt, now)}</span>
-          </p>
-        ) : null}
+      {/* Masthead (the notifications bell on its right) */}
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <span className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-muted">{dateStr}</span>
+          <h1 className="text-display mt-1 text-3xl font-extrabold sm:text-4xl">
+            {greeting(wall.hour)}, {firstName}.
+          </h1>
+          {last ? (
+            <p className="mt-1.5 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-muted" data-last-workout>
+              Último treino · <span className="text-foreground/80">{last.name}</span> ·{" "}
+              <span className="whitespace-nowrap">{formatSpDaysAgo(last.finishedAt, now)}</span>
+            </p>
+          ) : null}
+        </div>
+        <NotificationsBell />
       </div>
 
       {/* One-time outcome notices (the params are cleared once shown) */}
@@ -483,6 +490,9 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
         )}
       </div>
 
+      {/* A fatigue signal or an applied deload (W-128). */}
+      <FatigueCard userId={user.id} now={now} />
+
       {/* Monday/Tuesday: last week, closed out (W-129) */}
       {review && lastWeekRow && lastWeekRow.trained ? (
         <div className="mt-6">
@@ -603,6 +613,9 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
         ) : null}
       </div>
 
+      {/* Today's weigh-in, when the program asks for one (W-083). */}
+      <WeighInRow userId={user.id} now={now} />
+
       {/* Every day of the program, with where it stands this week */}
       {enrollment && days.length > 0 ? (
         <section className="mt-10">
@@ -647,6 +660,10 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
           </div>
         </section>
       ) : null}
+
+      {/* The people you follow (W-139). At most one optional prompt per visit:
+          the team invite gives way to the fatigue card and the weigh-in. */}
+      <TeamStrip userId={user.id} now={now} finishedWorkouts={habit.finishedWorkouts} allowInvite />
 
       {/* PRs */}
       {recentPrs.length > 0 ? (

@@ -724,6 +724,7 @@
      },
      {
       "exerciseSlug": "face-pull",
+      "groupKey": "A",
       "sets": 2,
       "repMin": 12,
       "repMax": 20,
@@ -735,6 +736,7 @@
      },
      {
       "exerciseSlug": "standing-calf-raises",
+      "groupKey": "A",
       "sets": 4,
       "repMin": 10,
       "repMax": 15,
@@ -963,6 +965,7 @@
      },
      {
       "exerciseSlug": "side-lateral-raise",
+      "groupKey": "A",
       "sets": 2,
       "repMin": 15,
       "repMax": 25,
@@ -974,6 +977,7 @@
      },
      {
       "exerciseSlug": "calf-press-on-the-leg-press-machine",
+      "groupKey": "A",
       "sets": 4,
       "repMin": 12,
       "repMax": 20,
@@ -1275,6 +1279,7 @@
      },
      {
       "exerciseSlug": "cable-rear-delt-fly",
+      "groupKey": "A",
       "sets": 2,
       "repMin": 15,
       "repMax": 20,
@@ -1286,6 +1291,7 @@
      },
      {
       "exerciseSlug": "standing-calf-raises",
+      "groupKey": "A",
       "sets": 4,
       "repMin": 12,
       "repMax": 20,
@@ -1373,6 +1379,7 @@
      },
      {
       "exerciseSlug": "seated-triceps-press",
+      "groupKey": "A",
       "sets": 2,
       "repMin": 10,
       "repMax": 15,
@@ -1384,6 +1391,7 @@
      },
      {
       "exerciseSlug": "incline-dumbbell-curl",
+      "groupKey": "A",
       "sets": 2,
       "repMin": 8,
       "repMax": 12,
@@ -1740,6 +1748,7 @@
      },
      {
       "exerciseSlug": "side-lateral-raise",
+      "groupKey": "A",
       "sets": 4,
       "repMin": 12,
       "repMax": 20,
@@ -1751,6 +1760,7 @@
      },
      {
       "exerciseSlug": "cable-rope-overhead-triceps-extension",
+      "groupKey": "A",
       "sets": 4,
       "repMin": 12,
       "repMax": 20,
@@ -1892,6 +1902,7 @@
      },
      {
       "exerciseSlug": "standing-calf-raises",
+      "groupKey": "A",
       "sets": 4,
       "repMin": 10,
       "repMax": 15,
@@ -1903,6 +1914,7 @@
      },
      {
       "exerciseSlug": "cable-seated-lateral-raise",
+      "groupKey": "A",
       "sets": 3,
       "repMin": 15,
       "repMax": 25,
@@ -1968,6 +1980,7 @@
      },
      {
       "exerciseSlug": "cable-hammer-curls-rope-attachment",
+      "groupKey": "A",
       "sets": 2,
       "repMin": 12,
       "repMax": 20,
@@ -1979,6 +1992,7 @@
      },
      {
       "exerciseSlug": "ez-bar-skullcrusher",
+      "groupKey": "A",
       "sets": 2,
       "repMin": 8,
       "repMax": 12,
@@ -2077,6 +2091,7 @@
      },
      {
       "exerciseSlug": "calf-press-on-the-leg-press-machine",
+      "groupKey": "A",
       "sets": 4,
       "repMin": 15,
       "repMax": 25,
@@ -2088,6 +2103,7 @@
      },
      {
       "exerciseSlug": "side-lateral-raise",
+      "groupKey": "A",
       "sets": 2,
       "repMin": 15,
       "repMax": 25,
@@ -2336,6 +2352,7 @@
      },
      {
       "exerciseSlug": "side-lateral-raise",
+      "groupKey": "A",
       "sets": 3,
       "repMin": 15,
       "repMax": 25,
@@ -2347,6 +2364,7 @@
      },
      {
       "exerciseSlug": "cable-rope-overhead-triceps-extension",
+      "groupKey": "A",
       "sets": 2,
       "repMin": 15,
       "repMax": 20,
@@ -2412,6 +2430,7 @@
      },
      {
       "exerciseSlug": "standing-calf-raises",
+      "groupKey": "A",
       "sets": 4,
       "repMin": 15,
       "repMax": 25,
@@ -2423,6 +2442,7 @@
      },
      {
       "exerciseSlug": "cable-rear-delt-fly",
+      "groupKey": "A",
       "sets": 2,
       "repMin": 15,
       "repMax": 20,
@@ -2662,6 +2682,7 @@
      },
      {
       "exerciseSlug": "calf-press-on-the-leg-press-machine",
+      "groupKey": "A",
       "sets": 4,
       "repMin": 15,
       "repMax": 25,
@@ -2673,6 +2694,7 @@
      },
      {
       "exerciseSlug": "side-lateral-raise",
+      "groupKey": "A",
       "sets": 3,
       "repMin": 15,
       "repMax": 25,
@@ -3051,6 +3073,7 @@
      },
      {
       "exerciseSlug": "standing-low-pulley-one-arm-triceps-extension",
+      "groupKey": "A",
       "sets": 2,
       "repMin": 10,
       "repMax": 15,
@@ -3062,6 +3085,7 @@
      },
      {
       "exerciseSlug": "incline-dumbbell-curl",
+      "groupKey": "A",
       "sets": 2,
       "repMin": 8,
       "repMax": 12,
@@ -3192,6 +3216,7 @@
      },
      {
       "exerciseSlug": "preacher-curl",
+      "groupKey": "A",
       "sets": 2,
       "repMin": 10,
       "repMax": 15,
@@ -3203,6 +3228,7 @@
      },
      {
       "exerciseSlug": "cable-rope-overhead-triceps-extension",
+      "groupKey": "A",
       "sets": 2,
       "repMin": 12,
       "repMax": 20,
@@ -3450,6 +3476,7 @@
      },
      {
       "exerciseSlug": "face-pull",
+      "groupKey": "A",
       "sets": 2,
       "repMin": 12,
       "repMax": 20,
@@ -3461,6 +3488,7 @@
      },
      {
       "exerciseSlug": "triceps-pushdown-v-bar-attachment",
+      "groupKey": "A",
       "sets": 2,
       "repMin": 10,
       "repMax": 15,
@@ -3526,6 +3554,7 @@
      },
      {
       "exerciseSlug": "standing-calf-raises",
+      "groupKey": "A",
       "sets": 4,
       "repMin": 10,
       "repMax": 15,
@@ -3537,6 +3566,7 @@
      },
      {
       "exerciseSlug": "hanging-leg-raise",
+      "groupKey": "A",
       "sets": 3,
       "repMin": 8,
       "repMax": 15,
@@ -3754,6 +3784,7 @@
      },
      {
       "exerciseSlug": "standing-calf-raises",
+      "groupKey": "A",
       "sets": 4,
       "repMin": 15,
       "repMax": 20,
@@ -3765,6 +3796,7 @@
      },
      {
       "exerciseSlug": "side-lateral-raise",
+      "groupKey": "A",
       "sets": 3,
       "repMin": 12,
       "repMax": 20,
@@ -3980,6 +4012,7 @@
      },
      {
       "exerciseSlug": "cable-crossover",
+      "groupKey": "A",
       "sets": 2,
       "repMin": 12,
       "repMax": 20,
@@ -3991,6 +4024,7 @@
      },
      {
       "exerciseSlug": "cable-rope-overhead-triceps-extension",
+      "groupKey": "A",
       "sets": 2,
       "repMin": 10,
       "repMax": 15,
@@ -4143,6 +4177,7 @@
      },
      {
       "exerciseSlug": "standing-calf-raises",
+      "groupKey": "A",
       "sets": 3,
       "repMin": 10,
       "repMax": 15,
@@ -4154,6 +4189,7 @@
      },
      {
       "exerciseSlug": "cable-seated-lateral-raise",
+      "groupKey": "A",
       "sets": 3,
       "repMin": 15,
       "repMax": 25,
@@ -4219,6 +4255,7 @@
      },
      {
       "exerciseSlug": "preacher-curl",
+      "groupKey": "A",
       "sets": 2,
       "repMin": 10,
       "repMax": 15,
@@ -4230,6 +4267,7 @@
      },
      {
       "exerciseSlug": "ez-bar-skullcrusher",
+      "groupKey": "A",
       "sets": 2,
       "repMin": 8,
       "repMax": 12,
@@ -4306,6 +4344,7 @@
      },
      {
       "exerciseSlug": "calf-press-on-the-leg-press-machine",
+      "groupKey": "A",
       "sets": 3,
       "repMin": 12,
       "repMax": 20,
@@ -4317,6 +4356,7 @@
      },
      {
       "exerciseSlug": "side-lateral-raise",
+      "groupKey": "A",
       "sets": 2,
       "repMin": 15,
       "repMax": 25,
@@ -4511,6 +4551,7 @@
      },
      {
       "exerciseSlug": "cable-rope-overhead-triceps-extension",
+      "groupKey": "A",
       "sets": 2,
       "repMin": 10,
       "repMax": 15,
@@ -4522,6 +4563,7 @@
      },
      {
       "exerciseSlug": "side-lateral-raise",
+      "groupKey": "A",
       "sets": 2,
       "repMin": 10,
       "repMax": 15,
@@ -4576,6 +4618,7 @@
      },
      {
       "exerciseSlug": "face-pull",
+      "groupKey": "A",
       "sets": 2,
       "repMin": 15,
       "repMax": 20,
@@ -4587,6 +4630,7 @@
      },
      {
       "exerciseSlug": "standing-calf-raises",
+      "groupKey": "A",
       "sets": 4,
       "repMin": 10,
       "repMax": 15,
@@ -4815,6 +4859,7 @@
      },
      {
       "exerciseSlug": "side-lateral-raise",
+      "groupKey": "A",
       "sets": 3,
       "repMin": 10,
       "repMax": 15,
@@ -4826,6 +4871,7 @@
      },
      {
       "exerciseSlug": "calf-press-on-the-leg-press-machine",
+      "groupKey": "A",
       "sets": 4,
       "repMin": 15,
       "repMax": 25,

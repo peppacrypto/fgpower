@@ -340,6 +340,8 @@ interface GeneratedProgram {
       exerciseSlug: string; sets: number; repMin: number; repMax: number;
       rirTarget: number; restSeconds: number; warmupSets?: number;
       notesEn?: string; notesPt?: string;
+      /** Superset / circuit label shared by adjacent rows ("A"). */
+      groupKey?: string | null;
     }[];
   }[];
 }
@@ -400,7 +402,7 @@ async function seedGeneratedPrograms() {
         }
         await prisma.workoutTemplateExercise.create({
           data: {
-            dayId: dayRow.id, exerciseId: exercise.id, sortOrder: sortEx++,
+            dayId: dayRow.id, exerciseId: exercise.id, sortOrder: sortEx++, groupKey: ex.groupKey ?? null,
             sets: ex.sets, repMin: ex.repMin, repMax: ex.repMax, rirTarget: ex.rirTarget,
             restSeconds: ex.restSeconds, warmupSets: ex.warmupSets ?? 0,
             notesEn: ex.notesEn ?? null, notesPt: ex.notesPt ?? null,

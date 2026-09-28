@@ -18,12 +18,13 @@ import { formatDuration, formatKg, formatNumber, formatVolume, plural } from "@/
 import { cn } from "@/lib/utils/cn";
 import { isWorkoutMilestone } from "@/lib/programming/milestones";
 import { BlockDonePanel } from "@/components/programs/block-done-panel";
-import { InstallAppCard } from "@/components/pwa/install-app-card";
+import { PostWorkoutAsks } from "@/components/reminders/post-workout-asks";
 import { formatDayNumber, formatSpShortDate, type LastTimeDelta } from "./dossier";
 import { loadWorkoutSummary, type WorkoutSummary } from "./summary-data";
 import { ShareWorkoutForm } from "./share-workout-form";
 import { SummaryMenu } from "./summary-menu";
 import { KeepSwapButton } from "./keep-swap-button";
+import { CheckInSlot } from "./check-in-slot";
 import { ClearParams } from "@/app/app/today/clear-params";
 
 export async function generateMetadata({ params }: PageProps<"/app/workout/[sessionId]/summary">): Promise<Metadata> {
@@ -122,6 +123,9 @@ export default async function WorkoutSummaryPage({ params, searchParams }: PageP
         </div>
       </header>
 
+      {/* How it went (effort, soreness, sleep, weight) — optional, owner-only (W-127). */}
+      <CheckInSlot userId={user.id} sessionId={session.id} correctableUntil={correctableUntil} />
+
       {/* Who sees it — near the top, compact; the workout itself is already saved. */}
       <section aria-label="Compartilhar treino" className="mt-5 border-y border-border py-3">
         <ShareWorkoutForm sessionId={session.id} initial={share.initial} published={share.published} />
@@ -213,8 +217,8 @@ export default async function WorkoutSummaryPage({ params, searchParams }: PageP
       </section>
 
       {blockDone ? <BlockDonePanel block={blockDone} className="mt-8" /> : next ? <NextUp next={next} /> : <ArchiveExit />}
-      {/* The one install ask: after the first workouts, never on a past workout opened from the history. */}
-      {next || blockDone ? <InstallAppCard finishedWorkouts={ordinal} className="mt-6" /> : null}
+      {/* The one ask (reminders or install): after the first workouts, never on a past workout opened from the history. */}
+      {next || blockDone ? <PostWorkoutAsks userId={user.id} finishedWorkouts={ordinal} className="mt-6" /> : null}
     </div>
   );
 }

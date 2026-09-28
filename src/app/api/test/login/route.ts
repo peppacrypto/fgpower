@@ -20,8 +20,9 @@ export async function POST(request: Request) {
     res = await auth.api.signUpEmail({ body: { email, password, name }, asResponse: true });
   }
 
-  const setCookie = res.headers.get("set-cookie");
+  // One header per cookie: get("set-cookie") joins them, and the joined value
+  // read back gave the session token the 5-minute Max-Age of the cache cookie.
   const response = NextResponse.json({ ok: true });
-  if (setCookie) response.headers.set("set-cookie", setCookie);
+  for (const cookie of res.headers.getSetCookie()) response.headers.append("set-cookie", cookie);
   return response;
 }

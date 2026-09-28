@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { ServiceWorkerRegistration } from "@/components/pwa/service-worker-registration";
+import { ThemeScript } from "@/components/theme/theme-script";
+import { ThemeSync } from "@/components/theme/theme-sync";
 import "./globals.css";
 
 const inter = Inter({
@@ -57,9 +59,14 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="pt-BR" className={`${inter.variable} ${jetbrainsMono.variable} h-full antialiased`} suppressHydrationWarning>
+      <head>
+        {/* The device's theme choice, applied before the first paint (never cookies() here: every page would turn dynamic). */}
+        <ThemeScript />
+      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         {children}
         <ServiceWorkerRegistration />
+        <ThemeSync />
       </body>
     </html>
   );

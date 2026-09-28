@@ -1,20 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState, useTransition, type KeyboardEvent } from "react";
+import { useState, useTransition } from "react";
 import { GArrow, GCheck } from "@/components/ui/glyph";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/input";
+import { VisibilityControl, type Visibility } from "@/components/social/visibility-control";
 import { shareWorkoutSession } from "@/lib/actions/activities";
-import { cn } from "@/lib/utils/cn";
-
-type Visibility = "PRIVATE" | "FOLLOWERS" | "PUBLIC";
-
-const VISIBILITY_OPTIONS: { value: Visibility; label: string }[] = [
-  { value: "PRIVATE", label: "Privado" },
-  { value: "FOLLOWERS", label: "Seguidores" },
-  { value: "PUBLIC", label: "Público" },
-];
 
 interface Published {
   id: string;
@@ -100,21 +92,9 @@ export function ShareWorkoutForm({
 
   const actionLabel = isOut ? "Atualizar" : visibility === "FOLLOWERS" ? "Publicar para seguidores" : "Publicar";
 
-  // A radio group: one tab stop (the checked option), arrows move and select.
-  const optionRefs = useRef<(HTMLButtonElement | null)[]>([]);
   function choose(value: Visibility) {
     setVisibility(value);
     setError(null);
-  }
-  function onOptionKeyDown(e: KeyboardEvent<HTMLButtonElement>, index: number) {
-    const step = e.key === "ArrowRight" || e.key === "ArrowDown" ? 1 : e.key === "ArrowLeft" || e.key === "ArrowUp" ? -1 : 0;
-    const target =
-      e.key === "Home" ? 0 : e.key === "End" ? VISIBILITY_OPTIONS.length - 1 : step !== 0 ? index + step : null;
-    if (target == null) return;
-    e.preventDefault();
-    const i = (target + VISIBILITY_OPTIONS.length) % VISIBILITY_OPTIONS.length;
-    choose(VISIBILITY_OPTIONS[i].value);
-    optionRefs.current[i]?.focus();
   }
 
   return (
@@ -131,31 +111,12 @@ export function ShareWorkoutForm({
         >
           Quem vê
         </span>
-        <div role="radiogroup" aria-labelledby={`share-${sessionId}`} className="flex min-w-0 border border-border @min-[21rem]:flex-1">
-          {VISIBILITY_OPTIONS.map((opt, i) => {
-            const on = visibility === opt.value;
-            return (
-              <button
-                key={opt.value}
-                ref={(el) => {
-                  optionRefs.current[i] = el;
-                }}
-                type="button"
-                role="radio"
-                aria-checked={on}
-                tabIndex={on ? 0 : -1}
-                onClick={() => choose(opt.value)}
-                onKeyDown={(e) => onOptionKeyDown(e, i)}
-                className={cn(
-                  "min-h-10 min-w-0 flex-1 border-l border-border px-1 text-[13px] transition-colors first:border-l-0",
-                  on ? "bg-accent-soft font-semibold text-accent" : "text-muted hover:bg-surface-2",
-                )}
-              >
-                {opt.label}
-              </button>
-            );
-          })}
-        </div>
+        <VisibilityControl
+          value={visibility}
+          onChange={choose}
+          labelledBy={`share-${sessionId}`}
+          className="@min-[21rem]:flex-1"
+        />
       </div>
 
       {visibility === "PRIVATE" ? (

@@ -5,6 +5,7 @@ import { blockProgress, countedWeeks, entryWeekEnd, resumePoint, type BlockProgr
 import { blockCompletedSummary, isWorkoutMilestone, workoutMilestoneSummary } from "@/lib/programming/milestones";
 import { layOutWeek } from "@/lib/programming/schedule";
 import { SHOWN_PR_KINDS } from "@/lib/training/personal-records-core";
+import { createNotification, notificationKey } from "@/lib/social/notifications";
 import { GD_SERIES, seriesPosition } from "@/lib/training/program-calendar";
 import { startOfWeek } from "@/lib/training/week";
 
@@ -122,8 +123,9 @@ export async function getBlockProgress(
  * Ends an ACTIVE enrollment as COMPLETED — once: a second call (another tab,
  * a redo after the end, the calendar check) finds it no longer ACTIVE and
  * does nothing. The program moves to "Arquivados" (read there as
- * "Concluído"); a PRIVATE PROGRAM_COMPLETED activity and a notification
- * record it. Nothing is posted publicly. Returns whether it closed the block.
+ * "Concluído"); a PRIVATE PROGRAM_COMPLETED activity and a (read)
+ * notification record it. Nothing is posted publicly. Returns whether it
+ * closed the block.
  */
 export async function closeBlock(db: Db, p: { userId: string; enrollmentId: string; now: Date }): Promise<boolean> {
   const closed = await db.programEnrollment.updateMany({
@@ -185,15 +187,22 @@ export async function closeBlock(db: Db, p: { userId: string; enrollmentId: stri
     },
     select: { id: true },
   });
-  await db.notification.create({
-    data: {
+  // The user's own achievement: logged already read (never the unread pip), once
+  // per block — a block reopened by deleting its last workout and closed again
+  // gets a fresh row (the old one went with its activity).
+  await createNotification(
+    db,
+    {
       recipientId: p.userId,
       actorId: null,
       type: "PROGRAM_COMPLETED",
+      dedupeKey: notificationKey.block(enrollment.id),
       activityId: activity.id,
       data: { enrollmentId: enrollment.id, programName: program.name, templateSlug },
+      read: true,
     },
-  });
+    p.now,
+  );
   return true;
 }
 

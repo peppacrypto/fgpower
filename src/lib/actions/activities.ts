@@ -67,11 +67,3 @@ export async function shareWorkoutSession(input: ShareWorkoutInput): Promise<{ a
   revalidatePath(`/app/workout/${session.id}/summary`);
   return { activityId: activity.id };
 }
-
-export async function setActivityVisibility(sessionId: string, visibility: "PRIVATE" | "FOLLOWERS" | "PUBLIC") {
-  const user = await requireUserOrThrow();
-  const activity = await prisma.activity.findUnique({ where: { sessionId } });
-  if (!activity || activity.userId !== user.id) throw new Error("FORBIDDEN");
-  await prisma.activity.update({ where: { id: activity.id }, data: { visibility } });
-  revalidatePath("/app/feed");
-}

@@ -1,11 +1,12 @@
 "use client";
 
 import { useRef, useState, useTransition } from "react";
-import type { SettingsSaveResult } from "@/lib/actions/profile";
+import type { SettingsSaveResult } from "@/lib/actions/result";
 import { runAction } from "@/components/social/run-action";
 
 /**
- * State for a block of autosaving Settings switches. Every change is applied
+ * State for a block of autosaving controls (Settings switches, the
+ * post-workout check-in). Every change is applied
  * at once and saved as the whole object; a failed save rolls the switches
  * back to what the server last confirmed and reports the tapped field.
  *

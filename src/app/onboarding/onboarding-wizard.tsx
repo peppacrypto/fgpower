@@ -14,7 +14,7 @@ import { FAT_LOSS_NOTE } from "@/lib/constants/program-labels";
 import { publicProfileLabel, slugifyUsername, usernameError, USERNAME_RULE } from "@/lib/validation/username";
 import { STEP_REASONS, TOTAL_STEPS } from "./steps";
 import { DaysMatchNote, WeekdayChips } from "./weekday-chips";
-import { INVALID_FIELD } from "@/app/app/settings/save-status";
+import { INVALID_FIELD } from "@/components/ui/save-status";
 
 const GOALS = [
   { value: "HYPERTROPHY", label: "Hipertrofia", desc: "Ganhar massa muscular" },

@@ -1,9 +1,10 @@
 "use client";
 
-import { updateWorkoutPreferences, type WorkoutPreferences } from "@/lib/actions/profile";
-import { SaveStatus } from "./save-status";
-import { Toggle } from "./toggle";
-import { useAutosave } from "./use-autosave";
+import { updateWorkoutPreferences } from "@/lib/actions/preferences";
+import type { WorkoutPreferences } from "@/lib/validation/preferences";
+import { SaveStatus } from "@/components/ui/save-status";
+import { Toggle } from "@/components/ui/toggle";
+import { useAutosave } from "@/components/ui/use-autosave";
 
 export function WorkoutPreferencesForm({ initial }: { initial: WorkoutPreferences }) {
   const { value: prefs, pending, savedAt, update, errorFor } = useAutosave(initial, updateWorkoutPreferences);

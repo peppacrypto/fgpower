@@ -1,19 +1,29 @@
 import type { Metadata } from "next";
 import { requireUser } from "@/lib/auth/require-user";
+import { isAdminUser } from "@/lib/auth/roles";
 import { getProfile, getPublicHandle, getPublicProfileOrigin } from "@/lib/data/profile";
-import { Card, CardContent } from "@/components/ui/card";
 import { Masthead } from "@/components/ui/masthead";
-import { SectionHead } from "@/components/ui/section-head";
+import { Section } from "./section";
 import { ProfileForm } from "./profile-form";
 import { RoutineForm } from "./routine-form";
+import { RemindersSection } from "./reminders-section";
 import { WorkoutPreferencesForm } from "./workout-preferences-form";
 import { UsernameForm } from "./username-form";
 import { PrivacyForm } from "./privacy-form";
+import { privacyInitial } from "./privacy-initial";
+import { BlockedSection } from "./blocked-section";
+import { AdminPanelLink } from "./admin-panel-link";
 import { DangerZone } from "./danger-zone";
 
 export const metadata: Metadata = { title: "Configurações" };
 
-export default async function SettingsPage() {
+/**
+ * Settings, in this order: Perfil · Rotina · Lembretes · Durante o treino ·
+ * Usuário público · Privacidade · Contas bloqueadas · Dados e conta. Sections
+ * other areas own render their own <Section> (or nothing while unavailable).
+ */
+export default async function SettingsPage({ searchParams }: PageProps<"/app/settings">) {
+  const sp = await searchParams;
   const user = await requireUser();
   const [profile, handle, publicOrigin] = await Promise.all([
     getProfile(user.id),
@@ -38,7 +48,7 @@ export default async function SettingsPage() {
         />
       </Section>
 
-      <Section title="Rotina" description="Quando e como você treina — usado para montar e ajustar seu programa.">
+      <Section id="rotina" title="Rotina" description="Quando e como você treina — usado para montar e ajustar seu programa.">
         <RoutineForm
           initial={{
             daysPerWeek: profile.daysPerWeek,
@@ -51,6 +61,8 @@ export default async function SettingsPage() {
         />
       </Section>
 
+      <RemindersSection userId={user.id} />
+
       <Section title="Durante o treino">
         <WorkoutPreferencesForm initial={{ restTimerSound: profile.restTimerSound }} />
       </Section>
@@ -60,44 +72,15 @@ export default async function SettingsPage() {
       </Section>
 
       <Section id="privacidade" title="Privacidade">
-        <PrivacyForm
-          initial={{
-            isPublicAccount: profile.isPublicAccount,
-            defaultWorkoutVisibility: profile.defaultWorkoutVisibility,
-            showLoadsPublicly: profile.showLoadsPublicly,
-            showBodyMetricsPublicly: profile.showBodyMetricsPublicly,
-            showCurrentProgram: profile.showCurrentProgram,
-            discoverable: profile.discoverable,
-            autoShareAchievements: profile.autoShareAchievements,
-          }}
-        />
+        <PrivacyForm initial={privacyInitial(profile)} />
       </Section>
 
+      <BlockedSection userId={user.id} notice={sp.bloqueado === "1"} />
+
       <Section title="Dados e conta">
+        <AdminPanelLink isAdmin={isAdminUser(user)} />
         <DangerZone />
       </Section>
     </div>
-  );
-}
-
-function Section({
-  id,
-  title,
-  description,
-  children,
-}: {
-  id?: string;
-  title: string;
-  description?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section id={id} className="mt-8 scroll-mt-4">
-      <SectionHead label={title} />
-      {description ? <p className="mt-1.5 text-xs text-muted">{description}</p> : null}
-      <Card className="mt-3">
-        <CardContent className="pt-5">{children}</CardContent>
-      </Card>
-    </section>
   );
 }

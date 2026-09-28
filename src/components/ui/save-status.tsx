@@ -11,7 +11,7 @@ export const INVALID_FIELD =
 const MONO = "font-mono text-[11px] font-bold uppercase tracking-[0.14em]";
 
 /**
- * Status line under a Settings block: "SALVANDO…" while pending, "SALVO ✓"
+ * Status line under an autosaving block (Settings, the check-in): "SALVANDO…" while pending, "SALVO ✓"
  * for a few seconds after each successful save (keyed on `savedAt`, so saving
  * twice flashes twice), or the error, which stays until the next attempt.
  */

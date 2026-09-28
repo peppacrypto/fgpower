@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { VOLUME_MUSCLES, parsePickerQuery, pickerSearchUrl } from "./exercise-facets";
+import { VOLUME_MUSCLES, countsAsVolume, parsePickerQuery, pickerSearchUrl } from "./exercise-facets";
 
 describe("picker search URLs", () => {
   it("round-trips a query and leaves defaults out", () => {
@@ -23,5 +23,15 @@ describe("picker search URLs", () => {
   it("maps every anatomical muscle to at most one volume muscle", () => {
     const ids = VOLUME_MUSCLES.flatMap((m) => [...m.muscleIds]);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+});
+
+describe("countsAsVolume", () => {
+  it("counts strength work, never stretches or cardio", () => {
+    expect(countsAsVolume("STRENGTH")).toBe(true);
+    expect(countsAsVolume("POWERLIFTING")).toBe(true);
+    expect(countsAsVolume(null)).toBe(true);
+    expect(countsAsVolume("STRETCHING")).toBe(false);
+    expect(countsAsVolume("CARDIO")).toBe(false);
   });
 });

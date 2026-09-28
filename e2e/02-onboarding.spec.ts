@@ -290,6 +290,24 @@ test("onboarding ends where sign-in started", async ({ page }) => {
   await Promise.all([page.waitForURL(/\/app\/today/), page.getByRole("button", { name: "Ver meu plano" }).click()]);
 });
 
+// L-onboarding-next: an app page opened before onboarding (a program from a
+// shared profile, say) sends the wizard back there; Today needs no `next`.
+test("an app page opened before onboarding is where the wizard ends", async ({ page }) => {
+  await loginAsTestUser(page, uniqueEmail("onb-deep"));
+  await page.goto("/app/programs/templates/gd-1");
+  await expect(page).toHaveURL(/\/onboarding\?next=%2Fapp%2Fprograms%2Ftemplates%2Fgd-1$/);
+  await page.getByLabel("Nome de exibição").fill("Nina");
+  for (let i = 0; i < 3; i++) await page.getByRole("button", { name: "Continuar" }).click();
+  await Promise.all([
+    page.waitForURL(/\/app\/programs\/templates\/gd-1$/, { timeout: 30_000 }),
+    page.getByRole("button", { name: "Ver meu plano" }).click(),
+  ]);
+
+  await loginAsTestUser(page, uniqueEmail("onb-today"));
+  await page.goto("/app/today");
+  await expect(page).toHaveURL(/\/onboarding$/);
+});
+
 // A dropped connection on "Ver meu plano" is an inline message, not the error page;
 // every answer is still there to retry.
 test("finishing offline keeps the wizard and its answers", async ({ page, context }) => {

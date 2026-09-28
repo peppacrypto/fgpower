@@ -1,18 +1,10 @@
 import "server-only";
 import { prisma } from "@/lib/db";
-import {
-  getActiveEnrollment,
-  getDaysDoneThisWeek,
-  getInProgressSessions,
-  getTodayHabit,
-  getWeeklyProgress,
-} from "@/lib/data/dashboard";
+import { getWeeklyProgress } from "@/lib/data/dashboard";
 import { entryWeekWasTrained, getRecentlyCompletedBlock } from "@/lib/data/program-lifecycle";
 import { getWeeklyStreak } from "@/lib/data/streak-data";
-import { resolveSessionDay } from "@/lib/training/day-match";
-import { dayNumberOf, planWeek, repeatsDays, upcomingWorkout } from "@/lib/training/day-rotation";
-import { completeWeekDone, effectiveProgramWeek, programWeekView, thisWeekRule } from "@/lib/training/week-guidance";
-import { trainingWeekdays } from "@/lib/programming/schedule";
+import { getUpcomingPlan } from "@/lib/data/upcoming";
+import { planWeek } from "@/lib/training/day-rotation";
 import { countedWeeks } from "@/lib/programming/block-progress";
 import type { NextLoadAdvice } from "@/lib/training/next-load";
 import { groupRecordsByExercise } from "@/lib/training/personal-records-core";
@@ -41,6 +33,8 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
       totalVolumeKg: true,
       totalWorkingSets: true,
       programWeek: true,
+      /** Opened in an applied deload week (W-128): light on purpose. */
+      isDeload: true,
       enrollmentId: true,
       enrollment: { select: { startedAt: true, status: true } },
       program: { select: { progressionStrategy: true, durationWeeks: true } },
@@ -175,6 +169,7 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
       totalVolumeKg: session.totalVolumeKg,
       totalWorkingSets: session.totalWorkingSets ?? 0,
       programWeek: session.programWeek,
+      isDeload: session.isDeload,
       /** The program week as the block counts it (a trained entry week is 0), when the workout belongs to one. */
       countedWeek:
         session.programWeek != null && session.enrollment
@@ -208,7 +203,8 @@ export type WorkoutSummary = Extract<NonNullable<Awaited<ReturnType<typeof loadW
  * For each exercise of the session, its most recent COMPLETED log finished
  * BEFORE this session (with at least one working set done) — so a summary
  * opened from the history compares with the time before it, not with later
- * workouts. One query.
+ * workouts. A deload workout (light on purpose) is never the reference for a
+ * normal one; a deload workout compares with anything. One query.
  */
 async function previousPerformances(userId: string, sessionId: string) {
   const rows = await prisma.$queryRaw<{ exerciseId: string; doneAt: Date; sets: LiteSet[] | string }[]>`
@@ -220,6 +216,7 @@ async function previousPerformances(userId: string, sessionId: string) {
         AND l."sessionId" <> ${sessionId}
         AND s.status = 'COMPLETED'
         AND s."finishedAt" < (SELECT c."finishedAt" FROM "WorkoutSession" c WHERE c.id = ${sessionId})
+        AND (NOT s."isDeload" OR (SELECT c."isDeload" FROM "WorkoutSession" c WHERE c.id = ${sessionId}))
         AND l."exerciseId" IN (SELECT e."exerciseId" FROM "WorkoutExerciseLog" e WHERE e."sessionId" = ${sessionId})
         AND EXISTS (
           SELECT 1 FROM "SetLog" x WHERE x."exerciseLogId" = l.id AND x."isCompleted" AND x."setType" <> 'WARMUP'
@@ -254,10 +251,10 @@ async function streakNow(userId: string, now: Date) {
 
 /**
  * This week's count and the next workout with a suggested date — what Today's
- * hero will offer on that date: Today's own rule (day-rotation upcomingWorkout,
- * fed as Today feeds it — the entry week's target from the activation day, a
- * week that already counts through another program, the user's week, next
- * week's "continuar a sequência" default), read with Today's loaders.
+ * hero will offer on that date: Today's own rule, read through
+ * getUpcomingPlan (lib/data/upcoming.ts: the entry week's target from the
+ * activation day, a week that already counts through another program, the
+ * user's week, next week's "continuar a sequência" default).
  */
 async function nextUp(
   userId: string,
@@ -266,18 +263,15 @@ async function nextUp(
   profile: { daysPerWeek: number; preferredDays: number[] } | null,
 ) {
   const inThisWeek = finishedAt >= startOfWeek(now);
-  const enrollment = await getActiveEnrollment(userId);
-  const days = enrollment?.program.days ?? [];
-  const isTrainable = (d: (typeof days)[number]) => d.exercises.length > 0;
-  const hasPlan = days.some(isTrainable);
+  const plan = await getUpcomingPlan(userId, now, profile);
 
-  if (!enrollment || !hasPlan) {
+  if (!plan.hasPlan) {
     const [weeklyCount, streak] = await Promise.all([
       getWeeklyProgress(userId),
       inThisWeek ? streakNow(userId, now) : Promise.resolve({ current: 0, best: 0 }),
     ]);
     return {
-      programName: enrollment?.program.name ?? null,
+      programName: plan.enrollment?.program.name ?? null,
       week: inThisWeek ? { done: weeklyCount, target: profile?.daysPerWeek ?? 3, entry: false, streak } : null,
       day: null,
       weekComplete: false,
@@ -286,45 +280,8 @@ async function nextUp(
     };
   }
 
-  const [done, inProgress, habit] = await Promise.all([
-    getDaysDoneThisWeek(userId, enrollment.id, days),
-    getInProgressSessions(userId, now),
-    getTodayHabit(userId, enrollment, now),
-  ]);
-  const own = habit.program;
-  // Days of this program with a workout still open (as Today's day rows map them).
-  const openDayIds = new Set(
-    inProgress
-      .filter((s) => s.programId === enrollment.programId)
-      .flatMap((s) => resolveSessionDay(s, days)?.id ?? []),
-  );
-  const daysPerWeek = enrollment.program.daysPerWeek;
-  const rotation = { days, isTrainable, nextDayIndex: enrollment.nextDayIndex, daysPerWeek };
-  const weekView = programWeekView({
-    startedAt: enrollment.startedAt,
-    now,
-    effectiveWeek: effectiveProgramWeek({
-      currentWeek: enrollment.currentWeek,
-      sessionsThisWeek: done.sessionCount,
-      trainedBefore: own?.trainedBefore ?? false,
-    }),
-    entryWeekTrained: own?.entryWeekTrained ?? false,
-  });
-  const entry = weekView.kind === "entry" ? weekView : null;
-  const rule = thisWeekRule({ view: weekView, enrollmentId: enrollment.id, thisWeek: habit.streak.thisWeek });
-  const preferredDays = profile?.preferredDays ?? [];
-  const weekInput = { ...rotation, doneDayIds: done.byDayId, sessionCount: done.sessionCount, skipDayIds: openDayIds };
-  const up = upcomingWorkout({
-    ...weekInput,
-    // A week that already counts: nothing is asked of it — the next workout is next week's first.
-    ...(rule.alreadyCounts ? completeWeekDone(days.filter(isTrainable).map((d) => d.id)) : {}),
-    targetCap: rule.targetCap,
-    todayNo: dayNumberOf(now),
-    lastDoneNo: habit.lastSession ? dayNumberOf(habit.lastSession.finishedAt) : null,
-    preferredDays: repeatsDays(daysPerWeek, days.length) ? trainingWeekdays(daysPerWeek, preferredDays) : preferredDays,
-    // Next week's start as Today judges it (dashboard getTodayHabit → day-rotation weekStartChoice).
-    carryOverNextWeek: own?.nextWeekCarryOver ?? false,
-  });
+  const { enrollment, habit, rule, up, weekView, weekInput, openDayIds } = plan;
+  const { days, isTrainable } = weekInput;
   const next = up.next;
   const day = next
     ? {
@@ -350,7 +307,7 @@ async function nextUp(
             done: Math.max(up.week.weeklyDone, rule.targetCap != null ? planWeek(weekInput).weeklyDone : 0),
             target: up.week.weeklyTarget,
             /** A program started Thursday–Sunday: its short entry week, aimed at the days from the activation day. */
-            entry: entry !== null,
+            entry: weekView.kind === "entry",
             streak: { current: habit.streak.current, best: habit.streak.best },
           }
       : null,

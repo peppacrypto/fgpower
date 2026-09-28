@@ -14,6 +14,7 @@ import {
 import { slugifyUsername, usernameError, USERNAME_TAKEN } from "@/lib/validation/username";
 import { z } from "zod";
 import { applyWeekLayout } from "@/lib/data/program-lifecycle";
+import type { SettingsSaveResult } from "./result";
 
 const GENERIC_ERROR = "Não foi possível salvar agora. Tente de novo.";
 
@@ -208,8 +209,6 @@ const privacySettingsSchema = z
 
 export type PrivacySettings = z.infer<typeof privacySettingsSchema>;
 
-export type SettingsSaveResult = { ok: true; savedAt: string } | { ok: false; error: string };
-
 export async function updatePrivacySettings(settings: PrivacySettings): Promise<SettingsSaveResult> {
   const user = await requireUserOrThrow().catch(() => null);
   if (!user) return { ok: false, error: SESSION_EXPIRED_ERROR };
@@ -221,26 +220,6 @@ export async function updatePrivacySettings(settings: PrivacySettings): Promise<
     await prisma.profile.update({ where: { userId: user.id }, data: parsed.data });
   } catch (err) {
     console.error("updatePrivacySettings failed", err);
-    return { ok: false, error: GENERIC_ERROR };
-  }
-  revalidatePath("/app/settings");
-  return { ok: true, savedAt: new Date().toISOString() };
-}
-
-const workoutPreferencesSchema = z.object({ restTimerSound: z.boolean() }).strict();
-
-export type WorkoutPreferences = z.infer<typeof workoutPreferencesSchema>;
-
-/** Workout-screen preferences (autosaved toggles in Settings → Treino). */
-export async function updateWorkoutPreferences(prefs: WorkoutPreferences): Promise<SettingsSaveResult> {
-  const user = await requireUserOrThrow().catch(() => null);
-  if (!user) return { ok: false, error: SESSION_EXPIRED_ERROR };
-  const parsed = workoutPreferencesSchema.safeParse(prefs);
-  if (!parsed.success) return { ok: false, error: GENERIC_ERROR };
-  try {
-    await prisma.profile.update({ where: { userId: user.id }, data: parsed.data });
-  } catch (err) {
-    console.error("updateWorkoutPreferences failed", err);
     return { ok: false, error: GENERIC_ERROR };
   }
   revalidatePath("/app/settings");

@@ -371,19 +371,22 @@ describe("Trocar / Adicionar exercício mid-workout", () => {
     await actions.logSet({ setLogId: set.id, weightKg: 50, reps: 8, rir: null });
     expect(await actions.swapExercise(first.id, exerciseIds[2])).toEqual({ ok: false, reason: "HAS_DATA" });
 
+    // In a superset (W-104): the stand-in takes the exercise's place in it.
+    await prisma.workoutExerciseLog.update({ where: { id: first.id }, data: { groupKey: "A" } });
     const added = await actions.addExerciseToWorkout(sessionId, exerciseIds[2], { after: first.id, replacing: true });
     expect(added.ok).toBe(true);
     if (!added.ok) return;
     const all = await prisma.workoutExerciseLog.findMany({
       where: { sessionId },
       orderBy: { sortOrder: "asc" },
-      select: { id: true, prescribedSets: true, substitutedFromExerciseId: true, sets: { select: { exerciseId: true } } },
+      select: { id: true, prescribedSets: true, substitutedFromExerciseId: true, groupKey: true, sets: { select: { exerciseId: true } } },
     });
     // Right after the first exercise, before the second.
     expect(all.map((l) => l.id)).toEqual([first.id, added.exerciseLogId, second.id]);
     const stand = all[1];
     expect(stand.prescribedSets).toBe(2); // 3 prescribed, 1 done
     expect(stand.substitutedFromExerciseId).toBe(exerciseIds[0]);
+    expect(stand.groupKey).toBe("A");
     expect(stand.sets).toHaveLength(2);
     expect(stand.sets.every((s) => s.exerciseId === exerciseIds[2])).toBe(true);
   });
@@ -655,5 +658,26 @@ describe("a block its last workout closed", () => {
     expect(await blockState(b.enrollmentId)).toMatchObject({ status: "ACTIVE", completedSessions: 0 });
     // The running block's program — never a draft "Descartar rascunho" would delete with it.
     expect(await programOf()).toEqual({ status: "ACTIVE", archivedAt: null });
+  });
+});
+
+describe("a new workout carries the profile's sharing defaults", () => {
+  it("opens with the profile's default visibility and loads flag (what finishing publishes)", async () => {
+    const before = await prisma.profile.findUniqueOrThrow({
+      where: { userId: USER_ID },
+      select: { defaultWorkoutVisibility: true, showLoadsPublicly: true },
+    });
+    await prisma.profile.update({ where: { userId: USER_ID }, data: { defaultWorkoutVisibility: "PUBLIC", showLoadsPublicly: true } });
+    try {
+      const sessionId = await startOn(dayIds[2]);
+      const opened = await prisma.workoutSession.findUniqueOrThrow({
+        where: { id: sessionId },
+        select: { visibility: true, showDetailedLoads: true },
+      });
+      expect(opened).toEqual({ visibility: "PUBLIC", showDetailedLoads: true });
+      await actions.discardWorkoutSession(sessionId);
+    } finally {
+      await prisma.profile.update({ where: { userId: USER_ID }, data: before });
+    }
   });
 });

@@ -142,6 +142,9 @@ describe("closing a block", () => {
     const notifications = await prisma.notification.findMany({ where: { recipientId: USER_ID, type: "PROGRAM_COMPLETED" } });
     expect(notifications).toHaveLength(1);
     expect(notifications[0].activityId).toBe(activities[0].id);
+    // The user's own achievement: logged read, keyed once per block.
+    expect(notifications[0].readAt).not.toBeNull();
+    expect(notifications[0].dedupeKey).toBe(`block:${enrollmentId}`);
   });
 
   it("offers the series' next block while nothing else runs", async () => {

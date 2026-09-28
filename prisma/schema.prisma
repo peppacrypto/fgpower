@@ -10,6 +10,7 @@
 //   6. User programs (custom / forked)
 //   7. Training log (sessions, exercise logs, set logs, PRs, body metrics)
 //   8. Social layer (follows, activities, FGs, notifications, blocks, reports)
+//   9. Re-engagement (reminders, Web Push, e-mail, background jobs)
 
 generator client {
   provider = "prisma-client"
@@ -68,7 +69,16 @@ model User {
   reportsMade      UserReport[]    @relation("ReportReporter")
   reportsReceived  UserReport[]    @relation("ReportReported")
   reportsResolved  UserReport[]    @relation("ReportResolver")
+  dismissals       UserDismissal[]
 
+  reminderPreference ReminderPreference?
+  pushSubscriptions  PushSubscription[]
+  reminderDeliveries ReminderDelivery[]
+  emailMessages      EmailMessage[]
+
+  // People search (Descobrir) matches ILIKE '%q%' on these: trigram indexes.
+  @@index([username(ops: raw("gin_trgm_ops"))], type: Gin, map: "user_username_trgm_idx")
+  @@index([name(ops: raw("gin_trgm_ops"))], type: Gin, map: "user_name_trgm_idx")
   @@map("user")
 }
 
@@ -177,18 +187,37 @@ model Profile {
   unitSystem               UnitSystem      @default(METRIC)
   loadIncrementKg          Float           @default(2.5)
   restTimerSound           Boolean         @default(true)
+  /// Vibration at the end of a rest and on a record (Settings → Durante o treino).
+  hapticsEnabled           Boolean         @default(true)
   onboardingCompletedAt    DateTime?
   // Privacy
   isPublicAccount          Boolean         @default(false)
-  defaultWorkoutVisibility Visibility      @default(PRIVATE)
+  /// What a finished workout is published as. New profiles: FOLLOWERS (decision 10);
+  /// existing rows were not backfilled.
+  defaultWorkoutVisibility Visibility      @default(FOLLOWERS)
   showLoadsPublicly        Boolean         @default(false)
+  /// No public surface reads body data; kept for a possible future toggle.
   showBodyMetricsPublicly  Boolean         @default(false)
   showCurrentProgram       Boolean         @default(true)
   discoverable             Boolean         @default(true)
+  /// Unused since Batch 5 (decision 9); kept so an image rollback still reads it.
   autoShareAchievements    Boolean         @default(true)
   location                 String?
   createdAt                DateTime        @default(now())
   updatedAt                DateTime        @updatedAt
+
+  @@index([displayName(ops: raw("gin_trgm_ops"))], type: Gin, map: "Profile_displayName_trgm_idx")
+}
+
+/// A one-time prompt the user closed for good (e.g. the summary's private-by-default
+/// notice, "Manter privado"). Keyed by prompt; stored server-side so it follows the account.
+model UserDismissal {
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  key       String
+  createdAt DateTime @default(now())
+
+  @@id([userId, key])
 }
 
 // ---------------------------------------------------------------------------
@@ -328,6 +357,7 @@ model Exercise {
   @@index([equipmentId])
   @@index([movementPatternId])
   @@index([isPublished, popularity])
+  @@index([searchText(ops: raw("gin_trgm_ops"))], type: Gin, map: "Exercise_searchText_trgm_idx")
 }
 
 model ExerciseAlias {
@@ -339,6 +369,7 @@ model ExerciseAlias {
 
   @@unique([exerciseId, alias, locale])
   @@index([alias])
+  @@index([alias(ops: raw("gin_trgm_ops"))], type: Gin, map: "ExerciseAlias_alias_trgm_idx")
 }
 
 enum MuscleRole {
@@ -674,6 +705,8 @@ model UserProgram {
   sessions    WorkoutSession[]
 
   @@index([userId, status, updatedAt])
+  // "Treinando o mesmo programa" (Descobrir): active programs forked from one template.
+  @@index([sourceTemplateId, status])
 }
 
 model UserProgramDay {
@@ -709,6 +742,8 @@ model UserProgramExercise {
   warmupSets          Int                  @default(0)
   loadTargetKg        Float?
   progressionStrategy ProgressionStrategy?
+  /// The exercise's own load step, only when the user set one in the builder;
+  /// null follows Profile.loadIncrementKg (decision 7). Template forks copy null.
   loadIncrementKg     Float?
   notes               String?
 
@@ -740,6 +775,10 @@ model ProgramEnrollment {
   plannedSessions   Int?
   completedSessions Int              @default(0)
   programSnapshot   Json
+  /// São Paulo Monday day numbers (mondayOf(dayNumberOf(…)), Today's weekKey) of
+  /// weeks the user turned into a deload ("Aplicar deload"). Read through
+  /// lib/training/deload.ts effectiveDeload, never on its own.
+  deloadMondays     Int[]            @default([])
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
 
@@ -784,13 +823,25 @@ model WorkoutSession {
   showDetailedLoads Boolean            @default(false)
   caption           String?
   daySnapshot       Json? // prescription at the time (immutable)
+  // Post-workout check-in (owner-only, never on any public or social surface).
+  // Writing it keeps updatedAt: the 24 h correction window runs from the save.
+  sessionRpe        Int? // 1–10
+  soreness          Int? // 0–10, soreness coming into this workout
+  shortSleep        Boolean            @default(false)
+  lingeringPain     Boolean            @default(false)
+  highStress        Boolean            @default(false)
+  checkInAt         DateTime? // answered
+  /// Opened inside an applied deload week: sets halved at open, RIR raised.
+  isDeload          Boolean            @default(false)
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
 
-  exerciseLogs WorkoutExerciseLog[]
-  setLogs      SetLog[]
-  records      ExercisePersonalRecord[]
-  activity     Activity?
+  exerciseLogs  WorkoutExerciseLog[]
+  setLogs       SetLog[]
+  records       ExercisePersonalRecord[]
+  activity      Activity?
+  notifications Notification[]
+  bodyMetrics   BodyMetric[]
 
   @@index([userId, startedAt(sort: Desc)])
   @@index([userId, status])
@@ -905,18 +956,27 @@ enum BodyMetricKind {
   CUSTOM
 }
 
+/// Weight and circumferences — health data, owner-only. One value per kind per
+/// São Paulo day (the latest wins); CUSTOM is not offered.
 model BodyMetric {
-  id          String         @id @default(cuid())
+  id          String          @id @default(cuid())
   userId      String
-  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   kind        BodyMetricKind
   customLabel String?
   value       Float
-  unit        String         @default("kg")
-  measuredAt  DateTime       @default(now())
-  createdAt   DateTime       @default(now())
+  unit        String          @default("kg")
+  measuredAt  DateTime        @default(now())
+  /// São Paulo day number (lib/training/day-rotation dayNumberOf).
+  day         Int
+  /// The workout whose check-in wrote it; a deleted workout leaves the weigh-in.
+  sessionId   String?
+  session     WorkoutSession? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+  createdAt   DateTime        @default(now())
 
+  @@unique([userId, kind, day])
   @@index([userId, kind, measuredAt(sort: Desc)])
+  @@index([sessionId])
 }
 
 // ---------------------------------------------------------------------------
@@ -932,6 +992,8 @@ model Follow {
 
   @@id([followerId, followingId])
   @@index([followingId, createdAt])
+  // "Seguindo" lists, newest first.
+  @@index([followerId, createdAt])
 }
 
 enum FollowRequestStatus {
@@ -975,6 +1037,13 @@ model Activity {
   showDetailedLoads Boolean         @default(false)
   summary           Json // precomputed card payload (ActivitySummary)
   fgCount           Int             @default(0)
+  /// Link-only access (/t/<token>) to this one workout, whatever its visibility.
+  /// Minted only by an explicit owner tap; null = no link. Omitted from every
+  /// query by default (lib/db.ts global omit) — select it explicitly.
+  shareToken        String?         @unique
+  sharedAt          DateTime?
+  /// Hidden by an admin (report moderation): the owner can't publish or share it again.
+  moderatedAt       DateTime?
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
 
@@ -1005,8 +1074,13 @@ enum NotificationType {
   PERSONAL_RECORD
   PROGRAM_WEEK_COMPLETE
   PROGRAM_COMPLETED
+  /// The 10th/25th/50th/100th finished workout (decision 4).
+  WORKOUT_MILESTONE
 }
 
+/// Written only through lib/social/notifications.ts createNotification (dedupe,
+/// self/blocked skipping). Rows about the user's own achievements (actorId null)
+/// are created already read: an achievements log, never the unread pip.
 model Notification {
   id              String           @id @default(cuid())
   recipientId     String
@@ -1018,11 +1092,19 @@ model Notification {
   activity        Activity?        @relation(fields: [activityId], references: [id], onDelete: Cascade)
   followRequestId String?
   followRequest   FollowRequest?   @relation(fields: [followRequestId], references: [id], onDelete: Cascade)
+  /// The workout a PR / week / milestone row is about (deleting the workout deletes the row).
+  sessionId       String?
+  session         WorkoutSession?  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  /// One row per event per recipient (notificationKey: "fg:<activity>:<actor>",
+  /// "follower:<actor>", "pr:<session>"…). NULL keys never collide.
+  dedupeKey       String?
   data            Json?
   readAt          DateTime?
   createdAt       DateTime         @default(now())
 
+  @@unique([recipientId, dedupeKey])
   @@index([recipientId, readAt, createdAt(sort: Desc)])
+  @@index([sessionId])
 }
 
 model UserBlock {
@@ -1061,6 +1143,9 @@ model UserReport {
   activity       Activity?    @relation(fields: [activityId], references: [id], onDelete: SetNull)
   reason         ReportReason
   details        String?
+  /// What was reported, as it stood then (caption, summary, author): the evidence
+  /// survives the owner deleting the post (activityId goes SetNull).
+  snapshot       Json?
   status         ReportStatus @default(OPEN)
   resolvedById   String?
   resolvedBy     User?        @relation("ReportResolver", fields: [resolvedById], references: [id], onDelete: SetNull)
@@ -1069,4 +1154,132 @@ model UserReport {
   resolvedAt     DateTime?
 
   @@index([status, createdAt])
+  // Rate limit (reports per reporter per day), dedupe and per-target counts.
+  @@index([reporterId, createdAt])
+  @@index([activityId])
+  @@index([reportedUserId])
+}
+
+// ---------------------------------------------------------------------------
+// 9. RE-ENGAGEMENT (reminders, Web Push, e-mail, background jobs)
+// ---------------------------------------------------------------------------
+
+enum ReminderKind {
+  WEEKLY_DIGEST
+  TRAINING_DAY
+  OPEN_WORKOUT
+}
+
+enum ReminderChannel {
+  EMAIL
+  PUSH
+}
+
+enum ReminderStatus {
+  PENDING
+  SENT
+  FAILED
+  SKIPPED
+}
+
+/// Per-user reminder settings and pause state, created lazily on opt-in.
+model ReminderPreference {
+  userId              String    @id
+  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// São Paulo hour of the training-day push: 7 | 12 | 18 | 20.
+  pushHour            Int       @default(18)
+  emailDigest         Boolean   @default(false)
+  emailDigestOptInAt  DateTime?
+  emailUnsubscribedAt DateTime?
+  emailBouncedAt      DateTime?
+  /// Paused after 2 ignored reminders in a row (silent; lifts on the next workout).
+  pausedAt            DateTime?
+  pausedReason        String?
+  resumedAt           DateTime?
+  /// The post-workout "Lembrar você nos dias de treino?" ask.
+  askDismissedAt      DateTime?
+  askCount            Int       @default(0)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+}
+
+/// One browser/device subscribed to Web Push (endpoint allow-listed on write).
+model PushSubscription {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  endpoint      String    @unique
+  p256dh        String
+  auth          String
+  userAgent     String?
+  createdAt     DateTime  @default(now())
+  lastSuccessAt DateTime?
+  failureCount  Int       @default(0)
+
+  @@index([userId])
+}
+
+/// One reminder decision (SENT counts toward the caps; SKIPPED/FAILED never do).
+/// The unique key makes a tick idempotent across restarts and deploy overlap.
+model ReminderDelivery {
+  id         String          @id @default(cuid())
+  userId     String
+  user       User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind       ReminderKind
+  channel    ReminderChannel
+  /// São Paulo day key (TRAINING_DAY), Monday day key (WEEKLY_DIGEST) or session id (OPEN_WORKOUT).
+  periodKey  String
+  status     ReminderStatus  @default(PENDING)
+  skipReason String?
+  targetId   String?
+  payload    Json?
+  sentAt     DateTime?
+  /// Engaged or ignored by then (SP midnight ending the day after the send).
+  deadline   DateTime?
+  clickedAt  DateTime?
+  engagedAt  DateTime?
+  ignoredAt  DateTime?
+  providerId String?
+  error      String?
+  createdAt  DateTime        @default(now())
+
+  @@unique([userId, kind, periodKey])
+  @@index([userId, status, sentAt])
+  @@index([status, deadline])
+  @@index([createdAt])
+}
+
+/// Every e-mail sent (or logged by the dev transport), for throttles, the admin
+/// panel and /api/test/outbox. Kept 30 days.
+model EmailMessage {
+  id         String   @id @default(cuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  toEmail    String
+  /// LOGIN_CODE | WEEKLY_DIGEST | ADMIN_REPORT (lib/email/send.ts EmailKind)
+  kind       String
+  subject    String
+  /// resend | dev
+  transport  String
+  /// SENT | FAILED | LOGGED (dev)
+  status     String
+  providerId String?
+  error      String?
+  /// The plain-text body, dev transport only (never in production).
+  devBody    String?
+  createdAt  DateTime @default(now())
+
+  @@index([toEmail, kind, createdAt])
+  @@index([kind, createdAt])
+  @@index([createdAt])
+}
+
+/// A named lease so only one process runs a periodic job at a time (lib/jobs/lease.ts).
+model JobLease {
+  name       String    @id
+  holder     String?
+  expiresAt  DateTime  @default(now())
+  lastRunAt  DateTime?
+  lastResult Json?
+  updatedAt  DateTime  @updatedAt
 }

@@ -43,6 +43,7 @@ export async function loadStreakInputs(userId: string, now: Date = new Date()) {
         startedAt: true,
         endedAt: true,
         currentWeek: true,
+        deloadMondays: true,
         program: {
           select: {
             daysPerWeek: true,
@@ -66,6 +67,7 @@ export async function loadStreakInputs(userId: string, now: Date = new Date()) {
         startedAt: e.startedAt,
         endedAt: e.endedAt,
         currentWeek: e.currentWeek,
+        deloadMondays: e.deloadMondays,
         program: {
           daysPerWeek: e.program.daysPerWeek,
           durationWeeks: e.program.durationWeeks,

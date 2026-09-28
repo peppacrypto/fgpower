@@ -1,3 +1,5 @@
+import { appOrigin } from "@/lib/app-origin";
+
 /**
  * Public-handle rules (`/u/<username>`), shared by Settings, onboarding and
  * the server actions. Plain functions, no zod, so the onboarding wizard can
@@ -59,17 +61,11 @@ export function usernameCandidate(base: string, n: number): string {
 }
 
 /**
- * Origin of public profile links (https://fgpower.monster in production).
- * NEXT_PUBLIC_ is inlined at build time, so this also works in the browser.
+ * Origin of public profile links (https://fgpower.monster in production): the
+ * app's origin (lib/app-origin.ts), which also works in the browser.
  */
 export function publicProfileOrigin(): string {
-  try {
-    const url = new URL(process.env.NEXT_PUBLIC_APP_URL ?? "");
-    if (url.host) return url.origin;
-  } catch {
-    // fall through
-  }
-  return "https://fgpower.monster";
+  return appOrigin();
 }
 
 /** "fgpower.monster/u/maria" — the link as people read it (no protocol). */
