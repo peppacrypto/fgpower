@@ -29,6 +29,21 @@ export default async function DiscoverPage({ searchParams }: PageProps<"/app/dis
       </form>
 
       <div className="mt-6 flex flex-col gap-2">
+        {!q ? (
+          // Before a search: what can be found here, and how to be found.
+          <div className="border-l-2 border-l-border-strong bg-surface-2 px-3.5 py-3 text-sm">
+            <p className="font-medium">Encontre amigos pelo nome ou @usuário.</p>
+            <p className="mt-0.5 text-muted">
+              Só aparecem contas que deixaram a descoberta ligada. Seus treinos continuam privados até você compartilhar um.
+            </p>
+            <Link
+              href="/app/settings#privacidade"
+              className="mt-1 inline-flex min-h-11 items-center font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
+            >
+              Como te encontram
+            </Link>
+          </div>
+        ) : null}
         {q && users.length === 0 ? (
           <p className="text-sm text-muted">
             Ninguém encontrado para “{q}”. Tente o nome ou o @usuário exato — contas que desligaram a descoberta não

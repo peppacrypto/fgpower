@@ -161,7 +161,20 @@ export default async function ProfilePage() {
           Favoritos
         </h2>
         {favorites.length === 0 ? (
-          <p className="text-sm text-muted">Nenhum exercício favoritado ainda.</p>
+          <div className="border-l-2 border-l-border-strong bg-surface-2 px-3.5 py-3 text-sm">
+            <p className="font-medium">Nenhum exercício favoritado ainda.</p>
+            <p className="mt-0.5 text-muted">
+              Toque em <Heart className="inline size-3.5 align-[-2px]" aria-hidden />
+              <span className="sr-only">Adicionar aos favoritos</span> na página de um exercício para guardá-lo aqui.
+            </p>
+            <Link
+              href="/app/exercises"
+              className="mt-1 inline-flex min-h-11 items-center gap-1 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
+            >
+              Ver exercícios
+              <GArrow className="size-3" />
+            </Link>
+          </div>
         ) : (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             {favorites.map((f) => (

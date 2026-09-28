@@ -1,37 +1,48 @@
 import "server-only";
+import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
 import { SHOWN_PR_KINDS } from "@/lib/training/personal-records-core";
+import { isBodyweightEquipment, isTimedHold } from "@/lib/training/set-plan";
+import { COUNTED_SET, SESSION_PERF_COLUMNS, toSessionPerf, type SessionPerfRow } from "./history";
+import { buildStreakWeeks } from "./streak-data";
+import { dayNumberOf, mondayOf } from "@/lib/training/day-rotation";
+import { dateOfDayNumber, periodStartDate, type ProgressPeriod, type SessionPerf, type WeekRow } from "./progress-core";
 
-export type ProgressPeriod = "4w" | "8w" | "3m" | "6m" | "1y" | "all";
+export { consistencyOf, dateOfDayNumber, periodStartDate, type ProgressPeriod, type WeekRow } from "./progress-core";
 
-export function periodStartDate(period: ProgressPeriod): Date | null {
-  const now = new Date();
-  switch (period) {
-    case "4w":
-      return new Date(now.getTime() - 28 * 86400_000);
-    case "8w":
-      return new Date(now.getTime() - 56 * 86400_000);
-    case "3m":
-      return new Date(now.getTime() - 90 * 86400_000);
-    case "6m":
-      return new Date(now.getTime() - 182 * 86400_000);
-    case "1y":
-      return new Date(now.getTime() - 365 * 86400_000);
-    case "all":
-      return null;
-  }
+const PERIOD_VALUES: ProgressPeriod[] = ["4w", "8w", "3m", "6m", "1y", "all"];
+
+/** ?period= as a known period (anything else → `fallback`). */
+export function parsePeriod(value: unknown, fallback: ProgressPeriod): ProgressPeriod {
+  return typeof value === "string" && (PERIOD_VALUES as string[]).includes(value) ? (value as ProgressPeriod) : fallback;
 }
 
-export async function getProgressSummary(userId: string, period: ProgressPeriod) {
-  const start = periodStartDate(period);
+/**
+ * Progress's counts for a period (from periodStartDate: the Monday opening
+ * the weeks "semanas na meta" reads, so the tiles never cover two spans).
+ * `countedSince` is where the workouts count really starts: the period's
+ * Monday — or, for "all", the Monday of the first workout's week (the weeks
+ * on target only reach 400 days back, so past that the two tiles say so).
+ */
+export async function getProgressSummary(userId: string, period: ProgressPeriod, now: Date = new Date()) {
+  const start = periodStartDate(period, now);
+  // A workout counts once it has a working set (legacy empty ones don't — the streak's rule).
   const where = {
     userId,
     status: "COMPLETED" as const,
+    totalWorkingSets: { gt: 0 },
     ...(start ? { finishedAt: { gte: start } } : {}),
   };
 
-  const [sessionCount, prRows, activeEnrollment] = await Promise.all([
+  const [sessionCount, firstWorkout, prRows, activeEnrollment] = await Promise.all([
     prisma.workoutSession.count({ where }),
+    start
+      ? null
+      : prisma.workoutSession.findFirst({
+          where: { ...where, finishedAt: { not: null } },
+          orderBy: { finishedAt: "asc" },
+          select: { finishedAt: true },
+        }),
     prisma.exercisePersonalRecord.findMany({
       where: {
         userId,
@@ -54,17 +65,21 @@ export async function getProgressSummary(userId: string, period: ProgressPeriod)
     }),
     prisma.programEnrollment.findFirst({
       where: { userId, status: "ACTIVE" },
-      include: { program: { select: { name: true, durationWeeks: true } } },
+      orderBy: { startedAt: "desc" },
+      select: {
+        id: true,
+        programId: true,
+        startedAt: true,
+        currentWeek: true,
+        plannedSessions: true,
+        program: { select: { name: true, durationWeeks: true, daysPerWeek: true, _count: { select: { days: true } } } },
+      },
     }),
   ]);
 
-  // Consistency: completed sessions vs. expected (profile.daysPerWeek * weeks in period).
-  const profile = await prisma.profile.findUnique({ where: { userId }, select: { daysPerWeek: true } });
-  const weeks = start ? Math.max(1, (Date.now() - start.getTime()) / (7 * 86400_000)) : null;
-  const expected = weeks && profile ? Math.round(weeks * profile.daysPerWeek) : null;
-  const consistencyPct = expected && expected > 0 ? Math.min(100, Math.round((sessionCount / expected) * 100)) : null;
-
-  return { sessionCount, recentPrs: latestRecordsPerExercise(prRows, 8), activeEnrollment, consistencyPct };
+  const firstAt = firstWorkout?.finishedAt ?? null;
+  const countedSince = start ?? (firstAt ? dateOfDayNumber(mondayOf(dayNumberOf(firstAt))) : null);
+  return { sessionCount, countedSince, recentPrs: latestRecordsPerExercise(prRows, 8), activeEnrollment };
 }
 
 /**
@@ -102,42 +117,121 @@ function latestRecordsPerExercise<
   return out;
 }
 
-/** For each exercise the user has trained in the period, the first vs. most recent best weight (a simple, honest progress delta). */
-export async function getExerciseProgressDeltas(userId: string, period: ProgressPeriod, limit = 6) {
-  const start = periodStartDate(period);
-  const logs = await prisma.workoutExerciseLog.findMany({
-    where: {
-      userId,
-      session: { status: "COMPLETED", ...(start ? { finishedAt: { gte: start } } : {}) },
-    },
-    orderBy: { createdAt: "asc" },
-    include: {
-      exercise: { select: { id: true, namePt: true, slug: true } },
-      sets: { where: { isCompleted: true, setType: "WORKING" } },
-    },
-  });
+// ---------------------------------------------------------------------------
+// Per-exercise series
+// ---------------------------------------------------------------------------
 
-  const byExercise = new Map<string, { namePt: string; slug: string; weights: number[] }>();
-  for (const log of logs) {
-    const bestWeight = Math.max(0, ...log.sets.map((s) => s.weightKg ?? 0));
-    if (bestWeight <= 0) continue;
-    const entry = byExercise.get(log.exerciseId) ?? { namePt: log.exercise.namePt, slug: log.exercise.slug, weights: [] };
-    entry.weights.push(bestWeight);
-    byExercise.set(log.exerciseId, entry);
+export interface ExerciseSeries {
+  exerciseId: string;
+  namePt: string;
+  slug: string;
+  bodyweight: boolean;
+  timed: boolean;
+  /** Sessions of the exercise in the window. */
+  sessionCount: number;
+  /** The first session in the window. */
+  first: SessionPerf;
+  /** The latest sessions (up to `recent`), oldest first — the last one is the latest. */
+  recent: SessionPerf[];
+}
+
+/**
+ * Every exercise trained in the window (since `since`, or ever) with its first
+ * session and its latest few — aggregated in SQL (a session's sets folded into
+ * one row, window functions keeping only those rows), so a two-year history
+ * costs the same few rows per exercise as a two-week one.
+ */
+export async function getExerciseSeries(
+  userId: string,
+  opts: { since: Date | null; recent?: number; minSessions?: number },
+): Promise<ExerciseSeries[]> {
+  const recent = opts.recent ?? 12;
+  const minSessions = opts.minSessions ?? 1;
+  const rows = await prisma.$queryRaw<
+    (SessionPerfRow & {
+      exerciseId: string;
+      fromStart: number;
+      sessionCount: number;
+      namePt: string;
+      slug: string;
+      equipmentCategory: string | null;
+    })[]
+  >`
+    WITH per_session AS (
+      SELECT l."exerciseId", s.id AS "sessionId", s."finishedAt" AS date, ${SESSION_PERF_COLUMNS}
+      FROM "WorkoutExerciseLog" l
+      JOIN "WorkoutSession" s ON s.id = l."sessionId"
+      JOIN "SetLog" x ON x."exerciseLogId" = l.id AND x."userId" = ${userId}
+      WHERE l."userId" = ${userId}
+        AND s.status = 'COMPLETED'
+        AND s."finishedAt" IS NOT NULL
+        ${opts.since ? Prisma.sql`AND s."finishedAt" >= ${opts.since}` : Prisma.empty}
+        AND ${COUNTED_SET}
+      GROUP BY l."exerciseId", s.id, s."finishedAt"
+    ), ranked AS (
+      SELECT p.*,
+        ROW_NUMBER() OVER (PARTITION BY p."exerciseId" ORDER BY p.date ASC, p."sessionId" ASC)::int AS "fromStart",
+        ROW_NUMBER() OVER (PARTITION BY p."exerciseId" ORDER BY p.date DESC, p."sessionId" DESC)::int AS "fromEnd",
+        COUNT(*) OVER (PARTITION BY p."exerciseId")::int AS "sessionCount"
+      FROM per_session p
+    )
+    SELECT r.*, e."namePt", e.slug, q.category::text AS "equipmentCategory"
+    FROM ranked r
+    JOIN "Exercise" e ON e.id = r."exerciseId"
+    LEFT JOIN "Equipment" q ON q.id = e."equipmentId"
+    WHERE r."sessionCount" >= ${minSessions} AND (r."fromStart" = 1 OR r."fromEnd" <= ${recent})
+    ORDER BY r."exerciseId", r.date ASC, r."sessionId" ASC`;
+
+  const byExercise = new Map<string, ExerciseSeries>();
+  for (const r of rows) {
+    const perf = toSessionPerf(r);
+    let entry = byExercise.get(r.exerciseId);
+    if (!entry) {
+      entry = {
+        exerciseId: r.exerciseId,
+        namePt: r.namePt,
+        slug: r.slug,
+        bodyweight: isBodyweightEquipment(r.equipmentCategory),
+        timed: isTimedHold({ slug: r.slug }),
+        sessionCount: r.sessionCount,
+        first: perf,
+        recent: [],
+      };
+      byExercise.set(r.exerciseId, entry);
+    }
+    if (r.fromStart === 1) entry.first = perf;
+    // The first session is also one of the latest when there are few.
+    if (r.fromStart !== 1 || r.sessionCount <= recent) entry.recent.push(perf);
   }
+  return [...byExercise.values()];
+}
 
-  const deltas = Array.from(byExercise.values())
-    .filter((e) => e.weights.length >= 2)
-    .map((e) => ({
-      namePt: e.namePt,
-      slug: e.slug,
-      firstKg: e.weights[0],
-      lastKg: e.weights[e.weights.length - 1],
-      deltaKg: Math.round((e.weights[e.weights.length - 1] - e.weights[0]) * 10) / 10,
-    }))
-    .filter((e) => e.deltaKg !== 0)
-    .sort((a, b) => b.deltaKg - a.deltaKg)
-    .slice(0, limit);
+// ---------------------------------------------------------------------------
+// Weeks on target (consistency, history week marks)
+// ---------------------------------------------------------------------------
 
-  return deltas;
+/**
+ * The weeks as the weekly streak reads them (lib/data/streak-data — one rule
+ * for Today, the workout summary and here): São Paulo Monday-start weeks up to
+ * the one holding `until`, each with its target (the program's, capped in a
+ * Thursday–Sunday entry week; else the profile's days per week), the workouts
+ * that count toward it, and whether it counts (met, or a planned deload week
+ * with any workout — `deload` says which). `monday` is the week's São Paulo
+ * day number (day-rotation).
+ */
+export async function getWeekRows(userId: string, until: Date = new Date()): Promise<WeekRow[]> {
+  const { weeks, thisWeek } = await buildStreakWeeks(userId, until);
+  const rows = [...weeks, thisWeek];
+  return rows.map((w, i) => ({
+    monday: w.monday,
+    enrollmentId: w.enrollmentId,
+    done: w.done,
+    target: w.target,
+    met: w.met || (w.deload === true && w.trained === true),
+    deload: w.deload === true,
+    current: i === rows.length - 1,
+    trained: w.trained === true,
+    // A Thursday–Sunday entry week (lib/training/streak): counts when met, never against.
+    neutral: w.neutral === true,
+  }));
 }

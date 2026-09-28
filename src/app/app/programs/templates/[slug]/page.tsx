@@ -3,10 +3,11 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Play } from "lucide-react";
 import { requireUser } from "@/lib/auth/require-user";
-import { getTemplateBySlug } from "@/lib/data/templates";
+import { getTemplateBySlug, listSeriesTemplates } from "@/lib/data/templates";
+import { GD_SERIES, seriesBlocks, seriesPosition } from "@/lib/programming/gd-series";
 import { getActiveEnrollment } from "@/lib/data/dashboard";
 import { getProfile } from "@/lib/data/profile";
-import { enrollmentProgress } from "@/lib/data/user-programs";
+import { getEnrollmentProgress } from "@/lib/data/user-programs";
 import { Button } from "@/components/ui/button";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { startTemplate, startTemplateAndBegin, customizeTemplate } from "@/lib/actions/programs";
@@ -29,16 +30,23 @@ export async function generateMetadata({ params }: PageProps<"/app/programs/temp
 export default async function TemplateDetailPage({ params }: PageProps<"/app/programs/templates/[slug]">) {
   const { slug } = await params;
   const user = await requireUser();
-  const [template, activeEnrollment, profile] = await Promise.all([
+  const inSeries = seriesPosition(slug) !== null;
+  const [template, activeEnrollment, profile, seriesTemplates] = await Promise.all([
     getTemplateBySlug(slug),
     getActiveEnrollment(user.id),
     getProfile(user.id),
+    inSeries ? listSeriesTemplates(GD_SERIES) : Promise.resolve([]),
   ]);
   if (!template) notFound();
+  const series = inSeries
+    ? { blocks: seriesBlocks(seriesTemplates, (s) => `/app/programs/templates/${s}`), current: template.slug }
+    : null;
 
   // Already following this template: "Ativar" again would fork a fresh copy
   // and reset the program to week 1 — send the user to their workouts instead.
   const alreadyActive = activeEnrollment?.program.sourceTemplateId === template.id;
+  // Where the running program stands, for the switch warning.
+  const activeProgress = activeEnrollment ? await getEnrollmentProgress(activeEnrollment) : null;
   const firstDay = template.days.find((d) => d.exercises.length > 0);
   const limitations = profile?.limitations?.trim();
 
@@ -83,7 +91,7 @@ export default async function TemplateDetailPage({ params }: PageProps<"/app/pro
       action={startTemplate.bind(null, template.slug)}
       label="Ativar programa"
       pendingLabel="Ativando…"
-      active={{ name: activeEnrollment.program.name, progress: enrollmentProgress(activeEnrollment) }}
+      active={{ name: activeEnrollment.program.name, progress: activeProgress ?? "" }}
     />
   ) : null;
 
@@ -144,6 +152,7 @@ export default async function TemplateDetailPage({ params }: PageProps<"/app/pro
       }
       actions={actions}
       stickyActions={sticky}
+      series={series}
     />
   );
 }

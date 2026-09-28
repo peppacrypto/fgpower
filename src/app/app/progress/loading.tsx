@@ -1,7 +1,9 @@
-import { Bone, BoneRow, SkeletonScreen, SkeletonTitle } from "@/components/ui/skeleton";
+import { Bone, SkeletonScreen, SkeletonTitle } from "@/components/ui/skeleton";
+import { NestedSkeleton } from "@/components/ui/skeleton-client";
+import { MyExercisesSkeleton } from "./exercises/loading";
 
-/** Progress: title, period chips, the two stat panels and the per-exercise list. */
-export default function ProgressLoading() {
+/** Progress: title, period chips, the two stat panels, the program card and the per-exercise list. */
+function ProgressSkeleton() {
   return (
     <SkeletonScreen label="o seu progresso" className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
       <div className="flex items-baseline justify-between gap-4">
@@ -21,19 +23,38 @@ export default function ProgressLoading() {
           </div>
         ))}
       </div>
-      <div className="reg-frame mt-3 flex items-center justify-between px-5 py-4">
-        <div>
-          <Bone className="h-3 w-24" />
-          <Bone className="mt-2 h-4 w-32" />
-        </div>
-        <Bone className="h-6 w-20" />
+      <div className="reg-frame mt-3 px-5 py-4">
+        <Bone className="h-3 w-24" />
+        <Bone className="mt-2 h-4 w-32" />
+        <Bone className="mt-4 h-3.5 w-28" />
+        <Bone className="mt-2.5 h-1.5 w-full" />
+        <Bone className="mt-2.5 h-3 w-48" />
       </div>
       <div className="mt-8 flex flex-col gap-2">
         <Bone className="mb-1 h-3.5 w-48" />
-        <BoneRow />
-        <BoneRow />
-        <BoneRow />
+        {[0, 1, 2].map((i) => (
+          <div key={i} className="reg-frame px-5 py-3.5">
+            <div className="flex items-center justify-between gap-4">
+              <Bone className="h-4 w-2/5" />
+              <Bone className="h-4 w-10" />
+            </div>
+            <div className="mt-2 flex items-center justify-between gap-4">
+              <Bone className="h-3 w-1/2" />
+              <Bone className="h-5 w-14" />
+            </div>
+          </div>
+        ))}
       </div>
     </SkeletonScreen>
+  );
+}
+
+/** Also the fallback for "Meus exercícios" below it, until that page's own arrives. */
+export default function ProgressLoading() {
+  return (
+    <NestedSkeleton
+      own={<ProgressSkeleton />}
+      routes={[["/app/progress/exercises", <MyExercisesSkeleton key="exercises" />]]}
+    />
   );
 }

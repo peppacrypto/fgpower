@@ -107,3 +107,68 @@ different question — *should this specific exercise's load increase next sessi
 than *is this program's overall structure reasonable*. See the inline documentation in
 that file and the `double-progression` / `rir` pages under `/app/science` for its
 reasoning; it is unit-tested in `progression.test.ts`.
+
+## Motivation: what keeps people training, and what we never do
+
+FGPOWER's habit features follow the same brand as the programs: they must never push
+someone to train while fatigued, reward junk volume, or nag. These are product rules
+(approved 2026-09-27), not heuristics — a change needs the owner's sign-off.
+
+### What the app does
+
+- **Weekly streak, never a daily one** (`src/lib/training/streak.ts` `weeklyStreak`, the
+  only streak rule; rows built by `src/lib/data/streak-weeks.ts` for Today and the workout
+  summary alike). A week counts when its target was met — the program's week (its days
+  with exercises, or its frequency when it repeats days), capped at the days left in a
+  Thursday–Sunday entry week; the profile's days per week without a program. A planned
+  **deload week counts with any workout** in it (the week's guidance says so). **One missed
+  week is forgiven per 8 weeks of streak**, so a sick week or a trip doesn't erase months.
+  Rest days never "break" anything.
+- **Neutral progress copy.** Today shows "4 SEMANAS SEGUIDAS · RECORDE 6" and, from
+  Thursday, "Faltam 2 treinos para manter a sequência" — only when the count fits the days
+  left at the plan's spacing and is 2 at most (`src/app/app/today/streak-nudge.ts`: a number
+  that takes back-to-back sessions to reach would push cramming), and "para esta semana
+  contar" when a free week would cover a miss. Nothing is shown when there is no streak.
+- **Rest is part of the plan.** After a workout, or on a day that isn't one of the user's
+  training days while the week is on track, Today says "Descanso hoje — próximo: Sessão B
+  na segunda", with an outline "Treinar mesmo assim" (`upcomingWorkout` in
+  `src/lib/training/day-rotation.ts`). A user who is behind is offered today, never pushed
+  into doubling up after a workout already done today. A new week never repeats the session
+  just trained: after the plan's first day, or any workout the day before the new week (a
+  Sunday catch-up), it continues the sequence by default (`weekStartChoice`).
+- **Welcome back, not "you missed".** From 10 days without training Today suggests
+  starting at ~90% of the loads with one more rep in reserve, linking the deload science.
+- **The program's week is visible** (`src/lib/training/week-guidance.ts`): "SEMANA 5 DE 13 ·
+  RIR ALVO 1" with the week's instructions on Today and in the workout. Deload and test
+  weeks are named as such. The week's RIR **moves** each exercise's own target rather than
+  replacing it (`weekRirTarget`): every exercise shifts by the same step — this week's RIR
+  minus the program's baseline, the lower median of its non-deload weeks — so the program's
+  differences between exercises stay, and the result never goes below the exercise's floor:
+  **RIR 1 for anything** (the wave never prescribes failure; "last set to failure" stays in
+  the week's instructions), **RIR 2 for free-weight compounds** ("pesos livres nunca à
+  falha"), or the exercise's own "mín. RIR N" note — unless the program itself asks for
+  less. Lighter weeks raise targets to RIR 4 at most; timed holds keep their own. GD 1's
+  week 5 (RIR 1, baseline 2): bench 3 → 2, machine compounds 2.5 → 1.5, isolations 2 → 1 —
+  what the week's note prescribes. The workout's advice and the summary's "Na próxima"
+  judge the sets by that same target (`getSessionRirTargets`).
+- **Records are rare and real** (`src/lib/training/personal-records-core.ts`): a first time
+  is a baseline, never a record; load, estimated 1RM (≤ 10 reps) and reps at a load already
+  used — never session volume. The workout marks a set that beats one with a square "PR"
+  and a 30 ms vibration, by the same rules.
+- **Milestones are sparse and private**: the 10th/25th/50th/100th workout and a completed
+  block. They are never posted anywhere unless the user shares them.
+- **A fresh start each Monday**: on Monday and Tuesday Today closes out last week (workouts
+  of the target, streak, records dated by their workout, sets per muscle judged as §1 judges
+  them — low under 4 fractional sets where the muscle has direct work, high over 28 direct
+  sets — and the new week's note), dismissible for the week.
+- **"Por quê?" links** go from every nudge to the science behind it.
+
+### What the app never does
+
+- No daily streaks, no "don't break the chain" pressure on rest days.
+- No loss-aversion or guilt copy ("você vai perder…", "não desista", countdowns to losing
+  a streak, red warnings on missed days).
+- No leaderboards, no tonnage/volume badges, no badge walls, no rewards for extra sets.
+- No auto-posting to the feed: activities are private unless the user shares them.
+- Reminders (a later batch) at most **1 a day and 3 a week**, and **never on rest or deload
+  days**.

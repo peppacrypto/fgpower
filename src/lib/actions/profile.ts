@@ -13,6 +13,7 @@ import {
 } from "@/lib/validation/onboarding";
 import { slugifyUsername, usernameError, USERNAME_TAKEN } from "@/lib/validation/username";
 import { z } from "zod";
+import { applyWeekLayout } from "@/lib/data/program-lifecycle";
 
 const GENERIC_ERROR = "Não foi possível salvar agora. Tente de novo.";
 
@@ -174,6 +175,18 @@ export async function updateProfile(_prev: ProfileUpdateState, formData: FormDat
   } catch (err) {
     console.error("updateProfile failed", err);
     return { ok: false, error: GENERIC_ERROR };
+  }
+  if (data.preferredDays !== undefined) {
+    // New preferred days re-lay the active program's week (Today's schedule, reminders).
+    try {
+      const active = await prisma.programEnrollment.findFirst({
+        where: { userId: user.id, status: "ACTIVE" },
+        select: { programId: true },
+      });
+      if (active) await applyWeekLayout(prisma, user.id, active.programId);
+    } catch (err) {
+      console.error("applyWeekLayout after profile save failed", err);
+    }
   }
   revalidatePath("/app/settings");
   revalidatePath("/app/profile");

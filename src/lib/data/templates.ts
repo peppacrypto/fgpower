@@ -76,6 +76,14 @@ export async function listTemplatesUsingPrinciple(principleId: string) {
   });
 }
 
+/** The GD series' published blocks (the rail on each block's dossier), in any order. */
+export async function listSeriesTemplates(slugs: readonly string[]) {
+  return prisma.workoutTemplate.findMany({
+    where: { isPublished: true, slug: { in: [...slugs] } },
+    select: { slug: true, namePt: true, durationWeeks: true, experienceLevel: true },
+  });
+}
+
 export async function getTemplateBySlug(slug: string) {
   return prisma.workoutTemplate.findUnique({
     where: { slug },

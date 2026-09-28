@@ -15,6 +15,8 @@ import { formatDuration, formatKg, formatVolume, plural } from "@/lib/utils/form
 import { GiveFgButton } from "./give-fg-button";
 import { ReportButton } from "./report-button";
 import { NOT_FOUND_TITLE } from "@/components/ui/not-found-panel";
+import { milestoneStampOf, type MilestoneStamp } from "@/components/social/milestone-stamp";
+import { MilestoneStampDetail } from "@/components/social/milestone-stamp-card";
 
 export async function generateMetadata({ params }: PageProps<"/app/activity/[id]">): Promise<Metadata> {
   const { id } = await params;
@@ -42,9 +44,39 @@ export default async function ActivityDetailPage({ params }: PageProps<"/app/act
   const allowed = await canViewActivity(viewerId, activity);
   if (!allowed) notFound();
 
-  const summary = activity.summary as unknown as WorkoutActivitySummary;
   // The name the user chose for the app, not the one from their Google account.
   const name = activity.user.profile?.displayName?.trim() || activity.user.name;
+  const header = (
+    <div className="flex items-center gap-3">
+      <Avatar src={activity.user.image} name={name} size={44} />
+      <div>
+        <p className="font-semibold">
+          {activity.user.username ? (
+            <Link href={`/u/${activity.user.username}`} className="hover:underline">
+              {name}
+            </Link>
+          ) : (
+            name
+          )}
+        </p>
+        <p className="text-xs text-muted">{formatAppDate(activity.createdAt, { dateStyle: "long" })}</p>
+      </div>
+    </div>
+  );
+
+  // A private milestone (10th workout, a completed block): its stamp — no FG, no report.
+  const stamp = activity.type === "MILESTONE" || activity.type === "PROGRAM_COMPLETED" ? milestoneStampOf(activity.summary) : null;
+  if (stamp) {
+    const links = await stampLinks(stamp, activity.userId, viewerId === activity.userId);
+    return (
+      <div className="mx-auto max-w-2xl px-4 py-6 sm:px-6 sm:py-8">
+        {header}
+        <MilestoneStampDetail stamp={stamp} createdAt={activity.createdAt} {...links} />
+      </div>
+    );
+  }
+
+  const summary = activity.summary as unknown as WorkoutActivitySummary;
   // Grouped per exercise (stored in workout order); session-volume entries of older summaries dropped.
   const prGroups = groupRecordsByExercise(summary.prs ?? [], (pr) => pr.exerciseName);
   const hasGivenFg = viewerId
@@ -53,21 +85,7 @@ export default async function ActivityDetailPage({ params }: PageProps<"/app/act
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-6 sm:px-6 sm:py-8">
-      <div className="flex items-center gap-3">
-        <Avatar src={activity.user.image} name={name} size={44} />
-        <div>
-          <p className="font-semibold">
-            {activity.user.username ? (
-              <Link href={`/u/${activity.user.username}`} className="hover:underline">
-                {name}
-              </Link>
-            ) : (
-              name
-            )}
-          </p>
-          <p className="text-xs text-muted">{formatAppDate(activity.createdAt, { dateStyle: "long" })}</p>
-        </div>
-      </div>
+      {header}
 
       {activity.caption ? <p className="mt-4 text-foreground/90">{activity.caption}</p> : null}
 
@@ -122,4 +140,45 @@ export default async function ActivityDetailPage({ params }: PageProps<"/app/act
       </div>
     </div>
   );
+}
+
+/**
+ * Where a stamp leads its owner: the workout that reached the number, or the
+ * block's program (its template when the program is gone). Nothing for anyone else.
+ */
+async function stampLinks(
+  stamp: MilestoneStamp,
+  ownerId: string,
+  isOwner: boolean,
+): Promise<{ sessionHref: string | null; programHref: string | null; lastWorkoutAt?: Date | null }> {
+  if (!isOwner) return { sessionHref: null, programHref: null };
+  if (stamp.kind === "WORKOUT_COUNT") {
+    const session = stamp.sessionId
+      ? await prisma.workoutSession.findFirst({
+          where: { id: stamp.sessionId, userId: ownerId, status: "COMPLETED" },
+          select: { id: true },
+        })
+      : null;
+    return { sessionHref: session ? `/app/workout/${session.id}/summary` : null, programHref: null };
+  }
+  const [enrollment, lastWorkout] = stamp.enrollmentId
+    ? await Promise.all([
+        prisma.programEnrollment.findFirst({ where: { id: stamp.enrollmentId, userId: ownerId }, select: { programId: true } }),
+        // The block ends with its last workout, not when the calendar closed it.
+        prisma.workoutSession.findFirst({
+          where: { userId: ownerId, enrollmentId: stamp.enrollmentId, status: "COMPLETED", finishedAt: { not: null } },
+          orderBy: { finishedAt: "desc" },
+          select: { finishedAt: true },
+        }),
+      ])
+    : [null, null];
+  return {
+    lastWorkoutAt: lastWorkout?.finishedAt ?? null,
+    sessionHref: null,
+    programHref: enrollment
+      ? `/app/programs/${enrollment.programId}`
+      : stamp.templateSlug
+        ? `/app/programs/templates/${stamp.templateSlug}`
+        : null,
+  };
 }

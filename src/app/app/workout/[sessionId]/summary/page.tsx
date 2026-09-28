@@ -13,6 +13,9 @@ import { describeRecord, type RecordLike } from "@/lib/training/personal-records
 import { adviceInSeconds, formatSet, isTimedHold } from "@/lib/training/set-plan";
 import { formatDuration, formatKg, formatNumber, formatVolume, plural } from "@/lib/utils/format";
 import { cn } from "@/lib/utils/cn";
+import { isWorkoutMilestone } from "@/lib/programming/milestones";
+import { BlockDonePanel } from "@/components/programs/block-done-panel";
+import { InstallAppCard } from "@/components/pwa/install-app-card";
 import { formatDayNumber, formatSpShortDate, type LastTimeDelta } from "./dossier";
 import { loadWorkoutSummary, type WorkoutSummary } from "./summary-data";
 import { ShareWorkoutForm } from "./share-workout-form";
@@ -38,14 +41,21 @@ export default async function WorkoutSummaryPage({ params }: PageProps<"/app/wor
   if (data.status === "IN_PROGRESS") redirect(`/app/workout/${sessionId}`);
   if (data.status !== "COMPLETED") notFound();
 
-  // `next` is only there for the latest workout (see loadWorkoutSummary).
-  const { session, ordinal, exercises, recordGroups, allBaseline, share, next } = data;
+  // `next` and `blockDone` are only there for the latest workout (see loadWorkoutSummary).
+  const { session, ordinal, exercises, recordGroups, allBaseline, share, next, blockDone } = data;
+  // Program weeks as the block counts them: a short entry week is its own thing, never "Semana 14/13".
+  const counted = session.countedWeek;
   const week =
-    session.programWeek != null
-      ? session.durationWeeks != null && session.programWeek <= session.durationWeeks
-        ? `Semana ${session.programWeek}/${session.durationWeeks}`
-        : `Semana ${session.programWeek}`
-      : null;
+    counted == null
+      ? null
+      : counted === 0
+        ? "Semana de entrada"
+        : session.durationWeeks == null
+          ? `Semana ${counted}`
+          : counted <= session.durationWeeks
+            ? `Semana ${counted}/${session.durationWeeks}`
+            : null;
+  const milestone = isWorkoutMilestone(ordinal);
   // A hold's records are in seconds ("Prancha · 50 s"), as its rows are.
   const shownRecordGroups = recordGroups
     .map((g) => {
@@ -77,6 +87,7 @@ export default async function WorkoutSummaryPage({ params }: PageProps<"/app/wor
       <h1 className="text-display mt-1.5 text-3xl font-extrabold tracking-tight sm:text-4xl">{session.name}</h1>
       <p className="mt-2 text-sm tabular-nums text-muted">{stats.join(" · ")}</p>
       {ordinal === 1 && next ? <p className="mt-3 text-sm">{firstSessionLine(exercises)}</p> : null}
+      {milestone ? <DossierStamp ordinal={ordinal} /> : null}
 
       {/* Who sees it — near the top, compact; the workout itself is already saved. */}
       <section aria-label="Compartilhar treino" className="mt-5 border-y border-border py-3">
@@ -156,7 +167,27 @@ export default async function WorkoutSummaryPage({ params }: PageProps<"/app/wor
         </div>
       </section>
 
-      {next ? <NextUp next={next} /> : <ArchiveExit />}
+      {blockDone ? <BlockDonePanel block={blockDone} className="mt-8" /> : next ? <NextUp next={next} /> : <ArchiveExit />}
+      {/* The one install ask: after the first workouts, never on a past workout opened from the history. */}
+      {next || blockDone ? <InstallAppCard finishedWorkouts={ordinal} className="mt-6" /> : null}
+    </div>
+  );
+}
+
+/**
+ * "DOSSIÊ Nº 50": the 10th, 25th, 50th and 100th workout get a stamp — a
+ * private marker of the long game, never a badge wall (lib/programming/milestones.ts).
+ */
+function DossierStamp({ ordinal }: { ordinal: number }) {
+  return (
+    <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2" data-testid="dossier-stamp">
+      <span
+        className="inline-block -rotate-2 border-2 border-accent px-2.5 py-1 font-mono text-sm font-extrabold uppercase tracking-[0.18em] text-accent"
+        aria-label={`Dossiê número ${ordinal}`}
+      >
+        Dossiê nº {ordinal}
+      </span>
+      <span className="text-sm text-muted">{plural(ordinal, "treino registrado", "treinos registrados")} até aqui.</span>
     </div>
   );
 }
@@ -316,7 +347,13 @@ function NextUp({ next }: { next: NonNullable<WorkoutSummary["next"]> }) {
         {week ? (
           <div className="mb-5">
             <div className="flex items-baseline justify-between gap-3">
-              <span className={cn(FIELD, "text-muted")}>{weekComplete ? "Semana concluída ✓" : "Esta semana"}</span>
+              <span className={cn(FIELD, "text-muted")}>
+                {week.entry
+                  ? `Semana de entrada${weekComplete ? " ✓" : ""}`
+                  : weekComplete
+                    ? "Semana concluída ✓"
+                    : "Esta semana"}
+              </span>
               <span className="font-mono text-sm font-bold tabular-nums">
                 {week.done}
                 <span className="text-muted">/{week.target}</span>
@@ -330,9 +367,12 @@ function NextUp({ next }: { next: NonNullable<WorkoutSummary["next"]> }) {
                 />
               ))}
             </div>
-            {week.streak >= 2 ? (
+            {week.streak.current >= 2 ? (
               <p className={cn(FIELD, "mt-2 text-success")}>
-                {plural(week.streak, "semana seguida", "semanas seguidas")} com treino
+                {plural(week.streak.current, "semana seguida", "semanas seguidas")} no alvo
+                {week.streak.best > week.streak.current ? (
+                  <span className="text-muted"> · recorde {formatNumber(week.streak.best, 0)}</span>
+                ) : null}
               </p>
             ) : null}
           </div>

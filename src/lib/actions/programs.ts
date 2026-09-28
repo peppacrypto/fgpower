@@ -6,7 +6,9 @@ import { requireUserOrThrow } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 import { getTemplateBySlug } from "@/lib/data/templates";
 import { findUndoableSwitch } from "@/lib/data/dashboard";
+import { applyWeekLayout, getProgramRestart } from "@/lib/data/program-lifecycle";
 import { startAdHocWorkoutSession } from "@/lib/actions/workouts";
+import { seriesPosition } from "@/lib/training/program-calendar";
 import type { Prisma } from "@/generated/prisma/client";
 
 /** A set "has data" once it is completed or holds a typed load/reps (as in workouts.ts). */
@@ -163,7 +165,8 @@ async function startProgramInternal(
 
   await setAsOnlyActiveProgram(userId, programId);
 
-  await prisma.userProgram.update({ where: { id: programId }, data: { status: "ACTIVE" } });
+  // A finished or archived program started again leaves "Arquivados".
+  await prisma.userProgram.update({ where: { id: programId }, data: { status: "ACTIVE", archivedAt: null } });
 
   await prisma.programEnrollment.create({
     data: {
@@ -176,6 +179,8 @@ async function startProgramInternal(
       programSnapshot: program as never,
     },
   });
+  // Its days onto the user's week (Today's schedule) and its frequency onto the profile.
+  await applyWeekLayout(prisma, userId, programId);
   return { ok: true, previousEnrollmentId: previous?.id ?? null };
 }
 
@@ -210,7 +215,7 @@ export async function restorePreviousProgram(enrollmentId: string) {
     // Same per-user lock as starting a workout: no start or double tap interleaves.
     await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${user.id}))`;
     const found = await findUndoableSwitch(tx, user.id, enrollmentId, now);
-    if (!found) return false;
+    if (!found) return null;
     const { previous, active } = found;
 
     await tx.programEnrollment.updateMany({
@@ -271,8 +276,10 @@ export async function restorePreviousProgram(enrollmentId: string) {
       where: { id: previous.id },
       data: { status: "ACTIVE", endedAt: null },
     });
-    return true;
+    return previous.programId;
   });
+  // The profile's weekly frequency goes back with the program (the switch had set the other one's).
+  if (restored) await applyWeekLayout(prisma, user.id, restored);
 
   revalidatePath("/app/today");
   revalidatePath("/app/programs");
@@ -281,8 +288,15 @@ export async function restorePreviousProgram(enrollmentId: string) {
 
 export async function createCustomProgram(name: string) {
   const user = await requireUserOrThrow();
+  // Trained as often as the user said they train: a one-day full body is 3×/week, not 1×.
+  const profile = await prisma.profile.findUnique({ where: { userId: user.id }, select: { daysPerWeek: true } });
   const program = await prisma.userProgram.create({
-    data: { userId: user.id, name: name || "Meu programa", status: "DRAFT" },
+    data: {
+      userId: user.id,
+      name: name || "Meu programa",
+      status: "DRAFT",
+      daysPerWeek: Math.max(1, Math.min(7, profile?.daysPerWeek ?? 3)),
+    },
   });
   redirect(`/app/programs/${program.id}/edit`);
 }
@@ -337,19 +351,189 @@ export async function duplicateProgram(programId: string) {
   revalidatePath("/app/programs");
 }
 
+/**
+ * Moves a program to "Arquivados". Archiving the active one ends its
+ * enrollment where it stands — the program page asks first — and it can be
+ * restored and picked up again from that week (resumeProgram). A day of it
+ * opened but never logged goes too, as in a switch.
+ */
 export async function archiveProgram(programId: string) {
   const user = await requireUserOrThrow();
   const program = await prisma.userProgram.findUniqueOrThrow({ where: { id: programId } });
   if (program.userId !== user.id) throw new Error("FORBIDDEN");
+  const now = new Date();
 
   await prisma.userProgram.update({
     where: { id: programId },
-    data: { status: "ARCHIVED", archivedAt: new Date() },
+    data: { status: "ARCHIVED", archivedAt: now },
   });
   await prisma.programEnrollment.updateMany({
     where: { programId, status: "ACTIVE" },
-    data: { status: "ABANDONED", endedAt: new Date() },
+    data: { status: "ABANDONED", endedAt: now },
+  });
+  await prisma.workoutSession.updateMany({
+    where: { userId: user.id, programId, status: "IN_PROGRESS", setLogs: { none: SET_HAS_DATA } },
+    data: { status: "DISCARDED" },
   });
   revalidatePath("/app/programs");
   revalidatePath("/app/today");
+}
+
+/** "Restaurar": an archived program back on the shelf, as a draft — started again from its page. */
+export async function restoreArchivedProgram(programId: string) {
+  const user = await requireUserOrThrow();
+  if (typeof programId !== "string") redirect("/app/programs");
+  await prisma.userProgram.updateMany({
+    where: { id: programId, userId: user.id, status: "ARCHIVED" },
+    data: { status: "DRAFT", archivedAt: null },
+  });
+  revalidatePath("/app/programs");
+  redirect(`/app/programs/${programId}`);
+}
+
+/**
+ * "Excluir": removes a program that was never trained — a draft, or one
+ * archived before any workout (discarded starts don't count). A program
+ * with workouts can only be archived: its history stays.
+ */
+export async function deleteUntrainedProgram(programId: string) {
+  const user = await requireUserOrThrow();
+  if (typeof programId !== "string") redirect("/app/programs");
+  const program = await prisma.userProgram.findFirst({
+    where: { id: programId, userId: user.id },
+    select: { status: true, _count: { select: { sessions: { where: { status: { not: "DISCARDED" } } } } } },
+  });
+  if (!program) redirect("/app/programs");
+  if (program.status === "ACTIVE" || program._count.sessions > 0) redirect(`/app/programs/${programId}`);
+  await prisma.userProgram.deleteMany({ where: { id: programId, userId: user.id } });
+  revalidatePath("/app/programs");
+  redirect("/app/programs?excluido=1");
+}
+
+/**
+ * "Retomar da semana N": makes a stopped program the active one again with
+ * the enrollment it had — its week, next day and workouts — instead of a new
+ * one at week 1 (see getProgramRestart for the week it picks up at; a block
+ * stopped in its last week resumes at that week, its counter one step back).
+ * A program running meanwhile is ended as by a switch, with the same one-time
+ * "Voltar para …" undo on Today, which opens with "<programa> retomado · semana N".
+ */
+export async function resumeProgram(programId: string) {
+  const user = await requireUserOrThrow();
+  if (typeof programId !== "string") redirect("/app/programs");
+  const program = await prisma.userProgram.findFirst({
+    where: { id: programId, userId: user.id },
+    select: { id: true, days: { select: { _count: { select: { exercises: true } } } } },
+  });
+  if (!program) redirect("/app/programs");
+  const [restart, previous] = await Promise.all([
+    getProgramRestart(user.id, programId),
+    prisma.programEnrollment.findFirst({
+      where: { userId: user.id, status: "ACTIVE" },
+      orderBy: { startedAt: "desc" },
+      select: { id: true, programId: true },
+    }),
+  ]);
+  if (previous?.programId === programId) redirect("/app/today");
+  if (!restart.resumable || !program.days.some((d) => d._count.exercises > 0)) redirect(`/app/programs/${programId}`);
+
+  await setAsOnlyActiveProgram(user.id, programId);
+  await prisma.userProgram.update({ where: { id: programId }, data: { status: "ACTIVE", archivedAt: null } });
+  await prisma.programEnrollment.update({
+    where: { id: restart.resumable.enrollmentId },
+    data: { status: "ACTIVE", endedAt: null, currentWeek: restart.resumable.currentWeek },
+  });
+  await applyWeekLayout(prisma, user.id, programId);
+  revalidatePath("/app/programs");
+  revalidatePath("/app/today");
+  // Today says "<programa> retomado · semana N" (not "Programa ativado"), with the switch's undo when one ended.
+  redirect(previous ? `/app/today?retomado=1&anterior=${previous.id}` : "/app/today?retomado=1");
+}
+
+/**
+ * The finished block these act on: the one given (the user's own, COMPLETED)
+ * or the latest one. Null once something was started after it — a second tap
+ * or a stale page must not start another copy.
+ */
+async function completedBlockToFollow(userId: string, enrollmentId: unknown) {
+  const block = await prisma.programEnrollment.findFirst({
+    where: { userId, status: "COMPLETED", ...(typeof enrollmentId === "string" ? { id: enrollmentId } : {}) },
+    orderBy: { endedAt: "desc" },
+    select: {
+      id: true,
+      endedAt: true,
+      programId: true,
+      program: { select: { sourceTemplate: { select: { slug: true } } } },
+    },
+  });
+  if (!block?.endedAt) return null;
+  const startedSince = await prisma.programEnrollment.findFirst({
+    where: { userId, status: "ACTIVE", startedAt: { gt: block.endedAt } },
+    select: { id: true },
+  });
+  return startedSince ? null : block;
+}
+
+/**
+ * "Começar <GD N>": activates the next block of the GD series after the one
+ * just finished (a fresh copy of its template), and lands on Today. Usable
+ * as a plain form action; binding a CompletedBlock's enrollmentId pins it.
+ */
+export async function startNextBlock(enrollmentId?: unknown) {
+  const user = await requireUserOrThrow();
+  const block = await completedBlockToFollow(user.id, enrollmentId);
+  if (!block) redirect("/app/today");
+  const nextSlug = seriesPosition(block.program.sourceTemplate?.slug)?.nextSlug;
+  if (!nextSlug) redirect("/app/programs");
+  const program = await forkTemplateToProgram(nextSlug, user.id);
+  const started = await startProgramInternal(user.id, program.id);
+  revalidatePath("/app/programs");
+  redirect(started.ok ? activatedUrl(started.previousEnrollmentId) : "/app/today");
+}
+
+/**
+ * "Começar <GD N>" on the finished block's own page. The page's switch
+ * confirm has already asked about any program running now, so this switches
+ * on purpose — no "started since" guard, only that the block is the user's
+ * and finished — and Today offers the one-time "Voltar para …" undo.
+ */
+export async function switchToNextBlock(enrollmentId: string) {
+  const user = await requireUserOrThrow();
+  if (typeof enrollmentId !== "string") redirect("/app/programs");
+  const block = await prisma.programEnrollment.findFirst({
+    where: { id: enrollmentId, userId: user.id, status: "COMPLETED" },
+    select: { programId: true, endedAt: true, program: { select: { sourceTemplate: { select: { slug: true } } } } },
+  });
+  if (!block) redirect("/app/programs");
+  const nextSlug = seriesPosition(block.program.sourceTemplate?.slug)?.nextSlug;
+  if (!nextSlug) redirect(`/app/programs/${block.programId}`);
+  // Already started from here (a double tap, a stale page): don't fork a second copy.
+  const running = await prisma.programEnrollment.findFirst({
+    where: {
+      userId: user.id,
+      status: "ACTIVE",
+      startedAt: { gt: block.endedAt ?? new Date(0) },
+      program: { sourceTemplate: { slug: nextSlug } },
+    },
+    select: { id: true },
+  });
+  if (running) redirect("/app/today");
+  const program = await forkTemplateToProgram(nextSlug, user.id);
+  const started = await startProgramInternal(user.id, program.id);
+  revalidatePath("/app/programs");
+  redirect(started.ok ? activatedUrl(started.previousEnrollmentId) : "/app/today");
+}
+
+/**
+ * "Repetir bloco": the finished program again from week 1 — the user's own
+ * copy, with any changes they made to it. Same arguments as startNextBlock.
+ */
+export async function repeatBlock(enrollmentId?: unknown) {
+  const user = await requireUserOrThrow();
+  const block = await completedBlockToFollow(user.id, enrollmentId);
+  if (!block) redirect("/app/today");
+  const started = await startProgramInternal(user.id, block.programId);
+  if (!started.ok) redirect(started.reason === "ALREADY_ACTIVE" ? "/app/today" : `/app/programs/${block.programId}`);
+  revalidatePath("/app/programs");
+  redirect(activatedUrl(started.previousEnrollmentId));
 }

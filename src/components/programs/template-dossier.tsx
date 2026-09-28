@@ -1,13 +1,22 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ExternalLink } from "lucide-react";
+import { ArrowLeft, ArrowRight, ExternalLink } from "lucide-react";
 import { GArrow, GLoad } from "@/components/ui/glyph";
 import { Markdown } from "@/components/markdown";
 import { SectionHead } from "@/components/ui/section-head";
-import { GOAL_LABEL, EXPERIENCE_LABEL, STYLE_LABEL, GOAL_HUE, EQUIPMENT_LABEL } from "@/lib/constants/program-labels";
+import { GOAL_LABEL, STYLE_LABEL, GOAL_HUE, EQUIPMENT_LABEL } from "@/lib/constants/program-labels";
 import { glossaryFor } from "@/lib/programming/glossary";
 import { formatNumber, formatRir, plural, pluralWord } from "@/lib/utils/format";
+import { seriesLevelLabel, splitSeriesTagline, type SeriesBlock } from "@/lib/programming/gd-series";
 import { OpenSectionsOnHash, StickyActionsBar } from "./dossier-client";
+import { SeriesRail } from "./gd-series-rail";
+
+/** A GD block's place in the series, for its dossier's rail and prev/next links. */
+export interface DossierSeries {
+  blocks: SeriesBlock[];
+  /** This dossier's block. */
+  current: string;
+}
 
 interface DossierTemplate {
   namePt: string;
@@ -55,7 +64,9 @@ interface DossierTemplate {
  * to the bottom of the (very tall) page, just above the mobile nav, once the
  * masthead's own buttons have scrolled away. `note` sits right above the plan
  * (the user's own limitations note). `scienceHref` prefixes principle links
- * and `exerciseHref` the exercise technique pages each plan row opens. */
+ * and `exerciseHref` the exercise technique pages each plan row opens.
+ * `series`, for a GD block, adds the series rail with the blocks before and
+ * after it ("Bloco 3 de 9 · faça antes: GD 2"). */
 export function TemplateDossier({
   template,
   actions,
@@ -63,6 +74,7 @@ export function TemplateDossier({
   note,
   scienceHref,
   exerciseHref = "/exercises",
+  series,
 }: {
   template: DossierTemplate;
   actions: React.ReactNode;
@@ -70,8 +82,11 @@ export function TemplateDossier({
   note?: React.ReactNode;
   scienceHref: string;
   exerciseHref?: string;
+  series?: DossierSeries | null;
 }) {
   const hue = GOAL_HUE[template.goal] ?? GOAL_HUE.GENERAL_FITNESS;
+  // A GD tagline leads with what the block builds; its place goes to the series line.
+  const tagline = splitSeriesTagline(template.taglinePt);
   const weekly = Array.isArray(template.weeklyGuidance)
     ? (template.weeklyGuidance as Array<{ week: number; rirTarget: number; setsNotePt: string; notePt?: string }>)
     : [];
@@ -91,14 +106,18 @@ export function TemplateDossier({
           <span className="tag tag--field" style={{ color: hue.fg }}>
             {GOAL_LABEL[template.goal] ?? template.goal}
           </span>
-          <span className="tag tag--spec">{EXPERIENCE_LABEL[template.experienceLevel] ?? template.experienceLevel}</span>
+          <span className="tag tag--spec">{seriesLevelLabel(series?.current ?? "", template.experienceLevel)}</span>
           {template.equipmentAccess && template.equipmentAccess !== "FULL_GYM" ? (
             <span className="tag tag--spec">{EQUIPMENT_LABEL[template.equipmentAccess]}</span>
           ) : null}
           {template.isFlagship ? <span className="tag tag--mark">Destaque</span> : null}
         </div>
         <h1 className="text-display mt-2 text-3xl font-extrabold sm:text-4xl">{template.namePt}</h1>
-        <p className="mt-2 text-muted">{template.taglinePt}</p>
+        {tagline.meta && !series ? (
+          <p className="mt-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted">{tagline.meta}</p>
+        ) : null}
+        <p className="mt-2 text-muted wrap-break-word">{tagline.outcome}</p>
+        {series ? <SeriesPlace series={series} /> : null}
 
         <div className="mt-6 grid grid-cols-3 divide-x divide-border border-y border-border py-3 text-center">
           <MastheadStat value={`${template.daysPerWeek}×`} label="/ semana" />
@@ -292,6 +311,69 @@ export function TemplateDossier({
       </CollapsibleSection>
 
       {stickyActions ? <StickyActionsBar watchId="dossier-actions">{stickyActions}</StickyActionsBar> : null}
+    </div>
+  );
+}
+
+/**
+ * "PLANO GD · BLOCO 3 DE 9 · FAÇA ANTES: GD 2", the series rail with this
+ * block marked, and the blocks before and after it.
+ */
+function SeriesPlace({ series }: { series: DossierSeries }) {
+  const at = series.blocks.findIndex((b) => b.slug === series.current);
+  if (at < 0) return null;
+  const block = series.blocks[at];
+  const prev = at > 0 ? series.blocks[at - 1] : null;
+  const next = at < series.blocks.length - 1 ? series.blocks[at + 1] : null;
+  const link = "font-bold text-accent hover:underline";
+  return (
+    <div className="mt-4 border-t border-border pt-3" data-series-place>
+      <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted">
+        Plano GD · Bloco {at + 1} de {series.blocks.length}
+        {prev ? (
+          <>
+            {" · "}
+            <span className="whitespace-nowrap">
+              faça antes:{" "}
+              <Link href={prev.href} className={link}>
+                {prev.name}
+              </Link>
+            </span>
+          </>
+        ) : (
+          " · o início do plano"
+        )}
+      </p>
+      <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-muted">
+        Semanas {block.fromWeek}–{block.toWeek} de {series.blocks[series.blocks.length - 1].toWeek}
+      </p>
+      {at === 1 && prev ? (
+        <p className="mt-1.5 text-xs text-muted">Já treina com boa técnica? Dá para começar o plano por aqui.</p>
+      ) : null}
+      <SeriesRail blocks={series.blocks} current={series.current} className="mt-3" />
+      {/* Each link stays on one line ("GD Adaptação", "Depois: GD 2"); when both don't
+          fit side by side (320 px), the next one moves under the first, still on the right. */}
+      <nav aria-label="Blocos do Plano GD" className="mt-3 flex flex-wrap items-center justify-between gap-x-3 text-sm">
+        {prev ? (
+          <Link href={prev.href} className="inline-flex min-h-10 items-center gap-1.5 whitespace-nowrap font-semibold hover:text-accent">
+            <ArrowLeft className="size-3.5" aria-hidden />
+            {prev.name}
+          </Link>
+        ) : (
+          <span />
+        )}
+        {next ? (
+          <Link
+            href={next.href}
+            className="ml-auto inline-flex min-h-10 items-center gap-1.5 whitespace-nowrap text-right font-semibold hover:text-accent"
+          >
+            Depois: {next.name}
+            <ArrowRight className="size-3.5" aria-hidden />
+          </Link>
+        ) : (
+          <span className="ml-auto font-mono text-[10px] uppercase tracking-wider text-muted">Último bloco</span>
+        )}
+      </nav>
     </div>
   );
 }

@@ -1,45 +1,70 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
-import { Play } from "lucide-react";
-import { GArrow, GCheck, GLoad, Lettermark } from "@/components/ui/glyph";
+import { cookies } from "next/headers";
+import { GArrow, Lettermark } from "@/components/ui/glyph";
 import { requireUser } from "@/lib/auth/require-user";
 import { getProfile } from "@/lib/data/profile";
 import {
+  HIGH_WEEKLY_DIRECT_SETS,
+  LOW_WEEKLY_SETS,
+  WELCOME_BACK_AFTER_DAYS,
   findUndoableSwitch,
   getActiveEnrollment,
   getDaysDoneThisWeek,
   getInProgressSessions,
+  getLastWeekReview,
   getRecentPersonalRecords,
+  getTodayHabit,
   getWeeklyProgress,
 } from "@/lib/data/dashboard";
+import { getBlockProgress, getRecentlyCompletedBlock, getSeriesContinuation } from "@/lib/data/program-lifecycle";
 import { prisma } from "@/lib/db";
 import { Button } from "@/components/ui/button";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { SectionHead } from "@/components/ui/section-head";
 import { DayActions, DayStatus, dayStates, exerciseCount } from "@/components/workout/day-actions";
 import { InlineActionForm } from "@/components/workout/inline-action-form";
-import { formatKg, plural, pluralWord } from "@/lib/utils/format";
+import { InstallAppCard } from "@/components/pwa/install-app-card";
+import { formatKg, formatNumber, plural } from "@/lib/utils/format";
 import { listTemplates, recommendProfileOf, toCatalogItem } from "@/lib/data/templates";
 import { recommendTemplates } from "@/lib/programming/recommend";
+import { trainingWeekdays } from "@/lib/programming/schedule";
 import { RecommendedPanel } from "@/components/programs/recommended-panel";
-import { cn } from "@/lib/utils/cn";
 import { APP_TIME_ZONE, wallClock } from "@/lib/training/week";
-import { planWeek } from "@/lib/training/day-rotation";
-import { formatSpDate } from "@/lib/training/stale";
-import { DiscardSessionButton } from "@/components/workout/discard-session-button";
-import { startAdHocWorkoutSession } from "@/lib/actions/workouts";
+import {
+  dayNumberOf,
+  mondayOf,
+  planWeek,
+  plannedWeekdays,
+  repeatsDays,
+  upcomingWorkout,
+  weekStrip,
+  weekdayName,
+} from "@/lib/training/day-rotation";
+import { seriesPosition } from "@/lib/training/program-calendar";
+import {
+  completeWeekDone,
+  effectiveProgramWeek,
+  getWeekGuidance,
+  programWeekView,
+  thisWeekRule,
+} from "@/lib/training/week-guidance";
+import { ResumeProgramPanel } from "@/components/programs/resume-program-panel";
+import { formatSpDate, formatSpDaysAgo, spDaysBetween } from "@/lib/training/stale";
 import { restorePreviousProgram } from "@/lib/actions/programs";
 import { StaleSessionRow } from "./stale-session-row";
 import { ClearParams } from "./clear-params";
+import { BlockCompletedHero, InProgressBlock, NextWorkoutHero, RestDayHero, WeekCompleteHero } from "./heroes";
+import { ProgramCard, ThisWeekCard, streakText } from "./week-cards";
+import { nudgeDaysLeft } from "./streak-nudge";
+import { WeekReviewFrame } from "./week-review";
+import { WEEK_REVIEW_COOKIE, WEEK_START_COOKIE, readWeekStart } from "./week-start";
+import { getEnrollmentProgress } from "@/lib/data/user-programs";
 
 export const metadata: Metadata = { title: "Hoje" };
 
 const WEEKDAYS = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SÁB"];
 const MONTHS = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ"];
-/** Exercise rows previewed in the hero: few on phones so "Iniciar treino" stays in view. */
-const PREVIEW_PHONE = 3;
-const PREVIEW_WIDE = 6;
 /** One-time notice params, cleared from the URL once shown. */
 const NOTICE_PARAMS = ["ativado", "anterior", "descartado", "salvo", "retomado"];
 
@@ -75,15 +100,25 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
   const savedSessionId = param("salvo");
   const user = await requireUser();
   const now = new Date();
-  const [profile, enrollment, inProgress, weeklyCount, recentPrs] = await Promise.all([
+  // First: it closes a block whose last week is over, so what's active below is current.
+  const completedBlock = await getRecentlyCompletedBlock(user.id, now);
+  const [profile, enrollment, inProgress, weeklyCount, recentPrs, cookieStore] = await Promise.all([
     getProfile(user.id),
     getActiveEnrollment(user.id),
     getInProgressSessions(user.id, now),
     getWeeklyProgress(user.id),
     getRecentPersonalRecords(user.id),
+    cookies(),
   ]);
   const days = enrollment?.program.days ?? [];
-  const [done, undo, saved, templates] = await Promise.all([
+  const todayNo = dayNumberOf(now);
+  const wall = wallClock(now, APP_TIME_ZONE);
+  const weekKey = String(mondayOf(todayNo));
+  // Monday and Tuesday close out last week (W-129), unless closed for this week on this device.
+  const reviewDay = wall.weekday === 1 || wall.weekday === 2;
+  const reviewClosed = cookieStore.get(WEEK_REVIEW_COOKIE)?.value === weekKey;
+  const noProgram = !enrollment && !completedBlock;
+  const [done, undo, saved, templates, habit, review, progress, continuation] = await Promise.all([
     enrollment
       ? getDaysDoneThisWeek(user.id, enrollment.id, days)
       : { byDayId: new Map<string, string>(), sessionCount: 0 },
@@ -96,9 +131,27 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
           select: { id: true, finishedAt: true },
         })
       : null,
-    // No program yet: what to start with, from the onboarding answers.
-    enrollment ? null : listTemplates(),
+    // No program running: what to start with, from the onboarding answers (and where the GD series goes on).
+    noProgram ? listTemplates() : null,
+    getTodayHabit(user.id, enrollment, now),
+    reviewDay && !reviewClosed ? getLastWeekReview(user.id, now) : null,
+    enrollment
+      ? getBlockProgress(prisma, user.id, {
+          id: enrollment.id,
+          currentWeek: enrollment.currentWeek,
+          startedAt: enrollment.startedAt,
+          program: {
+            durationWeeks: enrollment.program.durationWeeks,
+            daysPerWeek: enrollment.program.daysPerWeek,
+            dayCount: days.length,
+          },
+        })
+      : null,
+    // No program running: the GD series' next block, or the program stopped mid-block ("Retomar").
+    noProgram ? getSeriesContinuation(user.id, now) : null,
   ]);
+  // Where the program switched away from would resume (entry week and last-week resumes included).
+  const undoProgress = undo ? await getEnrollmentProgress(undo.previous, now) : null;
   const doneThisWeek = done.byDayId;
 
   // A workout left open on an earlier day (or for hours) and not touched
@@ -110,43 +163,113 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
   const open = inProgress.filter((s) => !s.stale);
 
   const firstName = (profile?.displayName ?? user.name).split(" ")[0];
-  // The hero suggests the next day not yet trained this week (lib/training/
-  // day-rotation: the same rule the workout summary's "Próximo treino" uses to
-  // promise a day for a later date). A day left open on an earlier date is
-  // handled by its own row above (save it on its day, continue or discard) —
-  // never suggested again next to it, which would start a second copy.
+
+  // Where the program stands this week: the program week the next workout
+  // counts in, a Thursday–Sunday entry week, and that week's guidance.
+  const own = habit.program;
+  const templateSlug = enrollment?.program.sourceTemplate?.slug ?? null;
+  const effectiveWeek = enrollment
+    ? effectiveProgramWeek({
+        currentWeek: enrollment.currentWeek,
+        sessionsThisWeek: done.sessionCount,
+        trainedBefore: own?.trainedBefore ?? false,
+      })
+    : 1;
+  const weekView = enrollment
+    ? programWeekView({ startedAt: enrollment.startedAt, now, effectiveWeek, entryWeekTrained: own?.entryWeekTrained ?? false })
+    : null;
+  const entry = weekView?.kind === "entry" ? { daysLeft: weekView.daysLeft } : null;
+  const streak = habit.streak;
+  // The entry week's target (activation day → Sunday), and whether this week already counts through
+  // another program (a block finished this week, the program switched from): then it's complete.
+  const rule = enrollment
+    ? thisWeekRule({ view: weekView, enrollmentId: enrollment.id, thisWeek: streak.thisWeek })
+    : { targetCap: null, alreadyCounts: false };
+  const guidance = enrollment
+    ? getWeekGuidance(enrollment.program.weeklyGuidance, weekView?.guidanceWeek ?? 1, {
+        templateSlug,
+        durationWeeks: enrollment.program.durationWeeks,
+      })
+    : null;
+
+  // The hero suggests the next day not yet trained this week, on the user's
+  // week (lib/training/day-rotation: planWeek's rotation — the rule the
+  // workout summary's "Próximo treino" uses too — dated by upcomingWorkout).
+  // A day left open on an earlier date is handled by its own row above (save
+  // it on its day, continue or discard) — never suggested again next to it,
+  // which would start a second copy.
   const staleDayIds = new Set(
     [...dayStates(days, stale, new Map()).entries()].filter(([, st]) => st.kind === "in-progress").map(([id]) => id),
   );
-  const plan = planWeek({
-    days,
-    isTrainable: (d) => d.exercises.length > 0,
-    nextDayIndex: enrollment?.nextDayIndex,
-    daysPerWeek: enrollment?.program.daysPerWeek ?? 0,
+  const isTrainable = (d: (typeof days)[number]) => d.exercises.length > 0;
+  const daysPerWeek = enrollment?.program.daysPerWeek ?? 0;
+  const rotation = { days, isTrainable, nextDayIndex: enrollment?.nextDayIndex, daysPerWeek };
+  // A week after one that stopped mid-plan: continue the sequence or start
+  // over (W-089) — and what next week will start with, for a date promised
+  // into it (dashboard getTodayHabit: the summary reads the same).
+  const choice = enrollment ? (own?.weekStart ?? null) : null;
+  const pick =
+    choice && enrollment
+      ? (readWeekStart(cookieStore.get(WEEK_START_COOKIE)?.value, enrollment.id, weekKey) ?? choice.byDefault)
+      : null;
+  // The user's week: the days' planned weekdays; a plan that repeats its days
+  // (A/B at 3×) is trained on the profile's days (programming/schedule).
+  const preferredDays = profile?.preferredDays ?? [];
+  const schedule = repeatsDays(daysPerWeek, days.length)
+    ? trainingWeekdays(daysPerWeek, preferredDays)
+    : preferredDays;
+  const lastDoneNo = habit.lastSession ? dayNumberOf(habit.lastSession.finishedAt) : null;
+  const weekInput = {
+    ...rotation,
     doneDayIds: doneThisWeek,
     sessionCount: done.sessionCount,
     skipDayIds: staleDayIds,
+    carryOver: pick === "continue",
+  };
+  const up = upcomingWorkout({
+    ...weekInput,
+    // A week that already counts: nothing is asked of it — the next workout is next week's first.
+    ...(rule.alreadyCounts ? completeWeekDone(days.filter(isTrainable).map((d) => d.id)) : {}),
+    targetCap: rule.targetCap,
+    todayNo,
+    lastDoneNo,
+    preferredDays: schedule,
+    carryOverNextWeek: own?.nextWeekCarryOver ?? false,
   });
+  const plan = up.week;
   const nextDay = plan.nextDay ?? undefined;
   const weekComplete = plan.weekComplete;
+  const trainedToday = lastDoneNo === todayNo;
   // Only a workout with something logged blocks starting another day (the
   // server discards untouched open sessions when a new day starts).
   const locked = open.some((s) => s.hasData);
   // With a plan, "Esta semana" counts what the plan counts: distinct days, plus
-  // repeats only where the plan repeats days (A/B at 3×) — a redo isn't a new workout.
+  // repeats only where the plan repeats days (A/B at 3×) — a redo isn't a new
+  // workout — never cut to an entry week's cap. A week that already counts
+  // through another program shows that week's count (the streak's row).
   const hasPlan = days.some((d) => d.exercises.length > 0);
-  const weeklyTarget = hasPlan ? plan.weeklyTarget : (profile?.daysPerWeek ?? 3);
-  const weeklyDone = hasPlan ? plan.weeklyDone : weeklyCount;
+  const weeklyTarget = rule.alreadyCounts
+    ? streak.thisWeek.target
+    : hasPlan
+      ? plan.weeklyTarget
+      : (profile?.daysPerWeek ?? 3);
+  const weeklyDone = rule.alreadyCounts
+    ? streak.thisWeek.done
+    : hasPlan
+      ? Math.max(plan.weeklyDone, rule.targetCap != null ? planWeek(weekInput).weeklyDone : 0)
+      : weeklyCount;
   // Stale sessions included: their day's row continues that session instead
   // of offering a fresh "Iniciar".
   const states = dayStates(days, [...open, ...stale], doneThisWeek);
-  const wall = wallClock(now, APP_TIME_ZONE);
   const dateStr = `${WEEKDAYS[wall.weekday]} · ${String(wall.day).padStart(2, "0")} ${MONTHS[wall.month - 1]}`;
   const editHref = enrollment ? `/app/programs/${enrollment.programId}/edit` : "/app/programs";
   const answers = recommendProfileOf(profile);
   const picks =
     templates && answers
-      ? recommendTemplates(answers, templates.map(toCatalogItem))
+      ? recommendTemplates(answers, templates.map(toCatalogItem), {
+          finishedGd: continuation?.finishedGd,
+          stoppedGd: continuation?.resume?.templateSlug,
+        })
           .slice(0, 3)
           .map((r) => ({
             slug: r.template.slug,
@@ -156,17 +279,42 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
           }))
       : [];
 
+  // The masthead's dateline and the welcome back after a gap (W-053).
+  const last = habit.lastSession;
+  const daysAway = last ? spDaysBetween(last.finishedAt, now) : 0;
+  const welcomeBack = last && daysAway >= WELCOME_BACK_AFTER_DAYS && open.length === 0;
+  const trainable = days.filter(isTrainable);
+  const position = nextDay && trainable.length > 1 ? { n: trainable.indexOf(nextDay) + 1, of: trainable.length } : null;
+  const plannedDays = enrollment ? plannedWeekdays(trainable, schedule) : new Set(preferredDays);
+  // Today is one of the user's training days (not just the day a catch-up or an entry week suggests).
+  const scheduledToday =
+    plannedDays.has(wall.weekday) && (!enrollment || todayNo >= dayNumberOf(enrollment.startedAt));
+  const strip = weekStrip({
+    todayNo,
+    planned: plannedDays,
+    doneDayNos: habit.doneDayNos,
+    fromNo: enrollment ? dayNumberOf(enrollment.startedAt) : null,
+    // The hero's day is a training day on the strip too (an entry week, a catch-up).
+    suggestedNo: open.length === 0 && !completedBlock && up.next && !up.next.nextWeek ? up.next.dayNo : null,
+  });
+  const series = seriesPosition(templateSlug);
+  const lastWeekRow = streak.lastWeek;
+
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
       <ClearParams keys={NOTICE_PARAMS} />
       {/* Masthead */}
-      <div className="flex items-baseline justify-between">
-        <div>
-          <span className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-muted">{dateStr}</span>
-          <h1 className="text-display mt-1 text-3xl font-extrabold sm:text-4xl">
-            {greeting(wall.hour)}, {firstName}.
-          </h1>
-        </div>
+      <div>
+        <span className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-muted">{dateStr}</span>
+        <h1 className="text-display mt-1 text-3xl font-extrabold sm:text-4xl">
+          {greeting(wall.hour)}, {firstName}.
+        </h1>
+        {last ? (
+          <p className="mt-1.5 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-muted" data-last-workout>
+            Último treino · <span className="text-foreground/80">{last.name}</span> ·{" "}
+            <span className="whitespace-nowrap">{formatSpDaysAgo(last.finishedAt, now)}</span>
+          </p>
+        ) : null}
       </div>
 
       {/* One-time outcome notices (the params are cleared once shown) */}
@@ -182,16 +330,15 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
       ) : null}
       {param("retomado") === "1" && enrollment ? (
         <Notice>
-          {enrollment.program.name} retomado · semana {enrollment.currentWeek}
+          {enrollment.program.name} retomado ·{" "}
+          {weekView?.kind === "week" ? `semana ${weekView.week}` : "semana de entrada"}
         </Notice>
       ) : null}
       {undo ? (
         <div className="mt-6 border-l-2 border-l-accent bg-surface-2 px-3 py-2.5">
           <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em]">Programa trocado</p>
           <p className="mt-0.5 text-xs text-muted">
-            {undo.previous.program.name} continua na semana {undo.previous.currentWeek}
-            {undo.previous.program.durationWeeks ? ` de ${undo.previous.program.durationWeeks}` : ""}, de onde você
-            parou.
+            {undo.previous.program.name} continua na {undoProgress}, de onde você parou.
           </p>
           <InlineActionForm
             action={restorePreviousProgram.bind(null, undo.previous.id)}
@@ -199,10 +346,23 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
             className="mt-2"
             errorClassName="mt-1.5"
           >
-            <SubmitButton size="sm" variant="outline" pendingLabel="Voltando…">
+            <SubmitButton size="sm" variant="outline" pendingLabel="Voltando…" className="h-auto min-h-9 max-w-full whitespace-normal py-1.5 text-left">
               Voltar para {undo.previous.program.name}
             </SubmitButton>
           </InlineActionForm>
+        </div>
+      ) : null}
+
+      {welcomeBack ? (
+        <div className="mt-6 border-l-2 border-l-accent bg-accent-soft px-3 py-2.5 text-xs" data-welcome-back>
+          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent">Bem-vindo de volta</p>
+          <p className="mt-1 text-foreground/90">
+            {daysAway} dias desde o último treino. Nos primeiros 1–2 treinos, comece com ~90% das cargas e deixe 1 rep a
+            mais na reserva (RIR +1): a força volta rápido.{" "}
+            <Link href="/app/science/deloads" className="font-semibold text-accent underline underline-offset-2">
+              Por quê?
+            </Link>
+          </p>
         </div>
       ) : null}
 
@@ -229,94 +389,42 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
               now={now}
             />
           ))
+        ) : completedBlock ? (
+          <BlockCompletedHero block={completedBlock} />
+        ) : nextDay && up.restToday && up.next ? (
+          <RestDayHero
+            next={up.next}
+            todayNo={todayNo}
+            trainedToday={trainedToday}
+            todaySessionId={trainedToday && last ? last.id : null}
+            startDay={nextDay}
+          />
         ) : nextDay ? (
-          <div className="relative overflow-hidden panel-raised">
-            <span className="absolute left-0 top-0 h-full w-1.5 bg-accent" aria-hidden />
-            <div className="p-6 sm:p-8">
-              {justActivated ? (
-                <span className="mb-2 inline-flex items-center gap-1.5 bg-accent-soft px-2 py-1 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent">
-                  <GCheck className="size-3.5" />
-                  Programa ativado
-                </span>
-              ) : null}
-              <span className="block font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-accent">
-                Próximo treino
-              </span>
-              <h2 className="text-display mt-2 text-3xl font-extrabold sm:text-4xl">{nextDay.name}</h2>
-              <div className="mt-3 flex items-center gap-4 font-mono text-sm text-muted">
-                <span>
-                  <span className="font-bold text-foreground">{nextDay.exercises.length}</span>{" "}
-                  {nextDay.exercises.length === 1 ? "exercício" : "exercícios"}
-                </span>
-                {nextDay.estimatedMinutes ? (
-                  <span>
-                    ~<span className="font-bold text-foreground">{nextDay.estimatedMinutes}</span>′
-                  </span>
-                ) : null}
-              </div>
-
-              {/* The daily loop is "open → start": the button sits right under the title. */}
-              <InlineActionForm
-                action={startAdHocWorkoutSession.bind(null, nextDay.id)}
-                failText="Não foi possível iniciar o treino. Tente de novo."
-                className="mt-5"
-                errorClassName="mt-2"
-              >
-                <SubmitButton size="lg" variant="strong" className="w-full sm:w-auto" pendingLabel="Iniciando…">
-                  <Play className="size-4" />
-                  Iniciar treino
-                </SubmitButton>
-              </InlineActionForm>
-
-              {/* Exercise preview — each row opens its technique page */}
-              <ol className="mt-5 flex flex-col border-b border-border">
-                {nextDay.exercises.slice(0, PREVIEW_WIDE).map((ex, i) => (
-                  <li key={ex.id} className={cn("border-t border-border", i >= PREVIEW_PHONE && "hidden sm:block")}>
-                    <Link href={`/app/exercises/${ex.exercise.slug}`} className="group flex items-center gap-3 py-2">
-                      <div className="relative size-10 shrink-0 overflow-hidden rounded-[3px] bg-surface-2">
-                        {ex.exercise.media?.[0]?.url ? (
-                          <Image src={ex.exercise.media[0].url} alt="" fill sizes="40px" className="object-cover" />
-                        ) : (
-                          <div className="flex h-full items-center justify-center text-muted">
-                            <GLoad className="size-4" />
-                          </div>
-                        )}
-                      </div>
-                      <span className="min-w-0 flex-1 truncate text-sm font-medium group-hover:text-accent">
-                        {ex.exercise.namePt}
-                      </span>
-                      <GArrow className="size-3.5 shrink-0 text-muted transition-transform group-hover:translate-x-0.5" />
-                    </Link>
-                  </li>
-                ))}
-                {nextDay.exercises.length > PREVIEW_PHONE ? (
-                  <li
-                    className={cn(
-                      "border-t border-border py-2 pl-[52px] text-xs text-muted",
-                      nextDay.exercises.length <= PREVIEW_WIDE && "sm:hidden",
-                    )}
-                  >
-                    <span className="sm:hidden">
-                      +{plural(nextDay.exercises.length - PREVIEW_PHONE, "exercício", "exercícios")}
-                    </span>
-                    <span className="hidden sm:inline">
-                      +{plural(nextDay.exercises.length - PREVIEW_WIDE, "exercício", "exercícios")}
-                    </span>
-                  </li>
-                ) : null}
-              </ol>
-            </div>
-          </div>
+          <NextWorkoutHero
+            day={nextDay}
+            justActivated={justActivated}
+            position={position}
+            plannedToday={!entry && up.next?.isToday && scheduledToday ? weekdayName(wall.weekday) : null}
+            weekStart={
+              choice && pick && enrollment
+                ? {
+                    leftover: choice.leftover.map((d) => d.name),
+                    afterEntryWeek: choice.afterEntryWeek,
+                    pick,
+                    firstDayName: trainable[0]?.name ?? "",
+                    enrollmentId: enrollment.id,
+                    weekKey,
+                  }
+                : null
+            }
+          />
         ) : weekComplete ? (
-          <div className="relative overflow-hidden panel-raised p-6 sm:p-8">
-            <span className="absolute left-0 top-0 h-full w-1.5 bg-accent" aria-hidden />
-            <span className="inline-flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-accent">
-              <GCheck className="size-3.5" />
-              Semana concluída
-            </span>
-            <h2 className="text-display mt-2 text-2xl font-extrabold sm:text-3xl">Todos os treinos da semana feitos.</h2>
-            <p className="mt-2 text-sm text-muted">Descanse. Os resultados de cada dia estão logo abaixo.</p>
-          </div>
+          <WeekCompleteHero
+            next={up.next}
+            todayNo={todayNo}
+            kind={rule.alreadyCounts ? "counted" : entry ? "entry" : "week"}
+            programName={enrollment?.program.name ?? null}
+          />
         ) : enrollment && hasPlan ? (
           // Every day with exercises is left open: the rows above save, continue or discard them.
           <p className="px-1 text-sm text-muted">
@@ -339,8 +447,12 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
               </Button>
             </div>
           </div>
+        ) : continuation?.resume ? (
+          // No program running, one stopped mid-block: it picks up where it was (the library is a tap away).
+          <ResumeProgramPanel resume={continuation.resume} showLibraryLink />
         ) : picks.length > 0 ? (
-          // No program yet: the onboarding answers pay off — one pick, why, and one tap to the first set.
+          // No program yet: the onboarding answers pay off — one pick (after a finished GD block,
+          // the series' next one), why, and one tap to the first set.
           <RecommendedPanel picks={picks} fatLoss={answers?.goal === "FAT_LOSS"} showLinks />
         ) : (
           <div className="border-y-2 border-y-[var(--rule-heavy)] bg-surface-2 p-8 text-center">
@@ -360,9 +472,129 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
         )}
       </div>
 
+      {/* Monday/Tuesday: last week, closed out (W-129) */}
+      {review && lastWeekRow && lastWeekRow.trained ? (
+        <div className="mt-6">
+          <WeekReviewFrame
+            weekKey={weekKey}
+            label={
+              <>
+                <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted">Semana anterior</span>
+                <p className="mt-1.5 font-mono text-2xl font-bold tabular-nums">
+                  {lastWeekRow.done}
+                  <span className="text-base text-muted"> / {lastWeekRow.target}</span>
+                  <span className="ml-2 align-middle font-sans text-[10px] font-bold uppercase tracking-wider text-muted">
+                    treinos
+                  </span>
+                </p>
+              </>
+            }
+          >
+            <ul className="mt-2 flex flex-col gap-1 text-xs text-foreground/90">
+              {streakText(streak.current, streak.best) ? (
+                <li className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-accent">
+                  {streakText(streak.current, streak.best)}
+                </li>
+              ) : null}
+              {lastWeekRow.deload ? <li>Semana de deload: leve de propósito.</li> : null}
+              <li>
+                {review.recordExercises.length === 0 ? (
+                  "Nenhum recorde novo — normal fora das semanas mais duras."
+                ) : (
+                  <>
+                    {plural(review.recordExercises.length, "recorde", "recordes")}:{" "}
+                    {review.recordExercises.slice(0, 3).map((e, i) => (
+                      <span key={e.slug}>
+                        {i > 0 ? ", " : ""}
+                        <Link href={`/app/exercises/${e.slug}/history`} className="font-semibold hover:text-accent">
+                          {e.namePt}
+                        </Link>
+                      </span>
+                    ))}
+                    {review.recordExercises.length > 3 ? ` e mais ${review.recordExercises.length - 3}` : ""}
+                  </>
+                )}
+              </li>
+            </ul>
+            {review.muscles.length > 0 ? (
+              <details className="group/muscles mt-2 border-t border-border">
+                <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between text-xs font-semibold text-accent [&::-webkit-details-marker]:hidden">
+                  Séries por músculo
+                  <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted group-open/muscles:hidden">
+                    ver
+                  </span>
+                </summary>
+                <ul className="grid grid-cols-1 gap-x-6 pb-1 min-[420px]:grid-cols-2">
+                  {review.muscles.slice(0, 8).map((m) => (
+                    <li key={m.name} className="flex items-baseline justify-between gap-3 border-t border-border py-1.5 text-xs">
+                      <span className="min-w-0 truncate">{m.name}</span>
+                      <span className="shrink-0 font-mono tabular-nums">
+                        {formatNumber(m.sets, 1)}
+                        {m.low ? <span className="ml-1 text-muted">· abaixo de {LOW_WEEKLY_SETS}</span> : null}
+                        {m.high ? <span className="ml-1 text-muted">· acima de {HIGH_WEEKLY_DIRECT_SETS} diretas</span> : null}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                <p className="pb-2 text-[11px] text-muted">
+                  Séries diretas, mais meia série onde o músculo só ajuda. Referência do app: abaixo de{" "}
+                  {LOW_WEEKLY_SETS} é pouco; acima de {HIGH_WEEKLY_DIRECT_SETS} diretas é muito.{" "}
+                  <Link href="/app/science/training-volume" className="font-semibold text-accent underline underline-offset-2">
+                    Volume
+                  </Link>
+                </p>
+              </details>
+            ) : null}
+            {guidance?.notePt ? (
+              <p className="mt-2 border-t border-border pt-2 text-xs text-foreground/90">
+                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted">
+                  Esta semana ·{" "}
+                </span>
+                {guidance.notePt}
+              </p>
+            ) : null}
+          </WeekReviewFrame>
+        </div>
+      ) : null}
+
+      {/* The week and the program */}
+      <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <ThisWeekCard
+          done={weeklyDone}
+          target={weeklyTarget}
+          strip={strip}
+          streak={{
+            current: streak.current,
+            best: streak.best,
+            remaining: streak.remaining,
+            deload: guidance?.deload ?? false,
+            test: guidance?.test ?? false,
+            freeWeekAvailable: streak.freeWeekAvailable,
+            thursdayOrLater: wall.weekday === 0 || wall.weekday >= 4,
+            // Today's workout is done: the days left start tomorrow (never "falta 1" on a trained Sunday).
+            daysLeft: nudgeDaysLeft(now, trainedToday),
+            perWeek: hasPlan ? daysPerWeek : (profile?.daysPerWeek ?? 3),
+          }}
+          entry={entry ? { ...entry, alreadyCounts: rule.alreadyCounts } : null}
+          programName={enrollment?.program.name ?? null}
+          durationWeeks={enrollment?.program.durationWeeks ?? null}
+        />
+        {enrollment && weekView ? (
+          <ProgramCard
+            programId={enrollment.programId}
+            name={enrollment.program.name}
+            series={series ? { index: series.index, total: series.total } : null}
+            week={weekView.kind === "entry" ? { kind: "entry" } : { kind: "week", week: weekView.week }}
+            durationWeeks={enrollment.program.durationWeeks}
+            guidance={guidance}
+            progress={progress}
+          />
+        ) : null}
+      </div>
+
       {/* Every day of the program, with where it stands this week */}
       {enrollment && days.length > 0 ? (
-        <section className="mt-6">
+        <section className="mt-10">
           <SectionHead label="Treinos do programa" count={plural(days.length, "dia", "dias")} />
           {locked ? (
             <p className="mt-2 text-xs text-muted">Finalize ou descarte o treino em andamento para iniciar outro dia.</p>
@@ -385,6 +617,9 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
                     <p className="text-sm font-semibold leading-snug wrap-break-word">{day.name}</p>
                     <p className="text-xs text-muted">
                       {exerciseCount(day.exercises.length)}
+                      {day.weekday != null && !empty ? (
+                        <span className="font-mono text-[10px] uppercase tracking-[0.1em]"> · {WEEKDAYS[day.weekday]}</span>
+                      ) : null}
                       <DayStatus state={state} suggested={suggested} />
                     </p>
                   </div>
@@ -401,62 +636,6 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
           </div>
         </section>
       ) : null}
-
-      {/* Stats grid */}
-      <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
-        {enrollment ? (
-          <div className="min-w-0 reg-frame p-5">
-            <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted">Programa</span>
-            <p className="mt-1.5 truncate text-sm font-semibold">{enrollment.program.name}</p>
-            {enrollment.program.durationWeeks ? (
-              <>
-                <p className="mt-3 font-mono text-2xl font-bold tabular-nums">
-                  {enrollment.currentWeek}
-                  <span className="text-base text-muted"> / {enrollment.program.durationWeeks}</span>
-                </p>
-                <div className="mt-2 flex gap-1">
-                  {Array.from({ length: enrollment.program.durationWeeks }, (_, i) => (
-                    <span
-                      key={i}
-                      className={`h-1 flex-1 rounded-full ${i < enrollment.currentWeek ? "bg-accent" : "bg-surface-2"}`}
-                    />
-                  ))}
-                </div>
-                <span className="mt-1.5 block text-[10px] uppercase tracking-wider text-muted">
-                  {pluralWord(enrollment.program.durationWeeks, "semana", "semanas")}
-                </span>
-              </>
-            ) : null}
-          </div>
-        ) : null}
-
-        <div className="min-w-0 reg-frame p-5">
-          <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted">Esta semana</span>
-          <p className="mt-1.5 font-mono text-2xl font-bold tabular-nums">
-            {weeklyDone}
-            <span className="text-base text-muted"> / {weeklyTarget}</span>
-          </p>
-          <div className="mt-3 flex gap-1.5">
-            {Array.from({ length: weeklyTarget }, (_, i) => (
-              <span
-                key={i}
-                className={`h-8 flex-1 rounded-[4px] ${i < weeklyDone ? "bg-accent" : "border border-border bg-surface-2"}`}
-              />
-            ))}
-          </div>
-          <div className="mt-1.5 flex items-center justify-between gap-3">
-            <span className="text-[10px] uppercase tracking-wider text-muted">treinos concluídos</span>
-            {/* Every past workout and the calendar live in the history. */}
-            <Link
-              href="/app/history"
-              className="-my-2.5 inline-flex items-center gap-1 py-2.5 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
-            >
-              Histórico
-              <GArrow className="size-3" />
-            </Link>
-          </div>
-        </div>
-      </div>
 
       {/* PRs */}
       {recentPrs.length > 0 ? (
@@ -484,6 +663,12 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
           </div>
         </section>
       ) : null}
+
+      {/*
+        The app on the home screen, after the first workouts (decides by itself).
+        Last on the page: it appears after hydration, so nothing below it can jump.
+      */}
+      <InstallAppCard finishedWorkouts={habit.finishedWorkouts} className="mt-10" />
     </div>
   );
 }
@@ -497,45 +682,5 @@ function Notice({ children }: { children: React.ReactNode }) {
     >
       {children}
     </p>
-  );
-}
-
-function InProgressBlock({
-  sessionId,
-  name,
-  setsDone,
-  startedAt,
-  now,
-}: {
-  sessionId: string;
-  name: string;
-  setsDone: number;
-  startedAt: Date;
-  now: Date;
-}) {
-  const s = wallClock(startedAt, APP_TIME_ZONE);
-  const n = wallClock(now, APP_TIME_ZONE);
-  const sameDay = s.year === n.year && s.month === n.month && s.day === n.day;
-  const started = sameDay
-    ? "iniciado hoje"
-    : `iniciado em ${String(s.day).padStart(2, "0")}/${String(s.month).padStart(2, "0")}`;
-  return (
-    <div className="relative overflow-hidden panel-raised p-6 sm:p-8">
-      <span className="absolute left-0 top-0 h-full w-1.5 bg-warning" aria-hidden />
-      <span className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-warning">Treino em andamento</span>
-      <h2 className="text-display mt-1.5 text-2xl font-extrabold sm:text-3xl">{name}</h2>
-      <p className="mt-1.5 font-mono text-xs text-muted">
-        {plural(setsDone, "série registrada", "séries registradas")} · {started}
-      </p>
-      <div className="mt-5 flex flex-wrap items-center gap-2">
-        <Button size="lg" asChild>
-          <Link href={`/app/workout/${sessionId}`}>
-            Continuar
-            <GArrow className="size-4" />
-          </Link>
-        </Button>
-        <DiscardSessionButton sessionId={sessionId} setsDone={setsDone} />
-      </div>
-    </div>
   );
 }

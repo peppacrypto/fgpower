@@ -10,7 +10,7 @@ const GRID = "grid grid-cols-[2.25rem_minmax(0,1fr)_minmax(0,1fr)_3rem_2.75rem] 
 
 /**
  * The live workout, drawn block by block as workout-execution-client.tsx lays
- * out its first exercise: the sticky header, the "Você informou" note when
+ * out its first exercise: the sticky header (with the program week's line), the "Você informou" note when
  * this device's screen last showed one (LimitationsBone, limitations-echo),
  * the name (two lines, as most are), the exercise nav row, the actions, the
  * program's note, the first-time / last-time box, the warm-up line and then
@@ -37,6 +37,10 @@ function WorkoutSkeleton({ limitationsPx }: { limitationsPx: number }) {
             </div>
           </div>
           <Bone className="h-11 w-24 shrink-0" />
+        </div>
+        {/* A program's week: "Sem. 5 · alvo RIR 1 · Instruções da semana" (every template has one). */}
+        <div className="mx-auto flex h-5 max-w-3xl items-center">
+          <Bone className="h-3 w-56 max-w-full" />
         </div>
       </div>
 

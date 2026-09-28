@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useTransition } from "react";
 import { Avatar } from "@/components/ui/misc";
+import { Lettermark } from "@/components/ui/glyph";
 import { Button } from "@/components/ui/button";
 import { respondToFollowRequest } from "@/lib/actions/social";
 import { runAction } from "@/components/social/run-action";
@@ -16,8 +17,14 @@ const TYPE_TEXT: Record<string, (actor: string) => string> = {
   FOLLOW_ACCEPTED: (a) => `${a} aceitou sua solicitação`,
   PERSONAL_RECORD: () => `Você bateu um novo recorde`,
   PROGRAM_WEEK_COMPLETE: () => `Você completou uma semana do programa`,
-  PROGRAM_COMPLETED: () => `Você completou um programa`,
+  PROGRAM_COMPLETED: () => `Você concluiu um programa`,
 };
+
+/** The program named in a PROGRAM_COMPLETED notification's payload, if any. */
+function programNameOf(data: unknown): string | null {
+  const name = data && typeof data === "object" ? (data as { programName?: unknown }).programName : null;
+  return typeof name === "string" && name.trim() ? name.trim() : null;
+}
 
 export interface NotificationData {
   id: string;
@@ -27,6 +34,8 @@ export interface NotificationData {
   actor: { name: string; username: string | null; image: string | null } | null;
   activity: { id: string } | null;
   followRequest: { id: string; status: string } | null;
+  /** Type-specific payload (e.g. { programName } for PROGRAM_COMPLETED). */
+  data?: unknown;
 }
 
 export function NotificationItem({ notification }: { notification: NotificationData }) {
@@ -35,7 +44,10 @@ export function NotificationItem({ notification }: { notification: NotificationD
   const [pending, startTransition] = useTransition();
 
   const actorName = notification.actor?.name ?? "Alguém";
-  const text = TYPE_TEXT[notification.type]?.(actorName) ?? "Nova notificação";
+  const programName = notification.type === "PROGRAM_COMPLETED" ? programNameOf(notification.data) : null;
+  const text = programName
+    ? `Você concluiu ${programName}`
+    : (TYPE_TEXT[notification.type]?.(actorName) ?? "Nova notificação");
   const href = notification.activity ? `/app/activity/${notification.activity.id}` : notification.actor?.username ? `/u/${notification.actor.username}` : undefined;
   const isFollowRequest = notification.type === "FOLLOW_REQUEST" && notification.followRequest;
 
@@ -51,7 +63,12 @@ export function NotificationItem({ notification }: { notification: NotificationD
 
   const content = (
     <div className="flex items-center gap-3 py-3.5">
-      <Avatar src={notification.actor?.image} name={notification.actor?.name ?? "?"} size={36} />
+      {notification.actor ? (
+        <Avatar src={notification.actor.image} name={notification.actor.name} size={36} />
+      ) : (
+        // Your own milestones and records: the app's mark, not a "?" avatar.
+        <Lettermark code="FG" className="size-9 shrink-0 text-[10px]" />
+      )}
       <div className="flex-1">
         <p className="text-sm">{text}</p>
         <p className="text-xs text-muted">{formatAppDate(notification.createdAt)}</p>

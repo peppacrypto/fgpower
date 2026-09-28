@@ -57,6 +57,12 @@ export interface ExecutionExerciseLog {
   bodyweight: boolean;
   /** A hold whose "reps" are seconds (set-plan isTimedHold): "45 s", never "× 45". */
   timed: boolean;
+  /**
+   * What a set must beat to be a record (pr-moment recordBars: each load's
+   * most reps and the best-1RM set in other finished workouts). Empty: never
+   * done before — a baseline, no PR moment.
+   */
+  recordBars: { weightKg: number; reps: number }[];
 }
 
 export interface ExecutionSession {
@@ -104,5 +110,23 @@ export interface ExecutionSession {
      * then saving with today's date comes first and its own day stays offered.
      */
     leftOpen: boolean;
+  } | null;
+  /**
+   * The program week this workout counts in and its guidance (W-054): the
+   * header's "Sem. 5 · alvo RIR 1" and "Instruções da semana". Each
+   * exercise's rirTarget already follows the week (its own target moved by
+   * the wave, never below its floor: week-guidance weekRirTarget). Null
+   * outside a program or without guidance for the week.
+   */
+  week: {
+    /** "Sem. 5", "Sem. de entrada". */
+    label: string;
+    /** "Semana 5 de 13". */
+    title: string;
+    rirTarget: number | null;
+    notePt: string | null;
+    setsNotePt: string | null;
+    deload: boolean;
+    test: boolean;
   } | null;
 }

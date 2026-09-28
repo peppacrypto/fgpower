@@ -5,6 +5,7 @@ import { ChevronDown, Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { SectionHead } from "@/components/ui/section-head";
 import { ProtocolCard, type ProtocolCardData } from "@/components/programs/protocol-card";
+import { GdSeriesCard, type SeriesProgress } from "@/components/programs/gd-series-card";
 import { FAT_LOSS_NOTE } from "@/lib/constants/program-labels";
 import {
   DAY_OPTIONS,
@@ -16,6 +17,7 @@ import {
   activeFilterCount,
   applyFilters,
   groupCatalog,
+  programGroup,
   sameFilters,
   searchLibrary,
   shelveFiltered,
@@ -32,7 +34,9 @@ import { cn } from "@/lib/utils/cn";
  * goal), shelved by kind. Everything filters instantly on the client. When
  * the page knows the user, the chips start preset from their profile
  * ("Filtrado pelo seu perfil · limpar"). Filtered, the shelf holding the
- * user's pick leads (see shelveFiltered).
+ * user's pick leads (see shelveFiltered). The GD series is one card (its
+ * blocks one tap away) rather than nine look-alike ones — a search still
+ * finds each block by name.
  */
 export function ProtocolLibrary({
   label,
@@ -41,10 +45,19 @@ export function ProtocolLibrary({
   pick = null,
   suggestions = [],
   suggestionsLabel = "Para você",
+  seriesEntry = "gd-adaptacao",
+  runningSlug = null,
+  seriesProgress = null,
   children,
 }: {
   label: string;
   items: ProtocolCardData[];
+  /** Where the GD card sends this user first: "gd-adaptacao" (new to lifting) or "gd-1". */
+  seriesEntry?: string;
+  /** The template the user is running: the GD card points at it when it's a block. */
+  runningSlug?: string | null;
+  /** Where the user stands in the GD series (blocks finished, the next one, one to resume): the GD card goes on from it. */
+  seriesProgress?: SeriesProgress | null;
   /** Chips preselected from the profile; null/undefined = start unfiltered. */
   preset?: LibraryFilters | null;
   /** Slug of the user's top recommendation (the "Para você" card). */
@@ -156,6 +169,27 @@ export function ProtocolLibrary({
           <>
             {filters.goal === "fat-loss" ? <HonestLine /> : null}
             {shelves.map((group) => {
+              if (group.key === "gd") {
+                const total = items.filter((t) => programGroup(t) === "gd").length;
+                return (
+                  <section key={group.key} aria-label={group.label} className="mt-10 first:mt-8">
+                    <SectionHead
+                      label={group.label}
+                      count={filtersOn ? `${group.items.length} de ${total} blocos` : `${total} blocos`}
+                    />
+                    <GdSeriesCard
+                      // Remount when the filters change, so the list opens on the new matches.
+                      key={filtersOn ? group.items.map((t) => t.slug).join() : "all"}
+                      items={items}
+                      entry={seriesEntry}
+                      running={runningSlug}
+                      progress={seriesProgress}
+                      pick={pick}
+                      matches={filtersOn ? new Set(group.items.map((t) => t.slug)) : null}
+                    />
+                  </section>
+                );
+              }
               const collapsible = previewShelves && group.items.length > SHELF_PREVIEW + 1;
               const open = !collapsible || openShelves.has(group.key);
               const restId = `shelf-${group.key}-rest`;

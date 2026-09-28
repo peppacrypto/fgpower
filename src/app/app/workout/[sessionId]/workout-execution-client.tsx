@@ -53,6 +53,7 @@ import { RestTimerBar, clearStoredRestTimer, useRestTimer } from "./rest-timer";
 import { unlockRestAudio } from "./rest-audio";
 import { useWakeLock } from "./use-wake-lock";
 import { rememberLimitationsEcho } from "./limitations-bone";
+import { recordRows } from "./pr-moment";
 import type { ExecutionExerciseLog, ExecutionSession, ExecutionSetLog } from "./types";
 
 type RowValues = Record<DraftField, string>;
@@ -314,6 +315,9 @@ function buildRows(
   };
   const prescribed = plan.prescribed.map((r) => toModel(r));
   const extras = plan.extras.map((r) => toModel(r));
+  // The ✓'d sets that beat a record (pr-moment): the summary's rules, in the order done.
+  const records = recordRows(ex.recordBars, workingRowsForRecords([...prescribed, ...extras]));
+  for (const r of [...prescribed, ...extras]) if (records.has(r.id)) r.record = true;
   // Warm-ups ramp up to the first working set: what is typed there, else its grey load.
   const first = prescribed[0];
   const workingLoad = first ? (parseDecimalInput(first.values.weight) ?? first.suggestion.weightKg) : null;
@@ -323,6 +327,13 @@ function buildRows(
     prescribed,
     extras,
   };
+}
+
+/** ✓'d working rows as pr-moment reads them (loads/reps as shown). */
+function workingRowsForRecords(rows: SetTableRowModel[]) {
+  return rows
+    .filter((r) => r.done)
+    .map((r) => ({ id: r.id, weightKg: parseDecimalInput(r.values.weight), reps: parseDecimalInput(r.values.reps) }));
 }
 
 function rowsComplete(rows: ExerciseRows, skipped: boolean) {
@@ -531,6 +542,22 @@ export function WorkoutExecutionClient({
   const [limitationsOpen, setLimitationsOpen] = useState(false);
   const [notesExpanded, setNotesExpanded] = useState(false);
   const [editingNote, setEditingNote] = useState(false);
+  /** The week's instructions (W-054), opened from the header chip. */
+  const [weekOpen, setWeekOpen] = useState(false);
+  /** The chip's week line: "Sem. 5 · alvo RIR 1", "Sem. 13 · teste". */
+  const weekChip = session.week
+    ? `${session.week.label}${
+        session.week.test
+          ? " · teste"
+          : session.week.deload
+            ? " · deload"
+            : session.week.rirTarget != null
+              ? ` · alvo ${formatRir(session.week.rirTarget)}`
+              : ""
+      }`
+    : "";
+  /** The row whose "PR" was just earned (W-122): its mark pops in once. */
+  const [prFlash, setPrFlash] = useState<{ id: string; n: number } | null>(null);
   const rest = useRestTimer(session.id);
   useWakeLock();
 
@@ -974,6 +1001,21 @@ export function WorkoutExecutionClient({
       ...d,
       [id]: { values: committed, done: true, doneAt: now, dirty: true, savedAt: null, rev: nextRev() },
     }));
+    // The PR moment: this set beats a real record (never a first time, never volume).
+    if (row.kind !== "WARMUP") {
+      const ordered = [...rows.prescribed, ...rows.extras].map((r) =>
+        r.id === id ? { ...r, done: true, values: committed } : r,
+      );
+      if (recordRows(entry.ex.recordBars, workingRowsForRecords(ordered)).has(id)) {
+        setPrFlash({ id, n: now });
+        try {
+          navigator.vibrate?.(30);
+        } catch {
+          // Not every browser lets a page vibrate.
+        }
+        announce(`Recorde pessoal: ${formatSet(weightKg, Math.round(reps), { timed: entry.ex.timed })}`);
+      }
+    }
     // The rest starts on the tap itself — never after a server round trip.
     if (row.kind !== "WARMUP") {
       if (session.restTimerSound) unlockRestAudio();
@@ -1288,6 +1330,57 @@ export function WorkoutExecutionClient({
             Finalizar
           </Button>
         </div>
+        {session.week ? (
+          <div className="mx-auto max-w-3xl">
+            <button
+              type="button"
+              onClick={() => setWeekOpen((v) => !v)}
+              aria-expanded={weekOpen}
+              data-week-chip
+              // A 44px tap target (the gym's size) around a 28px chip: the ::after
+              // reaches 16px down, outside the layout (clear of "ver todos" above) —
+              // so a chip that wraps on a narrow phone still pushes the header down
+              // instead of running into its edge.
+              className="relative -my-1 inline-flex min-h-7 max-w-full flex-wrap items-center gap-x-1.5 gap-y-0.5 py-1 text-left font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted after:absolute after:inset-x-0 after:top-0 after:-bottom-4 after:content-[''] hover:text-foreground"
+            >
+              <span className="whitespace-nowrap bg-surface-2 px-1.5 py-0.5 text-foreground">{weekChip}</span>
+              <span className="whitespace-nowrap text-accent">
+                Instruções
+                {/* A long week line ("Sem. de entrada · alvo RIR 3") keeps one line on a 390px phone. */}
+                <span className={weekChip.length >= 20 ? "max-[419px]:hidden" : "max-[359px]:hidden"}> da semana</span>
+              </span>
+              <ChevronDown className={cn("size-3 shrink-0 text-accent transition-transform", weekOpen && "rotate-180")} />
+            </button>
+          </div>
+        ) : null}
+        {session.week && weekOpen ? (
+          <div className="mx-auto mt-2 max-w-3xl border-l-2 border-l-accent bg-surface-2 px-3 py-2.5 text-xs" data-week-guidance>
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted">
+              {session.week.title}
+              {session.week.test ? " · semana de teste" : session.week.deload ? " · deload" : ""}
+              {session.week.rirTarget != null ? ` · RIR alvo ${formatDecimal(session.week.rirTarget)}` : ""}
+            </p>
+            {session.week.rirTarget != null ? (
+              <p className="mt-1.5 leading-relaxed text-muted">
+                O RIR de cada exercício já segue esta semana, sem descer do mínimo de cada um.
+              </p>
+            ) : null}
+            {session.week.notePt ? <p className="mt-1.5 leading-relaxed text-foreground/90">{session.week.notePt}</p> : null}
+            {session.week.setsNotePt ? (
+              <p className="mt-1.5 leading-relaxed text-foreground/90">
+                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted">Séries · </span>
+                {session.week.setsNotePt}
+              </p>
+            ) : null}
+            <Link
+              href={session.week.deload || session.week.test ? "/app/science/deloads" : "/app/science/rir"}
+              className="-my-1 mt-1 inline-flex items-center gap-1 py-2 font-semibold text-accent hover:underline"
+            >
+              {session.week.deload || session.week.test ? "Por que semanas leves" : "Entenda o RIR"}
+              <ChevronRight className="size-3.5" />
+            </Link>
+          </div>
+        ) : null}
         <div role="status" className="mx-auto max-w-3xl">
           {waiting > 0 && loggedOut ? (
             <p className="mt-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-warning">
@@ -1734,6 +1827,7 @@ export function WorkoutExecutionClient({
             onToggleWarmups={toggleWarmups}
             onExplainRir={() => setRirSheetOpen(true)}
             timed={exercise.timed}
+            flashRowId={prFlash}
           />
         </div>
 

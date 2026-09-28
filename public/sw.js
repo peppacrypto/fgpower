@@ -10,12 +10,11 @@
 //    to the network and is never cached.
 // Bump CACHE_NAME whenever a SHELL_ASSETS file changes (offline.html included):
 // the browser only reinstalls the worker, and re-precaches, when sw.js changes.
-const CACHE_NAME = "fgpower-shell-v2";
+const CACHE_NAME = "fgpower-shell-v3";
 const STATIC_CACHE = "fgpower-static-v2";
 const OFFLINE_URL = "/offline.html";
 const SHELL_ASSETS = [
   OFFLINE_URL,
-  "/manifest.webmanifest",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
   "/brand/fgpower-tile.png",

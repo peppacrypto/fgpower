@@ -7,9 +7,14 @@ import { NOT_FOUND_TITLE } from "@/components/ui/not-found-panel";
 import {
   getExerciseNotesForSession,
   getPreviousPerformances,
+  getRecordBars,
   getWorkoutSessionForExecution,
   getWorkoutUserContext,
+  getWorkoutWeek,
+  rirExerciseOf,
 } from "@/lib/data/workout-session";
+import { weekRirTarget } from "@/lib/training/week-guidance";
+import { recordBars } from "./pr-moment";
 import {
   assessOpenSession,
   formatSpDate,
@@ -46,20 +51,22 @@ const ECHO_LIMITATIONS_FOR = 3;
  */
 async function load(sessionId: string, userId: string) {
   const loadedAtMs = Date.now();
-  const [session, previous, notes, context] = await Promise.all([
+  const [session, previous, notes, context, week, bars] = await Promise.all([
     getWorkoutSessionForExecution(sessionId),
     getPreviousPerformances(userId, sessionId),
     getExerciseNotesForSession(userId, sessionId),
     getWorkoutUserContext(userId, ECHO_LIMITATIONS_FOR),
+    getWorkoutWeek(userId, sessionId),
+    getRecordBars(userId, sessionId),
   ]);
-  return { loadedAtMs, session, previous, notes, ...context };
+  return { loadedAtMs, session, previous, notes, week, bars, ...context };
 }
 
 export default async function WorkoutExecutionPage({ params, searchParams }: PageProps<"/app/workout/[sessionId]">) {
   const { sessionId } = await params;
   const sp = await searchParams;
   const user = await requireUser();
-  const { loadedAtMs, session, previous, notes, profile, finishedWorkouts } = await load(sessionId, user.id);
+  const { loadedAtMs, session, previous, notes, week, bars, profile, finishedWorkouts } = await load(sessionId, user.id);
 
   if (!session) notFound();
   if (session.userId !== user.id) notFound();
@@ -73,9 +80,16 @@ export default async function WorkoutExecutionPage({ params, searchParams }: Pag
     const strategy = log.programExercise?.progressionStrategy ?? session.program?.progressionStrategy ?? "DOUBLE";
     const loadIncrementKg = log.programExercise?.loadIncrementKg ?? profile?.loadIncrementKg ?? 2.5;
     const timed = isTimedHold({ slug: log.exercise.slug, notes: log.notes });
+    // The program's week moves the exercise's own target by its wave, never
+    // below the exercise's floor (week-guidance weekRirTarget — the summary's
+    // "Na próxima" reads the same, getSessionRirTargets).
+    const rirTarget = weekRirTarget(log.rirTarget, week?.guidance ?? null, {
+      baseline: week?.baselineRir ?? null,
+      exercise: rirExerciseOf(log),
+    });
     const advice = adviceFromLastTime({
       strategy,
-      prescribed: { repMin: log.repMin, repMax: log.repMax, rirTarget: log.rirTarget },
+      prescribed: { repMin: log.repMin, repMax: log.repMax, rirTarget },
       lastTime: last,
       loadIncrementKg,
       timed,
@@ -92,7 +106,7 @@ export default async function WorkoutExecutionPage({ params, searchParams }: Pag
       warmupSets: log.warmupSets,
       repMin: log.repMin,
       repMax: log.repMax,
-      rirTarget: log.rirTarget,
+      rirTarget,
       restSeconds: log.restSeconds,
       wasSkipped: log.wasSkipped,
       notes: log.notes,
@@ -115,6 +129,7 @@ export default async function WorkoutExecutionPage({ params, searchParams }: Pag
       loadIncrementKg,
       bodyweight: isBodyweightEquipment(log.exercise.equipment?.category),
       timed,
+      recordBars: recordBars(bars.get(log.exerciseId) ?? []),
     };
   });
 
@@ -149,6 +164,22 @@ export default async function WorkoutExecutionPage({ params, searchParams }: Pag
     firstWorkout: finishedWorkouts === 0,
     limitations: finishedWorkouts < ECHO_LIMITATIONS_FOR ? limitations : null,
     stale,
+    week: week
+      ? {
+          label: week.view.kind === "entry" ? "Sem. de entrada" : `Sem. ${week.view.week}`,
+          title:
+            week.view.kind === "entry"
+              ? "Semana de entrada"
+              : week.durationWeeks
+                ? `Semana ${Math.min(week.view.week, week.durationWeeks)} de ${week.durationWeeks}`
+                : `Semana ${week.view.week}`,
+          rirTarget: week.guidance.rirTarget,
+          notePt: week.guidance.notePt,
+          setsNotePt: week.guidance.setsNotePt,
+          deload: week.guidance.deload,
+          test: week.guidance.test,
+        }
+      : null,
   };
 
   // This device's workout-screen prefs (folded hint, open warm-ups, a closed

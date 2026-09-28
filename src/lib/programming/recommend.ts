@@ -7,6 +7,7 @@
  * things a user can't change about their week (days, time) outweigh taste.
  */
 import { EQUIPMENT_LABEL, EXPERIENCE_LABEL } from "@/lib/constants/program-labels";
+import { GD_SERIES } from "@/lib/training/program-calendar";
 import { FOCUS_SLUGS, isMidSeriesGd, isSportTemplate } from "./catalog";
 
 export { GD_ENTRY_SLUGS, isMidSeriesGd } from "./catalog";
@@ -162,17 +163,45 @@ export function reasonChips(profile: RecommendProfile, t: RecommendableTemplate)
 }
 
 /**
+ * Where the user is in the GD series: the blocks they finished, and one they
+ * stopped mid-way (it's resumed — "Retomar da semana N" — not started over).
+ * The series goes on from the furthest block finished — its next block leads
+ * the picks — and the blocks behind it drop out (a GD 1 graduate is never
+ * sent back to the Adaptação, nor offered GD 1 again as a new program). A
+ * stopped block drops out by itself: the blocks before it that were never
+ * finished stay (someone who stopped GD 1 without the Adaptação may step
+ * back to it).
+ */
+export interface SeriesHistory {
+  finishedGd?: readonly string[];
+  stoppedGd?: string | null;
+}
+
+/** The GD blocks left behind (finished and those before them, and the stopped one) and the one that comes next. */
+export function seriesStanding(history: SeriesHistory = {}): { passed: Set<string>; next: string | null } {
+  const series = GD_SERIES as readonly string[];
+  const furthest = Math.max(-1, ...(history.finishedGd ?? []).map((slug) => series.indexOf(slug)));
+  const passed = new Set(series.slice(0, furthest + 1));
+  if (history.stoppedGd && series.includes(history.stoppedGd)) passed.add(history.stoppedGd);
+  const next = furthest >= 0 ? (series[furthest + 1] ?? null) : null;
+  return { passed, next: next && !passed.has(next) ? next : null };
+}
+
+/**
  * Every template the user can run, best first (ties keep the given order —
  * the catalog's own: flagship, then sortOrder). Empty when nothing fits the
- * equipment.
+ * equipment. After a finished GD block, the series' next block leads and the
+ * blocks behind it are left out (seriesStanding).
  */
 export function recommendTemplates<T extends RecommendableTemplate>(
   profile: RecommendProfile,
   templates: T[],
+  history: SeriesHistory = {},
 ): Recommendation<T>[] {
+  const { passed, next } = seriesStanding(history);
   return templates
     .map((template, i) => ({ template, i, score: scoreTemplate(profile, template) }))
-    .filter(({ template }) => canRun(profile.equipmentAccess, template.equipmentAccess))
-    .sort((a, b) => b.score - a.score || a.i - b.i)
+    .filter(({ template }) => canRun(profile.equipmentAccess, template.equipmentAccess) && !passed.has(template.slug))
+    .sort((a, b) => Number(b.template.slug === next) - Number(a.template.slug === next) || b.score - a.score || a.i - b.i)
     .map(({ template, score }) => ({ template, score, reasons: reasonChips(profile, template) }));
 }

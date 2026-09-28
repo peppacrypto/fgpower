@@ -53,9 +53,12 @@ function suggestedDayNo(text: string, today: number): number {
   return at(year) < today ? at(year + 1) : at(year);
 }
 
-/** Today's hero day ("Próximo treino" → its heading). */
+/**
+ * Today's hero: the day it offers ("Próximo treino"), or — on a rest day or a
+ * finished week — the one it names as next.
+ */
 function todayHero(page: Page) {
-  return page.locator(".panel-raised").filter({ hasText: "Próximo treino" }).first().getByRole("heading", { level: 2 });
+  return page.locator("[data-hero]").first();
 }
 
 async function finishFirstDay(page: Page, label: string, template: string, firstDay: string) {
@@ -105,17 +108,20 @@ for (const plan of [
         page.waitForURL(/\/app\/today/, { timeout: 30_000 }),
         next.getByRole("link", { name: "Ir para Hoje" }).click(),
       ]);
-      await expect(todayHero(page)).toHaveText(promised);
+      await expect(todayHero(page)).toContainText(promised);
     }
 
     if (weekOf(date) > weekOf(today)) {
       // Monday's view: nothing done yet in the new week, the program pointer as it is now.
+      // The whole program moves back with it: an entry week stays the entry week.
       sql(
-        `UPDATE "WorkoutSession" SET "startedAt" = "startedAt" - interval '7 days', "finishedAt" = "finishedAt" - interval '7 days' WHERE id = '${sessionId}'`,
+        `UPDATE "WorkoutSession" SET "startedAt" = "startedAt" - interval '7 days', "finishedAt" = "finishedAt" - interval '7 days' WHERE id = '${sessionId}';
+         UPDATE "ProgramEnrollment" SET "startedAt" = "startedAt" - interval '7 days'
+           WHERE id = (SELECT "enrollmentId" FROM "WorkoutSession" WHERE id = '${sessionId}');`,
       );
     }
     await page.goto("/app/today");
-    await expect(todayHero(page)).toHaveText(promised);
+    await expect(todayHero(page)).toContainText(promised);
   });
 }
 

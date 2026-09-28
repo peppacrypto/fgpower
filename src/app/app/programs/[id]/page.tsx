@@ -5,15 +5,25 @@ import Image from "next/image";
 import { AlertTriangle, Info } from "lucide-react";
 import { GArrow, GLoad } from "@/components/ui/glyph";
 import { requireUser } from "@/lib/auth/require-user";
-import { enrollmentProgress, getUserProgram } from "@/lib/data/user-programs";
+import { getEnrollmentProgress, getUserProgram } from "@/lib/data/user-programs";
 import { getActiveEnrollment, getDaysDoneThisWeek, getInProgressSessions } from "@/lib/data/dashboard";
 import { analyzeUserProgram } from "@/lib/programming/analyze";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { SubmitButton } from "@/components/ui/submit-button";
-import { startProgram, archiveProgram, duplicateProgram } from "@/lib/actions/programs";
+import {
+  startProgram,
+  archiveProgram,
+  duplicateProgram,
+  deleteUntrainedProgram,
+  resumeProgram,
+  switchToNextBlock,
+} from "@/lib/actions/programs";
+import { getProgramRestart } from "@/lib/data/program-lifecycle";
+import { seriesBlockName, seriesPosition, splitSeriesTagline } from "@/lib/programming/gd-series";
+import { prisma } from "@/lib/db";
 import { DayActions, DayStatus, dayStates, exerciseCount } from "@/components/workout/day-actions";
 import { SwitchProgramButton } from "@/components/programs/switch-program-button";
+import { ProgramMenu } from "@/components/programs/program-menu";
 import { LimitationsNote } from "@/components/programs/limitations-note";
 import { getProfile } from "@/lib/data/profile";
 import { NOT_FOUND_TITLE } from "@/components/ui/not-found-panel";
@@ -30,14 +40,18 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
   const program = await getUserProgram(id);
   if (!program || program.userId !== user.id) notFound();
 
-  const [feedback, activeEnrollment, inProgress, profile] = await Promise.all([
+  const [feedback, activeEnrollment, inProgress, profile, restart, trained] = await Promise.all([
     analyzeUserProgram(id),
     getActiveEnrollment(user.id),
     getInProgressSessions(user.id),
     getProfile(user.id),
+    getProgramRestart(user.id, id),
+    prisma.workoutSession.count({ where: { userId: user.id, programId: id, status: { not: "DISCARDED" } } }),
   ]);
   const limitations = profile?.limitations?.trim();
   const isActive = program.status === "ACTIVE";
+  // A finished GD block leads on to the next one of the series.
+  const nextSlug = restart.completed ? seriesPosition(program.sourceTemplate?.slug)?.nextSlug ?? null : null;
   const otherActive = activeEnrollment && activeEnrollment.programId !== program.id ? activeEnrollment : null;
   const ownEnrollment = activeEnrollment && activeEnrollment.programId === program.id ? activeEnrollment : null;
   const doneThisWeek = ownEnrollment
@@ -50,15 +64,26 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
   const openWithData = open.find((s) => s.hasData);
   const hasExercises = program.days.some((d) => d.exercises.length > 0);
   const editHref = `/app/programs/${program.id}/edit`;
+  // A copy of a GD block carries its tagline: led by the outcome, its place as a mono line.
+  const description = program.description ? splitSeriesTagline(program.description) : null;
+  // Where the running program stands, for the switch and archive warnings.
+  const activeProgress = activeEnrollment ? await getEnrollmentProgress(activeEnrollment) : null;
+  const switchingFrom = otherActive ? { name: otherActive.program.name, progress: activeProgress ?? "" } : null;
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <h1 className="text-2xl font-bold tracking-tight">{program.name}</h1>
-            <Badge variant={isActive ? "accent" : program.status === "DRAFT" ? "default" : "warning"}>
-              {isActive ? "Ativo" : program.status === "DRAFT" ? "Rascunho" : "Arquivado"}
+            <Badge variant={isActive || restart.completed ? "accent" : program.status === "DRAFT" ? "default" : "warning"}>
+              {isActive
+                ? "Ativo"
+                : restart.completed && program.status === "ARCHIVED"
+                  ? "Concluído"
+                  : program.status === "DRAFT"
+                    ? "Rascunho"
+                    : "Arquivado"}
             </Badge>
           </div>
           {program.sourceTemplate ? (
@@ -69,21 +94,71 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
               </Link>
             </p>
           ) : null}
-          {program.description ? <p className="mt-1 text-sm text-muted">{program.description}</p> : null}
+          {description ? (
+            <>
+              {description.meta ? (
+                <p className="mt-1 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted">
+                  {description.meta}
+                </p>
+              ) : null}
+              <p className="mt-1 text-sm text-muted wrap-break-word">{description.outcome}</p>
+            </>
+          ) : null}
         </div>
       </div>
 
-      <div className="mt-5 flex flex-wrap gap-2">
-        <Button variant="outline" asChild>
-          <Link href={`/app/programs/${program.id}/edit`}>Editar</Link>
-        </Button>
-        {!isActive && hasExercises ? (
+      <div className="mt-5 flex flex-wrap items-start gap-2">
+        {!isActive && hasExercises && restart.resumable ? (
+          // Stopped midway: pick it up where it was, or start it over.
+          <>
+            <SwitchProgramButton
+              action={resumeProgram.bind(null, program.id)}
+              label={`Retomar da semana ${restart.resumable.week}`}
+              switchLabel={`Retomar da semana ${restart.resumable.week}`}
+              pendingLabel="Retomando…"
+              size="md"
+              active={switchingFrom}
+            />
+            <SwitchProgramButton
+              action={startProgram.bind(null, program.id)}
+              label="Recomeçar"
+              switchLabel="Recomeçar"
+              pendingLabel="Iniciando…"
+              size="md"
+              variant="outline"
+              active={switchingFrom}
+            />
+          </>
+        ) : !isActive && hasExercises && restart.completed ? (
+          // Finished: the next block of the series, or the same one again.
+          <>
+            {nextSlug ? (
+              <SwitchProgramButton
+                action={switchToNextBlock.bind(null, restart.completed.enrollmentId)}
+                label={`Começar ${seriesBlockName(nextSlug)}`}
+                switchLabel={`Começar ${seriesBlockName(nextSlug)}`}
+                pendingLabel="Ativando…"
+                size="md"
+                active={switchingFrom}
+              />
+            ) : null}
+            <SwitchProgramButton
+              action={startProgram.bind(null, program.id)}
+              label="Repetir bloco"
+              switchLabel="Repetir bloco"
+              pendingLabel="Iniciando…"
+              size="md"
+              variant={nextSlug ? "outline" : "strong"}
+              active={switchingFrom}
+            />
+          </>
+        ) : !isActive && hasExercises ? (
           <SwitchProgramButton
             action={startProgram.bind(null, program.id)}
             label="Iniciar este programa"
             pendingLabel="Iniciando…"
             size="md"
-            active={otherActive ? { name: otherActive.program.name, progress: enrollmentProgress(otherActive) } : null}
+            active={switchingFrom}
           />
         ) : null}
         {!isActive && !hasExercises ? (
@@ -91,18 +166,23 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
             Iniciar este programa
           </Button>
         ) : null}
-        <form action={duplicateProgram.bind(null, program.id)}>
-          <SubmitButton variant="outline" pendingLabel="Duplicando…">
-            Duplicar
-          </SubmitButton>
-        </form>
-        {program.status !== "ARCHIVED" ? (
-          <form action={archiveProgram.bind(null, program.id)}>
-            <SubmitButton variant="ghost" pendingLabel="Arquivando…">
-              Arquivar
-            </SubmitButton>
-          </form>
-        ) : null}
+        <Button variant="outline" asChild>
+          <Link href={`/app/programs/${program.id}/edit`}>Editar</Link>
+        </Button>
+        <div className="ml-auto">
+          <ProgramMenu
+            duplicate={duplicateProgram.bind(null, program.id)}
+            archive={
+              program.status === "ARCHIVED"
+                ? null
+                : {
+                    action: archiveProgram.bind(null, program.id),
+                    active: ownEnrollment ? { progress: activeProgress ?? "" } : null,
+                  }
+            }
+            remove={!isActive && trained === 0 ? deleteUntrainedProgram.bind(null, program.id) : null}
+          />
+        </div>
       </div>
 
       {!isActive && !hasExercises ? (

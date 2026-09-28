@@ -36,3 +36,9 @@ export function parseMonthParams(
   if (year === current.year && month0 > current.month0) return current;
   return { year, month0 };
 }
+
+/** ?day= as a day of the shown month (null when missing, malformed or out of range). */
+export function parseDayParam(value: Param, daysInMonth: number): number | null {
+  const n = toInt(value);
+  return n != null && n >= 1 && n <= daysInMonth ? n : null;
+}

@@ -42,10 +42,14 @@ async function userIdOf(sessionId: string) {
   return rows[0].userId;
 }
 
-/** GD 1 Quinta's first exercise: 3 × 8–12, RIR 2,5, two warm-ups, double progression. */
+/**
+ * GD 1 Quinta's first exercise: 3 × 8–12 at RIR 2,5, two warm-ups, double progression. The
+ * program's week moves that RIR with its wave (lib/training/week-guidance weekRirTarget, GD 1's
+ * baseline 2): 3,5 in week 1 (a new user's), 2,5 in week 4.
+ */
 const FIRST_EXERCISE = "Puxada Alta Unilateral no Pulley";
 
-/** Escada Corporal (bodyweight only): Flexão de Braço first (3 × 8–15, RIR 2), Prancha sixth (3 × 20–45 s). */
+/** Escada Corporal (bodyweight only): Flexão de Braço first (3 × 8–15, RIR 3 in week 1), Prancha sixth (3 × 20–45 s). */
 const CALISTHENICS_A = "Sessão A — Fundamentos";
 
 /** Escalada (climbers-pull): Pinça de Anilha, a loaded hold (3 × 20–30 s, RIR 1), is its fifth exercise. */
@@ -88,9 +92,10 @@ test("first time on an exercise: how to pick the load, reps from the program, �
   const callout = page.locator("[data-first-time]");
   await expect(callout).toContainText("Primeiro treino");
   await expect(callout).toContainText("~12×");
-  await expect(callout).toContainText("2–3 reps sobrando");
-  // "(RIR 2,5)." is one piece: ")." never starts a line of its own on a narrow phone.
-  await expect(callout.locator("span.whitespace-nowrap", { hasText: "(RIR 2,5)." })).toHaveCount(1);
+  // Week 1's effort: the exercise's 2,5 moved up by the program's wave.
+  await expect(callout).toContainText("3–4 reps sobrando");
+  // "(RIR 3,5)." is one piece: ")." never starts a line of its own on a narrow phone.
+  await expect(callout.locator("span.whitespace-nowrap", { hasText: "(RIR 3,5)." })).toHaveCount(1);
   await expect(callout).toContainText("Na próxima vez, sugerimos a carga.");
   // No history: no "grey numbers from last time" hint pointing at nothing.
   await expect(page.getByText(/Números em cinza/)).toHaveCount(0);
@@ -139,7 +144,17 @@ test("first time on an exercise: how to pick the load, reps from the program, �
 
 test("RIR is explained where it is read: the prescription and the RIR column open the 0–4 scale", async ({ page }) => {
   await newUserOnGd1(page, "teach-rir");
-  await startDayFromToday(page, QUINTA);
+  const sessionId = await startDayFromToday(page, QUINTA);
+  // In GD 1's week 4 (RIR 2, the wave's middle): the exercise keeps its own 2,5 — the chip
+  // names the week's, the exercise its own.
+  await db.query(
+    `update "ProgramEnrollment" set "currentWeek" = 4, "startedAt" = now() - interval '22 days'
+      where id = (select "enrollmentId" from "WorkoutSession" where id = $1)`,
+    [sessionId],
+  );
+  await page.reload();
+  await waitForWorkoutScreen(page);
+  await expect(page.locator("[data-week-chip]")).toContainText("Sem. 4 · alvo RIR 2");
 
   await page.getByRole("button", { name: "RIR 2,5", exact: true }).first().click();
   const sheet = page.getByRole("dialog", { name: "Quantas reps ainda sobrariam?" });
@@ -163,11 +178,11 @@ test("the second time: 'Último treino' with date and RIR, and the progression's
 }) => {
   await newUserOnGd1(page, "teach-progress");
   await startDayFromToday(page, QUINTA);
-  // 3 × 40 kg × 12 at RIR 2: the top of 8–12 at the target effort.
+  // 3 × 40 kg × 12 at RIR 3: the top of 8–12 at week 1's target effort (RIR 3,5, half a rep of slack).
   for (let n = 1; n <= 3; n++) {
     await page.getByLabel(`Série ${n} — kg`, { exact: true }).fill("40");
     await page.getByLabel(`Série ${n} — repetições`, { exact: true }).fill("12");
-    await page.getByLabel(`Série ${n} — RIR`, { exact: true }).fill("2");
+    await page.getByLabel(`Série ${n} — RIR`, { exact: true }).fill("3");
     await page.getByRole("button", { name: `Concluir série ${n}`, exact: true }).click();
     await expectSetSaved(page, `Série ${n}`);
   }
@@ -185,7 +200,7 @@ test("the second time: 'Último treino' with date and RIR, and the progression's
   const lastTime = page.locator("[data-last-time]");
   await expect(lastTime).toContainText(/Último treino · \d{2}\/\d{2} · hoje/i);
   await expect(lastTime).toContainText("× 12 · 12 · 12");
-  await expect(lastTime).toContainText("RIR 2 · 2 · 2");
+  await expect(lastTime).toContainText("RIR 3 · 3 · 3");
   const slug = await page.getByRole("link", { name: "Ver técnica" }).getAttribute("href");
   await expect(lastTime.getByRole("link").first()).toHaveAttribute("href", `${slug}/history`);
 
@@ -337,7 +352,7 @@ test("bodyweight exercises: ✓ needs only the reps, a plank counts seconds, and
 
   // No load to pick: the first time asks for reps, and kg only for extra load.
   const callout = page.locator("[data-first-time]");
-  await expect(callout).toContainText("Faça ~15 reps com ~2 sobrando (RIR 2)");
+  await expect(callout).toContainText("Faça ~15 reps com ~3 sobrando (RIR 3)");
   await expect(callout).toContainText("kg só se usar carga extra");
   await expect(callout).not.toContainText("Escolha uma carga");
   await expect(page.getByLabel("Série 1 — kg", { exact: true })).toHaveAttribute("placeholder", "0");
@@ -420,29 +435,36 @@ test("a loaded hold (Pinça de Anilha) speaks seconds everywhere: callout, advic
   await expect(card).toContainText("Suba a carga quando segurar 30\u00a0s em todas");
   await expect(card).not.toContainText("reps");
 
-  // A week later: the same advice on the workout screen, then a time record.
+  // A week later — the program's week 2 (or, activated Thursday–Sunday, still its entry
+  // week), RIR 3 for the week: a hold keeps its own effort (lib/training/week-guidance),
+  // so the workout gives the summary's advice, still in seconds; then a time record.
   await db.query(
     `update "WorkoutSession" set "startedAt" = "startedAt" - interval '7 days', "finishedAt" = "finishedAt" - interval '7 days' where id = $1`,
     [first],
   );
   await page.goto("/app/today");
   const row = todayDayRow(page, CLIMBERS_A);
-  const start = row.getByRole("button", { name: "Iniciar" });
-  if (await start.count()) await start.click();
+  const start = row.getByRole("button", { name: /^(Iniciar|Refazer)$/ });
+  await expect(start).toBeVisible();
+  if ((await start.innerText()).trim() === "Iniciar") await start.click();
   else {
-    await row.getByRole("button", { name: "Refazer" }).click();
+    await start.click();
     await row.getByRole("button", { name: "Sim, treinar de novo" }).click();
   }
   await waitForWorkoutScreen(page);
+  await expect(page.locator("[data-week-chip]")).toContainText(/Sem\. (2|de entrada) · alvo RIR 3/);
   await goToExercise(page, "Pinça de Anilha");
   const last = page.locator("[data-last-time]");
   await expect(last).toContainText(/10\skg × 28 · 25 · 22\ss/);
   await expect(last).toContainText("Mantenha 10 kg · segure 23\u00a0s");
+  await expect(last).not.toContainText("reps");
   for (const n of [1, 2, 3]) {
     await page.getByLabel(`Série ${n} — kg`, { exact: true }).fill("10");
     await page.getByLabel(`Série ${n} — segundos`, { exact: true }).fill("30");
     await page.getByRole("button", { name: `Concluir série ${n}`, exact: true }).click();
     await expectSetSaved(page, `Série ${n}`);
+    // The PR moment (W-122): 30 s with 10 kg beats last week's 28 s — once; the equal sets after it don't.
+    await expect(page.locator("[data-pr-mark]")).toHaveCount(1);
   }
   await finishAndSave(page);
   await expect(page.locator("a").filter({ hasText: "PR" }).filter({ hasText: "Pinça de Anilha" })).toContainText("30\u00a0s com 10 kg");

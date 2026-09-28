@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { getCurrentSession } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 import { validateBuilderProgram, type BuilderFieldError } from "@/lib/validation/program-builder";
+import { applyWeekLayout } from "@/lib/data/program-lifecycle";
 import type { ProgressionStrategy } from "@/lib/training/progression";
 import type { Prisma } from "@/generated/prisma/client";
 
@@ -54,6 +55,9 @@ export type SaveProgramResult =
       dayIds: string[];
       /** Final exercise row ids, per day and in order (new rows get theirs here too). */
       exerciseIds: string[][];
+      /** The weekly frequency and duration stored. */
+      daysPerWeek: number;
+      durationWeeks: number | null;
     }
   | { ok: false; errors: BuilderFieldError[]; message: string | null };
 
@@ -90,7 +94,15 @@ const EDITED_FIELDS = Object.keys(EDITED_SELECT) as (keyof EditedRow)[];
  */
 export async function saveProgram(
   programId: string,
-  input: { name: string; description: string; days: BuilderDay[] },
+  input: {
+    name: string;
+    description: string;
+    days: BuilderDay[];
+    /** "Treinos por semana" (≥ the number of days). Absent: inferred from the days, as before. */
+    daysPerWeek?: number;
+    /** "Duração (semanas, opcional)": null clears it; absent leaves it. */
+    durationWeeks?: number | null;
+  },
 ): Promise<SaveProgramResult> {
   const session = await getCurrentSession();
   if (!session) {
@@ -104,8 +116,9 @@ export async function saveProgram(
   const parsed = validateBuilderProgram(input);
   if (!parsed.ok) return { ok: false, errors: parsed.errors, message: null };
   const { name, description, days: safeDays } = parsed.data;
+  const durationWeeks = parsed.data.durationWeeks === undefined ? program.durationWeeks : parsed.data.durationWeeks;
 
-  let saved: { dayIds: string[]; exerciseIds: string[][] };
+  let saved: { dayIds: string[]; exerciseIds: string[][]; daysPerWeek: number };
   try {
     saved = await prisma.$transaction(async (tx) => {
       const oldDays = await tx.userProgramDay.findMany({
@@ -133,9 +146,13 @@ export async function saveProgram(
       const repeatsDays =
         (oldDays.length > 0 && program.daysPerWeek > oldDays.length) ||
         (!!template && template.daysPerWeek > template._count.days);
-      const daysPerWeek = repeatsDays
-        ? Math.max(program.daysPerWeek, template?.daysPerWeek ?? 0, safeDays.length)
-        : safeDays.length || 1;
+      // The editor sends its "Treinos por semana"; without it (an older editor), infer as before.
+      const daysPerWeek =
+        parsed.data.daysPerWeek !== undefined
+          ? Math.max(parsed.data.daysPerWeek, safeDays.length || 1)
+          : repeatsDays
+            ? Math.max(program.daysPerWeek, template?.daysPerWeek ?? 0, safeDays.length)
+            : safeDays.length || 1;
 
       // Days are updated in place (same id) instead of deleted and recreated, so
       // workouts stay linked to their day: "feito esta semana", the in-progress
@@ -233,10 +250,19 @@ export async function saveProgram(
           name,
           description: description || null,
           daysPerWeek,
+          durationWeeks,
           status: program.status === "ARCHIVED" ? "DRAFT" : program.status,
         },
       });
-      return { dayIds: finalDays.map((d) => d.id), exerciseIds: finalDays.map((d) => d.exerciseIds) };
+      if (program.status === "ACTIVE") {
+        // The running block follows the new frequency/duration, and its days the week.
+        await tx.programEnrollment.updateMany({
+          where: { programId, status: "ACTIVE" },
+          data: { plannedSessions: durationWeeks ? durationWeeks * daysPerWeek : null },
+        });
+        await applyWeekLayout(tx, session.user.id, programId);
+      }
+      return { dayIds: finalDays.map((d) => d.id), exerciseIds: finalDays.map((d) => d.exerciseIds), daysPerWeek };
     });
   } catch (err) {
     // e.g. an exercise removed from the catalog meanwhile (FK) or a lost
@@ -249,5 +275,5 @@ export async function saveProgram(
   revalidatePath(`/app/programs/${programId}/edit`);
   revalidatePath("/app/programs");
   revalidatePath("/app/today");
-  return { ok: true, name, description, ...saved };
+  return { ok: true, name, description, durationWeeks, ...saved };
 }

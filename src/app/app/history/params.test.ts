@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseMonthParams, parsePageParam } from "./params";
+import { parseDayParam, parseMonthParams, parsePageParam } from "./params";
 
 describe("parsePageParam", () => {
   it("accepts positive integers", () => {
@@ -38,5 +38,14 @@ describe("parseMonthParams", () => {
   it("never opens a month in the future", () => {
     expect(parseMonthParams({ year: "2026", month: "10" }, current)).toEqual(current);
     expect(parseMonthParams({ year: "2031", month: "1" }, current)).toEqual({ year: 2026, month0: 1 });
+  });
+});
+
+describe("parseDayParam", () => {
+  it("accepts a day of the month and rejects anything else", () => {
+    expect(parseDayParam("24", 30)).toBe(24);
+    expect(parseDayParam("31", 31)).toBe(31);
+    for (const bad of [undefined, "", "0", "31", "-1", "2.5", "abc"]) expect(parseDayParam(bad, 30)).toBeNull();
+    expect(parseDayParam(["1", "2"], 30)).toBeNull();
   });
 });

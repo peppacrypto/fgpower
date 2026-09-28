@@ -7,6 +7,7 @@ import { InlineActionForm } from "@/components/workout/inline-action-form";
 import { startTemplateAndBegin } from "@/lib/actions/programs";
 import { FAT_LOSS_NOTE } from "@/lib/constants/program-labels";
 import type { ReasonChip } from "@/lib/programming/recommend";
+import { splitSeriesTagline } from "@/lib/programming/gd-series";
 import { cn } from "@/lib/utils/cn";
 
 export interface RecommendedPick {
@@ -27,6 +28,7 @@ export function RecommendedPanel({
   picks,
   fatLoss = false,
   showLinks = false,
+  secondary = false,
   className,
 }: {
   /** Best first; the first is the pick, the next two the alternates. */
@@ -35,6 +37,8 @@ export function RecommendedPanel({
   fatLoss?: boolean;
   /** Links to the whole library and to building from scratch (Today). */
   showLinks?: boolean;
+  /** Under another primary action ("Retomar da semana N"): its CTA is an outline, so the page has one lime button. */
+  secondary?: boolean;
   className?: string;
 }) {
   const [pick, ...rest] = picks;
@@ -56,7 +60,7 @@ export function RecommendedPanel({
         <h2 id="recommended-title" className="text-display mt-2 text-2xl font-extrabold leading-tight sm:text-3xl">
           {pick.namePt}
         </h2>
-        <p className="mt-1.5 line-clamp-3 text-sm text-muted">{pick.taglinePt}</p>
+        <PickTagline tagline={pick.taglinePt} />
         <Reasons reasons={pick.reasons} className="mt-3" />
         {fatLoss ? (
           <p className="mt-3 border-l-2 border-l-accent pl-2.5 text-xs leading-snug text-foreground/85">
@@ -71,7 +75,12 @@ export function RecommendedPanel({
             className="flex flex-col"
             errorClassName="mt-1.5"
           >
-            <SubmitButton size="lg" variant="strong" className="w-full sm:w-auto" pendingLabel="Preparando o treino…">
+            <SubmitButton
+              size="lg"
+              variant={secondary ? "outline" : "strong"}
+              className="w-full sm:w-auto"
+              pendingLabel="Preparando o treino…"
+            >
               <Play className="size-4" />
               Ativar e começar
             </SubmitButton>
@@ -148,5 +157,16 @@ export function Reasons({ reasons, className }: { reasons: ReasonChip[]; classNa
         </li>
       ))}
     </ul>
+  );
+}
+
+/** The pick's tagline, led by its outcome (a GD block's place in the series goes to a mono line). */
+function PickTagline({ tagline }: { tagline: string }) {
+  const { outcome, meta } = splitSeriesTagline(tagline);
+  return (
+    <>
+      {meta ? <p className="mt-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted">{meta}</p> : null}
+      <p className="mt-1.5 line-clamp-3 text-sm text-muted wrap-break-word">{outcome}</p>
+    </>
   );
 }

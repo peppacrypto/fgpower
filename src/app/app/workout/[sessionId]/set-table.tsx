@@ -25,6 +25,8 @@ export interface SetTableRowModel {
   error: string | null;
   /** Only kg or only reps typed: the empty box, flagged — the row won't count. */
   missing: "weight" | "reps" | null;
+  /** A ✓'d set that beats the user's record (pr-moment): the row's square "PR" mark. */
+  record?: boolean;
 }
 
 /** Accessible names of the boxes ("Série 2 — kg"). */
@@ -60,6 +62,7 @@ export function SetTable({
   onToggleWarmups,
   onExplainRir,
   timed = false,
+  flashRowId = null,
 }: {
   warmups: SetTableRowModel[];
   prescribed: SetTableRowModel[];
@@ -84,8 +87,10 @@ export function SetTable({
   onExplainRir: () => void;
   /** A hold: the reps column holds seconds ("seg"). */
   timed?: boolean;
+  /** The row whose "PR" mark was just earned: it pops in (once per tap). */
+  flashRowId?: { id: string; n: number } | null;
 }) {
-  const rowProps = { onChange, onBlurRow, onToggle, timed };
+  const rowProps = { onChange, onBlurRow, onToggle, timed, flashRowId };
   // Rows holding something stay open: a logged warm-up is never hidden.
   const warmupsHaveData = warmups.some((r) => r.done || r.values.weight.trim() !== "" || r.values.reps.trim() !== "");
   const showWarmupRows = warmupsOpen || warmupsHaveData;
@@ -283,15 +288,33 @@ function SetRowInputs({
   onBlurRow,
   onToggle,
   timed,
+  flashRowId,
 }: {
   row: SetTableRowModel;
   onChange: (id: string, field: DraftField, value: string) => void;
   onBlurRow: (id: string) => void;
   onToggle: (id: string) => void;
   timed: boolean;
+  flashRowId: { id: string; n: number } | null;
 }) {
   const name = rowName(row);
   const repsRef = useRef<HTMLInputElement>(null);
+  const markRef = useRef<HTMLSpanElement>(null);
+  const flashN = flashRowId?.id === row.id ? flashRowId.n : null;
+  // The record just earned: the mark pops in (a still mark under reduced motion).
+  useEffect(() => {
+    const el = markRef.current;
+    if (flashN === null || !el || typeof el.animate !== "function") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    el.animate(
+      [
+        { transform: "scale(0.3)", opacity: 0 },
+        { transform: "scale(1.35)", opacity: 1, offset: 0.55 },
+        { transform: "scale(1)", opacity: 1 },
+      ],
+      { duration: 480, easing: "cubic-bezier(0.2, 0.8, 0.2, 1)" },
+    );
+  }, [flashN]);
   /**
    * Keyboard flow: "next" on kg jumps to reps; "done" on reps (or RIR)
    * completes the row like ✓ and closes the keyboard, so the rest starts.
@@ -338,11 +361,20 @@ function SetRowInputs({
       >
         <span
           className={cn(
-            "text-center font-mono text-sm font-bold tabular-nums",
+            "flex flex-col items-center justify-center gap-0.5 text-center font-mono text-sm font-bold leading-none tabular-nums",
             row.kind === "WARMUP" ? "text-muted" : row.kind === "EXTRA" ? "text-warning" : "text-foreground",
           )}
         >
           {rowLabel(row)}
+          {row.record ? (
+            <span
+              ref={markRef}
+              data-pr-mark
+              className="inline-flex size-[18px] items-center justify-center bg-accent text-[8px] font-bold tracking-[0.04em] text-accent-foreground shadow-[inset_0_-2px_0_var(--keel)]"
+            >
+              PR<span className="sr-only"> · recorde pessoal</span>
+            </span>
+          ) : null}
         </span>
         {field("weight", FIELD_LABEL.weight, formatDecimal(row.suggestion.weightKg), "decimal")}
         {field("reps", fieldLabel("reps", timed), formatDecimal(row.suggestion.reps), "numeric")}

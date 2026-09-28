@@ -171,6 +171,11 @@ test("on the live workout the offline strip sits on the bottom edge and the set 
   await newUserOnGd1(page, "shell-offline-workout");
   await startDayFromToday(page, SEGUNDA);
   await page.evaluate(() => (document.documentElement.style.overflowAnchor = "none"));
+  // A screen wider than the phone zooms the layout viewport out, and every
+  // fixed edge below lands off by that factor: name that cause first.
+  // (Against the device width: once zoomed out, innerWidth grows with the page.)
+  const sideScroll = (await page.evaluate(() => document.documentElement.scrollWidth)) - page.viewportSize()!.width;
+  expect(sideScroll, "the workout screen scrolls sideways").toBeLessThanOrEqual(0);
   const check = page.getByRole("button", { name: "Concluir série 2", exact: true });
   const header = page.getByRole("button", { name: "Finalizar" });
   const [checkTop, headerTop] = [await topOf(check), await topOf(header)];
@@ -274,4 +279,18 @@ test("the service worker serves a branded offline page for failed navigations", 
     localStorage.removeItem("fg:workout-drafts:sess123");
     for (const r of await navigator.serviceWorker.getRegistrations()) await r.unregister();
   });
+});
+
+test("every page links the manifest and holds the browser's install dialog for the app's own ask", async ({ page }) => {
+  // A public page, with no install card on it: the listener comes with the root layout.
+  await page.goto("/login");
+  await expect(page.locator('link[rel="manifest"]')).toHaveAttribute("href", "/manifest.webmanifest");
+  await page.waitForLoadState("networkidle");
+  const held = await page.evaluate(() => {
+    const e = new Event("beforeinstallprompt", { cancelable: true });
+    window.dispatchEvent(e);
+    return e.defaultPrevented;
+  });
+  // preventDefault keeps Chrome's own mini-infobar away until the card asks (after a finished workout).
+  expect(held).toBe(true);
 });

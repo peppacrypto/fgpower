@@ -52,7 +52,7 @@ export const auth = betterAuth({
   },
 
   session: {
-    expiresIn: 60 * 60 * 24 * 30, // 30 days
+    expiresIn: 60 * 60 * 24 * 90, // 90 days, renewed on use (approved 2026-09-27)
     updateAge: 60 * 60 * 24, // refresh once per day of activity
     freshAge: 60 * 60 * 24, // account deletion requires a session created within this window
     cookieCache: { enabled: true, maxAge: 5 * 60 },

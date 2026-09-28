@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { CATALOG_FIXTURE } from "./catalog-fixture";
-import { beginnerEntrySlug, canRun, isMidSeriesGd, recommendTemplates, type RecommendProfile } from "./recommend";
+import { beginnerEntrySlug, canRun, isMidSeriesGd, recommendTemplates, seriesStanding, type RecommendProfile } from "./recommend";
 
 const profile = (p: Partial<RecommendProfile> = {}): RecommendProfile => ({
   goal: "HYPERTROPHY",
@@ -16,6 +16,58 @@ const top = (p: Partial<RecommendProfile>, n = 3) =>
     .map((r) => r.template.slug);
 
 describe("recommendTemplates", () => {
+  it("after a finished GD block, the series' next block leads and the blocks behind it drop out", () => {
+    const gdSlugs = (finishedGd: string[]) =>
+      recommendTemplates(profile({ daysPerWeek: 5 }), CATALOG_FIXTURE, { finishedGd }).map((r) => r.template.slug);
+    // GD Adaptação done: GD 1 leads, the Adaptação is gone.
+    expect(gdSlugs(["gd-adaptacao"])[0]).toBe("gd-1");
+    expect(gdSlugs(["gd-adaptacao"])).not.toContain("gd-adaptacao");
+    // GD 1 done (with or without the Adaptação): GD 2 leads, neither earlier block is offered.
+    for (const done of [["gd-1"], ["gd-adaptacao", "gd-1"]]) {
+      const recs = gdSlugs(done);
+      expect(recs[0]).toBe("gd-2");
+      expect(recs).not.toContain("gd-1");
+      expect(recs).not.toContain("gd-adaptacao");
+    }
+    // After GD 8 there's no next block: the plain order, without the series.
+    const after8 = gdSlugs(["gd-8"]);
+    expect(after8.some((s) => s.startsWith("gd-"))).toBe(false);
+    // No history: the plain order, from the series' entry.
+    expect(gdSlugs([])[0]).toBe("gd-adaptacao");
+  });
+
+  it("seriesStanding: the furthest block finished decides", () => {
+    expect(seriesStanding({ finishedGd: ["gd-2", "gd-1"] })).toEqual({
+      passed: new Set(["gd-adaptacao", "gd-1", "gd-2"]),
+      next: "gd-3",
+    });
+    expect(seriesStanding({ finishedGd: ["gd-8"] }).next).toBeNull();
+    expect(seriesStanding()).toEqual({ passed: new Set(), next: null });
+    // Programs outside the series are no part of it.
+    expect(seriesStanding({ finishedGd: ["upper-lower"] })).toEqual({ passed: new Set(), next: null });
+    // GD 1 stopped in week 6: it's resumed, not offered fresh; the Adaptação, never done, stays.
+    expect(seriesStanding({ stoppedGd: "gd-1" })).toEqual({ passed: new Set(["gd-1"]), next: null });
+    // GD 3 stopped after GD 1: GD 2, never finished, stays; GD 1 and the Adaptação are behind.
+    expect(seriesStanding({ finishedGd: ["gd-1"], stoppedGd: "gd-3" }).passed).toEqual(new Set(["gd-adaptacao", "gd-1", "gd-3"]));
+    // GD 1 finished, GD 2 stopped mid-way: GD 2 is resumed, not started over as "the next block".
+    expect(seriesStanding({ finishedGd: ["gd-1"], stoppedGd: "gd-2" }).next).toBeNull();
+    // GD 2 finished, a repeat of GD 1 stopped: GD 3 still comes next.
+    expect(seriesStanding({ finishedGd: ["gd-2"], stoppedGd: "gd-1" }).next).toBe("gd-3");
+  });
+
+  it("a GD block stopped mid-way isn't recommended fresh (it's resumed); a beginner who skipped the Adaptação is offered it", () => {
+    const recs = recommendTemplates(profile({ daysPerWeek: 5 }), CATALOG_FIXTURE, { stoppedGd: "gd-1" }).map((r) => r.template.slug);
+    expect(recs).not.toContain("gd-1");
+    // The natural step back for a 5×/week beginner — not an intermediate split.
+    expect(recs[0]).toBe("gd-adaptacao");
+    // After a finished block, the blocks behind it stay out.
+    const after = recommendTemplates(profile({ daysPerWeek: 5 }), CATALOG_FIXTURE, { finishedGd: ["gd-1"], stoppedGd: "gd-2" }).map((r) => r.template.slug);
+    expect(after).not.toContain("gd-adaptacao");
+    expect(after).not.toContain("gd-1");
+    expect(after).not.toContain("gd-2");
+    expect(after.length).toBeGreaterThan(0);
+  });
+
   it("never offers a program the user's equipment can't run", () => {
     for (const equipmentAccess of ["HOME_DUMBBELLS", "HOME_BODYWEIGHT", "MINIMAL"]) {
       const recs = recommendTemplates(profile({ equipmentAccess }), CATALOG_FIXTURE);

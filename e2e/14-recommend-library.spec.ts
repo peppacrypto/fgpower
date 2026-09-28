@@ -171,7 +171,7 @@ test("a 2-day home-dumbbell beginner gets the 2-day dumbbell plan", async ({ pag
   );
 });
 
-test("the library leads with the pick's shelf and the GD series from its start", async ({ page }) => {
+test("the library leads with the pick's shelf, and the GD plan is one series card that starts by profile", async ({ page }) => {
   await newUserWith(page, "lib-int5", { experience: "INTERMEDIATE", daysPerWeek: 5 });
   await page.goto("/app/programs");
   const library = page.getByRole("region", { name: "Biblioteca de programas" });
@@ -180,19 +180,21 @@ test("the library leads with the pick's shelf and the GD series from its start",
   await expect(shelves.first()).toHaveAttribute("aria-label", "Força & hipertrofia");
   await expect(shelves.first().locator("a").first()).toContainText("Para você");
   await expect(shelves.first().locator("a").first()).toContainText("Divisão Clássica");
-  // GD 2-4 are mid-series: the shelf starts with the block its blurb points to.
+  // The GD plan is one card, not nine look-alikes: its rail, and — for someone who already
+  // trains — "Começar pelo GD 1" (a newcomer is sent to the Adaptação).
   const gd = library.getByRole("region", { name: "Plano GD" });
-  await expect(gd).toContainText("Comece pela Adaptação");
-  await expect(gd.locator("a").first()).toHaveAttribute("href", "/app/programs/templates/gd-adaptacao");
-  await expect(gd.locator("a").first()).toContainText("Início da série");
-  // The entry card leads without a numeral: the shelf's count and numbering are the matches only.
-  const gdCount = Number(await gd.locator(":scope > div").first().locator("span.font-mono").innerText());
-  const gdCards = gd.locator('a[href^="/app/programs/templates/"]');
-  const numeral = (card: typeof gdCards) => card.locator("span.text-5xl");
-  await expect(gdCards).toHaveCount(gdCount + 1);
-  await expect(numeral(gdCards.first())).toHaveCount(0);
-  await expect(numeral(gdCards.nth(1))).toHaveText("01");
-  await expect(numeral(gdCards.last())).toHaveText(String(gdCount).padStart(2, "0"));
+  const card = gd.locator('[data-series="gd"]');
+  await expect(card).toContainText("Plano GD");
+  await expect(card.getByRole("img", { name: /^9 blocos em sequência/ })).toBeVisible();
+  await expect(card.getByRole("link", { name: /Começar pelo GD 1/ })).toHaveAttribute(
+    "href",
+    "/app/programs/templates/gd-1",
+  );
+  // Filtered by the profile: the list opens on the blocks the chips kept, each a link.
+  const matches = Number((await gd.getByText(/^\d+ de 9 blocos$/).innerText()).split(" ")[0]);
+  expect(matches).toBeGreaterThan(0);
+  const blocks = card.locator('ol a[href^="/app/programs/templates/gd-"]');
+  await expect(blocks.filter({ visible: true })).toHaveCount(matches);
 
   // Typing beats the profile chips: "30 min" finds the shortest of all programs, not of the chips.
   const search = page.getByLabel("Buscar programa");
@@ -234,12 +236,18 @@ test("the library starts filtered by the profile, shelved, and its search speaks
   const gd = library.getByRole("region", { name: "Plano GD" });
   await expect(gd).toBeVisible();
   // Unfiltered, shelves preview their first cards; every program is still in the page.
-  await expect(library.locator('a[href^="/app/programs/templates/"]')).toHaveCount(48);
-  const gdCards = gd.locator('a[href^="/app/programs/templates/"]');
-  await expect(gdCards.filter({ visible: true })).toHaveCount(4);
-  await gd.getByRole("button", { name: "Ver todos (9)" }).click();
-  await expect(gdCards.filter({ visible: true })).toHaveCount(9);
-  await expect(gd.getByRole("button", { name: "Mostrar menos" })).toHaveAttribute("aria-expanded", "true");
+  const hrefs = await library
+    .locator('a[href^="/app/programs/templates/"]')
+    .evaluateAll((links) => new Set(links.map((a) => a.getAttribute("href"))).size);
+  expect(hrefs).toBe(48);
+  // The GD card folds its 9 blocks away (still links in the page) behind one toggle.
+  const gdBlocks = gd.locator('ol a[href^="/app/programs/templates/"]');
+  await expect(gdBlocks).toHaveCount(9);
+  await expect(gdBlocks.filter({ visible: true })).toHaveCount(0);
+  await expect(gd.getByRole("link", { name: "Começar pela Adaptação" })).toBeVisible();
+  await gd.getByRole("button", { name: "Ver os 9 blocos" }).click();
+  await expect(gdBlocks.filter({ visible: true })).toHaveCount(9);
+  await expect(gd.getByRole("button", { name: "Esconder os blocos" })).toHaveAttribute("aria-expanded", "true");
   await expect(filters.getByRole("button", { name: "5 dias por semana" })).toHaveAttribute("aria-pressed", "false");
   await filters.getByRole("button", { name: "Usar meu perfil" }).click();
   await expect(filters).toContainText("Filtrado pelo seu perfil");
@@ -295,13 +303,21 @@ test("program cards read their days and never widen a 320px screen", async ({ pa
   await page.setViewportSize({ width: 320, height: 700 });
   await page.goto("/app/programs");
   await page.getByRole("group", { name: "Filtros" }).getByRole("button", { name: "Limpar" }).click();
-  const gd = page.locator('a[href="/app/programs/templates/gd-adaptacao"]').last();
-  await expect(gd).toContainText("SEG · SUP A");
-  await expect(gd).toContainText("QUA · TÉC");
   const home = page.locator('a[href="/app/programs/templates/home-dumbbells"]').last();
   await expect(home.getByText("A", { exact: true })).toBeVisible();
+  // The GD plan's card (rail and all) fits too.
+  await page.getByRole("region", { name: "Plano GD" }).getByRole("button", { name: "Ver os 9 blocos" }).click();
   const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
   expect(scrollWidth).toBeLessThanOrEqual(320);
+  // A GD block found by name is a full card, its weekday-named days read as such.
+  await page.getByLabel("Buscar programa").fill("GD Adaptação");
+  const gd = page.locator('a[href="/app/programs/templates/gd-adaptacao"]').first();
+  await expect(gd).toContainText("SEG · SUP A");
+  await expect(gd).toContainText("QUA · TÉC");
+  // Led by its outcome; its place in the series is a mono line.
+  await expect(gd).toContainText("Bloco 1 de 9 · mês 1");
+  await expect(gd).toContainText("Aprenda os movimentos");
+  await page.getByLabel("Buscar programa").fill("");
   // The masthead's "Criar" stays inside the gutter, level with the search box.
   const criar = await page.getByRole("link", { name: "Criar" }).boundingBox();
   const searchBox = await page.getByLabel("Buscar programa").boundingBox();
@@ -332,7 +348,9 @@ test("program cards read their days and never widen a 320px screen", async ({ pa
   try {
     const p = await visitor.newPage();
     await p.goto(`${test.info().project.use.baseURL}/programs`);
-    await expect(p.locator('a[href="/programs/gd-1"]')).toBeVisible();
+    // The GD plan's card sends a visitor to the Adaptação; every block is still a link in the page.
+    await expect(p.getByRole("link", { name: "Começar pela Adaptação" })).toHaveAttribute("href", "/programs/gd-adaptacao");
+    await expect(p.locator('a[href="/programs/gd-1"]')).toHaveCount(1);
     expect(await p.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
     // Signing up from a public program page comes back to that program.
     await p.goto(`${test.info().project.use.baseURL}/programs/gd-1`);

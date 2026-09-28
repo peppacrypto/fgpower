@@ -1,6 +1,8 @@
 import "server-only";
 import { toCardSummary, type WorkoutActivitySummary } from "@/lib/social/activity-summary";
 import { ActivityCardView } from "./activity-card-view";
+import { milestoneStampOf } from "./milestone-stamp";
+import { MilestoneStampCard } from "./milestone-stamp-card";
 
 export interface ActivityCardData {
   id: string;
@@ -21,7 +23,8 @@ export interface ActivityCardData {
  * stored summary can carry record weights and e1RMs the owner chose to hide
  * (summaries saved before those were stripped), and everything passed to the
  * client card ends up in the page payload — so only what the card shows
- * (toCardSummary) crosses over.
+ * (toCardSummary) crosses over. A private milestone (the 10th workout, a
+ * completed block: its summary's `kind`) is drawn as a stamp instead — no FG.
  */
 export function ActivityCard({
   activity,
@@ -35,5 +38,10 @@ export function ActivityCard({
   signInReturnTo?: string;
 }) {
   const { summary, showDetailedLoads, ...card } = activity;
+  const stamp = milestoneStampOf(summary);
+  if (stamp) {
+    const isOwn = rest.isOwn ?? (rest.currentUsername != null && card.user.username === rest.currentUsername);
+    return <MilestoneStampCard activityId={card.id} createdAt={card.createdAt} stamp={stamp} isOwn={isOwn} />;
+  }
   return <ActivityCardView activity={{ ...card, summary: toCardSummary(summary, showDetailedLoads) }} {...rest} />;
 }

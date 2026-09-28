@@ -3,7 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ExternalLink } from "lucide-react";
-import { GLoad } from "@/components/ui/glyph";
+import { GLoad, GProgress } from "@/components/ui/glyph";
+import { Button } from "@/components/ui/button";
 import { getExerciseBySlug, type ExerciseCard as ExerciseCardData } from "@/lib/data/exercises";
 import { parseExerciseContent, parseInstructions } from "@/lib/exercises/content";
 import { Badge } from "@/components/ui/badge";
@@ -73,16 +74,20 @@ export default async function ExerciseDetailPage({ params }: PageProps<"/app/exe
         <div className="flex flex-col gap-4">
           <div className="flex items-start justify-between gap-3">
             <h1 className="min-w-0 break-words text-2xl font-bold tracking-tight">{exercise.namePt}</h1>
-            <div className="flex shrink-0 items-center gap-2">
-              <Link
-                href={`/app/exercises/${exercise.slug}/history`}
-                className="text-xs font-medium text-accent hover:underline"
-              >
-                Meu histórico
-              </Link>
-              {session ? <FavoriteButton exerciseId={exercise.id} initialFavorited={favorited} /> : null}
-            </div>
+            {session ? (
+              <div className="flex shrink-0 items-center gap-2">
+                <FavoriteButton exerciseId={exercise.id} initialFavorited={favorited} />
+              </div>
+            ) : null}
           </div>
+
+          {/* The way into this exercise's charts, records and sessions. */}
+          <Button variant="outline" size="sm" asChild className="min-h-11 self-start">
+            <Link href={`/app/exercises/${exercise.slug}/history`}>
+              <GProgress className="size-4" />
+              Meu histórico
+            </Link>
+          </Button>
 
           <dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
             <div>

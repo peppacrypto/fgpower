@@ -32,11 +32,14 @@ import {
   MAX_DAY_EXERCISES,
   MAX_PROGRAM_DAYS,
   PROGRAM_DESCRIPTION_MAX,
+  PROGRAM_LIMITS,
   PROGRAM_NAME_MAX,
+  frequencyRange,
   validateBuilderProgram,
   type BuilderFieldError,
   type BuilderNumberField,
 } from "@/lib/validation/program-builder";
+import { parseDecimalInput } from "@/lib/training/set-plan";
 import { ExercisePicker, type PickerExercise } from "./exercise-picker";
 import { ExerciseRow, type RowErrors } from "./exercise-row";
 import { LeaveSheet } from "./leave-sheet";
@@ -53,6 +56,14 @@ interface ProgramState {
   name: string;
   description: string;
   days: BuilderDay[];
+  /** "Treinos por semana" and "Duração (semanas, opcional)" (absent in drafts saved before they existed). */
+  daysPerWeek?: number;
+  durationWeeks?: number | null;
+}
+/** The program's own numbers, edited in the header. */
+interface Cadence {
+  daysPerWeek: number;
+  durationWeeks: number | null;
 }
 
 const EMPTY_DAY: BuilderDay = { name: "Dia 1", focus: null, exercises: [] };
@@ -70,10 +81,12 @@ function toEditable(days: BuilderDay[], makeId: (prefix: string) => string): Edi
 }
 
 /** The payload the server gets — also the unit of "dirty" and of the local draft. */
-function toState(name: string, description: string, days: EditableDay[]): ProgramState {
+function toState(name: string, description: string, days: EditableDay[], cadence: Cadence): ProgramState {
   return {
     name,
     description,
+    daysPerWeek: cadence.daysPerWeek,
+    durationWeeks: cadence.durationWeeks,
     days: days.map((d) => ({
       id: d.id,
       name: d.name,
@@ -122,6 +135,8 @@ function readDraft(programId: string): StoredDraft | null {
       d?.v === 1 &&
       typeof p?.name === "string" &&
       typeof p.description === "string" &&
+      (p.daysPerWeek === undefined || typeof p.daysPerWeek === "number") &&
+      (p.durationWeeks === undefined || p.durationWeeks === null || typeof p.durationWeeks === "number") &&
       Array.isArray(p.days) &&
       p.days.every(
         (day) =>
@@ -164,22 +179,26 @@ const isOwnDraft = (draft: StoredDraft) => !draft.tab || draft.tab === thisTab()
 type ErrorRef =
   | { kind: "name" }
   | { kind: "description" }
+  | { kind: "cadence"; field: CadenceField }
   | { kind: "day"; key: string }
   | { kind: "row"; rowId: string; field: BuilderNumberField }
   /** Form-level problem: only the next save clears it. */
   | { kind: "form" };
+
+type CadenceField = "daysPerWeek" | "durationWeeks";
 
 interface BuilderErrors {
   rows: Record<string, RowErrors>;
   days: Record<string, string>;
   name: string | null;
   description: string | null;
+  cadence: Partial<Record<CadenceField, string>>;
   /** The last save's problems in order; the save bar names the first still open. */
   items: { ref: ErrorRef; text: string }[];
   /** A save-bar message not tied to a field (offline, expired session). */
   message: string | null;
 }
-const NO_ERRORS: BuilderErrors = { rows: {}, days: {}, name: null, description: null, items: [], message: null };
+const NO_ERRORS: BuilderErrors = { rows: {}, days: {}, name: null, description: null, cadence: {}, items: [], message: null };
 
 function isOpen(e: BuilderErrors, ref: ErrorRef) {
   switch (ref.kind) {
@@ -187,6 +206,8 @@ function isOpen(e: BuilderErrors, ref: ErrorRef) {
       return !!e.name;
     case "description":
       return !!e.description;
+    case "cadence":
+      return !!e.cadence[ref.field];
     case "day":
       return !!e.days[ref.key];
     case "row":
@@ -210,12 +231,17 @@ export function ProgramBuilder({
   programId,
   programName,
   programDescription,
+  programDaysPerWeek,
+  programDurationWeeks,
   initialDays,
   version,
 }: {
   programId: string;
   programName: string;
   programDescription: string;
+  /** UserProgram.daysPerWeek / durationWeeks: the header's "Treinos por semana" and "Duração". */
+  programDaysPerWeek: number;
+  programDurationWeeks: number | null;
   initialDays: BuilderDay[];
   /** The program's updatedAt (ISO), to tell whether a local draft predates a save. */
   version: string;
@@ -224,10 +250,16 @@ export function ProgramBuilder({
   const [initial] = useState(() => {
     let n = 0;
     const days = toEditable(initialDays, (prefix) => `${prefix}-${n++}`);
-    return { days, key: JSON.stringify(toState(programName, programDescription, days)) };
+    const range = frequencyRange(days.length);
+    const cadence: Cadence = {
+      daysPerWeek: Math.min(range.max, Math.max(range.min, programDaysPerWeek)),
+      durationWeeks: programDurationWeeks,
+    };
+    return { days, cadence, key: JSON.stringify(toState(programName, programDescription, days, cadence)) };
   });
   const [name, setName] = useState(programName);
   const [description, setDescription] = useState(programDescription);
+  const [cadence, setCadence] = useState<Cadence>(initial.cadence);
   const [days, setDays] = useState<EditableDay[]>(initial.days);
   const [baseline, setBaseline] = useState(initial.key);
   const [activeDayIndex, setActiveDayIndex] = useState(0);
@@ -238,13 +270,13 @@ export function ProgramBuilder({
   const [draftOffer, setDraftOffer] = useState<StoredDraft | null>(null);
   const [leaveTo, setLeaveTo] = useState<string | null>(null);
 
-  const current = useMemo(() => toState(name, description, days), [name, description, days]);
+  const current = useMemo(() => toState(name, description, days, cadence), [name, description, days, cadence]);
   const currentKey = useMemo(() => JSON.stringify(current), [current]);
   const dirty = currentKey !== baseline;
   /** The editor state as of the last commit: a save reads this, not its render's closure. */
-  const latest = useRef({ name, description, days });
+  const latest = useRef({ name, description, days, cadence });
   useLayoutEffect(() => {
-    latest.current = { name, description, days };
+    latest.current = { name, description, days, cadence };
   });
 
   /** Set once the user chose to leave: no more guards or draft writes. */
@@ -354,12 +386,31 @@ export function ProgramBuilder({
     const key = newId("day");
     patchDays((prev) => [...prev, { key, name: `Dia ${prev.length + 1}`, focus: null, exercises: [] }]);
     setActiveDayIndex(days.length);
+    // At least one workout a week per day of the program.
+    setCadence((c) => (c.daysPerWeek < days.length + 1 ? { ...c, daysPerWeek: days.length + 1 } : c));
+    if (errors.cadence.daysPerWeek) setErrors((e) => ({ ...e, cadence: omitKey(e.cadence, "daysPerWeek") }));
+  }
+
+  function changeCadence(patch: Partial<Cadence>) {
+    setCadence((c) => ({ ...c, ...patch }));
+    setSavedOnce(false);
+    const fixed = (Object.keys(patch) as CadenceField[]).filter((f) => errors.cadence[f]);
+    if (fixed.length) {
+      setErrors((e) => {
+        let next = e.cadence;
+        for (const f of fixed) next = omitKey(next, f);
+        return { ...e, cadence: next };
+      });
+    }
   }
 
   function removeDay(index: number) {
     const removed = days[index];
     patchDays((prev) => prev.filter((_, i) => i !== index));
     setActiveDayIndex((i) => Math.max(0, Math.min(days.length - 2, i)));
+    // A program longer than a week keeps one workout per day; back within a week, at most 7.
+    const { max } = frequencyRange(days.length - 1);
+    setCadence((c) => (c.daysPerWeek > max ? { ...c, daysPerWeek: max } : c));
     // Its errors go with it (and so do their save-bar lines).
     if (removed && dayHasErrors(removed)) {
       setErrors((e) => {
@@ -472,6 +523,10 @@ export function ProgramBuilder({
     const p = draft.program;
     setName(p.name);
     setDescription(p.description);
+    setCadence((c) => ({
+      daysPerWeek: p.daysPerWeek ?? Math.max(c.daysPerWeek, p.days.length),
+      durationWeeks: p.durationWeeks === undefined ? c.durationWeeks : p.durationWeeks,
+    }));
     setDays(toEditable(p.days, newId));
     setActiveDayIndex(0);
     setErrors(NO_ERRORS);
@@ -495,12 +550,19 @@ export function ProgramBuilder({
 
   /** Maps validation problems onto the rows/days on screen and jumps to the first. */
   function showErrors(list: BuilderFieldError[], snapshot: EditableDay[]) {
-    const next: BuilderErrors = { ...NO_ERRORS, rows: {}, days: {}, items: [] };
+    const next: BuilderErrors = { ...NO_ERRORS, rows: {}, days: {}, cadence: {}, items: [] };
     let focus: { selector: string; dayKey?: string } | null = null;
     for (const err of list) {
       if (err.field === "name" || err.field === "description") {
         next[err.field] = err.message;
         next.items.push({ ref: { kind: err.field }, text: err.message });
+        focus ??= { selector: `#program-${err.field}` };
+        continue;
+      }
+      if (err.field === "daysPerWeek" || err.field === "durationWeeks") {
+        next.cadence = { ...next.cadence, [err.field]: err.message };
+        const label = err.field === "daysPerWeek" ? "Treinos por semana" : "Duração";
+        next.items.push({ ref: { kind: "cadence", field: err.field }, text: `${label}: ${err.message}` });
         focus ??= { selector: `#program-${err.field}` };
         continue;
       }
@@ -542,12 +604,12 @@ export function ProgramBuilder({
    */
   function commitFocusedField() {
     const el = document.activeElement;
-    if (el instanceof HTMLInputElement && el.dataset.field) flushSync(() => el.blur());
+    if (el instanceof HTMLInputElement && (el.dataset.field || el.dataset.cadence)) flushSync(() => el.blur());
   }
 
   async function save(): Promise<boolean> {
-    const { name, description, days: snapshot } = latest.current;
-    const payload = toState(name, description, snapshot);
+    const { name, description, days: snapshot, cadence: savedCadence } = latest.current;
+    const payload = toState(name, description, snapshot, savedCadence);
     const local = validateBuilderProgram(payload);
     if (!local.ok) {
       showErrors(local.errors, snapshot);
@@ -589,7 +651,11 @@ export function ProgramBuilder({
     // Show what was stored (trimmed) unless the user kept typing meanwhile.
     setName((n) => (n === payload.name ? result.name : n));
     setDescription((d) => (d === payload.description ? result.description : d));
-    setBaseline(JSON.stringify(toState(result.name, result.description, savedDays)));
+    const stored: Cadence = { daysPerWeek: result.daysPerWeek, durationWeeks: result.durationWeeks };
+    setCadence((c) =>
+      c.daysPerWeek === payload.daysPerWeek && c.durationWeeks === payload.durationWeeks ? stored : c,
+    );
+    setBaseline(JSON.stringify(toState(result.name, result.description, savedDays, stored)));
     setErrors(NO_ERRORS);
     setSavedOnce(true);
     // Another tab's unsaved edits may sit in the slot; leave those.
@@ -711,6 +777,8 @@ export function ProgramBuilder({
           {errors.description}
         </p>
       ) : null}
+
+      <CadenceChips cadence={cadence} dayCount={days.length} errors={errors.cadence} onChange={changeCadence} />
 
       <div className="mt-4 flex flex-wrap items-center gap-2">
         {days.map((day, i) => (
@@ -863,4 +931,162 @@ function omit<T>(record: Record<string, T>, key: string): Record<string, T> {
   const next = { ...record };
   delete next[key];
   return next;
+}
+
+function omitKey<K extends string, T>(record: Partial<Record<K, T>>, key: K): Partial<Record<K, T>> {
+  const next = { ...record };
+  delete next[key];
+  return next;
+}
+
+const CHIP_LABEL = "font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted";
+const STEP_BUTTON =
+  "flex size-9 shrink-0 items-center justify-center rounded-[2px] border border-border font-mono text-base font-bold text-foreground/80 hover:bg-surface-2 disabled:opacity-30 sm:size-8";
+
+/**
+ * The header's stat chips: "Treinos por semana" (at least one per day; more
+ * repeats days — a full body 3×, A/B 3×) and "Duração (semanas, opcional)".
+ * The number boxes commit on blur like the exercise rows; ± steps the frequency.
+ */
+function CadenceChips({
+  cadence,
+  dayCount,
+  errors,
+  onChange,
+}: {
+  cadence: Cadence;
+  dayCount: number;
+  errors: Partial<Record<CadenceField, string>>;
+  onChange: (patch: Partial<Cadence>) => void;
+}) {
+  const range = frequencyRange(dayCount);
+  const repeats = cadence.daysPerWeek > dayCount;
+  const hint =
+    dayCount === 1
+      ? cadence.daysPerWeek === 1
+        ? "O mesmo treino, uma vez por semana."
+        : `O mesmo treino, ${cadence.daysPerWeek}× por semana.`
+      : repeats
+        ? `${dayCount} dias em ${cadence.daysPerWeek} treinos: os dias se alternam (${alternation(dayCount, cadence.daysPerWeek)}).`
+        : "Cada dia uma vez por semana.";
+  return (
+    <div className="mt-3">
+      <div className="grid grid-cols-2 divide-x divide-border border-y border-border">
+        <div className="flex min-w-0 flex-col gap-1.5 py-2.5 pr-3">
+          <label htmlFor="program-daysPerWeek" className={CHIP_LABEL}>
+            Treinos por semana
+          </label>
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              className={STEP_BUTTON}
+              aria-label="Menos um treino por semana"
+              disabled={cadence.daysPerWeek <= range.min}
+              onClick={() => onChange({ daysPerWeek: Math.max(range.min, cadence.daysPerWeek - 1) })}
+            >
+              −
+            </button>
+            <NumberBox
+              id="program-daysPerWeek"
+              value={cadence.daysPerWeek}
+              invalid={!!errors.daysPerWeek}
+              onCommit={(n) =>
+                onChange({ daysPerWeek: n === null ? cadence.daysPerWeek : Math.min(range.max, Math.max(range.min, n)) })
+              }
+            />
+            <button
+              type="button"
+              className={STEP_BUTTON}
+              aria-label="Mais um treino por semana"
+              disabled={cadence.daysPerWeek >= range.max}
+              onClick={() => onChange({ daysPerWeek: Math.min(range.max, cadence.daysPerWeek + 1) })}
+            >
+              +
+            </button>
+          </div>
+        </div>
+        <div className="flex min-w-0 flex-col gap-1.5 py-2.5 pl-3">
+          <label htmlFor="program-durationWeeks" className={CHIP_LABEL}>
+            Duração (semanas, opcional)
+          </label>
+          <NumberBox
+            id="program-durationWeeks"
+            value={cadence.durationWeeks}
+            invalid={!!errors.durationWeeks}
+            placeholder="—"
+            suffix={cadence.durationWeeks ? "sem." : undefined}
+            onCommit={(n) =>
+              onChange({
+                durationWeeks:
+                  n === null
+                    ? null
+                    : Math.min(PROGRAM_LIMITS.durationWeeks.max, Math.max(PROGRAM_LIMITS.durationWeeks.min, n)),
+              })
+            }
+          />
+        </div>
+      </div>
+      <p className="mt-1.5 text-xs text-muted">{hint}</p>
+      {errors.daysPerWeek || errors.durationWeeks ? (
+        <p role="alert" className="mt-1 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-danger">
+          {errors.daysPerWeek ?? errors.durationWeeks}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+/** "A, B, A…" for 2 days at 3×; "A, B, C, A…" for 3 at 4×. */
+function alternation(dayCount: number, perWeek: number) {
+  const letters = Array.from({ length: Math.min(dayCount, 6) }, (_, i) => String.fromCharCode(65 + i));
+  return `${[...letters, letters[0]].slice(0, Math.min(perWeek, letters.length + 1)).join(", ")}…`;
+}
+
+/** A whole-number box that commits on blur or Enter (empty = null). */
+function NumberBox({
+  id,
+  value,
+  invalid,
+  placeholder,
+  suffix,
+  onCommit,
+}: {
+  id: string;
+  value: number | null;
+  invalid: boolean;
+  placeholder?: string;
+  suffix?: string;
+  onCommit: (n: number | null) => void;
+}) {
+  const [text, setText] = useState<string | null>(null);
+  const shown = text ?? (value === null ? "" : String(value));
+  const commit = () => {
+    if (text === null) return;
+    const n = parseDecimalInput(text);
+    setText(null);
+    onCommit(n === null ? null : Math.round(n));
+  };
+  return (
+    <div className="flex min-w-0 items-baseline gap-1">
+      <Input
+        id={id}
+        data-cadence
+        inputMode="numeric"
+        autoComplete="off"
+        value={shown}
+        placeholder={placeholder}
+        aria-invalid={invalid || undefined}
+        onChange={(e) => setText(e.target.value)}
+        onBlur={commit}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") e.currentTarget.blur();
+        }}
+        className={cn(
+          "h-9 w-12 px-1.5 text-center font-mono text-lg font-bold tabular-nums sm:h-8",
+          invalid && "border-danger",
+        )}
+      />
+      {suffix ? <span className="font-mono text-xs font-bold text-muted">{suffix}</span> : null}
+    </div>
+  );
 }

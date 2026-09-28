@@ -1,14 +1,14 @@
 import { formatKg } from "@/lib/utils/format";
-import { planWeek, weekdayFromName } from "@/lib/training/day-rotation";
+import { weekdayFromName } from "@/lib/training/day-rotation";
 import { wallClock } from "@/lib/training/week";
 
 export { weekdayFromName };
 
 /**
  * Pure pieces of the workout summary ("dossiê do treino"): how each exercise
- * compares with last time, where the week stands and what comes next, and the
- * São Paulo calendar dates it prints. Kept free of the database so they can be
- * unit-tested; summary-data.ts feeds them.
+ * compares with last time, and the São Paulo calendar dates it prints. What
+ * comes next is Today's own rule (day-rotation upcomingWorkout, in
+ * summary-data.ts). Kept free of the database so they can be unit-tested.
  */
 
 // ---------------------------------------------------------------------------
@@ -92,103 +92,6 @@ export function setsText(sets: LiteSet[]): string {
 }
 
 // ---------------------------------------------------------------------------
-// The week and the next workout (Today's rule: lib/training/day-rotation)
-// ---------------------------------------------------------------------------
-
-export interface PlanDay {
-  id: string;
-  dayIndex: number;
-  name: string;
-  exerciseCount: number;
-  /** Planned weekday (0 = Sunday), when the program sets one. */
-  weekday: number | null;
-  estimatedMinutes: number | null;
-}
-
-export interface SuggestedDate {
-  dayNo: number;
-  isToday: boolean;
-  isTomorrow: boolean;
-}
-
-export interface NextWorkout<D extends PlanDay> {
-  /** What Today will offer on `date` (if nothing else is trained before it). */
-  day: D | null;
-  date: SuggestedDate | null;
-  /**
-   * When there's no day to promise only because every day with exercises is
-   * left open (a workout not finished), how many: Today offers none until
-   * those are saved or discarded in their own rows. 0 otherwise.
-   */
-  openDaysBlocking: number;
-  /** This week: all its workouts are done. */
-  weekComplete: boolean;
-  weeklyDone: number;
-  weeklyTarget: number;
-}
-
-/**
- * This week's meter and the next workout — the day Today's hero will offer on
- * the suggested date. The day comes from Today's rotation (planWeek); its date
- * from suggestNextDate. When that date falls in a later week, Today will have
- * started a new week by then (nothing done yet: a plan laid out by weekday
- * from its first day, any other plan from its pointer), so the day is picked
- * again that way and dated in that week — a Saturday finisher of "Quarta"
- * is told "Segunda · seg", never a "Sexta" Today won't show on Monday; one of
- * "Sessão A" is told "Sessão B · seg", the day Today shows right away too.
- * Days of workouts still open are skipped: by any later date they are left
- * open, and Today leaves them to their own row.
- */
-export function nextWorkout<D extends PlanDay>(p: {
-  days: D[];
-  nextDayIndex: number | null;
-  daysPerWeek: number;
-  doneDayIds: ReadonlySet<string> | ReadonlyMap<string, unknown>;
-  /** Finished workouts of this program this week (with at least one working set). */
-  sessionCount: number;
-  /** Days of this program with a workout in progress. */
-  openDayIds: ReadonlySet<string>;
-  finishedAt: Date;
-  now: Date;
-  preferredDays: number[];
-}): NextWorkout<D> {
-  const rotation = {
-    days: p.days,
-    isTrainable: (d: D) => d.exerciseCount > 0,
-    nextDayIndex: p.nextDayIndex,
-    daysPerWeek: p.daysPerWeek,
-    skipDayIds: p.openDayIds,
-  };
-  const week = planWeek({ ...rotation, doneDayIds: p.doneDayIds, sessionCount: p.sessionCount });
-  const meter = { weekComplete: week.weekComplete, weeklyDone: week.weeklyDone, weeklyTarget: week.weeklyTarget };
-  const dateFor = (day: D, nextWeek: boolean) =>
-    suggestNextDate({
-      finishedAt: p.finishedAt,
-      now: p.now,
-      plannedWeekday: day.weekday,
-      namedWeekday: weekdayFromName(day.name),
-      preferredDays: p.preferredDays,
-      daysPerWeek: p.daysPerWeek,
-      nextWeek,
-    });
-
-  if (week.nextDay) {
-    const date = dateFor(week.nextDay, false);
-    if (weekNumber(date.dayNo) === weekNumber(spDayNumber(p.now))) {
-      return { ...meter, day: week.nextDay, date, openDaysBlocking: 0 };
-    }
-  }
-  const fresh = planWeek({ ...rotation, doneDayIds: new Set<string>(), sessionCount: 0 }).nextDay;
-  if (fresh) return { ...meter, day: fresh, date: dateFor(fresh, true), openDaysBlocking: 0 };
-  return {
-    ...meter,
-    day: null,
-    date: null,
-    openDaysBlocking: p.days.filter((d) => rotation.isTrainable(d) && p.openDayIds.has(d.id)).length,
-  };
-}
-
-// ---------------------------------------------------------------------------
 // São Paulo calendar days
 // ---------------------------------------------------------------------------
 
@@ -216,70 +119,4 @@ export function formatDayNumber(dayNo: number): string {
 /** "sex 25 set" for an instant, on the São Paulo wall clock. */
 export function formatSpShortDate(date: Date): string {
   return formatDayNumber(spDayNumber(date));
-}
-
-/**
- * The date to suggest for the next workout: never before tomorrow (relative to
- * the finished workout) nor before today; next week's Monday or later when
- * the day is next week's. Then the day's planned weekday, else the next of the
- * user's preferred weekdays, else the weekday the day is named after
- * ("Sexta — Pernas"), else a rest gap that fits the weekly frequency
- * (3×/week → every other day) — also into next week: a Sunday finisher at
- * 3×/week is sent to Tuesday, not straight to Monday.
- */
-export function suggestNextDate(p: {
-  finishedAt: Date;
-  now: Date;
-  plannedWeekday: number | null;
-  preferredDays: number[];
-  /** The weekday in the day's name (weekdayFromName), when there is one. */
-  namedWeekday?: number | null;
-  daysPerWeek: number;
-  nextWeek: boolean;
-}): SuggestedDate {
-  const today = spDayNumber(p.now);
-  const done = spDayNumber(p.finishedAt);
-  let earliest = Math.max(done + 1, today);
-  if (p.nextWeek) earliest = Math.max(earliest, today - ((weekdayOf(today) + 6) % 7) + 7);
-
-  const isWeekday = (d: number | null | undefined): d is number => d != null && Number.isInteger(d) && d >= 0 && d <= 6;
-  const preferred = p.preferredDays.filter(isWeekday);
-  const wanted = isWeekday(p.plannedWeekday)
-    ? [p.plannedWeekday]
-    : preferred.length > 0
-      ? preferred
-      : isWeekday(p.namedWeekday)
-        ? [p.namedWeekday]
-        : [];
-  let dayNo: number;
-  if (wanted.length > 0) {
-    dayNo = earliest;
-    while (!wanted.includes(weekdayOf(dayNo))) dayNo += 1;
-  } else {
-    const gap = Math.max(1, Math.floor(7 / Math.max(1, p.daysPerWeek)));
-    dayNo = Math.max(earliest, done + gap);
-  }
-  return { dayNo, isToday: dayNo === today, isTomorrow: dayNo === today + 1 };
-}
-
-/** Monday-start week number of a day number (same weeks as Today's counter). */
-function weekNumber(dayNo: number): number {
-  return Math.floor((dayNo + 3) / 7); // 1969-12-29, day −3, was a Monday
-}
-
-/**
- * Weeks in a row with at least one finished workout, counted back from this
- * week — or from last week while this one has none yet (the week isn't over,
- * the streak isn't broken).
- */
-export function weekStreak(workoutDays: number[], today: number): number {
-  const weeks = new Set(workoutDays.map(weekNumber));
-  let week = weekNumber(today);
-  if (!weeks.has(week)) week -= 1;
-  let streak = 0;
-  while (weeks.has(week)) {
-    streak += 1;
-    week -= 1;
-  }
-  return streak;
 }

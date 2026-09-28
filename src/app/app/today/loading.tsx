@@ -1,12 +1,16 @@
 import { Bone, BoneRow, SkeletonScreen } from "@/components/ui/skeleton";
 
-/** Today: the masthead and the next-workout hero, where "Iniciar treino" lands. */
+/**
+ * Today: the masthead (date, greeting, last-workout line), the next-workout
+ * hero where "Iniciar treino" lands, then "Esta semana" with its 7-day strip.
+ */
 export default function TodayLoading() {
   return (
     <SkeletonScreen label="o treino de hoje" className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
-      {/* Masthead: date line + greeting */}
+      {/* Masthead: date line + greeting + "Último treino · …" */}
       <Bone className="h-3 w-28" />
       <Bone className="mt-3 h-8 w-56 sm:h-10" />
+      <Bone className="mt-3 h-3 w-64 max-w-full" />
 
       {/* Hero: the next workout */}
       <div className="panel-raised relative mt-8 border-l-4 border-l-[var(--border-strong)] p-6 sm:p-8">
@@ -23,6 +27,21 @@ export default function TodayLoading() {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Esta semana: count, the 7-day strip, the streak line */}
+      <div className="reg-frame mt-6 p-5">
+        <Bone className="h-2.5 w-24" />
+        <Bone className="mt-3 h-6 w-20" />
+        <div className="mt-3 grid grid-cols-7 gap-1">
+          {Array.from({ length: 7 }, (_, i) => (
+            <div key={i} className="flex flex-col items-center gap-1">
+              <Bone className="h-2.5 w-6" />
+              <Bone className="h-8 w-full" />
+            </div>
+          ))}
+        </div>
+        <Bone className="mt-3 h-3 w-40" />
       </div>
 
       <div className="mt-10 flex flex-col gap-3">

@@ -42,6 +42,8 @@ export default async function EditProgramPage({ params }: PageProps<"/app/progra
       programId={program.id}
       programName={program.name}
       programDescription={program.description ?? ""}
+      programDaysPerWeek={program.daysPerWeek}
+      programDurationWeeks={program.durationWeeks}
       initialDays={initialDays}
       version={program.updatedAt.toISOString()}
     />

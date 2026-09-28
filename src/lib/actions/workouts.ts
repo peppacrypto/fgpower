@@ -10,7 +10,9 @@ import { checkAndRecordPersonalRecords } from "@/lib/training/personal-records";
 import { startOfWeek } from "@/lib/training/week";
 import { MAX_BOUT_SECONDS, assessOpenSession, boutSeconds, setBouts, staleSaveTiming } from "@/lib/training/stale";
 import { resolveSessionDay } from "@/lib/training/day-match";
-import { restartsEachWeek } from "@/lib/training/day-rotation";
+import { planWeek, restartsEachWeek } from "@/lib/training/day-rotation";
+import { blockEnds, countedWeeks } from "@/lib/programming/block-progress";
+import { closeBlock, entryWeekWasTrained, recordWorkoutMilestone } from "@/lib/data/program-lifecycle";
 
 type Tx = Prisma.TransactionClient;
 
@@ -513,6 +515,7 @@ async function finishSession(
   const drafts = (Array.isArray(pending) ? pending : []).slice(0, 400);
   const now = new Date();
   let finishedAt = now;
+  let blockClosed = false;
 
   const outcome = await prisma.$transaction(async (tx) => {
     // Lock the session row: concurrent set writes (FOR SHARE) and a second
@@ -608,7 +611,7 @@ async function finishSession(
     });
 
     if (session.enrollment && session.enrollment.status === "ACTIVE" && session.programId) {
-      await advanceProgram(tx, {
+      blockClosed = await advanceProgram(tx, {
         userId,
         sessionId,
         enrollment: session.enrollment,
@@ -633,10 +636,17 @@ async function finishSession(
       // The workout is saved; a PR bookkeeping failure must not look like a failed finish.
       console.error("PR recording failed", sessionId, err);
     }
+    try {
+      // The 10th/25th/50th/100th workout: a private milestone (the summary stamps its number).
+      await recordWorkoutMilestone(userId, sessionId);
+    } catch (err) {
+      console.error("Milestone recording failed", sessionId, err);
+    }
   }
 
   revalidatePath("/app/today");
   revalidatePath("/app/history");
+  if (blockClosed) revalidatePath("/app/programs");
   return { ok: true, summaryUrl };
 }
 
@@ -652,23 +662,32 @@ async function finishSession(
  * - `now` is when the workout counts as done: a workout left open and saved
  *   later on its own day counts in that day's week. If newer workouts already
  *   moved the program on, it only adds to the count and never winds it back.
+ * - The block ends (COMPLETED, see program-lifecycle.ts closeBlock) with the
+ *   workout that completes its last week, or with the first one past it —
+ *   closed before that workout takes a week: it's saved in the block's last
+ *   week, never in one past the duration. The entry week of a program
+ *   started Thursday–Sunday doesn't count toward its duration
+ *   (program-calendar.ts) when it was trained; untrained, it never took a
+ *   week number (block-progress countedWeeks). A redo after that isn't
+ *   linked to an active enrollment, so it never ends the block again.
+ *   Returns whether this workout ended it.
  */
 async function advanceProgram(
   tx: Tx,
   s: {
     userId: string;
     sessionId: string;
-    enrollment: { id: string; currentWeek: number; nextDayIndex: number };
+    enrollment: { id: string; currentWeek: number; nextDayIndex: number; startedAt: Date };
     programId: string;
     session: { programDayId: string | null; programDayIndex: number | null; name: string };
     now: Date;
   },
-) {
+): Promise<boolean> {
   const program = await tx.userProgram.findUnique({
     where: { id: s.programId },
-    include: { days: { orderBy: { dayIndex: "asc" } } },
+    include: { days: { orderBy: { dayIndex: "asc" }, include: { _count: { select: { exercises: true } } } } },
   });
-  if (!program || program.days.length === 0) return;
+  if (!program || program.days.length === 0) return false;
   const days = program.days;
 
   // userId keeps these on the (userId, …) indexes.
@@ -690,7 +709,7 @@ async function advanceProgram(
       data: { programWeek: newer.programWeek ?? s.enrollment.currentWeek },
     });
     await tx.programEnrollment.update({ where: { id: s.enrollment.id }, data: { completedSessions: { increment: 1 } } });
-    return;
+    return false;
   }
 
   const thisWeek = await tx.workoutSession.findMany({
@@ -700,6 +719,18 @@ async function advanceProgram(
   let week = s.enrollment.currentWeek;
   if (thisWeek.length === 0 && (await tx.workoutSession.findFirst({ where: finished, select: { id: true } }))) {
     week += 1;
+  }
+  // This workout is saved as finished already: it counts if it was done in the entry week.
+  const entryWeekTrained = await entryWeekWasTrained(tx, { id: s.enrollment.id, userId: s.userId, startedAt: s.enrollment.startedAt });
+
+  // The first workout past the block's last week: the block is over. It closes
+  // first, and the workout is kept in the block's last week — never a "Semana
+  // 5" of a 4-week block — as a late workout of it (a day of that week left
+  // over, done now).
+  if (program.durationWeeks && countedWeeks(week, s.enrollment.startedAt, entryWeekTrained) > program.durationWeeks) {
+    await tx.workoutSession.update({ where: { id: s.sessionId }, data: { programWeek: s.enrollment.currentWeek } });
+    await tx.programEnrollment.update({ where: { id: s.enrollment.id }, data: { completedSessions: { increment: 1 } } });
+    return closeBlock(tx, { userId: s.userId, enrollmentId: s.enrollment.id, now: s.now });
   }
 
   const thisDay = resolveSessionDay(s.session, days);
@@ -725,6 +756,23 @@ async function advanceProgram(
     where: { id: s.enrollment.id },
     data: { completedSessions: { increment: 1 }, nextDayIndex, currentWeek: week },
   });
+
+  if (!program.durationWeeks) return false;
+  // Where this week stands now (Today's rule), for the block's last week.
+  const doneDayIds = new Set(thisWeek.flatMap((x) => resolveSessionDay(x, days)?.id ?? []));
+  if (thisDay) doneDayIds.add(thisDay.id);
+  const { weekComplete } = planWeek({
+    days,
+    isTrainable: (d) => d._count.exercises > 0,
+    nextDayIndex,
+    daysPerWeek: program.daysPerWeek,
+    doneDayIds,
+    sessionCount: thisWeek.length + 1,
+  });
+  if (!blockEnds({ week, startedAt: s.enrollment.startedAt, durationWeeks: program.durationWeeks, weekComplete, entryWeekTrained })) {
+    return false;
+  }
+  return closeBlock(tx, { userId: s.userId, enrollmentId: s.enrollment.id, now: s.now });
 }
 
 /** Permanently deletes a completed session and all its logs (spec §43.15). */

@@ -101,7 +101,23 @@ export default async function PublicProfilePage({ params }: PageProps<"/u/[usern
           {!profile.canViewActivity ? (
             <p className="text-sm text-muted">Esta conta é privada. Siga para ver a atividade.</p>
           ) : activities.length === 0 ? (
-            <p className="text-sm text-muted">Nenhuma atividade pública ainda.</p>
+            viewerId === profile.id ? (
+              // The owner sees why their own profile is empty: workouts stay private until shared.
+              <div className="border-l-2 border-l-border-strong bg-surface-2 px-3.5 py-3 text-sm">
+                <p className="font-medium">Seus treinos são privados.</p>
+                <p className="mt-0.5 text-muted">
+                  Para um treino aparecer aqui, compartilhe-o no resumo dele — para seguidores ou para todos.
+                </p>
+                <Link
+                  href="/app/history"
+                  className="mt-1 inline-flex min-h-11 items-center font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
+                >
+                  Abrir histórico
+                </Link>
+              </div>
+            ) : (
+              <p className="text-sm text-muted">Nenhuma atividade pública ainda.</p>
+            )
           ) : (
             <div className="flex flex-col gap-4">
               {activities.map((a) => (

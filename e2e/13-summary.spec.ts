@@ -54,7 +54,10 @@ test("first workout: saved and dated, one baseline line instead of records, next
 
   // Masthead: saved, numbered, dated, program week.
   await expect(page.getByText("Salvo no histórico ✓")).toBeVisible();
-  await expect(page.getByText(/^Treino nº 1 · (dom|seg|ter|qua|qui|sex|sáb) \d{2} [a-z]{3} · Semana 1\/13$/)).toBeVisible();
+  // A program started Thursday–Sunday is in its entry week, which isn't one of its 13.
+  await expect(
+    page.getByText(/^Treino nº 1 · (dom|seg|ter|qua|qui|sex|sáb) \d{2} [a-z]{3} · (Semana 1\/13|Semana de entrada)$/),
+  ).toBeVisible();
   await expect(page.getByText(/3 séries de trabalho/)).toBeVisible();
   await expect(page.getByText("Primeira sessão registrada. Na próxima, sugerimos suas cargas.")).toBeVisible();
   await expectNoSideScroll(page);
@@ -69,7 +72,8 @@ test("first workout: saved and dated, one baseline line instead of records, next
   await expect(card.getByText(/^Mantenha 40\s?kg · busque 10 reps$/)).toBeVisible();
 
   // The week and the next workout, with a strong way into it.
-  await expect(page.getByText(/^Esta semana$/)).toBeVisible();
+  // (A program started Thursday–Sunday is in its short entry week.)
+  await expect(page.getByText(/^(Esta semana|Semana concluída ✓|Semana de entrada( ✓)?)$/)).toBeVisible();
   await expect(page.getByText(/^Próximo treino/)).toBeVisible();
   await expect(
     page.getByRole("link", { name: "Ir para Hoje" }).or(page.getByRole("button", { name: "Iniciar treino" })),

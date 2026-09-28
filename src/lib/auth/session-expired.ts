@@ -1,7 +1,7 @@
 import { safeNextPath } from "./safe-next";
 
 /**
- * What an action says when its caller's session is gone (30 days away, or
+ * What an action says when its caller's session is gone (90 days away, or
  * signed out on another device). Clients recognise it by prefix and add an
  * "Entrar" link that comes back to the same page (see SessionExpiredNote).
  */

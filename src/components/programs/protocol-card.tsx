@@ -3,6 +3,7 @@ import { GArrow } from "@/components/ui/glyph";
 import { GOAL_LABEL, EXPERIENCE_LABEL, STYLE_LABEL, GOAL_HUE } from "@/lib/constants/program-labels";
 import type { CatalogItem } from "@/lib/programming/catalog";
 import { dayTokens } from "@/lib/programming/day-tokens";
+import { splitSeriesTagline } from "@/lib/programming/gd-series";
 import { pluralWord } from "@/lib/utils/format";
 
 export interface ProtocolCardData extends CatalogItem {
@@ -18,6 +19,8 @@ export interface ProtocolCardData extends CatalogItem {
  * mono spec stats. Flat — grouping reads from the rule + tonal hover, no border/shadow. */
 export function ProtocolCard({ data }: { data: ProtocolCardData }) {
   const hue = GOAL_HUE[data.goal] ?? GOAL_HUE.GENERAL_FITNESS;
+  // A GD block's tagline leads with what it builds; its place in the series goes to a mono line.
+  const tagline = splitSeriesTagline(data.taglinePt);
 
   return (
     <Link
@@ -47,7 +50,10 @@ export function ProtocolCard({ data }: { data: ProtocolCardData }) {
       </div>
 
       <h3 className="mt-2 max-w-[85%] text-lg font-bold leading-tight tracking-tight">{data.namePt}</h3>
-      <p className="mt-1 line-clamp-2 text-sm text-muted">{data.taglinePt}</p>
+      {tagline.meta ? (
+        <p className="mt-1 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted">{tagline.meta}</p>
+      ) : null}
+      <p className="mt-1 line-clamp-2 text-sm text-muted wrap-break-word">{tagline.outcome}</p>
 
       {/* split map */}
       {data.dayNames.length > 0 ? <DayChips names={data.dayNames} className="mt-4" /> : null}

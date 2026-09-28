@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Bell } from "lucide-react";
 import { requireUser } from "@/lib/auth/require-user";
 import { getNotifications } from "@/lib/data/social";
 import { EmptyState } from "@/components/ui/misc";
+import { Button } from "@/components/ui/button";
 import { NotificationItem } from "./notification-item";
 
 export const metadata: Metadata = { title: "Notificações" };
@@ -17,7 +19,16 @@ export default async function NotificationsPage() {
 
       {notifications.length === 0 ? (
         <div className="mt-8">
-          <EmptyState icon={<Bell className="size-8" />} title="Nenhuma notificação ainda" />
+          <EmptyState
+            icon={<Bell className="size-8" />}
+            title="Nenhuma notificação ainda"
+            description="Aqui aparecem os FGs nos treinos que você compartilha, novos seguidores e pedidos para te seguir."
+            action={
+              <Button variant="outline" size="sm" asChild className="mt-1 min-h-11">
+                <Link href="/app/discover">Encontrar pessoas</Link>
+              </Button>
+            }
+          />
         </div>
       ) : (
         <div className="mt-4">

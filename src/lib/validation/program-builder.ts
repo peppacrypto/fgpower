@@ -30,6 +30,23 @@ export const BUILDER_FIELD_LABELS: Record<BuilderNumberField, string> = {
   warmupSets: "Aquec.",
 };
 
+/**
+ * The program's own numbers (the builder header's stat chips). Weekly
+ * frequency is at least one workout per day of the program (more repeats
+ * days: a full body 3×, A/B 3×) and at most 7 — a program with more days
+ * than a week keeps one workout per day. Duration is optional.
+ */
+export const PROGRAM_LIMITS = {
+  daysPerWeek: { min: 1, max: 7 },
+  durationWeeks: { min: 1, max: 52 },
+} as const;
+
+/** The weekly frequency range a program with `dayCount` days allows. */
+export function frequencyRange(dayCount: number) {
+  const days = Math.max(1, dayCount);
+  return { min: days, max: Math.max(PROGRAM_LIMITS.daysPerWeek.max, days) };
+}
+
 export const PROGRAM_NAME_MAX = 120;
 export const PROGRAM_DESCRIPTION_MAX = 2000;
 export const DAY_NAME_MAX = 120;
@@ -80,20 +97,38 @@ export const builderExerciseSchema = z
   })
   .refine((ex) => ex.repMin <= ex.repMax, { path: ["repMin"], params: { rule: "rep-range" } });
 
-export const builderProgramSchema = z.object({
-  name: z.string().trim().min(1).max(PROGRAM_NAME_MAX),
-  description: z.string().trim().max(PROGRAM_DESCRIPTION_MAX),
-  days: z
-    .array(
-      z.object({
-        id: z.string().max(64).optional(),
-        name: z.string().max(DAY_NAME_MAX),
-        focus: z.string().max(200).nullable(),
-        exercises: z.array(builderExerciseSchema).max(MAX_DAY_EXERCISES),
-      }),
-    )
-    .max(MAX_PROGRAM_DAYS),
-});
+export const builderProgramSchema = z
+  .object({
+    name: z.string().trim().min(1).max(PROGRAM_NAME_MAX),
+    description: z.string().trim().max(PROGRAM_DESCRIPTION_MAX),
+    days: z
+      .array(
+        z.object({
+          id: z.string().max(64).optional(),
+          name: z.string().max(DAY_NAME_MAX),
+          focus: z.string().max(200).nullable(),
+          exercises: z.array(builderExerciseSchema).max(MAX_DAY_EXERCISES),
+        }),
+      )
+      .max(MAX_PROGRAM_DAYS),
+    /** Absent (an older editor or draft): the server keeps inferring it from the days. */
+    daysPerWeek: z.coerce.number().int().min(1).max(MAX_PROGRAM_DAYS).optional(),
+    /** null = no set duration; absent = unchanged. */
+    durationWeeks: z.coerce
+      .number()
+      .int()
+      .min(PROGRAM_LIMITS.durationWeeks.min)
+      .max(PROGRAM_LIMITS.durationWeeks.max)
+      .nullable()
+      .optional(),
+  })
+  .superRefine((p, ctx) => {
+    if (p.daysPerWeek === undefined) return;
+    const { min, max } = frequencyRange(p.days.length);
+    if (p.daysPerWeek < min || p.daysPerWeek > max) {
+      ctx.addIssue({ code: "custom", path: ["daysPerWeek"], params: { rule: "frequency", min, max } });
+    }
+  });
 
 export type BuilderProgramInput = z.input<typeof builderProgramSchema>;
 export type BuilderProgramData = z.output<typeof builderProgramSchema>;
@@ -136,6 +171,21 @@ function issueToFieldError(issue: z.core.$ZodIssue): BuilderFieldError {
       field: "description",
       message: `Descrição longa demais (máx. ${PROGRAM_DESCRIPTION_MAX} caracteres).`,
     };
+  }
+  if (path[0] === "daysPerWeek") {
+    const params = (issue as { params?: { min?: number; max?: number } }).params;
+    const min = params?.min ?? PROGRAM_LIMITS.daysPerWeek.min;
+    const max = params?.max ?? PROGRAM_LIMITS.daysPerWeek.max;
+    return {
+      dayIndex: null,
+      exerciseIndex: null,
+      field: "daysPerWeek",
+      message: min === max ? `Use ${min} — um por dia.` : `Use de ${min} a ${max} — ao menos um por dia.`,
+    };
+  }
+  if (path[0] === "durationWeeks") {
+    const { min, max } = PROGRAM_LIMITS.durationWeeks;
+    return { dayIndex: null, exerciseIndex: null, field: "durationWeeks", message: `Use de ${min} a ${max} semanas, ou deixe vazio.` };
   }
   if (path[0] !== "days") return { dayIndex: null, exerciseIndex: null, field: "form", message: "Valor inválido." };
   if (path.length === 1) {

@@ -216,6 +216,8 @@ test("an emptied day is skipped and the week counts only the days left to train"
   const programId = new URL(page.url()).pathname.split("/")[3];
   sql(`DELETE FROM "UserProgramExercise" WHERE "dayId" =
     (SELECT id FROM "UserProgramDay" WHERE "programId" = '${programId}' AND "dayIndex" = 0)`);
+  // Started two weeks ago: a full week (a Thursday–Sunday start's entry week aims only at the days left).
+  sql(`UPDATE "ProgramEnrollment" SET "startedAt" = now() - interval '14 days' WHERE "programId" = '${programId}'`);
 
   await page.goto("/app/today");
   // GD 1 is 5×/week over 5 days: with Monday emptied it doesn't repeat a day in its place.
@@ -240,9 +242,10 @@ test("switching program asks first, and Today can undo it with the old progress 
   await page.evaluate(() => document.getElementById("estrutura")!.scrollIntoView());
   await expect(switchButtons).toHaveCount(2);
   await switchButtons.last().click();
+  // A Thursday–Sunday activation is in its entry week (lib/training/program-calendar).
   await expect(
     page
-      .getByText("Isso encerra GD 1 (semana 1 de 13). Seus treinos salvos continuam no histórico.")
+      .getByText(/^Isso encerra GD 1 \((semana 1 de 13|semana de entrada)\)\. Seus treinos salvos continuam no histórico\.$/)
       .filter({ visible: true }),
   ).toHaveCount(1);
   await page.getByRole("button", { name: "Cancelar" }).click();
@@ -267,7 +270,7 @@ test("switching program asks first, and Today can undo it with the old progress 
     page.waitForURL(/\/app\/today/, { timeout: 30_000 }),
     page.getByRole("button", { name: "Voltar para GD 1" }).click(),
   ]);
-  await expect(page.getByText("GD 1 retomado · semana 1")).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByText(/^GD 1 retomado · semana (1|de entrada)$/)).toBeVisible({ timeout: 30_000 });
   await expect(page.getByRole("button", { name: /Voltar para/ })).toHaveCount(0);
 
   // The copy made by the accidental switch leaves no trace on the shelf.
@@ -292,7 +295,7 @@ test("undoing a switch drops a day opened in the new program, and a stale undo l
     page.waitForURL(/\/app\/today/, { timeout: 30_000 }),
     page.getByRole("button", { name: "Voltar para GD 1" }).click(),
   ]);
-  await expect(page.getByText("GD 1 retomado · semana 1")).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByText(/^GD 1 retomado · semana (1|de entrada)$/)).toBeVisible({ timeout: 30_000 });
   await expect(page.getByText("Treino em andamento", { exact: true })).toHaveCount(0);
   expect(sessionStatus(openedId)).toBe("DISCARDED");
   // An untouched copy stays a throwaway even though a day of it was opened.
@@ -321,7 +324,7 @@ test("the switch confirmation works before the page hydrates", async ({ page, br
     const p = await nojs.newPage();
     await p.goto("/app/programs/templates/gd-2");
     await switchToggles(p).first().click();
-    await expect(p.getByText("Isso encerra GD 1 (semana 1 de 13).").first()).toBeVisible();
+    await expect(p.getByText(/Isso encerra GD 1 \((semana 1 de 13|semana de entrada)\)\./).first()).toBeVisible();
     await Promise.all([
       p.waitForURL(/\/app\/today/, { timeout: 30_000 }),
       p.getByRole("button", { name: "Trocar", exact: true }).first().click(),

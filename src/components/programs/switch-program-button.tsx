@@ -34,6 +34,7 @@ export function SwitchProgramButton({
   active,
   size = "lg",
   variant = "strong",
+  switchLabel = "Trocar para este programa",
 }: {
   /** The start server action, bound (kept as the form's own action: works before hydration). */
   action: (formData: FormData) => void | Promise<void>;
@@ -43,8 +44,10 @@ export function SwitchProgramButton({
   /** The program running now, if any: "GD 1", "semana 3 de 13". */
   active?: { name: string; progress: string } | null;
   size?: "md" | "lg";
-  /** Look of the one-tap button (a switch always asks with the strong one). */
+  /** Look of the one-tap button (and of the switch's first step). */
   variant?: "strong" | "outline";
+  /** The switch's first step ("Retomar da semana 5" where "Trocar para este programa" would be vague). */
+  switchLabel?: string;
 }) {
   const detailsRef = useRef<HTMLDetailsElement>(null);
 
@@ -76,13 +79,13 @@ export function SwitchProgramButton({
     >
       <summary
         className={cn(
-          buttonVariants({ size, variant: "strong" }),
+          buttonVariants({ size, variant }),
           "cursor-pointer list-none select-none group-open:hidden [&::-webkit-details-marker]:hidden",
           // Wraps inside itself on a 320px phone instead of spilling out of the masthead.
           size === "lg" && "h-auto min-h-13 whitespace-normal py-3 text-center text-balance max-sm:px-5",
         )}
       >
-        Trocar para este programa
+        {switchLabel}
       </summary>
       <InlineActionForm
         action={action}

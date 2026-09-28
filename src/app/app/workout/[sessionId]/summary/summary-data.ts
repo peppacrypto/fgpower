@@ -1,21 +1,25 @@
 import "server-only";
 import { prisma } from "@/lib/db";
-import { getActiveEnrollment, getDaysDoneThisWeek, getInProgressSessions, getWeeklyProgress } from "@/lib/data/dashboard";
+import {
+  getActiveEnrollment,
+  getDaysDoneThisWeek,
+  getInProgressSessions,
+  getTodayHabit,
+  getWeeklyProgress,
+} from "@/lib/data/dashboard";
+import { entryWeekWasTrained, getRecentlyCompletedBlock } from "@/lib/data/program-lifecycle";
+import { getWeeklyStreak } from "@/lib/data/streak-data";
 import { resolveSessionDay } from "@/lib/training/day-match";
+import { dayNumberOf, planWeek, repeatsDays, upcomingWorkout } from "@/lib/training/day-rotation";
+import { completeWeekDone, effectiveProgramWeek, programWeekView, thisWeekRule } from "@/lib/training/week-guidance";
+import { trainingWeekdays } from "@/lib/programming/schedule";
+import { countedWeeks } from "@/lib/programming/block-progress";
 import type { NextLoadAdvice } from "@/lib/training/next-load";
 import { groupRecordsByExercise } from "@/lib/training/personal-records-core";
 import { adviceFromLastTime } from "@/lib/training/set-plan";
 import { startOfWeek } from "@/lib/training/week";
-import {
-  compareWithLast,
-  nextWorkout,
-  setsText,
-  spDayNumber,
-  weekStreak,
-  type LastTimeDelta,
-  type LiteSet,
-  type PlanDay,
-} from "./dossier";
+import { compareWithLast, setsText, type LastTimeDelta, type LiteSet } from "./dossier";
+import { getSessionRirTargets } from "@/lib/data/workout-session";
 
 /**
  * Everything the workout summary shows, for its owner. `fresh` is whether this
@@ -36,6 +40,8 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
       totalVolumeKg: true,
       totalWorkingSets: true,
       programWeek: true,
+      enrollmentId: true,
+      enrollment: { select: { startedAt: true, status: true } },
       program: { select: { progressionStrategy: true, durationWeeks: true } },
       exerciseLogs: {
         orderBy: { sortOrder: "asc" },
@@ -64,7 +70,7 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
   }
   const finishedAt = session.finishedAt;
 
-  const [profile, ordinal, newer, previous] = await Promise.all([
+  const [profile, ordinal, newer, previous, completedBlock, entryWeekTrained, rirTargets] = await Promise.all([
     prisma.profile.findUnique({
       where: { userId },
       select: {
@@ -82,8 +88,17 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
       select: { id: true },
     }),
     previousPerformances(userId, session.id),
+    // The workout that closed its block: what comes next replaces "Próximo treino".
+    session.enrollment?.status === "COMPLETED" ? getRecentlyCompletedBlock(userId, now) : Promise.resolve(null),
+    // A trained entry week took week 1 of the counter; an untrained one took nothing.
+    session.enrollmentId && session.enrollment
+      ? entryWeekWasTrained(prisma, { id: session.enrollmentId, userId, startedAt: session.enrollment.startedAt })
+      : Promise.resolve(false),
+    // The RIR each exercise aimed for in its program week — what the workout screen showed.
+    getSessionRirTargets(userId, session.id),
   ]);
   const fresh = !newer;
+  const blockDone = fresh && completedBlock?.enrollmentId === session.enrollmentId ? completedBlock : null;
 
   const exercises = session.exerciseLogs
     .map((log) => {
@@ -99,7 +114,7 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
         fresh && reference.length > 0
           ? adviceFromLastTime({
               strategy: log.programExercise?.progressionStrategy ?? session.program?.progressionStrategy ?? null,
-              prescribed: { repMin: log.repMin, repMax: log.repMax, rirTarget: log.rirTarget },
+              prescribed: { repMin: log.repMin, repMax: log.repMax, rirTarget: rirTargets.get(log.id) ?? log.rirTarget },
               lastTime: {
                 sets: reference.map((s) => ({ weightKg: s.weightKg, reps: s.reps, rir: s.rir, isExtra: false })),
                 prescribedSets: log.prescribedSets,
@@ -142,9 +157,15 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
       totalVolumeKg: session.totalVolumeKg,
       totalWorkingSets: session.totalWorkingSets ?? 0,
       programWeek: session.programWeek,
+      /** The program week as the block counts it (a trained entry week is 0), when the workout belongs to one. */
+      countedWeek:
+        session.programWeek != null && session.enrollment
+          ? countedWeeks(session.programWeek, session.enrollment.startedAt, entryWeekTrained)
+          : session.programWeek,
       durationWeeks: session.program?.durationWeeks ?? null,
     },
     ordinal,
+    blockDone,
     fresh,
     exercises,
     recordGroups,
@@ -158,7 +179,7 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
         caption: session.activity?.caption ?? "",
       },
     },
-    next: fresh ? await nextUp(userId, finishedAt, now, profile) : null,
+    next: fresh && !blockDone ? await nextUp(userId, finishedAt, now, profile) : null,
   };
 }
 
@@ -203,24 +224,21 @@ async function previousPerformances(userId: string, sessionId: string) {
 }
 
 /**
- * Weeks in a row with a finished workout (with at least one working set, as
- * the weekly counter counts them), up to this week. Reads a year back at most.
+ * The weekly streak (lib/training/streak.ts, the app's only streak rule: weeks
+ * on target in a row, deload weeks count, one free week per 8), built by the
+ * same week rows as Today's.
  */
-async function weeksInARow(userId: string, now: Date) {
-  const since = new Date(now.getTime() - 400 * 86_400_000);
-  const sessions = await prisma.workoutSession.findMany({
-    where: { userId, status: "COMPLETED", totalWorkingSets: { gt: 0 }, finishedAt: { gte: since, lte: now } },
-    select: { finishedAt: true },
-  });
-  return weekStreak(
-    sessions.flatMap((s) => (s.finishedAt ? [spDayNumber(s.finishedAt)] : [])),
-    spDayNumber(now),
-  );
+async function streakNow(userId: string, now: Date) {
+  const s = await getWeeklyStreak(userId, now);
+  return { current: s.current, best: s.best };
 }
 
 /**
- * This week's count and the next workout with a suggested date — the day
- * Today will offer on that date (nextWorkout; read-only use of Today's loaders).
+ * This week's count and the next workout with a suggested date — what Today's
+ * hero will offer on that date: Today's own rule (day-rotation upcomingWorkout,
+ * fed as Today feeds it — the entry week's target from the activation day, a
+ * week that already counts through another program, the user's week, next
+ * week's "continuar a sequência" default), read with Today's loaders.
  */
 async function nextUp(
   userId: string,
@@ -229,25 +247,19 @@ async function nextUp(
   profile: { daysPerWeek: number; preferredDays: number[] } | null,
 ) {
   const inThisWeek = finishedAt >= startOfWeek(now);
-  const [enrollment, streak] = await Promise.all([
-    getActiveEnrollment(userId),
-    inThisWeek ? weeksInARow(userId, now) : Promise.resolve(0),
-  ]);
-  const days: (PlanDay & { exerciseCount: number })[] = (enrollment?.program.days ?? []).map((d) => ({
-    id: d.id,
-    dayIndex: d.dayIndex,
-    name: d.name,
-    exerciseCount: d.exercises.length,
-    weekday: d.weekday,
-    estimatedMinutes: d.estimatedMinutes,
-  }));
-  const hasPlan = days.some((d) => d.exerciseCount > 0);
+  const enrollment = await getActiveEnrollment(userId);
+  const days = enrollment?.program.days ?? [];
+  const isTrainable = (d: (typeof days)[number]) => d.exercises.length > 0;
+  const hasPlan = days.some(isTrainable);
 
   if (!enrollment || !hasPlan) {
-    const weeklyCount = await getWeeklyProgress(userId);
+    const [weeklyCount, streak] = await Promise.all([
+      getWeeklyProgress(userId),
+      inThisWeek ? streakNow(userId, now) : Promise.resolve({ current: 0, best: 0 }),
+    ]);
     return {
       programName: enrollment?.program.name ?? null,
-      week: inThisWeek ? { done: weeklyCount, target: profile?.daysPerWeek ?? 3, streak } : null,
+      week: inThisWeek ? { done: weeklyCount, target: profile?.daysPerWeek ?? 3, entry: false, streak } : null,
       day: null,
       weekComplete: false,
       date: null,
@@ -255,34 +267,78 @@ async function nextUp(
     };
   }
 
-  const [done, inProgress] = await Promise.all([
+  const [done, inProgress, habit] = await Promise.all([
     getDaysDoneThisWeek(userId, enrollment.id, days),
     getInProgressSessions(userId, now),
+    getTodayHabit(userId, enrollment, now),
   ]);
+  const own = habit.program;
   // Days of this program with a workout still open (as Today's day rows map them).
   const openDayIds = new Set(
     inProgress
       .filter((s) => s.programId === enrollment.programId)
       .flatMap((s) => resolveSessionDay(s, days)?.id ?? []),
   );
-  const next = nextWorkout({
-    days,
-    nextDayIndex: enrollment.nextDayIndex,
-    daysPerWeek: enrollment.program.daysPerWeek,
-    doneDayIds: done.byDayId,
-    sessionCount: done.sessionCount,
-    openDayIds,
-    finishedAt,
+  const daysPerWeek = enrollment.program.daysPerWeek;
+  const rotation = { days, isTrainable, nextDayIndex: enrollment.nextDayIndex, daysPerWeek };
+  const weekView = programWeekView({
+    startedAt: enrollment.startedAt,
     now,
-    preferredDays: profile?.preferredDays ?? [],
+    effectiveWeek: effectiveProgramWeek({
+      currentWeek: enrollment.currentWeek,
+      sessionsThisWeek: done.sessionCount,
+      trainedBefore: own?.trainedBefore ?? false,
+    }),
+    entryWeekTrained: own?.entryWeekTrained ?? false,
   });
+  const entry = weekView.kind === "entry" ? weekView : null;
+  const rule = thisWeekRule({ view: weekView, enrollmentId: enrollment.id, thisWeek: habit.streak.thisWeek });
+  const preferredDays = profile?.preferredDays ?? [];
+  const weekInput = { ...rotation, doneDayIds: done.byDayId, sessionCount: done.sessionCount, skipDayIds: openDayIds };
+  const up = upcomingWorkout({
+    ...weekInput,
+    // A week that already counts: nothing is asked of it — the next workout is next week's first.
+    ...(rule.alreadyCounts ? completeWeekDone(days.filter(isTrainable).map((d) => d.id)) : {}),
+    targetCap: rule.targetCap,
+    todayNo: dayNumberOf(now),
+    lastDoneNo: habit.lastSession ? dayNumberOf(habit.lastSession.finishedAt) : null,
+    preferredDays: repeatsDays(daysPerWeek, days.length) ? trainingWeekdays(daysPerWeek, preferredDays) : preferredDays,
+    // Next week's start as Today judges it (dashboard getTodayHabit → day-rotation weekStartChoice).
+    carryOverNextWeek: own?.nextWeekCarryOver ?? false,
+  });
+  const next = up.next;
+  const day = next
+    ? {
+        id: next.day.id,
+        name: next.day.name,
+        exerciseCount: next.day.exercises.length,
+        estimatedMinutes: next.day.estimatedMinutes,
+      }
+    : null;
   return {
     programName: enrollment.program.name,
-    week: inThisWeek ? { done: next.weeklyDone, target: next.weeklyTarget, streak } : null,
-    day: next.day,
-    weekComplete: next.weekComplete,
-    date: next.date,
+    week: inThisWeek
+      ? rule.alreadyCounts
+        ? {
+            // The week already counted through another program (the streak's row judges it).
+            done: habit.streak.thisWeek.done,
+            target: habit.streak.thisWeek.target,
+            entry: false,
+            streak: { current: habit.streak.current, best: habit.streak.best },
+          }
+        : {
+            // Never cut to an entry week's cap: two workouts are two.
+            done: Math.max(up.week.weeklyDone, rule.targetCap != null ? planWeek(weekInput).weeklyDone : 0),
+            target: up.week.weeklyTarget,
+            /** A program started Thursday–Sunday: its short entry week, aimed at the days from the activation day. */
+            entry: entry !== null,
+            streak: { current: habit.streak.current, best: habit.streak.best },
+          }
+      : null,
+    day,
+    weekComplete: up.week.weekComplete,
+    date: next ? { dayNo: next.dayNo, isToday: next.isToday, isTomorrow: next.isTomorrow } : null,
     /** Days left open that leave no day to promise (Today's "não finalizado" rows); 0 when there's a day. */
-    openDaysBlocking: next.openDaysBlocking,
+    openDaysBlocking: next ? 0 : days.filter((d) => isTrainable(d) && openDayIds.has(d.id)).length,
   };
 }
