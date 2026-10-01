@@ -24,6 +24,13 @@ export interface RestTimer {
   exerciseIndex: number;
   /** The set that started it: un-✓ing that set cancels the rest. */
   setId: string;
+  /**
+   * A superset's switch to the next member ("transition", W-104) or a rest
+   * (a set's, a round's). Absent in timers stored before supersets: a rest.
+   */
+  kind?: "rest" | "transition";
+  /** The exercise the group moves on to (the "Próximo" shortcut); absent outside a group. */
+  nextIndex?: number | null;
 }
 
 
@@ -47,7 +54,9 @@ function readStoredTimer(sessionId: string): RestTimer | null {
       typeof t.after !== "string" ||
       typeof t.exerciseIndex !== "number" ||
       typeof t.setId !== "string" ||
-      (t.pausedLeftMs !== null && typeof t.pausedLeftMs !== "number")
+      (t.pausedLeftMs !== null && typeof t.pausedLeftMs !== "number") ||
+      (t.kind !== undefined && t.kind !== "rest" && t.kind !== "transition") ||
+      (t.nextIndex !== undefined && t.nextIndex !== null && typeof t.nextIndex !== "number")
     ) {
       return null;
     }
@@ -97,8 +106,19 @@ export function useRestTimer(sessionId: string) {
   }, [sessionId]);
 
   const start = useCallback(
-    (o: { seconds: number; after: string; exerciseIndex: number; setId: string }) => {
-      if (!(o.seconds > 0)) return;
+    (o: {
+      seconds: number;
+      after: string;
+      exerciseIndex: number;
+      setId: string;
+      kind?: "rest" | "transition";
+      nextIndex?: number | null;
+    }) => {
+      // A 0 s switch (a superset done back to back) runs no bar — and ends the rest before it.
+      if (!(o.seconds > 0)) {
+        if (o.kind === "transition") set(null);
+        return;
+      }
       const now = Date.now();
       set({
         id: now,
@@ -108,6 +128,8 @@ export function useRestTimer(sessionId: string) {
         after: o.after,
         exerciseIndex: o.exerciseIndex,
         setId: o.setId,
+        kind: o.kind ?? "rest",
+        nextIndex: o.nextIndex ?? null,
       });
     },
     [set],
@@ -173,6 +195,7 @@ const BAR_BUTTON = "flex h-11 items-center justify-center gap-0.5 rounded-[3px] 
 export function RestTimerBar({
   timer,
   sound,
+  vibrate,
   next,
   upNext,
   onAdjust,
@@ -182,6 +205,8 @@ export function RestTimerBar({
 }: {
   timer: RestTimer;
   sound: boolean;
+  /** Vibrate at the end (Profile.hapticsEnabled). */
+  vibrate: boolean;
   /** After an exercise's last set: a shortcut to the next exercise. */
   next: { name: string; onGo: () => void } | null;
   /** What comes next in this exercise ("Série 3 · 60 kg × 10"), shown when the rest ends. */
@@ -193,33 +218,42 @@ export function RestTimerBar({
 }) {
   const [now, setNow] = useState(() => Date.now());
   const [seenEndAt, setSeenEndAt] = useState<number | null>(null);
-  const latest = useRef({ timer, sound, onAnnounce, onDismiss });
+  const latest = useRef({ timer, sound, vibrate, onAnnounce, onDismiss });
   useEffect(() => {
-    latest.current = { timer, sound, onAnnounce, onDismiss };
+    latest.current = { timer, sound, vibrate, onAnnounce, onDismiss };
   });
 
   useEffect(() => {
     const { timer: t, onAnnounce: announce } = latest.current;
     // A fresh rest (not one picked back up after a reload) is announced.
-    if (Date.now() - t.id < 2000) announce(`Descanso de ${spokenDuration(t.totalSeconds)}.`);
+    if (Date.now() - t.id < 2000) {
+      announce(`${t.kind === "transition" ? "Transição" : "Descanso"} de ${spokenDuration(t.totalSeconds)}.`);
+    }
 
     const flags = { cued: false, warned: false, seenAt: null as number | null };
     const tick = () => {
       const time = Date.now();
-      const { timer: tm, sound: beep, onAnnounce: say, onDismiss: dismiss } = latest.current;
+      const { timer: tm, sound: beep, vibrate: buzz, onAnnounce: say, onDismiss: dismiss } = latest.current;
+      const noun = tm.kind === "transition" ? "Transição" : "Descanso";
       const left = tm.pausedLeftMs ?? tm.endsAt - time;
       if (tm.pausedLeftMs === null && left > 0 && left <= 30_000 && tm.totalSeconds > 45 && !flags.warned) {
         flags.warned = true;
-        say("30 segundos de descanso.");
+        say(tm.kind === "transition" ? "30 segundos de transição." : "30 segundos de descanso.");
       }
       if (tm.pausedLeftMs === null && left <= 0) {
         if (!flags.cued) {
           flags.cued = true;
           if (-left < CUE_WITHIN_MS) {
-            vibrateRestEnd();
+            if (buzz) vibrateRestEnd();
             if (beep) playRestBeep();
           }
-          say(-left > LATE_AFTER_MS ? `Descanso terminou há ${ago(-left)}.` : "Descanso concluído.");
+          say(
+            -left > LATE_AFTER_MS
+              ? `${noun} terminou há ${ago(-left)}.`
+              : tm.kind === "transition"
+                ? "Transição concluída."
+                : "Descanso concluído.",
+          );
         }
         if (flags.seenAt === null && document.visibilityState === "visible") {
           flags.seenAt = time;
@@ -240,6 +274,8 @@ export function RestTimerBar({
     };
   }, []);
 
+  const transition = timer.kind === "transition";
+  const noun = transition ? "Transição" : "Descanso";
   const paused = timer.pausedLeftMs !== null;
   const leftMs = timer.pausedLeftMs ?? timer.endsAt - now;
   const ended = !paused && leftMs <= 0;
@@ -272,14 +308,14 @@ export function RestTimerBar({
             <div className="flex items-center justify-between gap-3">
               <div className="min-w-0 py-1">
                 <p className="font-mono text-xs font-bold uppercase tracking-[0.16em]">
-                  {late ? `Descanso terminou há ${ago(now - timer.endsAt)}` : "Descanso concluído"}
+                  {late ? `${noun} terminou há ${ago(now - timer.endsAt)}` : transition ? "Transição concluída" : "Descanso concluído"}
                 </p>
                 {!next && upNext ? <p className="mt-0.5 line-clamp-2 text-sm font-semibold wrap-break-word">{upNext}</p> : null}
               </div>
               <button
                 type="button"
                 onClick={onDismiss}
-                aria-label="Fechar aviso de descanso"
+                aria-label={transition ? "Fechar aviso de transição" : "Fechar aviso de descanso"}
                 className="flex size-11 shrink-0 items-center justify-center rounded-[3px] bg-background/15 hover:bg-background/25"
               >
                 <X className="size-4" />
@@ -292,7 +328,7 @@ export function RestTimerBar({
             {nextButton ?? (
               <p className="line-clamp-2 py-1.5 text-xs wrap-break-word">
                 <span className="font-mono text-xs font-bold uppercase tracking-[0.14em]">
-                  {paused ? "Descanso pausado" : "Descanso"}
+                  {paused ? `${noun} pausad${transition ? "a" : "o"}` : noun}
                 </span>
                 <span className="opacity-85"> · após {timer.after}</span>
               </p>
@@ -314,12 +350,12 @@ export function RestTimerBar({
                 <button
                   type="button"
                   onClick={onTogglePause}
-                  aria-label={paused ? "Retomar descanso" : "Pausar descanso"}
+                  aria-label={paused ? `Retomar ${noun.toLowerCase()}` : `Pausar ${noun.toLowerCase()}`}
                   className={cn(BAR_BUTTON, "size-11")}
                 >
                   {paused ? <Play className="size-4" /> : <Pause className="size-4" />}
                 </button>
-                <button type="button" onClick={onDismiss} aria-label="Pular descanso" className={cn(BAR_BUTTON, "size-11")}>
+                <button type="button" onClick={onDismiss} aria-label={`Pular ${noun.toLowerCase()}`} className={cn(BAR_BUTTON, "size-11")}>
                   <X className="size-4" />
                 </button>
               </div>

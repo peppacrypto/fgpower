@@ -6,15 +6,19 @@
  * that assist, and a muscle hit directly and as an assistant by one exercise
  * counts once, directly. A program that repeats its days within the week
  * (A/B at 3×) or spreads them over two (8 days at 4×) is scaled by how often
- * each day comes around: sessions per week ÷ days.
+ * each day comes around: sessions per week ÷ days. Stretches and cardio
+ * aren't training volume (exercise-facets countsAsVolume): they're skipped,
+ * never counted as "unknown".
  */
-import { VOLUME_MUSCLES, type VolumeMuscleKey } from "./exercise-facets";
+import { VOLUME_MUSCLES, countsAsVolume, type VolumeMuscleKey } from "./exercise-facets";
 
 /** The range the strip draws as its guide band — weekly hard sets per muscle for hypertrophy. */
 export const VOLUME_GUIDE = { min: 10, max: 20 } as const;
 
 export interface VolumeExercise {
   sets: number;
+  /** Exercise.category: STRETCHING and CARDIO don't count (absent: counts, as before). */
+  category?: string | null;
   /** Null while the exercise's muscles are still loading (a draft restored from another visit). */
   primaryMuscleIds: string[] | null;
   secondaryMuscleIds: string[] | null;
@@ -66,6 +70,7 @@ export function weeklyVolume(days: { exercises: VolumeExercise[] }[], sessionsPe
 
   for (const day of days) {
     for (const ex of day.exercises) {
+      if (!countsAsVolume(ex.category)) continue;
       if (!ex.primaryMuscleIds || !ex.secondaryMuscleIds) {
         unknown++;
         continue;

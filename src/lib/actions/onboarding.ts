@@ -80,7 +80,11 @@ export async function completeOnboarding(
     create: { userId: user.id, ...answers, ...NEW_PROFILE_SHARING },
     update: answers,
   });
-  if (handle.changed) await refreshSessionCache();
+  // An account made by e-mail has no name (Google gives one): activity cards
+  // and avatars read user.name, so the display name fills it in.
+  const nameChanged = user.name.trim() === "";
+  if (nameChanged) await prisma.user.update({ where: { id: user.id }, data: { name: data.displayName } });
+  if (handle.changed || nameChanged) await refreshSessionCache();
 
   // Back to where sign-in started (a program dossier, a shared profile…).
   redirect(onboardingNextPath(String(formData.get("next") ?? "")) ?? "/app/today");

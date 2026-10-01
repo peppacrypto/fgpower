@@ -6,7 +6,11 @@ import { GArrow, GCohort } from "@/components/ui/glyph";
 import { requireUser } from "@/lib/auth/require-user";
 import { getOwnIdentity, getProfile, getPublicProfileOrigin } from "@/lib/data/profile";
 import { listFavoriteExercises } from "@/lib/data/favorites";
+import { getGraphCounts } from "@/lib/data/social";
 import { prisma } from "@/lib/db";
+import { profileHref } from "@/lib/social/links";
+import { ShareProfileButton } from "@/components/share/share-profile-button";
+import { UnreadCountPip } from "@/components/nav/unread-provider";
 import { Avatar } from "@/components/ui/misc";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -28,16 +32,16 @@ const GOAL_LABEL: Record<string, string> = {
 
 export default async function ProfilePage() {
   const user = await requireUser();
-  const [profile, identity, favorites, sessionCount, followerCount, followingCount, publicOrigin] = await Promise.all([
+  const [profile, identity, favorites, sessionCount, graph, publicOrigin] = await Promise.all([
     getProfile(user.id),
     // Handle and name from the DB: the session cookie cache can be minutes stale.
     getOwnIdentity(user.id),
     listFavoriteExercises(user.id),
     prisma.workoutSession.count({ where: { userId: user.id, status: "COMPLETED" } }),
-    prisma.follow.count({ where: { followingId: user.id } }),
-    prisma.follow.count({ where: { followerId: user.id } }),
+    getGraphCounts(user.id),
     getPublicProfileOrigin(),
   ]);
+  const { followers: followerCount, following: followingCount, requests: requestCount } = graph;
   const name = identity?.name ?? user.name;
   const username = identity?.username ?? null;
 
@@ -66,12 +70,15 @@ export default async function ProfilePage() {
       </div>
 
       {username ? (
-        <Link
-          href={`/u/${username}`}
-          className="mt-1 -mb-2 inline-flex min-h-11 items-center gap-1 text-sm font-medium text-accent underline decoration-[color-mix(in_oklab,var(--accent)_35%,transparent)] underline-offset-[3px] hover:decoration-accent"
-        >
-          Ver perfil público <ExternalLink aria-hidden className="size-3.5" />
-        </Link>
+        <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1">
+          <Link
+            href={profileHref(username)}
+            className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-accent underline decoration-[color-mix(in_oklab,var(--accent)_35%,transparent)] underline-offset-[3px] hover:decoration-accent"
+          >
+            Ver perfil público <ExternalLink aria-hidden className="size-3.5" />
+          </Link>
+          <ShareProfileButton username={username} name={name} />
+        </div>
       ) : (
         <Link
           href="/app/settings"
@@ -115,6 +122,7 @@ export default async function ProfilePage() {
           <Link href="/app/notifications">
             <Bell className="size-4" />
             Notificações
+            <UnreadCountPip />
           </Link>
         </Button>
         <Button variant="outline" size="sm" asChild>
@@ -143,18 +151,38 @@ export default async function ProfilePage() {
             </CardContent>
           </Card>
         </Link>
-        <Card>
-          <CardContent className="py-4">
-            <p className="font-mono text-xl font-bold tabular-nums">{formatNumber(followerCount, 0)}</p>
-            <p className="text-xs text-muted">{pluralWord(followerCount, "Seguidor", "Seguidores")}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="py-4">
-            <p className="font-mono text-xl font-bold tabular-nums">{formatNumber(followingCount, 0)}</p>
-            <p className="text-xs text-muted">Seguindo</p>
-          </CardContent>
-        </Card>
+        <Link
+          href="/app/profile/seguidores"
+          aria-label={`${plural(followerCount, "seguidor", "seguidores")}${
+            requestCount > 0 ? ` e ${plural(requestCount, "pedido", "pedidos")} para seguir` : ""
+          } — ver lista`}
+        >
+          <Card className="is-link h-full">
+            <CardContent className="py-4">
+              <p className="font-mono text-xl font-bold tabular-nums">{formatNumber(followerCount, 0)}</p>
+              <p className="flex items-center justify-center gap-1 text-xs text-muted">
+                {pluralWord(followerCount, "Seguidor", "Seguidores")}
+                <GArrow className="size-3" />
+              </p>
+              {requestCount > 0 ? (
+                <p className="mt-1 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-accent">
+                  {plural(requestCount, "pedido", "pedidos")}
+                </p>
+              ) : null}
+            </CardContent>
+          </Card>
+        </Link>
+        <Link href="/app/profile/seguindo" aria-label={`Seguindo ${plural(followingCount, "pessoa", "pessoas")} — ver lista`}>
+          <Card className="is-link h-full">
+            <CardContent className="py-4">
+              <p className="font-mono text-xl font-bold tabular-nums">{formatNumber(followingCount, 0)}</p>
+              <p className="flex items-center justify-center gap-1 text-xs text-muted">
+                Seguindo
+                <GArrow className="size-3" />
+              </p>
+            </CardContent>
+          </Card>
+        </Link>
       </div>
 
       <section className="mt-8">

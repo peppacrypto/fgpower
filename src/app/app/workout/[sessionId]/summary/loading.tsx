@@ -6,8 +6,9 @@ import { EditSetsSkeleton } from "./editar/loading";
 /**
  * The post-workout dossier (summary/page.tsx), drawn as it lays out: the
  * masthead panel (kicker with the date, "Treino nº · week", the day's title,
- * the stats line, the saved line), the "Quem vê" row between rules, one panel
- * for the records or the baseline, then the exercise cards. Keep in step with
+ * the stats line, the saved line), the check-in folded to its one line, the
+ * share block between rules ("Quem vê", then "Fora do app"), one panel for
+ * the records or the baseline, then the exercise cards. Keep in step with
  * the page.
  */
 export function SummarySkeleton() {
@@ -40,8 +41,15 @@ export function SummarySkeleton() {
         </div>
       </div>
 
+      {/* The check-in (check-in-card.tsx) as one line: answered or skipped, it folds to 52px. */}
+      <div className="reg-frame mt-5 flex h-[52px] items-center px-3">
+        <Bone className="h-3 w-40" />
+      </div>
+
       {/* Quem vê: label and the three-way switch (stacked in a column under
-          21rem, as share-workout-form lays it out), then who that is, between hairlines. */}
+          21rem, as share-workout-form lays it out), then who that is; then
+          "Fora do app" with its two buttons (side by side from 360px) and the
+          helper line — between hairlines. */}
       <div className="@container mt-5 border-y border-border py-3">
         <div className="flex flex-col items-stretch gap-1.5 @min-[21rem]:flex-row @min-[21rem]:items-center @min-[21rem]:gap-3">
           <div className="flex h-4 items-center">
@@ -50,6 +58,16 @@ export function SummarySkeleton() {
           <Bone className="h-10 @min-[21rem]:flex-1" />
         </div>
         <Bone className="mt-3.5 h-3 w-2/5" />
+        <div className="mt-3.5 border-t border-border pt-3">
+          <div className="flex h-4 items-center">
+            <Bone className="h-2.5 w-20" />
+          </div>
+          <div className="mt-2 grid grid-cols-1 gap-2 min-[360px]:grid-cols-2">
+            <Bone className="h-9" />
+            <Bone className="h-9" />
+          </div>
+          <Bone className="mt-3 h-3 w-4/5" />
+        </div>
       </div>
 
       {/* Recordes / Marca inicial: one panel. */}
@@ -63,7 +81,7 @@ export function SummarySkeleton() {
         {[0, 1, 2].map((i) => (
           <div key={i} className="reg-frame p-4">
             <div className="flex items-center gap-3">
-              <span className="w-5 shrink-0 font-mono text-xs text-foreground/30">{String(i + 1).padStart(2, "0")}</span>
+              <span className="w-5 shrink-0 font-mono text-xs text-muted">{String(i + 1).padStart(2, "0")}</span>
               <Bone className="h-4 w-1/2" />
             </div>
             <div className="mt-2.5 flex gap-4 pl-8">

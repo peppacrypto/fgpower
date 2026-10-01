@@ -247,6 +247,13 @@ describe("firstTimeReps", () => {
     expect(firstTimeReps(4, 6)).toBe(4);
     expect(firstTimeReps(0, 0)).toBeNull();
   });
+
+  it("with the body's own weight, aims for the bottom of the range", () => {
+    expect(firstTimeReps(8, 15, { bodyweight: true })).toBe(8);
+    expect(firstTimeReps(20, 45, { bodyweight: true })).toBe(20);
+    expect(firstTimeReps(10, 10, { bodyweight: true })).toBe(10);
+    expect(firstTimeReps(0, 0, { bodyweight: true })).toBeNull();
+  });
 });
 
 describe("warmupSuggestions", () => {

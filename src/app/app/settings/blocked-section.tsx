@@ -1,12 +1,21 @@
+import { getBlockedUsers } from "@/lib/data/social";
+import { Section } from "./section";
+import { BlockedList } from "./blocked-list";
+
 /**
- * Settings → "Contas bloqueadas" (id="bloqueados", after Privacidade; W-141,
- * owned by C1): who you blocked, with "Desbloquear". `notice` is the one-time
- * "Conta bloqueada." after blocking from a profile (?bloqueado=1). An async
- * server component that renders its own <Section>.
- *
- * Phase 0 stub with the final props: renders nothing yet.
+ * Settings → "Contas bloqueadas" (id="bloqueados", after Privacidade; W-141):
+ * who you blocked, with "Desbloquear". `notice` is the one-time "Conta
+ * bloqueada." after blocking from a profile (?bloqueado=1).
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- Phase 0 stub (C1 implements W-141)
-export async function BlockedSection(props: { userId: string; notice: boolean }) {
-  return null;
+export async function BlockedSection({ userId, notice }: { userId: string; notice: boolean }) {
+  const blocked = await getBlockedUsers(userId);
+  return (
+    <Section
+      id="bloqueados"
+      title="Contas bloqueadas"
+      description="Vocês não veem o perfil nem os treinos um do outro, e quem foi bloqueado não é avisado."
+    >
+      <BlockedList people={blocked} notice={notice} />
+    </Section>
+  );
 }

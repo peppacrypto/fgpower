@@ -5,7 +5,10 @@ import Link from "next/link";
 import { unstable_isUnrecognizedActionError, unstable_rethrow } from "next/navigation";
 import { Trash2, Undo2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { describeActionFailure, OFFLINE_ERROR } from "@/components/social/run-action";
+import { ActionErrorText } from "@/components/social/session-expired";
 import { editFinishedWorkout, type FinishedSetEdit } from "@/lib/actions/workouts";
+import { isSessionExpiredError } from "@/lib/auth/session-expired";
 import { parseDecimalInput } from "@/lib/training/set-plan";
 import { cn } from "@/lib/utils/cn";
 
@@ -112,7 +115,15 @@ export function EditSetsForm({
           window.location.reload();
           return;
         }
-        setError("Sem conexão — nada foi alterado. Tente de novo quando o sinal voltar.");
+        // Nothing was saved. Offline, the login gone ("Entrar" back to this page), or a retry.
+        const { error: why } = await describeActionFailure();
+        setError(
+          isSessionExpiredError(why)
+            ? `${why} Nada foi alterado.`
+            : why === OFFLINE_ERROR
+              ? "Sem conexão — nada foi alterado. Tente de novo quando o sinal voltar."
+              : "Não foi possível salvar agora — nada foi alterado. Tente de novo.",
+        );
       }
     });
   }
@@ -122,7 +133,7 @@ export function EditSetsForm({
       {exercises.map((ex, i) => (
         <section key={ex.logId} aria-labelledby={`edit-${ex.logId}`}>
           <div className="flex items-baseline gap-3 border-b border-border pb-1.5">
-            <span className="w-5 shrink-0 font-mono text-xs text-foreground/40">{String(i + 1).padStart(2, "0")}</span>
+            <span className="w-5 shrink-0 font-mono text-xs text-muted">{String(i + 1).padStart(2, "0")}</span>
             <h2 id={`edit-${ex.logId}`} className="min-w-0 flex-1 text-sm font-semibold leading-snug wrap-break-word">
               {ex.name}
             </h2>
@@ -202,7 +213,7 @@ export function EditSetsForm({
 
       {error ? (
         <p role="alert" className="border-l-2 border-l-danger! bg-danger-soft px-3 py-2 text-xs font-medium text-danger">
-          {error}
+          <ActionErrorText error={error} />
         </p>
       ) : null}
       <div className="flex flex-col gap-2 sm:flex-row">

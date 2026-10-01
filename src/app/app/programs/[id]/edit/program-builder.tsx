@@ -24,6 +24,8 @@ import {
   ArrowUp,
   CalendarRange,
   Copy,
+  Link2,
+  Link2Off,
   MoreHorizontal,
   Plus,
   Trash2,
@@ -59,7 +61,10 @@ import { parseDecimalInput } from "@/lib/training/set-plan";
 import { dayTokens } from "@/lib/programming/day-tokens";
 import { analyzeProgram, type ProgramRuleDay } from "@/lib/programming/rules";
 import { weeklyVolume } from "@/lib/programming/weekly-volume";
-import type { PickerExercise } from "@/lib/programming/exercise-facets";
+import { countsAsVolume, type PickerExercise } from "@/lib/programming/exercise-facets";
+import { deriveGroups, normalizeGroupKeys } from "@/lib/programming/groups";
+import { formatRestClock } from "@/lib/validation/program-builder";
+import { canGroupWithNext, dissolveGroup, duplicateAt, groupWithNext, restoreGroupEdit, separateFromGroup } from "./group-edits";
 import { ExercisePicker } from "./exercise-picker";
 import { ExerciseRow, ROW_FIELD_LABELS, type RowErrors, type RowField } from "./exercise-row";
 import { LeaveSheet } from "./leave-sheet";
@@ -99,7 +104,8 @@ function toEditable(days: BuilderDay[], makeId: (prefix: string) => string): Edi
     name: d.name,
     focus: d.focus,
     key: makeId("day"),
-    exercises: d.exercises.map((e) => ({ ...e, rowId: makeId("row") })),
+    // Supersets in their canonical letters (W-104), so "unsaved" compares like with like.
+    exercises: normalizeGroupKeys(d.exercises.map((e) => ({ ...e, rowId: makeId("row") }))),
   }));
 }
 
@@ -538,8 +544,13 @@ export function ProgramBuilder({
     setSavedOnce(false);
   }
 
+  /**
+   * Every change to a day's list goes through here, normalized: a drag or a
+   * move that splits a superset dissolves it, a lone member loses its key,
+   * and groups are lettered A, B… in order (W-104).
+   */
   function patchDay(key: string, fn: (list: EditableExercise[]) => EditableExercise[]) {
-    patchDays((prev) => prev.map((d) => (d.key === key ? { ...d, exercises: fn(d.exercises) } : d)));
+    patchDays((prev) => prev.map((d) => (d.key === key ? { ...d, exercises: normalizeGroupKeys(fn(d.exercises)) } : d)));
   }
 
   function patchActiveExercises(fn: (list: EditableExercise[]) => EditableExercise[]) {
@@ -703,10 +714,12 @@ export function ProgramBuilder({
     const index = activeDay.exercises.findIndex((e) => e.rowId === rowId);
     const removed = activeDay.exercises[index];
     if (!removed) return;
+    const keysBefore = groupKeysOf(activeDay.exercises);
     patchDay(dayKey, (list) => list.filter((e) => e.rowId !== rowId));
     if (errors.rows[rowId]) setErrors((e) => ({ ...e, rows: omit(e.rows, rowId) }));
+    // Undo puts back its superset too (its partner lost the key when it left).
     offerUndo(`${removed.exerciseName ?? "Exercício"} removido`, () =>
-      patchDay(dayKey, (list) => (list.some((e) => e.rowId === rowId) ? list : insertAt(list, index, removed))),
+      patchDay(dayKey, (list) => (list.some((e) => e.rowId === rowId) ? list : withKeys(insertAt(list, index, removed), keysBefore))),
     );
     // Focus the next row's "⋯" (or the add button) instead of losing it to the page.
     const next = activeDay.exercises[index + 1] ?? activeDay.exercises[index - 1];
@@ -721,8 +734,9 @@ export function ProgramBuilder({
       if (idx === -1) return list;
       const next = [...list];
       // A new row (no id) that keeps everything else, including the
-      // prescription the builder carries without showing.
-      next.splice(idx + 1, 0, { ...list[idx], id: undefined, rowId: copyId });
+      // prescription the builder carries without showing — but not a
+      // superset's key: the copy goes after the group, on its own.
+      next.splice(duplicateAt(list, idx), 0, { ...list[idx], id: undefined, rowId: copyId, groupKey: null });
       return next;
     });
     pendingFocus.current = `[data-row-id="${copyId}"] [data-row-actions]`;
@@ -738,9 +752,66 @@ export function ProgramBuilder({
     pendingFocus.current = `[data-row-id="${rowId}"] [data-row-actions]`;
   }
 
+  /**
+   * A superset edit's "Desfazer": the keys, the rests and the order as they
+   * were (group-edits restoreGroupEdit — rows duplicated meanwhile stay).
+   */
+  function offerGroupUndo(text: string, dayKey: string, before: EditableExercise[]) {
+    offerUndo(text, () => patchDay(dayKey, (list) => restoreGroupEdit(list, before)));
+  }
+
+  /** "Agrupar com o próximo" (W-104): a superset with the row below, or a place in its group. */
+  function groupRows(rowId: string) {
+    const dayKey = activeDay.key;
+    const before = activeDay.exercises;
+    const after = groupWithNext(before, rowId);
+    if (after === before) return;
+    patchDay(dayKey, (list) => groupWithNext(list, rowId));
+    const index = after.findIndex((e) => e.rowId === rowId);
+    const slot = deriveGroups(after)[index];
+    const text =
+      slot && slot.size === 2
+        ? `${slot.heading} criado · ${formatRestClock(after[index].restSeconds)} entre os dois`
+        : `${slot?.heading ?? "Grupo"} · ${plural(slot?.size ?? 0, "exercício", "exercícios")} em sequência`;
+    offerGroupUndo(text, dayKey, before);
+    pendingFocus.current = `[data-row-id="${rowId}"] [data-row-actions]`;
+  }
+
+  /** "Separar do superset": this row leaves its group (a pair comes apart). */
+  function separateRow(rowId: string) {
+    const dayKey = activeDay.key;
+    const before = activeDay.exercises;
+    const slot = deriveGroups(before)[before.findIndex((e) => e.rowId === rowId)];
+    if (!slot) return;
+    patchDay(dayKey, (list) => separateFromGroup(list, rowId));
+    const name = before.find((e) => e.rowId === rowId)?.exerciseName ?? "Exercício";
+    offerGroupUndo(
+      slot.size <= 2 ? "Superset desfeito — confira os descansos" : `${name} saiu do ${slot.heading} — confira os descansos`,
+      dayKey,
+      before,
+    );
+    pendingFocus.current = `[data-row-id="${rowId}"] [data-row-actions]`;
+  }
+
+  /** "Desagrupar" on a group's header: every member on its own again. */
+  function ungroupRows(rowId: string) {
+    const dayKey = activeDay.key;
+    const before = activeDay.exercises;
+    const slot = deriveGroups(before)[before.findIndex((e) => e.rowId === rowId)];
+    if (!slot) return;
+    patchDay(dayKey, (list) => dissolveGroup(list, rowId));
+    offerGroupUndo(
+      `${slot.kind === "superset" ? "Superset" : "Circuito"} desfeito — confira os descansos`,
+      dayKey,
+      before,
+    );
+    pendingFocus.current = `[data-row-id="${rowId}"] [data-row-actions]`;
+  }
+
   /** "Mover para…": the row keeps its id, so its logged workouts stay linked. */
   function moveExerciseToDay(rowId: string, targetKey: string) {
     const fromKey = activeDay.key;
+    const keysBefore = groupKeysOf(activeDay.exercises);
     const index = activeDay.exercises.findIndex((e) => e.rowId === rowId);
     const row = activeDay.exercises[index];
     const target = days.find((d) => d.key === targetKey);
@@ -748,9 +819,10 @@ export function ProgramBuilder({
     patchDays((prev) =>
       prev.map((d) =>
         d.key === fromKey
-          ? { ...d, exercises: d.exercises.filter((e) => e.rowId !== rowId) }
+          ? { ...d, exercises: normalizeGroupKeys(d.exercises.filter((e) => e.rowId !== rowId)) }
           : d.key === targetKey
-            ? { ...d, exercises: [...d.exercises, row] }
+            ? // It arrives on its own: a superset stays in its day.
+              { ...d, exercises: [...d.exercises, { ...row, groupKey: null }] }
             : d,
       ),
     );
@@ -762,7 +834,7 @@ export function ProgramBuilder({
           d.key === targetKey
             ? { ...d, exercises: d.exercises.filter((e) => e.rowId !== rowId) }
             : d.key === fromKey
-              ? { ...d, exercises: insertAt(d.exercises, index, there) }
+              ? { ...d, exercises: withKeys(insertAt(d.exercises, index, there), keysBefore) }
               : d,
         );
       }),
@@ -1001,12 +1073,15 @@ export function ProgramBuilder({
   // Nothing unsaved and nothing touched since the last save (or a clean open, see savedOnce).
   const settled = !dirty && savedOnce;
 
+  // Stretches and cardio are in the plan but not in the week's volume (L-volume-counts-stretches).
+  const countsInVolume = (exerciseId: string) => countsAsVolume(meta[exerciseId]?.category);
   const volume = useMemo(
     () =>
       weeklyVolume(
         days.map((d) => ({
           exercises: d.exercises.map((e) => ({
             sets: e.sets,
+            category: meta[e.exerciseId]?.category ?? null,
             primaryMuscleIds: meta[e.exerciseId]?.primaryMuscleIds ?? null,
             secondaryMuscleIds: meta[e.exerciseId]?.secondaryMuscleIds ?? null,
           })),
@@ -1023,6 +1098,7 @@ export function ProgramBuilder({
       namePt: d.name || `Dia ${i + 1}`,
       exercises: d.exercises.map((e) => ({
         exerciseId: e.exerciseId,
+        category: meta[e.exerciseId]?.category ?? null,
         nameEn: e.exerciseName ?? "",
         namePt: e.exerciseName ?? meta[e.exerciseId]?.namePt ?? "",
         primaryMuscleGroups: (meta[e.exerciseId]?.primaryGroups ?? []) as ProgramRuleDay["exercises"][number]["primaryMuscleGroups"],
@@ -1040,6 +1116,9 @@ export function ProgramBuilder({
       ? activeDay.exercises.find((e) => e.rowId === sheet.rowId) ?? null
       : null;
   const sheetRowIndex = sheetRow ? activeDay.exercises.indexOf(sheetRow) : -1;
+  const groupSlots = deriveGroups(activeDay.exercises);
+  const sheetGroup = sheetRowIndex >= 0 ? groupSlots[sheetRowIndex] : null;
+  const sheetCanGroup = sheetRow ? canGroupWithNext(activeDay.exercises, sheetRow.rowId) : null;
   const activeDayLabel = activeDay.name || `Dia ${activeDayIndex + 1}`;
 
   // ---------------------------------------------------------------- render
@@ -1162,8 +1241,10 @@ export function ProgramBuilder({
           if (!name.trim()) setErrors((er) => ({ ...er, name: NAME_REQUIRED }));
         }}
         placeholder="Nome do programa"
+        // An underline, not a box: no invalid ring from the Input (the danger underline says it), and
+        // focus still shows as the accent underline while the name is missing.
         className={cn(
-          "mt-2 rounded-none border-0 border-b-2 border-b-transparent px-0 text-2xl font-bold tracking-tight shadow-none focus-visible:border-b-accent focus-visible:outline-none",
+          "mt-2 rounded-none border-0 border-b-2 border-b-transparent px-0 text-2xl font-bold tracking-tight shadow-none focus-visible:border-b-accent focus-visible:outline-none aria-[invalid=true]:ring-0 aria-[invalid=true]:focus-visible:border-b-accent",
           errors.name && "border-b-danger",
         )}
       />
@@ -1349,10 +1430,13 @@ export function ProgramBuilder({
               >
                 <SortableContext items={activeDay.exercises.map((e) => e.rowId)} strategy={verticalListSortingStrategy}>
                   <div className="flex flex-col gap-2">
-                    {activeDay.exercises.map((ex) => (
+                    {activeDay.exercises.map((ex, i) => (
                       <ExerciseRow
                         key={ex.rowId}
                         id={ex.rowId}
+                        group={groupSlots[i]}
+                        onUngroup={() => ungroupRows(ex.rowId)}
+                        noVolume={!countsInVolume(ex.exerciseId)}
                         exercise={ex}
                         meta={meta[ex.exerciseId]}
                         machineNote={machineNotes[ex.exerciseId] ?? null}
@@ -1477,6 +1561,31 @@ export function ProgramBuilder({
           >
             Mover para baixo
           </SheetItem>
+          {sheetGroup ? (
+            <SheetItem
+              icon={<Link2Off />}
+              onClick={() => {
+                closeSheet();
+                separateRow(sheetRow.rowId);
+              }}
+            >
+              {sheetGroup.kind === "superset" ? "Separar do superset" : "Separar do circuito"}
+            </SheetItem>
+          ) : sheetRowIndex < activeDay.exercises.length - 1 ? (
+            <SheetItem
+              icon={<Link2 />}
+              disabled={!sheetCanGroup?.ok}
+              onClick={() => {
+                closeSheet();
+                groupRows(sheetRow.rowId);
+              }}
+            >
+              Agrupar com o próximo
+              {sheetCanGroup && !sheetCanGroup.ok && sheetCanGroup.reason === "full" ? (
+                <span className="block text-xs font-normal text-muted">O grupo abaixo já tem 4 exercícios.</span>
+              ) : null}
+            </SheetItem>
+          ) : null}
           {days.length > 1 ? (
             <SheetItem icon={<CalendarRange />} onClick={() => setSheet({ kind: "move", rowId: sheetRow.rowId })}>
               Mover para outro dia…
@@ -1661,6 +1770,16 @@ function omitKey<K extends string, T>(record: Partial<Record<K, T>>, key: K): Pa
   return next;
 }
 
+/** Each row's superset key, to put back on undo. */
+function groupKeysOf(list: readonly { rowId: string; groupKey: string | null }[]): Map<string, string | null> {
+  return new Map(list.map((e) => [e.rowId, e.groupKey]));
+}
+
+/** The keys (and nothing else) as they were, where those rows still are; normalized. */
+function withKeys<T extends { rowId: string; groupKey: string | null }>(list: T[], keys: Map<string, string | null>): T[] {
+  return normalizeGroupKeys(list.map((e) => (keys.has(e.rowId) ? { ...e, groupKey: keys.get(e.rowId) ?? null } : e)));
+}
+
 function insertAt<T>(list: T[], index: number, item: T): T[] {
   const at = Math.max(0, Math.min(list.length, index));
   return [...list.slice(0, at), item, ...list.slice(at)];
@@ -1808,10 +1927,8 @@ function NumberBox({
         onKeyDown={(e) => {
           if (e.key === "Enter") e.currentTarget.blur();
         }}
-        className={cn(
-          "h-11 w-12 px-1.5 text-center font-mono text-lg font-bold tabular-nums",
-          invalid && "border-danger",
-        )}
+        // aria-invalid draws the danger border and ring (the Input's own).
+        className="h-11 w-12 px-1.5 text-center font-mono text-lg font-bold tabular-nums"
       />
       {suffix ? <span className="font-mono text-xs font-bold text-muted">{suffix}</span> : null}
     </div>

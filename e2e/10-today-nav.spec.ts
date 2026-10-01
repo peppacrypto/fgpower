@@ -1,6 +1,6 @@
 import { execSync } from "node:child_process";
 import { test, expect, devices, type Locator, type Page } from "@playwright/test";
-import { loginAsTestUser } from "./fixtures";
+import { loginAsTestUser, sqlText, userIdOf } from "./fixtures";
 import { completeOnboarding } from "./onboarding-helper";
 import {
   QUINTA,
@@ -66,6 +66,66 @@ test("Today puts 'Iniciar treino' above the fold, and preview rows open the exer
   const first = preview.getByRole("link").first();
   await expect(first).toHaveAttribute("href", /^\/app\/exercises\/[^/]+$/);
   await Promise.all([page.waitForURL(/\/app\/exercises\/[^/]+$/), first.click()]);
+});
+
+test("a superset in the next workout reads as one in the preview: its rule, then 'A1' and 'A2'", async ({ page }) => {
+  test.skip(!hasDb, "needs the local dev database");
+  await newUserOnGd1(page, "today-superset");
+  const userId = await userIdOf(page);
+  await page.goto("/app/today");
+  const hero = page.locator('[data-hero="next"]');
+  const dayName = (await hero.getByRole("heading", { level: 2 }).textContent())?.trim() ?? "";
+  // Pair the day's first two exercises (GD's own supersets sit further down its days).
+  sql(`UPDATE "UserProgramExercise" SET "groupKey" = 'A' WHERE id IN (
+    SELECT pe.id FROM "UserProgramExercise" pe
+    JOIN "UserProgramDay" d ON d.id = pe."dayId" JOIN "UserProgram" p ON p.id = d."programId"
+    WHERE p."userId" = ${sqlText(userId)} AND p.status = 'ACTIVE' AND d.name = ${sqlText(dayName)}
+    ORDER BY pe."sortOrder" LIMIT 2)`);
+  await page.reload();
+
+  const preview = hero.locator("ol");
+  await expect(preview.getByText("Superset A · alterne as séries")).toBeVisible();
+  const first = preview.locator('li[data-group="A1"]');
+  const second = preview.locator('li[data-group="A2"]');
+  await expect(first).toBeVisible();
+  await expect(second).toBeVisible();
+  // Read out as the group, then the exercise; the rows still open the exercise pages.
+  await expect(first.getByRole("link")).toHaveAccessibleName(/^Superset A, 1 de 2: \S/);
+  await expect(second.getByRole("link")).toHaveAccessibleName(/^Superset A, 2 de 2: \S/);
+  await expect(first.getByRole("link")).toHaveAttribute("href", /^\/app\/exercises\/[^/]+$/);
+  // Still three rows on a phone.
+  await expect(preview.getByRole("link").filter({ visible: true })).toHaveCount(3);
+});
+
+test("Today's records: a hold leads with its time and never shows a 1RM (L-bodyweight-timed-display)", async ({ page }) => {
+  test.skip(!hasDb, "needs the local dev database");
+  await loginAsTestUser(page, uniqueEmail("today-hold-prs"));
+  await completeOnboarding(page);
+  const userId = await userIdOf(page);
+  const id = (slug: string) => sql(`SELECT id FROM "Exercise" WHERE slug = ${sqlText(slug)}`);
+  // Three workouts, one record set each: a plank held 45 s (with a meaningless e1RM row), a
+  // loaded pinch held 40 s, and a side bridge whose only new record is an e1RM.
+  const session = (n: number) => {
+    const sid = `c5pr${n}-${userId}`;
+    sql(`INSERT INTO "WorkoutSession" (id, "userId", name, status, "startedAt", "finishedAt", "totalWorkingSets", "updatedAt")
+      VALUES (${sqlText(sid)}, ${sqlText(userId)}, 'Treino livre', 'COMPLETED', now() - interval '${n} hours 50 minutes', now() - interval '${n} hours', 2, now())`);
+    return sqlText(sid);
+  };
+  const [s1, s2, s3] = [session(1), session(2), session(3)];
+  sql(`INSERT INTO "ExercisePersonalRecord" (id, "userId", "exerciseId", kind, value, "weightKg", reps, "sessionId", "achievedAt") VALUES
+    ('c5pra' || md5(random()::text), ${sqlText(userId)}, '${id("plank")}', 'MAX_REPS_AT_WEIGHT', 45, 0, 45, ${s1}, now() - interval '1 hour'),
+    ('c5prb' || md5(random()::text), ${sqlText(userId)}, '${id("plank")}', 'ESTIMATED_1RM', 12, 0, 45, ${s1}, now() - interval '1 hour'),
+    ('c5prc' || md5(random()::text), ${sqlText(userId)}, '${id("plate-pinch")}', 'MAX_REPS_AT_WEIGHT', 40, 10, 40, ${s2}, now() - interval '2 hours'),
+    ('c5prd' || md5(random()::text), ${sqlText(userId)}, '${id("side-bridge")}', 'ESTIMATED_1RM', 23.3, 20, 8, ${s3}, now() - interval '3 hours')`);
+
+  await page.goto("/app/today");
+  const records = page.locator("section", { has: page.getByText("Recordes recentes") }).getByRole("link");
+  await expect(records).toHaveCount(2);
+  await expect(records.first()).toContainText("45 s");
+  await expect(records.first()).toContainText(/Tempo/i);
+  await expect(records.first()).not.toContainText(/1RM|reps|peso corporal|kg/i);
+  await expect(records.nth(1)).toContainText("10 kg × 40 s");
+  await expect(records.nth(1)).not.toContainText(/1RM/i);
 });
 
 test("'Treino descartado.' shows once after a discard from Today", async ({ page }) => {

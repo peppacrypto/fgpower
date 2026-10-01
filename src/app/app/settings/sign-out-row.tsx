@@ -5,17 +5,44 @@ import Link from "next/link";
 import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { runAction } from "@/components/social/run-action";
+import { currentSubscription, disablePush } from "@/components/reminders/push-client";
 import { countUnsyncedRows, DRAFTS_KEY_PREFIX } from "@/components/workout/local-workout";
 import { plural } from "@/lib/utils/format";
 import { isSessionExpiredError } from "@/lib/auth/session-expired";
 import { signOutAction } from "./actions";
 
+/** The longest each step of the reminders' cleanup may hold a sign-out up (a slow network, a hung push service). */
+const PUSH_CLEANUP_MS = 3000;
+
+/** `work`, or undefined once `ms` pass (it may still finish in the background); never rejects. */
+async function within<T>(work: () => Promise<T>, ms: number): Promise<T | undefined> {
+  let timer: number | undefined;
+  const timeout = new Promise<undefined>((resolve) => {
+    timer = window.setTimeout(() => resolve(undefined), ms);
+  });
+  try {
+    return await Promise.race([work().catch(() => undefined), timeout]);
+  } finally {
+    window.clearTimeout(timer);
+  }
+}
+
 /**
  * "Sair da conta", the one place to sign out: a tap asks first (inline, no
- * dialog), so a slip doesn't drop the user to Google's account picker, and a
+ * dialog), so a slip doesn't drop the user back to the login page, and a
  * failed call says so and lets them try again instead of leaving a dead button.
  * Sets typed offline live only on this phone until the workout screen sends
  * them, so the confirm step says so (and links the workout) when there are any.
+ *
+ * Signing out also stops this device's reminders (a shared phone must not keep
+ * getting someone else's): the account forgets this browser's subscription
+ * while the session still lets it, and the browser drops it. Best effort,
+ * never in the way — offline, a refused permission or a slow push service
+ * cost the sign-out at most PUSH_CLEANUP_MS a step (a second step only when
+ * the first didn't get through). When the account couldn't be told (a failed
+ * request, the login already gone), dropping the browser's own subscription
+ * is enough: the push service then answers 404/410 to the next reminder, and
+ * the server deletes the row (lib/push/send).
  */
 export function SignOutRow() {
   const [confirming, setConfirming] = useState(false);
@@ -26,10 +53,13 @@ export function SignOutRow() {
   function signOut() {
     setError(null);
     startTransition(async () => {
+      const stopped = await within(() => disablePush("device"), PUSH_CLEANUP_MS);
       const result = await runAction(() => signOutAction());
       // Signed out — or the session was already gone elsewhere: that's where they wanted to be.
-      if (result.ok || isSessionExpiredError(result.error)) window.location.replace("/login");
-      else setError(result.error);
+      if (result.ok || isSessionExpiredError(result.error)) {
+        if (!stopped?.ok) await within(async () => (await currentSubscription())?.unsubscribe(), PUSH_CLEANUP_MS);
+        window.location.replace("/login");
+      } else setError(result.error);
     });
   }
 
@@ -58,7 +88,7 @@ export function SignOutRow() {
       {confirming ? (
         <div role="group" aria-label="Confirmar saída" className="border-l-2 border-l-foreground/50 bg-surface-2 px-3.5 py-3">
           <p className="text-sm font-medium">Sair desta conta neste aparelho?</p>
-          <p className="mt-0.5 text-xs text-muted">Para voltar, é só entrar com o Google de novo.</p>
+          <p className="mt-0.5 text-xs text-muted">Para voltar, é só entrar de novo.</p>
           {unsent ? (
             <p className="mt-2 border-l-2 border-l-danger pl-2.5 text-xs font-medium text-danger">
               Este aparelho tem {plural(unsent.rows, "série ainda não enviada", "séries ainda não enviadas")} —{" "}

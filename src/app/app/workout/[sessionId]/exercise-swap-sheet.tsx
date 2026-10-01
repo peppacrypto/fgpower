@@ -7,7 +7,9 @@ import { GLoad } from "@/components/ui/glyph";
 import { Input } from "@/components/ui/input";
 import { Bone } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils/cn";
+import { SESSION_EXPIRED_ERROR } from "@/lib/auth/session-expired";
 import type { ExerciseOption, ExerciseOptions } from "@/lib/data/workout-session";
+import { WorkoutActionError, WorkoutLoggedOutError } from "./action-error";
 
 /** Why an exercise is offered, as its tag says it. */
 const REASON: Record<ExerciseOption["reason"], string | null> = {
@@ -42,6 +44,8 @@ export function ExerciseSwapSheet({
   mode,
   busyId,
   error,
+  loginHref,
+  onLoggedOut,
   onPick,
   onClose,
 }: {
@@ -50,6 +54,10 @@ export function ExerciseSwapSheet({
   /** The pick being saved: every row waits, that one says so. */
   busyId: string | null;
   error: string | null;
+  /** Where "Entrar" goes when the login is gone (back to this exercise). */
+  loginHref: string;
+  /** The list's request found the login gone (401): the screen holds its sends too. */
+  onLoggedOut?: () => void;
   /** `after`: add the pick after the exercise instead of swapping it (it already has sets). */
   onPick: (option: ExerciseOption, how: "swap" | "after" | "end") => void;
   onClose: () => void;
@@ -59,8 +67,14 @@ export function ExerciseSwapSheet({
   const [result, setResult] = useState<ExerciseOptions | null>(null);
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState(false);
+  /** The list's request came back 401: nothing to retry until the user signs in again. */
+  const [loggedOut, setLoggedOut] = useState(false);
   const [attempt, setAttempt] = useState(0);
   const busy = busyId !== null;
+  const onLoggedOutRef = useRef(onLoggedOut);
+  useEffect(() => {
+    onLoggedOutRef.current = onLoggedOut;
+  });
   const logId = mode.kind === "swap" ? mode.exerciseLogId : null;
 
   useEffect(() => {
@@ -84,14 +98,21 @@ export function ExerciseSwapSheet({
       if (q.length >= 2) params.set("q", q);
       fetch(`/api/workout/exercises?${params}`, { signal: controller.signal })
         .then(async (res) => {
+          if (res.status === 401) throw new WorkoutLoggedOutError();
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
           setResult((await res.json()) as ExerciseOptions);
           setFailed(false);
+          setLoggedOut(false);
           setLoading(false);
         })
-        .catch(() => {
+        .catch((err) => {
           if (controller.signal.aborted) return;
-          setFailed(true);
+          if (err instanceof WorkoutLoggedOutError) {
+            setLoggedOut(true);
+            onLoggedOutRef.current?.();
+          } else {
+            setFailed(true);
+          }
           setLoading(false);
         });
     };
@@ -171,13 +192,17 @@ export function ExerciseSwapSheet({
         <div className="flex-1 overflow-y-auto overscroll-contain px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3">
           {error ? (
             <p role="alert" className="mb-3 border-l-2 border-l-danger! bg-danger-soft px-3 py-2 text-xs font-medium text-danger">
-              {error}
+              <WorkoutActionError error={error} loginHref={loginHref} />
             </p>
           ) : null}
           <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted">
             {searching ? "Resultados" : mode.kind === "add" ? "Mais usados" : "Sugestões para trocar"}
           </p>
-          {failed ? (
+          {loggedOut ? (
+            <p role="alert" className="mt-2 border-l-2 border-l-danger! bg-danger-soft px-3 py-2 text-xs font-medium text-danger">
+              <WorkoutActionError error={SESSION_EXPIRED_ERROR} loginHref={loginHref} />
+            </p>
+          ) : failed ? (
             <div className="mt-2 flex flex-wrap items-center gap-x-3 border-l-2 border-l-warning bg-warning-soft px-3 py-2 text-xs text-foreground/90">
               <span className="min-w-0 flex-1">Sem conexão — a lista não carregou.</span>
               <button

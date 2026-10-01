@@ -16,6 +16,12 @@ import { closeBlock, entryWeekWasTrained, recordWorkoutMilestone } from "@/lib/d
 import { isStillEditable } from "@/lib/data/workout-session";
 import { buildWorkoutActivitySummary } from "@/lib/social/activity-summary";
 import { afterFinish, afterRescore } from "@/lib/workouts/finish-hooks";
+import { SESSION_EXPIRED_ERROR } from "@/lib/auth/session-expired";
+import type { SettingsSaveResult } from "@/lib/actions/result";
+import { dayNumberOf, mondayOf } from "@/lib/training/day-rotation";
+import { isAppliedDeload } from "@/lib/training/deload";
+import { deloadSets } from "@/lib/training/fatigue";
+import { checkBodyValue } from "@/lib/training/body-weight";
 
 type Tx = Prisma.TransactionClient;
 
@@ -129,6 +135,18 @@ async function openSessionForDay(
       });
     }
 
+    // A week the user turned into a deload (W-128 "Aplicar deload"), read
+    // under the lock — an apply or undo from another tab lands before or
+    // after this start, never halfway: half the working sets (warm-ups as
+    // they are), and the workout is a deload one (RIR raised, never a load
+    // reference for a normal workout). Workouts already open keep their sets.
+    const deloadMondays = enrollment
+      ? ((await tx.programEnrollment.findUnique({ where: { id: enrollment.id }, select: { deloadMondays: true } }))
+          ?.deloadMondays ?? [])
+      : [];
+    const isDeload = isAppliedDeload(deloadMondays, mondayOf(dayNumberOf(now)));
+    const setsOf = (ex: { sets: number }) => (isDeload ? deloadSets(ex.sets) : ex.sets);
+
     const session = await tx.workoutSession.create({
       data: {
         userId,
@@ -141,7 +159,9 @@ async function openSessionForDay(
         programDayIndex: day.dayIndex,
         visibility: defaults?.defaultWorkoutVisibility ?? "PRIVATE",
         showDetailedLoads: defaults?.showLoadsPublicly ?? false,
-        daySnapshot: day as never,
+        isDeload,
+        // The prescription as it was given (halved in a deload week).
+        daySnapshot: (isDeload ? { ...day, exercises: day.exercises.map((ex) => ({ ...ex, sets: setsOf(ex) })) } : day) as never,
         exerciseLogs: {
           create: day.exercises.map((ex) => ({
             userId,
@@ -149,7 +169,7 @@ async function openSessionForDay(
             programExerciseId: ex.id,
             sortOrder: ex.sortOrder,
             groupKey: ex.groupKey,
-            prescribedSets: ex.sets,
+            prescribedSets: setsOf(ex),
             repMin: ex.repMin,
             repMax: ex.repMax,
             rirTarget: ex.rirTarget,
@@ -1177,6 +1197,119 @@ export async function editFinishedWorkout(sessionId: string, edits: FinishedSetE
 /** Thrown inside the edit's transaction to roll it back when no working set would be left. */
 class EmptyEdit extends Error {}
 
+// ---------------------------------------------------------------------------
+// The post-workout check-in (W-127): how hard it felt, soreness coming in,
+// sleep, pain, stress, the day's weight and a note — optional, owner-only
+// (never on a card, the feed, /t or an OG image), open while the workout can
+// be corrected. It feeds the fatigue signal (W-128) and Corpo (W-083).
+// ---------------------------------------------------------------------------
+
+export interface CheckInInput {
+  /** Session RPE, 1–10. */
+  sessionRpe: number | null;
+  /** Muscle soreness coming into this workout, 0–10. */
+  soreness: number | null;
+  shortSleep: boolean;
+  lingeringPain: boolean;
+  highStress: boolean;
+  /** The day's weight (25–350 kg): also the day's weigh-in on Corpo. */
+  bodyweightKg: number | null;
+  notes: string | null;
+}
+
+const NOTE_MAX = 500;
+/** Control characters other than a line break or a tab. */
+const CONTROL_CHARS = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g;
+
+function intIn(v: unknown, min: number, max: number): number | null | undefined {
+  if (v === null) return null;
+  return typeof v === "number" && Number.isInteger(v) && v >= min && v <= max ? v : undefined;
+}
+
+/** The check-in as stored, or null when a value is out of range (never guessed at). */
+function cleanCheckIn(input: CheckInInput) {
+  if (!input || typeof input !== "object") return null;
+  const sessionRpe = intIn(input.sessionRpe, 1, 10);
+  const soreness = intIn(input.soreness, 0, 10);
+  if (sessionRpe === undefined || soreness === undefined) return null;
+  if (![input.shortSleep, input.lingeringPain, input.highStress].every((b) => typeof b === "boolean")) return null;
+  let bodyweightKg: number | null = null;
+  if (input.bodyweightKg !== null) {
+    const weight = checkBodyValue("BODYWEIGHT", input.bodyweightKg);
+    if (!weight.ok) return null;
+    bodyweightKg = weight.value;
+  }
+  if (input.notes !== null && typeof input.notes !== "string") return null;
+  const note = (input.notes ?? "").replace(CONTROL_CHARS, "").trim().slice(0, NOTE_MAX).trim();
+  return {
+    sessionRpe,
+    soreness,
+    shortSleep: input.shortSleep,
+    lingeringPain: input.lingeringPain,
+    highStress: input.highStress,
+    bodyweightKg,
+    notes: note === "" ? null : note,
+  };
+}
+
+/**
+ * Saves the check-in (the whole of it, as the card's autosave sends it) for
+ * one of the user's finished workouts, while it can still be corrected.
+ * Like a correction it keeps the workout's updatedAt: answering never moves
+ * the 24 h window (savedAt). The weight is the day's weigh-in too — one per
+ * São Paulo day, the workout's: typing one replaces a weigh-in logged by hand
+ * that day (the latest wins); clearing it removes only the one it wrote.
+ */
+export async function saveCheckIn(sessionId: string, input: CheckInInput): Promise<SettingsSaveResult> {
+  const user = await requireUserOrThrow().catch(() => null);
+  if (!user) return { ok: false, error: SESSION_EXPIRED_ERROR };
+  if (typeof sessionId !== "string") return { ok: false, error: "Treino não encontrado." };
+  const data = cleanCheckIn(input);
+  if (!data) return { ok: false, error: "Confira os valores." };
+
+  const outcome = await prisma.$transaction(async (tx) => {
+    const locked = await lockFinished(tx, user.id, sessionId);
+    if (typeof locked === "string") return locked;
+    const before = await tx.workoutSession.findUniqueOrThrow({ where: { id: sessionId }, select: { bodyweightKg: true } });
+    await tx.workoutSession.update({
+      where: { id: sessionId },
+      // Kept: it dates the save the correction window runs from (savedAt).
+      data: { ...data, checkInAt: new Date(), updatedAt: locked.updatedAt },
+    });
+    // Only a weight that changed here touches Corpo: saving the RPE again
+    // never overwrites a weigh-in edited there since.
+    if (data.bodyweightKg !== before.bodyweightKg) {
+      const day = dayNumberOf(locked.finishedAt);
+      if (data.bodyweightKg != null) {
+        await tx.bodyMetric.upsert({
+          where: { userId_kind_day: { userId: user.id, kind: "BODYWEIGHT", day } },
+          create: {
+            userId: user.id,
+            kind: "BODYWEIGHT",
+            value: data.bodyweightKg,
+            unit: "kg",
+            day,
+            sessionId,
+            measuredAt: locked.finishedAt,
+          },
+          update: { value: data.bodyweightKg, unit: "kg", sessionId, measuredAt: locked.finishedAt },
+        });
+      } else {
+        await tx.bodyMetric.deleteMany({ where: { userId: user.id, kind: "BODYWEIGHT", day, sessionId } });
+      }
+    }
+    return "SAVED" as const;
+  });
+  if (outcome === "NOT_FOUND") return { ok: false, error: "Treino não encontrado." };
+  if (outcome === "EXPIRED") return { ok: false, error: "O check-in fica aberto por 24 h depois do treino." };
+
+  revalidatePath(`/app/workout/${sessionId}/summary`);
+  revalidatePath("/app/today");
+  revalidatePath("/app/progress");
+  revalidatePath("/app/progress/body");
+  return { ok: true, savedAt: new Date().toISOString() };
+}
+
 /** A shared workout's card is built from its sets and records (activities.ts): rebuilt after a correction. */
 async function refreshSharedCard(sessionId: string) {
   // Most rescored workouts were never shared: those load nothing.
@@ -1221,6 +1354,9 @@ export async function deleteWorkoutSession(sessionId: string): Promise<FinishedE
   if (typeof sessionId !== "string") return { ok: false, reason: "NOT_FOUND" };
 
   const outcome = await prisma.$transaction(async (tx) => {
+    // Its post's row before its own, the order every writer of both takes (lib/social/publish.ts, the
+    // moderation in lib/actions/admin.ts): the delete below cascades to the post.
+    await tx.$queryRaw`SELECT id FROM "Activity" WHERE "sessionId" = ${sessionId} AND "userId" = ${user.id} FOR UPDATE`;
     const locked = await lockFinished(tx, user.id, sessionId);
     if (typeof locked === "string") return locked;
     const session = await tx.workoutSession.findUniqueOrThrow({

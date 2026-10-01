@@ -14,8 +14,8 @@ proceed regardless.
 
 ### 1. Weekly volume per muscle
 
-**Constants:** `LOW_WEEKLY_SETS_THRESHOLD = 4`, `HIGH_WEEKLY_SETS_THRESHOLD = 28`,
-`SECONDARY_SET_CREDIT = 0.5`.
+**Constants** (exported from `lib/programming/rules.ts`; Today's weekly review reads the same):
+`LOW_WEEKLY_SETS = 4`, `HIGH_WEEKLY_DIRECT_SETS = 28`, `SECONDARY_SET_CREDIT = 0.5`.
 
 When the program's exercises carry muscle-level data (the app always passes it), volume is
 judged **per muscle**, never summed across a coarse group such as "legs":

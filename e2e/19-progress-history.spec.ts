@@ -123,11 +123,13 @@ test("a new user sees no false numbers, a preview and a way forward — and ever
   await page.goto("/app/profile");
   await expect(page.getByRole("link", { name: "Ver exercícios" })).toHaveAttribute("href", "/app/exercises");
 
-  // Their own public profile explains why it is empty (workouts are private until shared).
+  // Their own public profile explains why it is empty: new accounts publish finished
+  // workouts to their followers (decision 10), and none is finished yet.
   const username = sql(`SELECT username FROM "user" WHERE id = '${await userIdOf(page)}'`);
   if (username) {
     await page.goto(`/u/${username}`);
-    await expect(page.getByText("Seus treinos são privados.")).toBeVisible();
+    await expect(page.getByText("Nenhum treino publicado ainda.")).toBeVisible();
+    await expect(page.getByRole("link", { name: "Ajustar padrão" })).toHaveAttribute("href", "/app/settings#privacidade");
   }
 
   // "Meu histórico" is a real button (≥ 44 px), not a tiny link.

@@ -14,7 +14,9 @@ import {
 import { slugifyUsername, usernameError, USERNAME_TAKEN } from "@/lib/validation/username";
 import { z } from "zod";
 import { applyWeekLayout } from "@/lib/data/program-lifecycle";
-import type { SettingsSaveResult } from "./result";
+import type { ActionResult, SettingsSaveResult } from "./result";
+import type { Prisma } from "@/generated/prisma/client";
+import { createNotification, notificationKey } from "@/lib/social/notifications";
 
 const GENERIC_ERROR = "Não foi possível salvar agora. Tente de novo.";
 
@@ -200,14 +202,15 @@ const privacySettingsSchema = z
     isPublicAccount: z.boolean(),
     defaultWorkoutVisibility: z.enum(["PRIVATE", "FOLLOWERS", "PUBLIC"]),
     showLoadsPublicly: z.boolean(),
-    showBodyMetricsPublicly: z.boolean(),
     showCurrentProgram: z.boolean(),
     discoverable: z.boolean(),
-    autoShareAchievements: z.boolean(),
   })
   .strict();
 
 export type PrivacySettings = z.infer<typeof privacySettingsSchema>;
+
+/** The summary's one-time question to a PRIVATE default (D-A), answered for good. */
+const PRIVATE_DEFAULT_NOTICE = "private-default-notice";
 
 export async function updatePrivacySettings(settings: PrivacySettings): Promise<SettingsSaveResult> {
   const user = await requireUserOrThrow().catch(() => null);
@@ -216,12 +219,90 @@ export async function updatePrivacySettings(settings: PrivacySettings): Promise<
   // unknown keys must never reach Prisma.
   const parsed = privacySettingsSchema.safeParse(settings);
   if (!parsed.success) return { ok: false, error: GENERIC_ERROR };
+  const next = parsed.data;
+  const now = new Date();
   try {
-    await prisma.profile.update({ where: { userId: user.id }, data: parsed.data });
+    await prisma.$transaction(async (tx) => {
+      const before = await tx.profile.findUniqueOrThrow({
+        where: { userId: user.id },
+        select: { isPublicAccount: true, defaultWorkoutVisibility: true },
+      });
+      await tx.profile.update({ where: { userId: user.id }, data: next });
+      // Choosing Privado here is an answer: the summary never asks again (D-A).
+      if (next.defaultWorkoutVisibility === "PRIVATE" && before.defaultWorkoutVisibility !== "PRIVATE") {
+        await tx.userDismissal.upsert({
+          where: { userId_key: { userId: user.id, key: PRIVATE_DEFAULT_NOTICE } },
+          create: { userId: user.id, key: PRIVATE_DEFAULT_NOTICE },
+          update: {},
+        });
+      }
+      // Private → public (W-044): everyone waiting is in — a public account
+      // approves every follower — and hears it like an accepted request.
+      if (next.isPublicAccount && !before.isPublicAccount) await acceptPendingRequests(tx, user.id, now);
+    });
   } catch (err) {
     console.error("updatePrivacySettings failed", err);
     return { ok: false, error: GENERIC_ERROR };
   }
   revalidatePath("/app/settings");
-  return { ok: true, savedAt: new Date().toISOString() };
+  revalidatePath("/app/profile");
+  revalidatePath("/app/notifications");
+  return { ok: true, savedAt: now.toISOString() };
+}
+
+/**
+ * Accepts every PENDING follow request to `userId`: the follows are created,
+ * the requests marked ACCEPTED, and each requester gets FOLLOW_ACCEPTED with
+ * the same key and re-arm policy as respondToFollowRequest (one row per
+ * account that accepted; re-armed only after 30 days read).
+ */
+async function acceptPendingRequests(tx: Prisma.TransactionClient, userId: string, now: Date) {
+  const pending = await tx.followRequest.findMany({
+    where: { targetId: userId, status: "PENDING" },
+    select: { id: true, requesterId: true },
+  });
+  if (pending.length === 0) return;
+  await tx.follow.createMany({
+    data: pending.map((r) => ({ followerId: r.requesterId, followingId: userId })),
+    skipDuplicates: true,
+  });
+  await tx.followRequest.updateMany({
+    where: { id: { in: pending.map((r) => r.id) } },
+    data: { status: "ACCEPTED", respondedAt: now },
+  });
+  const rearmIfReadBefore = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+  for (const r of pending) {
+    await createNotification(
+      tx,
+      {
+        recipientId: r.requesterId,
+        actorId: userId,
+        type: "FOLLOW_ACCEPTED",
+        dedupeKey: notificationKey.accepted(userId),
+        onDuplicate: { rearmIfReadBefore },
+      },
+      now,
+    );
+  }
+}
+
+/** "Manter privado" (D-A): the summary stops asking; nothing else changes. */
+export async function keepWorkoutsPrivate(): Promise<ActionResult> {
+  const user = await requireUserOrThrow().catch(() => null);
+  if (!user) return { ok: false, error: SESSION_EXPIRED_ERROR };
+  try {
+    await prisma.userDismissal.upsert({
+      where: { userId_key: { userId: user.id, key: PRIVATE_DEFAULT_NOTICE } },
+      create: { userId: user.id, key: PRIVATE_DEFAULT_NOTICE },
+      update: {},
+    });
+  } catch (err) {
+    console.error("keepWorkoutsPrivate failed", err);
+    return { ok: false, error: GENERIC_ERROR };
+  }
+  // The summaries already in the browser still hold the question: back to one
+  // (the phone's back button) must not ask again. The form keeps its answer
+  // through the re-render this causes (R5).
+  revalidatePath("/app/workout/[sessionId]/summary", "page");
+  return { ok: true };
 }

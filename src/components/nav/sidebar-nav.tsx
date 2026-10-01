@@ -4,7 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Bell, BookOpen, History, Settings, Shield, Users } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { plural } from "@/lib/utils/format";
 import { NAV_ITEMS } from "./nav-items";
+import { UnreadPip, useOpenReports, useUnread } from "./unread-provider";
 
 /** Destinations without a tab of their own that get a dedicated sidebar link on desktop. */
 const SECONDARY_ITEMS = [
@@ -31,6 +33,8 @@ const linkClass = (active: boolean) =>
 /** The sidebar's links: the client island of the (server) Sidebar — it lights by the current path. */
 export function SidebarNav({ isAdmin }: { isAdmin: boolean }) {
   const pathname = usePathname();
+  const unread = useUnread();
+  const openReports = useOpenReports() ?? 0;
 
   return (
     <nav aria-label="Navegação lateral" className="mt-8 flex flex-1 flex-col gap-1">
@@ -57,6 +61,7 @@ export function SidebarNav({ isAdmin }: { isAdmin: boolean }) {
             <Link key={item.href} href={item.href} aria-current={active ? "page" : undefined} className={linkClass(active)}>
               <Icon className="size-[18px]" />
               {item.label}
+              {item.href === "/app/notifications" ? <UnreadPip count={unread} className="ml-auto" /> : null}
             </Link>
           );
         })}
@@ -66,6 +71,11 @@ export function SidebarNav({ isAdmin }: { isAdmin: boolean }) {
         <Link href="/admin" className={cn(linkClass(false), "mt-4")}>
           <Shield className="size-[18px]" />
           Admin
+          <UnreadPip
+            count={openReports}
+            className="ml-auto"
+            srText={`, ${plural(openReports, "denúncia aberta", "denúncias abertas")}`}
+          />
         </Link>
       ) : null}
     </nav>

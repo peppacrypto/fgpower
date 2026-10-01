@@ -5,6 +5,7 @@ import { Input, Label } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { createCustomProgram } from "@/lib/actions/programs";
+import { requireUser } from "@/lib/auth/require-user";
 
 export const metadata: Metadata = { title: "Criar programa" };
 
@@ -14,7 +15,9 @@ async function createAction(formData: FormData) {
 }
 
 /** "Criar programa": a name, then the builder. "Cancelar" goes back to the shelf. */
-export default function NewProgramPage() {
+export default async function NewProgramPage() {
+  // Not the /app layout's check: a client navigation can render this page segment alone.
+  await requireUser();
   return (
     <div className="mx-auto max-w-md px-4 pb-10 pt-3 sm:px-6 sm:py-10">
       <Link

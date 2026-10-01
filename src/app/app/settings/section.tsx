@@ -4,7 +4,8 @@ import { SectionHead } from "@/components/ui/section-head";
 /**
  * One block of Settings: a section head, an optional line under it, and the
  * card. Shared by the sections other clusters add (Lembretes, Contas
- * bloqueadas); `id` is its anchor (/app/settings#lembretes).
+ * bloqueadas). `id` is its anchor (/app/settings#lembretes), which
+ * ScrollToHash lands a link on: every section has one.
  */
 export function Section({
   id,
@@ -12,7 +13,7 @@ export function Section({
   description,
   children,
 }: {
-  id?: string;
+  id: string;
   title: string;
   description?: string;
   children: React.ReactNode;

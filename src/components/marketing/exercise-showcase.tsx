@@ -24,7 +24,8 @@ export function ExerciseShowcase({ items }: { items: ShowcaseItem[] }) {
             fill
             sizes="(max-width: 640px) 50vw, 240px"
             className="object-cover transition duration-500 group-hover:scale-105"
-            priority={i < 3}
+            // The first row loads with the page, the rest as it scrolls near.
+            loading={i < 3 ? "eager" : "lazy"}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 p-3">

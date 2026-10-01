@@ -21,14 +21,29 @@ export async function listTemplates(filters: TemplateFilters = {}) {
       ...(filters.equipmentAccess ? { equipmentAccess: filters.equipmentAccess as never } : {}),
     },
     orderBy: [{ isFlagship: "desc" }, { sortOrder: "asc" }],
-    include: { days: { select: { id: true, namePt: true }, orderBy: { dayIndex: "asc" } } },
+    include: {
+      days: {
+        select: {
+          id: true,
+          namePt: true,
+          // What the plan really needs (the recommender's runnable check, L-home-catalog-gap).
+          exercises: { select: { exercise: { select: { equipmentId: true } } } },
+        },
+        orderBy: { dayIndex: "asc" },
+      },
+    },
   });
 }
 
 export type ListedTemplate = Awaited<ReturnType<typeof listTemplates>>[number];
 
 /** The fields the library, cards and recommender read. */
-export function toCatalogItem(t: ListedTemplate): CatalogItem & { isFlagship: boolean } {
+export function toCatalogItem(
+  t: Omit<ListedTemplate, "days"> & { days: { namePt: string; exercises?: { exercise: { equipmentId: string | null } }[] }[] },
+): CatalogItem & { isFlagship: boolean } {
+  const equipment = t.days.every((d) => d.exercises)
+    ? [...new Set(t.days.flatMap((d) => (d.exercises ?? []).map((e) => e.exercise.equipmentId).filter((id): id is string => !!id)))]
+    : undefined;
   return {
     slug: t.slug,
     namePt: t.namePt,
@@ -41,6 +56,7 @@ export function toCatalogItem(t: ListedTemplate): CatalogItem & { isFlagship: bo
     durationWeeks: t.durationWeeks,
     sessionMinutes: t.sessionMinutes,
     dayNames: t.days.map((d) => d.namePt),
+    equipmentIds: equipment,
     isFlagship: t.isFlagship,
   };
 }
@@ -73,7 +89,12 @@ export async function listTemplatesUsingPrinciple(principleId: string) {
   return prisma.workoutTemplate.findMany({
     where: { isPublished: true, principles: { some: { principleId } } },
     orderBy: [{ isFlagship: "desc" }, { sortOrder: "asc" }],
-    include: { days: { select: { id: true, namePt: true }, orderBy: { dayIndex: "asc" } } },
+    include: {
+      days: {
+        select: { id: true, namePt: true, exercises: { select: { exercise: { select: { equipmentId: true } } } } },
+        orderBy: { dayIndex: "asc" },
+      },
+    },
   });
 }
 

@@ -10,7 +10,9 @@
 //   - curated entries have every required field non-empty in both languages;
 //   - relations have a valid kind, no self-relations and no duplicates;
 //   - aliases are non-empty, not duplicated within an exercise and not equal
-//     to the exercise's own pt-BR name or to another catalog exercise's.
+//     to the exercise's own pt-BR name or to another catalog exercise's;
+//   - program supersets are 2–4 adjacent rows sharing a groupKey, and every
+//     template exercise has a movement pattern (unless none can fit it).
 //
 // Errors exit non-zero; warnings are printed but do not fail the run.
 // Usage: node scripts/validate-content.mjs
@@ -163,13 +165,51 @@ if (aliases) {
   }
 }
 
-// --- programs.generated.json (exercise slugs only) --------------------------
+// --- programs.generated.json -------------------------------------------------
+// Exercise slugs; supersets (W-104: a groupKey on 2–4 adjacent rows, never on
+// one row alone); a movement pattern on every template exercise the checks
+// can read one from (L-content-movement-patterns).
+const MAX_GROUP_SIZE = 4; // src/lib/programming/groups.ts
+const PATTERNLESS_CATEGORIES = new Set(["CARDIO", "PLYOMETRICS", "STRETCHING"]);
+// No MovementPattern fits these (shrugs, neck, grip and forearm, rotator cuff,
+// hip ab/adduction, a mobility drill): the checks that read patterns skip them.
+const PATTERNLESS = new Set([
+  "barbell-shrug",
+  "cable-shrugs",
+  "dumbbell-shrug",
+  "isometric-neck-exercise-front-and-back",
+  "plate-pinch",
+  "wrist-roller",
+  "external-rotation-with-cable",
+  "thigh-abductor",
+  "thigh-adductor",
+  "kettlebell-halo",
+]);
+const groupKeyOf = (ex) => (typeof ex.groupKey === "string" && ex.groupKey.trim() ? ex.groupKey.trim().toUpperCase() : null);
 if (programs) {
   for (const p of programs) {
     for (const d of p.days ?? []) {
-      for (const ex of d.exercises ?? []) {
-        if (!bySlug.has(ex.exerciseSlug)) error(`program ${p.slug} day ${d.dayIndex}: exercise "${ex.exerciseSlug}" not in catalog`);
-      }
+      const list = d.exercises ?? [];
+      const at = `program ${p.slug} day ${d.dayIndex}`;
+      list.forEach((ex, i) => {
+        const catalogEx = bySlug.get(ex.exerciseSlug);
+        if (!catalogEx) error(`${at}: exercise "${ex.exerciseSlug}" not in catalog`);
+        else if (!catalogEx.movementPattern && !PATTERNLESS_CATEGORIES.has(catalogEx.category) && !PATTERNLESS.has(ex.exerciseSlug)) {
+          error(`${at}: exercise "${ex.exerciseSlug}" has no movementPattern (exercises.generated.json)`);
+        }
+        const key = groupKeyOf(ex);
+        if (key && groupKeyOf(list[i - 1] ?? {}) !== key && groupKeyOf(list[i + 1] ?? {}) !== key) {
+          error(`${at}: "${ex.exerciseSlug}" has groupKey "${ex.groupKey}" but no adjacent row shares it`);
+        }
+        if (!key && /(^|\. )Superset com /.test(ex.notesPt ?? "")) warn(`${at}: "${ex.exerciseSlug}" says "Superset com" but has no groupKey`);
+      });
+      // Runs of one key longer than a group can be.
+      let run = 0;
+      list.forEach((ex, i) => {
+        const key = groupKeyOf(ex);
+        run = key && groupKeyOf(list[i - 1] ?? {}) === key ? run + 1 : key ? 1 : 0;
+        if (run === MAX_GROUP_SIZE + 1) error(`${at}: group "${key}" has more than ${MAX_GROUP_SIZE} exercises`);
+      });
     }
   }
 }

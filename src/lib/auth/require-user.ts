@@ -19,8 +19,42 @@ import { isAdminUser } from "@/lib/auth/roles";
  * lookup. The cache lives for one server request (render or action), so a
  * sign-out or a revoked session is still seen by the next one.
  */
-export const getCurrentSession = cache(async () => {
+
+/**
+ * better-auth's own read, from its 5-minute cookie cache: it rewrites that
+ * cookie as it goes and renews the session (90 days from the last use).
+ */
+const getCachedSession = cache(async () => {
   return auth.api.getSession({ headers: await headers() });
+});
+
+/**
+ * The same session read from the database, past the cookie cache, without
+ * writing a cookie (disableRefresh; getCachedSession keeps the cookie and the
+ * renewal). A cookie written in a server action re-renders the page, which the
+ * moderation panel avoids mid-tap. One indexed query.
+ */
+const getLiveSession = cache(async () => {
+  return auth.api.getSession({ headers: await headers(), query: { disableCookieCache: true, disableRefresh: true } });
+});
+
+/**
+ * Who is signed in, as the database has them now (the role included), or
+ * null. The cookie cache alone vouches for a session for up to 5 minutes
+ * after it ended: a ban (moderateReport ends the account's sessions), a
+ * sign-out on another device, an account deleted, a role taken away
+ * (requireAdmin). A banned account is refused even with a session left
+ * (lib/social/authorization's rule).
+ *
+ * The one answer for everyone who asks: the checks below, /login, the public
+ * pages and the route handlers. With /login trusting the cache while the app's
+ * pages read the database, an ended session went from one to the other and
+ * back (a redirect loop) until the cache ran out.
+ */
+export const getCurrentSession = cache(async () => {
+  if (!(await getCachedSession())) return null;
+  const live = await getLiveSession();
+  return live && live.user.banned !== true ? live : null;
 });
 
 /**
@@ -64,6 +98,8 @@ export async function requireUserOrThrow() {
  * Admin gate for content curation and moderation routes (section 29). Trusts
  * the `admin` plugin's `role` field OR the ADMIN_EMAILS allowlist (roles.ts
  * isAdminUser), so the very first admin can be granted without a DB write.
+ * The role is the database's (getCurrentSession): one taken away stops working
+ * on the next request, not when the cookie cache runs out.
  */
 export async function requireAdmin() {
   const user = await requireUser();

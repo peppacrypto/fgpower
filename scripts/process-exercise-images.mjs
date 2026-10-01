@@ -8,14 +8,32 @@
 // knowledge that their upstream provenance (wrkout/exercises.json) disclaims
 // commercial redistribution rights — see docs/DATA_SOURCES.md for the full
 // writeup and the cleaner alternatives (e.g. wger.de's CC-BY-SA images).
+//
+// Usage (from the repo root):
+//   node scripts/process-exercise-images.mjs --source <free-exercise-db checkout>
+// Without --source it does nothing (exit 1): the images and the manifest are
+// committed, and a stray run would rewrite them all.
 import sharp from "sharp";
 import { readFile, mkdir, readdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
+import { parseArgs } from "node:util";
 
-const SOURCE_DIR =
-  process.env.FEDB_DIR ||
-  "/tmp/claude-1000/-home-dev-peppa/8828c1da-c51f-48d9-9961-053fd91b144f/scratchpad/research/free-exercise-db";
+const USAGE = "Usage: node scripts/process-exercise-images.mjs --source <free-exercise-db dir>";
+
+let args;
+try {
+  ({ values: args } = parseArgs({ options: { source: { type: "string" } } }));
+} catch (err) {
+  console.error(`${err.message}\n${USAGE}`);
+  process.exit(1);
+}
+if (!args.source) {
+  console.error(`Missing --source (the free-exercise-db checkout).\n${USAGE}`);
+  process.exit(1);
+}
+
+const SOURCE_DIR = path.resolve(args.source);
 const OUT_DIR = path.join(process.cwd(), "public", "exercises");
 const TARGET_WIDTH = 640;
 const WEBP_QUALITY = 78;

@@ -5,6 +5,7 @@ import { ChevronDown, Plus } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { formatNumber } from "@/lib/utils/format";
 import { VOLUME_GUIDE, volumeSummary, type VolumeRow, type WeeklyVolume } from "@/lib/programming/weekly-volume";
+import { muscleRowLabel } from "@/components/charts/muscle-volume-bars";
 
 /** The bar's scale: 0 to 30 weekly sets (anything past it fills the bar). */
 const SCALE = 30;
@@ -123,12 +124,16 @@ function MiniBars({ rows }: { rows: VolumeRow[] }) {
   );
 }
 
-/** A muscle's bar; below the band it is a button that adds exercises for it (unless the day is full: `onAdd` null). */
+/**
+ * A muscle's bar; below the band it is a button that adds exercises for it (unless the day is full: `onAdd` null).
+ * Named in Progress's words ("Séries por músculo"): "Bíceps: 1 série por semana, abaixo", "Costas: nenhuma série".
+ */
 function MuscleRow({ row, onAdd }: { row: VolumeRow; onAdd: (() => void) | null }) {
   const below = row.status === "low" || row.status === "none";
   const low = below && onAdd !== null;
   const value = row.status === "none" ? "0" : formatNumber(row.sets);
-  const state = row.status === "none" ? "sem séries" : row.status === "low" ? "abaixo" : row.status === "high" ? "acima" : "na faixa";
+  const state = row.status === "low" ? "abaixo" : row.status === "high" ? "acima" : "na faixa";
+  const spoken = muscleRowLabel(row);
   const body = (
     <>
       <span className="w-24 shrink-0 truncate text-left text-sm">{row.label}</span>
@@ -160,13 +165,13 @@ function MuscleRow({ row, onAdd }: { row: VolumeRow; onAdd: (() => void) | null 
     <button
       type="button"
       onClick={onAdd ?? undefined}
-      aria-label={`${row.label}: ${value} séries por semana, ${state}. Adicionar exercícios de ${row.label.toLowerCase()}`}
+      aria-label={`${spoken}. Adicionar exercícios de ${row.label.toLowerCase()}`}
       className="flex min-h-11 w-full items-center gap-2.5 hover:bg-[var(--ink-2)]"
     >
       {body}
     </button>
   ) : (
-    <div className="flex min-h-9 items-center gap-2.5" aria-label={`${row.label}: ${value} séries por semana, ${state}`} role="group">
+    <div className="flex min-h-9 items-center gap-2.5" aria-label={spoken} role="group">
       {body}
     </div>
   );

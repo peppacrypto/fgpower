@@ -14,7 +14,6 @@ import { FAT_LOSS_NOTE } from "@/lib/constants/program-labels";
 import { publicProfileLabel, slugifyUsername, usernameError, USERNAME_RULE } from "@/lib/validation/username";
 import { STEP_REASONS, TOTAL_STEPS } from "./steps";
 import { DaysMatchNote, WeekdayChips } from "./weekday-chips";
-import { INVALID_FIELD } from "@/components/ui/save-status";
 
 const GOALS = [
   { value: "HYPERTROPHY", label: "Hipertrofia", desc: "Ganhar massa muscular" },
@@ -402,7 +401,7 @@ export function OnboardingWizard({
             name="displayName"
             placeholder="Ex.: Guilherme"
             required
-            className={cn("mt-1.5", INVALID_FIELD)}
+            className="mt-1.5"
             maxLength={60}
             autoComplete="given-name"
             enterKeyHint="next"
@@ -447,7 +446,7 @@ export function OnboardingWizard({
               enterKeyHint="next"
               aria-invalid={usernameMessage ? true : undefined}
               aria-describedby="username-rule username-status username-preview"
-              className={cn("rounded-l-none", INVALID_FIELD)}
+              className="rounded-l-none"
             />
           </div>
           <input type="hidden" name="usernameAuto" value={answers.usernameAuto ? "1" : "0"} />

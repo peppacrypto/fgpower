@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { requireAdmin } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 import { normalizeText } from "@/lib/utils/normalize-text";
 import { Badge } from "@/components/ui/badge";
@@ -8,6 +9,8 @@ import { Input } from "@/components/ui/input";
 export const metadata: Metadata = { title: "Admin · Exercícios" };
 
 export default async function AdminExercisesPage({ searchParams }: PageProps<"/admin/exercises">) {
+  // Not the layout's check: a client navigation can render this page segment alone.
+  await requireAdmin();
   const sp = await searchParams;
   const q = typeof sp.q === "string" ? sp.q : "";
   const curatedOnly = sp.curated === "1";

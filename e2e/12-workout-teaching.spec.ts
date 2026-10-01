@@ -244,8 +244,11 @@ test("what the user wrote about injuries is echoed on their first workouts, and 
     userId,
     "Evitar agachamento profundo por causa do joelho",
   ]);
+  // The screen marks this visit once React runs: cleared first, it tells when a tap will be heard.
+  await page.evaluate(() => sessionStorage.removeItem("fg:workout-visited"));
   await page.reload();
   await waitForWorkoutScreen(page);
+  await page.waitForFunction(() => sessionStorage.getItem("fg:workout-visited") === "1");
   const echo = page.getByText("Você informou");
   await expect(echo).toBeVisible();
   await expect(page.getByText("“Evitar agachamento profundo por causa do joelho”")).toBeVisible();
@@ -320,20 +323,27 @@ test("the workout skeleton keeps room for the 'Você informou' note, so the sets
   await fast();
   await expect(page.getByLabel("Série 1 — kg", { exact: true })).toBeVisible({ timeout: 30_000 });
 
-  // A reload (a restored or discarded tab) streams the server's skeleton, drawn
-  // before any script runs: it keeps the room too, from this device's cookie.
-  const slowAgain = await slowNetwork(page);
-  const reload = page.reload({ waitUntil: "commit" }).catch(() => {});
-  await expect(skeleton.locator("[data-limitations-bone]")).toBeVisible({ timeout: 20_000 });
-  // (Polled: until the stylesheet arrives, the bones stand anywhere.)
-  await expect
-    .poll(
-      async () => Math.abs((await pageTop(skeleton.locator("[data-bone-row] .sk").first()).catch(() => Infinity)) - realTop),
-      { timeout: 20_000 },
-    )
-    .toBeLessThanOrEqual(40);
-  await reload;
-  await slowAgain();
+  // A reload (a restored or discarded tab) streams the server's skeleton ahead of
+  // the workout, drawn before any script runs: it keeps the room too, from this
+  // device's cookie. Checked on the document the server sends, shown as it stands
+  // before the workout streams in: how long a browser keeps it on screen depends on
+  // when the stylesheet arrives (the theme boot script in <head> waits for it, W-149).
+  const html = await (await page.request.get(`/app/workout/${sessionId}`)).text();
+  const streamedAt = html.indexOf('<div hidden id="S:');
+  expect(html.indexOf('data-skeleton="o treino"')).toBeGreaterThan(0);
+  expect(streamedAt, "the skeleton comes ahead of the streamed workout").toBeGreaterThan(html.indexOf('data-skeleton="o treino"'));
+  await page.setContent(html.slice(0, streamedAt).replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, ""), { waitUntil: "load" });
+  const served = page.locator('[data-skeleton="o treino"]');
+  const serverRoom = served.locator("[data-limitations-bone]");
+  await expect(serverRoom).toBeVisible();
+  const serverRoomPx = await serverRoom.evaluate(
+    (el) => el.getBoundingClientRect().height + parseFloat(getComputedStyle(el).marginBottom),
+  );
+  expect(Math.abs(serverRoomPx - echoPx)).toBeLessThanOrEqual(2);
+  expect(Math.abs((await pageTop(served.locator("[data-bone-row] .sk").first())) - realTop)).toBeLessThanOrEqual(40);
+  // …and the reload itself lands on the workout.
+  await page.reload();
+  await waitForWorkoutScreen(page);
   await expect(page.getByLabel("Série 1 — kg", { exact: true })).toBeVisible({ timeout: 30_000 });
 
   // Closed for this workout: the skeleton no longer keeps room for it.
@@ -351,11 +361,12 @@ test("bodyweight exercises: ✓ needs only the reps, a plank counts seconds, and
 
   // No load to pick: the first time asks for reps, and kg only for extra load.
   const callout = page.locator("[data-first-time]");
-  await expect(callout).toContainText("Faça ~15 reps com ~3 sobrando (RIR 3)");
+  // The range, not its top: a beginner logs what they did (L-bodyweight-first-target).
+  await expect(callout).toContainText("Faça 8–15 reps, parando com ~3 sobrando (RIR 3)");
   await expect(callout).toContainText("kg só se usar carga extra");
   await expect(callout).not.toContainText("Escolha uma carga");
   await expect(page.getByLabel("Série 1 — kg", { exact: true })).toHaveAttribute("placeholder", "0");
-  await expect(page.getByLabel("Série 1 — repetições", { exact: true })).toHaveAttribute("placeholder", "15");
+  await expect(page.getByLabel("Série 1 — repetições", { exact: true })).toHaveAttribute("placeholder", "8");
 
   // ✓ with nothing typed logs the grey reps with no extra load — no "Digite a carga".
   await page.getByRole("button", { name: "Concluir série 1", exact: true }).click();
@@ -371,8 +382,8 @@ test("bodyweight exercises: ✓ needs only the reps, a plank counts seconds, and
   for (let i = 0; i < 5; i++) await page.getByRole("button", { name: "Próximo exercício" }).first().click();
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Prancha");
   await expect(page.getByText(/^3 séries\s×\s20–45\ss$/)).toBeVisible();
-  await expect(page.locator("[data-first-time]")).toContainText("Segure ~45 s sem perder a posição");
-  await expect(page.getByLabel("Série 1 — segundos", { exact: true })).toHaveAttribute("placeholder", "45");
+  await expect(page.locator("[data-first-time]")).toContainText("Segure 20–45 s sem perder a posição");
+  await expect(page.getByLabel("Série 1 — segundos", { exact: true })).toHaveAttribute("placeholder", "20");
   await page.getByRole("button", { name: "Concluir série 1", exact: true }).click();
   await expectSetSaved(page, "Série 1");
   await page.getByLabel("Série 2 — segundos", { exact: true }).fill("40");
@@ -385,9 +396,9 @@ test("bodyweight exercises: ✓ needs only the reps, a plank counts seconds, and
     [sessionId],
   );
   expect(rows).toEqual([
-    { sortOrder: 0, weightKg: 0, reps: 15 },
+    { sortOrder: 0, weightKg: 0, reps: 8 },
     { sortOrder: 0, weightKg: 0, reps: 10 },
-    { sortOrder: 5, weightKg: 0, reps: 45 },
+    { sortOrder: 5, weightKg: 0, reps: 20 },
     { sortOrder: 5, weightKg: 0, reps: 40 },
   ]);
 
@@ -397,11 +408,11 @@ test("bodyweight exercises: ✓ needs only the reps, a plank counts seconds, and
   await expect(page.getByText(/^Primeira sessão registrada\. Na próxima, suas reps e tempos de hoje viram a\sreferência\.$/)).toBeVisible();
   await expect(page.getByText(/sugerimos suas cargas/)).toHaveCount(0);
   const pushups = page.locator(".reg-frame").filter({ hasText: "Flexão de Braço" });
-  await expect(pushups.getByText(/^×\s15$/)).toBeVisible();
+  await expect(pushups.getByText(/^×\s8$/)).toBeVisible();
   await expect(pushups.getByText(/^×\s10$/)).toBeVisible();
   await expect(pushups).not.toContainText("kg");
   const plank = page.locator(".reg-frame").filter({ hasText: "Prancha" });
-  await expect(plank.getByText(/^45\ss$/)).toBeVisible();
+  await expect(plank.getByText(/^20\ss$/)).toBeVisible();
   await expect(plank).not.toContainText("kg");
 
   // The exercise's history counts time, not a flat 0 kg.

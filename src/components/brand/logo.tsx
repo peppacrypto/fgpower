@@ -19,7 +19,10 @@ export function Logomark({
       width={size}
       height={size}
       className={cn("rounded-[22%]", className)}
-      priority
+      // Not lazy: it sits in a page's first screen (a header, the login card). No high priority
+      // either: it's never the page's largest paint. React's server render still preloads it (it
+      // does for every non-lazy <img>), at normal priority. (`priority` is deprecated in Next 16.)
+      loading="eager"
     />
   );
 }

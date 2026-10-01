@@ -203,6 +203,7 @@ export function ProgramCard({
   durationWeeks,
   guidance,
   progress,
+  measureLink = false,
 }: {
   programId: string;
   name: string;
@@ -211,6 +212,8 @@ export function ProgramCard({
   durationWeeks: number | null;
   guidance: WeekGuidanceView | null;
   progress: { sessionsDone: number; plannedSessions: number | null; adherencePct: number | null } | null;
+  /** A GD block's first or last week: its instructions ask for measurements (W-083) — "Registrar medidas". */
+  measureLink?: boolean;
 }) {
   const current = week.kind === "entry" ? 0 : Math.min(week.week, durationWeeks ?? week.week);
   const science = guidance?.deload || guidance?.test ? "/app/science/deloads" : "/app/science/rir";
@@ -281,6 +284,16 @@ export function ProgramCard({
             </Link>
           </div>
         </details>
+      ) : null}
+      {measureLink ? (
+        <Link
+          href="/app/progress/body#medidas"
+          className="-mb-2 inline-flex min-h-11 items-center gap-1 text-xs font-semibold text-accent hover:underline"
+          data-measure-link
+        >
+          Registrar medidas
+          <GArrow className="size-3" />
+        </Link>
       ) : null}
     </div>
   );

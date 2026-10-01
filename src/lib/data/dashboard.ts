@@ -7,6 +7,7 @@ import { assessOpenSession } from "@/lib/training/stale";
 import { dayNumberOf, mondayOf, weekStartChoice } from "@/lib/training/day-rotation";
 import { isPartialEntryWeek } from "@/lib/training/program-calendar";
 import { layOutWeek } from "@/lib/programming/schedule";
+import { HIGH_WEEKLY_DIRECT_SETS, LOW_WEEKLY_SETS, SECONDARY_SET_CREDIT } from "@/lib/programming/rules";
 import { loadStreakInputs } from "./streak-data";
 import { entryWeekTrained as entryWeekHadWorkout, streakWeeksFrom, summarizeStreak } from "./streak-weeks";
 
@@ -31,7 +32,18 @@ export const getActiveEnrollment = cache(async (userId: string) => {
             include: {
               exercises: {
                 orderBy: { sortOrder: "asc" },
-                include: { exercise: { select: { id: true, namePt: true, slug: true, media: { take: 1, orderBy: { sortOrder: "asc" }, select: { url: true } } } } },
+                include: {
+                  exercise: {
+                    select: {
+                      id: true,
+                      namePt: true,
+                      slug: true,
+                      // Stretches and cardio are never key exercises (fatigue) nor volume.
+                      category: true,
+                      media: { take: 1, orderBy: { sortOrder: "asc" }, select: { url: true } },
+                    },
+                  },
+                },
               },
             },
           },
@@ -102,7 +114,16 @@ export async function getRecentPersonalRecords(userId: string, limit = 3) {
   }
   return [...byExercise.values()].map((list) => {
     const ordered = [...list].sort((a, b) => (PR_PRIORITY[a.kind] ?? 9) - (PR_PRIORITY[b.kind] ?? 9));
-    return { ...ordered[0], kinds: [...new Set(ordered.map((r) => r.kind))] };
+    const kinds = [...new Set(ordered.map((r) => r.kind))];
+    return {
+      ...ordered[0],
+      kinds,
+      // One per kind, in `kinds` order: a hold's row leads with its time (Today's PR rows).
+      records: kinds.map((k) => {
+        const r = ordered.find((x) => x.kind === k)!;
+        return { kind: r.kind, value: r.value, weightKg: r.weightKg, reps: r.reps };
+      }),
+    };
   });
 }
 
@@ -364,14 +385,13 @@ export async function getTodayHabit(userId: string, enrollment: ActiveEnrollment
 }
 
 /**
- * The weekly volume references of docs/PROGRAMMING_RULES.md §1 (the program
- * analysis's own, lib/programming/rules.ts): a muscle is low under 4
- * fractional sets (direct sets plus half of every set where it's a
- * secondary mover) when it has direct work, high over 28 direct sets.
+ * The weekly volume references of docs/PROGRAMMING_RULES.md §1 — the program
+ * analysis's own (lib/programming/rules.ts), read from there: a muscle is low
+ * under LOW_WEEKLY_SETS fractional sets (direct sets plus half of every set
+ * where it's a secondary mover) when it has direct work, high over
+ * HIGH_WEEKLY_DIRECT_SETS direct sets. Re-exported for Today's review.
  */
-export const LOW_WEEKLY_SETS = 4;
-export const HIGH_WEEKLY_DIRECT_SETS = 28;
-export const SECONDARY_SET_CREDIT = 0.5;
+export { HIGH_WEEKLY_DIRECT_SETS, LOW_WEEKLY_SETS, SECONDARY_SET_CREDIT };
 
 /**
  * Last week, closed out on Monday and Tuesday (W-129): the records set in its
@@ -401,6 +421,7 @@ export async function getLastWeekReview(userId: string, now: Date = new Date()) 
         count(*) FILTER (WHERE em.role = 'SECONDARY') AS secondary
       FROM "SetLog" x
       JOIN "WorkoutSession" s ON s.id = x."sessionId"
+      JOIN "Exercise" e ON e.id = x."exerciseId"
       JOIN "ExerciseMuscle" em ON em."exerciseId" = x."exerciseId" AND em.role IN ('PRIMARY', 'SECONDARY')
       JOIN "Muscle" m ON m.id = em."muscleId"
       WHERE x."userId" = ${userId}
@@ -408,6 +429,8 @@ export async function getLastWeekReview(userId: string, now: Date = new Date()) 
         AND s.status = 'COMPLETED'
         AND s."finishedAt" >= ${lastWeekStart} AND s."finishedAt" < ${thisWeekStart}
         AND x."isCompleted" AND x."setType" <> 'WARMUP'
+        -- Stretches and cardio aren't training volume (exercise-facets countsAsVolume).
+        AND e.category NOT IN ('STRETCHING', 'CARDIO')
       GROUP BY m."namePt"`,
   ]);
   const exercises = new Map<string, { namePt: string; slug: string }>();

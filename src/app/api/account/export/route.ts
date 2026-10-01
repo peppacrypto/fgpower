@@ -1,42 +1,41 @@
 import { getCurrentSession } from "@/lib/auth/require-user";
-import { prisma } from "@/lib/db";
+import { exportFilename, loadAccountExport, toExportJson, toTreinosCsv } from "@/lib/data/account-export";
+import { createRateLimiter } from "@/lib/export/rate-limit";
 
-/** Exports the current user's own data as JSON (spec §43.15 — training history belongs to the user). */
-export async function GET() {
+/**
+ * "Exportar meus dados" (W-151, spec §43.15 — training history belongs to the
+ * user): GET ?format=csv (the training log as a spreadsheet, one row per set)
+ * or ?format=json (everything the account keeps; the default, so older links
+ * still work). The signed-in user's own data only. An export reads the whole
+ * history, so it is limited per user (in process: one web replica, D-K).
+ */
+const limiter = createRateLimiter({ limit: 6, windowMs: 10 * 60 * 1000 });
+
+const NO_STORE = { "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff" };
+
+export async function GET(request: Request) {
   const session = await getCurrentSession();
   if (!session) {
-    return Response.json({ error: "Unauthorized" }, { status: 401 });
+    return Response.json({ error: "Sua sessão expirou — entre de novo." }, { status: 401, headers: NO_STORE });
   }
-  const userId = session.user.id;
+  const format = new URL(request.url).searchParams.get("format") === "csv" ? "csv" : "json";
 
-  const [profile, programs, sessions, setLogs, personalRecords, bodyMetrics, favorites, notes] = await Promise.all([
-    prisma.profile.findUnique({ where: { userId } }),
-    prisma.userProgram.findMany({ where: { userId }, include: { days: { include: { exercises: true } } } }),
-    prisma.workoutSession.findMany({ where: { userId }, include: { exerciseLogs: true } }),
-    prisma.setLog.findMany({ where: { userId } }),
-    prisma.exercisePersonalRecord.findMany({ where: { userId } }),
-    prisma.bodyMetric.findMany({ where: { userId } }),
-    prisma.favoriteExercise.findMany({ where: { userId } }),
-    prisma.exerciseUserNote.findMany({ where: { userId } }),
-  ]);
+  const allowed = limiter.hit(session.user.id);
+  if (!allowed.ok) {
+    return new Response(`Muitas exportações seguidas. Tente de novo em ${Math.ceil(allowed.retryAfterSeconds / 60)} min.`, {
+      status: 429,
+      headers: { ...NO_STORE, "Content-Type": "text/plain; charset=utf-8", "Retry-After": String(allowed.retryAfterSeconds) },
+    });
+  }
 
-  const payload = {
-    exportedAt: new Date().toISOString(),
-    user: { id: session.user.id, name: session.user.name, email: session.user.email },
-    profile,
-    programs,
-    workoutSessions: sessions,
-    setLogs,
-    personalRecords,
-    bodyMetrics,
-    favoriteExercises: favorites,
-    exerciseNotes: notes,
-  };
-
-  return new Response(JSON.stringify(payload, null, 2), {
+  const data = await loadAccountExport(session.user.id);
+  const now = new Date();
+  const body = format === "csv" ? toTreinosCsv(data) : JSON.stringify(toExportJson(data, now), null, 2);
+  return new Response(body, {
     headers: {
-      "Content-Type": "application/json",
-      "Content-Disposition": `attachment; filename="fgpower-export-${userId}.json"`,
+      ...NO_STORE,
+      "Content-Type": format === "csv" ? "text/csv; charset=utf-8" : "application/json; charset=utf-8",
+      "Content-Disposition": `attachment; filename="${exportFilename(format, now)}"`,
     },
   });
 }

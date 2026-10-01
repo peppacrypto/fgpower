@@ -1,16 +1,22 @@
 import { Bone, BoneRow, SkeletonScreen } from "@/components/ui/skeleton";
 
 /**
- * Today: the masthead (date, greeting, last-workout line), the next-workout
- * hero where "Iniciar treino" lands, then "Esta semana" with its 7-day strip.
+ * Today: the masthead (date, greeting, last-workout line, the notifications
+ * bell on its right), the next-workout hero where "Iniciar treino" lands,
+ * then "Esta semana" with its 7-day strip.
  */
 export default function TodayLoading() {
   return (
     <SkeletonScreen label="o treino de hoje" className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
-      {/* Masthead: date line + greeting + "Último treino · …" */}
-      <Bone className="h-3 w-28" />
-      <Bone className="mt-3 h-8 w-56 sm:h-10" />
-      <Bone className="mt-3 h-3 w-64 max-w-full" />
+      {/* Masthead: date line + greeting + "Último treino · …", and the bell */}
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <Bone className="h-3 w-28" />
+          <Bone className="mt-3 h-8 w-56 max-w-full sm:h-10" />
+          <Bone className="mt-3 h-3 w-64 max-w-full" />
+        </div>
+        <Bone className="size-11 shrink-0" />
+      </div>
 
       {/* Hero: the next workout */}
       <div className="panel-raised relative mt-8 border-l-4 border-l-[var(--border-strong)] p-6 sm:p-8">

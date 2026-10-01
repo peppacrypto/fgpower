@@ -2,6 +2,8 @@ import { formatKg, formatNumber, plural } from "@/lib/utils/format";
 import { dayNumberOf, mondayOf } from "@/lib/training/day-rotation";
 import { formatSet } from "@/lib/training/set-plan";
 import { zonedMidnight } from "@/lib/training/week";
+import { VOLUME_MUSCLES } from "@/lib/programming/exercise-facets";
+import { volumeStatus, type VolumeRow } from "@/lib/programming/weekly-volume";
 
 export type ProgressPeriod = "4w" | "8w" | "3m" | "6m" | "1y" | "all";
 
@@ -274,6 +276,8 @@ export interface WeekRow {
   trained: boolean;
   /** A program's Thursday–Sunday entry week (the streak's neutral week): it counts only when met, never against. */
   neutral?: boolean;
+  /** Monday-first offsets (0–6) of the São Paulo days with a counted workout (getWeekRows). */
+  days?: number[];
 }
 
 /** Full weeks a period spans, for "semanas na meta" (null: since the start). */
@@ -317,4 +321,96 @@ export function consistencyOf(rows: WeekRow[], period: ProgressPeriod): Consiste
   }));
   const first = window[0] ?? rows[rows.length - 1];
   return { ...summarizeConsistency(weeks, true), since: dateOfDayNumber(first.monday) };
+}
+
+// ---------------------------------------------------------------------------
+// Trends (W-085): workouts per week and sets per muscle
+// ---------------------------------------------------------------------------
+
+/** One column of "Treinos por semana": a streak week (WeekRow) with its trained São Paulo days. */
+export interface WeekColumn extends WeekRow {
+  /** Monday-first offsets (0 = Monday … 6 = Sunday) of the days with a counted workout. */
+  days: number[];
+}
+
+export interface WeekColumns {
+  /** Oldest → newest; the last one is this week. */
+  columns: WeekColumn[];
+  /** Average workouts in the complete weeks shown ("4,4"); null without one. */
+  avgDone: string | null;
+  /** The target: "5", or "3–5" when it changed along the way. */
+  targetText: string;
+  completeWeeks: number;
+  /** Complete weeks that counted (met, or a deload week with a workout). */
+  metWeeks: number;
+}
+
+/**
+ * The weeks "Treinos por semana" draws for a period: its full weeks and this
+ * one (4 weeks → 5 columns; "Tudo" → every week the streak reads, ≤ 58).
+ * The rows start at the week of the first workout, so no empty weeks come
+ * before it. The average counts complete weeks only (this week is never
+ * judged mid-way).
+ */
+export function weekColumns(rows: readonly WeekRow[], period: ProgressPeriod): WeekColumns {
+  const weeks = PERIOD_WEEKS[period];
+  const columns = (weeks == null ? rows : rows.slice(-(weeks + 1))).map((r) => ({ ...r, days: r.days ?? [] }));
+  const complete = columns.filter((c) => !c.current);
+  const avg = complete.length > 0 ? complete.reduce((n, c) => n + c.done, 0) / complete.length : null;
+  const targets = columns.map((c) => c.target);
+  const lo = Math.min(...targets);
+  const hi = Math.max(...targets);
+  return {
+    columns,
+    avgDone: avg == null ? null : formatNumber(avg, 1),
+    targetText: targets.length === 0 ? "" : lo === hi ? String(lo) : `${lo}–${hi}`,
+    completeWeeks: complete.length,
+    metWeeks: complete.filter((c) => c.met).length,
+  };
+}
+
+/** One muscle group's working sets in one São Paulo week (lib/data/progress getMuscleWeeks). */
+export interface MuscleWeekRow {
+  monday: number;
+  key: string;
+  /** Direct sets plus half of the assisting ones. */
+  sets: number;
+  /** Sets where it is a prime mover. */
+  direct: number;
+}
+
+export interface MuscleVolume {
+  /** All 10 groups, in the builder's order (VOLUME_MUSCLES). */
+  rows: VolumeRow[];
+  /** What the numbers average: n complete weeks, this week so far ("parcial"), or nothing yet. */
+  basis: { weeks: number } | "parcial" | null;
+}
+
+/**
+ * "Séries por músculo": each group's weekly working sets, averaged over the
+ * complete weeks shown that were trained — never a deload week (light on
+ * purpose) nor a program's entry week (short on purpose). Without such a
+ * week yet, this week's sets so far ("parcial"). Rounded to half a set, and
+ * judged against the builder's 10–20 guide (weekly-volume volumeStatus).
+ */
+export function muscleVolume(muscleRows: readonly MuscleWeekRow[], columns: readonly WeekColumn[]): MuscleVolume {
+  const counted = columns.filter((c) => !c.current && c.trained && !c.deload && !c.neutral).map((c) => c.monday);
+  const current = columns.find((c) => c.current);
+  const partial = counted.length === 0 && current?.trained === true;
+  const mondays = new Set(partial && current ? [current.monday] : counted);
+  const weeks = mondays.size;
+  const sum = (key: string, field: "sets" | "direct") =>
+    muscleRows.filter((r) => r.key === key && mondays.has(r.monday)).reduce((n, r) => n + r[field], 0);
+  const half = (n: number) => Math.round(n * 2) / 2;
+  const rows = VOLUME_MUSCLES.map((m) => {
+    const sets = weeks > 0 ? half(sum(m.key, "sets") / weeks) : 0;
+    return {
+      key: m.key,
+      label: m.label,
+      sets,
+      direct: weeks > 0 ? half(sum(m.key, "direct") / weeks) : 0,
+      status: volumeStatus(sets),
+    };
+  });
+  return { rows, basis: weeks === 0 ? null : partial ? "parcial" : { weeks } };
 }

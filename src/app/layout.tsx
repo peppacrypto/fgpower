@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import { ServiceWorkerRegistration } from "@/components/pwa/service-worker-registration";
 import { ThemeScript } from "@/components/theme/theme-script";
 import { ThemeSync } from "@/components/theme/theme-sync";
+import { appOrigin } from "@/lib/app-origin";
 import "./globals.css";
 
 const inter = Inter({
@@ -17,16 +18,17 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
-
 export const metadata: Metadata = {
-  metadataBase: new URL(APP_URL),
+  // Absolute og:image / og:url for every preview: NEXT_PUBLIC_APP_URL when it's
+  // a valid URL, else https://fgpower.monster in production (never localhost,
+  // never the request's Host) — lib/app-origin.ts.
+  metadataBase: new URL(appOrigin()),
   title: {
     default: "FGPOWER — Treine com um motivo",
     template: "%s · FGPOWER",
   },
   description:
-    "FGPOWER é uma plataforma de musculação orientada por ciência: programas com base em evidências, biblioteca de exercícios detalhada e progressão registrada semana após semana.",
+    "FGPOWER é uma plataforma de musculação orientada por ciência: programas com base em evidências, biblioteca de exercícios detalhada e progressão registrada semana após semana. Grátis e sem cartão.",
   applicationName: "FGPOWER",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
@@ -38,11 +40,14 @@ export const metadata: Metadata = {
     statusBarStyle: "default",
     title: "FGPOWER",
   },
+  // The preview image is the root segment's opengraph-image.jpg (1200×630, < 300 KB for WhatsApp);
+  // /t and /u draw their own.
   openGraph: {
     type: "website",
     siteName: "FGPOWER",
     locale: "pt_BR",
   },
+  twitter: { card: "summary_large_image" },
 };
 
 export const viewport: Viewport = {

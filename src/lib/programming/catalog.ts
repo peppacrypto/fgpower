@@ -27,6 +27,8 @@ export interface CatalogItem {
   durationWeeks: number;
   sessionMinutes: number;
   dayNames: string[];
+  /** Equipment.id of every exercise (the recommender's runnable check); absent in older callers. */
+  equipmentIds?: string[];
 }
 
 // ---------------------------------------------------------------------------

@@ -13,6 +13,7 @@ import { formatDayTag, whenText } from "@/lib/training/day-rotation";
 import { APP_TIME_ZONE, wallClock } from "@/lib/training/week";
 import { formatKg, plural, pluralWord } from "@/lib/utils/format";
 import { cn } from "@/lib/utils/cn";
+import { deriveGroups, groupRule } from "@/lib/programming/groups";
 import { chooseWeekStart } from "./actions";
 import type { WeekStartPick } from "./week-start";
 
@@ -24,7 +25,8 @@ export interface HeroDay {
   id: string;
   name: string;
   estimatedMinutes: number | null;
-  exercises: { id: string; exercise: { namePt: string; slug: string; media?: { url: string }[] } }[];
+  /** In order; `groupKey` marks supersets and circuits (lib/programming/groups). */
+  exercises: { id: string; groupKey?: string | null; exercise: { namePt: string; slug: string; media?: { url: string }[] } }[];
 }
 
 const monoLabel = "font-mono text-[11px] font-bold uppercase tracking-[0.2em]";
@@ -83,6 +85,9 @@ export function NextWorkoutHero({
     weekKey: string;
   } | null;
 }) {
+  // Supersets (W-104), as the program page draws them: "A1" before the name, an accent rule
+  // down the members, and the group's rule over its first one.
+  const slots = deriveGroups(day.exercises.map((ex) => ({ groupKey: ex.groupKey ?? null })));
   return (
     <div className="relative overflow-hidden panel-raised" data-hero="next">
       <span className="absolute left-0 top-0 h-full w-1.5 bg-accent" aria-hidden />
@@ -120,25 +125,46 @@ export function NextWorkoutHero({
 
         {/* Exercise preview — each row opens its technique page */}
         <ol className="mt-5 flex flex-col border-b border-border">
-          {day.exercises.slice(0, PREVIEW_WIDE).map((ex, i) => (
-            <li key={ex.id} className={cn("border-t border-border", i >= PREVIEW_PHONE && "hidden sm:block")}>
-              <Link href={`/app/exercises/${ex.exercise.slug}`} className="group flex items-center gap-3 py-2">
-                <div className="relative size-10 shrink-0 overflow-hidden rounded-[3px] bg-surface-2">
-                  {ex.exercise.media?.[0]?.url ? (
-                    <Image src={ex.exercise.media[0].url} alt="" fill sizes="40px" className="object-cover" />
-                  ) : (
-                    <div className="flex h-full items-center justify-center text-muted">
-                      <GLoad className="size-4" />
-                    </div>
-                  )}
-                </div>
-                <span className="line-clamp-2 min-w-0 flex-1 text-sm font-medium leading-snug wrap-break-word group-hover:text-accent">
-                  {ex.exercise.namePt}
-                </span>
-                <GArrow className="size-3.5 shrink-0 text-muted transition-transform group-hover:translate-x-0.5" />
-              </Link>
-            </li>
-          ))}
+          {day.exercises.slice(0, PREVIEW_WIDE).map((ex, i) => {
+            const slot = slots[i];
+            return (
+              <li
+                key={ex.id}
+                data-group={slot?.label}
+                className={cn(
+                  "border-t border-border",
+                  slot && "border-l-2 border-l-accent pl-2",
+                  i >= PREVIEW_PHONE && "hidden sm:block",
+                )}
+              >
+                {slot?.first ? (
+                  <p className="pt-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-accent">{groupRule(slot)}</p>
+                ) : null}
+                <Link href={`/app/exercises/${ex.exercise.slug}`} className="group flex items-center gap-3 py-2">
+                  <div className="relative size-10 shrink-0 overflow-hidden rounded-[3px] bg-surface-2">
+                    {ex.exercise.media?.[0]?.url ? (
+                      <Image src={ex.exercise.media[0].url} alt="" fill sizes="40px" className="object-cover" />
+                    ) : (
+                      <div className="flex h-full items-center justify-center text-muted">
+                        <GLoad className="size-4" />
+                      </div>
+                    )}
+                  </div>
+                  <span className="line-clamp-2 min-w-0 flex-1 text-sm font-medium leading-snug wrap-break-word group-hover:text-accent">
+                    {slot ? (
+                      <span className="mr-1.5 font-mono text-[11px] font-bold text-accent">
+                        <span aria-hidden>{slot.label}</span>
+                        {/* The space is spoken too: "Superset A, 1 de 2: Supino…". */}
+                        <span className="sr-only">{`${slot.heading}, ${slot.position} de ${slot.size}: `}</span>
+                      </span>
+                    ) : null}
+                    {ex.exercise.namePt}
+                  </span>
+                  <GArrow className="size-3.5 shrink-0 text-muted transition-transform group-hover:translate-x-0.5" />
+                </Link>
+              </li>
+            );
+          })}
           {day.exercises.length > PREVIEW_PHONE ? (
             <li
               className={cn(

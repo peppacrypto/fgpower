@@ -154,6 +154,11 @@ test("a 2-day home-dumbbell beginner gets the 2-day dumbbell plan", async ({ pag
   const reasons = panel(page).getByRole("list", { name: "Por que este programa" });
   await expect(reasons).toContainText("2×/semana (confere com o seu perfil)");
   await expect(reasons).toContainText("40 min (confere com o seu perfil)");
+  // The alternates: the other dumbbell plan first — the floor-only express plan leaves their dumbbells unused.
+  const alternates = panel(page).locator("li").filter({ has: page.locator("a") });
+  await expect(alternates).toHaveCount(2);
+  await expect(alternates.first()).toContainText("Halteres em Casa — Base Full-Body para Iniciantes");
+  await expect(alternates.last()).toContainText("Peso do Corpo Express 2×");
 
   // "Outras opções" names read whole on a 320px phone (two lines, not one truncated one).
   await page.setViewportSize({ width: 320, height: 640 });
@@ -169,6 +174,28 @@ test("a 2-day home-dumbbell beginner gets the 2-day dumbbell plan", async ({ pag
   await expect(panel(page).getByRole("list", { name: "Por que este programa" })).toContainText(
     "2×/semana (confere com o seu perfil)",
   );
+});
+
+test("a minimal-kit beginner starts on the bands plan; the alternates say what gear they need", async ({ page }) => {
+  // The wizard's defaults (hypertrophy, 3×, 60 min) with "Equipamento mínimo".
+  await newUserWith(page, "rec-minimal", { equipmentAccess: "MINIMAL" });
+  await page.goto("/app/today");
+  // The plan built on bands and the floor — never one that needs gear they may not own, whatever the goal.
+  await expect(panel(page).getByRole("heading", { level: 2 })).toHaveText("Elásticos e Peso do Corpo — Full-Body 3×");
+  await expect(panel(page).getByRole("list", { name: "Por que este programa" })).toContainText(
+    "Equipamento mínimo (confere com o seu perfil)",
+  );
+  // It runs as it is: one tap starts it, no adapting first.
+  await expect(panel(page).getByRole("button", { name: "Ativar e começar" })).toBeVisible();
+  await expect(panel(page).getByRole("link", { name: "Adaptar e começar" })).toHaveCount(0);
+  // Two alternates: the dumbbell plan says it needs dumbbells; the kettlebell plan is none of them.
+  const alternates = panel(page).locator("li").filter({ has: page.locator("a") });
+  await expect(alternates).toHaveCount(2);
+  await expect(alternates.filter({ hasText: "Halteres em Casa" })).toContainText("Requer halteres");
+  await expect(panel(page).locator('a[href="/app/programs/templates/kettlebell-strong"]')).toHaveCount(0);
+  // Readable on a 320px phone.
+  await page.setViewportSize({ width: 320, height: 640 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
 });
 
 test("the library leads with the pick's shelf, and the GD plan is one series card that starts by profile", async ({ page }) => {
@@ -196,11 +223,13 @@ test("the library leads with the pick's shelf, and the GD plan is one series car
   const blocks = card.locator('ol a[href^="/app/programs/templates/gd-"]');
   await expect(blocks.filter({ visible: true })).toHaveCount(matches);
 
-  // Typing beats the profile chips: "30 min" finds the shortest of all programs, not of the chips.
+  // Typing beats the profile chips: "20 min" finds the shortest of all programs, not of the chips
+  // (the 30-min bodyweight express plan leads them).
   const search = page.getByLabel("Buscar programa");
-  await search.fill("30 min");
+  await search.fill("20 min");
   await expect(page.getByText("Nada com os filtros escolhidos — buscando em todos os programas.")).toBeVisible();
-  await expect(page.getByText("Nenhum programa cabe em 30 min — estes são os mais curtos.")).toBeVisible();
+  await expect(page.getByText("Nenhum programa cabe em 20 min — estes são os mais curtos.")).toBeVisible();
+  await expect(page.locator('a[href="/app/programs/templates/bodyweight-express"]')).toBeVisible();
   await expect(page.locator('a[href="/app/programs/templates/full-body-express"]')).toBeVisible();
   await expect(page.locator('a[href="/app/programs/templates/gd-4"]')).toHaveCount(0);
   await search.fill("sem equipamento");
@@ -239,7 +268,7 @@ test("the library starts filtered by the profile, shelved, and its search speaks
   const hrefs = await library
     .locator('a[href^="/app/programs/templates/"]')
     .evaluateAll((links) => new Set(links.map((a) => a.getAttribute("href"))).size);
-  expect(hrefs).toBe(48);
+  expect(hrefs).toBe(50);
   // The GD card folds its 9 blocks away (still links in the page) behind one toggle.
   const gdBlocks = gd.locator('ol a[href^="/app/programs/templates/"]');
   await expect(gdBlocks).toHaveCount(9);
@@ -314,14 +343,18 @@ test("program cards read their days and never widen a 320px screen", async ({ pa
   const gd = page.locator('a[href="/app/programs/templates/gd-adaptacao"]').first();
   await expect(gd).toContainText("SEG · SUP A");
   await expect(gd).toContainText("QUA · TÉC");
-  // Led by its outcome; its place in the series is a mono line.
-  await expect(gd).toContainText("Bloco 1 de 9 · mês 1");
-  await expect(gd).toContainText("Aprenda os movimentos");
+  // Led by what it builds (L-gd-taglines): no "Bloco 1 de 9 · …" on the card — the dossier's rail says where it sits.
+  await expect(gd).toContainText("Aprenda os movimentos, calibre o RIR e prepare articulações e cargas para o GD 1");
+  await expect(gd).not.toContainText(/Bloco \d de 9/);
   await page.getByLabel("Buscar programa").fill("");
   // The masthead's "Criar" stays inside the gutter, level with the search box.
   const criar = await page.getByRole("link", { name: "Criar" }).boundingBox();
   const searchBox = await page.getByLabel("Buscar programa").boundingBox();
   expect(criar && searchBox && criar.x + criar.width <= searchBox.x + searchBox.width + 0.5).toBeTruthy();
+
+  // A GD block's place in the series: on its dossier, under the masthead.
+  await page.goto("/app/programs/templates/gd-adaptacao");
+  await expect(page.locator("[data-series-place]")).toContainText("Plano GD · Bloco 1 de 9");
 
   // The dossier's start button wraps inside itself instead of spilling out, and never says a bare letter.
   for (const [slug, label] of [

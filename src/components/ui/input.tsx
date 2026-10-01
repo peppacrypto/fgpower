@@ -4,9 +4,11 @@ import { cn } from "@/lib/utils/cn";
 // Form controls. The boundary is foreground/50 (≥3:1 on the surface, WCAG
 // 1.4.11) so a field reads as a field in gym light, not as floating text.
 // Text is 16px on phones — iOS Safari zooms into any focused field under
-// 16px and stays zoomed — and the denser 14px from `sm` up.
+// 16px and stays zoomed — and the denser 14px from `sm` up. A field with
+// aria-invalid="true" wears the danger border and ring on its own (its
+// message says why, in words): no per-form class to remember.
 const CONTROL =
-  "flex w-full rounded-[3px] border border-foreground/50 bg-surface px-3.5 text-foreground transition-colors hover:border-foreground/70 disabled:cursor-not-allowed disabled:opacity-50";
+  "flex w-full rounded-[3px] border border-foreground/50 bg-surface px-3.5 text-foreground transition-colors hover:border-foreground/70 disabled:cursor-not-allowed disabled:opacity-50 aria-[invalid=true]:border-danger aria-[invalid=true]:ring-1 aria-[invalid=true]:ring-danger";
 
 // A caller that sets its own font size (e.g. the builder's big title field)
 // keeps it on every breakpoint instead of being pulled back to sm:text-sm.

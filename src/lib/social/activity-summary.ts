@@ -1,5 +1,6 @@
 import { sessionVolumeKg, workingSetCount } from "@/lib/training/volume";
 import { groupRecordsByExercise, isShownPrKind } from "@/lib/training/personal-records-core";
+import { isTimedHold } from "@/lib/training/set-plan";
 
 interface SetLike {
   weightKg: number | null;
@@ -10,13 +11,16 @@ interface SetLike {
 
 interface ExerciseLogLike {
   exerciseId?: string;
-  exercise: { namePt: string };
+  /** The slug tells a hold whose "reps" are seconds (set-plan isTimedHold). */
+  exercise: { namePt: string; slug?: string };
+  /** The prescription's note, which can say the numbers are seconds. */
+  notes?: string | null;
   sets: SetLike[];
 }
 
 interface RecordLike {
   exerciseId?: string;
-  exercise: { namePt: string };
+  exercise: { namePt: string; slug?: string };
   kind: "MAX_WEIGHT" | "ESTIMATED_1RM" | "MAX_REPS_AT_WEIGHT" | "SESSION_VOLUME";
   value: number;
   weightKg: number | null;
@@ -32,6 +36,14 @@ interface SessionLike {
 
 export interface ActivityExerciseSummary {
   name: string;
+  /** Absent in summaries stored before it existed. */
+  slug?: string;
+  /**
+   * A hold whose "reps" are seconds (L-bodyweight-timed-display): print its
+   * sets with formatSet(…, { timed }) — "45 s", "10 kg × 40 s", never "0 kg × 45".
+   * Absent in older summaries: reps.
+   */
+  timed?: boolean;
   workingSets: number;
   bestSet: { weightKg: number; reps: number } | null;
 }
@@ -43,6 +55,8 @@ export interface ActivityPrSummary {
   value: number | null;
   weightKg: number | null;
   reps: number | null;
+  /** The record's exercise is a timed hold: its reps are seconds (describePr's `timed`). Absent in older summaries. */
+  timed?: boolean;
 }
 
 export interface WorkoutActivitySummary {
@@ -74,9 +88,12 @@ export function buildWorkoutActivitySummary(session: SessionLike, showDetailedLo
       return acc;
     }, null);
     if (workingSets.length === 0) return [];
+    const slug = log.exercise.slug;
     return [
       {
         name: log.exercise.namePt,
+        ...(slug ? { slug } : {}),
+        timed: isTimedHold({ slug, notes: log.notes }),
         workingSets: workingSets.length,
         bestSet:
           showDetailedLoads && best?.weightKg != null && best.reps != null
@@ -88,6 +105,8 @@ export function buildWorkoutActivitySummary(session: SessionLike, showDetailedLo
 
   const keyOf = (r: { exerciseId?: string; exercise: { namePt: string } }) => r.exerciseId ?? r.exercise.namePt;
   const order = session.exerciseLogs.map(keyOf);
+  // A record is timed when its exercise was in this workout as a hold (its note may say so), or is a known hold.
+  const timedByKey = new Map(session.exerciseLogs.map((l) => [keyOf(l), isTimedHold({ slug: l.exercise.slug, notes: l.notes })]));
   const prs = groupRecordsByExercise(session.records.filter((r) => isShownPrKind(r.kind)), keyOf, order)
     .flatMap((g) => g.records)
     .map((r) => ({
@@ -97,6 +116,7 @@ export function buildWorkoutActivitySummary(session: SessionLike, showDetailedLo
       value: showDetailedLoads || r.kind === "MAX_REPS_AT_WEIGHT" ? r.value : null,
       weightKg: showDetailedLoads ? r.weightKg : null,
       reps: showDetailedLoads || r.kind === "MAX_REPS_AT_WEIGHT" ? r.reps : null,
+      timed: timedByKey.get(keyOf(r)) ?? isTimedHold({ slug: r.exercise.slug }),
     }));
 
   return {

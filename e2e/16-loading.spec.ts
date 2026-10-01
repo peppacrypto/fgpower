@@ -259,3 +259,121 @@ test("the unmatched-URL catch-all keeps a real 404, a bare /app still redirects,
     await expect(page.locator("[data-skeleton]")).toHaveCount(0);
   }
 });
+
+test("the follower lists get their own skeleton at once, from the top — not the profile's (W-141)", async ({ page }) => {
+  await onboarded(page, "loading-people");
+  // A short phone screen: a new account's profile scrolls there.
+  await page.setViewportSize({ width: 390, height: 480 });
+  // Warm both routes (the dev server compiles on first hit).
+  await page.goto("/app/profile/seguidores");
+  await page.goto("/app/profile/seguindo");
+  for (const [count, label, title] of [
+    [/^0 seguidores — ver lista$/, "os seus seguidores", "Seguidores"],
+    [/^Seguindo 0 pessoas — ver lista$/, "quem você segue", "Seguindo"],
+  ] as const) {
+    await page.goto("/app/profile");
+    await expect(page.locator("[data-skeleton]")).toHaveCount(0, { timeout: 30_000 });
+    // Record every skeleton that shows from here on.
+    await page.evaluate(() => {
+      const w = window as unknown as { seen: string[] };
+      w.seen = [];
+      new MutationObserver(() => {
+        for (const el of document.querySelectorAll("[data-skeleton]")) {
+          const seen = el.getAttribute("data-skeleton")!;
+          if (!w.seen.includes(seen)) w.seen.push(seen);
+        }
+      }).observe(document.body, { childList: true, subtree: true });
+    });
+    // The profile is scrolled when a count is tapped.
+    const link = page.getByRole("link", { name: count });
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    await link.scrollIntoViewIfNeeded();
+    expect(await page.evaluate(() => scrollY)).toBeGreaterThan(0);
+
+    const cdp = await slowNetwork(page);
+    await link.click();
+    const skeleton = page.locator(`[data-skeleton="${label}"]`);
+    await expect(skeleton).toBeVisible({ timeout: 20_000 });
+    await expect(skeleton).toContainText(title);
+    expect(await page.evaluate(() => scrollY)).toBe(0);
+    await fastNetwork(cdp);
+    await expect(page.getByRole("heading", { level: 1, name: title })).toBeVisible({ timeout: 30_000 });
+    await expect(page.locator("[data-skeleton]")).toHaveCount(0);
+    expect(await page.evaluate(() => (window as unknown as { seen: string[] }).seen)).toEqual([label]);
+  }
+});
+
+test("Corpo, under Progress, gets its own skeleton at once — not Progress's", async ({ page }) => {
+  await onboarded(page, "loading-body");
+  // Warm both routes (the dev server compiles on first hit).
+  await page.goto("/app/progress/body");
+  await page.goto("/app/progress");
+  await expect(page.locator("[data-skeleton]")).toHaveCount(0, { timeout: 30_000 });
+  await page.evaluate(() => {
+    const w = window as unknown as { seen: string[] };
+    w.seen = [];
+    new MutationObserver(() => {
+      for (const el of document.querySelectorAll("[data-skeleton]")) {
+        const label = el.getAttribute("data-skeleton")!;
+        if (!w.seen.includes(label)) w.seen.push(label);
+      }
+    }).observe(document.body, { childList: true, subtree: true });
+  });
+  const cdp = await slowNetwork(page);
+  await page.locator("[data-body-card]").click();
+  await expect(page.locator('[data-skeleton="os dados do seu corpo"]')).toBeVisible({ timeout: 20_000 });
+  await fastNetwork(cdp);
+  await expect(page.getByRole("heading", { level: 1, name: "Corpo" })).toBeVisible({ timeout: 30_000 });
+  await expect(page.locator("[data-skeleton]")).toHaveCount(0);
+  expect(await page.evaluate(() => (window as unknown as { seen: string[] }).seen)).toEqual(["os dados do seu corpo"]);
+});
+
+test("a profile opened from the app gets its own skeleton at once, inside the app's shell (W-140)", async ({ page }) => {
+  await onboarded(page, "loading-profile");
+  await page.goto("/app/profile");
+  const open = page.getByRole("link", { name: "Ver perfil público" });
+  const href = (await open.getAttribute("href"))!;
+  expect(href).toMatch(/^\/u\/[^/]+$/);
+  // Warm the route (the dev server compiles on first hit), then start from Perfil.
+  await page.goto(href);
+  await page.goto("/app/profile");
+  await expect(page.locator("[data-skeleton]")).toHaveCount(0, { timeout: 30_000 });
+
+  const cdp = await slowNetwork(page);
+  await open.click();
+  const skeleton = page.locator('[data-skeleton="o perfil"]');
+  await expect(skeleton).toBeVisible({ timeout: 20_000 });
+  await expect(skeleton).toHaveAttribute("role", "status");
+  await expect(skeleton).toContainText("Carregando o perfil…");
+  await expect(page).toHaveURL(new RegExp(`${href}$`));
+  // The app stays around it: the bottom nav, with Perfil as the current tab.
+  await expect(bottomNav(page)).toHaveCount(1);
+  await fastNetwork(cdp);
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible({ timeout: 30_000 });
+  await expect(page.locator("[data-skeleton]")).toHaveCount(0);
+  await expect(tab(page, "Perfil")).toHaveAttribute("aria-current", "page");
+});
+
+test("a missing profile is a noindex soft 404 in the shell of whoever opens it (W-140)", async ({ page, browser }) => {
+  await onboarded(page, "loading-profile-404");
+  // Signed in: the app's shell, with ways back into the app.
+  await page.goto("/u/ninguem_por_aqui");
+  await expect(page.getByText("404 · Perfil")).toBeVisible();
+  await expect(page.locator('meta[name="robots"][content*="noindex"]').first()).toBeAttached();
+  await expect(bottomNav(page)).toHaveCount(1);
+  await expect(page.getByRole("link", { name: "Ir para Hoje" })).toBeVisible();
+  await expect(page.locator("[data-skeleton]")).toHaveCount(0);
+
+  // Signed out: the public header, whose "Entrar" comes back here.
+  const signedOut = await browser.newContext(iPhone);
+  const anon = await signedOut.newPage();
+  await anon.goto("/u/ninguem_por_aqui");
+  await expect(anon.getByText("404 · Perfil")).toBeVisible();
+  await expect(anon.locator('meta[name="robots"][content*="noindex"]').first()).toBeAttached();
+  await expect(bottomNav(anon)).toHaveCount(0);
+  await expect(anon.getByRole("banner").getByRole("link", { name: "Entrar" })).toHaveAttribute(
+    "href",
+    "/login?next=%2Fu%2Fninguem_por_aqui",
+  );
+  await signedOut.close();
+});

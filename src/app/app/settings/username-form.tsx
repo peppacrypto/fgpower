@@ -9,7 +9,6 @@ import { runAction } from "@/components/social/run-action";
 import { ActionErrorText } from "@/components/social/session-expired";
 import { publicProfileLabel, USERNAME_RULE } from "@/lib/validation/username";
 import { cn } from "@/lib/utils/cn";
-import { INVALID_FIELD } from "@/components/ui/save-status";
 
 const MONO = "font-mono text-[11px] font-bold uppercase tracking-[0.12em]";
 
@@ -109,7 +108,7 @@ export function UsernameForm({ initialUsername, publicOrigin }: { initialUsernam
             enterKeyHint="done"
             aria-invalid={error ? true : undefined}
             aria-describedby={error ? "username-rule username-error" : "username-rule username-status"}
-            className={cn("min-w-0 rounded-l-none", INVALID_FIELD)}
+            className="min-w-0 rounded-l-none"
           />
         </div>
         <Button type="submit" disabled={pending || !editing}>

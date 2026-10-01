@@ -143,6 +143,10 @@ describe("prescription helpers", () => {
       "3 × 8–12 · RIR 1,5 · 2:00 · +1 aquec.",
     );
     expect(prescriptionLine({ sets: 5, repMin: 5, repMax: 5, rirTarget: null, restSeconds: 180, warmupSets: 0 })).toBe("5 × 5 · 3:00");
+    // A superset's member says where the rest goes (W-104).
+    expect(
+      prescriptionLine({ sets: 2, repMin: 12, repMax: 15, rirTarget: 1, restSeconds: 20, warmupSets: 0 }, { restText: "0:20 até A2" }),
+    ).toBe("2 × 12–15 · RIR 1 · 0:20 até A2");
   });
 
   it("pins a too-long day focus and note to their fields", () => {

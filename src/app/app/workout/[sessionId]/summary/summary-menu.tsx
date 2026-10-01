@@ -5,7 +5,10 @@ import Link from "next/link";
 import { unstable_isUnrecognizedActionError, unstable_rethrow } from "next/navigation";
 import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { describeActionFailure, OFFLINE_ERROR } from "@/components/social/run-action";
+import { ActionErrorText } from "@/components/social/session-expired";
 import { deleteWorkoutSession } from "@/lib/actions/workouts";
+import { isSessionExpiredError } from "@/lib/auth/session-expired";
 
 /** A Next.js navigation thrown through an action (the delete's redirect to Today). */
 function isNavigation(err: unknown) {
@@ -169,7 +172,15 @@ function DeleteSheet({
           window.location.reload();
           return;
         }
-        setError("Sem conexão — o treino continua salvo. Tente de novo quando o sinal voltar.");
+        // Nothing was deleted. Offline, the login gone ("Entrar" back to this summary), or a retry.
+        const { error: why } = await describeActionFailure();
+        setError(
+          isSessionExpiredError(why)
+            ? `${why} O treino continua salvo.`
+            : why === OFFLINE_ERROR
+              ? "Sem conexão — o treino continua salvo. Tente de novo quando o sinal voltar."
+              : "Não foi possível excluir agora — o treino continua salvo. Tente de novo.",
+        );
       }
     });
   }
@@ -202,7 +213,7 @@ function DeleteSheet({
           </p>
           {error ? (
             <p role="alert" className="mt-3 border-l-2 border-l-danger! bg-danger-soft px-3 py-2 text-xs font-medium text-danger">
-              {error}
+              <ActionErrorText error={error} />
             </p>
           ) : null}
           <div className="mt-5 flex flex-col gap-2">

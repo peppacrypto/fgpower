@@ -11,7 +11,7 @@ const SHORTCUTS = [
 const SCREENSHOTS = [
   { file: "today", label: "Hoje: o próximo treino a um toque" },
   { file: "workout", label: "Treino: cargas, repetições e descanso de cada série" },
-  { file: "summary", label: "Resumo: o que o treino rendeu e o próximo passo" },
+  { file: "summary", label: "Resumo: o que o treino rendeu, quem vê e os recordes" },
 ] as const;
 
 export default function manifest(): MetadataRoute.Manifest {

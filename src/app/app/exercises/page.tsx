@@ -53,7 +53,20 @@ export default async function ExerciseLibraryPage({ searchParams }: PageProps<"/
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
-      <Masthead kicker="Técnica e ciência" title="Exercícios" lead="Como executar, por que executar, e a ciência por trás." />
+      <Masthead
+        kicker="Técnica e ciência"
+        title="Exercícios"
+        lead="Como executar, por que executar, e a ciência por trás."
+        action={
+          // The principles behind every exercise's "por quê" (W-050).
+          <Link
+            href="/app/science"
+            className="inline-flex min-h-11 items-center gap-1 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
+          >
+            Ciência <span aria-hidden>↗</span>
+          </Link>
+        }
+      />
 
       <div className="mt-6">
         <ExerciseFilterBar

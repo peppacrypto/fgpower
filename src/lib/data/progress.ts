@@ -4,9 +4,18 @@ import { prisma } from "@/lib/db";
 import { SHOWN_PR_KINDS } from "@/lib/training/personal-records-core";
 import { isBodyweightEquipment, isTimedHold } from "@/lib/training/set-plan";
 import { COUNTED_SET, SESSION_PERF_COLUMNS, toSessionPerf, type SessionPerfRow } from "./history";
-import { buildStreakWeeks } from "./streak-data";
+import { loadStreakInputs, streakWeeksFrom } from "./streak-data";
+import { spMondayNo } from "./sql";
 import { dayNumberOf, mondayOf } from "@/lib/training/day-rotation";
-import { dateOfDayNumber, periodStartDate, type ProgressPeriod, type SessionPerf, type WeekRow } from "./progress-core";
+import { VOLUME_MUSCLES } from "@/lib/programming/exercise-facets";
+import {
+  dateOfDayNumber,
+  periodStartDate,
+  type MuscleWeekRow,
+  type ProgressPeriod,
+  type SessionPerf,
+  type WeekRow,
+} from "./progress-core";
 
 export { consistencyOf, dateOfDayNumber, periodStartDate, type ProgressPeriod, type WeekRow } from "./progress-core";
 
@@ -217,12 +226,21 @@ export async function getExerciseSeries(
  * Thursday–Sunday entry week; else the profile's days per week), the workouts
  * that count toward it, and whether it counts (met, or a planned deload week
  * with any workout — `deload` says which). `monday` is the week's São Paulo
- * day number (day-rotation).
+ * day number (day-rotation). `days` are the Monday-first offsets (0–6) of
+ * the days with a counted workout ("Treinos por semana"'s day grid).
  */
 export async function getWeekRows(userId: string, until: Date = new Date()): Promise<WeekRow[]> {
-  const { weeks, thisWeek } = await buildStreakWeeks(userId, until);
+  const inputs = await loadStreakInputs(userId, until);
+  const { weeks, thisWeek } = streakWeeksFrom({ ...inputs, now: until });
+  const trainedDays = new Map<number, Set<number>>();
+  for (const s of inputs.sessions) {
+    const day = dayNumberOf(s.finishedAt);
+    const monday = mondayOf(day);
+    trainedDays.set(monday, (trainedDays.get(monday) ?? new Set()).add(day - monday));
+  }
   const rows = [...weeks, thisWeek];
   return rows.map((w, i) => ({
+    days: [...(trainedDays.get(w.monday) ?? [])].sort((a, b) => a - b),
     monday: w.monday,
     enrollmentId: w.enrollmentId,
     done: w.done,
@@ -234,4 +252,44 @@ export async function getWeekRows(userId: string, until: Date = new Date()): Pro
     // A Thursday–Sunday entry week (lib/training/streak): counts when met, never against.
     neutral: w.neutral === true,
   }));
+}
+
+// ---------------------------------------------------------------------------
+// Sets per muscle, per week (W-085)
+// ---------------------------------------------------------------------------
+
+/**
+ * Working sets per muscle group (the builder's 10, VOLUME_MUSCLES) in each
+ * São Paulo week since `since`: a completed set that isn't a warm-up counts
+ * once per group — 1 where the exercise trains it directly, 0.5 where it
+ * only assists (an exercise primary for two muscles of one group, lats and
+ * middle back, counts once). Stretches and cardio don't count
+ * (countsAsVolume), nor exercises without muscles. One aggregate query.
+ */
+export async function getMuscleWeeks(userId: string, since: Date): Promise<MuscleWeekRow[]> {
+  const pairs = VOLUME_MUSCLES.flatMap((m) => m.muscleIds.map((id) => Prisma.sql`(${m.key}::text, ${id}::text)`));
+  const rows = await prisma.$queryRaw<{ monday: number; key: string; sets: number; direct: number }[]>`
+    WITH groups(key, muscle_id) AS (VALUES ${Prisma.join(pairs)}),
+    ex_group AS (
+      SELECT em."exerciseId", g.key, bool_or(em.role = 'PRIMARY') AS direct
+      FROM "ExerciseMuscle" em
+      JOIN groups g ON g.muscle_id = em."muscleId"
+      WHERE em.role IN ('PRIMARY', 'SECONDARY')
+      GROUP BY em."exerciseId", g.key
+    )
+    SELECT ${spMondayNo(Prisma.sql`s."finishedAt"`)} AS monday, eg.key,
+      sum(CASE WHEN eg.direct THEN 1 ELSE 0.5 END)::float8 AS sets,
+      (count(*) FILTER (WHERE eg.direct))::int AS direct
+    FROM "SetLog" x
+    JOIN "WorkoutSession" s ON s.id = x."sessionId"
+    JOIN "Exercise" e ON e.id = x."exerciseId"
+    JOIN ex_group eg ON eg."exerciseId" = x."exerciseId"
+    WHERE x."userId" = ${userId}
+      AND s."userId" = ${userId}
+      AND s.status = 'COMPLETED'
+      AND s."finishedAt" >= ${since}
+      AND x."isCompleted" AND x."setType" <> 'WARMUP'
+      AND e.category NOT IN ('STRETCHING', 'CARDIO')
+    GROUP BY 1, 2`;
+  return rows.map((r) => ({ monday: Number(r.monday), key: r.key, sets: Number(r.sets), direct: Number(r.direct) }));
 }

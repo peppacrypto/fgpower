@@ -263,8 +263,9 @@ test("the 10th workout is stamped 'Dossiê nº 10', privately", async ({ page })
   expect(
     sql(`SELECT count(*) || '|' || min(visibility::text) FROM "Activity" WHERE "userId" = '${userId}' AND type = 'MILESTONE'`),
   ).toBe("1|PRIVATE");
-  // Nothing was published: the workout itself stays private too.
-  expect(sql(`SELECT count(*) FROM "Activity" WHERE "userId" = '${userId}' AND visibility <> 'PRIVATE'`)).toBe("0");
+  // The stamp is never published; the workout goes to followers like every new account's (decision 10).
+  expect(sql(`SELECT count(*) FROM "Activity" WHERE "userId" = '${userId}' AND type <> 'WORKOUT' AND visibility <> 'PRIVATE'`)).toBe("0");
+  expect(sql(`SELECT visibility FROM "Activity" WHERE "userId" = '${userId}' AND type = 'WORKOUT'`)).toBe("FOLLOWERS");
 });
 
 test("archiving the active program asks first; it restores from 'Arquivados' and picks up where it stopped", async ({

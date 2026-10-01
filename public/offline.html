@@ -7,6 +7,11 @@
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b0c0e" />
     <meta name="robots" content="noindex" />
     <title>Sem sinal · FGPOWER</title>
+    <!-- The device's theme choice (Settings → Aparência): the same boot script as
+         src/lib/theme.ts THEME_BOOT_SCRIPT, inlined — this page has no build assets. -->
+    <script>
+      (function(){try{var m=document.cookie.match(/(?:^|; )fg-theme=(light|dark)(?:;|$)/);if(!m)return;var t=m[1];document.documentElement.setAttribute("data-theme",t);var c=t==="dark"?"#0b0c0e":"#fafafb";var ms=document.querySelectorAll('meta[name="theme-color"]');for(var i=0;i<ms.length;i++)ms[i].setAttribute("content",c)}catch(e){}})();
+    </script>
     <!-- Served by public/sw.js when a page can't be reached. Fully static and
          self-contained (no build assets, no web fonts): it must render with
          zero network. Tokens mirror src/app/globals.css. -->
@@ -25,7 +30,8 @@
         --keel: rgba(28, 29, 31, 0.16);
       }
       @media (prefers-color-scheme: dark) {
-        :root {
+        :root:not([data-theme="light"]) {
+          color-scheme: dark;
           --background: #0b0c0e;
           --surface-2: #1c1e22;
           --foreground: #f2f3f5;
@@ -37,6 +43,23 @@
           --rule-heavy: #b0b2b6;
           --keel: rgba(0, 0, 0, 0.3);
         }
+      }
+      /* Settings → Aparência forced a theme on this device (the fg-theme cookie, read above). */
+      :root[data-theme="light"] {
+        color-scheme: light;
+      }
+      :root[data-theme="dark"] {
+        color-scheme: dark;
+        --background: #0b0c0e;
+        --surface-2: #1c1e22;
+        --foreground: #f2f3f5;
+        --muted: #9aa0aa;
+        --warning: #f5c14d;
+        --accent: #a3d92e;
+        --accent-strong: #c3ff4d;
+        --accent-strong-foreground: #0e1408;
+        --rule-heavy: #b0b2b6;
+        --keel: rgba(0, 0, 0, 0.3);
       }
       * {
         box-sizing: border-box;

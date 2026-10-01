@@ -23,7 +23,8 @@ export const NAV_ITEMS: NavItem[] = [
     href: "/app/profile",
     label: "Perfil",
     icon: GProfile,
-    // "/u": a profile (yours or anyone's) is where Perfil leads.
-    activePaths: ["/app/settings", "/app/feed", "/app/notifications", "/app/discover", "/app/activity", "/u"],
+    // "/u": a profile (yours or anyone's) is where Perfil leads; "/t": a shared
+    // workout opened inside the app, like /app/activity.
+    activePaths: ["/app/settings", "/app/feed", "/app/notifications", "/app/discover", "/app/activity", "/u", "/t"],
   },
 ];

@@ -119,7 +119,7 @@ export default async function AdaptTemplatePage({ params, searchParams }: PagePr
                 <section key={day.id} aria-labelledby={`adapt-day-${day.id}`} className="border-t-2 border-t-[var(--rule-heavy)] bg-surface">
                   <div className="flex items-baseline justify-between gap-3 border-b border-border bg-surface-2/60 px-4 py-3">
                     <div className="flex min-w-0 items-baseline gap-3">
-                      <span className="font-mono text-sm font-bold text-foreground/30">{String(i + 1).padStart(2, "0")}</span>
+                      <span className="font-mono text-sm font-bold text-muted">{String(i + 1).padStart(2, "0")}</span>
                       <h2 id={`adapt-day-${day.id}`} className="font-bold">
                         {day.namePt}
                       </h2>

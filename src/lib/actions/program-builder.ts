@@ -5,6 +5,7 @@ import { getCurrentSession } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 import { validateBuilderProgram, type BuilderFieldError } from "@/lib/validation/program-builder";
 import { applyWeekLayout } from "@/lib/data/program-lifecycle";
+import { normalizeGroupKeys } from "@/lib/programming/groups";
 import type { ProgressionStrategy } from "@/lib/training/progression";
 import type { Prisma } from "@/generated/prisma/client";
 
@@ -115,7 +116,10 @@ export async function saveProgram(
 
   const parsed = validateBuilderProgram(input);
   if (!parsed.ok) return { ok: false, errors: parsed.errors, message: null };
-  const { name, description, days: safeDays } = parsed.data;
+  const { name, description } = parsed.data;
+  // Supersets are stored canonical (W-104): each group's letter, a lone or
+  // stray key cleared — bad keys are fixed, never rejected.
+  const safeDays = parsed.data.days.map((d) => ({ ...d, exercises: normalizeGroupKeys(d.exercises) }));
   const durationWeeks = parsed.data.durationWeeks === undefined ? program.durationWeeks : parsed.data.durationWeeks;
 
   let saved: { dayIds: string[]; exerciseIds: string[][]; daysPerWeek: number };

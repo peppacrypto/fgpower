@@ -195,3 +195,14 @@ describe("the RIR each exercise aimed for (W-054)", () => {
     expect(targets.get(logs[1].id)).toBe(1);
   });
 });
+
+describe("stretches and cardio aren't training volume (L-volume-counts-stretches)", () => {
+  it("a stretch done last week is absent from last week's muscles", async () => {
+    const stretch = (await prisma.exercise.findUniqueOrThrow({ where: { slug: "all-fours-quad-stretch" } })).id;
+    const before = await getLastWeekReview(GD_USER, NOW);
+    await workout({ day: 1, at: at(1, 3), programWeek: 4, sets: [{ exerciseId: stretch, count: 6 }] });
+    const after = await getLastWeekReview(GD_USER, NOW);
+    expect(after.muscles).toEqual(before.muscles);
+    expect(after.muscles.find((m) => m.name === "Quadríceps")).toMatchObject({ sets: 5, direct: 5 });
+  });
+});

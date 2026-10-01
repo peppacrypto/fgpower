@@ -4,10 +4,6 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils/cn";
 import { ActionErrorText } from "@/components/social/session-expired";
 
-/** Danger border + ring for an input carrying aria-invalid="true". */
-export const INVALID_FIELD =
-  "aria-[invalid=true]:border-danger aria-[invalid=true]:ring-1 aria-[invalid=true]:ring-danger";
-
 const MONO = "font-mono text-[11px] font-bold uppercase tracking-[0.14em]";
 
 /**

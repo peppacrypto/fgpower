@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  APPLIED_DELOAD_NOTE,
+  appliedDeloadGuidance,
   baselineRir,
   completeWeekDone,
   daysLeftInWeek,
@@ -207,5 +209,46 @@ describe("the program week the user is in", () => {
     const done = completeWeekDone(["a", "b"]);
     expect([...done.doneDayIds]).toEqual(["a", "b"]);
     expect(done.sessionCount).toBeGreaterThan(100);
+  });
+});
+
+describe("an applied deload (W-128)", () => {
+  const gd1 = Array.from({ length: 13 }, (_, i) => ({
+    week: i + 1,
+    rirTarget: [3, 2.5, 2.5, 2, 1, 1, 3, 2.5, 2, 2, 1, 1, 3.5][i],
+    notePt: `Semana ${i + 1}.`,
+    setsNotePt: i === 12 ? "Seg-qua: deload — mesmas cargas." : "",
+  }));
+  const baseline = baselineRir(gd1);
+  const bench = { freeWeightCompound: true, notes: "Nunca à falha (mín. RIR 2).", timed: false };
+  const isolation = { freeWeightCompound: false, notes: null, timed: false };
+
+  it("reads as a deload with its own instructions, over the program week's", () => {
+    const week6 = getWeekGuidance(gd1, 6);
+    expect(appliedDeloadGuidance(week6, 6)).toEqual({
+      week: 6,
+      rirTarget: 3.5,
+      notePt: APPLIED_DELOAD_NOTE,
+      setsNotePt: expect.stringContaining("Metade das séries"),
+      deload: true,
+      test: false,
+      applied: true,
+    });
+    // A program without guidance gets one too.
+    expect(appliedDeloadGuidance(null, 4)).toMatchObject({ week: 4, deload: true, applied: true, rirTarget: 3.5 });
+  });
+
+  it("moves GD 1's targets with the wave, up to RIR 4 (bench 3 → 4, isolation 2 → 3,5)", () => {
+    const applied = appliedDeloadGuidance(getWeekGuidance(gd1, 6), 6);
+    expect(weekRirTarget(3, applied, { baseline, exercise: bench })).toBe(4);
+    expect(weekRirTarget(2, applied, { baseline, exercise: isolation })).toBe(3.5);
+  });
+
+  it("without a wave, takes every exercise to RIR 3 at least (holds keep theirs)", () => {
+    const applied = appliedDeloadGuidance(null, 1);
+    expect(weekRirTarget(2, applied, { baseline: null, exercise: isolation })).toBe(3);
+    expect(weekRirTarget(4, applied, { baseline: null, exercise: isolation })).toBe(4);
+    expect(weekRirTarget(null, applied, { baseline: null, exercise: isolation })).toBeNull();
+    expect(weekRirTarget(1, applied, { baseline: null, exercise: { ...isolation, timed: true } })).toBe(1);
   });
 });

@@ -40,6 +40,8 @@ export interface EmailContent {
   blocks: EmailBlock[];
   /** The one button. */
   cta?: EmailLink;
+  /** Blocks under the button (the login e-mail's "Ou digite este código no app:" + the code). */
+  afterCta?: EmailBlock[];
   /** Small print: why they get it, and links (unsubscribe, preferences). */
   footer: { lines: string[]; links?: EmailLink[] };
 }
@@ -128,6 +130,7 @@ ${content.preheader ? `<div style="display:none;max-height:0;overflow:hidden;opa
 <tr><td style="padding-top:8px;font-family:${SANS};font-size:24px;line-height:1.25;font-weight:800;color:${INK}">${esc(content.title)}</td></tr>
 ${content.blocks.map(blockHtml).join("\n")}
 ${cta}
+${(content.afterCta ?? []).map(blockHtml).join("\n")}
 <tr><td style="padding-top:28px;border-top:1px solid #d9dce1;font-family:${SANS};font-size:12px;line-height:1.5;color:${MUTED}">${footer}</td></tr>
 </table>
 </td></tr>
@@ -143,6 +146,7 @@ ${cta}
     "",
     ...content.blocks.map(blockText),
     ...(content.cta ? ["", `${content.cta.label}: ${safeHref(content.cta.href)}`] : []),
+    ...(content.afterCta?.length ? ["", ...content.afterCta.map(blockText)] : []),
     "",
     "—",
     ...content.footer.lines,

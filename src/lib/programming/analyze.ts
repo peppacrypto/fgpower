@@ -13,6 +13,7 @@ export async function analyzeUserProgram(programId: string) {
             select: {
               nameEn: true,
               namePt: true,
+              category: true,
               movementPattern: { select: { id: true } },
               muscles: { select: { role: true, muscle: { select: { id: true, nameEn: true, namePt: true, group: true } } } },
             },
@@ -39,6 +40,7 @@ export async function analyzeUserProgram(programId: string) {
         .map(({ muscle }) => ({ id: muscle.id, nameEn: muscle.nameEn, namePt: muscle.namePt })),
       movementPattern: ex.exercise.movementPattern?.id ?? null,
       sets: ex.sets,
+      category: ex.exercise.category,
     })),
   }));
 

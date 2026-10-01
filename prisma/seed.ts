@@ -28,6 +28,9 @@ const prisma = new PrismaClient({ adapter });
 
 const SEED_DATA_DIR = path.join(__dirname, "seed-data");
 
+/** Per-exercise / per-template transactions: generous limits for a remote database. */
+const TX_OPTIONS = { maxWait: 30_000, timeout: 120_000 };
+
 interface GeneratedExercise {
   sourceId: string;
   slug: string;
@@ -203,119 +206,122 @@ async function seedPrinciples() {
 async function seedFlagshipProgram() {
   const p = FLAGSHIP_PROGRAM;
 
-  const template = await prisma.workoutTemplate.upsert({
-    where: { slug: p.slug },
-    create: {
-      slug: p.slug,
-      version: p.version,
-      nameEn: p.nameEn,
-      namePt: p.namePt,
-      taglineEn: p.taglineEn,
-      taglinePt: p.taglinePt,
-      descriptionEn: p.descriptionEn,
-      descriptionPt: p.descriptionPt,
-      audienceEn: p.audienceEn,
-      audiencePt: p.audiencePt,
-      goal: p.goal as never,
-      experienceLevel: p.experienceLevel as never,
-      daysPerWeek: p.daysPerWeek,
-      durationWeeks: p.durationWeeks,
-      sessionMinutes: p.sessionMinutes,
-      equipmentAccess: p.equipmentAccess as never,
-      trainingStyle: p.trainingStyle as never,
-      progressionStrategy: p.progressionStrategy as never,
-      isFlagship: p.isFlagship,
-      rationaleEn: p.rationaleEn,
-      rationalePt: p.rationalePt,
-      restGuidanceEn: p.restGuidanceEn,
-      restGuidancePt: p.restGuidancePt,
-      weeklyGuidance: p.weeklyGuidance as never,
-      sortOrder: 0,
-    },
-    update: {
-      nameEn: p.nameEn,
-      namePt: p.namePt,
-      taglineEn: p.taglineEn,
-      taglinePt: p.taglinePt,
-      descriptionEn: p.descriptionEn,
-      descriptionPt: p.descriptionPt,
-      audienceEn: p.audienceEn,
-      audiencePt: p.audiencePt,
-      rationaleEn: p.rationaleEn,
-      rationalePt: p.rationalePt,
-      restGuidanceEn: p.restGuidanceEn,
-      restGuidancePt: p.restGuidancePt,
-      weeklyGuidance: p.weeklyGuidance as never,
-    },
-  });
-
-  for (const day of p.days) {
-    const dayRow = await prisma.workoutTemplateDay.upsert({
-      where: { templateId_dayIndex: { templateId: template.id, dayIndex: day.dayIndex } },
+  // Atomic, like the generated programs: never a day caught between delete and create.
+  await prisma.$transaction(async (tx) => {
+    const template = await tx.workoutTemplate.upsert({
+      where: { slug: p.slug },
       create: {
-        templateId: template.id,
-        dayIndex: day.dayIndex,
-        nameEn: day.nameEn,
-        namePt: day.namePt,
-        focusEn: day.focusEn,
-        focusPt: day.focusPt,
-        estimatedMinutes: day.estimatedMinutes,
+        slug: p.slug,
+        version: p.version,
+        nameEn: p.nameEn,
+        namePt: p.namePt,
+        taglineEn: p.taglineEn,
+        taglinePt: p.taglinePt,
+        descriptionEn: p.descriptionEn,
+        descriptionPt: p.descriptionPt,
+        audienceEn: p.audienceEn,
+        audiencePt: p.audiencePt,
+        goal: p.goal as never,
+        experienceLevel: p.experienceLevel as never,
+        daysPerWeek: p.daysPerWeek,
+        durationWeeks: p.durationWeeks,
+        sessionMinutes: p.sessionMinutes,
+        equipmentAccess: p.equipmentAccess as never,
+        trainingStyle: p.trainingStyle as never,
+        progressionStrategy: p.progressionStrategy as never,
+        isFlagship: p.isFlagship,
+        rationaleEn: p.rationaleEn,
+        rationalePt: p.rationalePt,
+        restGuidanceEn: p.restGuidanceEn,
+        restGuidancePt: p.restGuidancePt,
+        weeklyGuidance: p.weeklyGuidance as never,
+        sortOrder: 0,
       },
       update: {
-        nameEn: day.nameEn,
-        namePt: day.namePt,
-        focusEn: day.focusEn,
-        focusPt: day.focusPt,
-        estimatedMinutes: day.estimatedMinutes,
+        nameEn: p.nameEn,
+        namePt: p.namePt,
+        taglineEn: p.taglineEn,
+        taglinePt: p.taglinePt,
+        descriptionEn: p.descriptionEn,
+        descriptionPt: p.descriptionPt,
+        audienceEn: p.audienceEn,
+        audiencePt: p.audiencePt,
+        rationaleEn: p.rationaleEn,
+        rationalePt: p.rationalePt,
+        restGuidanceEn: p.restGuidanceEn,
+        restGuidancePt: p.restGuidancePt,
+        weeklyGuidance: p.weeklyGuidance as never,
       },
     });
 
-    await prisma.workoutTemplateExercise.deleteMany({ where: { dayId: dayRow.id } });
-    let sortOrder = 0;
-    for (const ex of day.exercises) {
-      const exercise = await prisma.exercise.findUnique({ where: { slug: ex.exerciseSlug } });
-      if (!exercise) {
-        console.warn(`  flagship program: exercise slug "${ex.exerciseSlug}" not found, skipping.`);
-        continue;
-      }
-      await prisma.workoutTemplateExercise.create({
-        data: {
-          dayId: dayRow.id,
-          exerciseId: exercise.id,
-          sortOrder: sortOrder++,
-          alternativeSlugs: ex.alternativeSlugs ?? [],
-          sets: ex.sets,
-          repMin: ex.repMin,
-          repMax: ex.repMax,
-          rirTarget: ex.rirTarget,
-          restSeconds: ex.restSeconds,
-          warmupSets: ex.warmupSets ?? 0,
-          notesEn: ex.notesEn,
-          notesPt: ex.notesPt,
+    for (const day of p.days) {
+      const dayRow = await tx.workoutTemplateDay.upsert({
+        where: { templateId_dayIndex: { templateId: template.id, dayIndex: day.dayIndex } },
+        create: {
+          templateId: template.id,
+          dayIndex: day.dayIndex,
+          nameEn: day.nameEn,
+          namePt: day.namePt,
+          focusEn: day.focusEn,
+          focusPt: day.focusPt,
+          estimatedMinutes: day.estimatedMinutes,
+        },
+        update: {
+          nameEn: day.nameEn,
+          namePt: day.namePt,
+          focusEn: day.focusEn,
+          focusPt: day.focusPt,
+          estimatedMinutes: day.estimatedMinutes,
         },
       });
+
+      await tx.workoutTemplateExercise.deleteMany({ where: { dayId: dayRow.id } });
+      let sortOrder = 0;
+      for (const ex of day.exercises) {
+        const exercise = await tx.exercise.findUnique({ where: { slug: ex.exerciseSlug } });
+        if (!exercise) {
+          console.warn(`  flagship program: exercise slug "${ex.exerciseSlug}" not found, skipping.`);
+          continue;
+        }
+        await tx.workoutTemplateExercise.create({
+          data: {
+            dayId: dayRow.id,
+            exerciseId: exercise.id,
+            sortOrder: sortOrder++,
+            alternativeSlugs: ex.alternativeSlugs ?? [],
+            sets: ex.sets,
+            repMin: ex.repMin,
+            repMax: ex.repMax,
+            rirTarget: ex.rirTarget,
+            restSeconds: ex.restSeconds,
+            warmupSets: ex.warmupSets ?? 0,
+            notesEn: ex.notesEn,
+            notesPt: ex.notesPt,
+          },
+        });
+      }
     }
-  }
 
-  await prisma.workoutTemplateEvidence.deleteMany({ where: { templateId: template.id } });
-  let evOrder = 0;
-  for (const key of p.evidenceKeys) {
-    const source = await prisma.evidenceSource.findUnique({ where: { key } });
-    if (!source) continue;
-    await prisma.workoutTemplateEvidence.create({
-      data: { templateId: template.id, sourceId: source.id, sortOrder: evOrder++ },
-    });
-  }
+    await tx.workoutTemplateEvidence.deleteMany({ where: { templateId: template.id } });
+    let evOrder = 0;
+    for (const key of p.evidenceKeys) {
+      const source = await tx.evidenceSource.findUnique({ where: { key } });
+      if (!source) continue;
+      await tx.workoutTemplateEvidence.create({
+        data: { templateId: template.id, sourceId: source.id, sortOrder: evOrder++ },
+      });
+    }
 
-  await prisma.workoutTemplatePrinciple.deleteMany({ where: { templateId: template.id } });
-  let prOrder = 0;
-  for (const slug of p.principleSlugs) {
-    const principle = await prisma.trainingPrinciple.findUnique({ where: { slug } });
-    if (!principle) continue;
-    await prisma.workoutTemplatePrinciple.create({
-      data: { templateId: template.id, principleId: principle.id, sortOrder: prOrder++ },
-    });
-  }
+    await tx.workoutTemplatePrinciple.deleteMany({ where: { templateId: template.id } });
+    let prOrder = 0;
+    for (const slug of p.principleSlugs) {
+      const principle = await tx.trainingPrinciple.findUnique({ where: { slug } });
+      if (!principle) continue;
+      await tx.workoutTemplatePrinciple.create({
+        data: { templateId: template.id, principleId: principle.id, sortOrder: prOrder++ },
+      });
+    }
+  }, TX_OPTIONS);
 
   console.log(`Flagship program "${p.namePt}": seeded with ${p.days.length} days.`);
 }
@@ -373,58 +379,62 @@ async function seedGeneratedPrograms() {
       restGuidanceEn: p.restGuidanceEn ?? null, restGuidancePt: p.restGuidancePt,
       weeklyGuidance: p.weeklyGuidance as never,
     };
-    const template = await prisma.workoutTemplate.upsert({
-      where: { slug: p.slug },
-      create: { slug: p.slug, version: 1, isFlagship: false, sortOrder, ...base },
-      update: { sortOrder, ...base },
-    });
-
-    for (const day of p.days) {
-      const dayRow = await prisma.workoutTemplateDay.upsert({
-        where: { templateId_dayIndex: { templateId: template.id, dayIndex: day.dayIndex } },
-        create: {
-          templateId: template.id, dayIndex: day.dayIndex,
-          nameEn: day.nameEn, namePt: day.namePt,
-          focusEn: day.focusEn ?? null, focusPt: day.focusPt ?? null, estimatedMinutes: day.estimatedMinutes,
-        },
-        update: {
-          nameEn: day.nameEn, namePt: day.namePt,
-          focusEn: day.focusEn ?? null, focusPt: day.focusPt ?? null, estimatedMinutes: day.estimatedMinutes,
-        },
+    // One template at a time, atomically: a program activated while the reseed
+    // runs (prod) never forks a day caught between its delete and its create.
+    await prisma.$transaction(async (tx) => {
+      const template = await tx.workoutTemplate.upsert({
+        where: { slug: p.slug },
+        create: { slug: p.slug, version: 1, isFlagship: false, sortOrder, ...base },
+        update: { sortOrder, ...base },
       });
-      await prisma.workoutTemplateExercise.deleteMany({ where: { dayId: dayRow.id } });
-      let sortEx = 0;
-      for (const ex of day.exercises) {
-        const exercise = await prisma.exercise.findUnique({ where: { slug: ex.exerciseSlug } });
-        if (!exercise) {
-          console.warn(`  program ${p.slug}: exercise slug "${ex.exerciseSlug}" not found, skipping.`);
-          continue;
-        }
-        await prisma.workoutTemplateExercise.create({
-          data: {
-            dayId: dayRow.id, exerciseId: exercise.id, sortOrder: sortEx++, groupKey: ex.groupKey ?? null,
-            sets: ex.sets, repMin: ex.repMin, repMax: ex.repMax, rirTarget: ex.rirTarget,
-            restSeconds: ex.restSeconds, warmupSets: ex.warmupSets ?? 0,
-            notesEn: ex.notesEn ?? null, notesPt: ex.notesPt ?? null,
+
+      for (const day of p.days) {
+        const dayRow = await tx.workoutTemplateDay.upsert({
+          where: { templateId_dayIndex: { templateId: template.id, dayIndex: day.dayIndex } },
+          create: {
+            templateId: template.id, dayIndex: day.dayIndex,
+            nameEn: day.nameEn, namePt: day.namePt,
+            focusEn: day.focusEn ?? null, focusPt: day.focusPt ?? null, estimatedMinutes: day.estimatedMinutes,
+          },
+          update: {
+            nameEn: day.nameEn, namePt: day.namePt,
+            focusEn: day.focusEn ?? null, focusPt: day.focusPt ?? null, estimatedMinutes: day.estimatedMinutes,
           },
         });
+        await tx.workoutTemplateExercise.deleteMany({ where: { dayId: dayRow.id } });
+        let sortEx = 0;
+        for (const ex of day.exercises) {
+          const exercise = await tx.exercise.findUnique({ where: { slug: ex.exerciseSlug } });
+          if (!exercise) {
+            console.warn(`  program ${p.slug}: exercise slug "${ex.exerciseSlug}" not found, skipping.`);
+            continue;
+          }
+          await tx.workoutTemplateExercise.create({
+            data: {
+              dayId: dayRow.id, exerciseId: exercise.id, sortOrder: sortEx++, groupKey: ex.groupKey ?? null,
+              sets: ex.sets, repMin: ex.repMin, repMax: ex.repMax, rirTarget: ex.rirTarget,
+              restSeconds: ex.restSeconds, warmupSets: ex.warmupSets ?? 0,
+              notesEn: ex.notesEn ?? null, notesPt: ex.notesPt ?? null,
+            },
+          });
+        }
       }
-    }
 
-    await prisma.workoutTemplateEvidence.deleteMany({ where: { templateId: template.id } });
-    let evOrder = 0;
-    for (const key of p.evidenceKeys) {
-      const source = await prisma.evidenceSource.findUnique({ where: { key } });
-      if (!source) continue;
-      await prisma.workoutTemplateEvidence.create({ data: { templateId: template.id, sourceId: source.id, sortOrder: evOrder++ } });
-    }
-    await prisma.workoutTemplatePrinciple.deleteMany({ where: { templateId: template.id } });
-    let prOrder = 0;
-    for (const slug of p.principleSlugs) {
-      const principle = await prisma.trainingPrinciple.findUnique({ where: { slug } });
-      if (!principle) continue;
-      await prisma.workoutTemplatePrinciple.create({ data: { templateId: template.id, principleId: principle.id, sortOrder: prOrder++ } });
-    }
+      await tx.workoutTemplateEvidence.deleteMany({ where: { templateId: template.id } });
+      let evOrder = 0;
+      for (const key of p.evidenceKeys) {
+        const source = await tx.evidenceSource.findUnique({ where: { key } });
+        if (!source) continue;
+        await tx.workoutTemplateEvidence.create({ data: { templateId: template.id, sourceId: source.id, sortOrder: evOrder++ } });
+      }
+      await tx.workoutTemplatePrinciple.deleteMany({ where: { templateId: template.id } });
+      let prOrder = 0;
+      for (const slug of p.principleSlugs) {
+        const principle = await tx.trainingPrinciple.findUnique({ where: { slug } });
+        if (!principle) continue;
+        await tx.workoutTemplatePrinciple.create({ data: { templateId: template.id, principleId: principle.id, sortOrder: prOrder++ } });
+      }
+    }, TX_OPTIONS);
     count++;
   }
   console.log(`Generated programs: seeded ${count}.`);
@@ -649,66 +659,70 @@ async function seedExercises() {
   for (const ex of exercises) {
     const searchText = normalizeSearchText(ex, []);
 
-    const exercise = await prisma.exercise.upsert({
-      where: { slug: ex.slug },
-      create: {
-        slug: ex.slug,
-        sourceId: ex.sourceId,
-        nameEn: ex.nameEn,
-        namePt: ex.namePt,
-        category: ex.category as never,
-        movementPatternId: ex.movementPattern,
-        equipmentId: ex.equipment,
-        difficulty: ex.difficulty as never,
-        forceType: ex.forceType as never,
-        laterality: ex.laterality as never,
-        mechanics: ex.mechanics as never,
-        instructionsEn: ex.instructionsEn,
-        instructionsPt: ex.instructionsPt,
-        searchText,
-      },
-      update: {
-        nameEn: ex.nameEn,
-        namePt: ex.namePt,
-        category: ex.category as never,
-        movementPatternId: ex.movementPattern,
-        equipmentId: ex.equipment,
-        difficulty: ex.difficulty as never,
-        forceType: ex.forceType as never,
-        laterality: ex.laterality as never,
-        mechanics: ex.mechanics as never,
-        instructionsEn: ex.instructionsEn,
-        instructionsPt: ex.instructionsPt,
-        searchText,
-      },
-    });
-
-    // Muscles: replace the set each run (cheap, exercise-scoped).
-    await prisma.exerciseMuscle.deleteMany({ where: { exerciseId: exercise.id } });
-    const muscleRows = [
-      ...ex.primaryMuscles.map((muscleId) => ({ exerciseId: exercise.id, muscleId, role: "PRIMARY" as const })),
-      ...ex.secondaryMuscles
-        .filter((m) => !ex.primaryMuscles.includes(m))
-        .map((muscleId) => ({ exerciseId: exercise.id, muscleId, role: "SECONDARY" as const })),
-    ];
-    if (muscleRows.length) {
-      await prisma.exerciseMuscle.createMany({ data: muscleRows, skipDuplicates: true });
-    }
-
-    // Media: replace each run.
-    await prisma.exerciseMedia.deleteMany({ where: { exerciseId: exercise.id } });
-    if (ex.media.length) {
-      await prisma.exerciseMedia.createMany({
-        data: ex.media.map((m) => ({
-          exerciseId: exercise.id,
-          kind: m.kind as never,
-          url: m.url,
-          width: m.width,
-          height: m.height,
-          sortOrder: m.sortOrder,
-        })),
+    // One exercise at a time, atomically: a reseed while people train (prod)
+    // never shows an exercise without its muscles or media.
+    await prisma.$transaction(async (tx) => {
+      const exercise = await tx.exercise.upsert({
+        where: { slug: ex.slug },
+        create: {
+          slug: ex.slug,
+          sourceId: ex.sourceId,
+          nameEn: ex.nameEn,
+          namePt: ex.namePt,
+          category: ex.category as never,
+          movementPatternId: ex.movementPattern,
+          equipmentId: ex.equipment,
+          difficulty: ex.difficulty as never,
+          forceType: ex.forceType as never,
+          laterality: ex.laterality as never,
+          mechanics: ex.mechanics as never,
+          instructionsEn: ex.instructionsEn,
+          instructionsPt: ex.instructionsPt,
+          searchText,
+        },
+        update: {
+          nameEn: ex.nameEn,
+          namePt: ex.namePt,
+          category: ex.category as never,
+          movementPatternId: ex.movementPattern,
+          equipmentId: ex.equipment,
+          difficulty: ex.difficulty as never,
+          forceType: ex.forceType as never,
+          laterality: ex.laterality as never,
+          mechanics: ex.mechanics as never,
+          instructionsEn: ex.instructionsEn,
+          instructionsPt: ex.instructionsPt,
+          searchText,
+        },
       });
-    }
+
+      // Muscles: replace the set each run (cheap, exercise-scoped).
+      await tx.exerciseMuscle.deleteMany({ where: { exerciseId: exercise.id } });
+      const muscleRows = [
+        ...ex.primaryMuscles.map((muscleId) => ({ exerciseId: exercise.id, muscleId, role: "PRIMARY" as const })),
+        ...ex.secondaryMuscles
+          .filter((m) => !ex.primaryMuscles.includes(m))
+          .map((muscleId) => ({ exerciseId: exercise.id, muscleId, role: "SECONDARY" as const })),
+      ];
+      if (muscleRows.length) {
+        await tx.exerciseMuscle.createMany({ data: muscleRows, skipDuplicates: true });
+      }
+
+      // Media: replace each run.
+      await tx.exerciseMedia.deleteMany({ where: { exerciseId: exercise.id } });
+      if (ex.media.length) {
+        await tx.exerciseMedia.createMany({
+          data: ex.media.map((m) => ({
+            exerciseId: exercise.id,
+            kind: m.kind as never,
+            url: m.url,
+            width: m.width,
+            height: m.height,
+            sortOrder: m.sortOrder,
+          })),
+        });
+      }
+    }, TX_OPTIONS);
 
     count++;
     if (count % 150 === 0) console.log(`  ...${count}/${exercises.length} exercises`);

@@ -27,6 +27,8 @@ import { ProgramMenu } from "@/components/programs/program-menu";
 import { LimitationsNote } from "@/components/programs/limitations-note";
 import { getProfile } from "@/lib/data/profile";
 import { NOT_FOUND_TITLE } from "@/components/ui/not-found-panel";
+import { deriveGroups, groupRule } from "@/lib/programming/groups";
+import { cn } from "@/lib/utils/cn";
 
 export async function generateMetadata({ params }: PageProps<"/app/programs/[id]">): Promise<Metadata> {
   const { id } = await params;
@@ -256,26 +258,46 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
               ) : null}
             </div>
             <ul className="mt-3 flex flex-col divide-y divide-border">
-              {day.exercises.map((ex) => (
-                <li key={ex.id}>
-                  <Link href={`/app/exercises/${ex.exercise.slug}`} className="group flex min-h-12 items-center gap-3 py-1.5 text-sm">
-                    <div className="relative size-9 shrink-0 overflow-hidden rounded-[3px] bg-surface-2">
-                      {ex.exercise.media?.[0]?.url ? (
-                        <Image src={ex.exercise.media[0].url} alt="" fill sizes="36px" className="object-cover" />
-                      ) : (
-                        <div className="flex h-full items-center justify-center text-muted">
-                          <GLoad className="size-4" />
-                        </div>
-                      )}
-                    </div>
-                    <span className="min-w-0 flex-1 truncate group-hover:text-accent">{ex.exercise.namePt}</span>
-                    <span className="shrink-0 font-mono tabular-nums text-muted">
-                      {ex.sets}×{ex.repMin === ex.repMax ? ex.repMin : `${ex.repMin}-${ex.repMax}`}
-                    </span>
-                    <GArrow className="size-3.5 shrink-0 text-muted" />
-                  </Link>
-                </li>
-              ))}
+              {day.exercises.map((ex, j, list) => {
+                // Supersets (W-104): an accent rule down the members, "A1" before each name.
+                const slot = deriveGroups(list)[j];
+                return (
+                  <li key={ex.id} data-group={slot?.label} className={cn(slot && "border-l-2 border-l-accent pl-2")}>
+                    {slot?.first ? (
+                      <p className="pt-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-accent">
+                        {groupRule(slot)}
+                      </p>
+                    ) : null}
+                    <Link href={`/app/exercises/${ex.exercise.slug}`} className="group flex min-h-12 items-center gap-3 py-1.5 text-sm">
+                      <div className="relative size-9 shrink-0 overflow-hidden rounded-[3px] bg-surface-2">
+                        {ex.exercise.media?.[0]?.url ? (
+                          <Image src={ex.exercise.media[0].url} alt="" fill sizes="36px" className="object-cover" />
+                        ) : (
+                          <div className="flex h-full items-center justify-center text-muted">
+                            <GLoad className="size-4" />
+                          </div>
+                        )}
+                      </div>
+                      {/* Whole, however many lines: names differ at the end ("… Pegada Média" / "… Pegada
+                          Aberta"), and at 320px even three lines cut GD's longer ones ("Extensão de Tríceps na
+                          Corda Acima da Cabeça"). The catalog's longest name is 71 characters. */}
+                      <span className="min-w-0 flex-1 leading-snug wrap-break-word group-hover:text-accent">
+                        {slot ? (
+                          <span className="mr-1.5 font-mono text-[11px] font-bold text-accent">
+                            <span aria-hidden>{slot.label}</span>
+                            <span className="sr-only">{`${slot.heading}, ${slot.position} de ${slot.size}:`}</span>
+                          </span>
+                        ) : null}
+                        {ex.exercise.namePt}
+                      </span>
+                      <span className="shrink-0 font-mono tabular-nums text-muted">
+                        {ex.sets}×{ex.repMin === ex.repMax ? ex.repMin : `${ex.repMin}-${ex.repMax}`}
+                      </span>
+                      <GArrow className="size-3.5 shrink-0 text-muted" />
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         ))}

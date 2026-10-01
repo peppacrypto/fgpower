@@ -421,7 +421,7 @@ export function ExercisePicker({
                         <span className="block text-sm font-semibold leading-snug wrap-break-word">{ex.namePt}</span>
                         <span className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 font-mono text-[10px] uppercase tracking-[0.08em] text-muted">
                           {[ex.equipment, ex.primaryMuscle].filter(Boolean).join(" · ")}
-                          {inDay.has(ex.id) ? <span className="tag tag--mark text-[9px]">No dia</span> : null}
+                          {inDay.has(ex.id) ? <span className="tag tag--mark">No dia</span> : null}
                         </span>
                       </span>
                       {multi ? (

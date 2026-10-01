@@ -1,6 +1,7 @@
 import "server-only";
 import { Prisma, type NotificationType } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
+import { NOT_BANNED } from "./authorization";
 
 /**
  * The in-app notification service: the ONLY writer of Notification rows.
@@ -34,9 +35,11 @@ export const notificationKey = {
  * - "keep": nothing — one row per event, ever (FG given, taken back, given again);
  * - "rearm": the row moves to the top as new (createdAt now, unread, the new links/data);
  * - { rearmIfReadBefore }: rearm only a row read before that date (a re-follow a
- *   month later notifies again; an unread or recently read row stays as it is).
+ *   month later notifies again; an unread or recently read row stays as it is);
+ * - "update": the row keeps its place and read state; only its links and data
+ *   change (a workout's records row after a correction).
  */
-export type DuplicatePolicy = "keep" | "rearm" | { rearmIfReadBefore: Date };
+export type DuplicatePolicy = "keep" | "rearm" | "update" | { rearmIfReadBefore: Date };
 
 export interface NotificationInput {
   recipientId: string;
@@ -107,6 +110,14 @@ export async function createNotification(db: Db, input: NotificationInput, now: 
 
   const policy = input.onDuplicate ?? "keep";
   if (policy === "keep") return (await insert()) ? { created: true, rearmed: false } : NOTHING;
+  if (policy === "update") {
+    if (await insert()) return { created: true, rearmed: false };
+    await db.notification.updateMany({
+      where: { recipientId, dedupeKey },
+      data: { ...links, data: input.data ?? Prisma.DbNull },
+    });
+    return NOTHING;
+  }
 
   const existing = await db.notification.findUnique({
     where: { recipientId_dedupeKey: { recipientId, dedupeKey } },
@@ -135,9 +146,19 @@ export async function retractNotification(
   return count;
 }
 
-/** Unread notifications (other people's actions; achievements are created read). */
+/**
+ * The rows the inbox shows: your own achievements and what people did — not
+ * what a banned person did (they disappear with their account; an unban
+ * brings the rows back). The unread count must count exactly these: a banned
+ * account can still act for a few minutes on its cached session, and a row
+ * the inbox hides would light the pip for good — opening the inbox could
+ * never clear it.
+ */
+export const SHOWN_NOTIFICATION = { OR: [{ actorId: null }, { actor: NOT_BANNED }] } satisfies Prisma.NotificationWhereInput;
+
+/** Unread notifications (other people's actions; achievements are created read), as the inbox shows them. */
 export async function countUnread(userId: string): Promise<number> {
-  return prisma.notification.count({ where: { recipientId: userId, readAt: null } });
+  return prisma.notification.count({ where: { recipientId: userId, readAt: null, ...SHOWN_NOTIFICATION } });
 }
 
 /**

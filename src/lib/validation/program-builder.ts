@@ -60,12 +60,16 @@ export function defaultPrescription(mechanics: string | null | undefined): Presc
   return { sets: 3, repMin: 8, repMax: 12, rirTarget: 2, restSeconds: 120, warmupSets: 0 };
 }
 
-/** A row's prescription in one line: "3 × 8–12 · RIR 2 · 2:00 · +1 aquec.". */
-export function prescriptionLine(p: Prescription): string {
+/**
+ * A row's prescription in one line: "3 × 8–12 · RIR 2 · 2:00 · +1 aquec.".
+ * `restText` replaces the clock for a superset's member (W-104): "0:20 até
+ * A2" (the switch), "2:00 após a rodada" (the last member's rest).
+ */
+export function prescriptionLine(p: Prescription, opts: { restText?: string } = {}): string {
   const reps = p.repMin === p.repMax ? `${p.repMin}` : `${p.repMin}–${p.repMax}`;
   const rir = p.rirTarget === null ? null : `RIR ${String(p.rirTarget).replace(".", ",")}`;
   const warmup = p.warmupSets > 0 ? `+${p.warmupSets} aquec.` : null;
-  return [`${p.sets} × ${reps}`, rir, formatRestClock(p.restSeconds), warmup].filter(Boolean).join(" · ");
+  return [`${p.sets} × ${reps}`, rir, opts.restText ?? formatRestClock(p.restSeconds), warmup].filter(Boolean).join(" · ");
 }
 
 /** Longest day focus ("Peito e tríceps, pesado") — matches the save schema. */

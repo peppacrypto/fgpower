@@ -71,6 +71,15 @@ export function deriveGroups(items: readonly { groupKey: string | null | undefin
 }
 
 /**
+ * The line over a group's first member, as every surface prints it (W-104):
+ * "Superset A · alterne as séries", "Circuito B · uma série de cada, em
+ * ordem". Shown in mono micro-caps (uppercase by CSS).
+ */
+export function groupRule(group: Pick<GroupSlot, "heading" | "kind">): string {
+  return `${group.heading} · ${group.kind === "superset" ? "alterne as séries" : "uma série de cada, em ordem"}`;
+}
+
+/**
  * The canonical keys: each group's letter, null for everything else (a lone
  * key, a blank one). Returns the same array when nothing changes, so state
  * comparisons stay cheap.

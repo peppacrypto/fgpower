@@ -22,6 +22,8 @@ export interface WeekGuidanceView extends WeekGuidance {
   deload: boolean;
   /** A GD block's last week: the benchmark test. */
   test: boolean;
+  /** A deload the user applied to this week (W-128 "Aplicar deload"), not the program's own. */
+  applied?: true;
 }
 
 const text = (v: unknown) => (typeof v === "string" && v.trim() !== "" ? v.trim() : null);
@@ -263,14 +265,51 @@ export function rirFloor(exerciseRir: number, exercise: RirExercise): number {
  */
 export function weekRirTarget(
   exerciseRir: number | null,
-  week: Pick<WeekGuidance, "rirTarget"> | null,
+  week: (Pick<WeekGuidance, "rirTarget"> & { applied?: boolean }) | null,
   program: { baseline: number | null; exercise?: RirExercise } = { baseline: null },
 ): number | null {
   if (exerciseRir == null) return null;
+  // An applied deload in a program without a wave: at least RIR 3 ("RIR 3-4"), holds aside.
+  if (week?.applied && program.baseline == null) {
+    return program.exercise?.timed ? exerciseRir : Math.max(exerciseRir, DELOAD_MIN_RIR);
+  }
   const weekRir = week?.rirTarget ?? null;
   if (weekRir == null || program.baseline == null || program.exercise?.timed) return exerciseRir;
   const shifted = exerciseRir + (weekRir - program.baseline);
   const floor = rirFloor(exerciseRir, program.exercise ?? { freeWeightCompound: false, notes: null, timed: false });
   const cap = Math.max(exerciseRir, WAVE_MAX_RIR);
   return Math.round(Math.min(cap, Math.max(floor, shifted)) * 2) / 2;
+}
+
+// ---------------------------------------------------------------------------
+// An applied deload (W-128)
+// ---------------------------------------------------------------------------
+
+/** The week RIR of a deload the user applied: the middle of the programs' "RIR 3-4". */
+export const DELOAD_WEEK_RIR = 3.5;
+/** Without a wave to shift, an applied deload takes every exercise to RIR 3 at least. */
+export const DELOAD_MIN_RIR = 3;
+
+export const APPLIED_DELOAD_NOTE =
+  "Semana leve aplicada por você: mesmas cargas, pare com 3-4 reps na reserva, sem falha nem técnicas. A progressão volta na semana que vem.";
+export const APPLIED_DELOAD_SETS_NOTE =
+  "Metade das séries de cada exercício (arredonde para baixo, mínimo 1: 4 → 2; 3 ou 2 → 1).";
+
+/**
+ * A week the user turned into a deload ("Aplicar deload"): the program
+ * week's guidance (or an empty one, for a program without guidance) as a
+ * deload — RIR 3.5 (weekRirTarget raises every exercise from it, up to 4),
+ * no test, and the applied week's own instructions. What Today's program
+ * card, the workout's header and the RIR targets of a deload workout read.
+ */
+export function appliedDeloadGuidance(base: WeekGuidanceView | null, week: number): WeekGuidanceView {
+  return {
+    week: base?.week ?? Math.max(1, week),
+    rirTarget: DELOAD_WEEK_RIR,
+    notePt: APPLIED_DELOAD_NOTE,
+    setsNotePt: APPLIED_DELOAD_SETS_NOTE,
+    deload: true,
+    test: false,
+    applied: true,
+  };
 }

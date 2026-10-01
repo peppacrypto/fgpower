@@ -6,18 +6,27 @@ import { Lettermark } from "@/components/ui/glyph";
 import { getCurrentSession } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 import { canViewActivity } from "@/lib/social/authorization";
+import { getFgGivers, hasEverGivenFg } from "@/lib/data/social";
 import { Avatar } from "@/components/ui/misc";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import type { WorkoutActivitySummary } from "@/lib/social/activity-summary";
+import type { ActivityExerciseSummary, WorkoutActivitySummary } from "@/lib/social/activity-summary";
 import { describeRecord, groupRecordsByExercise } from "@/lib/training/personal-records-core";
+import { formatSet, isTimedHold } from "@/lib/training/set-plan";
 import { formatAppDate } from "@/lib/training/week";
-import { formatDuration, formatKg, formatVolume, plural } from "@/lib/utils/format";
+import { formatDuration, formatVolume, plural } from "@/lib/utils/format";
+import { profileHref } from "@/lib/social/links";
+import { BackLink } from "@/components/nav/back-link";
+import { ReportButton } from "@/components/social/report-sheet";
 import { GiveFgButton } from "./give-fg-button";
-import { ReportButton } from "./report-button";
+import { OwnerControls } from "./owner-controls";
+import { FgGivers } from "./fg-givers";
 import { NOT_FOUND_TITLE } from "@/components/ui/not-found-panel";
 import { milestoneStampOf, type MilestoneStamp } from "@/components/social/milestone-stamp";
 import { MilestoneStampDetail } from "@/components/social/milestone-stamp-card";
+
+/** An exercise row of a stored summary; newer ones carry the slug and whether its reps are seconds. */
+type ExerciseRow = ActivityExerciseSummary & { slug?: string | null; timed?: boolean };
 
 /**
  * The activity and whether this viewer may see it — one lookup per request,
@@ -56,16 +65,17 @@ export default async function ActivityDetailPage({ params }: PageProps<"/app/act
   const { id } = await params;
   const { viewerId, activity, hasGivenFg } = await loadActivity(id);
   if (!activity) notFound();
+  const isOwner = viewerId === activity.userId;
 
   // The name the user chose for the app, not the one from their Google account.
   const name = activity.user.profile?.displayName?.trim() || activity.user.name;
   const header = (
-    <div className="flex items-center gap-3">
+    <div className="mt-2 flex items-center gap-3">
       <Avatar src={activity.user.image} name={name} size={44} />
-      <div>
-        <p className="font-semibold">
+      <div className="min-w-0">
+        <p className="font-semibold [overflow-wrap:anywhere]">
           {activity.user.username ? (
-            <Link href={`/u/${activity.user.username}`} className="hover:underline">
+            <Link href={profileHref(activity.user.username)} className="hover:underline">
               {name}
             </Link>
           ) : (
@@ -80,9 +90,10 @@ export default async function ActivityDetailPage({ params }: PageProps<"/app/act
   // A private milestone (10th workout, a completed block): its stamp — no FG, no report.
   const stamp = activity.type === "MILESTONE" || activity.type === "PROGRAM_COMPLETED" ? milestoneStampOf(activity.summary) : null;
   if (stamp) {
-    const links = await stampLinks(stamp, activity.userId, viewerId === activity.userId);
+    const links = await stampLinks(stamp, activity.userId, isOwner);
     return (
       <div className="mx-auto max-w-2xl px-4 py-6 sm:px-6 sm:py-8">
+        <BackLink fallbackHref={isOwner ? "/app/profile" : "/app/feed"} />
         {header}
         <MilestoneStampDetail stamp={stamp} createdAt={activity.createdAt} {...links} />
       </div>
@@ -92,20 +103,33 @@ export default async function ActivityDetailPage({ params }: PageProps<"/app/act
   const summary = activity.summary as unknown as WorkoutActivitySummary;
   // Grouped per exercise (stored in workout order); session-volume entries of older summaries dropped.
   const prGroups = groupRecordsByExercise(summary.prs ?? [], (pr) => pr.exerciseName);
+  // Older summaries kept skipped exercises as "0 séries": only what was trained.
+  const exercises = ((summary.exercises ?? []) as ExerciseRow[]).filter((ex) => ex.workingSets > 0);
+  const isWorkout = activity.type === "WORKOUT";
+
+  const [givers, gaveFg, link] = await Promise.all([
+    activity.fgCount > 0 ? getFgGivers(activity.id, viewerId) : [],
+    viewerId && !isOwner ? hasEverGivenFg(viewerId) : true,
+    // The owner's share link, read explicitly (Activity.shareToken is omitted by default).
+    isOwner && isWorkout
+      ? prisma.activity.findUnique({ where: { id: activity.id }, select: { shareToken: true } })
+      : null,
+  ]);
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-6 sm:px-6 sm:py-8">
+      <BackLink fallbackHref="/app/feed" />
       {header}
 
-      {activity.caption ? <p className="mt-4 text-foreground/90">{activity.caption}</p> : null}
+      {activity.caption ? <p className="mt-4 text-foreground/90 [overflow-wrap:anywhere]">{activity.caption}</p> : null}
 
       <Card className="mt-4">
         <CardContent className="pt-5">
-          <h1 className="text-xl font-bold">{summary.workoutName}</h1>
+          <h1 className="text-xl font-bold [overflow-wrap:anywhere]">{summary.workoutName}</h1>
           <p className="mt-1 text-sm text-muted">
             {summary.durationSeconds ? `${formatDuration(summary.durationSeconds)} · ` : ""}
             {plural(summary.totalWorkingSets, "série de trabalho", "séries de trabalho")}
-            {summary.totalVolumeKg ? ` · ${formatVolume(summary.totalVolumeKg)} de volume` : ""}
+            {summary.totalVolumeKg && activity.showDetailedLoads ? ` · ${formatVolume(summary.totalVolumeKg)} de volume` : ""}
           </p>
 
           {prGroups.length > 0 ? (
@@ -124,14 +148,18 @@ export default async function ActivityDetailPage({ params }: PageProps<"/app/act
             </div>
           ) : null}
 
-          {summary.exercises.length > 0 ? (
+          {exercises.length > 0 ? (
             <div className="mt-4 flex flex-col gap-1.5">
-              {summary.exercises.map((ex, i) => (
-                <div key={i} className="flex items-start justify-between gap-3 text-sm">
-                  <span className="min-w-0">{ex.name}</span>
-                  <span className="shrink-0 whitespace-nowrap font-mono tabular-nums text-muted">
+              {exercises.map((ex, i) => (
+                // A long line ("4 séries · 100 kg × 5" on a 320px phone) drops under the name
+                // instead of squeezing it to a few letters a line.
+                <div key={i} className="flex flex-wrap items-start justify-between gap-x-3 gap-y-0.5 text-sm">
+                  <span className="min-w-0 flex-1 basis-24 [overflow-wrap:anywhere]">{ex.name}</span>
+                  <span className="ml-auto shrink-0 whitespace-nowrap font-mono tabular-nums text-muted">
                     {plural(ex.workingSets, "série", "séries")}
-                    {ex.bestSet ? ` · ${formatKg(ex.bestSet.weightKg)} × ${ex.bestSet.reps}` : ""}
+                    {ex.bestSet && activity.showDetailedLoads
+                      ? ` · ${formatSet(ex.bestSet.weightKg, ex.bestSet.reps, { timed: ex.timed ?? isTimedHold({ slug: ex.slug }) })}`
+                      : ""}
                   </span>
                 </div>
               ))}
@@ -140,14 +168,42 @@ export default async function ActivityDetailPage({ params }: PageProps<"/app/act
         </CardContent>
       </Card>
 
-      <div className="mt-4 flex items-center gap-3">
+      <div className="mt-4 flex flex-wrap items-start gap-3">
         {viewerId ? (
-          <GiveFgButton activityId={activity.id} initialCount={activity.fgCount} initialGiven={hasGivenFg} isOwn={viewerId === activity.userId} />
+          <GiveFgButton
+            activityId={activity.id}
+            initialCount={activity.fgCount}
+            initialGiven={hasGivenFg}
+            isOwn={isOwner}
+            hint={!gaveFg}
+            // The hint wraps inside this column: "Denunciar" keeps its place on the row.
+            className="min-w-0 flex-1"
+          />
         ) : (
           <Badge>{plural(activity.fgCount, "FG", "FGs")}</Badge>
         )}
-        {viewerId && viewerId !== activity.userId ? <ReportButton activityId={activity.id} /> : null}
+        {viewerId && !isOwner ? (
+          <ReportButton
+            className="shrink-0"
+            target={{
+              kind: "activity",
+              activityId: activity.id,
+              author: { id: activity.user.id, username: activity.user.username, name },
+            }}
+          />
+        ) : null}
       </div>
+      <FgGivers givers={givers} total={activity.fgCount} />
+
+      {isOwner && isWorkout ? (
+        <OwnerControls
+          activityId={activity.id}
+          sessionId={activity.sessionId}
+          initialVisibility={activity.visibility}
+          moderated={activity.moderatedAt !== null}
+          linkShared={Boolean(link?.shareToken)}
+        />
+      ) : null}
     </div>
   );
 }

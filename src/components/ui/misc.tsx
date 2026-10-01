@@ -51,6 +51,25 @@ export function EmptyState({
   );
 }
 
+/**
+ * Only a Google account photo (what Google sign-in stores): https on Google's
+ * avatar host, no port, no credentials, the host rule of lib/og/avatar.ts.
+ * Any other URL in User.image (better-auth's /update-user accepted any before
+ * it was closed) would be fetched by every viewer's browser, an IP-logging
+ * pixel: those draw the initials instead.
+ */
+function googlePhotoSrc(src: string | null | undefined): string | null {
+  if (!src) return null;
+  try {
+    const url = new URL(src);
+    const google =
+      url.protocol === "https:" && url.hostname === "lh3.googleusercontent.com" && !url.port && !url.username && !url.password;
+    return google ? url.href : null;
+  } catch {
+    return null;
+  }
+}
+
 export function Avatar({
   src,
   name,
@@ -68,11 +87,12 @@ export function Avatar({
     .slice(0, 2)
     .map((w) => w[0]?.toUpperCase())
     .join("");
-  if (src) {
+  const photo = googlePhotoSrc(src);
+  if (photo) {
     return (
-      // eslint-disable-next-line @next/next/no-img-element -- external Google avatar URLs, arbitrary hosts
+      // eslint-disable-next-line @next/next/no-img-element -- external Google avatar URLs
       <img
-        src={src}
+        src={photo}
         alt={name}
         width={size}
         height={size}

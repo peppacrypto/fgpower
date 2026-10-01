@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Play } from "lucide-react";
+import { Play, Repeat } from "lucide-react";
 import { GArrow, GCheck } from "@/components/ui/glyph";
 import { Button } from "@/components/ui/button";
 import { SubmitButton } from "@/components/ui/submit-button";
@@ -15,7 +15,12 @@ export interface RecommendedPick {
   namePt: string;
   taglinePt: string;
   reasons: ReasonChip[];
+  /** Runs only after "Adaptar" swaps some exercises (the recommender's "Com adaptação" chip says so too). */
+  adapt?: boolean;
 }
+
+/** A pick that needs the adapt review before it starts. */
+const needsAdapt = (p: RecommendedPick) => p.adapt ?? p.reasons.some((r) => r.kind === "adapt");
 
 /**
  * "RECOMENDADO PARA VOCÊ": the best-fitting ready-made program for the
@@ -69,22 +74,32 @@ export function RecommendedPanel({
         ) : null}
 
         <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-start">
-          <InlineActionForm
-            action={startTemplateAndBegin.bind(null, pick.slug)}
-            failText="Não foi possível ativar. Tente de novo."
-            className="flex flex-col"
-            errorClassName="mt-1.5"
-          >
-            <SubmitButton
-              size="lg"
-              variant={secondary ? "outline" : "strong"}
-              className="w-full sm:w-auto"
-              pendingLabel="Preparando o treino…"
+          {needsAdapt(pick) ? (
+            // Some exercises need gear the user lacks: the swaps are reviewed before it starts.
+            <Button size="lg" variant={secondary ? "outline" : "strong"} asChild className="w-full sm:w-auto">
+              <Link href={`${href(pick.slug)}/adapt`}>
+                <Repeat className="size-4" />
+                Adaptar e começar
+              </Link>
+            </Button>
+          ) : (
+            <InlineActionForm
+              action={startTemplateAndBegin.bind(null, pick.slug)}
+              failText="Não foi possível ativar. Tente de novo."
+              className="flex flex-col"
+              errorClassName="mt-1.5"
             >
-              <Play className="size-4" />
-              Ativar e começar
-            </SubmitButton>
-          </InlineActionForm>
+              <SubmitButton
+                size="lg"
+                variant={secondary ? "outline" : "strong"}
+                className="w-full sm:w-auto"
+                pendingLabel="Preparando o treino…"
+              >
+                <Play className="size-4" />
+                Ativar e começar
+              </SubmitButton>
+            </InlineActionForm>
+          )}
           <Button size="lg" variant="outline" asChild className="w-full sm:w-auto">
             <Link href={href(pick.slug)}>Ver programa</Link>
           </Button>
@@ -147,13 +162,19 @@ export function Reasons({ reasons, className }: { reasons: ReasonChip[]; classNa
           key={r.label}
           className={cn(
             "inline-flex h-6 items-center gap-1 bg-surface px-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.08em]",
-            r.match ? "text-foreground" : "text-muted",
+            r.kind === "adapt" ? "text-warning" : r.match ? "text-foreground" : "text-muted",
           )}
         >
           {r.match ? <GCheck className="size-3 text-accent" aria-hidden /> : null}
           {r.label}
           {/* The tick is decorative: say it for screen readers too. */}
-          <span className="sr-only">{r.match ? " (confere com o seu perfil)" : " (diferente do seu perfil)"}</span>
+          <span className="sr-only">
+            {r.kind === "adapt"
+              ? " (alguns exercícios são trocados pelo seu equipamento)"
+              : r.match
+                ? " (confere com o seu perfil)"
+                : " (diferente do seu perfil)"}
+          </span>
         </li>
       ))}
     </ul>

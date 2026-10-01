@@ -125,6 +125,18 @@ describe("createNotification", () => {
     expect(await rows(owner, key)).toHaveLength(1);
   });
 
+  it("updates a row in place ('update'): new data, same place and read state", async () => {
+    const key = notificationKey.records("session-update");
+    const base = { recipientId: fan, actorId: null, type: "PERSONAL_RECORD" as const, dedupeKey: key, read: true, onDuplicate: "update" as const };
+    const old = new Date(Date.now() - 3_600_000);
+    expect(await createNotification(prisma, { ...base, data: { count: 1 } }, old)).toEqual({ created: true, rearmed: false });
+    expect(await createNotification(prisma, { ...base, data: { count: 2 } })).toEqual({ created: false, rearmed: false });
+    const [row] = await rows(fan, key);
+    expect(row.data).toEqual({ count: 2 });
+    expect(row.createdAt).toEqual(old);
+    expect(row.readAt).toEqual(old);
+  });
+
   it("works inside an interactive transaction", async () => {
     const key = notificationKey.block("enrollment-tx");
     await prisma.$transaction(async (tx) => {
@@ -172,5 +184,29 @@ describe("countUnread / markSeen", () => {
     expect(await countUnread(recipient)).toBe(1);
     // Another user's rows are untouched.
     expect(await countUnread(owner)).toBeGreaterThan(0);
+  });
+
+  it("counts what the inbox shows: a banned person's row lights no pip (the inbox can't show it to clear it), until an unban", async () => {
+    const { getNotifications } = await import("@/lib/data/social/notifications");
+    const recipient = await makeUser("inbox-ban");
+    const banned = await makeUser("banned");
+    // Made in the minutes a banned account still acts on its cached session.
+    await prisma.user.update({ where: { id: banned }, data: { banned: true } });
+    await createNotification(prisma, { recipientId: recipient, actorId: banned, type: "NEW_FOLLOWER", dedupeKey: notificationKey.follower(banned) });
+    expect(await countUnread(recipient)).toBe(0);
+    expect(await getNotifications(recipient)).toMatchObject({ lines: [], unread: 0 });
+
+    // Unbanned: the row is back, as new, in both; banned again, gone from both.
+    await prisma.user.update({ where: { id: banned }, data: { banned: false } });
+    expect([(await getNotifications(recipient)).unread, await countUnread(recipient)]).toEqual([1, 1]);
+    await prisma.user.update({ where: { id: banned }, data: { banned: true } });
+    expect([(await getNotifications(recipient)).unread, await countUnread(recipient)]).toEqual([0, 0]);
+
+    // Someone else's row: one on the pip, one line in the inbox, and seeing it clears the pip.
+    await createNotification(prisma, { recipientId: recipient, actorId: fan, type: "NEW_FOLLOWER", dedupeKey: notificationKey.follower(fan) });
+    const inbox = await getNotifications(recipient);
+    expect(inbox.lines.map((l) => l.actors[0]?.id)).toEqual([fan]);
+    expect([inbox.unread, await countUnread(recipient)]).toEqual([1, 1]);
+    expect(await markSeen(recipient, new Date(inbox.newestAt!))).toBe(0);
   });
 });

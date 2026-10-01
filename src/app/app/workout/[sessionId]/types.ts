@@ -60,11 +60,42 @@ export interface ExecutionExerciseLog {
   /** A hold whose "reps" are seconds (set-plan isTimedHold): "45 s", never "× 45". */
   timed: boolean;
   /**
+   * Its place in a superset / circuit (W-104, lib/programming/groups): the
+   * members alternate one set each, with the member's own rest as the switch
+   * and the last member's after each round (lib/training/superset-flow).
+   * Null outside a group.
+   */
+  group: ExecutionGroup | null;
+  /**
+   * Replaced mid-workout by a stand-in added after it ("Adicionar como novo
+   * exercício", W-006): out of its group's rotation, whatever its sets say.
+   */
+  replaced: boolean;
+  /**
    * What a set must beat to be a record (pr-moment recordBars: each load's
    * most reps and the best-1RM set in other finished workouts). Empty: never
    * done before — a baseline, no PR moment.
    */
   recordBars: { weightKg: number; reps: number }[];
+}
+
+export interface ExecutionGroup {
+  /** "A". */
+  key: string;
+  /** "A1". */
+  label: string;
+  /** "Superset A" / "Circuito A". */
+  heading: string;
+  kind: "superset" | "circuit";
+  /** 1-based. */
+  position: number;
+  size: number;
+  /** The members' exercise indexes, in order. */
+  memberIndexes: number[];
+  /** This member's switch to the next one (its own rest); the last member's is the round's rest. */
+  transitionSeconds: number;
+  /** The rest after each round: the last member's rest. */
+  roundRestSeconds: number;
 }
 
 export interface ExecutionSession {
@@ -85,6 +116,8 @@ export interface ExecutionSession {
   programId: string | null;
   /** Play a short beep when a rest ends (Profile.restTimerSound). */
   restTimerSound: boolean;
+  /** Vibrate at the end of a rest and on a record (Profile.hapticsEnabled, W-149). */
+  haptics: boolean;
   /** No workout finished yet: this is the user's very first. */
   firstWorkout: boolean;
   /**

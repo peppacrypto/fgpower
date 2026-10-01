@@ -1,12 +1,30 @@
 "use client";
 
+import Link from "next/link";
+import { Bell } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils/cn";
+import { plural } from "@/lib/utils/format";
+import { UnreadPip, useUnread } from "./unread-provider";
+
 /**
- * Today's masthead bell: a 44px link to /app/notifications with the unread
- * pip (useUnread). Owned by the social inbox cluster (C1, W-042).
- *
- * Phase 0 stub with the final signature: renders nothing yet.
+ * Today's masthead bell (W-042): a 44px square link to /app/notifications,
+ * with the unread pip on its corner. On a phone the notifications have no
+ * tab of their own; this is the one-tap way in from the screen people open
+ * most.
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- Phase 0 stub (C1 implements W-042)
 export function NotificationsBell({ className }: { className?: string }) {
-  return null;
+  const unread = useUnread();
+  return (
+    <Button variant="outline" size="icon" asChild className={cn("relative shrink-0 [&_svg]:size-5", className)}>
+      <Link
+        href="/app/notifications"
+        aria-label={unread > 0 ? `Notificações, ${plural(unread, "nova", "novas")}` : "Notificações"}
+        data-notifications-bell
+      >
+        <Bell aria-hidden />
+        <UnreadPip count={unread} className="pointer-events-none absolute -right-1.5 -top-1.5" />
+      </Link>
+    </Button>
+  );
 }

@@ -130,12 +130,17 @@ export function suggestFor(
 /**
  * The reps a first-timer aims for: the top of a hypertrophy range (a light,
  * safe first load — "8–12" → 12), the bottom of a heavy one ("3–5" → 3,
- * whenever the range tops out at 6 or less).
+ * whenever the range tops out at 6 or less). With the body's own weight
+ * there is no load to pick light: the bottom of the range ("8–15" push-ups →
+ * 8, a "20–45 s" plank → 20), so a ✓ on the empty box never logs 15 push-ups
+ * a beginner didn't do — the record, the baseline and the next progression
+ * start from what is reachable (L-bodyweight-first-target).
  */
-export function firstTimeReps(repMin: number, repMax: number): number | null {
+export function firstTimeReps(repMin: number, repMax: number, opts: { bodyweight?: boolean } = {}): number | null {
   const top = Math.max(repMin, repMax);
   const bottom = Math.min(repMin, repMax);
   if (!(top > 0)) return null;
+  if (opts.bodyweight) return Math.max(1, bottom);
   return top <= 6 ? Math.max(1, bottom) : top;
 }
 

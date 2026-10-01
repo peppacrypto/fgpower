@@ -16,6 +16,11 @@ export interface ActivityCardData {
   summary: WorkoutActivitySummary;
   /** The activity's "Mostrar cargas"; when false, the volume is dropped too. */
   showDetailedLoads?: boolean;
+  /**
+   * Who sees it — pass it for the viewer's OWN workouts only: the card then
+   * carries a "SEGUIDORES" chip that opens its "Quem vê" (W-144).
+   */
+  visibility?: "PRIVATE" | "FOLLOWERS" | "PUBLIC";
 }
 
 /**
@@ -36,6 +41,8 @@ export function ActivityCard({
   isOwn?: boolean;
   /** Set when the viewer is signed out: FG becomes a sign-in link that returns here. */
   signInReturnTo?: string;
+  /** Explain FG under this card's heart (the viewer never gave one; W-147). */
+  fgHint?: boolean;
 }) {
   const { summary, showDetailedLoads, ...card } = activity;
   const stamp = milestoneStampOf(summary);

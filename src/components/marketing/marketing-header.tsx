@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Wordmark } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
+import { GArrow } from "@/components/ui/glyph";
 import { cn } from "@/lib/utils/cn";
 
 const NAV = [
@@ -9,7 +10,13 @@ const NAV = [
   { href: "/science", label: "Ciência" },
 ] as const;
 
-export function MarketingHeader({ onDark = false }: { onDark?: boolean }) {
+/**
+ * The public site's header. Signed in (the landing checks the real session),
+ * the right side is one way back into the app — never "Entrar"/"Começar",
+ * which would only bounce through /login. The static pages (privacy, terms)
+ * always render the signed-out header: /login sends a signed-in user on.
+ */
+export function MarketingHeader({ onDark = false, signedIn = false }: { onDark?: boolean; signedIn?: boolean }) {
   return (
     <header
       className={cn(
@@ -38,19 +45,28 @@ export function MarketingHeader({ onDark = false }: { onDark?: boolean }) {
             </Link>
           ))}
         </nav>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            asChild
-            className={onDark ? "text-white hover:bg-white/10" : ""}
-          >
-            <Link href="/login">Entrar</Link>
-          </Button>
+        {signedIn ? (
           <Button variant="strong" size="sm" asChild>
-            <Link href="/login">Começar</Link>
+            <Link href="/app/today">
+              Abrir o app
+              <GArrow className="size-4" />
+            </Link>
           </Button>
-        </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              asChild
+              className={onDark ? "text-white hover:bg-white/10" : ""}
+            >
+              <Link href="/login">Entrar</Link>
+            </Button>
+            <Button variant="strong" size="sm" asChild>
+              <Link href="/login">Começar</Link>
+            </Button>
+          </div>
+        )}
       </div>
     </header>
   );

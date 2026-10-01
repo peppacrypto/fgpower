@@ -25,6 +25,7 @@ const PICKER_SELECT = {
   slug: true,
   namePt: true,
   mechanics: true,
+  category: true,
   equipmentId: true,
   movementPatternId: true,
   equipment: { select: { namePt: true } },
@@ -49,6 +50,7 @@ function toPickerExercise(e: PickerRow): PickerExercise {
     primaryMuscleIds: primary.map((m) => m.muscleId),
     secondaryMuscleIds: e.muscles.filter((m) => m.role === "SECONDARY").map((m) => m.muscleId),
     primaryGroups: [...new Set(primary.map((m) => m.muscle.group as string))],
+    category: e.category,
   };
 }
 

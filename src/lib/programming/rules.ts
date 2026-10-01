@@ -7,6 +7,7 @@
  */
 
 import { MUSCLE_GROUP_LABEL, type MuscleGroupTag } from "@/lib/constants/muscle-groups";
+import { countsAsVolume } from "./exercise-facets";
 
 export type { MuscleGroupTag };
 
@@ -56,6 +57,8 @@ export interface ProgramRuleExercise {
   secondaryMuscles?: ProgramRuleMuscle[];
   movementPattern: string | null;
   sets: number;
+  /** Exercise.category: stretches and cardio aren't training volume (exercise-facets countsAsVolume). */
+  category?: string | null;
 }
 
 export interface ProgramRuleDay {
@@ -73,15 +76,21 @@ export interface ProgramFeedbackItem {
 }
 
 // Thresholds — see docs/PROGRAMMING_RULES.md for the evidence behind these numbers.
-const LOW_WEEKLY_SETS_THRESHOLD = 4;
-const HIGH_WEEKLY_SETS_THRESHOLD = 28;
+/**
+ * The weekly volume references (§1), shared with Today's "semana passada"
+ * review (lib/data/dashboard): a muscle with direct work is low under this
+ * many fractional sets (direct plus SECONDARY_SET_CREDIT per assisting set)…
+ */
+export const LOW_WEEKLY_SETS = 4;
+/** …and high over this many direct sets (per coarse group, for callers without muscle data). */
+export const HIGH_WEEKLY_DIRECT_SETS = 28;
+/** Credit for a set in which the muscle is a synergist rather than the prime mover (fractional counting). */
+export const SECONDARY_SET_CREDIT = 0.5;
 const HIGH_SESSION_WORKING_SETS_THRESHOLD = 30;
 const SIMILAR_MOVEMENT_MIN_COUNT = 3;
 const LOWER_BODY_HEAVY_SET_THRESHOLD = 3;
 
 const LOWER_BODY_GROUPS: MuscleGroupTag[] = ["LEGS", "GLUTES"];
-/** Credit for a set in which the muscle is a synergist rather than the prime mover (fractional counting). */
-const SECONDARY_SET_CREDIT = 0.5;
 
 function weeklySetsByMuscleGroup(days: ProgramRuleDay[]): Map<MuscleGroupTag, number> {
   const totals = new Map<MuscleGroupTag, number>();
@@ -141,8 +150,11 @@ function isLowerBodyHeavy(day: ProgramRuleDay): boolean {
 
 const GROUP_LABEL = MUSCLE_GROUP_LABEL;
 
-export function analyzeProgram(days: ProgramRuleDay[]): ProgramFeedbackItem[] {
+export function analyzeProgram(allDays: ProgramRuleDay[]): ProgramFeedbackItem[] {
   const feedback: ProgramFeedbackItem[] = [];
+  // Every rule reads training work: a stretch or a cardio block counts as no
+  // sets, no movement and no heavy leg day (exercise-facets countsAsVolume).
+  const days = allDays.map((d) => ({ ...d, exercises: d.exercises.filter((e) => countsAsVolume(e.category)) }));
 
   // 1. Weekly volume. With muscle-level data: per muscle — "high" on direct
   // sets, "low" on fractional sets (direct + half of the sets where the muscle
@@ -152,7 +164,7 @@ export function analyzeProgram(days: ProgramRuleDay[]): ProgramFeedbackItem[] {
   const hasMuscleData = days.every((d) => d.exercises.every((e) => Array.isArray(e.primaryMuscles)));
   if (hasMuscleData) {
     for (const { muscle, direct, fractional } of weeklySetsByMuscle(days).values()) {
-      if (direct > 0 && fractional < LOW_WEEKLY_SETS_THRESHOLD) {
+      if (direct > 0 && fractional < LOW_WEEKLY_SETS) {
         feedback.push({
           code: `low-volume-${muscle.id}`,
           severity: "notice",
@@ -160,7 +172,7 @@ export function analyzeProgram(days: ProgramRuleDay[]): ProgramFeedbackItem[] {
           messagePt: `${muscle.namePt}: cerca de ${formatSets(fractional, "pt")} séries/semana, contando as séries diretas e metade das séries em que ele auxilia. Pode ser pouco se a hipertrofia desse músculo for prioridade.`,
         });
       }
-      if (direct > HIGH_WEEKLY_SETS_THRESHOLD) {
+      if (direct > HIGH_WEEKLY_DIRECT_SETS) {
         feedback.push({
           code: `high-volume-${muscle.id}`,
           severity: "notice",
@@ -174,7 +186,7 @@ export function analyzeProgram(days: ProgramRuleDay[]): ProgramFeedbackItem[] {
   for (const [group, sets] of weekly) {
     if (group === "FULL_BODY" || group === "NECK") continue;
     const label = GROUP_LABEL[group];
-    if (sets > 0 && sets < LOW_WEEKLY_SETS_THRESHOLD) {
+    if (sets > 0 && sets < LOW_WEEKLY_SETS) {
       feedback.push({
         code: `low-volume-${group.toLowerCase()}`,
         severity: "notice",
@@ -182,7 +194,7 @@ export function analyzeProgram(days: ProgramRuleDay[]): ProgramFeedbackItem[] {
         messagePt: `O ${label.pt} está recebendo cerca de ${sets} série${sets === 1 ? "" : "s"} diretas/semana. Isso pode ser pouco se a hipertrofia desse músculo for prioridade.`,
       });
     }
-    if (sets > HIGH_WEEKLY_SETS_THRESHOLD) {
+    if (sets > HIGH_WEEKLY_DIRECT_SETS) {
       feedback.push({
         code: `high-volume-${group.toLowerCase()}`,
         severity: "notice",

@@ -9,30 +9,10 @@ import {
   EXPERIENCE_LEVELS,
   EQUIPMENT_ACCESS_OPTIONS,
 } from "@/lib/validation/onboarding";
+import { EQUIPMENT_LABEL, EXPERIENCE_LABEL, GOAL_LABEL } from "@/lib/constants/program-labels";
 import { runAction } from "@/components/social/run-action";
 import { ActionErrorText } from "@/components/social/session-expired";
-import { cn } from "@/lib/utils/cn";
-import { INVALID_FIELD, SaveStatus } from "@/components/ui/save-status";
-
-const GOAL_LABEL: Record<string, string> = {
-  HYPERTROPHY: "Hipertrofia",
-  STRENGTH: "Força",
-  GENERAL_FITNESS: "Fitness geral",
-  STRENGTH_HYPERTROPHY: "Força + Hipertrofia",
-  SPORTS_PERFORMANCE: "Performance esportiva",
-  FAT_LOSS: "Emagrecer / definir",
-};
-const EXPERIENCE_LABEL: Record<string, string> = {
-  BEGINNER: "Iniciante",
-  INTERMEDIATE: "Intermediário",
-  ADVANCED: "Avançado",
-};
-const EQUIPMENT_LABEL: Record<string, string> = {
-  FULL_GYM: "Academia completa",
-  HOME_DUMBBELLS: "Halteres em casa",
-  HOME_BODYWEIGHT: "Só peso do corpo",
-  MINIMAL: "Equipamento mínimo",
-};
+import { SaveStatus } from "@/components/ui/save-status";
 
 /**
  * Submits a Settings block to `updateProfile` (which only writes the fields
@@ -145,7 +125,7 @@ export function ProfileForm({ initial }: Props) {
           maxLength={60}
           autoComplete="nickname"
           aria-describedby={displayName.error ? "displayName-error displayName-hint" : "displayName-hint"}
-          className={cn("mt-1.5", INVALID_FIELD)}
+          className="mt-1.5"
         />
         <FieldError name="displayName" error={displayName.error} />
         <p id="displayName-hint" className="mt-1 text-xs text-muted">
@@ -155,7 +135,7 @@ export function ProfileForm({ initial }: Props) {
 
       <div>
         <Label htmlFor="bio">Bio (opcional)</Label>
-        <Textarea {...bio.props} defaultValue={initial.bio} maxLength={280} rows={2} className={cn("mt-1.5", INVALID_FIELD)} />
+        <Textarea {...bio.props} defaultValue={initial.bio} maxLength={280} rows={2} className="mt-1.5" />
         <FieldError name="bio" error={bio.error} />
       </div>
 
@@ -163,7 +143,7 @@ export function ProfileForm({ initial }: Props) {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <Label htmlFor="goal">Objetivo</Label>
-          <Select {...goal.props} defaultValue={initial.goal} className={cn("mt-1.5", INVALID_FIELD)}>
+          <Select {...goal.props} defaultValue={initial.goal} className="mt-1.5">
             {TRAINING_GOALS.map((g) => (
               <option key={g} value={g}>
                 {GOAL_LABEL[g]}
@@ -174,7 +154,7 @@ export function ProfileForm({ initial }: Props) {
         </div>
         <div>
           <Label htmlFor="experience">Experiência</Label>
-          <Select {...experience.props} defaultValue={initial.experience} className={cn("mt-1.5", INVALID_FIELD)}>
+          <Select {...experience.props} defaultValue={initial.experience} className="mt-1.5">
             {EXPERIENCE_LEVELS.map((e) => (
               <option key={e} value={e}>
                 {EXPERIENCE_LABEL[e]}
@@ -187,7 +167,7 @@ export function ProfileForm({ initial }: Props) {
 
       <div>
         <Label htmlFor="equipmentAccess">Equipamento</Label>
-        <Select {...equipment.props} defaultValue={initial.equipmentAccess} className={cn("mt-1.5", INVALID_FIELD)}>
+        <Select {...equipment.props} defaultValue={initial.equipmentAccess} className="mt-1.5">
           {EQUIPMENT_ACCESS_OPTIONS.map((e) => (
             <option key={e} value={e}>
               {EQUIPMENT_LABEL[e]}

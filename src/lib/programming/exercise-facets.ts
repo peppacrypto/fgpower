@@ -22,6 +22,12 @@ export interface PickerExercise {
   secondaryMuscleIds: string[];
   /** MuscleGroup of the primary muscles (CHEST, LEGS…), for the program rules. */
   primaryGroups: string[];
+  /**
+   * ExerciseCategory (STRENGTH, STRETCHING, CARDIO…): stretches and cardio
+   * don't count in the week's volume (countsAsVolume). Absent in drafts
+   * restored from before it existed — then it counts, as before.
+   */
+  category?: string | null;
 }
 
 export interface PickerPage {

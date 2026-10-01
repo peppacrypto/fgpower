@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { GArrow } from "@/components/ui/glyph";
+import { requireUser } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 import { SectionHead } from "@/components/ui/section-head";
 import { Masthead } from "@/components/ui/masthead";
@@ -10,6 +11,8 @@ import { plural } from "@/lib/utils/format";
 export const metadata: Metadata = { title: "Ciência" };
 
 export default async function ScienceIndexPage() {
+  // Not the /app layout's check: a client navigation can render this page segment alone.
+  await requireUser();
   const principles = readingOrder(await prisma.trainingPrinciple.findMany({ orderBy: { sortOrder: "asc" } }));
   const path = principles.filter((p) => BEGINNER_PATH.includes(p.slug));
   const rest = principles.filter((p) => !BEGINNER_PATH.includes(p.slug));

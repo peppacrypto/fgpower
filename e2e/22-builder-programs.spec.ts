@@ -308,7 +308,8 @@ test("the weekly volume strip counts sets while building and opens the picker on
   expect(await position()).not.toBe("sticky");
   await expect(strip.getByRole("group", { name: /^Peitoral: \d/ }).or(strip.getByRole("button", { name: /^Peitoral: \d/ }))).toBeVisible();
 
-  await strip.getByRole("button", { name: /^Costas: 0 séries por semana/ }).click();
+  // Named as Progress's "Séries por músculo" names it: "nenhuma série", never "0 séries…, sem séries".
+  await strip.getByRole("button", { name: /^Costas: nenhuma série\. Adicionar/ }).click();
   await expect(picker(page)).toBeVisible();
   await expect(picker(page).getByRole("button", { name: "Costas", exact: true })).toHaveAttribute("aria-pressed", "true");
 });
@@ -329,6 +330,36 @@ test("editing the running program says when changes apply, and ends with 'Ir par
   await newUserOnGd1(page, "b4-active");
   await page.goto("/app/programs");
   await page.locator('a[href^="/app/programs/"]').filter({ hasText: "GD 1" }).first().click();
+  await expect(page.getByRole("link", { name: "Editar", exact: true })).toBeVisible();
+
+  // On a 320px phone the program page reads every exercise name whole: wrapped, never cut to a line
+  // ("Rosca Direta c…"), and the page doesn't scroll sideways.
+  await page.setViewportSize({ width: 320, height: 640 });
+  const names = await page.locator('main a[href^="/app/exercises/"]').evaluateAll((links) =>
+    links.map((a) => {
+      // The element holding the name's own text (after an optional "A1" superset mark).
+      const el = [...a.querySelectorAll("span")].find((s) =>
+        [...s.childNodes].some((n) => n.nodeType === Node.TEXT_NODE && (n.textContent ?? "").trim().length > 3),
+      )!;
+      const style = getComputedStyle(el);
+      const line = style.lineHeight.endsWith("px")
+        ? parseFloat(style.lineHeight)
+        : parseFloat(style.lineHeight) * parseFloat(style.fontSize);
+      return {
+        name: el.textContent?.trim(),
+        whole: el.scrollWidth <= el.clientWidth + 1 && el.scrollHeight <= el.clientHeight + 1,
+        wraps: style.whiteSpace !== "nowrap" && style.textOverflow !== "ellipsis",
+        lines: Math.round(el.getBoundingClientRect().height / line),
+      };
+    }),
+  );
+  expect(names.length).toBeGreaterThan(5);
+  expect(names.filter((n) => !n.whole || !n.wraps)).toEqual([]);
+  // GD 1's longer names take a second line at this width.
+  expect(names.some((n) => n.lines >= 2)).toBe(true);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await page.setViewportSize(iPhone.viewport);
+
   await page.getByRole("link", { name: "Editar", exact: true }).click();
   await expect(page.getByRole("heading", { level: 1, name: "Editar programa" })).toBeVisible();
   await expect(page.getByTestId("active-program-note")).toContainText("As mudanças valem a partir do próximo treino.");

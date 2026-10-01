@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { APP_TIME_ZONE } from "@/lib/training/week";
 import { isPartialEntryWeek } from "@/lib/training/program-calendar";
 import {
+  appliedDeloadGuidance,
   baselineRir,
   effectiveProgramWeek,
   getWeekGuidance,
@@ -12,6 +13,8 @@ import {
   type RirExercise,
   type WeekGuidanceView,
 } from "@/lib/training/week-guidance";
+import { dayNumberOf, mondayOf } from "@/lib/training/day-rotation";
+import { isAppliedDeload } from "@/lib/training/deload";
 import { isTimedHold } from "@/lib/training/set-plan";
 import { countedWeeks } from "@/lib/programming/block-progress";
 import { parseExerciseContent, parseInstructions } from "@/lib/exercises/content";
@@ -106,7 +109,10 @@ export interface PreviousPerformance {
  * For every exercise of the session, the user's most recent COMPLETED
  * performance in another session — one query (DISTINCT ON), not one per
  * exercise. Only logs where at least one working set was actually done count:
- * an exercise skipped or left empty must not hide the last real loads.
+ * an exercise skipped or left empty must not hide the last real loads. A
+ * deload workout (W-128: half the sets, RIR 3-4 on purpose) is never the
+ * reference for a normal one — "Na próxima" starts from the last workout
+ * before it; within a deload week it is (the same light loads).
  * Keyed by exerciseId.
  */
 export async function getPreviousPerformances(userId: string, sessionId: string) {
@@ -126,6 +132,7 @@ export async function getPreviousPerformances(userId: string, sessionId: string)
       WHERE l."userId" = ${userId}
         AND l."sessionId" <> ${sessionId}
         AND s.status = 'COMPLETED'
+        AND (NOT s."isDeload" OR (SELECT c."isDeload" FROM "WorkoutSession" c WHERE c.id = ${sessionId}))
         AND l."exerciseId" IN (
           SELECT c."exerciseId" FROM "WorkoutExerciseLog" c WHERE c."sessionId" = ${sessionId} AND c."userId" = ${userId}
         )
@@ -184,6 +191,12 @@ export async function getWorkoutUserContext(userId: string, firstWorkouts = 3) {
  * workout of a new calendar week starts the next program week), counted as
  * Today counts it (an entry week reads week 1). Null outside a program or
  * when the program has no guidance for that week. Two small counts.
+ *
+ * A deload workout (opened in a week the user turned into a deload, W-128)
+ * reads the applied deload's guidance — RIR raised, its own instructions —
+ * even in a program without guidance; a workout opened in that week before
+ * the deload was applied keeps its week's RIR but reads as a deload week
+ * (lib/training/deload: the week is one).
  */
 export async function getWorkoutWeek(
   userId: string,
@@ -202,6 +215,8 @@ export async function getWorkoutWeek(
   const rows = await prisma.$queryRaw<
     {
       startedAt: Date;
+      isDeload: boolean;
+      deloadMondays: number[];
       enrolledAt: Date;
       currentWeek: number;
       weeklyGuidance: unknown;
@@ -213,12 +228,12 @@ export async function getWorkoutWeek(
     }[]
   >`
     WITH s AS (
-      SELECT s.id, s."userId", s."startedAt", s."enrollmentId", s."programId",
+      SELECT s.id, s."userId", s."startedAt", s."enrollmentId", s."programId", s."isDeload",
         ((date_trunc('week', (s."startedAt" AT TIME ZONE 'UTC') AT TIME ZONE ${APP_TIME_ZONE}) AT TIME ZONE ${APP_TIME_ZONE}) AT TIME ZONE 'UTC') AS "weekStart"
       FROM "WorkoutSession" s
       WHERE s.id = ${sessionId} AND s."userId" = ${userId}
     ), e AS (
-      SELECT e.id, e."startedAt", e."currentWeek",
+      SELECT e.id, e."startedAt", e."currentWeek", e."deloadMondays",
         ((date_trunc('week', (e."startedAt" AT TIME ZONE 'UTC') AT TIME ZONE ${APP_TIME_ZONE}) AT TIME ZONE ${APP_TIME_ZONE}) AT TIME ZONE 'UTC') AS "entryStart"
       FROM "ProgramEnrollment" e JOIN s ON s."enrollmentId" = e.id
     ), done AS (
@@ -226,7 +241,7 @@ export async function getWorkoutWeek(
       WHERE x."userId" = s."userId" AND x."enrollmentId" = s."enrollmentId" AND x.id <> s.id
         AND x.status = 'COMPLETED' AND x."totalWorkingSets" > 0
     )
-    SELECT s."startedAt", e."startedAt" AS "enrolledAt", e."currentWeek",
+    SELECT s."startedAt", s."isDeload", e."deloadMondays", e."startedAt" AS "enrolledAt", e."currentWeek",
       p."weeklyGuidance", p."durationWeeks", t.slug,
       (SELECT count(*) FROM done WHERE done."finishedAt" >= s."weekStart") AS "thisWeek",
       (SELECT count(*) FROM done WHERE done."finishedAt" < s."weekStart") AS "before",
@@ -249,10 +264,16 @@ export async function getWorkoutWeek(
     effectiveWeek,
     entryWeekTrained: isPartialEntryWeek(enrolledAt) && Number(r.inEntryWeek) > 0,
   });
-  const guidance = getWeekGuidance(r.weeklyGuidance, view.guidanceWeek, {
+  const planned = getWeekGuidance(r.weeklyGuidance, view.guidanceWeek, {
     templateSlug: r.slug,
     durationWeeks: r.durationWeeks,
   });
+  const appliedWeek = isAppliedDeload(r.deloadMondays, mondayOf(dayNumberOf(new Date(r.startedAt))));
+  const guidance = r.isDeload
+    ? appliedDeloadGuidance(planned, view.guidanceWeek)
+    : planned && appliedWeek
+      ? { ...planned, deload: true }
+      : planned;
   return guidance ? { view, guidance, durationWeeks: r.durationWeeks, baselineRir: baselineRir(r.weeklyGuidance) } : null;
 }
 
@@ -283,6 +304,7 @@ export async function getSessionRirTargets(userId: string, sessionId: string): P
     select: {
       status: true,
       programWeek: true,
+      isDeload: true,
       enrollmentId: true,
       enrollment: { select: { startedAt: true } },
       program: { select: { weeklyGuidance: true, durationWeeks: true, sourceTemplate: { select: { slug: true } } } },
@@ -306,10 +328,15 @@ export async function getSessionRirTargets(userId: string, sessionId: string): P
       userId,
       startedAt: session.enrollment.startedAt,
     });
-    guidance = getWeekGuidance(session.program.weeklyGuidance, countedWeeks(session.programWeek, session.enrollment.startedAt, trained), {
+    const week = countedWeeks(session.programWeek, session.enrollment.startedAt, trained);
+    guidance = getWeekGuidance(session.program.weeklyGuidance, week, {
       templateSlug: session.program.sourceTemplate?.slug ?? null,
       durationWeeks: session.program.durationWeeks,
     });
+    // A deload workout aimed for the applied deload's raised targets (W-128).
+    if (session.isDeload) guidance = appliedDeloadGuidance(guidance, week);
+  } else if (session.isDeload) {
+    guidance = appliedDeloadGuidance(null, 1);
   }
   const baseline = baselineRir(session.program?.weeklyGuidance ?? null);
   return new Map(

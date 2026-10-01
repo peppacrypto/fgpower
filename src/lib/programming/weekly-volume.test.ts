@@ -41,6 +41,27 @@ describe("weeklyVolume", () => {
     expect(row(v, "peito").sets).toBe(3);
   });
 
+  it("a stretch or cardio changes nothing — and is no unknown either (L-volume-counts-stretches)", () => {
+    const base = weeklyVolume([{ exercises: [ex(3, ["glutes"], ["hamstrings"])] }], 2);
+    const withStretch = weeklyVolume(
+      [
+        {
+          exercises: [
+            ex(3, ["glutes"], ["hamstrings"]),
+            { ...ex(3, ["glutes"], ["hamstrings"]), category: "STRETCHING" },
+            { ...ex(2, ["quadriceps"]), category: "CARDIO" },
+            { sets: 2, primaryMuscleIds: null, secondaryMuscleIds: null, category: "STRETCHING" },
+          ],
+        },
+      ],
+      2,
+    );
+    expect(withStretch.rows).toEqual(base.rows);
+    expect(withStretch.unknown).toBe(0);
+    // A strength exercise still counts with its category known.
+    expect(row(weeklyVolume([{ exercises: [{ ...ex(3, ["glutes"]), category: "STRENGTH" }] }], 1), "gluteos").sets).toBe(3);
+  });
+
   it("rounds to half a set", () => {
     const v = weeklyVolume([{ exercises: [ex(3, ["lats"], ["biceps"])] }, { exercises: [] }, { exercises: [] }], 4);
     // 1.5 biceps sets × 4/3 = 2 → 2

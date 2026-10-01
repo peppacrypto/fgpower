@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { deriveGroups, normalizeGroupKeys } from "./groups";
+import { deriveGroups, groupRule, normalizeGroupKeys } from "./groups";
 
 const rows = (...keys: (string | null)[]) => keys.map((groupKey, i) => ({ id: `r${i}`, groupKey }));
 
@@ -41,5 +41,14 @@ describe("normalizeGroupKeys", () => {
     const out = normalizeGroupKeys(list);
     expect(out[0]).toBe(list[0]);
     expect(out[1]).toEqual({ id: "r1", groupKey: "A" });
+  });
+});
+
+describe("groupRule", () => {
+  it("says how the group runs", () => {
+    const [pair] = deriveGroups(rows("A", "A"));
+    expect(groupRule(pair!)).toBe("Superset A · alterne as séries");
+    const [circuit] = deriveGroups(rows("B", "B", "B"));
+    expect(groupRule(circuit!)).toBe("Circuito A · uma série de cada, em ordem");
   });
 });

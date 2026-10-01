@@ -1,6 +1,15 @@
 import { describe, expect, it } from "vitest";
 import { CATALOG_FIXTURE } from "./catalog-fixture";
-import { beginnerEntrySlug, canRun, isMidSeriesGd, recommendTemplates, seriesStanding, type RecommendProfile } from "./recommend";
+import { missingEquipment } from "./equipment-needs";
+import {
+  ACCESS_EQUIPMENT,
+  beginnerEntrySlug,
+  isMidSeriesGd,
+  recommendTemplates,
+  seriesStanding,
+  templateFit,
+  type RecommendProfile,
+} from "./recommend";
 
 const profile = (p: Partial<RecommendProfile> = {}): RecommendProfile => ({
   goal: "HYPERTROPHY",
@@ -68,13 +77,63 @@ describe("recommendTemplates", () => {
     expect(after.length).toBeGreaterThan(0);
   });
 
-  it("never offers a program the user's equipment can't run", () => {
+  it("never offers a program the user's equipment can't run — or can't adapt, and says which is which", () => {
     for (const equipmentAccess of ["HOME_DUMBBELLS", "HOME_BODYWEIGHT", "MINIMAL"]) {
       const recs = recommendTemplates(profile({ equipmentAccess }), CATALOG_FIXTURE);
       expect(recs.length).toBeGreaterThan(0);
-      for (const r of recs) expect(canRun(equipmentAccess, r.template.equipmentAccess)).toBe(true);
+      expect(recs[0].adapt).toBe(false);
+      for (const r of recs) {
+        const missing = missingEquipment(r.template.equipmentIds ?? [], ACCESS_EQUIPMENT[equipmentAccess]);
+        // Runnable as it is, or missing only home gear the adapt review swaps; a gym plan never.
+        expect(r.adapt).toBe(missing.length > 0);
+        expect(r.template.equipmentAccess).not.toBe("FULL_GYM");
+        if (r.adapt) expect(r.reasons).toContainEqual({ label: "Com adaptação", match: false, kind: "adapt" });
+      }
+      // Runnable ones first.
+      const firstAdapt = recs.findIndex((r) => r.adapt);
+      if (firstAdapt >= 0) expect(recs.slice(firstAdapt).every((r) => r.adapt)).toBe(true);
     }
-    expect(top({ equipmentAccess: "HOME_BODYWEIGHT" }, 5)).toEqual(["calisthenics"]);
+    const bodyweight = recommendTemplates(profile({ equipmentAccess: "HOME_BODYWEIGHT" }), CATALOG_FIXTURE);
+    expect(bodyweight.filter((r) => !r.adapt).map((r) => r.template.slug).sort()).toEqual([
+      "bands-bodyweight-full-body",
+      "bodyweight-express",
+      "calisthenics",
+    ]);
+  });
+
+  it("gives home users three picks at 2, 3 and 4 days a week, the first one runnable (L-home-catalog-gap)", () => {
+    for (const equipmentAccess of ["MINIMAL", "HOME_BODYWEIGHT"]) {
+      for (const daysPerWeek of [2, 3, 4]) {
+        const recs = recommendTemplates(profile({ equipmentAccess, daysPerWeek, goal: "GENERAL_FITNESS" }), CATALOG_FIXTURE);
+        expect(recs.length, `${equipmentAccess} ${daysPerWeek}×`).toBeGreaterThanOrEqual(3);
+        expect(templateFit(equipmentAccess, recs[0].template)).toBe("runnable");
+      }
+    }
+    // Bands and the floor: the plan built on them leads, never the kettlebell one.
+    expect(top({ equipmentAccess: "MINIMAL", goal: "GENERAL_FITNESS" }, 1)).toEqual(["bands-bodyweight-full-body"]);
+    expect(top({ equipmentAccess: "HOME_BODYWEIGHT", daysPerWeek: 2, goal: "GENERAL_FITNESS" }, 1)).toEqual(["bodyweight-express"]);
+  });
+
+  it("never shows a kettlebell plan to 'equipamento mínimo' as a sure fit: it says what it needs", () => {
+    for (const daysPerWeek of [2, 3, 4]) {
+      const recs = recommendTemplates(profile({ equipmentAccess: "MINIMAL", daysPerWeek }), CATALOG_FIXTURE);
+      expect(recs[0].template.slug).not.toBe("kettlebell-strong");
+      const kb = recs.find((r) => r.template.slug === "kettlebell-strong");
+      expect(kb?.reasons).toContainEqual({ label: "Requer halteres e kettlebell", match: false });
+      expect(kb?.reasons.some((r) => r.match && r.label === "Equipamento mínimo")).toBe(false);
+    }
+  });
+
+  it("gives 'equipamento mínimo' a pick it surely runs (bands and the floor), whatever the goal", () => {
+    for (const goal of ["HYPERTROPHY", "GENERAL_FITNESS", "STRENGTH", "FAT_LOSS"]) {
+      for (const daysPerWeek of [2, 3, 4]) {
+        for (const sessionMinutes of [30, 45, 60]) {
+          const [first] = recommendTemplates(profile({ equipmentAccess: "MINIMAL", goal, daysPerWeek, sessionMinutes }), CATALOG_FIXTURE);
+          const needs = first.reasons.filter((r) => r.label.startsWith("Requer")).map((r) => r.label);
+          expect(needs, `${goal} ${daysPerWeek}× ${sessionMinutes} min → ${first.template.slug}`).toEqual([]);
+        }
+      }
+    }
   });
 
   it("starts a 3-day gym beginner on the flagship adaptation, with beginner full-body alternates", () => {
@@ -99,22 +158,29 @@ describe("recommendTemplates", () => {
     // beats one that fits the goal but needs a day the user doesn't have.
     expect(top({ ...home, daysPerWeek: 2, sessionMinutes: 60 }, 2)).toEqual(["full-body-express", "home-dumbbells"]);
     expect(top({ ...home, daysPerWeek: 2, sessionMinutes: 90 }, 1)).toEqual(["full-body-express"]);
+    // With 30 minutes, the 40-min dumbbell plan still beats the 30-min floor-only one: it
+    // uses what they own (a score, not the catalog's order, decides).
+    const thirty = recommendTemplates(profile({ ...home, daysPerWeek: 2, sessionMinutes: 30 }), CATALOG_FIXTURE);
+    expect(thirty[0].template.slug).toBe("full-body-express");
+    const express = thirty.find((r) => r.template.slug === "bodyweight-express");
+    expect(thirty[0].score).toBeGreaterThan(express?.score ?? -Infinity);
     expect(top({ ...home, goal: "GENERAL_FITNESS", daysPerWeek: 2 }, 1)).toEqual(["full-body-express"]);
     // 3×: the 3-day dumbbell plan for hypertrophy; for fitness in 45 min, the
     // one that fits the session leads. Never the bodyweight plan: it needs a
     // pull-up bar, which "halteres e talvez um banco" doesn't include.
     expect(top({ ...home, daysPerWeek: 3 }, 1)).toEqual(["home-dumbbells"]);
     expect(top({ ...home, daysPerWeek: 3, sessionMinutes: 60 }, 1)).toEqual(["home-dumbbells"]);
-    expect(top({ ...home, goal: "GENERAL_FITNESS" }, 3)).toEqual(["full-body-express", "home-dumbbells", "dumbbell-upper-lower"]);
+    expect(top({ ...home, goal: "GENERAL_FITNESS" }, 3)).toEqual(["full-body-express", "home-dumbbells", "bodyweight-express"]);
   });
 
-  it("offers the 2-day dumbbell plan only to those who own dumbbells or a gym", () => {
+  it("offers the 2-day dumbbell plan as it is only to those who may own dumbbells; to the rest, adapted", () => {
     const express = (equipmentAccess: string) =>
-      recommendTemplates(profile({ equipmentAccess }), CATALOG_FIXTURE).some((r) => r.template.slug === "full-body-express");
-    expect(express("HOME_DUMBBELLS")).toBe(true);
-    expect(express("FULL_GYM")).toBe(true);
-    expect(express("MINIMAL")).toBe(false);
-    expect(express("HOME_BODYWEIGHT")).toBe(false);
+      recommendTemplates(profile({ equipmentAccess }), CATALOG_FIXTURE).find((r) => r.template.slug === "full-body-express");
+    expect(express("HOME_DUMBBELLS")?.adapt).toBe(false);
+    expect(express("FULL_GYM")?.adapt).toBe(false);
+    // "Equipamento mínimo" may have dumbbells: offered, saying so.
+    expect(express("MINIMAL")?.reasons).toContainEqual({ label: "Requer halteres", match: false });
+    expect(express("HOME_BODYWEIGHT")?.adapt).toBe(true);
   });
 
   it("scores fat loss as general fitness, favoring full-body plans", () => {
@@ -174,7 +240,8 @@ describe("recommendTemplates", () => {
   it("keeps someone who already trains within a day of their week", () => {
     for (const p of everyProfile()) {
       if (p.experience === "BEGINNER") continue; // a beginner's level comes first (no 4- or 5-day home plan for them)
-      const recs = recommendTemplates(p, CATALOG_FIXTURE);
+      // Among the plans that run as they are (those come first, whatever the week).
+      const recs = recommendTemplates(p, CATALOG_FIXTURE).filter((r) => !r.adapt);
       if (!recs.some((r) => Math.abs(r.template.daysPerWeek - p.daysPerWeek) <= 1)) continue;
       expect(Math.abs(recs[0].template.daysPerWeek - p.daysPerWeek), JSON.stringify(p)).toBeLessThanOrEqual(1);
     }

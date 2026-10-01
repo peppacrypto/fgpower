@@ -9,6 +9,8 @@ import { countedWeeks } from "@/lib/programming/block-progress";
 import type { NextLoadAdvice } from "@/lib/training/next-load";
 import { groupRecordsByExercise } from "@/lib/training/personal-records-core";
 import { adviceFromLastTime } from "@/lib/training/set-plan";
+import { deriveGroups } from "@/lib/programming/groups";
+import { NOT_BANNED } from "@/lib/social/authorization";
 import { startOfWeek } from "@/lib/training/week";
 import { compareWithLast, setsText, type LastTimeDelta, type LiteSet } from "./dossier";
 import { correctableUntil as correctionDeadline, getSessionRirTargets, isStillEditable } from "@/lib/data/workout-session";
@@ -35,6 +37,10 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
       programWeek: true,
       /** Opened in an applied deload week (W-128): light on purpose. */
       isDeload: true,
+      // Its sharing choices (set from the profile's defaults when it was opened).
+      visibility: true,
+      showDetailedLoads: true,
+      caption: true,
       enrollmentId: true,
       enrollment: { select: { startedAt: true, status: true } },
       program: { select: { progressionStrategy: true, durationWeeks: true } },
@@ -47,6 +53,7 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
           repMax: true,
           rirTarget: true,
           prescribedSets: true,
+          groupKey: true,
           substitutedFromExerciseId: true,
           substitutedFrom: { select: { namePt: true } },
           exercise: { select: { namePt: true, slug: true } },
@@ -58,7 +65,18 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
         },
       },
       records: { select: { id: true, exerciseId: true, kind: true, value: true, weightKg: true, reps: true } },
-      activity: { select: { id: true, visibility: true, showDetailedLoads: true, caption: true } },
+      // shareToken is omitted from every row by default (lib/db.ts): asked for explicitly.
+      activity: {
+        select: {
+          id: true,
+          visibility: true,
+          showDetailedLoads: true,
+          caption: true,
+          updatedAt: true,
+          moderatedAt: true,
+          shareToken: true,
+        },
+      },
     },
   });
   if (!session || session.userId !== userId) return null;
@@ -70,7 +88,7 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
   const saved = { finishedAt, updatedAt: session.updatedAt };
   const correctableUntil = isStillEditable(saved, now) ? correctionDeadline(saved) : null;
 
-  const [profile, ordinal, newer, previous, completedBlock, entryWeekTrained, rirTargets] = await Promise.all([
+  const [profile, ordinal, newer, previous, completedBlock, entryWeekTrained, rirTargets, followerCount, answeredNotice] = await Promise.all([
     prisma.profile.findUnique({
       where: { userId },
       select: {
@@ -96,12 +114,22 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
       : Promise.resolve(false),
     // The RIR each exercise aimed for in its program week — what the workout screen showed.
     getSessionRirTargets(userId, session.id),
+    // "Você ainda não tem seguidores" under Seguidores — counted as /u counts them (a banned account isn't one).
+    prisma.follow.count({ where: { followingId: userId, follower: NOT_BANNED } }),
+    // The one-time question to a PRIVATE default (D-A), once answered.
+    prisma.userDismissal.findUnique({
+      where: { userId_key: { userId, key: PRIVATE_DEFAULT_NOTICE } },
+      select: { createdAt: true },
+    }),
   ]);
   const fresh = !newer;
   const blockDone = fresh && completedBlock?.enrollmentId === session.enrollmentId ? completedBlock : null;
 
+  // Supersets are read over every exercise of the workout, before the ones
+  // with nothing done drop out (lib/programming/groups.ts).
+  const groups = deriveGroups(session.exerciseLogs);
   const exercises = session.exerciseLogs
-    .map((log) => {
+    .map((log, index) => {
       const done = log.sets.filter((s) => s.isCompleted && s.setType !== "WARMUP");
       if (done.length === 0) return null;
       const prev = previous.get(log.exerciseId) ?? null;
@@ -133,6 +161,8 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
         previousText: prev ? setsText(prev.sets) : null,
         previousAt: prev?.doneAt ?? null,
         advice,
+        /** Its place in a superset / circuit ("A1", "Superset A"), or null. */
+        group: groups[index],
         /**
          * Swapped mid-workout (W-006): what the program asked for, whether the
          * program still asks for it — then "Usar no programa" can make the
@@ -185,15 +215,64 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
     recordGroups,
     /** Every exercise here is logged for the first time: the whole workout is the baseline. */
     allBaseline: exercises.length > 0 && firstTime.size === exercises.length,
-    share: {
-      published: session.activity,
-      initial: {
-        visibility: session.activity?.visibility ?? profile?.defaultWorkoutVisibility ?? "PRIVATE",
-        showDetailedLoads: session.activity?.showDetailedLoads ?? profile?.showLoadsPublicly ?? false,
-        caption: session.activity?.caption ?? "",
-      },
-    },
+    share: shareState(session, {
+      fresh,
+      followerCount,
+      askPrivateDefault: profile?.defaultWorkoutVisibility === "PRIVATE" && !answeredNotice,
+      loadsHidden: !(profile?.showLoadsPublicly ?? false),
+    }),
     next: fresh && !blockDone ? await nextUp(userId, finishedAt, now, profile) : null,
+  };
+}
+
+/** The dismissal key of the summary's one-time question to a PRIVATE default (D-A). */
+const PRIVATE_DEFAULT_NOTICE = "private-default-notice";
+
+/**
+ * The share block's state: how the workout is published (if at all), its
+ * live share link, and whether to ask a PRIVATE default the one-time
+ * question (D-A) — only on the latest workout, while it isn't out yet.
+ */
+function shareState(
+  session: {
+    visibility: "PRIVATE" | "FOLLOWERS" | "PUBLIC";
+    showDetailedLoads: boolean;
+    caption: string | null;
+    activity: {
+      id: string;
+      visibility: "PRIVATE" | "FOLLOWERS" | "PUBLIC";
+      showDetailedLoads: boolean;
+      caption: string | null;
+      updatedAt: Date;
+      moderatedAt: Date | null;
+      shareToken: string | null;
+    } | null;
+  },
+  ctx: { fresh: boolean; followerCount: number; askPrivateDefault: boolean; loadsHidden: boolean },
+) {
+  const activity = session.activity;
+  const moderated = Boolean(activity?.moderatedAt);
+  return {
+    published: activity
+      ? {
+          id: activity.id,
+          visibility: activity.visibility,
+          showDetailedLoads: activity.showDetailedLoads,
+          caption: activity.caption,
+          moderated,
+        }
+      : null,
+    link: activity?.shareToken && !moderated ? { token: activity.shareToken, version: activity.updatedAt.getTime() } : null,
+    initial: {
+      visibility: activity?.visibility ?? session.visibility,
+      showDetailedLoads: activity?.showDetailedLoads ?? session.showDetailedLoads,
+      caption: activity?.caption ?? session.caption ?? "",
+    },
+    followerCount: ctx.followerCount,
+    privateNotice:
+      ctx.fresh && ctx.askPrivateDefault && !moderated && (activity?.visibility ?? session.visibility) === "PRIVATE"
+        ? { loadsHidden: ctx.loadsHidden }
+        : null,
   };
 }
 

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { requireAdmin } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 import { parseExerciseContent } from "@/lib/exercises/content";
 import { ExerciseAdminForm } from "./exercise-admin-form";
@@ -7,6 +8,8 @@ import { ExerciseAdminForm } from "./exercise-admin-form";
 export const metadata: Metadata = { title: "Editar exercício" };
 
 export default async function AdminExerciseEditPage({ params }: PageProps<"/admin/exercises/[id]/edit">) {
+  // Not the layout's check: a client navigation can render this page segment alone.
+  await requireAdmin();
   const { id } = await params;
   const exercise = await prisma.exercise.findUnique({
     where: { id },

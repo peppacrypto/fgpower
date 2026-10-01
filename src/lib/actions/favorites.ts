@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { requireUserOrThrow } from "@/lib/auth/require-user";
+import { SESSION_EXPIRED_ERROR } from "@/lib/auth/session-expired";
 import { prisma } from "@/lib/db";
 
 export type FavoriteResult = { ok: true; favorited: boolean } | { ok: false; error: string };
@@ -9,16 +10,18 @@ export type FavoriteResult = { ok: true; favorited: boolean } | { ok: false; err
 /**
  * Sets (or, without `favorite`, flips) an exercise's favorite flag. Passing
  * the wanted state makes a retried or double-sent call idempotent. Failures
- * come back as `{ ok: false }` so the button rolls back inline.
+ * come back as `{ ok: false }` so the button rolls back inline; an expired
+ * session is SESSION_EXPIRED_ERROR (D-L), which the button shows with "Entrar".
  */
 export async function toggleFavoriteExercise(exerciseId: string, favorite?: boolean): Promise<FavoriteResult> {
   const user = await requireUserOrThrow().catch(() => null);
-  if (!user) return { ok: false, error: "Entre na sua conta para salvar favoritos." };
+  if (!user) return { ok: false, error: SESSION_EXPIRED_ERROR };
 
   try {
     const where = { userId_exerciseId: { userId: user.id, exerciseId } };
     const existing = await prisma.favoriteExercise.findUnique({ where });
-    const want = favorite ?? !existing;
+    // Server actions take any client input: only a real boolean sets the state.
+    const want = typeof favorite === "boolean" ? favorite : !existing;
 
     if (want && !existing) {
       await prisma.favoriteExercise.create({ data: { userId: user.id, exerciseId } });

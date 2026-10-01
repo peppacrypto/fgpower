@@ -16,6 +16,39 @@ describe("buildWorkoutActivitySummary", () => {
     );
     expect(summary.exercises[0].bestSet).toEqual({ weightKg: 40, reps: 11 });
   });
+
+  it("marks holds whose reps are seconds, by slug or by the program's note (L-bodyweight-timed-display)", () => {
+    const summary = buildWorkoutActivitySummary(
+      {
+        name: "Dia B",
+        durationSeconds: 1200,
+        exerciseLogs: [
+          { exerciseId: "p", exercise: { namePt: "Prancha", slug: "plank" }, sets: [set(0, 45)] },
+          { exerciseId: "f", exercise: { namePt: "Flexão de Braço", slug: "pushups" }, sets: [set(0, 15)] },
+          {
+            exerciseId: "w",
+            exercise: { namePt: "Parede", slug: "wall-sit" },
+            notes: "Os números são o tempo em segundos.",
+            sets: [set(0, 30)],
+          },
+        ],
+        records: [
+          { exerciseId: "p", exercise: { namePt: "Prancha", slug: "plank" }, kind: "MAX_REPS_AT_WEIGHT", value: 45, weightKg: 0, reps: 45 },
+          { exerciseId: "f", exercise: { namePt: "Flexão de Braço", slug: "pushups" }, kind: "MAX_REPS_AT_WEIGHT", value: 15, weightKg: 0, reps: 15 },
+        ],
+      },
+      false,
+    );
+    expect(summary.exercises.map((e) => [e.slug, e.timed])).toEqual([
+      ["plank", true],
+      ["pushups", false],
+      ["wall-sit", true],
+    ]);
+    expect(summary.prs.map((p) => [p.exerciseName, p.timed])).toEqual([
+      ["Prancha", true],
+      ["Flexão de Braço", false],
+    ]);
+  });
 });
 
 describe("toCardSummary", () => {

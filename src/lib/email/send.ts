@@ -25,6 +25,11 @@ export interface EmailMessageInput {
   headers?: Record<string, string>;
   /** Resend drops a repeat with the same key within 24 h (e.g. `digest:<user>:<monday>`). */
   idempotencyKey?: string;
+  /**
+   * What the log keeps as the subject when the real one carries a secret (the
+   * sign-in code): EmailMessage rows live 30 days and must hold no credential.
+   */
+  logSubject?: string;
 }
 
 export type SendEmailResult = { ok: true; id: string } | { ok: false; error: string };
@@ -40,7 +45,7 @@ export async function sendEmail(m: EmailMessageInput): Promise<SendEmailResult> 
 
   if (transport === "dev") {
     const id = `dev_${globalThis.crypto.randomUUID()}`;
-    console.info("[email:dev]", m.kind, to, m.subject);
+    console.info("[email:dev]", m.kind, to, m.logSubject ?? m.subject);
     await log(m, to, { transport, status: "LOGGED", providerId: id, devBody: m.text });
     return { ok: true, id };
   }
@@ -106,7 +111,7 @@ async function log(
         userId: m.userId ?? null,
         toEmail: to,
         kind: m.kind,
-        subject: m.subject.slice(0, 300),
+        subject: (m.logSubject ?? m.subject).slice(0, 300),
         transport: row.transport,
         status: row.status,
         providerId: row.providerId ?? null,

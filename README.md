@@ -159,7 +159,9 @@ docker run -d --name fgpower-postgres \
   -p 5433:5432 postgres:16-alpine
 
 npx prisma migrate dev          # applies the schema
-node scripts/build-exercise-catalog.mjs   # only needed if regenerating exercise seed data
+# only to regenerate the exercise seed data (exits 1 without --source; keeps the file's hand
+# fixes unless --overwrite, which rebuilds it from the source alone):
+# node scripts/build-exercise-catalog.mjs --source <free-exercise-db checkout> [--translations <dir>] [--overwrite]
 npx tsx prisma/seed.ts          # seeds taxonomy, exercises, evidence, principles, program
 
 npm run dev                     # http://localhost:3000

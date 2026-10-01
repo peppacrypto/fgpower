@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { GCheck } from "@/components/ui/glyph";
 import { Button } from "@/components/ui/button";
+import { WorkoutActionError } from "./action-error";
 
 /** A load asked about at the finish, and where its kg box is. */
 export interface LoadQuestion {
@@ -48,6 +49,7 @@ export function FinishSheet({
   finishing,
   discarding,
   error,
+  loginHref,
   onFinish,
   onFinishStale,
   onDiscard,
@@ -68,6 +70,8 @@ export function FinishSheet({
   finishing: "now" | "stale" | null;
   discarding: boolean;
   error: string | null;
+  /** Where "Entrar" goes when the error says the login is gone (back to this workout). */
+  loginHref: string;
   onFinish: () => void;
   onFinishStale: () => void;
   onDiscard: () => void;
@@ -248,7 +252,7 @@ export function FinishSheet({
 
           {error ? (
             <p role="alert" className="mt-3 border-l-2 border-l-danger! bg-danger-soft px-3 py-2 text-xs font-medium text-danger">
-              {error}
+              <WorkoutActionError error={error} loginHref={loginHref} />
             </p>
           ) : null}
 

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Fragment } from "react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { Play } from "lucide-react";
@@ -17,6 +18,7 @@ import { formatSpTime } from "@/lib/training/stale";
 import { formatDuration, formatKg, formatNumber, formatVolume, plural } from "@/lib/utils/format";
 import { cn } from "@/lib/utils/cn";
 import { isWorkoutMilestone } from "@/lib/programming/milestones";
+import { groupRule } from "@/lib/programming/groups";
 import { BlockDonePanel } from "@/components/programs/block-done-panel";
 import { PostWorkoutAsks } from "@/components/reminders/post-workout-asks";
 import { formatDayNumber, formatSpShortDate, type LastTimeDelta } from "./dossier";
@@ -110,6 +112,7 @@ export default async function WorkoutSummaryPage({ params, searchParams }: PageP
           <p className={cn(FIELD, "mt-2 text-xs tracking-[0.14em] text-muted")}>
             Treino nº {ordinal}
             {week ? ` · ${week}` : ""}
+            {session.isDeload ? " · deload" : ""}
           </p>
           <h1 className="text-display mt-1.5 text-3xl font-extrabold tracking-tight wrap-break-word sm:text-4xl">
             {session.name}
@@ -128,7 +131,15 @@ export default async function WorkoutSummaryPage({ params, searchParams }: PageP
 
       {/* Who sees it — near the top, compact; the workout itself is already saved. */}
       <section aria-label="Compartilhar treino" className="mt-5 border-y border-border py-3">
-        <ShareWorkoutForm sessionId={session.id} initial={share.initial} published={share.published} />
+        <ShareWorkoutForm
+          sessionId={session.id}
+          workoutName={session.name}
+          initial={share.initial}
+          published={share.published}
+          link={share.link}
+          followerCount={share.followerCount}
+          privateNotice={share.privateNotice}
+        />
       </section>
 
       {/* Records: one card per exercise, in workout order — or the baseline. */}
@@ -166,10 +177,22 @@ export default async function WorkoutSummaryPage({ params, searchParams }: PageP
         <SectionHead label="Exercícios" count={exercises.length} />
         <div className="mt-3 flex flex-col gap-2">
           {exercises.map((ex, i) => (
-            <div key={ex.logId} className="reg-frame p-4">
+            <div
+              key={ex.logId}
+              className={cn("reg-frame p-4", ex.group && "border-l-2 border-l-accent")}
+              data-group={ex.group?.label}
+            >
+              {/* A superset / circuit (W-104): its rule on its first card, as the builder and the
+                  workout say it ("Superset A · alterne as séries"), and "A1"/"A2" on each. */}
+              {ex.group?.first ? <GroupRuleLine text={groupRule(ex.group)} /> : null}
               <div className="flex items-baseline gap-3">
-                <span className="w-5 shrink-0 font-mono text-xs text-foreground/30">{String(i + 1).padStart(2, "0")}</span>
+                <span className="w-5 shrink-0 font-mono text-xs text-muted" aria-hidden>
+                  {String(i + 1).padStart(2, "0")}
+                </span>
                 <p className="min-w-0 flex-1 text-sm font-semibold wrap-break-word">{ex.name}</p>
+                {ex.group ? (
+                  <span className="shrink-0 font-mono text-[11px] font-bold text-accent">{ex.group.label}</span>
+                ) : null}
               </div>
               {ex.swap ? (
                 <div className="mt-1 flex flex-wrap items-center gap-x-3 pl-8 text-xs text-muted" data-swap>
@@ -199,6 +222,7 @@ export default async function WorkoutSummaryPage({ params, searchParams }: PageP
                     delta={ex.delta}
                     timed={isTimedHold({ slug: ex.slug })}
                     noLoad={ex.sets.every((s) => s.weightKg === 0)}
+                    deload={session.isDeload}
                   />
                   {ex.previousText && ex.delta.kind !== "first" ? (
                     <span className="mt-0.5 block font-mono text-[11px] text-muted">
@@ -208,7 +232,16 @@ export default async function WorkoutSummaryPage({ params, searchParams }: PageP
                   ) : null}
                 </dd>
                 {ex.advice ? (
-                  <NextAdvice advice={isTimedHold({ slug: ex.slug }) ? adviceInSeconds(ex.advice) : ex.advice} />
+                  <NextAdvice
+                    advice={
+                      // A deload workout is light on purpose: the next suggestion starts from the workout before it (W-128).
+                      session.isDeload
+                        ? DELOAD_ADVICE
+                        : isTimedHold({ slug: ex.slug })
+                          ? adviceInSeconds(ex.advice)
+                          : ex.advice
+                    }
+                  />
                 ) : null}
               </dl>
             </div>
@@ -241,8 +274,29 @@ function DossierStamp({ ordinal }: { ordinal: number }) {
   );
 }
 
+/** A group's rule in micro-caps: on a narrow phone it wraps at its " · ", never inside a half. */
+function GroupRuleLine({ text }: { text: string }) {
+  return (
+    <p className={cn(FIELD, "mb-1.5 pl-8 text-accent")}>
+      {text.split(" · ").map((part, i) => (
+        <Fragment key={i}>
+          {i > 0 ? " · " : null}
+          <span className="whitespace-nowrap">{part}</span>
+        </Fragment>
+      ))}
+    </p>
+  );
+}
+
+/** "Na próxima" after a deload workout: nothing to raise, the reference is the workout before it. */
+const DELOAD_ADVICE = {
+  kind: "hold",
+  headline: "Mantenha as cargas",
+  reason: "Semana de deload: a próxima sugestão parte do seu último treino antes dela.",
+} as const;
+
 /** "Na próxima": the advice the workout screen will give next time. */
-function NextAdvice({ advice }: { advice: NonNullable<WorkoutSummary["exercises"][number]["advice"]> }) {
+function NextAdvice({ advice }: { advice: Pick<NonNullable<WorkoutSummary["exercises"][number]["advice"]>, "kind" | "headline" | "reason"> }) {
   return (
     <>
       <dt className={cn(FIELD, "mt-2 text-muted sm:mt-0")}>Na próxima</dt>
@@ -317,14 +371,18 @@ function DeltaChip({
   delta,
   timed = false,
   noLoad = false,
+  deload = false,
 }: {
   delta: LastTimeDelta;
   /** A hold: its reps are seconds ("↑ tempo +5 s"). */
   timed?: boolean;
   /** Done without load (bodyweight): only the reps (or the time) compare. */
   noLoad?: boolean;
+  /** A deload workout (W-128): lighter on purpose, never a decline. */
+  deload?: boolean;
 }) {
   const base = "font-mono text-xs font-bold tabular-nums";
+  if (deload && delta.kind !== "first") return <span className={cn(base, "text-muted")}>deload · leve de propósito</span>;
   const repsDelta = (sign: string, n: number) =>
     timed ? `tempo ${sign}${formatNumber(n, 0)}\u00a0s` : `reps ${sign}${formatNumber(n, 0)}`;
   switch (delta.kind) {

@@ -17,12 +17,13 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
     durationWeeks: 4,
     sessionMinutes: 60,
     dayNames: ["Sessão A", "Sessão B", "Sessão C — Superior"],
+    equipmentIds: ["barbell", "cable", "dumbbell", "machine"],
   },
   {
     slug: "gd-adaptacao",
     namePt: "GD Adaptação",
     taglinePt:
-      "Bloco 1 de 9 · semanas 1-4 (mês 1): aprenda os movimentos, calibre o RIR e prepare articulações e cargas para o GD 1, em cinco treinos de ~45-50 min.",
+      "Aprenda os movimentos, calibre o RIR e prepare articulações e cargas para o GD 1: cinco treinos de ~45-50 min por semana, durante 4 semanas.",
     goal: "HYPERTROPHY",
     experienceLevel: "BEGINNER",
     trainingStyle: "HYBRID",
@@ -37,12 +38,13 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
       "Quinta — Superior B (halteres e máquinas)",
       "Sexta — Inferior B (hack e glúteos)",
     ],
+    equipmentIds: ["barbell", "bodyweight", "cable", "dumbbell", "machine"],
   },
   {
     slug: "gd-1",
     namePt: "GD 1",
     taglinePt:
-      "Bloco 2 de 9 · semanas 5-17 (meses 2-4): base de hipertrofia em 5 dias, 80→88 séries por semana e o primeiro teste de força do plano.",
+      "Base de hipertrofia em 5 dias: de 80 a 88 séries por semana e o primeiro teste de força do plano.",
     goal: "HYPERTROPHY",
     experienceLevel: "BEGINNER",
     trainingStyle: "HYBRID",
@@ -57,12 +59,13 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
       "Quinta — Puxar (moderado)",
       "Sexta — Pernas (posterior de coxa e glúteos)",
     ],
+    equipmentIds: ["barbell", "cable", "dumbbell", "machine", "pull-up-bar"],
   },
   {
     slug: "gd-2",
     namePt: "GD 2",
     taglinePt:
-      "Bloco 3 de 9 · semanas 18-30 (meses 5-7): força-hipertrofia com top sets + back-offs no supino e no hack; Superior/Inferior A-B + sexta de braços e ombros.",
+      "Força-hipertrofia com top sets e back-offs no supino e no hack, em Superior/Inferior A-B e uma sexta de braços e ombros.",
     goal: "STRENGTH_HYPERTROPHY",
     experienceLevel: "INTERMEDIATE",
     trainingStyle: "UPPER_LOWER",
@@ -77,12 +80,13 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
       "Quinta — Inferior B (moderado, sem falha)",
       "Sexta — Braços, ombros e abdômen",
     ],
+    equipmentIds: ["barbell", "cable", "dumbbell", "machine"],
   },
   {
     slug: "gd-3",
     namePt: "GD 3",
     taglinePt:
-      "Bloco 4 de 9 · semanas 31-43 (meses 8-10): o maior volume do ano 1, em Empurrar/Puxar/Pernas/Superior/Inferior, com novas âncoras de força.",
+      "O maior volume do ano 1, em Empurrar/Puxar/Pernas/Superior/Inferior, com novas âncoras de força.",
     goal: "HYPERTROPHY",
     experienceLevel: "INTERMEDIATE",
     trainingStyle: "HYBRID",
@@ -97,12 +101,13 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
       "Quinta — Superior (moderado)",
       "Sexta — Inferior (posteriores e glúteos)",
     ],
+    equipmentIds: ["barbell", "cable", "dumbbell", "ez-bar", "machine", "other-equipment", "pull-up-bar"],
   },
   {
     slug: "gd-4",
     namePt: "GD 4",
     taglinePt:
-      "Bloco 5 de 9 · semanas 44-56 (meses 11-13): repetições altas, menos carga nas articulações, uma top set pesada por âncora e parciais alongadas — fecha o ano 1 com teste e revisão.",
+      "Repetições altas e menos carga nas articulações, uma top set pesada por âncora e parciais alongadas — fecha o ano 1 com teste e revisão.",
     goal: "HYPERTROPHY",
     experienceLevel: "INTERMEDIATE",
     trainingStyle: "HYBRID",
@@ -117,12 +122,13 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
       "Quinta — Puxar (moderado)",
       "Sexta — Pernas (stiff + glúteos)",
     ],
+    equipmentIds: ["barbell", "bodyweight", "cable", "dumbbell", "machine", "other-equipment"],
   },
   {
     slug: "gd-5",
     namePt: "GD 5",
     taglinePt:
-      "Bloco 6 de 9 · semanas 57-69 (meses 14-16, início do ano 2): especialização em que peito e deltoide lateral sobem até 20 e 18 séries semanais, enquanto o resto do corpo treina com ~25% menos volume.",
+      "Especialização de peito e deltoide lateral, até 20 e 18 séries semanais, com o resto do corpo em ~25% menos volume. Abre o ano 2.",
     goal: "HYPERTROPHY",
     experienceLevel: "ADVANCED",
     trainingStyle: "UPPER_LOWER",
@@ -137,12 +143,13 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
       "Quinta — Inferior B (posterior + glúteos)",
       "Sexta — Prioridade (peito + deltoide lateral)",
     ],
+    equipmentIds: ["barbell", "cable", "dumbbell", "machine", "pull-up-bar"],
   },
   {
     slug: "gd-6",
     namePt: "GD 6",
     taglinePt:
-      "Bloco 7 de 9 · semanas 70-82 (meses 17-19): top sets pesadas nas âncoras, 91 séries fixas por semana e progressão pela carga — força e músculo no mesmo bloco.",
+      "Força e músculo no mesmo bloco: top sets pesadas nas âncoras, 91 séries fixas por semana e progressão pela carga.",
     goal: "STRENGTH_HYPERTROPHY",
     experienceLevel: "ADVANCED",
     trainingStyle: "HYBRID",
@@ -157,12 +164,13 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
       "Quinta — Puxar (costas + bíceps)",
       "Sexta — Pernas (terra romeno pesado)",
     ],
+    equipmentIds: ["barbell", "cable", "dumbbell", "machine", "pull-up-bar"],
   },
   {
     slug: "gd-7",
     namePt: "GD 7",
     taglinePt:
-      "Bloco 8 de 9 · semanas 83-95 (meses 20-22): especialização em posteriores de coxa e glúteos, treinados 3x por semana, com o resto do corpo em volume reduzido e as novas âncoras de força.",
+      "Especialização de posteriores de coxa e glúteos, 3× por semana, com o resto do corpo em volume reduzido e as novas âncoras de força.",
     goal: "HYPERTROPHY",
     experienceLevel: "ADVANCED",
     trainingStyle: "HYBRID",
@@ -177,12 +185,13 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
       "Quinta — Superior (supino pesado)",
       "Sexta — Inferior (terra romeno + prioridade)",
     ],
+    equipmentIds: ["barbell", "cable", "dumbbell", "ez-bar", "machine", "other-equipment", "pull-up-bar"],
   },
   {
     slug: "gd-8",
     namePt: "GD 8",
     taglinePt:
-      "Bloco 9 de 9 · semanas 96-104 (meses 23-24): consolida os volumes que funcionaram, faz uma última onda com rampa de peito e costas e fecha com o teste final dos 2 anos.",
+      "Consolida os volumes que funcionaram, faz uma última onda com rampa de peito e costas e fecha com o teste final dos 2 anos.",
     goal: "HYPERTROPHY",
     experienceLevel: "ADVANCED",
     trainingStyle: "HYBRID",
@@ -197,6 +206,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
       "Quinta — Puxar (moderado)",
       "Sexta — Pernas (posterior + glúteos)",
     ],
+    equipmentIds: ["barbell", "cable", "dumbbell", "machine", "other-equipment"],
   },
   {
     slug: "full-body-beginner",
@@ -210,6 +220,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
     durationWeeks: 8,
     sessionMinutes: 60,
     dayNames: ["Sessão A", "Sessão B", "Sessão C"],
+    equipmentIds: ["barbell", "bodyweight", "cable", "dumbbell", "machine", "other-equipment"],
   },
   {
     slug: "push-pull-legs",
@@ -224,6 +235,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
     durationWeeks: 6,
     sessionMinutes: 70,
     dayNames: ["Push A", "Pull A", "Pernas A", "Push B", "Pull B", "Pernas B"],
+    equipmentIds: ["barbell", "bodyweight", "cable", "dumbbell", "machine", "pull-up-bar"],
   },
   {
     slug: "upper-lower",
@@ -243,6 +255,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
       "Superior B — Ênfase em Puxar",
       "Inferior B — Ênfase em Levantamento Terra",
     ],
+    equipmentIds: ["barbell", "cable", "dumbbell", "machine", "other-equipment", "pull-up-bar"],
   },
   {
     slug: "strength-fundamentals",
@@ -261,6 +274,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
       "Sessão B — Terra e Desenvolvimento",
       "Sessão C — Agachamento Frontal e Inclinado",
     ],
+    equipmentIds: ["barbell", "cable", "machine", "pull-up-bar"],
   },
   {
     slug: "home-dumbbells",
@@ -274,6 +288,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
     durationWeeks: 8,
     sessionMinutes: 55,
     dayNames: ["Corpo Inteiro A", "Corpo Inteiro B", "Corpo Inteiro C"],
+    equipmentIds: ["bodyweight", "dumbbell"],
   },
   {
     slug: "strength-for-runners",
@@ -292,6 +307,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
       "Sessão B — Dobradiça e Cadeia Posterior",
       "Sessão C — Potência e Unilateral",
     ],
+    equipmentIds: ["barbell", "bodyweight", "cable", "dumbbell", "machine", "other-equipment"],
   },
   {
     slug: "full-body-express",
@@ -306,6 +322,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
     durationWeeks: 6,
     sessionMinutes: 40,
     dayNames: ["Sessão A — Corpo Inteiro", "Sessão B — Corpo Inteiro"],
+    equipmentIds: ["bodyweight", "dumbbell"],
   },
   {
     slug: "glute-focus",
@@ -324,6 +341,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
       "Inferior B — Ênfase em Posterior",
       "Superior B — Ênfase em Puxar",
     ],
+    equipmentIds: ["barbell", "cable", "dumbbell", "machine", "other-equipment"],
   },
   {
     slug: "ppl-advanced",
@@ -345,6 +363,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
       "Pull B — Alongamento e Pump",
       "Legs B — Cadeia Posterior",
     ],
+    equipmentIds: ["barbell", "cable", "dumbbell", "machine", "pull-up-bar"],
   },
   {
     slug: "arnold-split",
@@ -366,6 +385,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
       "Ombro & Braço — Bomba",
       "Perna — Cadeia Posterior",
     ],
+    equipmentIds: ["barbell", "bodyweight", "cable", "dumbbell", "machine"],
   },
   {
     slug: "classic-split",
@@ -380,6 +400,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
     durationWeeks: 8,
     sessionMinutes: 60,
     dayNames: ["Dia 1 — Peito", "Dia 2 — Costas", "Dia 3 — Pernas", "Dia 4 — Ombros", "Dia 5 — Braços"],
+    equipmentIds: ["barbell", "cable", "dumbbell", "machine"],
   },
   {
     slug: "torso-limbs",
@@ -394,6 +415,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
     durationWeeks: 8,
     sessionMinutes: 65,
     dayNames: ["Tronco — Tensão", "Membros — Tensão", "Tronco — Bomba", "Membros — Bomba"],
+    equipmentIds: ["barbell", "cable", "dumbbell", "machine", "other-equipment"],
   },
   {
     slug: "powerbuilding",
@@ -407,6 +429,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
     durationWeeks: 10,
     sessionMinutes: 70,
     dayNames: ["Superior — Força", "Inferior — Força", "Superior — Hipertrofia", "Inferior — Hipertrofia"],
+    equipmentIds: ["barbell", "cable", "dumbbell", "machine", "other-equipment", "pull-up-bar"],
   },
   {
     slug: "linear-5x5",
@@ -421,6 +444,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
     durationWeeks: 8,
     sessionMinutes: 55,
     dayNames: ["Treino A", "Treino B"],
+    equipmentIds: ["barbell", "cable", "pull-up-bar"],
   },
   {
     slug: "strength-peak",
@@ -435,6 +459,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
     durationWeeks: 4,
     sessionMinutes: 60,
     dayNames: ["Dia do Agachamento", "Dia do Supino", "Dia do Terra", "Dia do Desenvolvimento"],
+    equipmentIds: ["barbell", "cable", "dumbbell", "machine", "other-equipment", "pull-up-bar"],
   },
   {
     slug: "active-deload",
@@ -453,6 +478,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
       "Sessão B — Corpo Inteiro com Pesos Livres Leves",
       "Sessão C — Bomba nos Cabos",
     ],
+    equipmentIds: ["barbell", "cable", "dumbbell", "machine"],
   },
   {
     slug: "calisthenics",
@@ -466,6 +492,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
     durationWeeks: 8,
     sessionMinutes: 50,
     dayNames: ["Sessão A — Fundamentos", "Sessão B — Puxada Vertical", "Sessão C — Empurrar & Unilateral"],
+    equipmentIds: ["bodyweight", "none", "pull-up-bar"],
   },
   {
     slug: "kettlebell-strong",
@@ -480,6 +507,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
     durationWeeks: 6,
     sessionMinutes: 50,
     dayNames: ["A — Swing & Desenvolvimento", "B — Clean & Agachamento", "C — Snatch & Densidade"],
+    equipmentIds: ["dumbbell", "kettlebell"],
   },
   {
     slug: "dumbbell-upper-lower",
@@ -499,6 +527,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
       "Superior B — Vertical + Alongado",
       "Inferior B — Ênfase Unilateral",
     ],
+    equipmentIds: ["bodyweight", "dumbbell"],
   },
   {
     slug: "minimalist-strength",
@@ -513,6 +542,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
     durationWeeks: 8,
     sessionMinutes: 50,
     dayNames: ["Sessão A — Agachamento e Supino", "Sessão B — Terra e Desenvolvimento"],
+    equipmentIds: ["barbell", "pull-up-bar"],
   },
   {
     slug: "arms-specialization",
@@ -532,6 +562,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
       "Braço B — Cotovelos com Ênfase de Puxar",
       "Manutenção — Superior",
     ],
+    equipmentIds: ["barbell", "cable", "dumbbell", "ez-bar", "machine", "other-equipment", "pull-up-bar"],
   },
   {
     slug: "back-focus",
@@ -551,6 +582,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
       "Largura B — Supinada & Neutra",
       "Densidade B — Remada de Detalhe & Trapézio",
     ],
+    equipmentIds: ["barbell", "cable", "dumbbell", "machine", "other-equipment", "pull-up-bar"],
   },
   {
     slug: "chest-focus",
@@ -570,6 +602,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
       "Dia C — Ênfase Inclinada",
       "Dia D — Crucifixos e Cross Over",
     ],
+    equipmentIds: ["barbell", "cable", "dumbbell", "machine"],
   },
   {
     slug: "delts-3d",
@@ -584,6 +617,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
     durationWeeks: 6,
     sessionMinutes: 55,
     dayNames: ["Pressão & Largura", "Posterior & Braço", "Altura & Força", "Densidade & Bombeamento"],
+    equipmentIds: ["barbell", "cable", "dumbbell", "machine"],
   },
   {
     slug: "legs-specialization",
@@ -603,6 +637,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
       "Perna B — Posterior & Glúteo",
       "Superior B — Suporte (Ênfase Puxar)",
     ],
+    equipmentIds: ["barbell", "cable", "dumbbell", "machine", "pull-up-bar"],
   },
   {
     slug: "lengthened-partials",
@@ -622,6 +657,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
       "Superior B — Tensão no Alongamento (ênfase puxar)",
       "Inferior B — Cadeia Posterior em Alongamento",
     ],
+    equipmentIds: ["barbell", "cable", "dumbbell", "machine"],
   },
   {
     slug: "tempo-control",
@@ -636,6 +672,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
     durationWeeks: 6,
     sessionMinutes: 60,
     dayNames: ["Sessão A — Excêntrica nos Compostos", "Sessão B — Cadência Constante", "Sessão C — Pausa no Alongado"],
+    equipmentIds: ["barbell", "cable", "dumbbell", "machine"],
   },
   {
     slug: "metabolite-pump",
@@ -655,6 +692,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
       "Superior B — Bomba de Costas e Ombro",
       "Inferior B — Ênfase em Glúteo e Posterior",
     ],
+    equipmentIds: ["barbell", "cable", "dumbbell", "ez-bar", "machine", "pull-up-bar"],
   },
   {
     slug: "silver-strength-50plus",
@@ -669,6 +707,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
     durationWeeks: 8,
     sessionMinutes: 50,
     dayNames: ["Sessão A — Levantar e Empurrar", "Sessão B — Puxar e Carregar", "Sessão C — Posterior e Estabilidade"],
+    equipmentIds: ["bodyweight", "cable", "dumbbell", "machine", "other-equipment"],
   },
   {
     slug: "desk-worker",
@@ -687,6 +726,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
       "Sessão B — Retração & Ancoragem",
       "Sessão C — Extensão & Blindagem",
     ],
+    equipmentIds: ["barbell", "bodyweight", "cable", "dumbbell", "machine", "other-equipment"],
   },
   {
     slug: "machines-only-beginner",
@@ -701,6 +741,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
     durationWeeks: 8,
     sessionMinutes: 50,
     dayNames: ["Sessão A — Fundamentos", "Sessão B — Variações Guiadas", "Sessão C — Base Completa"],
+    equipmentIds: ["cable", "machine"],
   },
   {
     slug: "athletic-power",
@@ -719,6 +760,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
       "Potência Inferior B — Terra e Saltos Reativos",
       "Potência Superior B — Desenvolvimento e Puxada",
     ],
+    equipmentIds: ["barbell", "bodyweight", "cable", "medicine-ball", "other-equipment", "pull-up-bar"],
   },
   {
     slug: "combat-sports",
@@ -733,6 +775,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
     durationWeeks: 8,
     sessionMinutes: 55,
     dayNames: ["Sessão A — Soco & Base", "Sessão B — Puxão & Dobradiça", "Sessão C — Giro & Blindagem"],
+    equipmentIds: ["barbell", "bodyweight", "cable", "dumbbell", "kettlebell", "medicine-ball", "other-equipment"],
   },
   {
     slug: "cyclists-strength",
@@ -747,6 +790,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
     durationWeeks: 8,
     sessionMinutes: 45,
     dayNames: ["Sessão A — Agachamento e Anti-Rotação", "Sessão B — Leg Press e Extensão de Quadril"],
+    equipmentIds: ["barbell", "bodyweight", "cable", "machine"],
   },
   {
     slug: "climbers-pull",
@@ -761,6 +805,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
     durationWeeks: 8,
     sessionMinutes: 55,
     dayNames: ["Sessão A — Puxada Pesada", "Sessão B — Volume de Costas & Antebraço", "Sessão C — Preensão & Contato"],
+    equipmentIds: ["barbell", "bodyweight", "cable", "dumbbell", "other-equipment", "pull-up-bar"],
   },
   {
     slug: "hybrid-athlete",
@@ -780,6 +825,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
       "Inferior B — Terra e Unilateral",
       "Superior B — Hipertrofia de Puxar + Zona 2",
     ],
+    equipmentIds: ["barbell", "cable", "dumbbell", "machine", "other-equipment", "pull-up-bar"],
   },
   {
     slug: "full-body-strength-hyp-3",
@@ -794,6 +840,7 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
     durationWeeks: 8,
     sessionMinutes: 65,
     dayNames: ["Sessão A — Âncora: Agachamento", "Sessão B — Âncora: Supino", "Sessão C — Âncora: Terra"],
+    equipmentIds: ["barbell", "cable", "dumbbell", "machine", "pull-up-bar"],
   },
   {
     slug: "high-frequency-squat",
@@ -813,5 +860,34 @@ export const CATALOG_FIXTURE: CatalogItem[] = [
       "Sexta — Controle na Caixa",
       "Sábado — Velocidade",
     ],
+    equipmentIds: ["barbell", "cable", "dumbbell", "machine", "other-equipment"],
+  },
+  {
+    slug: "bands-bodyweight-full-body",
+    namePt: "Elásticos e Peso do Corpo — Full-Body 3×",
+    taglinePt: "Elásticos e o peso do corpo, sem barra fixa nem kettlebell: o corpo inteiro 3× por semana, em cerca de 45 minutos.",
+    goal: "GENERAL_FITNESS",
+    experienceLevel: "BEGINNER",
+    trainingStyle: "FULL_BODY",
+    equipmentAccess: "MINIMAL",
+    daysPerWeek: 3,
+    durationWeeks: 8,
+    sessionMinutes: 45,
+    dayNames: ["Sessão A — Agachar e Empurrar", "Sessão B — Afundo e Desenvolvimento", "Sessão C — Subida e Peito"],
+    equipmentIds: ["bodyweight", "none", "resistance-band"],
+  },
+  {
+    slug: "bodyweight-express",
+    namePt: "Peso do Corpo Express 2×",
+    taglinePt: "Dois treinos de corpo inteiro de 30 minutos por semana, sem equipamento nenhum — nem barra fixa.",
+    goal: "GENERAL_FITNESS",
+    experienceLevel: "BEGINNER",
+    trainingStyle: "FULL_BODY",
+    equipmentAccess: "HOME_BODYWEIGHT",
+    daysPerWeek: 2,
+    durationWeeks: 6,
+    sessionMinutes: 30,
+    dayNames: ["Sessão A — Corpo Inteiro", "Sessão B — Corpo Inteiro"],
+    equipmentIds: ["bodyweight", "none"],
   },
 ];

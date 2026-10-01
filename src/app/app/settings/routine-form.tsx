@@ -3,11 +3,10 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label, Select, Textarea } from "@/components/ui/input";
-import { cn } from "@/lib/utils/cn";
 import { formatDuration } from "@/lib/utils/format";
 import { DaysMatchNote, WeekdayChips } from "@/app/onboarding/weekday-chips";
 import { FieldError, FormError, useProfileSave } from "./profile-form";
-import { INVALID_FIELD, SaveStatus } from "@/components/ui/save-status";
+import { SaveStatus } from "@/components/ui/save-status";
 
 const SESSION_MINUTES = [30, 45, 60, 75, 90, 120];
 
@@ -53,7 +52,7 @@ export function RoutineForm({ initial }: Props) {
             {...daysPerWeek.props}
             value={daysPerWeekValue}
             onChange={(e) => setDaysPerWeekValue(Number(e.target.value))}
-            className={cn("mt-1.5", INVALID_FIELD)}
+            className="mt-1.5"
           >
             {[1, 2, 3, 4, 5, 6, 7].map((d) => (
               <option key={d} value={d}>
@@ -65,7 +64,7 @@ export function RoutineForm({ initial }: Props) {
         </div>
         <div>
           <Label htmlFor="sessionMinutes">Duração da sessão</Label>
-          <Select {...sessionMinutes.props} defaultValue={initial.sessionMinutes} className={cn("mt-1.5", INVALID_FIELD)}>
+          <Select {...sessionMinutes.props} defaultValue={initial.sessionMinutes} className="mt-1.5">
             {minuteOptions.map((m) => (
               <option key={m} value={m}>
                 ~{formatDuration(m * 60)}
@@ -116,7 +115,7 @@ export function RoutineForm({ initial }: Props) {
               placeholder="Ex.: corro 3x por semana, treinando para uma meia-maratona"
               maxLength={300}
               rows={2}
-              className={cn("mt-2", INVALID_FIELD)}
+              className="mt-2"
             />
             <FieldError name="enduranceNotes" error={enduranceNotes.error} />
           </>
@@ -131,7 +130,7 @@ export function RoutineForm({ initial }: Props) {
           placeholder="Ex.: evitar agachamento profundo por causa do joelho"
           maxLength={500}
           rows={3}
-          className={cn("mt-1.5", INVALID_FIELD)}
+          className="mt-1.5"
         />
         <FieldError name="limitations" error={limitations.error} />
         <p className="mt-1.5 text-xs text-muted">

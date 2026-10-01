@@ -16,6 +16,8 @@ import { joinPt, needLabels } from "@/lib/programming/equipment-needs";
 import { glossaryFor } from "@/lib/programming/glossary";
 import { formatNumber, formatRir, plural, pluralWord } from "@/lib/utils/format";
 import { seriesLevelLabel, splitSeriesTagline, type SeriesBlock } from "@/lib/programming/gd-series";
+import { deriveGroups, groupRule } from "@/lib/programming/groups";
+import { cn } from "@/lib/utils/cn";
 import { OpenSectionsOnHash, StickyActionsBar } from "./dossier-client";
 import { SeriesRail } from "./gd-series-rail";
 
@@ -71,6 +73,8 @@ interface DossierTemplate {
       restSeconds: number;
       warmupSets: number;
       notesPt?: string | null;
+      /** A superset's key (W-104): adjacent exercises sharing one alternate their sets. */
+      groupKey?: string | null;
       exercise: { namePt: string; slug: string; equipmentId?: string | null; media?: { url: string }[] };
     }[];
   }[];
@@ -119,6 +123,8 @@ export function TemplateDossier({
     ? (template.weeklyGuidance as Array<{ week: number; rirTarget: number; setsNotePt: string; notePt?: string }>)
     : [];
   const exercises = template.days.flatMap((d) => d.exercises);
+  // Supersets (W-104): each day's groups, lettered A, B… in order.
+  const daySlots = template.days.map((d) => deriveGroups(d.exercises.map((ex) => ({ groupKey: ex.groupKey ?? null }))));
   const glossary = glossaryFor(exercises.map((ex) => ex.notesPt));
   // "Requer: máquinas, cabos e barra" — what the exercises actually use.
   const needs = needLabels(exercises.map((ex) => ex.exercise.equipmentId ?? "").filter(Boolean));
@@ -224,42 +230,58 @@ export function TemplateDossier({
                 ) : null}
               </div>
               <ul className="divide-y divide-border">
-                {day.exercises.map((ex) => (
-                  <li key={ex.id}>
-                    <Link
-                      href={`${exerciseHref}/${ex.exercise.slug}`}
-                      className="group flex gap-3 px-4 py-2.5 transition-colors hover:bg-[var(--ink-3)]"
-                    >
-                      <div className="relative size-11 shrink-0 overflow-hidden rounded-[3px] bg-surface-2">
-                        {ex.exercise.media?.[0]?.url ? (
-                          <Image
-                            src={ex.exercise.media[0].url}
-                            alt=""
-                            fill
-                            sizes="44px"
-                            className="object-cover"
-                          />
-                        ) : (
-                          <div className="flex h-full items-center justify-center text-muted">
-                            <GLoad className="size-4" />
-                          </div>
-                        )}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <span className="block text-sm group-hover:text-accent">{ex.exercise.namePt}</span>
-                        <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 font-mono text-[11px] text-muted">
-                          <span className="font-semibold tabular-nums text-foreground">
-                            {ex.sets}×{ex.repMin === ex.repMax ? ex.repMin : `${ex.repMin}-${ex.repMax}`}
-                          </span>
-                          {ex.rirTarget != null ? <span>{formatRir(ex.rirTarget)}</span> : null}
-                          {ex.warmupSets > 0 ? <span>+{ex.warmupSets} aquec.</span> : null}
+                {day.exercises.map((ex, j) => {
+                  const slot = daySlots[i][j];
+                  return (
+                    <li key={ex.id} data-group={slot?.label} className={cn(slot && "border-l-2 border-l-accent")}>
+                      {slot?.first ? (
+                        <p className="px-4 pt-2 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-accent">
+                          {groupRule(slot)}
+                        </p>
+                      ) : null}
+                      <Link
+                        href={`${exerciseHref}/${ex.exercise.slug}`}
+                        className="group flex gap-3 px-4 py-2.5 transition-colors hover:bg-[var(--ink-3)]"
+                      >
+                        <div className="relative size-11 shrink-0 overflow-hidden rounded-[3px] bg-surface-2">
+                          {ex.exercise.media?.[0]?.url ? (
+                            <Image
+                              src={ex.exercise.media[0].url}
+                              alt=""
+                              fill
+                              sizes="44px"
+                              className="object-cover"
+                            />
+                          ) : (
+                            <div className="flex h-full items-center justify-center text-muted">
+                              <GLoad className="size-4" />
+                            </div>
+                          )}
                         </div>
-                        {ex.notesPt ? <p className="mt-1 text-xs text-muted">{ex.notesPt}</p> : null}
-                      </div>
-                      <GArrow className="mt-1 size-3.5 shrink-0 self-start text-muted transition-transform group-hover:translate-x-0.5" />
-                    </Link>
-                  </li>
-                ))}
+                        <div className="min-w-0 flex-1">
+                          <span className="block text-sm group-hover:text-accent">
+                            {slot ? (
+                              <span className="mr-1.5 font-mono text-[11px] font-bold text-accent">
+                                <span aria-hidden>{slot.label}</span>
+                                <span className="sr-only">{`${slot.heading}, ${slot.position} de ${slot.size}:`}</span>
+                              </span>
+                            ) : null}
+                            {ex.exercise.namePt}
+                          </span>
+                          <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 font-mono text-[11px] text-muted">
+                            <span className="font-semibold tabular-nums text-foreground">
+                              {ex.sets}×{ex.repMin === ex.repMax ? ex.repMin : `${ex.repMin}-${ex.repMax}`}
+                            </span>
+                            {ex.rirTarget != null ? <span>{formatRir(ex.rirTarget)}</span> : null}
+                            {ex.warmupSets > 0 ? <span>+{ex.warmupSets} aquec.</span> : null}
+                          </div>
+                          {ex.notesPt ? <p className="mt-1 text-xs text-muted">{ex.notesPt}</p> : null}
+                        </div>
+                        <GArrow className="mt-1 size-3.5 shrink-0 self-start text-muted transition-transform group-hover:translate-x-0.5" />
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           ))}

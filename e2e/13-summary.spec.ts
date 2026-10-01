@@ -1,4 +1,5 @@
 import { devices, expect, test, type Page } from "@playwright/test";
+import { sql, sqlText, userIdOf } from "./fixtures";
 import {
   QUINTA,
   finishAndSave,
@@ -14,17 +15,35 @@ import {
  * The workout summary as a "dossiê do treino": saved confirmation, dated
  * masthead, the baseline instead of a flood of first-time "records", real
  * records one card per exercise, vs. last time and "Na próxima" per exercise,
- * the next workout, and the compact share row.
+ * the next workout, and the compact share row — which opens published: new
+ * accounts publish finished workouts to their followers, loads hidden
+ * (decision 10).
  */
 
 test.use({ ...devices["iPhone 13"], defaultBrowserType: "chromium", timezoneId: "America/Sao_Paulo", locale: "pt-BR" });
 
 const EXERCISE = "Puxada Alta Unilateral no Pulley";
+/** GD 1's Tuesday: its 4th and 5th exercises are Superset A (Face Pull, then the calf raise). */
+const TERCA = "Terça — Inferior (quadríceps, pesado)";
+const FACE_PULL = "Puxada para o Rosto (Face Pull)";
+const CALF = "Elevação de Panturrilha em Pé";
 
 /** Nothing on the page is wider than the phone. */
 async function expectNoSideScroll(page: Page) {
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(overflow).toBeLessThanOrEqual(0);
+}
+
+/**
+ * A server re-render of the page on screen, as better-auth's cookie-cache
+ * rewrite causes inside any action run 5+ minutes after the last one (R5):
+ * what the screen confirmed must survive it.
+ */
+async function forceServerRerender(page: Page) {
+  await Promise.all([
+    page.waitForResponse((r) => r.request().headers()["rsc"] === "1" && r.url().includes(new URL(page.url()).pathname)),
+    page.evaluate(() => (window as unknown as { next: { router: { refresh(): void } } }).next.router.refresh()),
+  ]);
 }
 
 /** Opens the day again from Today ("Refazer" → confirm) and returns the new session id. */
@@ -80,14 +99,21 @@ test("first workout: saved and dated, one baseline line instead of records, next
     page.getByRole("link", { name: "Ir para Hoje" }).or(page.getByRole("button", { name: "Iniciar treino" })),
   ).toBeVisible();
 
-  // Share row: private needs no button; the others say what they do; then a confirmation with links.
-  await expect(page.getByText("Só você vê este treino.")).toBeVisible();
+  // Share row: already published to followers on finish, without a tap; a new account has none yet.
+  await expect(page.getByRole("radio", { name: "Seguidores" })).toHaveAttribute("aria-checked", "true");
+  await expect(page.getByText("Publicado", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: /Publicar|Salvar/ })).toHaveCount(0);
-  await page.getByRole("radio", { name: "Seguidores" }).click();
-  await page.getByRole("button", { name: "Publicar para seguidores" }).click();
-  await expect(page.getByText("Publicado", { exact: true })).toBeVisible({ timeout: 15_000 });
   await expect(page.getByRole("link", { name: "Ver no feed" })).toHaveAttribute("href", "/app/feed");
+  await expect(page.getByText("Você ainda não tem seguidores — no feed, por enquanto, só você vê.")).toBeVisible();
+  await expect(page.getByRole("checkbox", { name: "Mostrar kg e reps" })).not.toBeChecked();
+  // Out of the app: the story image and a link that opens without an account.
+  await expect(page.getByRole("button", { name: /^(Compartilhar|Baixar) imagem$/ })).toBeVisible();
   await expect(page.getByRole("button", { name: "Copiar link" })).toBeVisible();
+  await expect(page.getByText("Uma imagem para o story e um link que abre sem login. Cargas ficam ocultas.")).toBeVisible();
+  // Privado says what taking it back does, with its own button.
+  await page.getByRole("radio", { name: "Privado" }).click();
+  await expect(page.getByText("Publicado para seguidores. Tornar privado tira do feed.")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Tornar privado" })).toBeVisible();
   // Changing a choice turns the confirmation back into an explicit "Atualizar".
   await page.getByRole("radio", { name: "Público" }).click();
   await expect(page.getByRole("button", { name: "Atualizar" })).toBeVisible();
@@ -131,6 +157,86 @@ test("first workout: saved and dated, one baseline line instead of records, next
   await page.getByRole("button", { name: "Tornar privado" }).click();
   await expect(page.getByText("Só você vê este treino.")).toBeVisible({ timeout: 15_000 });
   await expect(page.getByRole("button", { name: "Tornar privado" })).toHaveCount(0);
+  // The tapped button is gone: focus lands on the choice that holds now, not on the page.
+  await expect(page.getByRole("radio", { name: "Privado" })).toBeFocused();
+  // …and the answer holds through a server re-render (R5).
+  await forceServerRerender(page);
+  await expect(page.getByText("Só você vê este treino.")).toBeVisible();
+  await expect(page.getByRole("radio", { name: "Privado" })).toHaveAttribute("aria-checked", "true");
+  await expect(page.getByRole("status").filter({ hasText: "Salvo como privado." })).toHaveCount(1);
+});
+
+test("a deload workout's summary says it's light on purpose: '· deload', no decline, 'Mantenha as cargas' (W-128)", async ({
+  page,
+}) => {
+  test.setTimeout(150_000);
+  await newUserOnGd1(page, "summary-deload");
+  const userId = await userIdOf(page);
+  await startDayFromToday(page, QUINTA);
+  await recordSet(page, 1, "40", "10");
+  await recordSet(page, 2, "40", "10");
+  await finishAndSave(page);
+
+  // "Aplicar deload" for this week, as Today's fatigue card writes it (this São Paulo week's Monday):
+  // the next workout opens as a deload one.
+  sql(`UPDATE "ProgramEnrollment"
+          SET "deloadMondays" = ARRAY[(date_trunc('week', now() AT TIME ZONE 'America/Sao_Paulo')::date - DATE '1970-01-01')]
+        WHERE "userId" = ${sqlText(userId)} AND status = 'ACTIVE'`);
+  const deload = await redoFromToday(page, QUINTA);
+  // Lighter on purpose.
+  await recordSet(page, 1, "30", "10");
+  await finishAndSave(page);
+  expect(sql(`SELECT "isDeload"::text FROM "WorkoutSession" WHERE id = ${sqlText(deload)}`)).toBe("true");
+
+  await expect(page.getByText(/^Treino nº 2( · [^·]+)? · deload$/)).toBeVisible();
+  const card = page.locator(".reg-frame").filter({ hasText: EXERCISE });
+  // Vs. last time: never a decline — the drop is the point.
+  await expect(card.getByText("deload · leve de propósito")).toBeVisible();
+  await expect(card.getByText(/↓/)).toHaveCount(0);
+  // Na próxima: nothing to raise; the next suggestion starts from the workout before this week.
+  await expect(card.getByText("Mantenha as cargas", { exact: true })).toBeVisible();
+  await expect(card.getByText("Semana de deload: a próxima sugestão parte do seu último treino antes dela.")).toBeVisible();
+  await expect(card.getByText(/Suba para|busque/)).toHaveCount(0);
+  await expectNoSideScroll(page);
+});
+
+test("a superset reads as one on the summary: its rule on the first card, 'A1'/'A2' on each (W-104)", async ({ page }) => {
+  test.setTimeout(150_000);
+  await newUserOnGd1(page, "summary-superset");
+  const sessionId = await startDayFromToday(page, TERCA);
+  await page.getByRole("button", { name: /ver todos/ }).click();
+  await page.getByRole("button", { name: new RegExp(FACE_PULL.replace(/[()]/g, "\\$&")) }).first().click();
+  const heading = page.getByRole("heading", { level: 1 });
+  await expect(heading).toHaveText(`A1 · ${FACE_PULL}`);
+  // ✓ on A1: the screen moves to its partner by itself.
+  await page.getByLabel("Série 1 — kg", { exact: true }).fill("20");
+  await page.getByLabel("Série 1 — repetições", { exact: true }).fill("15");
+  await page.getByRole("button", { name: "Concluir série 1", exact: true }).click();
+  await expect(heading).toHaveText(`A2 · ${CALF}`, { timeout: 10_000 });
+  await recordSet(page, 1, "40", "12");
+  await expect
+    .poll(() =>
+      sql(`SELECT count(*) FROM "SetLog" WHERE "sessionId" = ${sqlText(sessionId)} AND "isCompleted" AND "setType" <> 'WARMUP'`),
+    )
+    .toBe("2");
+  await finishAndSave(page);
+
+  // Only the two done: the pair, in its order, marked as the builder and the workout mark it.
+  const cards = page.locator("[data-group]");
+  await expect(cards).toHaveCount(2);
+  const first = page.locator('[data-group="A1"]');
+  const second = page.locator('[data-group="A2"]');
+  await expect(first).toContainText(FACE_PULL);
+  await expect(first).toContainText("Superset A · alterne as séries");
+  await expect(first.getByText("A1", { exact: true })).toBeVisible();
+  await expect(second).toContainText(CALF);
+  await expect(second.getByText("A2", { exact: true })).toBeVisible();
+  // The rule once, on the group's first card.
+  await expect(second).not.toContainText("alterne as séries");
+  await expectNoSideScroll(page);
+  await page.setViewportSize({ width: 320, height: 640 });
+  await expect(first).toContainText("Superset A · alterne as séries");
+  await expectNoSideScroll(page);
 });
 
 test("an unfinished workout's summary URL goes back to the workout", async ({ page }) => {
@@ -170,22 +276,22 @@ test("fewer sets than prescribed: no load increase, no false decline; share radi
   await expect(card.getByText(/Suba para/)).toHaveCount(0);
   await expectNoSideScroll(page);
 
-  // The visibility radios: one tab stop, arrows move and select.
+  // The visibility radios: one tab stop (the checked one — published to followers), arrows move and select.
   const privado = page.getByRole("radio", { name: "Privado" });
   const seguidores = page.getByRole("radio", { name: "Seguidores" });
-  await expect(privado).toHaveAttribute("tabindex", "0");
-  await expect(seguidores).toHaveAttribute("tabindex", "-1");
-  await privado.focus();
+  await expect(seguidores).toHaveAttribute("tabindex", "0");
+  await expect(privado).toHaveAttribute("tabindex", "-1");
+  await seguidores.focus();
+  await page.keyboard.press("ArrowLeft");
+  await expect(privado).toHaveAttribute("aria-checked", "true");
+  await expect(privado).toBeFocused();
+  await expect(page.getByRole("button", { name: "Tornar privado" })).toBeVisible();
   await page.keyboard.press("ArrowRight");
   await expect(seguidores).toHaveAttribute("aria-checked", "true");
-  await expect(seguidores).toBeFocused();
-  await expect(page.getByRole("button", { name: "Publicar para seguidores" })).toBeVisible();
 
   // Published with the loads hidden: the feed's page data carries record names, never values.
-  const loads = page.getByRole("checkbox", { name: "Mostrar cargas" });
-  if (await loads.isChecked()) await loads.uncheck();
-  await page.getByRole("button", { name: "Publicar para seguidores" }).click();
-  await expect(page.getByText("Publicado", { exact: true })).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByRole("checkbox", { name: "Mostrar kg e reps" })).not.toBeChecked();
+  await expect(page.getByText("Publicado", { exact: true })).toBeVisible();
   const feed = await (await page.request.get("/app/feed")).text();
   expect(feed).toContain(EXERCISE);
   expect(feed).toMatch(/prNames/);

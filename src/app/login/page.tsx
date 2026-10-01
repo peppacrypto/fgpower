@@ -1,21 +1,27 @@
 import Link from "next/link";
 import Image from "next/image";
 import { redirect } from "next/navigation";
+import * as z from "zod";
 import { Wordmark } from "@/components/brand/logo";
 import { getCurrentSession } from "@/lib/auth/require-user";
 import { safeNextPath } from "@/lib/auth/safe-next";
 import { SESSION_EXPIRED_PARAM, SESSION_EXPIRED_VALUE } from "@/lib/auth/session-expired";
+import { emailEnabled } from "@/lib/email/config";
+import { EmailSignIn } from "./email-sign-in";
 import { GoogleSignInButton } from "./google-sign-in-button";
+import { oauthErrorView } from "./sign-in-errors";
 
-/**
- * better-auth sends failed Google sign-ins back here with `?error=<code>`:
- * `access_denied` when the user backs out of Google's consent screen.
- */
-function oauthErrorText(code: string) {
-  if (code === "access_denied") return "O login com o Google foi cancelado. Tente de novo quando quiser.";
-  return "Não foi possível entrar com o Google. Tente de novo em instantes.";
+/** `?email=` (the link page's "Pedir um novo link"): prefilled only when it is an address. */
+function prefillEmail(value: string | string[] | undefined): string | null {
+  const raw = (Array.isArray(value) ? value[0] : value)?.trim().toLowerCase();
+  return raw && raw.length <= 254 && z.email().safeParse(raw).success ? raw : null;
 }
 
+/**
+ * Google, and — only while e-mail is configured (lib/email/config; off in
+ * production until Resend exists) — a link + code by e-mail. Off, the page
+ * is Google alone: no disabled form, no "em breve".
+ */
 export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   const sp = await searchParams;
   const next = safeNextPath(sp.next);
@@ -23,9 +29,8 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   if (session) {
     redirect(next ?? "/app/today");
   }
-  const rawError = Array.isArray(sp.error) ? sp.error[0] : sp.error;
-  // Codes are short snake_case; anything else is shown as a generic failure.
-  const errorCode = rawError ? (/^[a-z0-9_]{1,64}$/.test(rawError) ? rawError : "erro") : null;
+  // A failed Google sign-in (better-auth's `?error=`): cancelled, suspended, or anything else.
+  const oauthError = oauthErrorView(Array.isArray(sp.error) ? sp.error[0] : sp.error);
   const sessionExpired = sp[SESSION_EXPIRED_PARAM] === SESSION_EXPIRED_VALUE;
 
   return (
@@ -44,7 +49,8 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
               width={1920}
               height={641}
               className="h-auto w-full select-none"
-              priority
+              // The page's largest paint: fetched from the <head>. (`priority` is deprecated in Next 16.)
+              preload
             />
             <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-surface to-transparent" />
           </div>
@@ -55,12 +61,12 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
               Sua conta e seu histórico de treino ficam salvos automaticamente.
             </p>
 
-            {errorCode ? (
+            {oauthError ? (
               <div role="alert" className="mt-5 border-l-2 border-l-danger bg-danger-soft px-3.5 py-2.5 text-sm text-danger">
-                <p className="font-medium">{oauthErrorText(errorCode)}</p>
-                {errorCode !== "access_denied" ? (
+                <p className="font-medium">{oauthError.text}</p>
+                {oauthError.code ? (
                   <p className="mt-1 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] opacity-80">
-                    Código: {errorCode}
+                    Código: {oauthError.code}
                   </p>
                 ) : null}
               </div>
@@ -73,6 +79,19 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
             <div className="mt-6">
               <GoogleSignInButton googleConfigured={Boolean(process.env.GOOGLE_CLIENT_ID)} next={next} />
             </div>
+
+            {emailEnabled() ? (
+              <>
+                <div className="my-5 flex items-center gap-3" role="separator" aria-label="ou">
+                  <span aria-hidden className="h-px flex-1 bg-border" />
+                  <span aria-hidden className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-muted">
+                    ou
+                  </span>
+                  <span aria-hidden className="h-px flex-1 bg-border" />
+                </div>
+                <EmailSignIn next={next} initialEmail={prefillEmail(sp.email)} />
+              </>
+            ) : null}
 
             <p className="mt-6 text-center text-xs text-muted">
               Ao continuar, você concorda com os{" "}

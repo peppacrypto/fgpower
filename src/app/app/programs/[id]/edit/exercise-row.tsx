@@ -1,16 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import Image from "next/image";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { ChevronDown, GripVertical, MoreHorizontal } from "lucide-react";
+import { ChevronDown, GripVertical, Link2Off, MoreHorizontal } from "lucide-react";
 import { GLoad } from "@/components/ui/glyph";
 import { AutoGrowText } from "./auto-grow";
 import { cn } from "@/lib/utils/cn";
 import { formatDecimal, parseDecimalInput } from "@/lib/training/set-plan";
 import type { BuilderExercise } from "@/lib/actions/program-builder";
 import type { PickerExercise } from "@/lib/programming/exercise-facets";
+import { TRANSITION_PRESETS, groupRule, type GroupSlot } from "@/lib/programming/groups";
 import {
   BUILDER_FIELD_LABELS,
   BUILDER_LIMITS,
@@ -45,8 +46,14 @@ interface RowProps {
   onChange: (patch: Partial<BuilderExercise>) => void;
   /** Any keystroke in a number box, storable or not (so "Salvo" goes away). */
   onEdit: () => void;
-  /** The row's "⋯": move, duplicate, remove. */
+  /** The row's "⋯": move, duplicate, group, remove. */
   onOpenActions: () => void;
+  /** Its place in a superset / circuit (W-104), null outside one. */
+  group?: GroupSlot | null;
+  /** "Desagrupar" on the group's first member: the whole group comes apart. */
+  onUngroup?: () => void;
+  /** Stretching / cardio: shown but not counted in the week's volume (L-volume-counts-stretches). */
+  noVolume?: boolean;
 }
 
 const FIELDS: RowField[] = ["sets", "repMin", "repMax", "rirTarget", "warmupSets", "restSeconds", "notes"];
@@ -64,6 +71,11 @@ function noticeFor(field: BuilderNumberField, commit: NumberCommit): Notice | nu
 }
 
 const FIELD_LABEL = "font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted";
+
+/** The member after this one ("A2"), for a switch's "Troca para A2". */
+function nextLabel(group: GroupSlot): string {
+  return `${group.key}${group.position + 1}`;
+}
 
 /**
  * One exercise of the builder, folded to a line — thumbnail, the whole name
@@ -84,12 +96,21 @@ export function ExerciseRow({
   onChange,
   onEdit,
   onOpenActions,
+  group = null,
+  onUngroup,
+  noVolume = false,
 }: RowProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
   const [notice, setNotice] = useState<Notice | null>(null);
   const [rirHelp, setRirHelp] = useState(false);
   const name = exercise.exerciseName ?? meta?.namePt ?? "Exercício";
-  const parts = prescriptionLine(exercise).split(" · ");
+  // A member's rest is where it goes: the switch to the next one, or the rest after the round.
+  const restText = group
+    ? group.last
+      ? `${formatRestClock(exercise.restSeconds)} após a rodada`
+      : `${formatRestClock(exercise.restSeconds)} até ${nextLabel(group)}`
+    : undefined;
+  const parts = prescriptionLine(exercise, { restText }).split(" · ");
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -129,6 +150,17 @@ export function ExerciseRow({
   const hintId = `${id}-hint`;
   const editorId = `${id}-editor`;
   const firstError = errors ? FIELDS.find((f) => errors[f]) : undefined;
+  // The prescription's last part, then the row's tags and its error mark: each stays whole.
+  const tail = [
+    parts[parts.length - 1],
+    exercise.notes ? <span className="tag tag--spec align-[1px]">Nota</span> : null,
+    noVolume ? <span className="tag tag--spec align-[1px]">Não conta no volume</span> : null,
+    errors && firstError ? (
+      <span className="font-bold text-danger" aria-label="com erro">
+        !
+      </span>
+    ) : null,
+  ].filter((item) => item !== null);
   const hint = firstError
     ? { tone: "error" as const, text: `${ROW_FIELD_LABELS[firstError]}: ${errors?.[firstError]}` }
     : notice
@@ -156,8 +188,33 @@ export function ExerciseRow({
       style={style}
       data-row-id={id}
       data-expanded={expanded || undefined}
-      className={cn("reg-frame", isDragging && "z-10 opacity-60")}
+      data-group={group?.label}
+      className={cn(
+        "reg-frame",
+        // A group's members sit together on one accent rule (W-104), joined by a hairline.
+        group && "border-l-2 border-l-accent",
+        group && !group.first && "-mt-2 border-t border-t-border",
+        isDragging && "z-10 opacity-60",
+      )}
     >
+      {group?.first ? (
+        <div className="flex items-center justify-between gap-2 border-b border-border pl-3">
+          <p className="min-w-0 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-accent" data-group-rule>
+            {groupRule(group)}
+          </p>
+          {onUngroup ? (
+            <button
+              type="button"
+              onClick={onUngroup}
+              aria-label={`Desagrupar ${group.heading}`}
+              className="flex min-h-11 shrink-0 items-center gap-1 px-2.5 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted hover:text-foreground"
+            >
+              <Link2Off className="size-3.5" />
+              Desagrupar
+            </button>
+          ) : null}
+        </div>
+      ) : null}
       <div className="flex items-stretch">
         {/* The grip drags (touch-none so a press on it never scrolls the page instead). */}
         <button
@@ -187,28 +244,40 @@ export function ExerciseRow({
             )}
           </span>
           <span className="min-w-0 flex-1">
-            <span data-row-name className="block text-sm font-semibold leading-snug wrap-break-word">
-              {name}
+            <span className="block text-sm font-semibold leading-snug wrap-break-word">
+              {group ? (
+                <span className="mr-1.5 font-mono text-[11px] font-bold text-accent" data-group-label>
+                  <span aria-hidden>{group.label}</span>
+                  <span className="sr-only">
+                    {group.heading}, {group.position} de {group.size}:
+                  </span>
+                </span>
+              ) : null}
+              <span data-row-name>{name}</span>
             </span>
             <span className="mt-0.5 block font-mono text-[11px] leading-relaxed tabular-nums text-muted">
-              {/* Wraps between the parts ("3 × 6–10 · RIR 2 · 2:30"), never inside one; the chevron rides the last. */}
+              {/* Wraps between the parts ("3 × 6–10 · RIR 2 · 2:30") and before a tag, never inside one;
+                  the chevron rides the last. (All on one unbreakable run, "Nota" and "Não conta no
+                  volume" ran out of a 320px row.) */}
               {parts
                 .slice(0, -1)
                 .map((part) => `${part.replace(/ /g, "\u00a0")} · `)
                 .join("")}
-              <span className="whitespace-nowrap">
-                {parts[parts.length - 1]}
-                {exercise.notes ? <span className="tag tag--spec ml-2 align-[1px] text-[9px]">Nota</span> : null}
-                {errors && firstError ? (
-                  <span className="ml-2 font-bold text-danger" aria-label="com erro">
-                    !
+              {tail.map((item, i) =>
+                i < tail.length - 1 ? (
+                  <Fragment key={i}>
+                    <span className="whitespace-nowrap">{item}</span>{" "}
+                  </Fragment>
+                ) : (
+                  <span key={i} className="whitespace-nowrap">
+                    {item}
+                    <ChevronDown
+                      className={cn("ml-1.5 inline-block size-3.5 align-[-2px] transition-transform", expanded && "rotate-180")}
+                      aria-hidden
+                    />
                   </span>
-                ) : null}
-                <ChevronDown
-                  className={cn("ml-1.5 inline-block size-3.5 align-[-2px] transition-transform", expanded && "rotate-180")}
-                  aria-hidden
-                />
-              </span>
+                ),
+              )}
             </span>
           </span>
         </button>
@@ -269,6 +338,7 @@ export function ExerciseRow({
 
           <RestField
             value={exercise.restSeconds}
+            group={group}
             forceCustom={!!errors?.restSeconds || notice?.field === "restSeconds"}
             onPick={(s) => {
               setNotice(null);
@@ -376,26 +446,36 @@ function RirHelpButton({ open, controls, onToggle }: { open: boolean; controls: 
   );
 }
 
-/** Rest as clock chips; "Outro" opens the seconds box for anything else. */
+/**
+ * Rest as clock chips; "Outro" opens the seconds box for anything else. In a
+ * superset (W-104) a member's rest is the switch to the next one (short
+ * chips: 0:00–0:45) and the last member's is the rest after the round.
+ */
 function RestField({
   value,
+  group,
   forceCustom,
   onPick,
   children,
 }: {
   value: number;
+  group: GroupSlot | null;
   forceCustom: boolean;
   onPick: (seconds: number) => void;
   children: React.ReactNode;
 }) {
-  const preset = (REST_PRESETS as readonly number[]).includes(value);
+  const switching = group !== null && !group.last;
+  const presets: readonly number[] = switching ? TRANSITION_PRESETS : REST_PRESETS;
+  const preset = presets.includes(value);
   const [customOpen, setCustomOpen] = useState(false);
   const custom = customOpen || forceCustom || !preset;
   return (
     <fieldset className="mt-3 min-w-0">
-      <legend className={cn(FIELD_LABEL, "mb-1")}>Descanso</legend>
+      <legend className={cn(FIELD_LABEL, "mb-1")}>
+        {switching ? `Troca para ${nextLabel(group)}` : group ? "Descanso após a rodada" : "Descanso"}
+      </legend>
       <div className="flex flex-wrap gap-1">
-        {REST_PRESETS.map((s) => (
+        {presets.map((s) => (
           <button
             key={s}
             type="button"

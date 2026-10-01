@@ -3,16 +3,50 @@
 // pt-BR translations (from the translation workflow) + our fixed taxonomy
 // into prisma/seed-data/exercises.generated.json, which prisma/seed.ts
 // upserts into the database. No network/LLM calls here — everything is a
-// pure function of the inputs, so this step is safe to re-run any time.
+// pure function of the inputs.
+//
+// Usage (from the repo root):
+//   node scripts/build-exercise-catalog.mjs --source <free-exercise-db checkout>
+//        [--translations <dir of pt-BR batch .json files>] [--overwrite]
+//
+// The file has been corrected by hand since the first build — equipment tags,
+// movement patterns (L-content-movement-patterns), a few instructions — so a
+// rerun keeps those fields (HAND_FIXED_FIELDS) for every slug already in it,
+// keeps the slugs the source no longer has, and otherwise adds new slugs and
+// refreshes the mapped fields. --overwrite rebuilds the file from the source
+// alone, dropping those fixes. Without --source it does nothing (exit 1).
 import { readFile, writeFile, readdir } from "node:fs/promises";
 import path from "node:path";
+import { parseArgs } from "node:util";
 
-const SOURCE_DIR =
-  process.env.FEDB_DIR ||
-  "/tmp/claude-1000/-home-dev-peppa/8828c1da-c51f-48d9-9961-053fd91b144f/scratchpad/research/free-exercise-db";
-const PT_BATCH_DIR =
-  "/tmp/claude-1000/-home-dev-peppa/8828c1da-c51f-48d9-9961-053fd91b144f/scratchpad/exercise-batches-pt";
+const USAGE =
+  "Usage: node scripts/build-exercise-catalog.mjs --source <free-exercise-db dir> [--translations <dir>] [--overwrite]";
+
+let args;
+try {
+  ({ values: args } = parseArgs({
+    options: {
+      source: { type: "string" },
+      translations: { type: "string" },
+      overwrite: { type: "boolean", default: false },
+    },
+  }));
+} catch (err) {
+  console.error(`${err.message}\n${USAGE}`);
+  process.exit(1);
+}
+if (!args.source) {
+  console.error(`Missing --source (the free-exercise-db checkout).\n${USAGE}`);
+  process.exit(1);
+}
+
+const SOURCE_DIR = path.resolve(args.source);
+const PT_BATCH_DIR = args.translations ? path.resolve(args.translations) : null;
 const SEED_DATA_DIR = path.join(process.cwd(), "prisma", "seed-data");
+const CATALOG_FILE = path.join(SEED_DATA_DIR, "exercises.generated.json");
+
+/** Fields fixed by hand in the generated file: a rerun keeps them for existing slugs unless --overwrite. */
+const HAND_FIXED_FIELDS = ["equipment", "movementPattern", "namePt", "instructionsEn", "instructionsPt"];
 
 // --- muscle mapping (fedb tag -> our Muscle slug) -------------------------
 const MUSCLE_MAP = {
@@ -119,10 +153,14 @@ function mapMovementPattern(fedb) {
 async function loadTranslations() {
   const map = new Map();
   let files = [];
+  if (!PT_BATCH_DIR) {
+    console.warn("No --translations: new exercises get their English names (existing ones keep theirs).");
+    return map;
+  }
   try {
     files = (await readdir(PT_BATCH_DIR)).filter((f) => f.endsWith(".json"));
   } catch {
-    console.warn(`No translation batches found at ${PT_BATCH_DIR} — namePt will fall back to English.`);
+    console.warn(`No translation batches found at ${PT_BATCH_DIR} — new exercises get their English names.`);
   }
   for (const f of files) {
     const data = JSON.parse(await readFile(path.join(PT_BATCH_DIR, f), "utf8"));
@@ -142,6 +180,17 @@ function slugify(fedbId) {
     .replace(/^-|-$/g, "");
 }
 
+/** The catalog as it is now, by slug (empty when there's none yet). */
+async function loadExisting() {
+  try {
+    const list = JSON.parse(await readFile(CATALOG_FILE, "utf8"));
+    return new Map(list.map((e) => [e.slug, e]));
+  } catch (err) {
+    if (err.code === "ENOENT") return new Map();
+    throw err;
+  }
+}
+
 async function main() {
   const source = JSON.parse(await readFile(path.join(SOURCE_DIR, "dist", "exercises.json"), "utf8"));
   const mediaManifest = JSON.parse(
@@ -149,17 +198,21 @@ async function main() {
   );
   const mediaBySource = new Map(mediaManifest.map((m) => [m.sourceId, m]));
   const translations = await loadTranslations();
+  const existing = args.overwrite ? new Map() : await loadExisting();
 
   const exercises = [];
   let missingTranslation = 0;
+  let kept = 0;
+  const differs = new Map(HAND_FIXED_FIELDS.map((f) => [f, 0]));
 
   for (const fedb of source) {
     const slug = slugify(fedb.id);
+    const previous = existing.get(slug);
     const t = translations.get(fedb.id);
-    if (!t) missingTranslation++;
+    if (!t && !previous) missingTranslation++;
     const media = mediaBySource.get(fedb.id);
 
-    exercises.push({
+    const built = {
       sourceId: fedb.id,
       slug,
       nameEn: fedb.name,
@@ -182,15 +235,32 @@ async function main() {
         height: m.height,
         sortOrder: m.index,
       })),
-    });
+    };
+    if (previous) {
+      kept++;
+      existing.delete(slug);
+      for (const field of HAND_FIXED_FIELDS) {
+        if (!(field in previous)) continue;
+        if (JSON.stringify(previous[field]) !== JSON.stringify(built[field])) differs.set(field, differs.get(field) + 1);
+        built[field] = previous[field];
+      }
+    }
+    exercises.push(built);
   }
+  // No longer in the source (or never from it): kept as they are — programs may use them.
+  const orphans = [...existing.values()];
+  exercises.push(...orphans);
 
-  await writeFile(
-    path.join(SEED_DATA_DIR, "exercises.generated.json"),
-    JSON.stringify(exercises, null, 1),
-  );
+  await writeFile(CATALOG_FILE, JSON.stringify(exercises, null, 1));
 
-  console.log(`Built catalog: ${exercises.length} exercises. Missing pt-BR translation: ${missingTranslation}`);
+  console.log(`Built catalog: ${exercises.length} exercises. New ones without a pt-BR translation: ${missingTranslation}`);
+  if (orphans.length > 0) console.log(`Kept ${orphans.length} exercises the source no longer has. --overwrite drops them.`);
+  if (kept > 0) {
+    const changed = [...differs].filter(([, n]) => n > 0).map(([f, n]) => `${f} ${n}`);
+    console.log(
+      `Kept the hand-fixed fields of ${kept} existing exercises${changed.length ? ` (a fresh mapping differs: ${changed.join(", ")})` : ""}. --overwrite replaces them.`,
+    );
+  }
   const noPattern = exercises.filter((e) => !e.movementPattern).length;
   console.log(`Exercises without an inferred movement pattern: ${noPattern} (left null; fine, it's optional)`);
 }

@@ -1,61 +1,48 @@
 "use client";
 
-import { useState, useTransition } from "react";
 import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { giveFg, removeFg } from "@/lib/actions/social";
-import { runAction } from "@/components/social/run-action";
+import { cn } from "@/lib/utils/cn";
+import { ActionErrorText } from "@/components/social/session-expired";
+import { FG_HINT, FG_TITLE, useFgToggle } from "@/components/social/use-fg";
 
+/** The activity page's FG: the same toggle as the feed card, with the count spelled out. */
 export function GiveFgButton({
   activityId,
   initialCount,
   initialGiven,
   isOwn,
+  hint = false,
+  className,
 }: {
   activityId: string;
   initialCount: number;
   initialGiven: boolean;
   isOwn: boolean;
+  /** The viewer never gave an FG: say what it is under the button (W-147). */
+  hint?: boolean;
+  className?: string;
 }) {
-  const [count, setCount] = useState(initialCount);
-  const [given, setGiven] = useState(initialGiven);
-  const [error, setError] = useState<string | null>(null);
-  const [pending, startTransition] = useTransition();
-
-  function toggle() {
-    const before = { given, count };
-    const next = !given;
-    // Optimistic; rolled back if the server refuses or the call fails.
-    setGiven(next);
-    setCount((c) => c + (next ? 1 : -1));
-    setError(null);
-    startTransition(async () => {
-      const result = await runAction(() => (next ? giveFg(activityId) : removeFg(activityId)));
-      if (result.ok) {
-        setCount(result.fgCount);
-      } else {
-        setGiven(before.given);
-        setCount(before.count);
-        setError(result.error);
-      }
-    });
-  }
+  const fg = useFgToggle({ activityId, initialGiven, initialCount });
 
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className={cn("flex flex-col gap-1.5", className)}>
       <Button
-        variant={given ? "secondary" : "outline"}
-        disabled={pending || isOwn}
-        aria-pressed={given}
-        aria-label={`${isOwn ? "FGs no seu treino" : given ? "Remover seu FG" : "Dar FG neste treino"} (${count})`}
-        onClick={toggle}
+        variant={fg.given ? "secondary" : "outline"}
+        disabled={fg.pending || isOwn}
+        aria-pressed={fg.given}
+        title={FG_TITLE}
+        aria-label={`${isOwn ? "FGs no seu treino" : fg.given ? "Remover seu FG" : "Dar FG neste treino"} (${fg.count})`}
+        onClick={fg.toggle}
+        className="self-start"
       >
-        <Heart className="size-4" fill={given ? "currentColor" : "none"} />
-        {count} {count === 1 ? "FG" : "FGs"}
+        <Heart className="size-4" fill={fg.given ? "currentColor" : "none"} />
+        {fg.count} {fg.count === 1 ? "FG" : "FGs"}
       </Button>
-      {error ? (
+      {hint && !isOwn && !fg.given ? <p className="text-xs text-muted">{FG_HINT}</p> : null}
+      {fg.error ? (
         <p role="alert" className="text-xs text-danger">
-          {error}
+          <ActionErrorText error={fg.error} />
         </p>
       ) : null}
     </div>

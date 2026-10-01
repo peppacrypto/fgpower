@@ -7,7 +7,9 @@ import { ChevronRight, X } from "lucide-react";
 import { GLoad } from "@/components/ui/glyph";
 import { Button } from "@/components/ui/button";
 import { Bone } from "@/components/ui/skeleton";
+import { SESSION_EXPIRED_ERROR } from "@/lib/auth/session-expired";
 import type { TechniqueSheet as TechniqueData } from "@/lib/data/workout-session";
+import { WorkoutActionError, WorkoutLoggedOutError } from "./action-error";
 
 /** Fetched once per exercise for the life of the page (the content rarely changes). */
 const cache = new Map<string, Promise<TechniqueData | null>>();
@@ -18,10 +20,11 @@ function loadTechnique(exerciseId: string): Promise<TechniqueData | null> {
   if (!p) {
     p = fetch(`/api/workout/technique?exercise=${encodeURIComponent(exerciseId)}`).then((res) => {
       if (res.status === 404) return null;
+      if (res.status === 401) throw new WorkoutLoggedOutError();
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return res.json() as Promise<TechniqueData>;
     });
-    // A failure (no signal at the gym) is tried again on the next open.
+    // A failure (no signal at the gym, the login gone) is tried again on the next open.
     p.catch(() => cache.delete(exerciseId));
     cache.set(exerciseId, p);
   }
@@ -38,10 +41,16 @@ function loadTechnique(exerciseId: string): Promise<TechniqueData | null> {
 export function TechniqueSheet({
   exercise,
   fullHref,
+  loginHref,
+  onLoggedOut,
   onClose,
 }: {
   exercise: { exerciseId: string; name: string; imageUrl: string | null };
   fullHref: string;
+  /** Where "Entrar" goes when the login is gone (back to this exercise). */
+  loginHref: string;
+  /** The request found the login gone (401): the screen holds its sends too. */
+  onLoggedOut?: () => void;
   onClose: () => void;
 }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -49,7 +58,13 @@ export function TechniqueSheet({
   /** "missing": the server has no sheet for this exercise. */
   const [data, setData] = useState<TechniqueData | "missing" | null>(null);
   const [failed, setFailed] = useState(false);
+  /** 401: nothing to retry until the user signs in again. */
+  const [loggedOut, setLoggedOut] = useState(false);
   const [attempt, setAttempt] = useState(0);
+  const onLoggedOutRef = useRef(onLoggedOut);
+  useEffect(() => {
+    onLoggedOutRef.current = onLoggedOut;
+  });
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -71,8 +86,14 @@ export function TechniqueSheet({
         setData(d ?? "missing");
         setFailed(false);
       })
-      .catch(() => {
-        if (live) setFailed(true);
+      .catch((err) => {
+        if (!live) return;
+        if (err instanceof WorkoutLoggedOutError) {
+          setLoggedOut(true);
+          onLoggedOutRef.current?.();
+        } else {
+          setFailed(true);
+        }
       });
     return () => {
       live = false;
@@ -159,6 +180,10 @@ export function TechniqueSheet({
               ) : (
                 <p className="mt-2 text-sm text-muted">Sem instruções escritas para este exercício ainda.</p>
               )
+            ) : loggedOut ? (
+              <p role="alert" className="mt-2 border-l-2 border-l-danger! bg-danger-soft px-3 py-2 text-xs font-medium text-danger">
+                <WorkoutActionError error={SESSION_EXPIRED_ERROR} loginHref={loginHref} />
+              </p>
             ) : failed ? (
               <div className="mt-2 flex flex-wrap items-center gap-x-3 border-l-2 border-l-warning bg-warning-soft px-3 py-2 text-xs text-foreground/90">
                 <span className="min-w-0 flex-1">Sem conexão — as instruções não carregaram.</span>

@@ -4,8 +4,13 @@ import { useLayoutEffect, useState } from "react";
 import Link, { useLinkStatus } from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils/cn";
+import { plural } from "@/lib/utils/format";
 import { isWorkoutFocusPath } from "@/components/pwa/resume";
 import { NAV_ITEMS, type NavItem } from "./nav-items";
+import { UnreadPip, useUnread } from "./unread-provider";
+
+/** The tab that carries the unread-notifications pip (notifications live under Perfil on the phone). */
+const INBOX_TAB = "/app/profile";
 
 /** `force` shows the nav even in workout focus mode (a 404 on a stale workout link). */
 export function BottomNav({ force = false }: { force?: boolean }) {
@@ -13,6 +18,7 @@ export function BottomNav({ force = false }: { force?: boolean }) {
   // The tab whose navigation is under way: it lights at once and the current
   // one lets go, instead of the old tab staying lit until the new page loads.
   const [pendingHref, setPendingHref] = useState<string | null>(null);
+  const unread = useUnread();
 
   // Focus mode: hide the nav during a live workout so a mistap can't drop the
   // user out mid-session (the post-workout summary keeps the nav).
@@ -39,7 +45,12 @@ export function BottomNav({ force = false }: { force?: boolean }) {
                 aria-current={active ? "page" : undefined}
                 className="flex h-full touch-manipulation select-none active:bg-[var(--ink-3)]"
               >
-                <TabFace item={item} lit={pendingHref ? pendingHref === item.href : active} onPending={setPendingHref} />
+                <TabFace
+                  item={item}
+                  lit={pendingHref ? pendingHref === item.href : active}
+                  onPending={setPendingHref}
+                  badge={item.href === INBOX_TAB ? unread : 0}
+                />
               </Link>
             </li>
           );
@@ -58,10 +69,13 @@ function TabFace({
   item,
   lit,
   onPending,
+  badge = 0,
 }: {
   item: NavItem;
   lit: boolean;
   onPending: (update: (current: string | null) => string | null) => void;
+  /** Unread notifications: a pip on the icon's corner (and ", N notificações novas" in the tab's name). */
+  badge?: number;
 }) {
   const { pending } = useLinkStatus();
   // Tell the bar before paint, so the old tab dims in the same frame.
@@ -85,8 +99,12 @@ function TabFace({
         pending && "bg-[var(--ink-3)]",
       )}
     >
-      <Icon className="size-5" strokeWidth={on ? 2.4 : 2} />
+      <span className="relative">
+        <Icon className="size-5" strokeWidth={on ? 2.4 : 2} />
+        <UnreadPip count={badge} srText="" className="absolute -right-3 -top-1.5" />
+      </span>
       {item.label}
+      {badge > 0 ? <span className="sr-only">, {plural(badge, "notificação nova", "notificações novas")}</span> : null}
       {/* The keel: the accent rule under a lit tab (square, like the buttons' bevel). */}
       <span
         aria-hidden

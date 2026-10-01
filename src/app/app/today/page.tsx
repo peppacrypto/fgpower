@@ -26,6 +26,7 @@ import { DayActions, DayStatus, dayStates, exerciseCount } from "@/components/wo
 import { InlineActionForm } from "@/components/workout/inline-action-form";
 import { InstallAppCard } from "@/components/pwa/install-app-card";
 import { formatKg, formatNumber, plural } from "@/lib/utils/format";
+import { formatSet, isTimedHold } from "@/lib/training/set-plan";
 import { listTemplates, recommendProfileOf, toCatalogItem } from "@/lib/data/templates";
 import { recommendTemplates } from "@/lib/programming/recommend";
 import { trainingWeekdays } from "@/lib/programming/schedule";
@@ -43,12 +44,18 @@ import {
 } from "@/lib/training/day-rotation";
 import { seriesPosition } from "@/lib/training/program-calendar";
 import {
+  appliedDeloadGuidance,
   completeWeekDone,
   effectiveProgramWeek,
   getWeekGuidance,
   programWeekView,
   thisWeekRule,
 } from "@/lib/training/week-guidance";
+import { isAppliedDeload } from "@/lib/training/deload";
+import { GD_SERIES } from "@/lib/training/program-calendar";
+import { measurementWeek } from "@/lib/training/body-weight";
+import { fatigueDismissalKey, getFatigueSignal } from "@/lib/data/fatigue";
+import { getBodyweightGlance } from "@/lib/data/body-metrics";
 import { ResumeProgramPanel } from "@/components/programs/resume-program-panel";
 import { formatSpDate, formatSpDaysAgo, spDaysBetween } from "@/lib/training/stale";
 import { restorePreviousProgram } from "@/lib/actions/programs";
@@ -71,7 +78,7 @@ export const metadata: Metadata = { title: "Hoje" };
 const WEEKDAYS = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SÁB"];
 const MONTHS = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ"];
 /** One-time notice params, cleared from the URL once shown. */
-const NOTICE_PARAMS = ["ativado", "anterior", "descartado", "salvo", "retomado", "excluido"];
+const NOTICE_PARAMS = ["ativado", "anterior", "descartado", "salvo", "retomado", "excluido", "deload"];
 /** A workout touched this recently is the one to go back to when the app reopens on Today (W-097). */
 const RESUME_WITHIN_MS = 3 * 60 * 60 * 1000;
 
@@ -81,22 +88,45 @@ function greeting(hour: number) {
   return "Boa noite";
 }
 
-/** What each record kind is called in a PR row ("Carga · 1RM estimado"). */
-const PR_TEXT: Record<string, string> = {
-  MAX_WEIGHT: "Carga",
-  ESTIMATED_1RM: "1RM estimado",
-  MAX_REPS_AT_WEIGHT: "Repetições",
-};
-const PR_VALUE: Record<string, (v: number, w: number | null, r: number | null) => string> = {
-  MAX_WEIGHT: (v) => formatKg(v),
-  ESTIMATED_1RM: (v) => formatKg(v),
-  // Bodyweight (0 kg) rep records read "15 reps", with "peso corporal" on the kinds line.
-  MAX_REPS_AT_WEIGHT: (v, w, r) => (w === 0 ? plural(r ?? v, "rep", "reps") : `${formatKg(w)} × ${r ?? v}`),
-};
-/** The kinds line of a PR row: "1RM estimado · Repetições", "Repetições · peso corporal". */
-function prKinds(pr: { kind: string; kinds: string[]; weightKg: number | null }) {
-  const text = pr.kinds.map((k) => PR_TEXT[k]).filter(Boolean);
-  return pr.kind === "MAX_REPS_AT_WEIGHT" && pr.weightKg === 0 ? [...text, "peso corporal"] : text;
+/** What each record kind is called in a PR row ("Carga · 1RM estimado"); a hold's rep record is its time. */
+function prText(kind: string, timed: boolean): string | null {
+  switch (kind) {
+    case "MAX_WEIGHT":
+      return "Carga";
+    case "ESTIMATED_1RM":
+      // A hold's e1RM means nothing (progress-core describePr).
+      return timed ? null : "1RM estimado";
+    case "MAX_REPS_AT_WEIGHT":
+      return timed ? "Tempo" : "Repetições";
+    default:
+      return null;
+  }
+}
+
+type PrRecord = { kind: string; value: number; weightKg: number | null; reps: number | null };
+
+/** A record's value: "62,5 kg"; a bodyweight rep record "15 reps"; a hold "45 s", "10 kg × 40 s". */
+function prValue(r: PrRecord, timed: boolean): string {
+  if (r.kind !== "MAX_REPS_AT_WEIGHT") return formatKg(r.value);
+  const reps = r.reps ?? r.value;
+  if (timed) return formatSet(r.weightKg ?? 0, reps, { timed: true });
+  return r.weightKg === 0 ? plural(reps, "rep", "reps") : `${formatKg(r.weightKg)} × ${reps}`;
+}
+
+/**
+ * A PR row (L-bodyweight-timed-display): the lead record's value and the
+ * kinds line ("1RM estimado · Repetições", "Repetições · peso corporal").
+ * A hold leads with its time and never lists a 1RM — a hold whose only new
+ * record is an estimated 1RM (a short loaded hold) has no row (null).
+ */
+function prRow(pr: { records: PrRecord[]; exercise: { slug: string } }) {
+  const timed = isTimedHold({ slug: pr.exercise.slug });
+  const shown = pr.records.filter((r) => prText(r.kind, timed) != null);
+  const lead = (timed ? shown.find((r) => r.kind === "MAX_REPS_AT_WEIGHT") : undefined) ?? shown[0];
+  if (!lead) return null;
+  const kinds = [lead, ...shown.filter((r) => r !== lead)].map((r) => prText(r.kind, timed)).filter((t): t is string => t != null);
+  const bodyweight = !timed && lead.kind === "MAX_REPS_AT_WEIGHT" && lead.weightKg === 0;
+  return { value: prValue(lead, timed), kinds: bodyweight ? [...kinds, "peso corporal"] : kinds };
 }
 
 export default async function TodayPage({ searchParams }: PageProps<"/app/today">) {
@@ -198,12 +228,16 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
   const rule = enrollment
     ? thisWeekRule({ view: weekView, enrollmentId: enrollment.id, thisWeek: streak.thisWeek })
     : { targetCap: null, alreadyCounts: false };
-  const guidance = enrollment
+  const plannedGuidance = enrollment
     ? getWeekGuidance(enrollment.program.weeklyGuidance, weekView?.guidanceWeek ?? 1, {
         templateSlug,
         durationWeeks: enrollment.program.durationWeeks,
       })
     : null;
+  // A week the user turned into a deload (W-128) reads as one everywhere on Today: the program
+  // card's "Deload" and instructions, "Semana de deload: 1 treino já conta" (lib/training/deload).
+  const appliedDeload = enrollment ? isAppliedDeload(enrollment.deloadMondays, mondayOf(todayNo)) : false;
+  const guidance = appliedDeload ? appliedDeloadGuidance(plannedGuidance, weekView?.guidanceWeek ?? 1) : plannedGuidance;
 
   // The hero suggests the next day not yet trained this week, on the user's
   // week (lib/training/day-rotation: planWeek's rotation — the rule the
@@ -313,6 +347,40 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
   const series = seriesPosition(templateSlug);
   const lastWeekRow = streak.lastWeek;
 
+  // The optional prompts — at most one per visit: the fatigue signal (W-128), else today's
+  // weigh-in (W-083), else the team invite (W-139). The fatigue card waits while a workout is
+  // open, after a gap (the welcome back says it) and when a block just ended.
+  const measure = enrollment
+    ? measurementWeek({ templateSlug, week: weekView?.guidanceWeek ?? 1, durationWeeks: enrollment.program.durationWeeks })
+    : null;
+  const [signal, dismissed, glance] = await Promise.all([
+    enrollment && weekView && open.length === 0 && !welcomeBack && !completedBlock
+      ? getFatigueSignal(user.id, enrollment, {
+          now,
+          weekView,
+          guidance: plannedGuidance,
+          lastWeekDeload: lastWeekRow?.deload === true,
+          entryWeekTrained: own?.entryWeekTrained ?? false,
+        })
+      : null,
+    enrollment
+      ? prisma.userDismissal.findUnique({
+          where: { userId_key: { userId: user.id, key: fatigueDismissalKey(enrollment.id, weekKey) } },
+          select: { key: true },
+        })
+      : null,
+    getBodyweightGlance(user.id, now),
+  ]);
+  const prRows = recentPrs.flatMap((pr) => {
+    const row = prRow(pr);
+    return row ? [{ pr, row }] : [];
+  });
+  // "Agora não" / "Entendi" close this week's signal; an applied deload always shows.
+  const fatigue = signal && (signal.level === "applied" || !dismissed) ? signal : null;
+  // In a week that asks for body data, the row stays for the day (saved: "PESO HOJE 81,4 KG");
+  // for the weigh-in habit, only until today's is in.
+  const showWeighIn = !fatigue && (measure != null || glance.weighedRecently) && (measure != null || glance.todayKg == null);
+
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
       <ClearParams keys={NOTICE_PARAMS} />
@@ -346,6 +414,8 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
           </Link>
         </Notice>
       ) : null}
+      {param("deload") === "aplicado" ? <Notice>Deload aplicado nesta semana.</Notice> : null}
+      {param("deload") === "desfeito" ? <Notice>Deload desfeito.</Notice> : null}
       {param("retomado") === "1" && enrollment ? (
         <Notice>
           {enrollment.program.name} retomado ·{" "}
@@ -490,8 +560,17 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
         )}
       </div>
 
-      {/* A fatigue signal or an applied deload (W-128). */}
-      <FatigueCard userId={user.id} now={now} />
+      {/* A fatigue signal or an applied deload (W-128). Closed this week, it's still rendered — as
+          its live region alone — so the re-render right after "Agora não" keeps that said, and the
+          focus where the card was (FatigueFrame). */}
+      {signal ? (
+        <FatigueCard
+          signal={signal}
+          dismissed={fatigue == null}
+          arrived={param("deload") === "aplicado" || param("deload") === "desfeito"}
+          gd={templateSlug != null && (GD_SERIES as readonly string[]).includes(templateSlug)}
+        />
+      ) : null}
 
       {/* Monday/Tuesday: last week, closed out (W-129) */}
       {review && lastWeekRow && lastWeekRow.trained ? (
@@ -609,12 +688,13 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
             durationWeeks={enrollment.program.durationWeeks}
             guidance={guidance}
             progress={progress}
+            measureLink={measure === "measure"}
           />
         ) : null}
       </div>
 
-      {/* Today's weigh-in, when the program asks for one (W-083). */}
-      <WeighInRow userId={user.id} now={now} />
+      {/* Today's weigh-in, when the program asks for one or the habit is on (W-083). */}
+      <WeighInRow show={showWeighIn} mode={measure} glance={glance} todayNo={todayNo} />
 
       {/* Every day of the program, with where it stands this week */}
       {enrollment && days.length > 0 ? (
@@ -663,14 +743,19 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
 
       {/* The people you follow (W-139). At most one optional prompt per visit:
           the team invite gives way to the fatigue card and the weigh-in. */}
-      <TeamStrip userId={user.id} now={now} finishedWorkouts={habit.finishedWorkouts} allowInvite />
+      <TeamStrip
+        userId={user.id}
+        now={now}
+        finishedWorkouts={habit.finishedWorkouts}
+        allowInvite={!fatigue && !showWeighIn}
+      />
 
       {/* PRs */}
-      {recentPrs.length > 0 ? (
+      {prRows.length > 0 ? (
         <section className="mt-10">
           <SectionHead label="Recordes recentes" />
           <div className="mt-4 flex flex-col divide-y divide-border border-y border-border">
-            {recentPrs.map((pr) => (
+            {prRows.map(({ pr, row }) => (
               <Link
                 key={pr.id}
                 href={`/app/exercises/${pr.exercise.slug}/history`}
@@ -680,13 +765,9 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
                 <div className="min-w-0 flex-1">
                   {/* Two lines: variants share a long prefix and differ at the end ("… - Pegada Aberta"). */}
                   <p className="line-clamp-2 text-sm font-semibold leading-snug wrap-break-word">{pr.exercise.namePt}</p>
-                  <p className="truncate text-[11px] uppercase tracking-wider text-muted">
-                    {prKinds(pr).join(" · ")}
-                  </p>
+                  <p className="truncate text-[11px] uppercase tracking-wider text-muted">{row.kinds.join(" · ")}</p>
                 </div>
-                <span className="shrink-0 font-mono text-lg font-bold tabular-nums">
-                  {PR_VALUE[pr.kind]?.(pr.value, pr.weightKg, pr.reps)}
-                </span>
+                <span className="shrink-0 font-mono text-lg font-bold tabular-nums">{row.value}</span>
               </Link>
             ))}
           </div>

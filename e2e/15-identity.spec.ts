@@ -346,6 +346,29 @@ test("a revoked session lands on a login page that says why", async ({ page, con
   await expect(page.getByText("Sua sessão expirou.")).toBeVisible();
 });
 
+/**
+ * After an action finds the session gone, either outcome is right (recovery
+ * R5): the page says "Sua sessão expirou — entre de novo." with a sign-in
+ * link back to `back` — inline under the button, or the page itself when
+ * better-auth's cookie write re-rendered it signed out — or the page went to
+ * the sign-in page, also back to `back`. Says which.
+ */
+async function expectSessionExpired(page: Page, back: string): Promise<"inline" | "login"> {
+  let outcome: "inline" | "login" | null = null;
+  await expect(async () => {
+    const url = new URL(page.url());
+    if (url.pathname === "/login") {
+      if (url.searchParams.get("sessao") === "expirada" && url.searchParams.get("next") === back) outcome = "login";
+    } else if ((await page.getByRole("alert").filter({ hasText: "Sua sessão expirou — entre de novo." }).count()) > 0) {
+      const hrefs = await page.locator('a[href*="sessao=expirada"]').evaluateAll((links) => links.map((a) => a.getAttribute("href") ?? ""));
+      if (hrefs.some((href) => new URL(href, url).searchParams.get("next") === back)) outcome = "inline";
+    }
+    expect(outcome, `neither "Sua sessão expirou" with a sign-in link back to ${back} nor the sign-in page (at ${url.pathname}${url.search})`).not.toBeNull();
+  }).toPass({ timeout: 20_000 });
+  test.info().annotations.push({ type: "session-expired", description: `${back}: ${outcome}` });
+  return outcome!;
+}
+
 test("a follow tap after the session ended says so instead of failing silently", async ({ browser }) => {
   const t = tag();
   const owner = await newContext(browser);
@@ -358,12 +381,22 @@ test("a follow tap after the session ended says so instead of failing silently",
   // Cookies gone entirely, as after 30 days away (/u pages aren't behind the proxy).
   await fan.context.clearCookies();
   await fan.page.getByRole("button", { name: "Solicitar seguir" }).click();
-  await expect(fan.page.getByText("Sua sessão expirou — entre de novo.")).toBeVisible();
-  await expect(fan.page.getByRole("button", { name: "Solicitar seguir" })).toBeVisible(); // rolled back
-  await expect(fan.page.getByRole("link", { name: "Entrar" })).toHaveAttribute(
-    "href",
-    `/login?next=${encodeURIComponent(`/u/olga_${t}`)}&sessao=expirada`,
+  if ((await expectSessionExpired(fan.page, `/u/olga_${t}`)) === "inline") {
+    await expect(fan.page.getByRole("button", { name: "Solicitar seguir" })).toBeVisible(); // rolled back
+  }
+
+  // Signed out on another device instead (the cookie still sent, the session gone on the server):
+  // better-auth drops the cookie inside the action and the profile, re-rendered signed out, says so.
+  await loginAsTestUser(fan.page, fanEmail);
+  await fan.page.goto(`/u/olga_${t}`);
+  await revokeSessions(fanEmail, fan.context);
+  await fan.page.getByRole("button", { name: "Solicitar seguir" }).click();
+  await expectSessionExpired(fan.page, `/u/olga_${t}`);
+  const { rows } = await db.query(
+    `select count(*)::int as n from "FollowRequest" r join "user" u on u.id = r."requesterId" where u.email = $1`,
+    [fanEmail],
   );
+  expect(rows[0].n).toBe(0);
 
   await owner.context.close();
   await fan.context.close();
@@ -385,4 +418,44 @@ test("an action with the cookie gone entirely (30 days away) also explains itsel
   await expect(signIn).toHaveAttribute("href", "/login?next=%2Fapp%2Fsettings&sessao=expirada");
   await signIn.click();
   await expect(page.getByText("Sua sessão expirou.")).toBeVisible();
+});
+
+// L-session-expired-social: an FG on a feed card with the session gone (cookie
+// dropped, 30 days away) rolls back and offers "Entrar", back to the feed.
+test("an FG tap after the session ended rolls back and offers Entrar, back to the feed", async ({ browser }) => {
+  const t = tag();
+  const author = await newContext(browser);
+  const authorEmail = uniqueEmail("id-fg-author");
+  await onboard(author.page, { email: authorEmail, name: "Ivo Autor", handle: `ivo_${t}` });
+  const fan = await newContext(browser);
+  const fanEmail = uniqueEmail("id-fg-fan");
+  await onboard(fan.page, { email: fanEmail, name: "Fabio" });
+
+  const { rows } = await db.query<{ id: string }>(`select id from "user" where email = any($1) order by email = $2 desc`, [
+    [authorEmail, fanEmail],
+    authorEmail,
+  ]);
+  const [authorId, fanId] = rows.map((r) => r.id);
+  await db.query(`insert into "Follow" ("followerId", "followingId") values ($1, $2)`, [fanId, authorId]);
+  const summary = { workoutName: "Superior (pesado)", durationSeconds: 3600, totalWorkingSets: 18, totalVolumeKg: null, prs: [], exercises: [] };
+  await db.query(
+    `insert into "Activity" (id, "userId", type, visibility, summary, "updatedAt") values ($1, $2, 'WORKOUT', 'FOLLOWERS', $3::jsonb, now())`,
+    [`${authorId}-fg`, authorId, JSON.stringify(summary)],
+  );
+
+  await fan.page.goto("/app/feed");
+  const fg = fan.page.getByRole("button", { name: /^Dar FG no treino Superior \(pesado\) de Ivo Autor/ });
+  await expect(fg).toBeVisible();
+  await fan.context.clearCookies();
+  await fg.click();
+  if ((await expectSessionExpired(fan.page, "/app/feed")) === "inline") {
+    const alert = fan.page.getByRole("alert").filter({ hasText: "Sua sessão expirou — entre de novo." });
+    await expect(alert.getByRole("link", { name: "Entrar" })).toHaveAttribute("href", "/login?next=%2Fapp%2Ffeed&sessao=expirada");
+    await expect(fg).toHaveAttribute("aria-pressed", "false");
+  }
+  const given = await db.query(`select count(*)::int as n from "ActivityFG" where "activityId" = $1`, [`${authorId}-fg`]);
+  expect(given.rows[0].n).toBe(0);
+
+  await author.context.close();
+  await fan.context.close();
 });

@@ -231,6 +231,7 @@ export default async function ProgramsPage({ searchParams }: PageProps<"/app/pro
               namePt: r.template.namePt,
               taglinePt: r.template.taglinePt,
               reasons: r.reasons,
+              adapt: r.adapt,
             }))}
           />
         ) : null}

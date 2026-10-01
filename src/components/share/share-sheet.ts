@@ -54,6 +54,8 @@ export async function copyTextKeepingActivation(text: Promise<string> | string):
   try {
     if (typeof ClipboardItem !== "undefined" && typeof navigator.clipboard?.write === "function") {
       const blob = Promise.resolve(text).then((t) => new Blob([t], { type: "text/plain" }));
+      // A write refused before it reads the text would leave the text's failure unhandled.
+      blob.catch(() => {});
       await navigator.clipboard.write([new ClipboardItem({ "text/plain": blob })]);
       return true;
     }

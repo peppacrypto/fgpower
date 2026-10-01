@@ -30,8 +30,9 @@ import {
   progressionPrincipleSlug,
 } from "@/lib/training/set-plan";
 import { WORKOUT_PREFS_COOKIE, devicePrefsFrom, parseWorkoutPrefsCookie } from "@/components/workout/local-workout";
+import { deriveGroups } from "@/lib/programming/groups";
 import { WorkoutExecutionClient } from "./workout-execution-client";
-import type { ExecutionSession } from "./types";
+import type { ExecutionGroup, ExecutionSession } from "./types";
 
 export async function generateMetadata({ params }: PageProps<"/app/workout/[sessionId]">): Promise<Metadata> {
   const { sessionId } = await params;
@@ -41,6 +42,49 @@ export async function generateMetadata({ params }: PageProps<"/app/workout/[sess
     : null;
   // "Treino · Segunda — Superior" in the tab and the app switcher (W-172).
   return workout && workout.userId === session?.user.id ? { title: `Treino · ${workout.name}` } : { title: NOT_FOUND_TITLE };
+}
+
+type ExecutionLogRow = { id: string; exerciseId: string; sortOrder: number; groupKey: string | null; substitutedFromExerciseId: string | null; restSeconds: number };
+
+/**
+ * Logs replaced mid-workout by a stand-in added after them ("Adicionar como
+ * novo exercício": the stand-in records the exercise the program asked for).
+ */
+function replacedLogIds(logs: readonly ExecutionLogRow[]): Set<string> {
+  const out = new Set<string>();
+  for (const log of logs) {
+    const asked = log.substitutedFromExerciseId ?? log.exerciseId;
+    if (logs.some((o) => o.sortOrder > log.sortOrder && o.substitutedFromExerciseId === asked)) out.add(log.id);
+  }
+  return out;
+}
+
+/**
+ * Each log's superset / circuit (W-104), lettered over the logs still in
+ * play: a replaced log leaves its group to its stand-in (which kept the
+ * group's key), so the pair stays "A1 / A2" instead of a three-way circuit.
+ */
+function workoutGroups(logs: readonly ExecutionLogRow[], replaced: Set<string>): (ExecutionGroup | null)[] {
+  const live = logs.map((log, index) => ({ log, index })).filter(({ log }) => !replaced.has(log.id));
+  const slots = deriveGroups(live.map(({ log }) => log));
+  const out: (ExecutionGroup | null)[] = logs.map(() => null);
+  live.forEach(({ index }, i) => {
+    const slot = slots[i];
+    if (!slot) return;
+    const memberIndexes = live.slice(slot.firstIndex, slot.lastIndex + 1).map((m) => m.index);
+    out[index] = {
+      key: slot.key,
+      label: slot.label,
+      heading: slot.heading,
+      kind: slot.kind,
+      position: slot.position,
+      size: slot.size,
+      memberIndexes,
+      transitionSeconds: logs[index].restSeconds,
+      roundRestSeconds: logs[memberIndexes[memberIndexes.length - 1]].restSeconds,
+    };
+  });
+  return out;
 }
 
 /** Onboarding limitations are echoed on the user's first workouts only. */
@@ -75,7 +119,9 @@ export default async function WorkoutExecutionPage({ params, searchParams }: Pag
   if (session.status === "DISCARDED") redirect("/app/today");
 
   const now = new Date(loadedAtMs);
-  const exercises = session.exerciseLogs.map((log) => {
+  const replaced = replacedLogIds(session.exerciseLogs);
+  const groups = workoutGroups(session.exerciseLogs, replaced);
+  const exercises = session.exerciseLogs.map((log, index) => {
     const last = previous.get(log.exerciseId) ?? null;
     // The program exercise's own rule, then the program's, then double progression.
     const strategy = log.programExercise?.progressionStrategy ?? session.program?.progressionStrategy ?? "DOUBLE";
@@ -132,6 +178,8 @@ export default async function WorkoutExecutionPage({ params, searchParams }: Pag
       bodyweight: isBodyweightEquipment(log.exercise.equipment?.category),
       timed,
       recordBars: recordBars(bars.get(log.exerciseId) ?? []),
+      group: groups[index],
+      replaced: replaced.has(log.id),
     };
   });
 
@@ -163,6 +211,7 @@ export default async function WorkoutExecutionPage({ params, searchParams }: Pag
     notice: sp.aviso === "em-andamento" ? "em-andamento" : null,
     programId: session.programId,
     restTimerSound: profile?.restTimerSound ?? true,
+    haptics: profile?.hapticsEnabled ?? true,
     firstWorkout: finishedWorkouts === 0,
     limitations: finishedWorkouts < ECHO_LIMITATIONS_FOR ? limitations : null,
     stale,

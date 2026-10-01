@@ -278,7 +278,7 @@ test("signed-out visitors get a sign-in link for FG; FG failures roll back", asy
 
   await fan.context.setOffline(true);
   await fg.click();
-  await expect(fan.page.getByText(/Sem conexão/)).toBeVisible();
+  await expect(fan.page.getByRole("alert").filter({ hasText: "Sem conexão" })).toBeVisible();
   await expect(fg).toHaveAttribute("aria-pressed", "true");
   await expect(fg).toContainText("1");
   await expect(fan.page.getByText("Algo saiu do prumo")).toHaveCount(0);
@@ -297,7 +297,11 @@ test("answering a follow request says what happened", async ({ browser }) => {
 
   for (const who of [asker, other]) {
     await who.page.goto(`/u/diana_${tag}`);
-    await who.page.getByRole("button", { name: "Solicitar seguir" }).click();
+    // The button turns at once (optimistic): wait for the server to take the request before the owner looks.
+    await Promise.all([
+      who.page.waitForResponse((r) => r.request().method() === "POST" && r.request().headers()["next-action"] !== undefined),
+      who.page.getByRole("button", { name: "Solicitar seguir" }).click(),
+    ]);
     await expect(who.page.getByRole("button", { name: "Solicitação enviada" })).toBeVisible();
   }
 
@@ -314,7 +318,7 @@ test("answering a follow request says what happened", async ({ browser }) => {
 
   await askerRow.getByRole("button", { name: "Aceitar" }).click();
   await expect(askerRow.getByText("Solicitação aceita")).toBeVisible();
-  await expect(askerRow.getByText("Edu Pedido agora segue você.")).toBeVisible();
+  await expect(askerRow.getByText("Edu Pedido agora segue você", { exact: true })).toBeVisible();
   await otherRow.getByRole("button", { name: "Recusar" }).click();
   await expect(otherRow.getByText("Solicitação recusada")).toBeVisible();
 

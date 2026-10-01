@@ -266,6 +266,42 @@ describe("saveProgram", () => {
     expect(logsAfter.map((l) => l.programExerciseId)).toEqual([first.id, null]);
   });
 
+  it("stores supersets canonical (W-104): stray keys fixed, rows kept in place when regrouped", async () => {
+    const payload = (keys: (string | null)[], ids: (string | undefined)[] = []) => ({
+      name: "Supersets",
+      description: "",
+      days: [
+        {
+          name: "Dia A",
+          focus: null,
+          exercises: keys.map((groupKey, i) => exercise({ id: ids[i], groupKey, exerciseId: i % 2 ? otherExerciseId : exerciseId })),
+        },
+      ],
+    });
+    const created = await prisma.userProgram.create({ data: { userId: USER_ID, name: "Supersets", status: "DRAFT" } });
+    const r1 = await saveProgram(created.id, payload(["x", "X ", null, "Y"]));
+    expect(r1.ok).toBe(true);
+    if (!r1.ok) return;
+    const stored = async () =>
+      (
+        await prisma.userProgramExercise.findMany({
+          where: { day: { programId: created.id } },
+          orderBy: { sortOrder: "asc" },
+          select: { id: true, groupKey: true },
+        })
+      ).map((r) => [r.id, r.groupKey] as const);
+    const first = await stored();
+    expect(first.map(([, k]) => k)).toEqual(["A", "A", null, null]);
+
+    // Regrouped: rows 2–3 become the pair; every row keeps its id.
+    const ids = r1.exerciseIds[0];
+    const r2 = await saveProgram(created.id, payload([null, null, "A", "A"], ids));
+    expect(r2.ok).toBe(true);
+    const second = await stored();
+    expect(second.map(([id]) => id)).toEqual(ids);
+    expect(second.map(([, k]) => k)).toEqual([null, null, "A", "A"]);
+  });
+
   it("never touches another program's rows, and a repeated id becomes a new row", async () => {
     const [mine, theirs] = await Promise.all(
       [USER_ID, OTHER_ID].map((userId) =>

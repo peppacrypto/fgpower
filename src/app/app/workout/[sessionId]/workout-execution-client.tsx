@@ -36,6 +36,10 @@ import {
   type SuggestedValues,
 } from "@/lib/training/set-plan";
 import { formatKg, formatRir, plural } from "@/lib/utils/format";
+import { afterWorkingSet, memberOnTurn, type FlowMember } from "@/lib/training/superset-flow";
+import { groupRule } from "@/lib/programming/groups";
+import { describeActionFailure, OFFLINE_ERROR } from "@/components/social/run-action";
+import { SESSION_EXPIRED_ERROR, isSessionExpiredError, loginAgainHref } from "@/lib/auth/session-expired";
 import {
   DRAFTS_KEY_PREFIX,
   REST_KEY_PREFIX,
@@ -60,7 +64,9 @@ import { recordRows } from "./pr-moment";
 import { ExerciseSwapSheet, type SwapSheetMode } from "./exercise-swap-sheet";
 import { TechniqueSheet } from "./technique-sheet";
 import { markWorkoutVisited, readShownExercise, rememberShownExercise } from "./workout-visit";
-import type { ExecutionExerciseLog, ExecutionSession, ExecutionSetLog } from "./types";
+import { WorkoutActionError } from "./action-error";
+import { formatRestClock } from "@/lib/validation/program-builder";
+import type { ExecutionExerciseLog, ExecutionGroup, ExecutionSession, ExecutionSetLog } from "./types";
 import type { ExerciseOption } from "@/lib/data/workout-session";
 
 type RowValues = Record<DraftField, string>;
@@ -291,7 +297,7 @@ function buildRows(
   const ctx: SuggestContext = {
     previous: ex.previousSets,
     target: ex.advice ? { kind: ex.advice.kind, loadKg: ex.advice.loadKg, targetReps: ex.advice.targetReps } : null,
-    prescribedReps: firstTimeReps(ex.repMin, ex.repMax),
+    prescribedReps: firstTimeReps(ex.repMin, ex.repMax, { bodyweight: ex.bodyweight }),
     bodyweight: ex.bodyweight,
   };
   // A typed load far from last time's that isn't ✓'d yet ("225" for 22,5) is
@@ -398,6 +404,53 @@ function rowsComplete(rows: ExerciseRows, skipped: boolean) {
   if (skipped) return true;
   if (rows.prescribed.length > 0) return rows.prescribed.every((r) => r.done);
   return rows.extras.some((r) => r.done);
+}
+
+/** How long after a superset's ✓ the screen moves to the next member — any touch or key first cancels it. */
+const ADVANCE_DELAY_MS = 900;
+
+/**
+ * The group's members as the flow reads them (lib/training/superset-flow),
+ * from the rows on screen (drafts included). `justDone`: the row whose ✓ was
+ * just tapped counts as done.
+ */
+function flowMembers(
+  group: ExecutionGroup,
+  exercises: readonly ExecutionExerciseLog[],
+  rowsByExercise: readonly ExerciseRows[],
+  justDone: string | null = null,
+): (FlowMember & { doneWorking: number })[] {
+  return group.memberIndexes.map((index) => {
+    const ex = exercises[index];
+    const prescribed = rowsByExercise[index]?.prescribed ?? [];
+    const done = prescribed.filter((r) => r.done || r.id === justDone).length;
+    return {
+      index,
+      restSeconds: ex.restSeconds,
+      openWorking: prescribed.length - done,
+      doneWorking: done,
+      out: ex.wasSkipped || ex.replaced,
+    };
+  });
+}
+
+/**
+ * Where a (re)opened workout lands: the first exercise still to do — and, in a
+ * superset, the member whose turn it is (the fewest sets done), from the sets
+ * the server has.
+ */
+function landingIndex(exercises: readonly ExecutionExerciseLog[]): number {
+  const i = exercises.findIndex((ex) => !isExerciseDone(ex.sets, ex.wasSkipped));
+  if (i < 0) return Math.max(0, exercises.length - 1);
+  const group = exercises[i].group;
+  if (!group) return i;
+  const members = group.memberIndexes.map((index) => {
+    const ex = exercises[index];
+    const prescribed = ex.sets.filter((s) => s.setType !== "WARMUP" && !s.isExtra);
+    const done = prescribed.filter((s) => s.isCompleted).length;
+    return { index, restSeconds: ex.restSeconds, openWorking: prescribed.length - done, doneWorking: done, out: ex.wasSkipped || ex.replaced };
+  });
+  return memberOnTurn(members) ?? i;
 }
 
 /**
@@ -552,9 +605,8 @@ export function WorkoutExecutionClient({
   const [exerciseIndex, setExerciseIndex] = useState(() => {
     const kept = initialExerciseLogId ? session.exercises.findIndex((ex) => ex.id === initialExerciseLogId) : -1;
     if (kept >= 0) return kept;
-    // Reopening a workout lands on the first exercise still to do.
-    const i = session.exercises.findIndex((ex) => !isExerciseDone(ex.sets, ex.wasSkipped));
-    return i >= 0 ? i : Math.max(0, total - 1);
+    // Reopening a workout lands on the first exercise still to do (in a superset, the member whose turn it is).
+    return landingIndex(session.exercises);
   });
   const [drafts, setDrafts] = useState<Drafts>({});
   const [sync, setSync] = useState<SyncState>({});
@@ -652,6 +704,17 @@ export function WorkoutExecutionClient({
   const focusHeading = useRef(false);
   const rest = useRestTimer(session.id);
   useWakeLock();
+  /**
+   * A superset's move to the next member, due shortly after the ✓ (W-104):
+   * the next touch, key, typing or sheet cancels it — the user is doing
+   * something here. Purely on this screen, so offline it works the same.
+   */
+  const pendingAdvance = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [advancePending, setAdvancePending] = useState(false);
+  /** Where "Entrar" comes back to: this workout, on the exercise on screen. */
+  const loginHref = loginAgainHref(
+    `/app/workout/${session.id}${session.exercises[exerciseIndex] ? `?ex=${session.exercises[exerciseIndex].id}` : ""}`,
+  );
 
   const setById = useMemo(() => {
     const map = new Map<string, { set: ExecutionSetLog; ex: ExecutionExerciseLog; index: number }>();
@@ -1012,12 +1075,41 @@ export function WorkoutExecutionClient({
     };
   }, []);
 
+  function cancelAdvance() {
+    if (pendingAdvance.current === null) return;
+    clearTimeout(pendingAdvance.current);
+    pendingAdvance.current = null;
+    setAdvancePending(false);
+  }
+
+  function scheduleAdvance(next: number) {
+    cancelAdvance();
+    pendingAdvance.current = setTimeout(() => {
+      pendingAdvance.current = null;
+      setAdvancePending(false);
+      goToRef.current(next);
+    }, ADVANCE_DELAY_MS);
+    setAdvancePending(true);
+  }
+
   function goTo(i: number) {
+    cancelAdvance();
     saveNote(exercise?.exerciseId, exercise?.persistentNote ?? null);
     const next = Math.max(0, Math.min(total - 1, i));
     if (next !== exerciseIndex) {
       focusHeading.current = true;
-      announce(`${session.exercises[next]?.exerciseName ?? ""}, exercício ${next + 1} de ${total}`);
+      const target = session.exercises[next];
+      const group = target?.group;
+      const prescribed = rowsByExercise[next]?.prescribed ?? [];
+      const doneSets = prescribed.filter((r) => r.done).length;
+      // In a superset the member and its turn: "A2, Panturrilha. Superset A, série 2 de 4."
+      announce(
+        group
+          ? `${group.label}, ${target.exerciseName}. ${group.heading}${
+              prescribed.length > 0 ? `, série ${Math.min(doneSets + 1, prescribed.length)} de ${prescribed.length}` : ""
+            }.`
+          : `${target?.exerciseName ?? ""}, exercício ${next + 1} de ${total}`,
+      );
     }
     // Kept for coming back to it (only on a change the user made: never overwritten by a mount).
     const nextId = session.exercises[next]?.id;
@@ -1035,6 +1127,32 @@ export function WorkoutExecutionClient({
     window.scrollTo({ top: 0 });
   }
 
+  // The pending advance runs from a timer: it calls the latest goTo.
+  const goToRef = useRef(goTo);
+  const cancelAdvanceRef = useRef(cancelAdvance);
+  useEffect(() => {
+    goToRef.current = goTo;
+    cancelAdvanceRef.current = cancelAdvance;
+  });
+  // While an advance is pending, the next touch or key anywhere cancels it
+  // (attached after the ✓ that scheduled it, so that tap doesn't count).
+  useEffect(() => {
+    if (!advancePending) return;
+    const cancel = () => cancelAdvanceRef.current();
+    document.addEventListener("pointerdown", cancel, true);
+    document.addEventListener("keydown", cancel, true);
+    return () => {
+      document.removeEventListener("pointerdown", cancel, true);
+      document.removeEventListener("keydown", cancel, true);
+    };
+  }, [advancePending]);
+  useEffect(
+    () => () => {
+      if (pendingAdvance.current !== null) clearTimeout(pendingAdvance.current);
+    },
+    [],
+  );
+
   function toggleWarmups() {
     const open = !warmupsOpen;
     setWarmupsOpen(open);
@@ -1042,6 +1160,7 @@ export function WorkoutExecutionClient({
   }
 
   function changeField(id: string, field: DraftField, value: string) {
+    cancelAdvance();
     setTouched(true);
     if (field === "weight" && loadCheck?.id === id) setLoadCheck(null);
     updateDrafts((d) => {
@@ -1109,6 +1228,7 @@ export function WorkoutExecutionClient({
     // A double tap must not log the set and undo it at once (a tap that only
     // showed "fill in the load" doesn't count: the next one may follow fast).
     if (now - (lastToggle.current[id] ?? 0) < 400) return;
+    cancelAdvance();
     clearTimeout(typingTimer.current);
     setRowError(id, null);
     setTouched(true);
@@ -1175,10 +1295,12 @@ export function WorkoutExecutionClient({
       );
       if (recordRows(entry.ex.recordBars, workingRowsForRecords(ordered)).has(id)) {
         setPrFlash({ id, n: now });
-        try {
-          navigator.vibrate?.(30);
-        } catch {
-          // Not every browser lets a page vibrate.
+        if (session.haptics) {
+          try {
+            navigator.vibrate?.(30);
+          } catch {
+            // Not every browser lets a page vibrate.
+          }
         }
         announce(`Recorde pessoal: ${formatSet(weightKg, Math.round(reps), { timed: entry.ex.timed })}`);
       }
@@ -1186,15 +1308,46 @@ export function WorkoutExecutionClient({
     // The rest starts on the tap itself — never after a server round trip.
     if (row.kind !== "WARMUP") {
       if (session.restTimerSound) unlockRestAudio();
-      rest.start({ seconds: entry.ex.restSeconds, after: entry.ex.exerciseName, exerciseIndex: entry.index, setId: id });
-      const finishesExercise =
-        !entry.ex.wasSkipped &&
-        (rows.prescribed.length > 0
-          ? rows.prescribed.every((r) => r.id === id || r.done)
-          : !rows.extras.some((r) => r.id !== id && r.done));
-      if (finishesExercise) revealCta.current = true;
+      const group = entry.ex.group;
+      if (group && row.kind === "PRESCRIBED" && !entry.ex.wasSkipped && !entry.ex.replaced) {
+        // A superset (W-104): the switch to the next member, or the round's rest,
+        // and on to the member whose turn it is.
+        const step = afterWorkingSet(flowMembers(group, session.exercises, rowsByExercise, id), entry.index);
+        rest.start({
+          seconds: step.restSeconds,
+          after: entry.ex.exerciseName,
+          exerciseIndex: entry.index,
+          setId: id,
+          kind: step.kind === "transition" ? "transition" : "rest",
+          nextIndex: step.nextIndex,
+        });
+        if (step.nextIndex !== null && step.nextIndex !== entry.index) scheduleAdvance(step.nextIndex);
+        if (step.groupDone) revealCta.current = true;
+      } else {
+        rest.start({ seconds: entry.ex.restSeconds, after: entry.ex.exerciseName, exerciseIndex: entry.index, setId: id });
+        const finishesExercise =
+          !entry.ex.wasSkipped &&
+          (rows.prescribed.length > 0
+            ? rows.prescribed.every((r) => r.id === id || r.done)
+            : !rows.extras.some((r) => r.id !== id && r.done));
+        if (finishesExercise) revealCta.current = true;
+      }
     }
     flush();
+  }
+
+  /**
+   * Why an action call rejected (L-session-expired-workout): the login gone
+   * (checked with the server — production masks the action's own error), no
+   * signal, or something else. The login gone also holds the outbox's sends.
+   */
+  async function whyFailed(): Promise<"session" | "offline" | "other"> {
+    const { error } = await describeActionFailure();
+    if (isSessionExpiredError(error)) {
+      setLoggedOut(true);
+      return "session";
+    }
+    return error === OFFLINE_ERROR ? "offline" : "other";
   }
 
   function runExerciseAction(action: () => Promise<{ ok: boolean; reason?: string }>, failure: string, after?: () => void) {
@@ -1207,7 +1360,11 @@ export function WorkoutExecutionClient({
           else setExerciseError(failure);
         }
       } catch (err) {
-        if (!recoverFromStaleBuild(err)) setExerciseError(`${failure} Sem conexão?`);
+        if (recoverFromStaleBuild(err)) return;
+        const why = await whyFailed();
+        setExerciseError(
+          why === "session" ? SESSION_EXPIRED_ERROR : why === "offline" ? `${failure} Sem conexão.` : `${failure} Tente de novo.`,
+        );
       } finally {
         after?.();
       }
@@ -1269,7 +1426,15 @@ export function WorkoutExecutionClient({
           setSwapError(how === "swap" ? "Não foi possível trocar o exercício." : "Não foi possível adicionar o exercício.");
         }
       } catch (err) {
-        if (!recoverFromStaleBuild(err)) setSwapError("Sem conexão — nada mudou no treino. Tente de novo quando o sinal voltar.");
+        if (recoverFromStaleBuild(err)) return;
+        const why = await whyFailed();
+        setSwapError(
+          why === "session"
+            ? SESSION_EXPIRED_ERROR
+            : why === "offline"
+              ? "Sem conexão — nada mudou no treino. Tente de novo quando o sinal voltar."
+              : "Não foi possível agora — nada mudou no treino. Tente de novo.",
+        );
       } finally {
         setSwapBusy(null);
       }
@@ -1277,6 +1442,7 @@ export function WorkoutExecutionClient({
   }
 
   function openSwap() {
+    cancelAdvance();
     if (!exercise || !rows) return;
     const anyValue = [...rows.warmups, ...rows.prescribed, ...rows.extras].some(
       (r) => r.done || r.values.weight.trim() !== "" || r.values.reps.trim() !== "",
@@ -1286,6 +1452,7 @@ export function WorkoutExecutionClient({
   }
 
   function openAdd() {
+    cancelAdvance();
     setSwapError(null);
     setShowOverview(false);
     setSwapSheet({ kind: "add" });
@@ -1415,8 +1582,11 @@ export function WorkoutExecutionClient({
 
   /** Opens the finish sheet on fresh data (sets may have been saved from another device). */
   function openSheet() {
+    cancelAdvance();
     setFinishError(null);
-    refreshIfOnline();
+    // With the login gone, a refresh could only bounce this screen to the login
+    // page: the finish itself says so, inline, with "Entrar" back here.
+    if (!loggedOut) refreshIfOnline();
     setSheetOpen(true);
   }
 
@@ -1460,9 +1630,14 @@ export function WorkoutExecutionClient({
           setLeaving(true);
           return;
         }
-        if (!recoverFromStaleBuild(err)) {
-          setFinishError("Não foi possível finalizar — verifique a conexão e tente de novo. Nada do que você digitou foi perdido.");
-        }
+        if (recoverFromStaleBuild(err)) return;
+        // Never forgets anything here: the finish didn't happen.
+        const why = await whyFailed();
+        setFinishError(
+          why === "session"
+            ? `${SESSION_EXPIRED_ERROR} Nada do que você digitou foi perdido.`
+            : "Não foi possível finalizar — verifique a conexão e tente de novo. Nada do que você digitou foi perdido.",
+        );
       }
     });
   }
@@ -1485,7 +1660,15 @@ export function WorkoutExecutionClient({
         forgetLocalState();
         router.replace(then);
       } catch (err) {
-        if (!recoverFromStaleBuild(err)) setFinishError("Não foi possível descartar — sem conexão?");
+        if (recoverFromStaleBuild(err)) return;
+        const why = await whyFailed();
+        setFinishError(
+          why === "session"
+            ? SESSION_EXPIRED_ERROR
+            : why === "offline"
+              ? "Não foi possível descartar — sem conexão. Tente de novo quando o sinal voltar."
+              : "Não foi possível descartar agora. Tente de novo.",
+        );
       }
     });
   }
@@ -1510,7 +1693,7 @@ export function WorkoutExecutionClient({
         </p>
         {finishError ? (
           <p role="alert" className="border-l-2 border-l-danger bg-danger-soft px-3 py-2 text-xs font-medium text-danger">
-            {finishError}
+            <WorkoutActionError error={finishError} loginHref={loginHref} />
           </p>
         ) : null}
         <div className="mt-2 flex flex-col gap-2">
@@ -1535,7 +1718,19 @@ export function WorkoutExecutionClient({
   }
 
   const complete = rowsComplete(rows, exercise.wasSkipped);
-  const isLast = exerciseIndex === total - 1;
+  const group = exercise.group;
+  /** Every member of a group has nothing left (a replaced one counts as done). */
+  const groupDone = (g: ExecutionGroup) =>
+    g.memberIndexes.every((i) => session.exercises[i].replaced || rowsComplete(rowsByExercise[i], session.exercises[i].wasSkipped));
+  /** What "Próximo exercício" opens: past the whole group once it is done (its partner is finished too). */
+  const nextAfter = (i: number) => {
+    const g = session.exercises[i]?.group;
+    return g && groupDone(g) ? g.memberIndexes[g.memberIndexes.length - 1] + 1 : i + 1;
+  };
+  const nextIndex = nextAfter(exerciseIndex);
+  const isLast = nextIndex >= total;
+  /** The chevron steps one exercise at a time, partner included. */
+  const atEnd = exerciseIndex === total - 1;
   const noteValue = noteDrafts[exercise.exerciseId] ?? exercise.persistentNote ?? "";
   const note = noteStatus[exercise.exerciseId];
   const waiting = Object.keys(sync).filter((id) => sync[id] === "failed" && drafts[id]?.dirty).length;
@@ -1543,7 +1738,9 @@ export function WorkoutExecutionClient({
   const hasHistory = exercise.previousSets.length > 0;
   const lastSummary = sameLoadSummary(exercise.previousSets, exercise.timed);
   const advice = exercise.advice;
-  const firstReps = firstTimeReps(exercise.repMin, exercise.repMax);
+  const firstReps = firstTimeReps(exercise.repMin, exercise.repMax, { bodyweight: exercise.bodyweight });
+  /** "8–15" (a bodyweight first time aims anywhere in it), "10" when it's one number. */
+  const repRange = exercise.repMin === exercise.repMax ? `~${exercise.repMin}` : `${exercise.repMin}–${exercise.repMax}`;
   const rirButton = (text: string, className?: string) => (
     <button
       type="button"
@@ -1554,10 +1751,17 @@ export function WorkoutExecutionClient({
       {text}
     </button>
   );
+  // The rest bar's shortcut: a superset's next member, else the next exercise once this one is done.
+  const timerNext = rest.timer?.nextIndex;
   const restNext =
-    rest.timer && rest.timer.exerciseIndex === exerciseIndex && complete && !isLast
-      ? { name: session.exercises[exerciseIndex + 1].exerciseName, onGo: () => goTo(exerciseIndex + 1) }
-      : null;
+    rest.timer && typeof timerNext === "number" && timerNext !== exerciseIndex && session.exercises[timerNext]
+      ? {
+          name: `${session.exercises[timerNext].group?.label ?? ""} · ${session.exercises[timerNext].exerciseName}`.replace(/^ · /, ""),
+          onGo: () => goTo(timerNext),
+        }
+      : rest.timer && rest.timer.exerciseIndex === exerciseIndex && complete && !isLast
+        ? { name: session.exercises[nextIndex].exerciseName, onGo: () => goTo(nextIndex) }
+        : null;
   const staleSave = session.stale?.saveAsDay
     ? { since: session.stale.since, saveAsDay: session.stale.saveAsDay, preferred: session.stale.leftOpen && !touched }
     : null;
@@ -1651,7 +1855,7 @@ export function WorkoutExecutionClient({
           {waiting > 0 && loggedOut ? (
             <p className="mt-1.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-warning">
               Sessão expirada —{" "}
-              <Link href="/login" className="-my-3 inline-block py-3 text-accent underline underline-offset-2">
+              <Link href={loginHref} className="-my-3 inline-block py-3 text-accent underline underline-offset-2">
                 entre de novo
               </Link>{" "}
               para enviar {waitingText}
@@ -1676,13 +1880,23 @@ export function WorkoutExecutionClient({
                       type="button"
                       onClick={() => goTo(i)}
                       aria-current={i === exerciseIndex ? "true" : undefined}
-                      className={`flex w-full items-center gap-3 px-4 py-2.5 text-left hover:bg-surface-2 ${
-                        i === exerciseIndex ? "bg-accent-soft" : ""
-                      }`}
+                      data-group={ex.group?.label}
+                      className={cn(
+                        "flex w-full items-center gap-3 px-4 py-2.5 text-left hover:bg-surface-2",
+                        i === exerciseIndex && "bg-accent-soft",
+                        // A superset's members share a 2px accent rule down the left (W-104).
+                        ex.group && "border-l-2 border-l-accent pl-3.5",
+                      )}
                     >
                       <span className="w-5 shrink-0 font-mono text-xs text-muted">
                         {String(i + 1).padStart(2, "0")}
                       </span>
+                      {ex.group ? (
+                        <span className="shrink-0 font-mono text-xs font-bold text-accent">
+                          <span className="sr-only">{ex.group.heading}, </span>
+                          {ex.group.label}
+                        </span>
+                      ) : null}
                       {/* Two lines: long names differ only at the end (grip, cable position). */}
                       <span className="line-clamp-2 min-w-0 flex-1 text-sm font-medium leading-snug wrap-break-word">
                         {ex.exerciseName}
@@ -1750,12 +1964,59 @@ export function WorkoutExecutionClient({
           />
         ) : null}
 
+        {group ? (
+          // The superset's members, one tap from each other (W-104): who's done, whose turn.
+          <nav aria-label={group.heading} className="mb-3" data-group-strip>
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-accent">{groupRule(group)}</p>
+            <ul className="mt-1.5 grid grid-cols-2 gap-1.5">
+              {group.memberIndexes.map((i) => {
+                const member = session.exercises[i];
+                const r = rowsByExercise[i];
+                const doneSets = r.prescribed.filter((row) => row.done).length;
+                const finished = member.replaced || rowsComplete(r, member.wasSkipped);
+                const current = i === exerciseIndex;
+                return (
+                  <li key={member.id} className="min-w-0">
+                    <button
+                      type="button"
+                      onClick={() => goTo(i)}
+                      aria-current={current ? "true" : undefined}
+                      aria-label={`${member.group?.label ?? ""} ${member.exerciseName}, ${
+                        finished ? "concluído" : `${doneSets} de ${plural(r.prescribed.length, "série", "séries")}`
+                      }`}
+                      className={cn(
+                        "flex min-h-11 w-full min-w-0 items-center gap-1.5 border px-2 text-left text-xs",
+                        current ? "border-accent bg-accent-soft font-semibold" : "border-border hover:bg-surface-2",
+                      )}
+                    >
+                      <span className="shrink-0 font-mono font-bold text-accent">{member.group?.label}</span>
+                      <span className="line-clamp-1 min-w-0 flex-1 wrap-break-word">{member.exerciseName}</span>
+                      {finished ? (
+                        <GCheck className="size-3.5 shrink-0 text-accent" />
+                      ) : (
+                        <span className="shrink-0 font-mono tabular-nums text-muted">
+                          {doneSets}/{r.prescribed.length}
+                        </span>
+                      )}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+        ) : null}
+
         {/* Full width: long names differ only at the end (grip, cable position). */}
         <h1
           ref={headingRef}
           tabIndex={-1}
           className={cn("text-xl font-bold leading-tight wrap-break-word outline-none", exercise.substitutedFromName ? "mb-1" : "mb-3")}
         >
+          {group ? (
+            <>
+              <span className="font-mono text-accent">{group.label} ·</span>{" "}
+            </>
+          ) : null}
           {exercise.exerciseName}
         </h1>
         {exercise.substitutedFromName ? (
@@ -1808,15 +2069,30 @@ export function WorkoutExecutionClient({
               {exercise.rirTarget != null
                 ? rirButton(formatRir(exercise.rirTarget), "-my-3 whitespace-nowrap py-3")
                 : null}
-              <span className="whitespace-nowrap">Descanso {formatRest(exercise.restSeconds)}</span>
+              {/* A superset's line may break between its halves on a 320px phone, never inside one. */}
+              {group && group.position < group.size ? (
+                <span>
+                  <span className="whitespace-nowrap">
+                    Troca para {session.exercises[group.memberIndexes[group.position]]?.group?.label ?? `${group.key}${group.position + 1}`}
+                  </span>{" "}
+                  <span className="whitespace-nowrap">em {formatRestClock(exercise.restSeconds)}</span>
+                </span>
+              ) : group ? (
+                <span>
+                  <span className="whitespace-nowrap">Descanso {formatRestClock(group.roundRestSeconds)}</span>{" "}
+                  <span className="whitespace-nowrap">após a rodada</span>
+                </span>
+              ) : (
+                <span className="whitespace-nowrap">Descanso {formatRest(exercise.restSeconds)}</span>
+              )}
             </p>
           </div>
           <button
             onClick={() => goTo(exerciseIndex + 1)}
-            disabled={isLast}
+            disabled={atEnd}
             className={cn(
               "flex size-11 shrink-0 items-center justify-center rounded-[3px] border disabled:opacity-30",
-              complete && !isLast ? "border-accent bg-accent-soft text-accent" : "border-border",
+              complete && !atEnd ? "border-accent bg-accent-soft text-accent" : "border-border",
             )}
             aria-label="Próximo exercício"
           >
@@ -2080,14 +2356,15 @@ export function WorkoutExecutionClient({
               {exercise.bodyweight ? (
                 // No load to pick: the reps (a hold's seconds) are the whole set; kg is extra load.
                 <>
+                  {/* The range, not its top: a beginner logs what they did, never 15 they didn't (the grey box is its bottom). */}
                   {exercise.timed ? (
-                    <>Segure ~{firstReps ?? exercise.repMax}&nbsp;s sem perder a posição</>
+                    <>Segure {repRange}&nbsp;s sem perder a posição</>
                   ) : (
                     <>
-                      Faça ~{firstReps ?? exercise.repMax} reps{" "}
+                      Faça {repRange} reps,{" "}
                       {exercise.rirTarget != null ? (
                         <>
-                          {rirSpareWords(exercise.rirTarget, true)}{" "}
+                          {exercise.rirTarget < 0.5 ? "indo até a falha" : `parando ${rirSpareWords(exercise.rirTarget, true)}`}{" "}
                           <span className="whitespace-nowrap">({rirButton(formatRir(exercise.rirTarget))})</span>
                         </>
                       ) : (
@@ -2162,7 +2439,7 @@ export function WorkoutExecutionClient({
 
         {exerciseError ? (
           <p role="alert" className="mt-2 text-xs font-medium text-danger">
-            {exerciseError}
+            <WorkoutActionError error={exerciseError} loginHref={loginHref} />
           </p>
         ) : null}
 
@@ -2193,7 +2470,7 @@ export function WorkoutExecutionClient({
             )}
             size="lg"
             variant={complete ? "primary" : "secondary"}
-            onClick={() => goTo(exerciseIndex + 1)}
+            onClick={() => goTo(nextIndex)}
           >
             Próximo exercício
             <ChevronRight className="size-4" />
@@ -2206,6 +2483,7 @@ export function WorkoutExecutionClient({
           key={rest.timer.id}
           timer={rest.timer}
           sound={session.restTimerSound}
+          vibrate={session.haptics}
           next={restNext}
           upNext={upNextText(rows, exercise)}
           onAdjust={rest.adjust}
@@ -2228,6 +2506,8 @@ export function WorkoutExecutionClient({
           exercise={{ exerciseId: exercise.exerciseId, name: exercise.exerciseName, imageUrl: exercise.imageUrl }}
           // The full page, and the way back to this exercise of this workout.
           fullHref={`/app/exercises/${exercise.exerciseSlug}?from=${encodeURIComponent(`/app/workout/${session.id}?ex=${exercise.id}`)}`}
+          loginHref={loginHref}
+          onLoggedOut={() => setLoggedOut(true)}
           onClose={() => setTechniqueOpen(false)}
         />
       ) : null}
@@ -2238,6 +2518,8 @@ export function WorkoutExecutionClient({
           mode={swapSheet}
           busyId={swapBusy}
           error={swapError}
+          loginHref={loginHref}
+          onLoggedOut={() => setLoggedOut(true)}
           onPick={pickExercise}
           onClose={() => {
             setSwapSheet(null);
@@ -2254,6 +2536,7 @@ export function WorkoutExecutionClient({
           finishing={finishing ? finishMode : null}
           discarding={discarding}
           error={finishError}
+          loginHref={loginHref}
           onFinish={() => finish("now")}
           onFinishStale={() => finish("stale")}
           onDiscard={() => discard()}

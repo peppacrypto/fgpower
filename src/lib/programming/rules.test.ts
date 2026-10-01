@@ -100,6 +100,19 @@ describe("analyzeProgram — weekly volume per muscle (muscle-level data)", () =
   });
 });
 
+describe("analyzeProgram — stretches and cardio aren't training volume", () => {
+  it("a stretch changes nothing: no volume, no session sets, no heavy leg day", () => {
+    const glutes = { id: "glutes", nameEn: "Glutes", namePt: "Glúteos" };
+    const lift = exercise({ primaryMuscleGroups: ["GLUTES"], primaryMuscles: [glutes], secondaryMuscles: [], sets: 2, movementPattern: "hip-extension" });
+    const stretch = { ...lift, exerciseId: "stretch", sets: 30, category: "STRETCHING" };
+    const without = analyzeProgram([{ dayIndex: 0, nameEn: "A", namePt: "A", exercises: [lift] }]);
+    const withStretch = analyzeProgram([{ dayIndex: 0, nameEn: "A", namePt: "A", exercises: [lift, stretch] }]);
+    expect(withStretch).toEqual(without);
+    expect(withStretch.some((f) => f.code === "low-volume-glutes")).toBe(true);
+    expect(withStretch.some((f) => f.code.startsWith("high-session-volume"))).toBe(false);
+  });
+});
+
 describe("analyzeProgram — session volume", () => {
   it("flags a day with too many total working sets", () => {
     const days: ProgramRuleDay[] = [

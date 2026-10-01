@@ -5,10 +5,13 @@ import {
   compareSessions,
   consistencyOf,
   describePr,
+  muscleVolume,
   periodStartDate,
   progressMode,
   summarizeConsistency,
+  weekColumns,
   type LedgerWeek,
+  type MuscleWeekRow,
   type WeekRow,
   type SessionPerf,
 } from "./progress-core";
@@ -257,5 +260,87 @@ describe("weeks on target", () => {
         expect(consistencyOf(rows, period).since?.toISOString()).toBe(periodStartDate(period, sunday)?.toISOString());
       }
     });
+  });
+});
+
+describe("trends (W-085)", () => {
+  const MON = 20_700;
+  const row = (i: number, done: number, extra: Partial<WeekRow> = {}): WeekRow => ({
+    monday: MON + i * 7,
+    enrollmentId: "e",
+    done,
+    target: 5,
+    met: done >= 5,
+    deload: false,
+    current: false,
+    trained: done > 0,
+    days: [],
+    ...extra,
+  });
+  const rows = [...Array.from({ length: 11 }, (_, i) => row(i, i % 2 === 0 ? 5 : 3)), row(11, 2, { current: true })];
+
+  it("weekColumns: the period's full weeks and this one", () => {
+    expect(weekColumns(rows, "4w").columns).toHaveLength(5);
+    expect(weekColumns(rows, "8w").columns).toHaveLength(9);
+    expect(weekColumns(rows, "all").columns).toHaveLength(12);
+    expect(weekColumns(rows.slice(-3), "8w").columns).toHaveLength(3);
+  });
+
+  it("weekColumns: the average counts complete weeks only; the target shows its range when it changed", () => {
+    // 4 weeks: 3, 5, 3, 5 (i = 7–10) and this week's 2.
+    const w = weekColumns(rows, "4w");
+    expect(w).toMatchObject({ avgDone: "4", targetText: "5", completeWeeks: 4, metWeeks: 2 });
+    const changed = weekColumns([row(0, 3, { target: 3, met: true }), row(1, 4), row(2, 1, { current: true })], "4w");
+    expect(changed).toMatchObject({ avgDone: "3,5", targetText: "3–5", completeWeeks: 2, metWeeks: 1 });
+    expect(weekColumns([row(0, 2, { current: true })], "4w")).toMatchObject({ avgDone: null, completeWeeks: 0 });
+  });
+
+  it("muscleVolume: averages trained complete weeks, never a deload, an entry or an untrained week", () => {
+    const cols = weekColumns(
+      [
+        row(0, 2, { neutral: true }),
+        row(1, 5),
+        row(2, 1, { deload: true, met: true }),
+        row(3, 0),
+        row(4, 5),
+        row(5, 1, { current: true }),
+      ],
+      "all",
+    ).columns;
+    const muscles: MuscleWeekRow[] = [
+      { monday: MON, key: "peito", sets: 30, direct: 30 },
+      { monday: MON + 7, key: "peito", sets: 10, direct: 10 },
+      { monday: MON + 14, key: "peito", sets: 2, direct: 2 },
+      { monday: MON + 28, key: "peito", sets: 13, direct: 12 },
+      { monday: MON + 28, key: "triceps", sets: 5.5, direct: 1 },
+      { monday: MON + 35, key: "peito", sets: 50, direct: 50 },
+    ];
+    const v = muscleVolume(muscles, cols);
+    expect(v.basis).toEqual({ weeks: 2 });
+    expect(v.rows.map((r) => r.key)).toEqual([
+      "peito",
+      "costas",
+      "ombros",
+      "biceps",
+      "triceps",
+      "quadriceps",
+      "posteriores",
+      "gluteos",
+      "panturrilhas",
+      "abdomen",
+    ]);
+    // (10 + 13) / 2 = 11,5; triceps 5,5 / 2 = 2,75 → 3 (half sets).
+    expect(v.rows[0]).toMatchObject({ sets: 11.5, direct: 11, status: "ok" });
+    expect(v.rows[4]).toMatchObject({ sets: 3, status: "low" });
+    expect(v.rows[1]).toMatchObject({ sets: 0, status: "none" });
+  });
+
+  it("muscleVolume: this week so far when no complete week counts yet — and nothing untrained", () => {
+    const cols = weekColumns([row(0, 1, { neutral: true }), row(1, 2, { current: true })], "4w").columns;
+    const v = muscleVolume([{ monday: MON + 7, key: "costas", sets: 7, direct: 6 }], cols);
+    expect(v.basis).toBe("parcial");
+    expect(v.rows[1]).toMatchObject({ key: "costas", sets: 7 });
+    const untrained = weekColumns([row(0, 0, { current: true })], "4w").columns;
+    expect(muscleVolume([], untrained).basis).toBeNull();
   });
 });

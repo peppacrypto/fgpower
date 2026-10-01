@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Wordmark } from "@/components/brand/logo";
 import { MarketingHeader } from "@/components/marketing/marketing-header";
 import { ExerciseShowcase, type ShowcaseItem } from "@/components/marketing/exercise-showcase";
+import { AccountDeletedNotice } from "@/components/marketing/account-deleted-notice";
+import { getCurrentSession } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 
 // Live counters + a real seeded-program preview mean this page must render
@@ -53,6 +55,28 @@ const PILLARS = [
   },
 ];
 
+/** Real screens of the app (the install dialog's screenshots, manifest.ts), 780×1688. */
+const SCREENS = [
+  {
+    src: "/icons/screenshots/today.png",
+    alt: "Tela Hoje: o próximo treino, os exercícios e a semana",
+    caption: "Seu treino de hoje",
+  },
+  {
+    src: "/icons/screenshots/workout.png",
+    alt: "Tela de treino: carga, repetições, RIR e o descanso contando",
+    caption: "Cada série, carga e descanso",
+  },
+  {
+    src: "/icons/screenshots/summary.png",
+    alt: "Resumo do treino: tempo, séries e volume, o check-in, quem vê, como compartilhar e os recordes",
+    caption: "O resumo, quem vê e os recordes",
+  },
+] as const;
+
+/** Mono micro-caps under a CTA (decision 12: free, never "para sempre"). */
+const FREE_LINE = "font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-white/60";
+
 async function getStats() {
   const [exercises, evidence, principles] = await Promise.all([
     prisma.exercise.count({ where: { isPublished: true } }),
@@ -84,11 +108,15 @@ async function getShowcase(): Promise<ShowcaseItem[]> {
 }
 
 export default async function LandingPage() {
-  const [stats, showcase] = await Promise.all([getStats(), getShowcase()]);
+  // The validated session (the one the app's pages check), not the bare
+  // cookie: a dead cookie must not offer an app that bounces to /login.
+  const [stats, showcase, session] = await Promise.all([getStats(), getShowcase(), getCurrentSession()]);
+  const signedIn = Boolean(session);
 
   return (
     <div className="flex min-h-dvh flex-col bg-[#0a0a0b] text-white">
-      <MarketingHeader onDark />
+      <MarketingHeader onDark signedIn={signedIn} />
+      <AccountDeletedNotice />
 
       <main className="flex-1">
         {/* HERO */}
@@ -111,8 +139,8 @@ export default async function LandingPage() {
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Button size="lg" variant="strong" asChild>
-                  <Link href="/login">
-                    Começar a treinar
+                  <Link href={signedIn ? "/app/today" : "/login"}>
+                    {signedIn ? "Abrir o app" : "Criar conta grátis"}
                     <GArrow className="size-4" />
                   </Link>
                 </Button>
@@ -122,9 +150,10 @@ export default async function LandingPage() {
                   asChild
                   className="border-white/25 bg-white/[0.04] text-white hover:border-white/45 hover:bg-white/10 active:border-white/45 active:bg-white/10"
                 >
-                  <Link href="/programs">Explorar programas</Link>
+                  <Link href={signedIn ? "/app/programs" : "/programs"}>Explorar programas</Link>
                 </Button>
               </div>
+              {signedIn ? null : <p className={`mt-4 ${FREE_LINE}`}>Grátis · sem cartão · pronto em 1 minuto</p>}
 
               <dl className="mt-12 grid max-w-md grid-cols-3 gap-6 border-t border-white/10 pt-6">
                 <Stat value={stats.exercises} label="Exercícios" />
@@ -134,6 +163,45 @@ export default async function LandingPage() {
             </div>
 
             <ExerciseShowcase items={showcase} />
+          </div>
+        </section>
+
+        {/* THE APP — three real screens: a scroll-snap row on phones (the next
+            screen peeks, the page never scrolls sideways), three columns from sm. */}
+        <section aria-labelledby="landing-app" className="border-t border-white/10 py-16">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6">
+            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-accent-strong">O app</p>
+            <h2 id="landing-app" className="text-display mt-3 text-3xl font-bold sm:text-5xl">
+              Abra, treine, registre.
+            </h2>
+            <p className="mt-4 max-w-xl text-white/55">
+              O treino do dia pronto, cada série com carga, reps e descanso — e o resumo diz o que subir da próxima vez.
+            </p>
+            <ol
+              tabIndex={0}
+              aria-label="Telas do app"
+              className="-mx-4 mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-strong sm:mx-0 sm:grid sm:grid-cols-3 sm:gap-6 sm:overflow-visible sm:px-0 [&::-webkit-scrollbar]:hidden"
+            >
+              {SCREENS.map((screen, i) => (
+                <li key={screen.src} className="w-[72vw] max-w-[260px] shrink-0 snap-center sm:w-auto sm:max-w-none">
+                  <figure className="reg-frame bg-transparent p-3 [--reg:rgba(255,255,255,.35)]">
+                    <div className="rounded-[30px] border border-white/15 bg-black p-2 shadow-2xl">
+                      <Image
+                        src={screen.src}
+                        alt={screen.alt}
+                        width={780}
+                        height={1688}
+                        className="h-auto w-full rounded-[22px]"
+                        sizes="(max-width: 640px) 72vw, 260px"
+                      />
+                    </div>
+                    <figcaption className="mt-3 font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-white/70">
+                      <span className="text-accent-strong">Fig. {String(i + 1).padStart(2, "0")}</span> — {screen.caption}
+                    </figcaption>
+                  </figure>
+                </li>
+              ))}
+            </ol>
           </div>
         </section>
 
@@ -147,7 +215,10 @@ export default async function LandingPage() {
                   className="flex h-full flex-col gap-3 border-t-2 border-t-white/70 bg-white/[0.02] p-6"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="font-mono text-2xl font-bold tabular-nums text-white/25">{p.n}</span>
+                    {/* Decorative numbering (the order is the reading order): hidden from screen readers. */}
+                    <span aria-hidden className="font-mono text-2xl font-bold tabular-nums text-white/25">
+                      {p.n}
+                    </span>
                     <p.glyph className="size-5 text-accent-strong" />
                   </div>
                   <h2 className="font-semibold text-white">{p.title}</h2>
@@ -206,16 +277,21 @@ export default async function LandingPage() {
           <div className="relative mx-auto flex max-w-6xl flex-col px-4 pt-14 sm:px-6 lg:grid lg:grid-cols-[0.8fr_1fr] lg:items-end lg:gap-10 lg:pt-20">
             {/* Copy */}
             <div className="order-1 flex flex-col items-center text-center lg:order-2 lg:items-start lg:pb-24 lg:text-left">
-              <h2 className="text-display max-w-md text-3xl font-bold sm:text-5xl">Pronto para começar?</h2>
+              <h2 className="text-display max-w-md text-3xl font-bold sm:text-5xl">
+                {signedIn ? "Seu próximo treino está esperando." : "Pronto para começar?"}
+              </h2>
               <p className="mt-5 max-w-md text-white/55">
-                Entre com sua conta Google e monte seu perfil de treino em menos de um minuto.
+                {signedIn
+                  ? "Continue de onde parou."
+                  : "Crie sua conta grátis e monte seu perfil de treino em menos de um minuto."}
               </p>
               <Button size="lg" variant="strong" className="mt-8" asChild>
-                <Link href="/login">
-                  Continuar com Google
+                <Link href={signedIn ? "/app/today" : "/login"}>
+                  {signedIn ? "Abrir o app" : "Criar conta grátis"}
                   <GArrow className="size-4" />
                 </Link>
               </Button>
+              {signedIn ? null : <p className={`mt-4 ${FREE_LINE}`}>Grátis · sem cartão</p>}
             </div>
 
             {/* Athlete — full figure, never cropped; stands flush on the section base */}
