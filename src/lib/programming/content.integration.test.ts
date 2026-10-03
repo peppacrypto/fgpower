@@ -88,4 +88,34 @@ describe("seeded content", () => {
       expect(t.taglinePt.length).toBeLessThanOrEqual(160);
     }
   });
+
+  it("the mobility programs are a complete, loadless, imaged, cited track", async () => {
+    const mob = await prisma.workoutTemplate.findMany({
+      where: { goal: "MOBILITY" },
+      include: {
+        days: { include: { exercises: { include: { exercise: { include: { media: true } } } } } },
+        evidence: true,
+        principles: true,
+      },
+    });
+    // The nine authored mobility programs are all published.
+    expect(mob.length).toBe(9);
+    expect(mob.every((t) => t.isPublished && t.trainingStyle === "MOBILITY")).toBe(true);
+    for (const t of mob) {
+      expect(t.days.length).toBe(t.daysPerWeek);
+      // Real week-by-week progression and real citations/principles, like every other program.
+      expect(Array.isArray(t.weeklyGuidance) ? (t.weeklyGuidance as unknown[]).length : 0).toBe(t.durationWeeks);
+      expect(t.evidence.length).toBeGreaterThan(0);
+      expect(t.principles.length).toBeGreaterThan(0);
+      for (const day of t.days) {
+        expect(day.exercises.length).toBeGreaterThanOrEqual(4);
+        for (const e of day.exercises) {
+          // Every mobility exercise is a loadless stretch (so the workout never asks for kg)
+          // and ships with its images.
+          expect(e.exercise.category).toBe("STRETCHING");
+          expect(e.exercise.media.length).toBeGreaterThan(0);
+        }
+      }
+    }
+  });
 });

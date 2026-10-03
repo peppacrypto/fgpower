@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { CATALOG_FIXTURE } from "./catalog-fixture";
 import { recommendTemplates } from "./recommend";
 import {
+  type CatalogItem,
   NO_FILTERS,
   applyFilters,
   groupCatalog,
@@ -40,6 +41,49 @@ describe("groupCatalog", () => {
     expect(group("glute-focus")).toBe("focus");
     expect(group("full-body-beginner")).toBe("start");
     expect(group("push-pull-legs")).toBe("core");
+  });
+});
+
+describe("mobility programs (additive track)", () => {
+  // A small self-contained catalog so the shared CATALOG_FIXTURE search/time
+  // assumptions stay intact: mobility programs are short and bodyweight.
+  const mob: CatalogItem = {
+    slug: "mobilidade-diaria",
+    namePt: "Mobilidade Diária Essencial",
+    taglinePt: "Dez minutos de mobilidade todos os dias, só com o peso do corpo.",
+    goal: "MOBILITY",
+    experienceLevel: "BEGINNER",
+    trainingStyle: "MOBILITY",
+    equipmentAccess: "HOME_BODYWEIGHT",
+    daysPerWeek: 6,
+    durationWeeks: 4,
+    sessionMinutes: 12,
+    dayNames: ["Rotina diária de mobilidade"],
+    equipmentIds: ["bodyweight", "none"],
+  };
+  const strength = CATALOG_FIXTURE.filter((t) => ["push-pull-legs", "glute-focus"].includes(t.slug));
+  const mini = [...strength, mob];
+
+  it("puts a mobility program on its own shelf, ahead of sport/home, beating the equipment check", () => {
+    expect(programGroup(mob)).toBe("mobility");
+    const groups = groupCatalog(mini);
+    const labels = groups.map((g) => g.label);
+    expect(labels).toContain("Mobilidade & flexibilidade");
+    // Mobility sits after "Especializações" and before "Casa & mínimo" in display order.
+    expect(labels.indexOf("Mobilidade & flexibilidade")).toBeLessThan(
+      labels.indexOf("Casa & mínimo") === -1 ? Infinity : labels.indexOf("Casa & mínimo"),
+    );
+  });
+
+  it("is reachable by the Mobilidade goal chip and by a pt-BR search", () => {
+    expect(slugs(applyFilters(mini, { ...NO_FILTERS, goal: "mobility" }))).toEqual(["mobilidade-diaria"]);
+    expect(slugs(searchCatalog(mini, "mobilidade").results)).toContain("mobilidade-diaria");
+    expect(slugs(searchCatalog(mini, "flexibilidade").results)).toContain("mobilidade-diaria");
+  });
+
+  it("never leads the strength recommender", () => {
+    const beginner = { goal: "GENERAL_FITNESS", experience: "BEGINNER", daysPerWeek: 6, sessionMinutes: 30, equipmentAccess: "HOME_BODYWEIGHT" };
+    expect(recommendTemplates(beginner, mini).every((r) => r.template.slug !== "mobilidade-diaria")).toBe(true);
   });
 });
 

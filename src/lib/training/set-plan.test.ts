@@ -6,6 +6,7 @@ import {
   formatDecimal,
   formatSet,
   isBodyweightEquipment,
+  isBodyweightExercise,
   isExerciseDone,
   isTimedHold,
   parseDecimalInput,
@@ -165,6 +166,16 @@ describe("bodyweight exercises", () => {
     expect(isBodyweightEquipment("FREE_WEIGHT")).toBe(false);
     expect(isBodyweightEquipment("SPECIALTY")).toBe(false);
     expect(isBodyweightEquipment(null)).toBe(false);
+  });
+
+  it("isBodyweightExercise: a stretch logs reps/seconds with no kg, including a foam roller (SPECIALTY)", () => {
+    // Every mobility drill is loadless, whatever its equipment — so ✓ never waits for a weight.
+    expect(isBodyweightExercise({ category: "STRETCHING", equipment: null })).toBe(true);
+    expect(isBodyweightExercise({ category: "STRETCHING", equipment: { category: "SPECIALTY" } })).toBe(true);
+    // Non-stretch still follows the equipment category.
+    expect(isBodyweightExercise({ category: "STRENGTH", equipment: { category: "BODYWEIGHT" } })).toBe(true);
+    expect(isBodyweightExercise({ category: "STRENGTH", equipment: { category: "FREE_WEIGHT" } })).toBe(false);
+    expect(isBodyweightExercise({ category: "STRENGTH", equipment: null })).toBe(false);
   });
 
   it("suggest 0 kg (no extra load), so ✓ needs nothing typed on a first time", () => {

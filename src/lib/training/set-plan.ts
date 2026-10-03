@@ -154,12 +154,85 @@ export function isBodyweightEquipment(category: string | null | undefined): bool
 }
 
 /**
+ * An exercise that logs reps/seconds with no load to type in: bodyweight
+ * equipment (isBodyweightEquipment), or any stretch/mobility drill
+ * (ExerciseCategory STRETCHING — foam rolling included, whose equipment is a
+ * roller, not "bodyweight"). Its kg box is optional extra load, so ✓ never
+ * waits for a weight.
+ */
+export function isBodyweightExercise(exercise: {
+  category?: string | null;
+  equipment?: { category?: string | null } | null;
+}): boolean {
+  return exercise.category === "STRETCHING" || isBodyweightEquipment(exercise.equipment?.category);
+}
+
+/**
  * Holds whose "reps" are always seconds, whatever the program's note says.
  * Every surface that knows only the exercise (summary, exercise history)
  * relies on this list, so a hold the programs time belongs here, not only in
  * its notes (plate-pinch: "As repetições = segundos de sustentação por mão").
  */
-const TIMED_HOLD_SLUGS = new Set(["plank", "side-bridge", "plate-pinch"]);
+const TIMED_HOLD_SLUGS = new Set([
+  "plank",
+  "side-bridge",
+  "plate-pinch",
+  // Mobility / flexibility static holds (seconds, not reps) used by the mobility
+  // programs. Listed here so slug-only surfaces (exercise history, progress, PR
+  // list) also print "30 s" — the workout screen and dossier already know from
+  // the program note, but those surfaces have only the slug.
+  "adductor",
+  "all-fours-quad-stretch",
+  "ankle-on-the-knee",
+  "anterior-tibialis-smr",
+  "calf-stretch-elbows-against-wall",
+  "calf-stretch-hands-against-wall",
+  "calves-smr",
+  "cat-stretch",
+  "childs-pose",
+  "chin-to-chest-stretch",
+  "dancers-stretch",
+  "elbows-back",
+  "foot-smr",
+  "groin-and-back-stretch",
+  "hamstring-smr",
+  "hamstring-stretch",
+  "hug-knees-to-chest",
+  "iliotibial-tract-smr",
+  "knee-across-the-body",
+  "kneeling-hip-flexor",
+  "latissimus-dorsi-smr",
+  "lower-back-smr",
+  "middle-back-stretch",
+  "on-your-side-quad-stretch",
+  "one-arm-against-wall",
+  "one-knee-to-chest",
+  "overhead-stretch",
+  "peroneals-smr",
+  "piriformis-smr",
+  "quadriceps-smr",
+  "rhomboids-smr",
+  "runners-stretch",
+  "seated-calf-stretch",
+  "seated-floor-hamstring-stretch",
+  "side-lying-groin-stretch",
+  "side-neck-stretch",
+  "side-wrist-pull",
+  "spinal-stretch",
+  "standing-gastrocnemius-calf-stretch",
+  "standing-hip-flexors",
+  "standing-lateral-stretch",
+  "standing-pelvic-tilt",
+  "standing-soleus-and-achilles-stretch",
+  "standing-toe-touches",
+  "the-straddle",
+  "tricep-side-stretch",
+  "triceps-stretch",
+  "upper-back-leg-grab",
+  "upper-back-stretch",
+  "upward-stretch",
+  "worlds-greatest-stretch",
+]);
 
 /**
  * Program notes that say the numbers are seconds: "Os números são (o tempo

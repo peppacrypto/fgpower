@@ -25,7 +25,7 @@ import {
 } from "@/lib/training/stale";
 import {
   adviceFromLastTime,
-  isBodyweightEquipment,
+  isBodyweightExercise,
   isTimedHold,
   progressionPrincipleSlug,
 } from "@/lib/training/set-plan";
@@ -175,7 +175,7 @@ export default async function WorkoutExecutionPage({ params, searchParams }: Pag
       advice: advice ? { ...advice, whyHref: why ? `/app/science/${why}` : null } : null,
       strategy,
       loadIncrementKg,
-      bodyweight: isBodyweightEquipment(log.exercise.equipment?.category),
+      bodyweight: isBodyweightExercise(log.exercise),
       timed,
       recordBars: recordBars(bars.get(log.exerciseId) ?? []),
       group: groups[index],

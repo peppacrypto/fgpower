@@ -17,6 +17,7 @@ import { glossaryFor } from "@/lib/programming/glossary";
 import { formatNumber, formatRir, plural, pluralWord } from "@/lib/utils/format";
 import { seriesLevelLabel, splitSeriesTagline, type SeriesBlock } from "@/lib/programming/gd-series";
 import { deriveGroups, groupRule } from "@/lib/programming/groups";
+import { isTimedHold } from "@/lib/training/set-plan";
 import { cn } from "@/lib/utils/cn";
 import { OpenSectionsOnHash, StickyActionsBar } from "./dossier-client";
 import { SeriesRail } from "./gd-series-rail";
@@ -120,7 +121,7 @@ export function TemplateDossier({
   // A GD tagline leads with what the block builds; its place goes to the series line.
   const tagline = splitSeriesTagline(template.taglinePt);
   const weekly = Array.isArray(template.weeklyGuidance)
-    ? (template.weeklyGuidance as Array<{ week: number; rirTarget: number; setsNotePt: string; notePt?: string }>)
+    ? (template.weeklyGuidance as Array<{ week: number; rirTarget: number | null; setsNotePt: string; notePt?: string }>)
     : [];
   const exercises = template.days.flatMap((d) => d.exercises);
   // Supersets (W-104): each day's groups, lettered A, B… in order.
@@ -232,6 +233,8 @@ export function TemplateDossier({
               <ul className="divide-y divide-border">
                 {day.exercises.map((ex, j) => {
                   const slot = daySlots[i][j];
+                  // A mobility hold logs seconds, not reps (set-plan isTimedHold): print "3×30 s".
+                  const timed = isTimedHold({ slug: ex.exercise.slug, notes: ex.notesPt });
                   return (
                     <li key={ex.id} data-group={slot?.label} className={cn(slot && "border-l-2 border-l-accent")}>
                       {slot?.first ? (
@@ -271,6 +274,7 @@ export function TemplateDossier({
                           <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 font-mono text-[11px] text-muted">
                             <span className="font-semibold tabular-nums text-foreground">
                               {ex.sets}×{ex.repMin === ex.repMax ? ex.repMin : `${ex.repMin}-${ex.repMax}`}
+                              {timed ? " s" : ""}
                             </span>
                             {ex.rirTarget != null ? <span>{formatRir(ex.rirTarget)}</span> : null}
                             {ex.warmupSets > 0 ? <span>+{ex.warmupSets} aquec.</span> : null}
@@ -304,9 +308,11 @@ export function TemplateDossier({
                 </div>
                 <div className="pb-5">
                   <div className="flex items-center gap-2">
-                    <span className="rounded-[2px] bg-accent-soft px-2 py-0.5 font-mono text-[11px] font-semibold text-accent">
-                      RIR ~{formatNumber(w.rirTarget)}
-                    </span>
+                    {w.rirTarget != null ? (
+                      <span className="rounded-[2px] bg-accent-soft px-2 py-0.5 font-mono text-[11px] font-semibold text-accent">
+                        RIR ~{formatNumber(w.rirTarget)}
+                      </span>
+                    ) : null}
                     <span className="text-[10px] uppercase tracking-wider text-muted">Semana {w.week}</span>
                   </div>
                   <p className="mt-1.5 text-sm text-foreground/90">{w.setsNotePt}</p>

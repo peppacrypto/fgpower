@@ -344,7 +344,7 @@ interface GeneratedProgram {
     focusEn?: string; focusPt?: string; estimatedMinutes: number;
     exercises: {
       exerciseSlug: string; sets: number; repMin: number; repMax: number;
-      rirTarget: number; restSeconds: number; warmupSets?: number;
+      rirTarget: number | null; restSeconds: number; warmupSets?: number;
       notesEn?: string; notesPt?: string;
       /** Superset / circuit label shared by adjacent rows ("A"). */
       groupKey?: string | null;

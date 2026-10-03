@@ -57,6 +57,8 @@
   --tag-pink-fg: #b32e63;
   --tag-blue-bg: #e8f0ff;
   --tag-blue-fg: #245bc2;
+  --tag-teal-bg: #e0f3ee;
+  --tag-teal-fg: #0f766e;
 
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
@@ -118,6 +120,8 @@
     --tag-pink-fg: #f291b8;
     --tag-blue-bg: #101f33;
     --tag-blue-fg: #7fb0ff;
+    --tag-teal-bg: #0c2420;
+    --tag-teal-fg: #5fd6c4;
 
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
     --shadow-md: 0 1px 3px rgba(0, 0, 0, 0.3), 0 8px 20px rgba(0, 0, 0, 0.35);
@@ -156,6 +160,8 @@
   --tag-pink-fg: #f291b8;
   --tag-blue-bg: #101f33;
   --tag-blue-fg: #7fb0ff;
+  --tag-teal-bg: #0c2420;
+  --tag-teal-fg: #5fd6c4;
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 1px 3px rgba(0, 0, 0, 0.3), 0 8px 20px rgba(0, 0, 0, 0.35);
@@ -192,6 +198,8 @@
   --color-tag-pink-fg: var(--tag-pink-fg);
   --color-tag-blue-bg: var(--tag-blue-bg);
   --color-tag-blue-fg: var(--tag-blue-fg);
+  --color-tag-teal-bg: var(--tag-teal-bg);
+  --color-tag-teal-fg: var(--tag-teal-fg);
 
   --radius-sm: var(--radius-sm);
   --radius-md: var(--radius-md);

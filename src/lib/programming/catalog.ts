@@ -35,7 +35,7 @@ export interface CatalogItem {
 // Groups
 // ---------------------------------------------------------------------------
 
-export type ProgramGroupKey = "gd" | "start" | "core" | "focus" | "sport" | "home";
+export type ProgramGroupKey = "gd" | "start" | "core" | "focus" | "mobility" | "sport" | "home";
 
 /** Library shelves, in display order. Every template lands in exactly one. */
 export const PROGRAM_GROUPS: { key: ProgramGroupKey; label: string; blurb: string }[] = [
@@ -43,6 +43,7 @@ export const PROGRAM_GROUPS: { key: ProgramGroupKey; label: string; blurb: strin
   { key: "start", label: "Comece aqui", blurb: "Para quem está começando ou voltando a treinar." },
   { key: "core", label: "Força & hipertrofia", blurb: "Divisões clássicas para quem já treina." },
   { key: "focus", label: "Especializações", blurb: "Foco em um músculo ou método por algumas semanas." },
+  { key: "mobility", label: "Mobilidade & flexibilidade", blurb: "Amplitude, soltura e aquecimento — para somar aos seus treinos de força." },
   { key: "sport", label: "Esporte", blurb: "Força a serviço de outro esporte." },
   { key: "home", label: "Casa & mínimo", blurb: "Halteres, kettlebell ou só o peso do corpo." },
 ];
@@ -71,11 +72,14 @@ export function isSportTemplate(t: Pick<CatalogItem, "slug" | "goal" | "training
   return t.goal === "SPORTS_PERFORMANCE" || t.trainingStyle === "ENDURANCE_SUPPORT" || SPORT_SLUGS.has(t.slug);
 }
 
-/** Which shelf a template sits on. Precedence: GD series, equipment, sport, focus, level. */
+/** Which shelf a template sits on. Precedence: GD series, mobility, equipment, sport, focus, level. */
 export function programGroup(
   t: Pick<CatalogItem, "slug" | "goal" | "trainingStyle" | "equipmentAccess" | "experienceLevel">,
 ): ProgramGroupKey {
   if (t.slug.startsWith("gd-")) return "gd";
+  // Mobility is its own shelf regardless of equipment (most are bodyweight, so
+  // this must beat the "home" check below).
+  if (t.goal === "MOBILITY") return "mobility";
   if (t.equipmentAccess !== "FULL_GYM") return "home";
   if (isSportTemplate(t)) return "sport";
   if (FOCUS_SLUGS.has(t.slug)) return "focus";
@@ -142,7 +146,7 @@ export function shelveFiltered<T extends CatalogItem>(filtered: T[], all: T[], p
 // ---------------------------------------------------------------------------
 
 export type PlaceFacet = "gym" | "home" | "bodyweight";
-export type GoalFacet = "hypertrophy" | "strength" | "fat-loss" | "fitness" | "sport";
+export type GoalFacet = "hypertrophy" | "strength" | "fat-loss" | "fitness" | "sport" | "mobility";
 
 export interface LibraryFilters {
   days: number | null;
@@ -169,6 +173,7 @@ export const GOAL_OPTIONS: { value: GoalFacet; label: string }[] = [
   { value: "fat-loss", label: "Emagrecer" },
   { value: "fitness", label: "Fitness geral" },
   { value: "sport", label: "Esporte" },
+  { value: "mobility", label: "Mobilidade" },
 ];
 
 /**
@@ -207,6 +212,8 @@ function matchesGoal(t: CatalogItem, goal: GoalFacet): boolean {
       return t.goal === "GENERAL_FITNESS";
     case "sport":
       return isSportTemplate(t);
+    case "mobility":
+      return t.goal === "MOBILITY";
   }
 }
 
@@ -248,6 +255,7 @@ const GOAL_FACET_FOR_GOAL: Record<string, GoalFacet> = {
   GENERAL_FITNESS: "fitness",
   FAT_LOSS: "fat-loss",
   SPORTS_PERFORMANCE: "sport",
+  MOBILITY: "mobility",
 };
 
 /** Programs that must be left for each preset facet (place, level, days, goal) to be applied. */

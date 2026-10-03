@@ -142,6 +142,9 @@ enum TrainingGoal {
   SPORTS_PERFORMANCE
   /// "Emagrecer / definir" (profile only; programs map it to general fitness)
   FAT_LOSS
+  /// Mobility / flexibility programs (templates only; not an onboarding goal —
+  /// a complementary track alongside the strength plans, with its own library shelf).
+  MOBILITY
 }
 
 enum ExperienceLevel {
@@ -558,6 +561,8 @@ enum TrainingStyle {
   BODY_PART_SPLIT
   HYBRID
   ENDURANCE_SUPPORT
+  /// Mobility / flexibility routines (stretches, dynamic drills, foam rolling).
+  MOBILITY
 }
 
 enum ProgressionStrategy {

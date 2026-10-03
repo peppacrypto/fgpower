@@ -66,7 +66,9 @@ export async function getWorkoutSessionForExecution(sessionId: string) {
               slug: true,
               namePt: true,
               media: { take: 1, orderBy: { sortOrder: "asc" }, select: { url: true } },
-              // Bodyweight exercises log reps only: kg is extra load (set-plan isBodyweightEquipment).
+              // Bodyweight exercises log reps only: kg is extra load (set-plan isBodyweightExercise).
+              // A stretch (category STRETCHING) is loadless too, so its category is read here.
+              category: true,
               equipment: { select: { category: true } },
               // A free-weight compound's RIR floor under the week's wave (rirExerciseOf).
               mechanics: true,
