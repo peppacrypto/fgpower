@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils/cn";
+import { useRestoreFocus } from "./use-restore-focus";
 
 /**
  * A bottom sheet of actions (the builder's row and day menus, a profile's
@@ -129,15 +130,8 @@ export function ConfirmSheet({
   onConfirm: () => void;
   onClose: () => void;
 }) {
-  // The element that had focus when the sheet was rendered (its trigger),
-  // read before ActionSheet's effect moves focus into the dialog.
-  const [trigger] = useState(() => (typeof document === "undefined" ? null : document.activeElement));
-  useEffect(
-    () => () => {
-      if (trigger instanceof HTMLElement && trigger.isConnected) requestAnimationFrame(() => trigger.focus());
-    },
-    [trigger],
-  );
+  // Restore focus to the trigger when the sheet unmounts.
+  useRestoreFocus();
 
   return (
     <ActionSheet title={title} subtitle={subtitle} onClose={pending ? () => {} : onClose} labelledBy="confirm-sheet-title">

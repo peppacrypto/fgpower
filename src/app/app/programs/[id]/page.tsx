@@ -158,15 +158,15 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
         ) : !isActive && hasExercises ? (
           <SwitchProgramButton
             action={startProgram.bind(null, program.id)}
-            label="Iniciar este programa"
-            pendingLabel="Iniciando…"
+            label="Ativar este programa"
+            pendingLabel="Ativando…"
             size="md"
             active={switchingFrom}
           />
         ) : null}
         {!isActive && !hasExercises ? (
           <Button disabled aria-describedby="start-needs-exercises">
-            Iniciar este programa
+            Ativar este programa
           </Button>
         ) : null}
         <Button variant="outline" asChild>

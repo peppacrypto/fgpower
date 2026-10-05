@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useRestoreFocus } from "@/components/ui/use-restore-focus";
 import { cn } from "@/lib/utils/cn";
 import { formatRir } from "@/lib/utils/format";
 
@@ -54,35 +55,42 @@ export function RirSheet({
   rirDrivesLoad: boolean;
   onClose: () => void;
 }) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
-  const latest = useRef(onClose);
+  useRestoreFocus();
+
   useEffect(() => {
-    latest.current = onClose;
-  });
-  useEffect(() => {
-    const opener = document.activeElement as HTMLElement | null;
+    const dialog = dialogRef.current;
+    // A native modal <dialog>: focus is trapped inside and the workout behind
+    // is inert (top layer) — Tab can no longer reach controls under the sheet.
+    if (dialog && !dialog.open) dialog.showModal();
     closeRef.current?.focus();
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") latest.current();
-    };
-    window.addEventListener("keydown", onKey);
+    const root = document.documentElement;
+    const before = root.style.overflow;
+    root.style.overflow = "hidden";
     return () => {
-      window.removeEventListener("keydown", onKey);
-      opener?.focus?.({ preventScroll: true });
+      root.style.overflow = before;
     };
   }, []);
 
   const isTarget = (rir: number) => isRirTarget(rir, target);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/45 sm:items-center" onClick={onClose}>
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="rir-title"
-        onClick={(e) => e.stopPropagation()}
-        className="panel-raised max-h-[calc(100dvh-env(safe-area-inset-top,0px))] w-full max-w-lg overflow-y-auto overscroll-contain bg-background px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5"
-      >
+    <dialog
+      ref={dialogRef}
+      aria-labelledby="rir-title"
+      // Escape closes it; the parent unmounts the sheet, so prevent the native close.
+      onCancel={(e) => {
+        e.preventDefault();
+        onClose();
+      }}
+      className="m-0 h-dvh max-h-dvh w-dvw max-w-dvw bg-transparent p-0 text-foreground backdrop:bg-black/45"
+    >
+      <div className="flex h-full w-full items-end justify-center sm:items-center" onClick={onClose}>
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="panel-raised max-h-[calc(100dvh-env(safe-area-inset-top,0px))] w-full max-w-lg overflow-y-auto overscroll-contain bg-background px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5"
+        >
         <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent">
           RIR · repetições em reserva
         </span>
@@ -129,7 +137,8 @@ export function RirSheet({
             Fechar
           </Button>
         </div>
+        </div>
       </div>
-    </div>
+    </dialog>
   );
 }

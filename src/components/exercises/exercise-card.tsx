@@ -38,7 +38,9 @@ export function ExerciseCard({ exercise, href }: { exercise: ExerciseCardData; h
         ) : null}
       </div>
       <div className="flex flex-1 flex-col gap-1.5 p-3.5">
-        <h3 className="line-clamp-2 text-sm font-semibold leading-tight">{exercise.namePt}</h3>
+        {/* A-034: no clamp — grip/position variants differ only at the end of the name,
+            and a clamp also clips names under the WCAG 1.4.12 text-spacing overrides. */}
+        <h3 className="text-sm font-semibold leading-tight wrap-break-word">{exercise.namePt}</h3>
         <div className="mt-auto flex flex-wrap items-center gap-1.5 pt-1 text-xs text-muted">
           {primaryMuscle ? <span>{primaryMuscle.namePt}</span> : null}
           {exercise.equipment ? (

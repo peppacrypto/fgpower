@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
+import { Fragment, useCallback, useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { Button } from "@/components/ui/button";
 import { Input, Textarea } from "@/components/ui/input";
 import { SaveStatus } from "@/components/ui/save-status";
@@ -26,6 +26,8 @@ export interface CheckInValues {
 const MONO = "font-mono text-[11px] font-bold uppercase tracking-[0.14em]";
 const LEGEND = "font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted";
 const NOTE_MAX = 500;
+/** A-074: push a typed note to the server this long after the last keystroke, not only on blur. */
+const NOTE_DEBOUNCE_MS = 600;
 const SKIP_KEY = (sessionId: string) => `fg:check-in-skip:${sessionId}`;
 const SKIP_EVENT = "fg:check-in-skip";
 
@@ -147,6 +149,9 @@ export function CheckInCard({
   const [weightDraft, setWeightDraft] = useState<string | null>(null);
   const [weightError, setWeightError] = useState<string | null>(null);
   const [noteDraft, setNoteDraft] = useState<string | null>(null);
+  /** A note typed but not yet confirmed by the server (A-074): the status must not claim "Salvo". */
+  const [noteDirty, setNoteDirty] = useState(false);
+  const noteTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const saved = answered || savedAt != null;
   // Focus follows a fold or an unfold (the button pressed is gone): to the folded line's
   // button, or to the open card's title.
@@ -167,6 +172,18 @@ export function CheckInCard({
     focusNext.current = "open";
     setOpen(true);
   }
+  // A-074: debounced autosave of the typed note. Hoisted above the early return
+  // below so this hook is called on every render (react-hooks/rules-of-hooks).
+  const saveNoteText = useCallback(
+    (text: string) => {
+      setNoteDirty(false);
+      const note = text.trim() === "" ? null : text.trim().slice(0, NOTE_MAX);
+      if (note !== value.notes) update({ notes: note });
+    },
+    [value.notes, update],
+  );
+  // Stop the pending debounce if the card unmounts.
+  useEffect(() => () => clearTimeout(noteTimer.current), []);
 
   if (!open || (skipped && !saved)) {
     if (saved) {
@@ -224,11 +241,11 @@ export function CheckInCard({
     if (checked.value !== value.bodyweightKg) update({ bodyweightKg: checked.value });
   }
   function commitNote() {
+    clearTimeout(noteTimer.current);
     const text = noteDraft;
     setNoteDraft(null);
     if (text === null) return;
-    const note = text.trim() === "" ? null : text.trim().slice(0, NOTE_MAX);
-    if (note !== value.notes) update({ notes: note });
+    saveNoteText(text);
   }
 
   const radioError = errorFor("sessionRpe") ?? errorFor("soreness");
@@ -356,7 +373,13 @@ export function CheckInCard({
           maxLength={NOTE_MAX}
           value={noteDraft ?? value.notes ?? ""}
           onFocus={() => setNoteDraft((d) => d ?? value.notes ?? "")}
-          onChange={(e) => setNoteDraft(e.target.value)}
+          onChange={(e) => {
+            const text = e.target.value;
+            setNoteDraft(text);
+            setNoteDirty(true);
+            clearTimeout(noteTimer.current);
+            noteTimer.current = setTimeout(() => saveNoteText(text), NOTE_DEBOUNCE_MS);
+          }}
           onBlur={commitNote}
           placeholder="Algo para lembrar no próximo treino?"
           className="mt-1.5 min-h-0"
@@ -369,7 +392,7 @@ export function CheckInCard({
       </div>
 
       <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-        <SaveStatus pending={pending} savedAt={savedAt} idleText="Salvo automaticamente" />
+        <SaveStatus pending={pending || noteDirty} savedAt={savedAt} idleText="Salvo automaticamente" />
         {saved ? (
           <Button size="sm" variant="ghost" onClick={fold} className="-mr-2">
             Pronto

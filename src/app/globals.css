@@ -215,6 +215,18 @@
 
 html {
   color-scheme: light dark;
+  /* Keep a control scrolled or focused into view clear of the sticky header
+     and of the fixed/sticky bottom bars (nav, rest timer, builder save bar) —
+     WCAG 2.4.11. A bar publishes its measured height as --sp-bar/--sp-top
+     while it is mounted (components/ui/use-scroll-inset.ts); below sm the
+     bottom nav is always there. */
+  scroll-padding-top: var(--sp-top, 0px);
+  scroll-padding-bottom: var(--sp-bar, 0px);
+}
+@media (max-width: 639px) {
+  html {
+    scroll-padding-bottom: calc(var(--nav-h) + var(--sp-bar, 0px));
+  }
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {

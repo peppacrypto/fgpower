@@ -10,6 +10,7 @@ import { ActionErrorText } from "@/components/social/session-expired";
 import { editFinishedWorkout, type FinishedSetEdit } from "@/lib/actions/workouts";
 import { isSessionExpiredError } from "@/lib/auth/session-expired";
 import { parseDecimalInput } from "@/lib/training/set-plan";
+import { validateEditRow, type RowError } from "@/lib/training/edit-set-validation";
 import { cn } from "@/lib/utils/cn";
 
 export interface EditableExercise {
@@ -52,14 +53,14 @@ export function EditSetsForm({
     exercises.flatMap((ex) => ex.sets.map((s) => [s.id, { weight: s.weight, reps: s.reps, rir: s.rir, removed: false }])),
   ) as Record<string, Row>;
   const [rows, setRows] = useState<Record<string, Row>>(initial);
-  const [invalid, setInvalid] = useState<Set<string>>(new Set());
+  const [invalid, setInvalid] = useState<Map<string, RowError>>(new Map());
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
   const change = (id: string, patch: Partial<Row>) => {
     setRows((r) => ({ ...r, [id]: { ...r[id], ...patch } }));
     if (invalid.has(id)) {
-      const next = new Set(invalid);
+      const next = new Map(invalid);
       next.delete(id);
       setInvalid(next);
     }
@@ -68,7 +69,7 @@ export function EditSetsForm({
   function save() {
     setError(null);
     const edits: FinishedSetEdit[] = [];
-    const bad = new Set<string>();
+    const bad = new Map<string, RowError>();
     for (const [id, row] of Object.entries(rows)) {
       const before = initial[id];
       if (row.removed) {
@@ -76,18 +77,16 @@ export function EditSetsForm({
         continue;
       }
       if (row.weight === before.weight && row.reps === before.reps && row.rir === before.rir) continue;
-      const weightKg = parseDecimalInput(row.weight);
-      const reps = parseDecimalInput(row.reps);
-      const rir = parseDecimalInput(row.rir);
-      if (weightKg === null || reps === null || reps < 1 || (row.rir.trim() !== "" && rir === null)) {
-        bad.add(id);
+      const problem = validateEditRow(row);
+      if (problem) {
+        bad.set(id, problem);
         continue;
       }
-      edits.push({ setLogId: id, weightKg, reps: Math.round(reps), rir });
+      edits.push({ setLogId: id, weightKg: parseDecimalInput(row.weight)!, reps: Math.round(parseDecimalInput(row.reps)!), rir: parseDecimalInput(row.rir) });
     }
     setInvalid(bad);
     if (bad.size > 0) {
-      setError("Preencha kg e reps das séries marcadas — ou tire a série.");
+      setError("Corrija os valores destacados nas séries marcadas — ou tire a série.");
       return;
     }
     if (Object.values(rows).every((r) => r.removed)) {
@@ -148,21 +147,25 @@ export function EditSetsForm({
           <div className="flex flex-col gap-1.5">
             {ex.sets.map((s) => {
               const row = rows[s.id];
-              const bad = invalid.has(s.id);
+              const reason = invalid.get(s.id);
+              const msgId = `edit-msg-${s.id}`;
+              const fieldBad = (field: "weight" | "reps" | "rir") =>
+                reason === "value" ? field !== "rir" : reason === "rir" ? field === "rir" : false;
               const box = (field: "weight" | "reps" | "rir", label: string, inputMode: "decimal" | "numeric") => (
                 <input
                   type="text"
                   inputMode={inputMode}
                   autoComplete="off"
                   aria-label={`${s.name} — ${label}`}
-                  aria-invalid={bad && field !== "rir" ? true : undefined}
+                  aria-invalid={fieldBad(field) ? true : undefined}
+                  aria-describedby={fieldBad(field) ? msgId : undefined}
                   disabled={row.removed || pending}
                   value={row[field]}
                   placeholder={field === "rir" ? "–" : undefined}
                   onChange={(e) => change(s.id, { [field]: e.target.value })}
                   className={cn(
                     "h-11 w-full min-w-0 rounded-[3px] border bg-surface px-1 text-center font-mono text-base font-semibold tabular-nums placeholder:font-normal placeholder:text-muted disabled:opacity-40",
-                    bad && field !== "rir" ? "border-2 border-warning!" : "border-foreground/50!",
+                    fieldBad(field) ? "border-2 border-warning!" : "border-foreground/50!",
                   )}
                 />
               );
@@ -199,9 +202,9 @@ export function EditSetsForm({
                     <p className="px-1 pt-0.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted">
                       Sai do treino ao salvar
                     </p>
-                  ) : bad ? (
-                    <p className="px-1 pt-0.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-warning">
-                      Falta kg ou reps
+                  ) : reason ? (
+                    <p id={msgId} className="px-1 pt-0.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-warning">
+                      {reason === "rir" ? "RIR inválido" : "Falta kg ou reps"}
                     </p>
                   ) : null}
                 </div>

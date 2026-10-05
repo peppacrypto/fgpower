@@ -242,10 +242,19 @@ export function SetTable({
  */
 function RemoveExtraButton({ row, onRemove }: { row: SetTableRowModel; onRemove: () => void }) {
   const [armed, setArmed] = useState(false);
+  // Spoken for SR users: the armed state and its 4 s expiry aren't otherwise announced.
+  const [note, setNote] = useState("");
   const hasValues = row.values.weight.trim() !== "" || row.values.reps.trim() !== "";
+  // A-080: once armed, disarm after 4 s and tell SR users it was cancelled. The
+  // armed prompt itself is announced from the click handler below — setting it
+  // synchronously in the effect body would cascade renders — so the effect owns
+  // only the timeout, whose setState runs from a later callback, not inline.
   useEffect(() => {
     if (!armed) return;
-    const t = setTimeout(() => setArmed(false), 4000);
+    const t = setTimeout(() => {
+      setArmed(false);
+      setNote("Remoção cancelada.");
+    }, 4000);
     return () => clearTimeout(t);
   }, [armed]);
   return (
@@ -253,8 +262,10 @@ function RemoveExtraButton({ row, onRemove }: { row: SetTableRowModel; onRemove:
       <button
         type="button"
         onClick={() => {
-          if (hasValues && !armed) setArmed(true);
-          else onRemove();
+          if (hasValues && !armed) {
+            setArmed(true);
+            setNote(`Remover extra ${row.ordinal}? Toque de novo para confirmar.`);
+          } else onRemove();
         }}
         disabled={row.sync === "sending"}
         className={cn(
@@ -265,6 +276,9 @@ function RemoveExtraButton({ row, onRemove }: { row: SetTableRowModel; onRemove:
         <Trash2 className="size-3.5" />
         {armed ? `Remover extra ${row.ordinal}? Toque de novo` : `Remover extra ${row.ordinal}`}
       </button>
+      <span aria-live="assertive" className="sr-only">
+        {note}
+      </span>
     </div>
   );
 }

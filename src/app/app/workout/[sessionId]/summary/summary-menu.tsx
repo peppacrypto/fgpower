@@ -124,7 +124,8 @@ export function SummaryMenu({
           latest={latest}
           onClose={() => {
             setConfirming(false);
-            triggerRef.current?.focus();
+            // The dialog is inert until it unmounts; move focus back to "⋯" after that.
+            requestAnimationFrame(() => triggerRef.current?.focus());
           }}
         />
       ) : null}

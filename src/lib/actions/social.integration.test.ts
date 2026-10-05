@@ -31,6 +31,7 @@ vi.mock("next/server", async (importOriginal) => ({
 
 const social = await import("./social");
 const { getNotifications, getFollowers, getBlockedUsers } = await import("@/lib/data/social");
+const { countUnread } = await import("@/lib/social/notifications");
 
 const userIds: string[] = [];
 async function makeUser(label: string, opts: { isPublic?: boolean; profile?: boolean } = {}) {
@@ -444,5 +445,32 @@ describe("admin e-mail on a new report", () => {
     } finally {
       process.env.ADMIN_EMAILS = saved;
     }
+  });
+});
+
+describe("respondToFollowRequest marks the request notification read (A-072)", () => {
+  // Fresh users so the countUnread assertions don't depend on other tests' state.
+  let target: string, asker: string;
+  beforeAll(async () => {
+    target = await makeUser("a072alvo");
+    asker = await makeUser("a072fa");
+  });
+
+  it("marks the follow-request notification read once it is answered", async () => {
+    // target is private; asker requests → target gets an unread FOLLOW_REQUEST.
+    as(asker);
+    expect(await social.followUser(target)).toEqual({ ok: true, status: "REQUESTED" });
+    expect((await notes(target, "FOLLOW_REQUEST")).at(-1)?.readAt).toBeNull();
+    expect(await countUnread(target)).toBeGreaterThan(0);
+
+    const request = await prisma.followRequest.findUniqueOrThrow({
+      where: { requesterId_targetId: { requesterId: asker, targetId: target } },
+    });
+    as(target);
+    expect(await social.respondToFollowRequest(request.id, true)).toEqual({ ok: true, status: "ACCEPTED" });
+
+    // The request's own notification is read; the bell no longer flags it.
+    expect((await notes(target, "FOLLOW_REQUEST")).at(-1)?.readAt).not.toBeNull();
+    expect(await countUnread(target)).toBe(0);
   });
 });

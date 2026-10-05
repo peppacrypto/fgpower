@@ -35,7 +35,7 @@ export default async function LoginLinkPage() {
   const session = await getCurrentSession();
   return (
     <div className="flex min-h-dvh flex-col items-center justify-center bg-background px-4 pt-[max(2.5rem,env(safe-area-inset-top))] pb-[max(2.5rem,env(safe-area-inset-bottom))]">
-      <div className="w-full max-w-md">
+      <main className="w-full max-w-md">
         <div className="mb-6 flex justify-center">
           <Wordmark iconSize={34} />
         </div>
@@ -47,7 +47,7 @@ export default async function LoginLinkPage() {
             ← Voltar para a página inicial
           </Link>
         </p>
-      </div>
+      </main>
     </div>
   );
 }

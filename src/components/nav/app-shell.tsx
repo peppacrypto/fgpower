@@ -2,6 +2,7 @@ import { Sidebar } from "@/components/nav/sidebar";
 import { BottomNav } from "@/components/nav/bottom-nav";
 import { AppMain } from "@/components/nav/app-main";
 import { NavHistoryTracker } from "@/components/nav/nav-history";
+import { RouteAnnouncer } from "@/components/nav/route-announcer";
 import { UnreadProvider } from "@/components/nav/unread-provider";
 import { OfflineBanner } from "@/components/pwa/offline-banner";
 import { ResumeRefresh } from "@/components/pwa/resume-refresh";
@@ -48,6 +49,7 @@ export async function AppShell({
         <BottomNav />
         <ResumeRefresh />
         <NavHistoryTracker />
+        <RouteAnnouncer />
       </div>
     </UnreadProvider>
   );

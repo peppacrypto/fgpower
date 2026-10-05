@@ -13,6 +13,7 @@ vi.mock("@/lib/auth/require-user", () => ({ requireUserOrThrow: async () => ({ i
 
 const { prisma } = await import("@/lib/db");
 const { saveExerciseNote } = await import("./exercise-notes");
+const { persistExerciseNote } = await import("@/lib/data/exercise-notes");
 
 let exerciseId: string;
 
@@ -50,5 +51,14 @@ it("removes the row when the note is blank", async () => {
 
 it("writes nothing when the payload is not a string", async () => {
   await saveExerciseNote(exerciseId, undefined as unknown as string);
+  expect(await stored()).toBeNull();
+});
+
+it("persistExerciseNote (the A-074 keepalive route's write) trims, caps and clears for an explicit user id", async () => {
+  await persistExerciseNote(USER, exerciseId, "  anota isso  ");
+  expect((await stored())?.note).toBe("anota isso");
+  await persistExerciseNote(USER, exerciseId, "B".repeat(EXERCISE_NOTE_MAX + 100));
+  expect((await stored())?.note).toHaveLength(EXERCISE_NOTE_MAX);
+  await persistExerciseNote(USER, exerciseId, "   ");
   expect(await stored()).toBeNull();
 });

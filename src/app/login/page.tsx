@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { redirect } from "next/navigation";
@@ -10,6 +11,8 @@ import { emailEnabled } from "@/lib/email/config";
 import { EmailSignIn } from "./email-sign-in";
 import { GoogleSignInButton } from "./google-sign-in-button";
 import { oauthErrorView, BANNED_TEXT } from "./sign-in-errors";
+
+export const metadata: Metadata = { title: "Entrar" };
 
 /** `?email=` (the link page's "Pedir um novo link"): prefilled only when it is an address. */
 function prefillEmail(value: string | string[] | undefined): string | null {
@@ -35,7 +38,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
 
   return (
     <div className="flex min-h-dvh flex-col items-center justify-center bg-background px-4 pt-[max(2.5rem,env(safe-area-inset-top))] pb-[max(2.5rem,env(safe-area-inset-bottom))]">
-      <div className="w-full max-w-md">
+      <main className="w-full max-w-md">
         <div className="mb-6 flex justify-center">
           <Wordmark iconSize={34} />
         </div>
@@ -48,6 +51,11 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
               alt="Same weights, different you — FGPOWER"
               width={1920}
               height={641}
+              // Full-width inside a max-w-md (448px) column. Without `sizes`,
+              // Next serves a 1x/2x density srcSet and every device downloads
+              // the 1920px variant (~175 KB); with it, a phone picks w=1200
+              // (~76 KB). Does not crop the art (A-090).
+              sizes="(max-width: 480px) 100vw, 448px"
               className="h-auto w-full select-none"
               // The page's largest paint: fetched from the <head>. (`priority` is deprecated in Next 16.)
               preload
@@ -122,7 +130,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
             ← Voltar para a página inicial
           </Link>
         </p>
-      </div>
+      </main>
     </div>
   );
 }

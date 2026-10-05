@@ -8,7 +8,7 @@ import {
   TRAINING_GOALS,
   EXPERIENCE_LEVELS,
   EQUIPMENT_ACCESS_OPTIONS,
-} from "@/lib/validation/onboarding";
+} from "@/lib/validation/onboarding-constants";
 import { EQUIPMENT_LABEL, EXPERIENCE_LABEL, GOAL_LABEL } from "@/lib/constants/program-labels";
 import { runAction } from "@/components/social/run-action";
 import { ActionErrorText } from "@/components/social/session-expired";

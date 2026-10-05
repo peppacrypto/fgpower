@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { GCheck } from "@/components/ui/glyph";
 import { Button } from "@/components/ui/button";
+import { useRestoreFocus } from "@/components/ui/use-restore-focus";
 import { WorkoutActionError } from "./action-error";
 
 /** A load asked about at the finish, and where its kg box is. */
@@ -88,6 +89,7 @@ export function FinishSheet({
   const primaryRef = useRef<HTMLButtonElement>(null);
   const recorded = stats.prescribedDone + stats.extrasDone;
   const busy = finishing !== null || discarding;
+  useRestoreFocus();
 
   useEffect(() => {
     const dialog = dialogRef.current;

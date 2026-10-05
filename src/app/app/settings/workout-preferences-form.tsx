@@ -1,7 +1,7 @@
 "use client";
 
 import { updateWorkoutPreferences } from "@/lib/actions/preferences";
-import { LOAD_INCREMENT_OPTIONS, type WorkoutPreferences } from "@/lib/validation/preferences";
+import { LOAD_INCREMENT_OPTIONS, type WorkoutPreferences } from "@/lib/validation/preferences-constants";
 import { formatDecimal } from "@/lib/training/set-plan";
 import { ActionErrorText } from "@/components/social/session-expired";
 import { SaveStatus } from "@/components/ui/save-status";

@@ -36,7 +36,11 @@ export default function manifest(): MetadataRoute.Manifest {
     // in layout.tsx still switches per color scheme once the page loads).
     background_color: "#fafafb",
     theme_color: "#fafafb",
-    orientation: "portrait-primary",
+    // Installed apps must work in any orientation (WCAG 1.3.4): phones and
+    // tablets on wheelchair / arm mounts and stands are often fixed landscape,
+    // and nothing here depends on portrait (the workout, rest bar and nav all
+    // work at 844×390).
+    orientation: "any",
     categories: ["health", "fitness", "sports"],
     icons: [
       { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },

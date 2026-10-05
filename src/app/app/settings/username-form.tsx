@@ -116,12 +116,17 @@ export function UsernameForm({ initialUsername, publicOrigin }: { initialUsernam
         </Button>
       </div>
 
+      {/* Confirmations only — the URL preview below must not re-announce per keystroke. */}
+      <p role="status" aria-live="polite" className="sr-only">
+        {justSaved ? "Nome de usuário salvo." : ""}
+      </p>
+
       {error ? (
         <p id="username-error" role="alert" className="mt-1.5 text-xs font-medium text-danger">
           <ActionErrorText error={error} />
         </p>
       ) : (
-        <div id="username-status" role="status" aria-live="polite" className="mt-2">
+        <div id="username-status" className="mt-2">
           {editing ? (
             <p className="font-mono text-xs text-muted">
               {publicProfileLabel(value.trim() || "seu_usuario", publicOrigin)}

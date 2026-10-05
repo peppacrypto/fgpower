@@ -14,6 +14,7 @@ import { InlineActionForm } from "@/components/workout/inline-action-form";
 import { startAdHocWorkoutSession } from "@/lib/actions/workouts";
 import { describeRecord, type RecordLike } from "@/lib/training/personal-records-core";
 import { adviceInSeconds, formatSet, isTimedHold } from "@/lib/training/set-plan";
+import { dayNameWithoutWeekday, scheduleShifted } from "@/lib/training/day-rotation";
 import { formatSpTime } from "@/lib/training/stale";
 import { formatDuration, formatKg, formatNumber, formatVolume, plural } from "@/lib/utils/format";
 import { cn } from "@/lib/utils/cn";
@@ -502,7 +503,9 @@ function NextUp({ next }: { next: NonNullable<WorkoutSummary["next"]> }) {
                 </>
               ) : null}
             </p>
-            <h2 className="text-display mt-1.5 text-2xl font-extrabold sm:text-3xl">{day.name}</h2>
+            <h2 className="text-display mt-1.5 text-2xl font-extrabold sm:text-3xl">
+              {date && scheduleShifted({ dayName: day.name, dayNo: date.dayNo }) ? dayNameWithoutWeekday(day.name) : day.name}
+            </h2>
             <p className="mt-1 font-mono text-xs text-muted">
               {plural(day.exerciseCount, "exercício", "exercícios")}
               {day.estimatedMinutes ? ` · ~${formatDuration(day.estimatedMinutes * 60)}` : ""}

@@ -13,6 +13,7 @@ import {
 import { slugifyUsername } from "@/lib/validation/username";
 import { Wordmark } from "@/components/brand/logo";
 import { OnboardingWizard } from "./onboarding-wizard";
+import { SignOutLink } from "./sign-out-link";
 import { TOTAL_STEPS } from "./steps";
 
 export const metadata: Metadata = { title: "Primeiros passos" };
@@ -48,8 +49,9 @@ export default async function OnboardingPage({ searchParams }: PageProps<"/onboa
 
   return (
     <main className="flex min-h-dvh flex-col items-center bg-background px-4 pt-[max(2rem,env(safe-area-inset-top))] pb-[max(2.5rem,env(safe-area-inset-bottom))]">
-      <div className="mb-8">
+      <div className="mb-8 flex w-full max-w-lg items-center justify-between gap-3">
         <Wordmark iconSize={32} />
+        <SignOutLink firstName={defaultName} />
       </div>
       <OnboardingWizard
         userId={user.id}

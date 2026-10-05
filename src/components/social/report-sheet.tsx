@@ -98,14 +98,14 @@ export function ReportSheet({ target, shareToken, canBlock = true, onClose }: Re
   return (
     <ActionSheet
       title={target.kind === "activity" ? "Denunciar treino" : `Denunciar ${handle}`}
-      subtitle={sent ? undefined : "A equipe do FGPOWER analisa cada denúncia. Quem você denunciou não é avisado."}
+      subtitle={sent ? undefined : "A FGPOWER analisa cada denúncia. Quem você denunciou não é avisado."}
       onClose={pending ? () => {} : onClose}
       labelledBy="report-sheet-title"
     >
       {sent ? (
         <div className="flex flex-col items-start gap-3 px-5 py-4">
           <p ref={doneRef} tabIndex={-1} className="text-sm font-medium outline-none">
-            Denúncia enviada. A equipe do FGPOWER vai analisar.
+            Denúncia enviada. A FGPOWER vai analisar.
           </p>
           {canBlock && !sent.blocked ? (
             <Button variant="link" size="sm" className="min-h-11 px-0" disabled={pending} onClick={blockToo}>

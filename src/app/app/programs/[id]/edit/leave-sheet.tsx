@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
+import { useRestoreFocus } from "@/components/ui/use-restore-focus";
 
 /**
  * Asked when the user taps a link (bottom nav, back link…) with unsaved
@@ -22,6 +23,7 @@ export function LeaveSheet({
 }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const primaryRef = useRef<HTMLButtonElement>(null);
+  useRestoreFocus();
 
   useEffect(() => {
     const dialog = dialogRef.current;

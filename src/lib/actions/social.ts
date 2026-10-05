@@ -8,7 +8,7 @@ import { SESSION_EXPIRED_ERROR } from "@/lib/auth/session-expired";
 import { prisma } from "@/lib/db";
 import { PUBLIC_USER_SELECT, toPublicUser } from "@/lib/data/social/public-user";
 import { activityAccess, canViewActivity, isBlocked } from "@/lib/social/authorization";
-import { createNotification, markSeen, notificationKey, retractNotification } from "@/lib/social/notifications";
+import { createNotification, markRead, markSeen, notificationKey, retractNotification } from "@/lib/social/notifications";
 import { notifyAdminsOfNewReport } from "@/lib/social/notification-reports";
 import {
   REPORT_DETAILS_STORED_MAX,
@@ -245,6 +245,10 @@ export async function respondToFollowRequest(
         now,
       );
     }
+    // The request is answered now, so its FOLLOW_REQUEST notification (keyed by
+    // the requester) is no longer actionable — mark it read so the bell stops
+    // flagging it (A-072).
+    await markRead(prisma, { recipientId: user.id, dedupeKey: notificationKey.request(request.requesterId) }, now);
     return settled(accept ? "ACCEPTED" : "DECLINED");
   });
 }

@@ -231,7 +231,7 @@ export default async function HistoryPage({ searchParams }: PageProps<"/app/hist
                     {met ? (
                       <>
                         <GCheck className="size-3.5" aria-hidden />
-                        <span className="sr-only">{metWeek.deload ? "Semana de descarga na meta" : "Semana na meta"}</span>
+                        <span className="sr-only">{metWeek.deload ? "Semana de deload na meta" : "Semana na meta"}</span>
                       </>
                     ) : null}
                   </span>

@@ -466,3 +466,25 @@ export function weekdayFromName(name: string): number | null {
   const first = normalizeText(name.trim()).match(/^[a-z]+/)?.[0];
   return first != null && first in NAME_WEEKDAY ? NAME_WEEKDAY[first] : null;
 }
+
+/**
+ * A day's display name with a leading weekday stripped ("Terça — Inferior A" →
+ * "Inferior A"), for when a weekday-named plan is being trained off its named
+ * weekday (A-076): the title must not say "Terça" while the app suggests a
+ * Thursday. Names without a leading weekday come back unchanged.
+ */
+export function dayNameWithoutWeekday(name: string): string {
+  if (weekdayFromName(name) == null) return name;
+  const stripped = name.replace(/^\s*[A-Za-zÀ-ÿ]+\s*[—–-]\s*/u, "").trim();
+  return stripped || name;
+}
+
+/**
+ * True when a day named after a weekday is being suggested on a *different*
+ * weekday (started midweek, entry week, catch-up): its weekday label then
+ * contradicts the suggested day (A-076).
+ */
+export function scheduleShifted(p: { dayName: string | undefined; dayNo: number }): boolean {
+  const named = p.dayName != null ? weekdayFromName(p.dayName) : null;
+  return named != null && weekdayOfDayNo(p.dayNo) !== named;
+}

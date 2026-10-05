@@ -1,22 +1,10 @@
 import { z } from "zod";
+import { EQUIPMENT_ACCESS_OPTIONS, EXPERIENCE_LEVELS, TRAINING_GOALS } from "./onboarding-constants";
 
-export const TRAINING_GOALS = [
-  "HYPERTROPHY",
-  "STRENGTH",
-  "GENERAL_FITNESS",
-  "STRENGTH_HYPERTROPHY",
-  "SPORTS_PERFORMANCE",
-  "FAT_LOSS",
-] as const;
-
-export const EXPERIENCE_LEVELS = ["BEGINNER", "INTERMEDIATE", "ADVANCED"] as const;
-
-export const EQUIPMENT_ACCESS_OPTIONS = [
-  "FULL_GYM",
-  "HOME_DUMBBELLS",
-  "HOME_BODYWEIGHT",
-  "MINIMAL",
-] as const;
+// The option enums live zod-free in `onboarding-constants` so the Settings
+// profile form can import them without zod (A-089). Re-export so every server
+// importer of this module is unaffected.
+export * from "./onboarding-constants";
 
 export const onboardingSchema = z.object({
   displayName: z.string().trim().min(1, "Informe seu nome.").max(60),

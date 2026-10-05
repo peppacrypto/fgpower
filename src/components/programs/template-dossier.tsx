@@ -337,25 +337,27 @@ export function TemplateDossier({
       <CollapsibleSection title="Base científica" id="ciencia">
         <Markdown text={template.rationalePt} />
         {template.evidence.length > 0 ? (
-          <div className="mt-4 flex flex-col gap-2">
+          <ul className="mt-4 flex flex-col gap-2">
             {template.evidence.map((ev) => (
-              <a
-                key={ev.sourceId}
-                href={ev.source.url}
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center justify-between gap-3 border-b border-border px-3.5 py-2.5 text-sm hover:bg-[var(--ink-2)]"
-              >
-                <span className="min-w-0">
-                  <span className="line-clamp-1">{ev.source.title}</span>
-                  <span className="text-xs text-muted">
-                    {ev.source.journal}, {ev.source.publicationYear}
+              <li key={ev.sourceId}>
+                <a
+                  href={ev.source.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center justify-between gap-3 border-b border-border px-3.5 py-2.5 text-sm hover:bg-[var(--ink-2)]"
+                >
+                  <span className="min-w-0">
+                    <span lang="en" className="line-clamp-1">{ev.source.title}</span>
+                    <span className="text-xs text-muted">
+                      {ev.source.journal}, {ev.source.publicationYear}
+                    </span>
                   </span>
-                </span>
-                <ExternalLink className="size-3.5 shrink-0 text-muted" />
-              </a>
+                  <ExternalLink aria-hidden className="size-3.5 shrink-0 text-muted" />
+                  <span className="sr-only">(abre em nova aba)</span>
+                </a>
+              </li>
             ))}
-          </div>
+          </ul>
         ) : null}
         {template.principles.length > 0 ? (
           <div className="mt-4 flex flex-wrap gap-1.5">
@@ -524,7 +526,7 @@ function SeriesPlace({ series }: { series: DossierSeries }) {
   const block = series.blocks[at];
   const prev = at > 0 ? series.blocks[at - 1] : null;
   const next = at < series.blocks.length - 1 ? series.blocks[at + 1] : null;
-  const link = "font-bold text-accent hover:underline";
+  const link = "font-bold text-accent underline decoration-2 underline-offset-2";
   return (
     <div className="mt-4 border-t border-border pt-3" data-series-place>
       <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted">

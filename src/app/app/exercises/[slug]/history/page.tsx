@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ChevronLeft } from "lucide-react";
 import { GArrow, Lettermark } from "@/components/ui/glyph";
 import { requireUser } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
@@ -28,6 +28,9 @@ export async function generateMetadata({ params }: PageProps<"/app/exercises/[sl
 /** Sessions listed before "Ver todas". */
 const LIST_SIZE = 12;
 
+/** A-075 · back to the workout the history was opened from: `/app/workout/<id>`, nothing else (no open redirect). */
+const WORKOUT_RETURN = /^\/app\/workout\/[\w-]+(\?ex=[\w-]+)?$/;
+
 type Chart = { label: string; unit: ChartUnit; points: ChartInputPoint[] } | { note: string };
 
 export default async function ExerciseHistoryPage({
@@ -36,6 +39,8 @@ export default async function ExerciseHistoryPage({
 }: PageProps<"/app/exercises/[slug]/history">) {
   const { slug } = await params;
   const sp = await searchParams;
+  const from = Array.isArray(sp.from) ? sp.from[0] : sp.from;
+  const backToWorkout = typeof from === "string" && WORKOUT_RETURN.test(from) ? from : null;
   const period = parsePeriod(sp.period, "all");
   const listAll = sp.sessoes === "todas";
   const user = await requireUser();
@@ -51,9 +56,20 @@ export default async function ExerciseHistoryPage({
     prisma.profile.findUnique({ where: { userId: user.id }, select: { loadIncrementKg: true } }),
   ]);
 
+  const backLink = backToWorkout ? (
+    <Link
+      href={backToWorkout}
+      className="-mt-2 -ml-1 mb-2 inline-flex min-h-11 items-center gap-0.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted hover:text-foreground"
+    >
+      <ChevronLeft className="size-3.5" aria-hidden />
+      Voltar ao treino
+    </Link>
+  ) : null;
+
   if (history.length === 0) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
+        {backLink}
         <h1 className="text-2xl font-bold tracking-tight">{exercise.namePt}</h1>
         <div className="mt-8">
           <EmptyState
@@ -213,6 +229,7 @@ export default async function ExerciseHistoryPage({
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
+      {backLink}
       <h1 className="text-2xl font-bold tracking-tight">{exercise.namePt}</h1>
       <p className="mt-1 text-sm text-muted">
         {plural(history.length, "sessão", "sessões")} · última em{" "}

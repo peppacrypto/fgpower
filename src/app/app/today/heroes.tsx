@@ -9,7 +9,7 @@ import { DiscardSessionButton } from "@/components/workout/discard-session-butto
 import { startAdHocWorkoutSession } from "@/lib/actions/workouts";
 import { repeatBlock, startNextBlock } from "@/lib/actions/programs";
 import type { CompletedBlock } from "@/lib/data/program-lifecycle";
-import { formatDayTag, whenText } from "@/lib/training/day-rotation";
+import { dayNameWithoutWeekday, formatDayTag, scheduleShifted, whenText } from "@/lib/training/day-rotation";
 import { APP_TIME_ZONE, wallClock } from "@/lib/training/week";
 import { formatKg, plural, pluralWord } from "@/lib/utils/format";
 import { cn } from "@/lib/utils/cn";
@@ -65,12 +65,15 @@ function SuggestedTag({ dayNo, todayNo }: { dayNo: number; todayNo: number }) {
  */
 export function NextWorkoutHero({
   day,
+  shifted = false,
   justActivated,
   position,
   plannedToday,
   weekStart,
 }: {
   day: HeroDay;
+  /** A-076: the day is named after a weekday but suggested on another — show it without that weekday. */
+  shifted?: boolean;
   justActivated: boolean;
   position: { n: number; of: number } | null;
   /** Today is one of the user's training days: "Sugerido para hoje (sexta)". */
@@ -106,7 +109,9 @@ export function NextWorkoutHero({
             </span>
           ) : null}
         </div>
-        <h2 className="text-display mt-2 text-3xl font-extrabold sm:text-4xl">{day.name}</h2>
+        <h2 className="text-display mt-2 text-3xl font-extrabold sm:text-4xl">
+          {shifted ? dayNameWithoutWeekday(day.name) : day.name}
+        </h2>
         <DayMeta day={day} />
         {plannedToday ? <p className="mt-1 text-xs text-muted">Sugerido para hoje ({plannedToday})</p> : null}
 
@@ -280,7 +285,9 @@ export function RestDayHero({
 
         <div className="mt-5 border-t border-border pt-4">
           <span className={cn(monoLabel, "text-accent")}>Próximo treino</span>
-          <h2 className="text-display mt-1.5 text-2xl font-extrabold sm:text-3xl">{next.day.name}</h2>
+          <h2 className="text-display mt-1.5 text-2xl font-extrabold sm:text-3xl">
+            {scheduleShifted({ dayName: next.day.name, dayNo: next.dayNo }) ? dayNameWithoutWeekday(next.day.name) : next.day.name}
+          </h2>
           <p className="mt-1.5">
             <SuggestedTag dayNo={next.dayNo} todayNo={todayNo} />
           </p>
@@ -354,7 +361,9 @@ export function WeekCompleteHero({
       {next ? (
         <p className="mt-4 border-t border-border pt-3 text-sm">
           <span className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted">Próximo · </span>
-          <span className="font-semibold">{next.day.name}</span>{" "}
+          <span className="font-semibold">
+            {scheduleShifted({ dayName: next.day.name, dayNo: next.dayNo }) ? dayNameWithoutWeekday(next.day.name) : next.day.name}
+          </span>{" "}
           <span className="tag tag--spec uppercase">{formatDayTag(next.dayNo)}</span>
           <span className="sr-only"> ({whenText(next.dayNo, todayNo)})</span>
         </p>

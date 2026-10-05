@@ -8,6 +8,7 @@ import { ArrowLeftRight, ChevronDown, ChevronLeft, ChevronRight, Info, Pencil, P
 import { GLoad, GNotes, GCheck } from "@/components/ui/glyph";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils/cn";
+import { useTopBarInset } from "@/components/ui/use-scroll-inset";
 import {
   addExerciseToWorkout,
   addExtraSet,
@@ -65,7 +66,7 @@ import { ExerciseSwapSheet, type SwapSheetMode } from "./exercise-swap-sheet";
 import { TechniqueSheet } from "./technique-sheet";
 import { markWorkoutVisited, readShownExercise, rememberShownExercise } from "./workout-visit";
 import { WorkoutActionError } from "./action-error";
-import { EXERCISE_NOTE_MAX, formatRestClock } from "@/lib/validation/program-builder";
+import { EXERCISE_NOTE_MAX, formatRestClock } from "@/lib/validation/program-builder-constants";
 import type { ExecutionExerciseLog, ExecutionGroup, ExecutionSession, ExecutionSetLog } from "./types";
 import type { ExerciseOption } from "@/lib/data/workout-session";
 
@@ -409,6 +410,9 @@ function rowsComplete(rows: ExerciseRows, skipped: boolean) {
 /** How long after a superset's ✓ the screen moves to the next member — any touch or key first cancels it. */
 const ADVANCE_DELAY_MS = 900;
 
+/** A-074: push a typed exercise note to the server this long after the last keystroke. */
+const NOTE_DEBOUNCE_MS = 600;
+
 /**
  * The group's members as the flow reads them (lib/training/superset-flow),
  * from the rows on screen (drafts included). `justDone`: the row whose ✓ was
@@ -614,6 +618,9 @@ export function WorkoutExecutionClient({
   const [exerciseError, setExerciseError] = useState<string | null>(null);
   const [noteDrafts, setNoteDrafts] = useState<Record<string, string>>({});
   const [noteStatus, setNoteStatus] = useState<Record<string, NoteStatus>>({});
+  /** Latest note drafts, for the pagehide keepalive flush (A-074). */
+  const noteDraftsRef = useRef<Record<string, string>>({});
+  const noteTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const [addingExtra, setAddingExtra] = useState(false);
   const [confirmSkip, setConfirmSkip] = useState(false);
   const [showOverview, setShowOverview] = useState(false);
@@ -645,6 +652,8 @@ export function WorkoutExecutionClient({
    */
   const revealRow = useRef<string | null>(null);
   const ctaRef = useRef<HTMLButtonElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
+  useTopBarInset(headerRef);
   const lastToggle = useRef<Record<string, number>>({});
   const savedNotes = useRef<Record<string, string>>({});
   const [sheetKey, setSheetKey] = useState(0);
@@ -665,7 +674,7 @@ export function WorkoutExecutionClient({
   const [editingNote, setEditingNote] = useState(false);
   /** The week's instructions (W-054), opened from the header chip. */
   const [weekOpen, setWeekOpen] = useState(false);
-  /** The chip's week line: "Sem. 5 · alvo RIR 1", "Sem. 13 · teste". */
+  /** The chip's week line: "Sem. 5 · RIR alvo 1", "Sem. 13 · teste". */
   const weekChip = session.week
     ? `${session.week.label}${
         session.week.test
@@ -673,7 +682,7 @@ export function WorkoutExecutionClient({
           : session.week.deload
             ? " · deload"
             : session.week.rirTarget != null
-              ? ` · alvo ${formatRir(session.week.rirTarget)}`
+              ? ` · RIR alvo ${formatDecimal(session.week.rirTarget)}`
               : ""
       }`
     : "";
@@ -785,7 +794,11 @@ export function WorkoutExecutionClient({
 
   useEffect(() => {
     if (!confirmSkip) return;
-    const t = setTimeout(() => setConfirmSkip(false), 4000);
+    // Fires only when the user did NOT confirm (confirming clears this timer first).
+    const t = setTimeout(() => {
+      setConfirmSkip(false);
+      announce("Pular cancelado.");
+    }, 4000);
     return () => clearTimeout(t);
   }, [confirmSkip]);
 
@@ -993,19 +1006,40 @@ export function WorkoutExecutionClient({
     unloadRef.current = () => {
       // A normal request may not survive the page unloading; a keepalive one can.
       const { ops } = buildOps(true);
-      if (ops.length === 0) return;
+      if (ops.length > 0) {
+        try {
+          void fetch("/api/workout/sets", {
+            method: "POST",
+            keepalive: true,
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ ops }),
+          }).catch(() => {});
+        } catch {
+          /* the local mirror still has them */
+        }
+      }
+      // A-074: flush any note typed but not yet confirmed by the server.
+      const persistedById = new Map(sessionRef.current.exercises.map((ex) => [ex.exerciseId, ex.persistentNote ?? ""]));
+      const notes = Object.entries(noteDraftsRef.current)
+        .filter(([id, text]) => text !== (savedNotes.current[id] ?? persistedById.get(id) ?? ""))
+        .map(([exerciseId, note]) => ({ exerciseId, note }));
+      if (notes.length === 0) return;
       try {
-        void fetch("/api/workout/sets", {
+        void fetch("/api/workout/notes", {
           method: "POST",
           keepalive: true,
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ ops }),
+          body: JSON.stringify({ notes }),
         }).catch(() => {});
       } catch {
-        /* the local mirror still has them */
+        /* best effort */
       }
     };
   });
+
+  useEffect(() => {
+    noteDraftsRef.current = noteDrafts;
+  }, [noteDrafts]);
 
   // Restore anything typed or ✓'d before a reload / tab kill, then send what the server lacks.
   useEffect(() => {
@@ -1492,7 +1526,11 @@ export function WorkoutExecutionClient({
 
   function saveNote(exerciseId: string | undefined, persisted: string | null) {
     if (!exerciseId) return;
-    const text = noteDrafts[exerciseId];
+    saveNoteByText(exerciseId, noteDrafts[exerciseId], persisted);
+  }
+
+  /** Save an explicit note text (so the debounced timer is never stale). */
+  function saveNoteByText(exerciseId: string, text: string | undefined, persisted: string | null) {
     const last = savedNotes.current[exerciseId] ?? persisted ?? "";
     if (text === undefined || text === last || staleBuild.current) return;
     setNoteStatus((s) => ({ ...s, [exerciseId]: { state: "saving", text } }));
@@ -1776,7 +1814,7 @@ export function WorkoutExecutionClient({
     <div className="flex min-h-dvh flex-col pb-40">
       {liveRegion}
       {/* Sticks below the status-bar inset the app shell paints (installed PWA draws under it). */}
-      <header className="sticky top-[env(safe-area-inset-top,0px)] z-20 border-b border-border bg-background/95 px-4 py-3 backdrop-blur">
+      <header ref={headerRef} className="sticky top-[env(safe-area-inset-top,0px)] z-20 border-b border-border bg-background/95 px-4 py-3 backdrop-blur">
         <div className="mx-auto flex max-w-3xl items-center justify-between gap-3">
           <div className="min-w-0">
             <p className="truncate text-sm font-semibold">{session.name}</p>
@@ -2134,6 +2172,7 @@ export function WorkoutExecutionClient({
                   runExerciseAction(() => skipExercise(exercise.id, true), "Não foi possível pular.");
                 } else {
                   setConfirmSkip(true);
+                  announce("Toque em pular de novo para confirmar.");
                 }
               }}
               // Under 360px the four actions keep one line with the short words ("Pular"); the name stays whole.
@@ -2195,8 +2234,14 @@ export function WorkoutExecutionClient({
                     return next;
                   });
                 }
+                // A-074: debounce-save as the user types, not only on blur.
+                clearTimeout(noteTimer.current);
+                const id = exercise.exerciseId;
+                const persisted = exercise.persistentNote;
+                noteTimer.current = setTimeout(() => saveNoteByText(id, text, persisted), NOTE_DEBOUNCE_MS);
               }}
               onBlur={() => {
+                clearTimeout(noteTimer.current);
                 saveNote(exercise.exerciseId, exercise.persistentNote);
                 setEditingNote(false);
               }}
@@ -2292,7 +2337,7 @@ export function WorkoutExecutionClient({
         {hasHistory ? (
           <div className="mt-4 border-l-2 border-l-border-strong bg-surface-2" data-last-time>
             <Link
-              href={`/app/exercises/${exercise.exerciseSlug}/history`}
+              href={`/app/exercises/${exercise.exerciseSlug}/history?from=${encodeURIComponent(`/app/workout/${session.id}`)}`}
               aria-label={`Último treino${exercise.lastTime ? `, ${exercise.lastTime.date}, ${exercise.lastTime.ago}` : ""} — ver o histórico do exercício`}
               className="flex min-h-10 items-center justify-between gap-2 px-3.5 pt-1 font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted hover:text-foreground"
             >

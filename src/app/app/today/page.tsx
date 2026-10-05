@@ -34,14 +34,17 @@ import { trainingWeekdays } from "@/lib/programming/schedule";
 import { RecommendedPanel } from "@/components/programs/recommended-panel";
 import { APP_TIME_ZONE, wallClock } from "@/lib/training/week";
 import {
+  dayNameWithoutWeekday,
   dayNumberOf,
   mondayOf,
   planWeek,
   plannedWeekdays,
   repeatsDays,
+  scheduleShifted,
   upcomingWorkout,
   weekStrip,
   weekdayName,
+  weekdayOfDayNo,
 } from "@/lib/training/day-rotation";
 import { seriesPosition } from "@/lib/training/program-calendar";
 import {
@@ -291,6 +294,9 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
     preferredDays: schedule,
     carryOverNextWeek: own?.nextWeekCarryOver ?? false,
   });
+  // A-076: the suggested day is named after a weekday but trained on another
+  // one this week — its weekday label would contradict the suggested date.
+  const suggestedShifted = up.next != null && scheduleShifted({ dayName: up.next.day.name, dayNo: up.next.dayNo });
   const plan = up.week;
   const nextDay = plan.nextDay ?? undefined;
   const weekComplete = plan.weekComplete;
@@ -502,6 +508,7 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
         ) : nextDay ? (
           <NextWorkoutHero
             day={nextDay}
+            shifted={suggestedShifted}
             justActivated={justActivated}
             position={position}
             plannedToday={!entry && up.next?.isToday && scheduledToday ? weekdayName(wall.weekday) : null}
@@ -731,11 +738,18 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
                     {String(day.dayIndex + 1).padStart(2, "0")}
                   </span>
                   <div className="min-w-[7rem] flex-1">
-                    <p className="text-sm font-semibold leading-snug wrap-break-word">{day.name}</p>
+                    {/* A-076: on the suggested day of a shifted week, strip the name's weekday and
+                        drop the fixed weekday tag — the "sugerido" marker + hero give the real day. */}
+                    <p className="text-sm font-semibold leading-snug wrap-break-word">
+                      {suggested && suggestedShifted ? dayNameWithoutWeekday(day.name) : day.name}
+                    </p>
                     <p className="text-xs text-muted">
                       {exerciseCount(day.exercises.length)}
-                      {day.weekday != null && !empty ? (
+                      {day.weekday != null && !empty && !(suggested && suggestedShifted) ? (
                         <span className="font-mono text-[10px] uppercase tracking-[0.1em]"> · {WEEKDAYS[day.weekday]}</span>
+                      ) : null}
+                      {suggested && suggestedShifted && up.next ? (
+                        <span className="font-mono text-[10px] uppercase tracking-[0.1em]"> · previsto p/ {WEEKDAYS[weekdayOfDayNo(up.next.dayNo)]}</span>
                       ) : null}
                       <DayStatus state={state} suggested={suggested} />
                     </p>

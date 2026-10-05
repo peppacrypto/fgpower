@@ -7,6 +7,7 @@ import { ChevronRight, X } from "lucide-react";
 import { GLoad } from "@/components/ui/glyph";
 import { Button } from "@/components/ui/button";
 import { Bone } from "@/components/ui/skeleton";
+import { useRestoreFocus } from "@/components/ui/use-restore-focus";
 import { SESSION_EXPIRED_ERROR } from "@/lib/auth/session-expired";
 import type { TechniqueSheet as TechniqueData } from "@/lib/data/workout-session";
 import { WorkoutActionError, WorkoutLoggedOutError } from "./action-error";
@@ -65,6 +66,7 @@ export function TechniqueSheet({
   useEffect(() => {
     onLoggedOutRef.current = onLoggedOut;
   });
+  useRestoreFocus();
 
   useEffect(() => {
     const dialog = dialogRef.current;

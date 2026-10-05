@@ -207,12 +207,12 @@ export default async function ExerciseDetailPage({ params, searchParams }: PageP
             <p className="mb-4 text-sm text-foreground/90">{content.whyThisExerciseExists}</p>
           ) : null}
           {exercise.evidence.length > 0 ? (
-            <div className="flex flex-col gap-3">
+            <ol className="flex flex-col gap-3">
               {exercise.evidence.map((ev) => (
-                <div key={ev.sourceId} className="reg-frame p-3.5">
+                <li key={ev.sourceId} className="reg-frame p-3.5">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="text-sm font-semibold">{ev.source.title}</p>
+                      <p lang="en" className="text-sm font-semibold">{ev.source.title}</p>
                       <p className="text-xs text-muted">
                         {ev.source.authors} · {ev.source.journal} · {ev.source.publicationYear}
                       </p>
@@ -226,13 +226,14 @@ export default async function ExerciseDetailPage({ params, searchParams }: PageP
                     href={ev.source.url}
                     target="_blank"
                     rel="noreferrer"
+                    aria-label={`Ver fonte: ${ev.source.title} (abre em nova aba)`}
                     className="mt-2 inline-flex items-center gap-1 text-xs text-accent hover:underline"
                   >
-                    Ver fonte <ExternalLink className="size-3" />
+                    Ver fonte <ExternalLink aria-hidden className="size-3" />
                   </a>
-                </div>
+                </li>
               ))}
-            </div>
+            </ol>
           ) : null}
           {exercise.evidence.length > 0 ? (
             <ul className="mt-4 flex flex-col gap-0.5 text-[11px] text-muted">

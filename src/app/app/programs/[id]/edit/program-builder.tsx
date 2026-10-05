@@ -28,6 +28,7 @@ import {
   Link2Off,
   MoreHorizontal,
   Plus,
+  Repeat,
   Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -43,6 +44,7 @@ import {
   type BuilderExercise,
   type SaveProgramResult,
 } from "@/lib/actions/program-builder";
+import { swapRowExercise } from "@/lib/programming/swap-row";
 import {
   BUILDER_LIMITS,
   DAY_FOCUS_MAX,
@@ -57,7 +59,7 @@ import {
   validateBuilderProgram,
   type BuilderFieldError,
 } from "@/lib/validation/program-builder";
-import { parseDecimalInput } from "@/lib/training/set-plan";
+import { isTimedHold, parseDecimalInput } from "@/lib/training/set-plan";
 import { dayTokens } from "@/lib/programming/day-tokens";
 import { analyzeProgram, type ProgramRuleDay } from "@/lib/programming/rules";
 import { layOutWeek } from "@/lib/programming/schedule";
@@ -70,6 +72,7 @@ import { ExercisePicker } from "./exercise-picker";
 import { ExerciseRow, ROW_FIELD_LABELS, type RowErrors, type RowField } from "./exercise-row";
 import { LeaveSheet } from "./leave-sheet";
 import { ActionSheet, SheetItem } from "@/components/ui/action-sheet";
+import { useBottomBarInset } from "@/components/ui/use-scroll-inset";
 import { VolumeStrip } from "./volume-strip";
 import { AutoGrowText } from "./auto-grow";
 
@@ -358,6 +361,8 @@ export function ProgramBuilder({
   const [activeDayIndex, setActiveDayIndex] = useState(0);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [pickerMuscle, setPickerMuscle] = useState<string | null>(null);
+  /** A-077: non-null while the picker is replacing this row's exercise (single-pick). */
+  const [swapRowId, setSwapRowId] = useState<string | null>(null);
   const [saving, startSaving] = useTransition();
   // "Salvo": saved in this visit — or a draft opened clean with exercises (an "Adaptar"
   // copy lands already saved), which can start right away instead of asking for a save
@@ -400,6 +405,8 @@ export function ProgramBuilder({
   /** Exercise ids whose details were already asked for. */
   const metaRequested = useRef(new Set<string>());
   const idSeq = useRef(0);
+  const saveBarRef = useRef<HTMLDivElement>(null);
+  useBottomBarInset(saveBarRef);
   const newId = (prefix: string) => `${prefix}-n${++idSeq.current}`;
 
   const sensors = useSensors(
@@ -691,6 +698,29 @@ export function ProgramBuilder({
     setMeta((m) => ({ ...m, ...Object.fromEntries(list.map((p) => [p.id, p])) }));
     pendingScroll.current = rows[0].rowId;
     pendingFocus.current = `[data-row-id="${rows[0].rowId}"] [data-row-toggle]`;
+  }
+
+  // A-077: replace a row's exercise in place (single-pick picker), keeping the
+  // prescription, order, group and DB id. Across a timed↔untimed change the rep
+  // range is swapped for the new exercise's default (A-058).
+  function replaceExercise(rowId: string, picked: PickerExercise) {
+    const before = activeDay.exercises.find((e) => e.rowId === rowId);
+    if (!before) return;
+    const oldMeta = meta[before.exerciseId];
+    const oldTimed = isTimedHold({ slug: oldMeta?.slug ?? "" });
+    const newTimed = isTimedHold({ slug: picked.slug });
+    patchActiveExercises((list) =>
+      list.map((e) => (e.rowId === rowId ? swapRowExercise(e, picked, { oldTimed, newTimed }) : e)),
+    );
+    setMeta((m) => ({ ...m, [picked.id]: picked }));
+    pendingFocus.current = `[data-row-id="${rowId}"] [data-row-toggle]`;
+  }
+
+  function openSwap(rowId: string) {
+    setSwapRowId(rowId);
+    // PickerExercise exposes no muscle-facet key, so the picker opens on search (A-077).
+    setPickerMuscle(null);
+    setPickerOpen(true);
   }
 
   function updateExercise(rowId: string, patch: Partial<BuilderExercise>) {
@@ -1350,7 +1380,6 @@ export function ProgramBuilder({
                 role="tab"
                 aria-selected={selected}
                 aria-controls="day-panel"
-                aria-label={`${label}${dayHasErrors(day) ? " (com erro)" : ""}`}
                 tabIndex={selected ? 0 : -1}
                 title={label}
                 onClick={() => selectDay(i)}
@@ -1363,7 +1392,9 @@ export function ProgramBuilder({
               >
                 <span className={selected ? "text-accent" : undefined}>D{i + 1}</span>
                 {token && token !== String(i + 1) ? <span>{token}</span> : null}
-                {dayHasErrors(day) ? <span className="text-danger">!</span> : null}
+                {dayHasErrors(day) ? <span aria-hidden className="text-danger">!</span> : null}
+                {/* Keep the visible face the start of the accessible name (WCAG 2.5.3); full name follows. */}
+                <span className="sr-only">: {label}{dayHasErrors(day) ? " (com erro)" : ""}</span>
               </button>
             );
           })}
@@ -1494,7 +1525,7 @@ export function ProgramBuilder({
         </div>
       </div>
 
-      <div className="sticky bottom-[var(--nav-h)] z-20 -mx-4 mt-6 border-t-2 border-t-[var(--rule-heavy)] bg-background px-4 py-2 sm:bottom-0 sm:-mx-6 sm:px-6">
+      <div ref={saveBarRef} className="sticky bottom-[var(--nav-h)] z-20 -mx-4 mt-6 border-t-2 border-t-[var(--rule-heavy)] bg-background px-4 py-2 sm:bottom-0 sm:-mx-6 sm:px-6">
         {undo ? (
           <div role="status" className="mb-2 flex items-center gap-3 border-l-2 border-l-accent bg-surface-2 py-0.5 pl-3 pr-1">
             <span className="min-w-0 flex-1 text-sm leading-snug">{undo.text}</span>
@@ -1528,9 +1559,9 @@ export function ProgramBuilder({
             ) : (
               <SwitchProgramButton
                 action={start}
-                label="Iniciar este programa"
-                switchLabel="Iniciar este programa"
-                pendingLabel="Iniciando…"
+                label="Ativar este programa"
+                switchLabel="Ativar este programa"
+                pendingLabel="Ativando…"
                 size="md"
                 active={switchFrom}
               />
@@ -1553,13 +1584,27 @@ export function ProgramBuilder({
 
       <ExercisePicker
         open={pickerOpen}
-        onClose={() => setPickerOpen(false)}
-        onAdd={addExercises}
+        onClose={() => {
+          setPickerOpen(false);
+          setSwapRowId(null);
+        }}
+        {...(swapRowId
+          ? {
+              onSelect: (ex: PickerExercise) => {
+                const rowId = swapRowId;
+                setSwapRowId(null);
+                if (rowId) replaceExercise(rowId, ex);
+              },
+              title: "Trocar exercício",
+            }
+          : {
+              onAdd: addExercises,
+              maxSelect: room,
+              title: `Adicionar ao dia ${activeDayIndex + 1}`,
+            })}
         inDayIds={activeDay.exercises.map((e) => e.exerciseId)}
-        maxSelect={room}
         initialMuscle={pickerMuscle}
         equipmentAccess={equipmentAccess}
-        title={`Adicionar ao dia ${activeDayIndex + 1}`}
       />
 
       {sheet?.kind === "row" && sheetRow ? (
@@ -1613,6 +1658,15 @@ export function ProgramBuilder({
               ) : null}
             </SheetItem>
           ) : null}
+          <SheetItem
+            icon={<Repeat />}
+            onClick={() => {
+              closeSheet();
+              openSwap(sheetRow.rowId);
+            }}
+          >
+            Trocar exercício
+          </SheetItem>
           {days.length > 1 ? (
             <SheetItem icon={<CalendarRange />} onClick={() => setSheet({ kind: "move", rowId: sheetRow.rowId })}>
               Mover para outro dia…

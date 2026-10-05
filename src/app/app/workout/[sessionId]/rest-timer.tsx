@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronRight, Minus, Pause, Play, Plus, X } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
-import { plural } from "@/lib/utils/format";
+import { restTimerSpeech, spokenDuration } from "@/lib/training/rest-timer-speech";
+import { useBottomBarInset } from "@/components/ui/use-scroll-inset";
 import { restKey } from "@/components/workout/local-workout";
 import { playRestBeep, vibrateRestEnd } from "./rest-audio";
 
@@ -174,16 +175,7 @@ function ago(ms: number) {
   return s < 60 ? `${s} s` : `${Math.floor(s / 60)} min`;
 }
 
-function spokenDuration(seconds: number) {
-  const m = Math.floor(seconds / 60);
-  const s = seconds % 60;
-  const secs = plural(s, "segundo", "segundos");
-  if (m === 0) return secs;
-  const mins = plural(m, "minuto", "minutos");
-  return s === 0 ? mins : `${mins} e ${secs}`;
-}
-
-const BAR_BUTTON = "flex h-11 items-center justify-center gap-0.5 rounded-[3px] bg-black/10 text-sm font-semibold hover:bg-black/20";
+const BAR_BUTTON ="flex h-11 items-center justify-center gap-0.5 rounded-[3px] bg-black/10 text-sm font-semibold hover:bg-black/20";
 
 /**
  * The rest bar. The countdown itself is hidden from screen readers (it would
@@ -218,6 +210,8 @@ export function RestTimerBar({
 }) {
   const [now, setNow] = useState(() => Date.now());
   const [seenEndAt, setSeenEndAt] = useState<number | null>(null);
+  const barRef = useRef<HTMLDivElement>(null);
+  useBottomBarInset(barRef);
   const latest = useRef({ timer, sound, vibrate, onAnnounce, onDismiss });
   useEffect(() => {
     latest.current = { timer, sound, vibrate, onAnnounce, onDismiss };
@@ -295,11 +289,15 @@ export function RestTimerBar({
 
   return (
     <div
+      ref={barRef}
       data-rest-state={ended ? "ended" : paused ? "paused" : "running"}
       className={cn(
         "fixed inset-x-0 bottom-0 z-30 px-4 pt-1.5 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-lg",
         // Ink, not accent, when it ends: unmistakably different from the running bar in both themes.
-        ended ? "bg-foreground text-background" : "bg-accent text-accent-foreground",
+        // Scope --ring so a focused control's outline contrasts with the bar it sits on (WCAG 2.4.7).
+        ended
+          ? "bg-foreground text-background [--ring:var(--background)]"
+          : "bg-accent text-accent-foreground [--ring:var(--accent-foreground)]",
       )}
     >
       <div className="mx-auto max-w-3xl">
@@ -337,6 +335,10 @@ export function RestTimerBar({
               {/* A notch smaller under 360px: the clock and the four buttons share a 320px row. */}
               <span aria-hidden className="font-mono text-3xl font-bold tabular-nums max-[359px]:text-2xl">
                 {clock(Math.ceil(leftMs / 1000))}
+              </span>
+              {/* Read on demand (role=timer never auto-announces): the visible clock is aria-hidden. */}
+              <span role="timer" className="sr-only">
+                {restTimerSpeech(leftMs, paused)}
               </span>
               <div className="flex shrink-0 items-center gap-1.5 max-[359px]:gap-1">
                 <button type="button" onClick={() => onAdjust(-15)} aria-label="Menos 15 segundos" className={cn(BAR_BUTTON, "px-2.5")}>

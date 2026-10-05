@@ -105,11 +105,11 @@ export default async function AllHistoryPage({ searchParams }: PageProps<"/app/h
                     {week ? (
                       <span data-week-mark className={week.met ? "text-accent" : "text-muted"}>
                         {" · "}
-                        {deloadMet ? "descarga" : `${week.done}/${week.target}`}
+                        {deloadMet ? "deload" : `${week.done}/${week.target}`}
                         {week.met ? (
                           <>
                             <GCheck className="ml-1 inline size-3 align-[-1px]" aria-hidden />
-                            <span className="sr-only">{deloadMet ? " (semana de descarga, na meta)" : " (semana na meta)"}</span>
+                            <span className="sr-only">{deloadMet ? " (semana de deload, na meta)" : " (semana na meta)"}</span>
                           </>
                         ) : null}
                       </span>

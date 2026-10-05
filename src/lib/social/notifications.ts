@@ -174,6 +174,22 @@ export async function markSeen(userId: string, upTo: Date, now: Date = new Date(
   return countUnread(userId);
 }
 
+/**
+ * Marks one event's row read for its recipient, if it is still unread — e.g. a
+ * follow request that has just been answered (A-072), so the bell stops
+ * flagging work already done. Keyed by the event's dedupeKey (the unique
+ * recipientId_dedupeKey index). Idempotent: a no-op when there is no unread
+ * row for the key (already read, or answered on another device). Returns how
+ * many rows it marked.
+ */
+export async function markRead(db: Db, p: { recipientId: string; dedupeKey: string }, now: Date = new Date()): Promise<number> {
+  const { count } = await db.notification.updateMany({
+    where: { recipientId: p.recipientId, dedupeKey: p.dedupeKey, readAt: null },
+    data: { readAt: now },
+  });
+  return count;
+}
+
 async function blockedPair(db: Db, a: string, b: string): Promise<boolean> {
   const n = await db.userBlock.count({
     where: {

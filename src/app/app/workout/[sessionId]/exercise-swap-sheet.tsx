@@ -6,6 +6,7 @@ import { Search, X } from "lucide-react";
 import { GLoad } from "@/components/ui/glyph";
 import { Input } from "@/components/ui/input";
 import { Bone } from "@/components/ui/skeleton";
+import { useRestoreFocus } from "@/components/ui/use-restore-focus";
 import { cn } from "@/lib/utils/cn";
 import { SESSION_EXPIRED_ERROR } from "@/lib/auth/session-expired";
 import type { ExerciseOption, ExerciseOptions } from "@/lib/data/workout-session";
@@ -76,6 +77,7 @@ export function ExerciseSwapSheet({
     onLoggedOutRef.current = onLoggedOut;
   });
   const logId = mode.kind === "swap" ? mode.exerciseLogId : null;
+  useRestoreFocus();
 
   useEffect(() => {
     const dialog = dialogRef.current;

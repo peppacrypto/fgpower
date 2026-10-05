@@ -10,15 +10,18 @@ export const WEEKDAYS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
  * seven equal columns, so "Sáb" never wraps alone on a 390px phone. Shared by
  * onboarding and Settings → Rotina.
  */
+/** Monday → Sunday order (as the week strips run), each cell keeping its 0=Sunday weekday value. */
+const WEEKDAY_ORDER = [1, 2, 3, 4, 5, 6, 0] as const;
+
 export function WeekdayChips({ value, onToggle }: { value: number[]; onToggle: (day: number) => void }) {
   return (
     <div className="grid grid-cols-7 gap-1.5">
-      {WEEKDAYS.map((label, i) => {
+      {WEEKDAY_ORDER.map((i) => {
         const on = value.includes(i);
         return (
           <button
             type="button"
-            key={label}
+            key={i}
             onClick={() => onToggle(i)}
             aria-pressed={on}
             className={cn(
@@ -26,7 +29,7 @@ export function WeekdayChips({ value, onToggle }: { value: number[]; onToggle: (
               on ? "border-accent bg-accent-soft text-accent" : "border-border text-muted hover:bg-surface-2",
             )}
           >
-            {label}
+            {WEEKDAYS[i]}
           </button>
         );
       })}

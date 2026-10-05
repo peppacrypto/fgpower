@@ -2,11 +2,13 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import {
+  dayNameWithoutWeekday,
   formatDayTag,
   laidOutByWeekday,
   planWeek,
   plannedWeekdays,
   restartsEachWeek,
+  scheduleShifted,
   upcomingWorkout,
   weekStartChoice,
   weekStrip,
@@ -420,5 +422,19 @@ describe("the next workout's date (Today's hero and rest day)", () => {
     const cells = weekStrip({ todayNo: SUN, planned: monFri, doneDayNos: [], fromNo: SUN, suggestedNo: SUN });
     expect(cells.find((c) => c.today)).toMatchObject({ planned: true, done: false });
     expect(cells.filter((c) => c.planned)).toHaveLength(1);
+  });
+});
+
+describe("weekday-named days trained off their weekday (A-076)", () => {
+  it("dayNameWithoutWeekday strips a leading weekday, leaves other names alone", () => {
+    expect(dayNameWithoutWeekday("Terça — Inferior A")).toBe("Inferior A");
+    expect(dayNameWithoutWeekday("Corpo Inteiro A")).toBe("Corpo Inteiro A");
+  });
+  it("scheduleShifted is true only when a weekday-named day is suggested on a different weekday", () => {
+    // weekdayOfDayNo(7) is a Thursday; weekdayOfDayNo(5) is a Tuesday (1970-01-06).
+    expect(scheduleShifted({ dayName: "Terça — Inferior A", dayNo: 7 })).toBe(true);
+    expect(scheduleShifted({ dayName: "Terça — Inferior A", dayNo: 5 })).toBe(false);
+    // A day not named after a weekday is never "shifted".
+    expect(scheduleShifted({ dayName: "Inferior A", dayNo: 7 })).toBe(false);
   });
 });
