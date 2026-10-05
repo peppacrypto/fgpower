@@ -1526,7 +1526,7 @@
   "nameEn": "Backward Medicine Ball Throw",
   "namePt": "Arremesso de Medicine Ball para Trás",
   "category": "PLYOMETRICS",
-  "movementPattern": "horizontal-pull",
+  "movementPattern": null,
   "equipment": "medicine-ball",
   "difficulty": "BEGINNER",
   "forceType": "PUSH",
@@ -6545,7 +6545,7 @@
   "nameEn": "Calf Press On The Leg Press Machine",
   "namePt": "Panturrilha no Leg Press",
   "category": "STRENGTH",
-  "movementPattern": "squat",
+  "movementPattern": "plantar-flexion",
   "equipment": "machine",
   "difficulty": "BEGINNER",
   "forceType": "PUSH",
@@ -7007,7 +7007,7 @@
   "nameEn": "Catch and Overhead Throw",
   "namePt": "Recepção e Arremesso Acima da Cabeça",
   "category": "PLYOMETRICS",
-  "movementPattern": "horizontal-pull",
+  "movementPattern": null,
   "equipment": "medicine-ball",
   "difficulty": "BEGINNER",
   "forceType": "PUSH",
@@ -18058,11 +18058,11 @@
    "Move slowly and keep your head, hips and lower back still. If your lower back arches or the bell drifts far from your head, use a lighter weight."
   ],
   "instructionsPt": [
-   "Stand tall with your feet hip-width apart. Hold a kettlebell upside down by the horns, with the bell above your hands and close to your chest. Brace your abdominals and squeeze your glutes so your ribcage stays down. This is your starting position.",
-   "Keeping your elbows close to your head, move the kettlebell up past one ear and around behind your head.",
-   "Continue the circle past the opposite ear and back down to the starting position in front of your chest, letting the bell pass close to your body throughout.",
-   "Complete the prescribed number of circles in one direction, then repeat the same number in the opposite direction.",
-   "Move slowly and keep your head, hips and lower back still. If your lower back arches or the bell drifts far from your head, use a lighter weight."
+   "Fique em pé, ereto, com os pés na largura do quadril. Segure um kettlebell de cabeça para baixo pelas alças (horns), com a bola acima das mãos e próxima ao peito. Contraia o abdômen e aperte os glúteos para manter a caixa torácica baixa. Esta é a posição inicial.",
+   "Mantendo os cotovelos próximos à cabeça, leve o kettlebell para cima passando por uma das orelhas e contornando por trás da cabeça.",
+   "Continue o círculo passando pela orelha oposta e volte à posição inicial, à frente do peito, deixando a bola passar perto do corpo durante todo o movimento.",
+   "Complete o número prescrito de círculos em uma direção e depois repita o mesmo número na direção oposta.",
+   "Faça o movimento devagar e mantenha a cabeça, o quadril e a lombar imóveis. Se a lombar arquear ou a bola se afastar muito da cabeça, use uma carga mais leve."
   ],
   "primaryMuscles": [
    "shoulders"
@@ -18096,12 +18096,12 @@
    "Alternate the direction of the circle on each repetition. Keep your head, hips and lower back still throughout; if your lower back arches or you cannot reach the overhead position without leaning back, use a lighter weight or perform the halo and the extension as separate exercises."
   ],
   "instructionsPt": [
-   "Stand tall with your feet hip-width apart. Hold a kettlebell upside down by the horns, with the bell above your hands and close to your chest. Brace your abdominals and squeeze your glutes so your ribcage stays down. This is your starting position.",
-   "Keeping your elbows close to your head, move the kettlebell up past one ear and around until it sits behind your head. Pause here.",
-   "From this position, extend your elbows to press the kettlebell up and overhead until your arms are straight, keeping your upper arms alongside your head.",
-   "Bend your elbows to lower the kettlebell back to the pause position behind your head, under control.",
-   "Continue the circle past the opposite ear and back down to the starting position in front of your chest to complete one repetition.",
-   "Alternate the direction of the circle on each repetition. Keep your head, hips and lower back still throughout; if your lower back arches or you cannot reach the overhead position without leaning back, use a lighter weight or perform the halo and the extension as separate exercises."
+   "Fique em pé, ereto, com os pés na largura do quadril. Segure um kettlebell de cabeça para baixo pelas alças (horns), com a bola acima das mãos e próxima ao peito. Contraia o abdômen e aperte os glúteos para manter a caixa torácica baixa. Esta é a posição inicial.",
+   "Mantendo os cotovelos próximos à cabeça, leve o kettlebell para cima passando por uma das orelhas e contornando até ele ficar atrás da cabeça. Faça uma pausa aqui.",
+   "A partir dessa posição, estenda os cotovelos para empurrar o kettlebell para cima, acima da cabeça, até os braços ficarem retos, mantendo os braços ao lado da cabeça.",
+   "Flexione os cotovelos para baixar o kettlebell de volta à posição de pausa atrás da cabeça, de forma controlada.",
+   "Continue o círculo passando pela orelha oposta e volte à posição inicial, à frente do peito, para completar uma repetição.",
+   "Alterne a direção do círculo a cada repetição. Mantenha a cabeça, o quadril e a lombar imóveis durante todo o movimento; se a lombar arquear ou você não conseguir chegar à posição acima da cabeça sem inclinar o tronco para trás, use uma carga mais leve ou faça o halo e a extensão como exercícios separados."
   ],
   "primaryMuscles": [
    "shoulders",
@@ -18229,11 +18229,11 @@
    "Keep your ribcage down and avoid arching your lower back as you extend."
   ],
   "instructionsPt": [
-   "Stand with your feet hip-width apart, holding a kettlebell by the horns with both hands. Press it overhead until your arms are extended, with the bell hanging behind your hands.",
-   "Brace your abdominals and keep your upper arms vertical and close to your head. This is your starting position.",
-   "Bend at the elbows to lower the kettlebell behind your head, going as far as your shoulder mobility allows without your elbows flaring outward.",
-   "Extend your elbows to press the kettlebell back to the starting position, keeping your upper arms still throughout.",
-   "Keep your ribcage down and avoid arching your lower back as you extend."
+   "Fique em pé com os pés na largura do quadril, segurando um kettlebell pelas alças (horns) com as duas mãos. Empurre-o acima da cabeça até os braços ficarem estendidos, com a bola pendurada atrás das mãos.",
+   "Contraia o abdômen e mantenha os braços na vertical e próximos à cabeça. Esta é a posição inicial.",
+   "Flexione os cotovelos para baixar o kettlebell atrás da cabeça, indo até onde a mobilidade do seu ombro permitir, sem abrir os cotovelos para os lados.",
+   "Estenda os cotovelos para empurrar o kettlebell de volta à posição inicial, mantendo os braços imóveis durante todo o movimento.",
+   "Mantenha a caixa torácica baixa e evite arquear a lombar ao estender."
   ],
   "primaryMuscles": [
    "triceps"
@@ -22332,7 +22332,7 @@
   "nameEn": "Medicine Ball Scoop Throw",
   "namePt": "Arremesso para Trás com Medicine Ball",
   "category": "PLYOMETRICS",
-  "movementPattern": "horizontal-pull",
+  "movementPattern": null,
   "equipment": "medicine-ball",
   "difficulty": "BEGINNER",
   "forceType": "PUSH",
@@ -25381,7 +25381,7 @@
   "nameEn": "Pallof Press",
   "namePt": "Pallof Press",
   "category": "STRENGTH",
-  "movementPattern": "rotation",
+  "movementPattern": "anti-rotation",
   "equipment": "cable",
   "difficulty": "BEGINNER",
   "forceType": "PULL",
@@ -37932,7 +37932,7 @@
   "nameEn": "Standing Two-Arm Overhead Throw",
   "namePt": "Arremesso de Medicine Ball Acima da Cabeça em Pé",
   "category": "PLYOMETRICS",
-  "movementPattern": "horizontal-pull",
+  "movementPattern": null,
   "equipment": "medicine-ball",
   "difficulty": "BEGINNER",
   "forceType": "PULL",
@@ -38771,7 +38771,7 @@
   "nameEn": "Supine Chest Throw",
   "namePt": "Arremesso de Peito Deitado",
   "category": "PLYOMETRICS",
-  "movementPattern": "horizontal-pull",
+  "movementPattern": null,
   "equipment": "medicine-ball",
   "difficulty": "BEGINNER",
   "forceType": "PUSH",
@@ -38819,7 +38819,7 @@
   "nameEn": "Supine One-Arm Overhead Throw",
   "namePt": "Arremesso Deitado Acima da Cabeça com Um Braço",
   "category": "PLYOMETRICS",
-  "movementPattern": "horizontal-pull",
+  "movementPattern": null,
   "equipment": "medicine-ball",
   "difficulty": "BEGINNER",
   "forceType": "PULL",
@@ -38866,7 +38866,7 @@
   "nameEn": "Supine Two-Arm Overhead Throw",
   "namePt": "Arremesso Deitado Acima da Cabeça com Dois Braços",
   "category": "PLYOMETRICS",
-  "movementPattern": "horizontal-pull",
+  "movementPattern": null,
   "equipment": "medicine-ball",
   "difficulty": "BEGINNER",
   "forceType": "PULL",

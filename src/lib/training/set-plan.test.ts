@@ -8,6 +8,7 @@ import {
   isBodyweightEquipment,
   isBodyweightExercise,
   isExerciseDone,
+  isLoadedCarry,
   isTimedHold,
   parseDecimalInput,
   planRows,
@@ -474,5 +475,19 @@ describe("parseDecimalInput / formatDecimal", () => {
     expect(formatDecimal(42.5)).toBe("42,5");
     expect(formatDecimal(40)).toBe("40");
     expect(formatDecimal(null)).toBe("");
+  });
+});
+
+describe("isLoadedCarry (A-056)", () => {
+  it("knows the loaded-carry slugs", () => {
+    expect(isLoadedCarry({ slug: "farmers-walk" })).toBe(true);
+    expect(isLoadedCarry({ slug: "sled-push" })).toBe(true);
+    expect(isLoadedCarry({ slug: "barbell-bench-press-medium-grip" })).toBe(false);
+    expect(isLoadedCarry({ slug: "plank" })).toBe(false); // a hold, not a carry
+  });
+  it("reads a program note that says the reps are steps/metres", () => {
+    expect(isLoadedCarry({ slug: null, notes: "As 'reps' são passos: caminhe 30 a 40 passos por série." })).toBe(true);
+    expect(isLoadedCarry({ slug: null, notes: "Os números são metros por série." })).toBe(true);
+    expect(isLoadedCarry({ slug: null, notes: "Desça em 3 s, 10 reps controladas." })).toBe(false);
   });
 });

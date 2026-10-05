@@ -79,6 +79,17 @@ const DELOAD_STATEMENT = [
 /** "Começa a onda 2 (regra do ano 1, não é deload)". */
 const NOT_A_DELOAD = /\bnão\s+é\s+(?:deload|descarga)\b/i;
 
+/**
+ * The numbered GD blocks (gd-adaptacao aside): each authors its exercises' own
+ * RIR targets at the WAVE-START week — the onda's opening week 2 (RIR 2,5), one
+ * notch easier than the week-1 "find loads" week — not at the lower-median week.
+ * Anchoring the wave there (baselineRir) is what keeps the benchmark free-weight
+ * compounds (RIR 3) on the note at the mid-wave weeks instead of one RIR too easy
+ * (A-021). gd-adaptacao is a short ramp authored at its working weeks, so it keeps
+ * the generic lower-median baseline.
+ */
+const GD_WAVE_BLOCKS = new Set(["gd-1", "gd-2", "gd-3", "gd-4", "gd-5", "gd-6", "gd-7", "gd-8"]);
+
 export function isDeloadGuidance(g: Pick<WeekGuidance, "notePt" | "setsNotePt">): boolean {
   const texts = [g.setsNotePt, g.notePt].filter((t): t is string => t != null);
   if (texts.some((t) => NOT_A_DELOAD.test(t))) return false;
@@ -227,8 +238,16 @@ export function completeWeekDone(trainableDayIds: readonly string[]): { doneDayI
  * 2.5, 2, 1, 1, …) sits at 2: its exercises' 3 / 2.5 / 2 (free weights /
  * machines / isolations) are the middle weeks' effort. Null without a wave.
  */
-export function baselineRir(json: unknown): number | null {
+export function baselineRir(json: unknown, templateSlug?: string | null): number | null {
   const weeks = parseWeeklyGuidance(json).filter((w) => w.rirTarget != null);
+  if (weeks.length === 0) return null;
+  // A numbered GD block authors its exercises at the wave-start week (week 2):
+  // anchor the wave there so the benchmark lifts stay on the week's own note
+  // (A-021). Fall back to the lower median when that week has no RIR.
+  if (templateSlug != null && GD_WAVE_BLOCKS.has(templateSlug)) {
+    const waveStart = weeks.find((w) => w.week === 2);
+    if (waveStart?.rirTarget != null) return waveStart.rirTarget;
+  }
   const regular = weeks.filter((w) => !isDeloadGuidance(w));
   const pool = (regular.length > 0 ? regular : weeks).map((w) => w.rirTarget as number).sort((a, b) => a - b);
   return pool.length > 0 ? pool[Math.floor((pool.length - 1) / 2)] : null;

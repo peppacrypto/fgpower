@@ -39,6 +39,8 @@ vi.mock("next/navigation", () => ({
 
 const actions = await import("./workouts");
 const activities = await import("./activities");
+const programActions = await import("./programs");
+const { getSessionRirTargets, getPreviousPerformances } = await import("@/lib/data/workout-session");
 
 let exerciseIds: string[];
 /** The program's coaching note on its exercises: it belongs to them, never to a stand-in. */
@@ -1001,5 +1003,77 @@ describe("an invalid row in an edit commits nothing (A-046)", () => {
     } finally {
       await redirectOf(actions.deleteWorkoutSession(session));
     }
+  });
+});
+
+describe("getSessionRirTargets + getPreviousPerformances wire the GD wave (A-020, A-021)", () => {
+  // A real GD-2 fork (its wave: w1 3, w2-3 2,5, w4 2, w5-6 1, w7-8 2,5, …; baseline
+  // anchors on week 2 = 2,5). Day 0 (Segunda — Superior A) opens with the bench top
+  // set, a free-weight compound authored at E = 3.
+  const BENCH = "barbell-bench-press-medium-grip";
+  let week4 = "";
+  let week6 = "";
+  let week7 = "";
+
+  /** The bench top-set log of a session (lowest sortOrder for the bench exercise). */
+  const benchLogOf = (sessionId: string) =>
+    prisma.workoutExerciseLog.findFirstOrThrow({
+      where: { sessionId, exercise: { slug: BENCH } },
+      orderBy: { sortOrder: "asc" },
+      select: { id: true },
+    });
+
+  beforeAll(async () => {
+    // Fork GD-2 as the sole ACTIVE enrollment (startTemplate retires the previous one — A-007).
+    await redirectOf(programActions.startTemplate("gd-2"));
+    const gd2 = await prisma.programEnrollment.findFirstOrThrow({
+      where: { userId: USER_ID, status: "ACTIVE", program: { sourceTemplate: { slug: "gd-2" } } },
+      orderBy: { startedAt: "desc" },
+      select: { id: true, programId: true },
+    });
+    // A plain Monday start: no partial entry week to offset the counted program week.
+    await prisma.programEnrollment.update({ where: { id: gd2.id }, data: { startedAt: startOfWeek(new Date()) } });
+    const day0 = await prisma.userProgramDay.findFirstOrThrow({
+      where: { programId: gd2.programId, dayIndex: 0 },
+      select: { id: true },
+    });
+    // Three finished bench sessions in order (ascending finishedAt), stamped with the
+    // wave week they belong to (overriding the counter so the fixture is deterministic).
+    week4 = await trainOn(day0.id, 100, 4);
+    week6 = await trainOn(day0.id, 100, 4);
+    week7 = await trainOn(day0.id, 100, 4);
+    await prisma.workoutSession.update({ where: { id: week4 }, data: { programWeek: 4, isDeload: false } });
+    await prisma.workoutSession.update({ where: { id: week6 }, data: { programWeek: 6, isDeload: false } });
+    await prisma.workoutSession.update({ where: { id: week7 }, data: { programWeek: 7, isDeload: false } });
+  });
+
+  it("getSessionRirTargets anchors a GD block's benchmark lift on the wave-start week (A-021)", async () => {
+    // Week 4 (wave RIR 2) with the bench top set (E = 3). Anchored on week 2 (2,5),
+    // the benchmark lands at 2,5 — not the 3 the lower-median baseline (2) would give.
+    const benchLog = await benchLogOf(week4);
+    const targets = await getSessionRirTargets(USER_ID, week4);
+    expect(targets.get(benchLog.id)).toBe(2.5);
+  });
+
+  it("getPreviousPerformances returns the reference session and log id (A-020)", async () => {
+    const newerBenchLog = await benchLogOf(week7);
+    const olderBenchLog = await benchLogOf(week6);
+    const prev = await getPreviousPerformances(USER_ID, week7);
+    const row = prev.get(newerBenchLog.id)!;
+    expect(row.refSessionId).toBe(week6);
+    expect(row.refLogId).toBe(olderBenchLog.id);
+  });
+
+  it("the next week's advice about last week's sets is judged by the week it was performed in (A-020)", async () => {
+    // The week-7 screen's advice about the week-6 bench sets uses the week-6 target
+    // (its own wave), exactly what the week-6 summary used — never this week's.
+    const week6Bench = await benchLogOf(week6);
+    const week6Targets = await getSessionRirTargets(USER_ID, week6);
+    const newerBenchLog = await benchLogOf(week7);
+    const prev = await getPreviousPerformances(USER_ID, week7);
+    const row = prev.get(newerBenchLog.id)!;
+    const lastRir = (await getSessionRirTargets(USER_ID, row.refSessionId)).get(row.refLogId);
+    expect(lastRir).toBe(week6Targets.get(week6Bench.id)); // same target both screens judge by
+    expect(lastRir).toBe(2); // week 6 wave RIR 1 → benchmark FWC floor 2
   });
 });

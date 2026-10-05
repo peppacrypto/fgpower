@@ -257,6 +257,42 @@ export function isTimedHold(exercise: { slug?: string | null; notes?: string | n
   return notes !== "" && SECONDS_NOTE.some((re) => re.test(notes));
 }
 
+/**
+ * Loaded carries whose "reps" are steps or metres walked, never repetitions
+ * (farmers' walk, sled push, yoke/rickshaw carries, drags). Their load × "reps"
+ * is not training volume — the kg-volume total and rep totals exclude them
+ * (A-056), the same way timed holds are excluded. Slug-only surfaces rely on
+ * this list; a program note that spells it out ("as reps são passos/metros") is
+ * caught too.
+ */
+const LOADED_CARRY_SLUGS = new Set([
+  "farmers-walk",
+  "sled-push",
+  "yoke-walk",
+  "rickshaw-carry",
+  "sled-drag-harness",
+  "backward-drag",
+  "forward-drag-with-press",
+  "bear-crawl-sled-drags",
+  "conans-wheel",
+  "power-stairs",
+]);
+const DISTANCE_NOTE = [
+  /\b(?:n[úu]meros|reps?|repeti[çc](?:ão|ões))['’”"]?\s+(?:s[ãa]o|=|significam|representam)\s+(?:os?\s+|o\s+n[úu]mero\s+de\s+)?(?:passos|metros|m\b)/i,
+  /\breps?\s*=\s*(?:passos|metros|m\b)/i,
+];
+
+/**
+ * A loaded carry (isLoadedCarry): one of the known carry slugs, or a program
+ * note saying the numbers are steps/metres. Its load × "reps" is excluded from
+ * kg-volume and rep totals (A-056).
+ */
+export function isLoadedCarry(exercise: { slug?: string | null; notes?: string | null }): boolean {
+  if (exercise.slug && LOADED_CARRY_SLUGS.has(exercise.slug)) return true;
+  const notes = exercise.notes ?? "";
+  return notes !== "" && DISTANCE_NOTE.some((re) => re.test(notes));
+}
+
 /** The default prescription range of a timed hold: 20–45 s (the plank/mobility norm). */
 export const DEFAULT_HOLD_SECONDS_RANGE = { repMin: 20, repMax: 45 } as const;
 /** The default prescription range of a rep exercise: 8–12 (ADDED_EXERCISE_DEFAULTS). */

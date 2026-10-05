@@ -94,11 +94,15 @@ describe("recommendTemplates", () => {
       if (firstAdapt >= 0) expect(recs.slice(firstAdapt).every((r) => r.adapt)).toBe(true);
     }
     const bodyweight = recommendTemplates(profile({ equipmentAccess: "HOME_BODYWEIGHT" }), CATALOG_FIXTURE);
+    // "Só peso do corpo" has no bands (onboarding: "Sem equipamento, ou só uma barra fixa"),
+    // so the band plan needs "Adaptar" first — only the bar/floor plans run as they are.
     expect(bodyweight.filter((r) => !r.adapt).map((r) => r.template.slug).sort()).toEqual([
-      "bands-bodyweight-full-body",
       "bodyweight-express",
       "calisthenics",
     ]);
+    const band = bodyweight.find((r) => r.template.slug === "bands-bodyweight-full-body");
+    expect(band?.adapt).toBe(true);
+    expect(band?.reasons).toContainEqual({ label: "Com adaptação", match: false, kind: "adapt" });
   });
 
   it("gives home users three picks at 2, 3 and 4 days a week, the first one runnable (L-home-catalog-gap)", () => {
@@ -261,5 +265,23 @@ describe("recommendTemplates", () => {
     ]);
     const [gd] = recommendTemplates(profile({ daysPerWeek: 5, sessionMinutes: 45 }), CATALOG_FIXTURE);
     expect(gd.reasons.find((r) => r.label === "47 min")?.match).toBe(false);
+  });
+
+  it("does not lead off-goal users into the strength-peaking block (A-065)", () => {
+    for (const goal of ["FAT_LOSS", "GENERAL_FITNESS", "HYPERTROPHY"]) {
+      for (const daysPerWeek of [3, 4, 5]) {
+        const [first] = recommendTemplates(
+          profile({ goal, experience: "ADVANCED", daysPerWeek, sessionMinutes: 60 }),
+          CATALOG_FIXTURE,
+        );
+        expect(first.template.slug, `${goal} ${daysPerWeek}d`).not.toBe("strength-peak");
+      }
+    }
+    // Still pickable for its own audience (not necessarily first).
+    const strength = recommendTemplates(
+      profile({ goal: "STRENGTH", experience: "ADVANCED", daysPerWeek: 4, sessionMinutes: 60 }),
+      CATALOG_FIXTURE,
+    );
+    expect(strength.some((r) => r.template.slug === "strength-peak")).toBe(true);
   });
 });

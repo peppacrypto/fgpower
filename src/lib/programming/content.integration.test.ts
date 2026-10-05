@@ -118,4 +118,65 @@ describe("seeded content", () => {
       }
     }
   });
+
+  it("retags the mislabeled movement patterns (A-067)", async () => {
+    const rows = await prisma.exercise.findMany({
+      where: {
+        slug: {
+          in: [
+            "pallof-press",
+            "calf-press-on-the-leg-press-machine",
+            "backward-medicine-ball-throw",
+            "catch-and-overhead-throw",
+            "medicine-ball-scoop-throw",
+            "standing-two-arm-overhead-throw",
+            "supine-chest-throw",
+            "supine-one-arm-overhead-throw",
+            "supine-two-arm-overhead-throw",
+          ],
+        },
+      },
+      select: { slug: true, movementPatternId: true },
+    });
+    const by = new Map(rows.map((r) => [r.slug, r.movementPatternId]));
+    expect(by.get("pallof-press")).toBe("anti-rotation");
+    expect(by.get("calf-press-on-the-leg-press-machine")).toBe("plantar-flexion");
+    for (const s of [
+      "backward-medicine-ball-throw",
+      "catch-and-overhead-throw",
+      "medicine-ball-scoop-throw",
+      "standing-two-arm-overhead-throw",
+      "supine-chest-throw",
+      "supine-one-arm-overhead-throw",
+      "supine-two-arm-overhead-throw",
+    ]) {
+      expect(by.get(s)).toBeNull();
+    }
+  });
+
+  it("athletic-power day 3 no longer trips a false 'similar movements' notice (A-067)", async () => {
+    const template = await prisma.workoutTemplate.findUniqueOrThrow({
+      where: { slug: "athletic-power" },
+      include: {
+        days: { orderBy: { dayIndex: "asc" }, include: { exercises: { include: { exercise: true } } } },
+      },
+    });
+    const day3 = template.days.find((d) => d.dayIndex === 3)!;
+    const ruleDay: ProgramRuleDay = {
+      dayIndex: 3,
+      nameEn: "D",
+      namePt: "Potência Superior B",
+      exercises: day3.exercises.map((e) => ({
+        exerciseId: e.exerciseId,
+        nameEn: e.exercise.nameEn,
+        namePt: e.exercise.namePt,
+        primaryMuscleGroups: [],
+        movementPattern: e.exercise.movementPatternId,
+        sets: e.sets,
+        category: e.exercise.category,
+      })),
+    };
+    const feedback = analyzeProgram([ruleDay]);
+    expect(feedback.find((f) => f.code.startsWith("similar-movements-day-3-horizontal-pull"))).toBeUndefined();
+  });
 });

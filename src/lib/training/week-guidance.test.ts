@@ -280,3 +280,51 @@ describe("an applied deload (W-128)", () => {
     expect(weekRirTarget(1, applied, { baseline: null, exercise: { ...isolation, timed: true } })).toBe(1);
   });
 });
+
+describe("baselineRir anchors the GD numbered blocks on the wave-start week (A-021)", () => {
+  // GD 1..8 wave: find-loads week 1 (RIR 3), onda opens week 2 (RIR 2,5).
+  const gdWave = [3, 2.5, 2.5, 2, 1, 1, 2.5, 2.5, 2, 2, 1, 1, 3.5].map((rirTarget, i) => ({
+    week: i + 1,
+    rirTarget,
+    notePt: "",
+    setsNotePt: i === 12 ? "Seg-qua: deload — mesmas cargas." : "",
+  }));
+  const bench = { freeWeightCompound: true, notes: null, timed: false }; // benchmark top set, E = 3
+  const machine = { freeWeightCompound: false, notes: null, timed: false };
+  const at = (slug: string | null, exerciseRir: number, week: number, exercise = bench) =>
+    weekRirTarget(exerciseRir, getWeekGuidance(gdWave, week), {
+      baseline: baselineRir(gdWave, slug),
+      exercise,
+    });
+
+  it("anchors gd-1..gd-8 on week 2 (RIR 2,5), not the lower median", () => {
+    for (const slug of ["gd-1", "gd-2", "gd-3", "gd-4", "gd-5", "gd-6", "gd-7", "gd-8"]) {
+      expect(baselineRir(gdWave, slug)).toBe(2.5);
+    }
+  });
+
+  it("keeps the lower median for gd-adaptacao and non-GD programs, and when no slug is given", () => {
+    expect(baselineRir(gdWave, "gd-adaptacao")).toBe(2);
+    expect(baselineRir(gdWave, "upper-lower")).toBe(2);
+    expect(baselineRir(gdWave)).toBe(2);
+  });
+
+  it("the benchmark free-weight compound (E=3) now matches the note at the wave weeks", () => {
+    // Note: "RIR 3 nas sem. 2-3 e 7-8, 2 nas demais."
+    expect(at("gd-2", 3, 2)).toBe(3); // wave-start, exact
+    expect(at("gd-2", 3, 3)).toBe(3);
+    expect(at("gd-2", 3, 7)).toBe(3);
+    expect(at("gd-2", 3, 8)).toBe(3);
+    expect(at("gd-2", 3, 4)).toBe(2.5); // mid-wave: was 3 (the +1 gap), now within 0,5 of the note's 2
+    expect(at("gd-2", 3, 9)).toBe(2.5);
+    expect(at("gd-2", 3, 10)).toBe(2.5);
+    expect(at("gd-2", 3, 5)).toBe(2); // hardest weeks, floor for free-weight compound
+    expect(at("gd-2", 3, 6)).toBe(2);
+  });
+
+  it("does not drive any category more than 0,5 below its note (no new under-shoot)", () => {
+    // Isolation E=2 at the RIR-2 weeks: 1,5 (0,5 under note 2), never a full RIR under.
+    expect(at("gd-1", 2, 4, machine)).toBe(1.5);
+    expect(at("gd-1", 2, 5, machine)).toBe(1); // note "isolados RIR 1"
+  });
+});

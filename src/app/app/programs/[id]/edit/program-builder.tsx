@@ -60,6 +60,7 @@ import {
 import { parseDecimalInput } from "@/lib/training/set-plan";
 import { dayTokens } from "@/lib/programming/day-tokens";
 import { analyzeProgram, type ProgramRuleDay } from "@/lib/programming/rules";
+import { layOutWeek } from "@/lib/programming/schedule";
 import { weeklyVolume } from "@/lib/programming/weekly-volume";
 import { countsAsVolume, type PickerExercise } from "@/lib/programming/exercise-facets";
 import { deriveGroups, normalizeGroupKeys } from "@/lib/programming/groups";
@@ -1111,10 +1112,15 @@ export function ProgramBuilder({
   );
   // The program rules the strip doesn't already say (volume is the strip itself).
   const ruleNotes = useMemo(() => {
+    // Lay the days out on the week the way activation will (no preferred days
+    // here — the default spread), so the "heavy legs back-to-back" note is
+    // judged by calendar adjacency, not day order.
+    const weekdays = layOutWeek(days.map((d) => ({ name: d.name })), cadence.daysPerWeek, []).weekdays;
     const ruleDays: ProgramRuleDay[] = days.map((d, i) => ({
       dayIndex: i,
       nameEn: d.name,
       namePt: d.name || `Dia ${i + 1}`,
+      weekday: weekdays[i] ?? null,
       exercises: d.exercises.map((e) => ({
         exerciseId: e.exerciseId,
         category: meta[e.exerciseId]?.category ?? null,
@@ -1122,13 +1128,15 @@ export function ProgramBuilder({
         namePt: e.exerciseName ?? meta[e.exerciseId]?.namePt ?? "",
         primaryMuscleGroups: (meta[e.exerciseId]?.primaryGroups ?? []) as ProgramRuleDay["exercises"][number]["primaryMuscleGroups"],
         movementPattern: meta[e.exerciseId]?.movementPattern ?? null,
+        mechanics: meta[e.exerciseId]?.mechanics ?? null,
+        rirTarget: e.rirTarget ?? null,
         sets: e.sets,
       })),
     }));
-    return analyzeProgram(ruleDays)
+    return analyzeProgram(ruleDays, { sessionsPerWeek: cadence.daysPerWeek })
       .filter((f) => !/^(low|high)-volume-/.test(f.code))
       .map((f) => f.messagePt);
-  }, [days, meta]);
+  }, [days, meta, cadence.daysPerWeek]);
 
   const sheetRow =
     sheet && (sheet.kind === "row" || sheet.kind === "move")

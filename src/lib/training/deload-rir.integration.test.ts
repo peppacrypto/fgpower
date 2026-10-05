@@ -57,3 +57,40 @@ describe("no seeded deload week prescribes an effort harder than RIR 3 (A-018)",
     expect(offenders).toEqual([]);
   });
 });
+
+describe("the GD numbered blocks anchor their benchmark free-weight compounds on the wave-start week (A-021)", () => {
+  it("an E=3 free-weight compound reads RIR 3 at the wave-opening weeks and ≤2.5 at the mid-wave weeks", async () => {
+    const blocks = await prisma.workoutTemplate.findMany({
+      where: { slug: { in: ["gd-1", "gd-2", "gd-3", "gd-4", "gd-5", "gd-6", "gd-7", "gd-8"] } },
+      select: { slug: true, durationWeeks: true, weeklyGuidance: true },
+    });
+    expect(blocks.length).toBe(8);
+    // A benchmark free-weight compound authored at the wave-start effort (E = 3),
+    // with no note that raises its own floor — the bench/squat top sets A-021 is about.
+    const benchmark = { freeWeightCompound: true, notes: null, timed: false };
+    let waveOpeningWeeksChecked = 0;
+    let midWaveWeeksChecked = 0;
+    for (const t of blocks) {
+      const baseline = baselineRir(t.weeklyGuidance, t.slug);
+      // Every numbered block anchors on its week-2 opening (RIR 2,5), not the lower median (2).
+      expect(baseline, t.slug).toBe(2.5);
+      for (const w of parseWeeklyGuidance(t.weeklyGuidance)) {
+        if (w.rirTarget == null) continue;
+        const guidance = getWeekGuidance(t.weeklyGuidance, w.week, { templateSlug: t.slug, durationWeeks: t.durationWeeks });
+        if (guidance?.deload) continue; // deload weeks clamp to 3–4 (A-018), not part of the wave
+        const target = weekRirTarget(3, guidance, { baseline, exercise: benchmark });
+        if (w.rirTarget === 2.5) {
+          // Wave-opening week: the benchmark lift is exactly on the note (RIR 3).
+          expect(target, `${t.slug} wk${w.week}`).toBe(3);
+          waveOpeningWeeksChecked++;
+        } else if (w.rirTarget < 2.5) {
+          // Mid-wave / hard week: within 0,5 of the note — never a full RIR too easy.
+          expect(target, `${t.slug} wk${w.week}`).toBeLessThanOrEqual(2.5);
+          midWaveWeeksChecked++;
+        }
+      }
+    }
+    expect(waveOpeningWeeksChecked).toBeGreaterThan(0);
+    expect(midWaveWeeksChecked).toBeGreaterThan(0);
+  });
+});

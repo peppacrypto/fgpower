@@ -63,12 +63,16 @@ specialization or accidental duplication.
 
 ### 4. Consecutive lower-body-heavy sessions
 
-**Constant:** `LOWER_BODY_HEAVY_SET_THRESHOLD = 3`.
+**Constants:** `HEAVY_LOWER_COMPOUND_SETS = 4`, `LIGHT_DAY_MIN_RIR = 3`.
 
-A day is considered "lower-body heavy" if its `LEGS`/`GLUTES`-primary exercises sum to 3
-or more sets. If two such days are scheduled on **consecutive** program days (by
-`dayIndex`), FGPOWER flags that heavy lower-body stress is scheduled back-to-back with no
-day of lighter lower-body work between them.
+A day is "lower-body heavy" only if its **COMPOUND** `LEGS`/`GLUTES`-primary work pushed at
+a working intensity (`rirTarget < 3`; a technique/deload day sits at RIR ≥ 3) sums to 4 or
+more sets — isolation (leg curls, calf raises) and light technique days don't count. Two
+heavy days are flagged only when their **planned weekdays** are back-to-back on the calendar
+(`UserProgramDay.weekday`, wrapping Sunday↔Monday), never merely adjacent in `dayIndex`. A
+plan with no fixed weekdays (an A/B rotation, or a draft before activation) is not judged for
+adjacency. Weekly volume (§1) is scaled by sessions ÷ days so a plan that repeats its days
+reports its real weekly sets.
 
 ### 5. No horizontal pulling movement
 
@@ -77,6 +81,13 @@ If a program includes at least one pulling movement (`horizontal-pull` or
 specifically (i.e., the only pulling is lat pulldowns/pull-ups with no rowing movement),
 FGPOWER flags the missing horizontal-pull pattern — matching the spec's worked example
 verbatim.
+
+### 6. Pushing with no pulling at all
+
+If a program has pushing movements (`horizontal-push` or `vertical-push`) but **no** pulling
+movement anywhere (`horizontal-pull` and `vertical-pull` both absent), FGPOWER flags that the
+back is left untrained. This is the honest limit of the no-equipment home plans until a band
+row / anchored pulldown is added to them.
 
 ## What is deliberately *not* a rule
 

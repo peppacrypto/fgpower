@@ -105,6 +105,11 @@ export interface PreviousPerformance {
   prescribedSets: number;
   /** Its completed working sets, in order (extras flagged). */
   sets: { weightKg: number | null; reps: number | null; rir: number | null; isExtra: boolean }[];
+  /** The reference session and its exercise log — so the advice can judge these
+   *  sets by the RIR target that session aimed for (getSessionRirTargets), not
+   *  this week's, which would flip the verdict at a wave turn (A-020). */
+  refSessionId: string;
+  refLogId: string;
 }
 
 /**
@@ -126,6 +131,8 @@ export async function getPreviousPerformances(userId: string, sessionId: string)
       exerciseId: string;
       doneAt: Date;
       prescribedSets: number;
+      refLogId: string;
+      refSessionId: string;
       sets: PreviousPerformance["sets"] | string;
     }[]
   >`
@@ -135,7 +142,7 @@ export async function getPreviousPerformances(userId: string, sessionId: string)
       FROM "WorkoutExerciseLog" c
       WHERE c."sessionId" = ${sessionId} AND c."userId" = ${userId}
     ), cand AS (
-      SELECT l.id, l."exerciseId", l."programExerciseId", l."prescribedSets",
+      SELECT l.id, l."sessionId", l."exerciseId", l."programExerciseId", l."prescribedSets",
         COALESCE(s."finishedAt", l."createdAt") AS "doneAt",
         row_number() OVER (PARTITION BY l."sessionId", l."exerciseId" ORDER BY l."sortOrder", l.id) AS ord
       FROM "WorkoutExerciseLog" l
@@ -150,7 +157,7 @@ export async function getPreviousPerformances(userId: string, sessionId: string)
         )
     ), last AS (
       SELECT DISTINCT ON (cur."curLogId")
-        cur."curLogId", cur."exerciseId", cand.id, cand."prescribedSets", cand."doneAt"
+        cur."curLogId", cur."exerciseId", cand.id, cand."sessionId", cand."prescribedSets", cand."doneAt"
       FROM cur
       JOIN cand ON cand."exerciseId" = cur."exerciseId"
         AND (
@@ -164,17 +171,25 @@ export async function getPreviousPerformances(userId: string, sessionId: string)
         cand."doneAt" DESC, cand.id DESC
     )
     SELECT last."curLogId", last."exerciseId", last."doneAt", last."prescribedSets",
+      last.id AS "refLogId", last."sessionId" AS "refSessionId",
       json_agg(
         json_build_object('weightKg', x."weightKg", 'reps', x.reps, 'rir', x.rir, 'isExtra', x."isExtra")
         ORDER BY x."setNumber"
       ) AS sets
     FROM last
     JOIN "SetLog" x ON x."exerciseLogId" = last.id AND x."isCompleted" AND x."setType" = 'WORKING'
-    GROUP BY last."curLogId", last."exerciseId", last."doneAt", last."prescribedSets"`;
+    GROUP BY last."curLogId", last."exerciseId", last."doneAt", last."prescribedSets", last.id, last."sessionId"`;
   const out = new Map<string, PreviousPerformance>();
   for (const r of rows) {
     const sets = typeof r.sets === "string" ? (JSON.parse(r.sets) as PreviousPerformance["sets"]) : r.sets;
-    out.set(r.curLogId, { exerciseId: r.exerciseId, doneAt: new Date(r.doneAt), prescribedSets: r.prescribedSets, sets });
+    out.set(r.curLogId, {
+      exerciseId: r.exerciseId,
+      doneAt: new Date(r.doneAt),
+      prescribedSets: r.prescribedSets,
+      refSessionId: r.refSessionId,
+      refLogId: r.refLogId,
+      sets,
+    });
   }
   return out;
 }
@@ -314,7 +329,7 @@ export async function getWorkoutWeek(
     : planned && appliedWeek
       ? { ...planned, deload: true }
       : planned;
-  return guidance ? { view, guidance, durationWeeks: r.durationWeeks, baselineRir: baselineRir(r.weeklyGuidance) } : null;
+  return guidance ? { view, guidance, durationWeeks: r.durationWeeks, baselineRir: baselineRir(r.weeklyGuidance, r.slug) } : null;
 }
 
 /** What the week's RIR needs to know about a logged exercise (week-guidance weekRirTarget). */
@@ -378,7 +393,7 @@ export async function getSessionRirTargets(userId: string, sessionId: string): P
   } else if (session.isDeload) {
     guidance = appliedDeloadGuidance(null, 1);
   }
-  const baseline = baselineRir(session.program?.weeklyGuidance ?? null);
+  const baseline = baselineRir(session.program?.weeklyGuidance ?? null, session.program?.sourceTemplate?.slug ?? null);
   return new Map(
     session.exerciseLogs.map((log) => [
       log.id,

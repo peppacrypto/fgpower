@@ -214,6 +214,39 @@ if (programs) {
   }
 }
 
+// --- exercises.generated.json: name/pattern sanity (A-067) ------------------
+// Biomechanical invariants that caught three mis-tags. Each is satisfied by the
+// corrected catalog with zero other violations today.
+if (catalog) {
+  for (const e of catalog) {
+    const at = `exercise ${e.slug}`;
+    const prim = Array.isArray(e.primaryMuscles) ? e.primaryMuscles : [];
+    // 1. A strength calf-isolation lift (sole primary = calves) is plantar flexion.
+    if (e.category === "STRENGTH" && prim.length === 1 && prim[0] === "calves" && e.movementPattern && e.movementPattern !== "plantar-flexion") {
+      error(`${at}: calf isolation tagged "${e.movementPattern}", expected plantar-flexion`);
+    }
+    // 2. A Pallof press is anti-rotation unless its name says it rotates.
+    if (/pallof/.test(e.slug) && e.movementPattern === "rotation" && !/rotation|rotacao/.test(norm(`${e.slug} ${e.nameEn} ${e.namePt}`))) {
+      error(`${at}: Pallof press tagged rotation, expected anti-rotation`);
+    }
+    // 3. A plyometric throw/jump is never a horizontal pull (there is no plyo row).
+    if (e.category === "PLYOMETRICS" && e.movementPattern === "horizontal-pull") {
+      error(`${at}: plyometric tagged horizontal-pull (throws are not rows)`);
+    }
+  }
+}
+
+// --- exercises.generated.json: pt-BR instructions must not be the English ones (A-069) --
+if (catalog) {
+  for (const e of catalog) {
+    const en = Array.isArray(e.instructionsEn) ? e.instructionsEn : [];
+    const pt = Array.isArray(e.instructionsPt) ? e.instructionsPt : [];
+    if (pt.length > 0 && en.length === pt.length && en.every((s, i) => s === pt[i])) {
+      warn(`exercise ${e.slug ?? "?"}: instructionsPt is identical to instructionsEn (untranslated)`);
+    }
+  }
+}
+
 // --- report -----------------------------------------------------------------
 const summary = {
   catalog: bySlug.size,

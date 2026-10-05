@@ -8,6 +8,7 @@ import {
   getExerciseNotesForSession,
   getPreviousPerformances,
   getRecordBars,
+  getSessionRirTargets,
   getWorkoutSessionForExecution,
   getWorkoutUserContext,
   getWorkoutWeek,
@@ -112,14 +113,21 @@ async function load(sessionId: string, userId: string) {
   // screen and the summary agree even for a session left open across the
   // WELCOME_BACK_AFTER_DAYS cutoff) (A-006).
   const lastWorkout = session ? await lastFinishedWorkoutBefore(userId, session.startedAt) : null;
-  return { loadedAtMs, session, previous, notes, week, bars, lastWorkout, ...context };
+  // The RIR target each reference ("last time") session aimed for, by its own
+  // week's wave — so the advice about those sets matches that session's summary
+  // and never flips at a wave turn (A-020). Normally one reference session.
+  const refSessionIds = [...new Set([...previous.values()].map((p) => p.refSessionId))];
+  const refRirBySession = new Map(
+    await Promise.all(refSessionIds.map(async (sid) => [sid, await getSessionRirTargets(userId, sid)] as const)),
+  );
+  return { loadedAtMs, session, previous, refRirBySession, notes, week, bars, lastWorkout, ...context };
 }
 
 export default async function WorkoutExecutionPage({ params, searchParams }: PageProps<"/app/workout/[sessionId]">) {
   const { sessionId } = await params;
   const sp = await searchParams;
   const user = await requireUser();
-  const { loadedAtMs, session, previous, notes, week, bars, lastWorkout, profile, finishedWorkouts } = await load(sessionId, user.id);
+  const { loadedAtMs, session, previous, refRirBySession, notes, week, bars, lastWorkout, profile, finishedWorkouts } = await load(sessionId, user.id);
 
   if (!session) notFound();
   if (session.userId !== user.id) notFound();
@@ -154,9 +162,14 @@ export default async function WorkoutExecutionPage({ params, searchParams }: Pag
     });
     // deload and easeBack are whole-session (computed once above).
     const rirTarget = easeBack && baseRir != null ? Math.min(5, baseRir + 1) : baseRir;
+    // The advice about last time judges those sets against the RIR target the
+    // reference session was performed under (its own week's wave), not this
+    // week's — so it equals that session's summary "Na próxima" and never flips
+    // at a wave turn (A-020). deload/easeBack short-circuit inside adviceFromLastTime.
+    const lastRir = last ? (refRirBySession.get(last.refSessionId)?.get(last.refLogId) ?? log.rirTarget) : rirTarget;
     const advice = adviceFromLastTime({
       strategy,
-      prescribed: { repMin: log.repMin, repMax: log.repMax, rirTarget },
+      prescribed: { repMin: log.repMin, repMax: log.repMax, rirTarget: lastRir },
       lastTime: last,
       loadIncrementKg,
       timed,

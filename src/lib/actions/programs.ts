@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { requireUserOrThrow } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 import { getTemplateBySlug } from "@/lib/data/templates";
-import { adaptRowKey } from "@/lib/data/alternatives";
+import { adaptRepRange, adaptRowKey } from "@/lib/data/alternatives";
 import { findUndoableSwitch } from "@/lib/data/dashboard";
 import { applyWeekLayout, getProgramRestart } from "@/lib/data/program-lifecycle";
 import { isUntouchedFork } from "@/lib/data/user-programs";
@@ -43,7 +43,7 @@ async function forkTemplateToProgram(
   templateSlug: string,
   userId: string,
   /** "Adaptar": swaps by template row (adaptRowKey), and the copy's name. */
-  adapt?: { swaps: Map<string, { exerciseId: string; replaces: string }>; name: string },
+  adapt?: { swaps: Map<string, { exerciseId: string; replaces: string; repMin: number; repMax: number; noteSuffix: string }>; name: string },
 ) {
   const template = await getTemplateBySlug(templateSlug);
   if (!template) throw new Error("TEMPLATE_NOT_FOUND");
@@ -77,8 +77,8 @@ async function forkTemplateToProgram(
                 sortOrder: ex.sortOrder,
                 groupKey: ex.groupKey,
                 sets: ex.sets,
-                repMin: ex.repMin,
-                repMax: ex.repMax,
+                repMin: swap?.repMin ?? ex.repMin,
+                repMax: swap?.repMax ?? ex.repMax,
                 rirTarget: ex.rirTarget,
                 rpeTarget: ex.rpeTarget,
                 restSeconds: ex.restSeconds,
@@ -86,7 +86,7 @@ async function forkTemplateToProgram(
                 warmupSets: ex.warmupSets,
                 progressionStrategy: ex.progressionStrategy,
                 loadIncrementKg: ex.loadIncrementKg,
-                notes: swap ? `No lugar de ${swap.replaces}.${ex.notesPt ? ` ${ex.notesPt}` : ""}` : ex.notesPt,
+                notes: swap ? `No lugar de ${swap.replaces}.${swap.noteSuffix}${ex.notesPt ? ` ${ex.notesPt}` : ""}` : ex.notesPt,
               };
             }),
           },
@@ -240,18 +240,30 @@ export async function adaptTemplate(templateSlug: string, formData: FormData) {
     if (!row) redirect(`/app/programs/templates/${template.slug}/adapt?mudou=1`);
     if (value && value !== "keep" && value !== row.exerciseId) wanted.set(rowKey, value.slice(0, 64));
   }
-  const valid = new Set(
+  const subs = new Map(
     (
       await prisma.exercise.findMany({
         where: { id: { in: [...new Set(wanted.values())] }, isPublished: true },
-        select: { id: true },
+        select: { id: true, difficulty: true, equipmentId: true },
       })
-    ).map((e) => e.id),
+    ).map((e) => [e.id, e]),
   );
-  const swaps = new Map<string, { exerciseId: string; replaces: string }>();
+  const swaps = new Map<string, { exerciseId: string; replaces: string; repMin: number; repMax: number; noteSuffix: string }>();
   for (const [rowKey, exerciseId] of wanted) {
     const row = rows.get(rowKey);
-    if (row && valid.has(exerciseId)) swaps.set(rowKey, { exerciseId, replaces: row.exercise.namePt });
+    const sub = subs.get(exerciseId);
+    if (!row || !sub) continue;
+    const reps = adaptRepRange(
+      { repMin: row.repMin, repMax: row.repMax },
+      { originalDifficulty: row.exercise.difficulty, substituteDifficulty: sub.difficulty },
+    );
+    const noteSuffix =
+      reps.shift === "harder"
+        ? ` Variação mais difícil: ${row.sets}×${reps.repMin}, parando 1–2 antes da falha.`
+        : reps.shift === "easier"
+          ? ` Variação mais fácil: dá para fazer ${row.sets}×${reps.repMax}.`
+          : "";
+    swaps.set(rowKey, { exerciseId, replaces: row.exercise.namePt, repMin: reps.repMin, repMax: reps.repMax, noteSuffix });
   }
 
   await enforceProgramQuota(user.id);

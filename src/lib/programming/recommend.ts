@@ -83,12 +83,12 @@ export function canRun(userEquipment: string, templateEquipment: string): boolea
  * lib/data/alternatives EQUIPMENT_FOR_ACCESS, which is server-only (kept equal
  * by recommend.test.ts): "Halteres em casa" is dumbbells and maybe a bench,
  * "Equipamento mínimo" bands, a kettlebell or dumbbells, "Só peso do corpo"
- * the floor, a pull-up bar and bands.
+ * the floor and a pull-up bar (onboarding: "Sem equipamento, ou só uma barra fixa").
  */
 export const ACCESS_EQUIPMENT: Record<string, readonly string[] | null> = {
   FULL_GYM: null,
   HOME_DUMBBELLS: ["dumbbell", "bench", "bodyweight", "none"],
-  HOME_BODYWEIGHT: ["bodyweight", "none", "pull-up-bar", "resistance-band"],
+  HOME_BODYWEIGHT: ["bodyweight", "none", "pull-up-bar"],
   MINIMAL: ["bodyweight", "none", "resistance-band", "dumbbell", "kettlebell"],
 };
 
@@ -165,6 +165,13 @@ const RELATED_GOALS: Record<string, string[]> = {
 const AUDIENCE_PENALTY: Record<string, number> = { "silver-strength-50plus": 10, "desk-worker": 5 };
 
 /**
+ * A short peaking / intensification block (e.g. "Pico de Força"): a deliberate
+ * pick after a base, never a default first program — the same role as a focus
+ * block, which a 4-week duration wouldn't otherwise penalize.
+ */
+const PEAK_SLUGS = new Set(["strength-peak"]);
+
+/**
  * The default first program for a beginner, when it fits their week:
  * training 5+ days → "gd-adaptacao", the entry block of the GD series (there
  * is no 6-day beginner plan, so 6 days also starts there); fewer days → the
@@ -217,6 +224,7 @@ export function scoreTemplate(profile: RecommendProfile, t: RecommendableTemplat
   // Not a first program: a specialization block, a GD block from the middle
   // of the series or a one-week deload.
   if (FOCUS_SLUGS.has(t.slug)) score -= 15;
+  if (PEAK_SLUGS.has(t.slug)) score -= 15;
   if (isMidSeriesGd(t.slug)) score -= 40;
   if (t.durationWeeks < 3) score -= 40;
   score -= AUDIENCE_PENALTY[t.slug] ?? 0;

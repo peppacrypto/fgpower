@@ -57,6 +57,10 @@ export interface ProgramRuleExercise {
   secondaryMuscles?: ProgramRuleMuscle[];
   movementPattern: string | null;
   sets: number;
+  /** Exercise.mechanics: only COMPOUND lower-body work counts toward a heavy leg day (rule 4). */
+  mechanics?: "COMPOUND" | "ISOLATION" | null;
+  /** Reps in reserve target: a light/technique day (RIR ≥ 3) is not a heavy leg day (rule 4). */
+  rirTarget?: number | null;
   /** Exercise.category: stretches and cardio aren't training volume (exercise-facets countsAsVolume). */
   category?: string | null;
 }
@@ -65,6 +69,8 @@ export interface ProgramRuleDay {
   dayIndex: number;
   nameEn: string;
   namePt: string;
+  /** Planned weekday (0 = Sunday), UserProgramDay.weekday / layOutWeek. Rule 4 compares calendar days. */
+  weekday?: number | null;
   exercises: ProgramRuleExercise[];
 }
 
@@ -88,9 +94,21 @@ export const HIGH_WEEKLY_DIRECT_SETS = 28;
 export const SECONDARY_SET_CREDIT = 0.5;
 const HIGH_SESSION_WORKING_SETS_THRESHOLD = 30;
 const SIMILAR_MOVEMENT_MIN_COUNT = 3;
-const LOWER_BODY_HEAVY_SET_THRESHOLD = 3;
+/** Compound lower-body working sets in one day that make it a "heavy leg" day. */
+const HEAVY_LOWER_COMPOUND_SETS = 4;
+/** RIR at or above this is technique/deload work — not heavy, however many sets. */
+const LIGHT_DAY_MIN_RIR = 3;
 
 const LOWER_BODY_GROUPS: MuscleGroupTag[] = ["LEGS", "GLUTES"];
+
+const isRuleWeekday = (d: number | null | undefined): d is number =>
+  d != null && Number.isInteger(d) && d >= 0 && d <= 6;
+
+/** Two weekdays are back-to-back on the calendar (wrapping Sun↔Mon and Sat↔Sun). */
+function adjacentWeekdays(a: number, b: number): boolean {
+  const diff = Math.abs(a - b);
+  return diff === 1 || diff === 6;
+}
 
 function weeklySetsByMuscleGroup(days: ProgramRuleDay[]): Map<MuscleGroupTag, number> {
   const totals = new Map<MuscleGroupTag, number>();
@@ -141,20 +159,33 @@ function formatSets(n: number, locale: "en" | "pt"): string {
   return locale === "pt" ? text.replace(".", ",") : text;
 }
 
-function isLowerBodyHeavy(day: ProgramRuleDay): boolean {
-  const lowerSets = day.exercises
-    .filter((e) => e.primaryMuscleGroups.some((g) => LOWER_BODY_GROUPS.includes(g)))
+/** Compound lower-body working sets pushed hard enough to count (not a light/technique day). */
+function heavyLowerBodySets(day: ProgramRuleDay): number {
+  return day.exercises
+    .filter(
+      (e) =>
+        e.mechanics === "COMPOUND" &&
+        e.primaryMuscleGroups.some((g) => LOWER_BODY_GROUPS.includes(g)) &&
+        (e.rirTarget == null || e.rirTarget < LIGHT_DAY_MIN_RIR),
+    )
     .reduce((sum, e) => sum + e.sets, 0);
-  return lowerSets >= LOWER_BODY_HEAVY_SET_THRESHOLD;
 }
 
 const GROUP_LABEL = MUSCLE_GROUP_LABEL;
 
-export function analyzeProgram(allDays: ProgramRuleDay[]): ProgramFeedbackItem[] {
+export function analyzeProgram(
+  allDays: ProgramRuleDay[],
+  opts: { sessionsPerWeek?: number } = {},
+): ProgramFeedbackItem[] {
   const feedback: ProgramFeedbackItem[] = [];
   // Every rule reads training work: a stretch or a cardio block counts as no
   // sets, no movement and no heavy leg day (exercise-facets countsAsVolume).
   const days = allDays.map((d) => ({ ...d, exercises: d.exercises.filter((e) => countsAsVolume(e.category)) }));
+  // Weekly volume scales by how often each day comes around: a plan that
+  // repeats its days within the week (A/B at 3×) or spreads them over two
+  // weeks is counted per real weekly session, matching the builder's volume
+  // strip (weekly-volume.ts). Legacy callers (no sessionsPerWeek) aren't scaled.
+  const perWeek = days.length > 0 && opts.sessionsPerWeek ? Math.max(0, opts.sessionsPerWeek) / days.length : 1;
 
   // 1. Weekly volume. With muscle-level data: per muscle — "high" on direct
   // sets, "low" on fractional sets (direct + half of the sets where the muscle
@@ -163,7 +194,9 @@ export function analyzeProgram(allDays: ProgramRuleDay[]): ProgramFeedbackItem[]
   // Without it (legacy callers): per coarse muscle group, direct sets only.
   const hasMuscleData = days.every((d) => d.exercises.every((e) => Array.isArray(e.primaryMuscles)));
   if (hasMuscleData) {
-    for (const { muscle, direct, fractional } of weeklySetsByMuscle(days).values()) {
+    for (const { muscle, direct: rawDirect, fractional: rawFractional } of weeklySetsByMuscle(days).values()) {
+      const direct = rawDirect * perWeek;
+      const fractional = rawFractional * perWeek;
       if (direct > 0 && fractional < LOW_WEEKLY_SETS) {
         feedback.push({
           code: `low-volume-${muscle.id}`,
@@ -238,16 +271,28 @@ export function analyzeProgram(allDays: ProgramRuleDay[]): ProgramFeedbackItem[]
     }
   }
 
-  // 4. Consecutive lower-body-heavy sessions.
-  const sortedDays = [...days].sort((a, b) => a.dayIndex - b.dayIndex);
-  for (let i = 0; i < sortedDays.length - 1; i++) {
-    if (isLowerBodyHeavy(sortedDays[i]) && isLowerBodyHeavy(sortedDays[i + 1])) {
-      feedback.push({
-        code: `consecutive-lower-body-${sortedDays[i].dayIndex}-${sortedDays[i + 1].dayIndex}`,
-        severity: "notice",
-        messageEn: `Heavy lower-body sessions ("${sortedDays[i].nameEn}" and "${sortedDays[i + 1].nameEn}") are scheduled on consecutive days.`,
-        messagePt: `Sessões pesadas de perna ("${sortedDays[i].namePt}" e "${sortedDays[i + 1].namePt}") estão programadas em dias consecutivos.`,
-      });
+  // 4. Heavy lower-body sessions on back-to-back calendar days. Only a day's
+  // COMPOUND lower-body work at a working intensity counts (a light/technique
+  // or deload day, RIR ≥ 3, is not "heavy"), and days are compared by their
+  // planned weekday (UserProgramDay.weekday), wrapping Sun↔Mon. A plan with no
+  // fixed weekdays (an A/B rotation, or a draft before activation) has no
+  // calendar adjacency to judge, so the check is skipped for it.
+  const heavyLegDays = days.filter(
+    (d) => isRuleWeekday(d.weekday) && heavyLowerBodySets(d) >= HEAVY_LOWER_COMPOUND_SETS,
+  );
+  for (let i = 0; i < heavyLegDays.length; i++) {
+    for (let j = i + 1; j < heavyLegDays.length; j++) {
+      const a = heavyLegDays[i];
+      const b = heavyLegDays[j];
+      if (adjacentWeekdays(a.weekday as number, b.weekday as number)) {
+        const [first, second] = a.dayIndex <= b.dayIndex ? [a, b] : [b, a];
+        feedback.push({
+          code: `consecutive-lower-body-${first.dayIndex}-${second.dayIndex}`,
+          severity: "notice",
+          messageEn: `Heavy lower-body sessions ("${first.nameEn}" and "${second.nameEn}") are scheduled on consecutive days.`,
+          messagePt: `Sessões pesadas de perna ("${first.namePt}" e "${second.namePt}") estão programadas em dias consecutivos.`,
+        });
+      }
     }
   }
 
@@ -262,6 +307,21 @@ export function analyzeProgram(allDays: ProgramRuleDay[]): ProgramFeedbackItem[]
       severity: "info",
       messageEn: "This program contains no horizontal pulling movement (e.g. a row).",
       messagePt: "Este programa não contém nenhum movimento de puxada horizontal (ex.: remada).",
+    });
+  }
+
+  // 6. Pushing with no pulling at all. A program with horizontal/vertical
+  // pushing but no pull (horizontal or vertical) leaves the back untrained —
+  // the no-equipment home plans fall here until a band row / pulldown is added.
+  const hasPush = days.some((d) =>
+    d.exercises.some((e) => e.movementPattern === "horizontal-push" || e.movementPattern === "vertical-push"),
+  );
+  if (hasPush && !hasAnyPull) {
+    feedback.push({
+      code: "no-pull",
+      severity: "info",
+      messageEn: "This program has pushing movements but no pulling movement (e.g. a row or a pulldown), which leaves the back undertrained.",
+      messagePt: "Este programa tem movimentos de empurrar mas nenhum de puxar (ex.: remada ou puxada), o que deixa as costas pouco treinadas.",
     });
   }
 

@@ -1324,7 +1324,13 @@ export function WorkoutExecutionClient({
         if (step.nextIndex !== null && step.nextIndex !== entry.index) scheduleAdvance(step.nextIndex);
         if (step.groupDone) revealCta.current = true;
       } else {
-        rest.start({ seconds: entry.ex.restSeconds, after: entry.ex.exerciseName, exerciseIndex: entry.index, setId: id });
+        // A superset member's extra set (beyond its prescription) is done solo,
+        // like a leftover set in the round rotation: it rests the round's rest,
+        // not the 0:20 switch to the next member (A-057). A solo exercise with no
+        // group keeps its own rest.
+        const restSeconds =
+          group && !entry.ex.wasSkipped && !entry.ex.replaced ? group.roundRestSeconds : entry.ex.restSeconds;
+        rest.start({ seconds: restSeconds, after: entry.ex.exerciseName, exerciseIndex: entry.index, setId: id });
         const finishesExercise =
           !entry.ex.wasSkipped &&
           (rows.prescribed.length > 0

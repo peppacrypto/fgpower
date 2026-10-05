@@ -62,4 +62,51 @@ describe("adviseNextLoad", () => {
     expect(adviseNextLoad({ strategy: "DOUBLE", prescribed, sets: sets(0, [15, 15]), loadIncrementKg: 2.5 })).toBeNull();
     expect(adviseNextLoad({ strategy: "MANUAL", prescribed, sets: sets(60, [12, 12]), loadIncrementKg: 2.5 })).toBeNull();
   });
+
+  it("an RIR-based hold explains the RIR gate, not a rep target (A-055)", () => {
+    // avg RIR == target → rir-at-target-keep-load.
+    const a = adviseNextLoad({
+      strategy: "RIR_BASED",
+      prescribed: { repMin: 5, repMax: 8, rirTarget: 2 },
+      sets: [
+        { weightKg: 100, reps: 8, rir: 2 },
+        { weightKg: 100, reps: 8, rir: 2 },
+        { weightKg: 100, reps: 8, rir: 2 },
+        { weightKg: 100, reps: 8, rir: 2 },
+      ],
+      loadIncrementKg: 2.5,
+    });
+    expect(a?.kind).toBe("hold");
+    expect(a?.reason).toBe("Suba a carga quando sobrar RIR 3+ em média (alvo 2)");
+    expect(a?.reason).not.toContain("reps em todas");
+  });
+
+  it("a double-progression hold still asks for the rep ceiling (A-055 unchanged)", () => {
+    const a = adviseNextLoad({
+      strategy: "DOUBLE",
+      prescribed: { repMin: 8, repMax: 12, rirTarget: 2 },
+      sets: [
+        { weightKg: 60, reps: 10, rir: 2 },
+        { weightKg: 60, reps: 9, rir: 2 },
+      ],
+      loadIncrementKg: 2.5,
+    });
+    expect(a?.reason).toBe("Suba a carga quando fizer 12 reps em todas");
+  });
+
+  it("a LINEAR_LOAD uneven session routes to the uneven-loads advice (A-055)", () => {
+    const a = adviseNextLoad({
+      strategy: "LINEAR_LOAD",
+      prescribed: { repMin: 5, repMax: 5, rirTarget: 2 },
+      sets: [
+        { weightKg: 100, reps: 5, rir: 2 },
+        { weightKg: 100, reps: 5, rir: 2 },
+        { weightKg: 97.5, reps: 5, rir: 2 },
+      ],
+      loadIncrementKg: 2.5,
+    });
+    expect(a?.kind).toBe("hold");
+    expect(a?.reason).toContain("todas as séries com");
+    expect(a?.reason).not.toContain("abaixo de");
+  });
 });

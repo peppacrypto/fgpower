@@ -884,9 +884,19 @@ async function finishSession(
 
     const session = await tx.workoutSession.findUniqueOrThrow({
       where: { id: sessionId },
-      include: { setLogs: true, enrollment: true },
+      include: {
+        setLogs: { include: { exercise: { select: { slug: true } }, exerciseLog: { select: { notes: true } } } },
+        enrollment: true,
+      },
     });
-    if (workingSetCount(session.setLogs) === 0) return "EMPTY" as const;
+    // Loaded carries (steps/metres) and timed holds (seconds) are still working
+    // sets, but their load × "reps" is not kg-volume (A-056) — tag each set with
+    // its exercise so volume/reps can skip them.
+    const volumeSets = session.setLogs.map((s) => ({
+      ...s,
+      exercise: { slug: s.exercise.slug, notes: s.exerciseLog.notes },
+    }));
+    if (workingSetCount(volumeSets) === 0) return "EMPTY" as const;
 
     const startedMs = session.startedAt.getTime();
     const setTimes = session.setLogs.filter((s) => s.isCompleted && s.completedAt).map((s) => s.completedAt as Date);
@@ -908,9 +918,9 @@ async function finishSession(
         status: "COMPLETED",
         finishedAt,
         durationSeconds,
-        totalVolumeKg: sessionVolumeKg(session.setLogs),
-        totalWorkingSets: workingSetCount(session.setLogs),
-        totalReps: totalReps(session.setLogs),
+        totalVolumeKg: sessionVolumeKg(volumeSets),
+        totalWorkingSets: workingSetCount(volumeSets),
+        totalReps: totalReps(volumeSets),
       },
     });
 
@@ -1306,14 +1316,18 @@ export async function editFinishedWorkout(sessionId: string, edits: FinishedSetE
         if (values.weightKg === set.weightKg && values.reps === set.reps && values.rir === set.rir) continue;
         await tx.setLog.update({ where: { id: set.id }, data: values });
       }
-      const all = await tx.setLog.findMany({ where: { sessionId } });
-      if (workingSetCount(all) === 0) throw new EmptyEdit();
+      const all = await tx.setLog.findMany({
+        where: { sessionId },
+        include: { exercise: { select: { slug: true } }, exerciseLog: { select: { notes: true } } },
+      });
+      const volumeSets = all.map((s) => ({ ...s, exercise: { slug: s.exercise.slug, notes: s.exerciseLog.notes } }));
+      if (workingSetCount(volumeSets) === 0) throw new EmptyEdit();
       await tx.workoutSession.update({
         where: { id: sessionId },
         data: {
-          totalVolumeKg: sessionVolumeKg(all),
-          totalWorkingSets: workingSetCount(all),
-          totalReps: totalReps(all),
+          totalVolumeKg: sessionVolumeKg(volumeSets),
+          totalWorkingSets: workingSetCount(volumeSets),
+          totalReps: totalReps(volumeSets),
           // Kept: it dates the save the correction window runs from (savedAt) — a correction doesn't extend it.
           updatedAt: locked.updatedAt,
         },

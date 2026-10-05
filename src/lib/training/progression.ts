@@ -139,13 +139,23 @@ function suggestLinear(
   load: number,
   increment: number,
 ): ProgressionSuggestion {
-  const hitPrescription = sets.every((s) => (s.reps as number) >= prescribed.repMin) && sameLoad(sets, load);
-  if (hitPrescription) {
+  const allRepsHit = sets.every((s) => (s.reps as number) >= prescribed.repMin);
+  if (allRepsHit && sameLoad(sets, load)) {
     return {
       strategy: "LINEAR_LOAD",
       progressionAvailable: true,
       suggestedLoadKg: round(load + increment),
       reasonKey: "linear-hit-prescription",
+    };
+  }
+  // Every set hit the reps but on different loads (a back-off set): that is an
+  // uneven session, not a rep miss — say so instead of "ficou abaixo de N reps" (A-055).
+  if (allRepsHit) {
+    return {
+      strategy: "LINEAR_LOAD",
+      progressionAvailable: false,
+      suggestedLoadKg: null,
+      reasonKey: "uneven-loads",
     };
   }
   return {

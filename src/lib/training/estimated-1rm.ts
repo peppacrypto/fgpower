@@ -6,7 +6,7 @@
  * quickly (see docs/SCIENCE_METHOD.md). We deliberately refuse to estimate
  * from very high-rep sets.
  *
- * Formulas (both widely used and validated against measured 1RM in
+ * Formulas (both widely used and compared against measured 1RM in
  * resistance-trained lifters — see LeSuer et al. 1997, J Strength Cond Res):
  *   Epley (1985):   1RM = weight × (1 + reps / 30)
  *   Brzycki (1993): 1RM = weight × 36 / (37 - reps)

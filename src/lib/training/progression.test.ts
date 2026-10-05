@@ -53,6 +53,36 @@ describe("suggestProgression — LINEAR_LOAD", () => {
     expect(result.progressionAvailable).toBe(false);
     expect(result.reasonKey).toBe("linear-missed-prescription");
   });
+
+  it("linear with all reps hit but uneven loads is an uneven session, not a rep miss (A-055)", () => {
+    const s = suggestProgression(
+      "LINEAR_LOAD",
+      { repMin: 5, repMax: 5, rirTarget: 2 },
+      [
+        { weightKg: 100, reps: 5, rir: 2 },
+        { weightKg: 100, reps: 5, rir: 2 },
+        { weightKg: 100, reps: 5, rir: 2 },
+        { weightKg: 100, reps: 5, rir: 2 },
+        { weightKg: 97.5, reps: 5, rir: 2 },
+      ],
+      2.5,
+    );
+    expect(s.reasonKey).toBe("uneven-loads");
+    expect(s.progressionAvailable).toBe(false);
+  });
+
+  it("linear still flags a real rep miss (A-055 unchanged)", () => {
+    const s = suggestProgression(
+      "LINEAR_LOAD",
+      { repMin: 5, repMax: 5, rirTarget: 2 },
+      [
+        { weightKg: 100, reps: 5, rir: 2 },
+        { weightKg: 100, reps: 4, rir: 1 },
+      ],
+      2.5,
+    );
+    expect(s.reasonKey).toBe("linear-missed-prescription");
+  });
 });
 
 describe("suggestProgression — RIR_BASED", () => {

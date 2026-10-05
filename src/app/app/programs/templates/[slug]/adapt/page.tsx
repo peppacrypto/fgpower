@@ -8,8 +8,10 @@ import { getProfile } from "@/lib/data/profile";
 import {
   EQUIPMENT_FOR_ACCESS,
   adaptRowKey,
+  assignStandIns,
   getAlternatives,
   mainGearFirst,
+  rankStandIns,
   type AlternativeExercise,
 } from "@/lib/data/alternatives";
 import { ADAPT_LABEL, EQUIPMENT_LABEL } from "@/lib/constants/program-labels";
@@ -65,16 +67,21 @@ export default async function AdaptTemplatePage({ params, searchParams }: PagePr
   );
 
   const days = template.days.map((day) => {
-    // A stand-in already in the day (kept or picked) isn't picked again for it.
-    const used = new Set(day.exercises.filter((ex) => usable(ex.exercise.equipmentId)).map((ex) => ex.exerciseId));
-    const rows = day.exercises.map((ex) => {
-      if (usable(ex.exercise.equipmentId)) return { kind: "keep" as const, ex };
-      const all = mainGearFirst(alternatives.get(ex.exerciseId) ?? [], access);
-      const pick = all.find((a) => !used.has(a.id)) ?? all[0] ?? null;
-      if (pick) used.add(pick.id);
-      const options = pick ? [pick, ...all.filter((a) => a.id !== pick.id)].slice(0, OPTIONS) : [];
-      return { kind: "swap" as const, ex, pick, options, field: `swap:${adaptRowKey(day.dayIndex, ex)}` };
-    });
+    const assigned = assignStandIns(
+      day.exercises.map((ex) => ({
+        ex,
+        exerciseId: ex.exerciseId,
+        usableNow: usable(ex.exercise.equipmentId),
+        difficulty: ex.exercise.difficulty,
+        candidates: rankStandIns(mainGearFirst(alternatives.get(ex.exerciseId) ?? [], access), ex.exercise.difficulty),
+      })),
+      OPTIONS,
+    );
+    const rows = assigned.map((a) =>
+      a.kind === "keep"
+        ? ({ kind: "keep" as const, ex: a.ex })
+        : ({ kind: "swap" as const, ex: a.ex, pick: a.pick, options: a.options, reps: a.reps, field: `swap:${adaptRowKey(day.dayIndex, a.ex)}` }),
+    );
     return { day, rows };
   });
   const swaps = days.flatMap((d) => d.rows).filter((r) => r.kind === "swap");
@@ -100,7 +107,7 @@ export default async function AdaptTemplatePage({ params, searchParams }: PagePr
       <p className="mt-2 text-sm text-muted">
         {swaps.length === 0
           ? "Todos os exercícios deste programa já cabem no seu equipamento."
-          : `${plural(swaps.length, "exercício pede", "exercícios pedem")} o que você não tem, em ${plural(daysTouched, "dia", "dias")}. Sugerimos uma troca para ${withStandIn.length < swaps.length ? "os que têm substituto" : "cada um"} — mesmo músculo e movimento, com o seu equipamento. Séries, repetições e descanso continuam os do plano.`}
+          : `${plural(swaps.length, "exercício pede", "exercícios pedem")} o que você não tem, em ${plural(daysTouched, "dia", "dias")}. Sugerimos uma troca para ${withStandIn.length < swaps.length ? "os que têm substituto" : "cada um"} — mesmo músculo e movimento, com o seu equipamento. Séries e descanso seguem o plano; ajustamos as repetições quando o substituto é mais difícil ou mais fácil.`}
       </p>
       <p className="mt-1 text-xs text-muted">Salvar cria uma cópia sua; o original não muda.</p>
       {changed ? (
@@ -138,6 +145,13 @@ export default async function AdaptTemplatePage({ params, searchParams }: PagePr
                               {r.ex.exercise.equipment?.namePt} · {r.ex.sets}×{r.ex.repMin === r.ex.repMax ? r.ex.repMin : `${r.ex.repMin}-${r.ex.repMax}`}
                             </span>
                           </p>
+                          {r.kind === "swap" && r.reps?.shift ? (
+                            <p className="mt-1 text-xs text-muted">
+                              {r.reps.shift === "harder"
+                                ? `Variação mais difícil — sugerimos ${r.ex.sets}×${r.reps.repMin} rep${r.reps.repMin > 1 ? "s" : ""}, parando 1–2 antes da falha.`
+                                : `Variação mais fácil — dá para subir para ${r.ex.sets}×${r.reps.repMax} reps.`}
+                            </p>
+                          ) : null}
                           {r.pick ? (
                             <AdaptSwapChoice
                               name={r.field}

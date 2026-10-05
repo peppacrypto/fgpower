@@ -69,12 +69,20 @@ export function adviseNextLoad(input: NextLoadInput): NextLoadAdvice | null {
     case "within-rep-range-add-reps":
     case "rir-at-target-keep-load": {
       const target = Math.min(repMax, Math.max(repMin, minReps + 1));
+      // RIR-based holds don't move the load on reps — they move it when the
+      // average RIR rises a full point above target. Say that, not "faça N reps
+      // em todas" (which the user may already be doing) (A-055).
+      const targetRir = s.reasonData?.targetRir ?? rirTarget;
+      const rirReason =
+        s.reasonKey === "rir-at-target-keep-load" && targetRir != null
+          ? `Suba a carga quando sobrar RIR ${rir(targetRir + 1)}+ em média (alvo ${rir(targetRir)})`
+          : `Suba a carga quando fizer ${repMax} reps em todas`;
       return {
         kind: "hold",
         loadKg: top,
         targetReps: target,
         headline: `Mantenha ${formatKg(top)} · busque ${target} reps`,
-        reason: `Suba a carga quando fizer ${repMax} reps em todas`,
+        reason: rirReason,
       };
     }
     case "incomplete-sets":

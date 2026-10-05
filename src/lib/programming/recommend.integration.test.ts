@@ -47,5 +47,8 @@ describe("recommendTemplates on the seeded catalog", () => {
     // Two days with nothing but the floor: the express plan leads.
     const bodyweight = recommendTemplates(profile({ equipmentAccess: "HOME_BODYWEIGHT", daysPerWeek: 2 }), catalog);
     expect(bodyweight[0].template.slug).toBe("bodyweight-express");
+    // A-015: "só peso do corpo" has no bands — the band plan is adapt, not runnable.
+    const bw = recommendTemplates(profile({ equipmentAccess: "HOME_BODYWEIGHT", daysPerWeek: 3 }), catalog);
+    expect(bw.find((r) => r.template.slug === "bands-bodyweight-full-body")?.adapt).toBe(true);
   });
 });

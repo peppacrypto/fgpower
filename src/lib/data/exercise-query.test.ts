@@ -312,3 +312,44 @@ describe("searchWords", () => {
     expect(searchWords("Leg Press 45° (Máquina)")).toEqual(["leg", "press", "45", "maquina"]);
   });
 });
+
+describe("A-071: pec deck ranks the butterfly first", () => {
+  // Mirrors the seed data: butterfly carries the exact "pec deck" alias; the
+  // reverse pec-deck machine only has "peck deck invertido".
+  const butterfly: RankCandidate = {
+    id: "butterfly",
+    namePt: "Voador (Peck Deck)",
+    nameEn: "Butterfly",
+    aliases: ["peck deck", "pec deck", "voador peitoral", "crucifixo máquina"],
+    popularity: 3,
+    isCurated: true,
+  };
+  const reverseMachine: RankCandidate = {
+    id: "reverse-machine-flyes",
+    namePt: "Crucifixo Inverso na Máquina",
+    nameEn: "Reverse Machine Flyes",
+    aliases: ["voador inverso", "peck deck invertido", "posterior de ombro na máquina"],
+    popularity: 9, // higher popularity must NOT let it win once butterfly phrase-matches
+    isCurated: true,
+  };
+  it("butterfly first for 'pec deck'", () => {
+    const ranked = rankExercises("pec deck", [reverseMachine, butterfly]);
+    expect(ranked[0].id).toBe("butterfly");
+    expect(rankKey("pec deck", butterfly).tier).toBe(MATCH_TIER.PHRASE_START);
+  });
+  it("butterfly first for 'peck deck' too", () => {
+    const ranked = rankExercises("peck deck", [reverseMachine, butterfly]);
+    expect(ranked[0].id).toBe("butterfly");
+  });
+});
+
+describe("A-071: 'faixa elástica' alias makes band exercises searchable", () => {
+  // searchText is rebuilt as names + aliases at seed time (normalizeSearchText).
+  const bandSearchText = searchWords("Elevação Lateral com Elástico faixa elástica").join(" ");
+  it("matches 'faixa', 'faixas' and 'faixa elástica'", () => {
+    expect(matches("faixa", bandSearchText)).toBe(true);
+    expect(matches("faixas", bandSearchText)).toBe(true);
+    expect(matches("faixa elástica", bandSearchText)).toBe(true);
+    expect(matches("faixas elásticas", bandSearchText)).toBe(true);
+  });
+});
