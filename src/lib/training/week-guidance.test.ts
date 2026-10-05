@@ -8,6 +8,7 @@ import {
   effectiveProgramWeek,
   entryWeekTarget,
   getWeekGuidance,
+  guidanceLastWeek,
   isDeloadGuidance,
   parseWeeklyGuidance,
   programWeekView,
@@ -46,6 +47,16 @@ describe("week guidance", () => {
     expect(getWeekGuidance(gd1, 13, { templateSlug: "gd-1", durationWeeks: 13 })).toMatchObject({ test: true, deload: true });
     expect(getWeekGuidance(gd1, 13, { templateSlug: "upper-lower", durationWeeks: 13 })?.test).toBe(false);
     expect(getWeekGuidance(gd1, 13, { templateSlug: "gd-adaptacao", durationWeeks: 13 })?.test).toBe(false);
+  });
+
+  it("the test week comes from the guidance, not the editable durationWeeks (A-059)", () => {
+    expect(guidanceLastWeek(gd1)).toBe(13);
+    expect(guidanceLastWeek([])).toBeNull();
+    expect(guidanceLastWeek("nope")).toBeNull();
+    // Shortened to 5 weeks: the current hard week 5 is NOT the test (and stays a non-deload hard week).
+    expect(getWeekGuidance(gd1, 5, { templateSlug: "gd-1", durationWeeks: 5 })).toMatchObject({ test: false, deload: false });
+    // The template's own last week is still the test, whatever durationWeeks says.
+    expect(getWeekGuidance(gd1, 13, { templateSlug: "gd-1", durationWeeks: 5 })).toMatchObject({ test: true, deload: true });
   });
 
   it("a deload is a week that says it is one — not one that mentions a possible deload", () => {

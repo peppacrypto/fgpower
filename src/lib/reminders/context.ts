@@ -2,6 +2,7 @@ import "server-only";
 import { prisma } from "@/lib/db";
 import { getInProgressSessions, WELCOME_BACK_AFTER_DAYS } from "@/lib/data/dashboard";
 import { getUpcomingPlan, type UpcomingPlan } from "@/lib/data/upcoming";
+import { streakNudgeApplies } from "@/lib/data/streak-weeks";
 import { dayNumberOf, mondayOf, weekdayOfDayNo } from "@/lib/training/day-rotation";
 import { startOfWeek, wallClock, zonedMidnight } from "@/lib/training/week";
 import type { TrainingDayFacts } from "./copy";
@@ -93,13 +94,16 @@ export async function loadReminderUser(
     let plannedLeft = 0;
     for (let d = todayNo; d <= monday + 6; d++) if (plannedDays.has(weekdayOfDayNo(d))) plannedLeft += 1;
     const view = plan.weekView;
+    // The "Faltam N" push speaks for the active program only — not a neutral entry
+    // week another program judges (A-060): then 0, so no count is pushed.
+    const nudgeApplies = streakNudgeApplies(plan.habit.streak.thisWeek.enrollmentId, plan.enrollment.id);
     trainingDay = {
       dayName: plan.up.next.day.name,
       exerciseCount: plan.up.next.day.exercises.length,
       daysSinceLast: lastDoneNo == null ? null : todayNo - lastDoneNo,
       welcomeBackAfterDays: WELCOME_BACK_AFTER_DAYS,
       streakCurrent: plan.habit.streak.current,
-      remaining: plan.habit.streak.remaining,
+      remaining: nudgeApplies ? plan.habit.streak.remaining : 0,
       plannedLeft,
       program: {
         name: plan.enrollment.program.name,

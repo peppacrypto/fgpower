@@ -4,7 +4,7 @@ import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest
 import { prisma } from "@/lib/db";
 import { startOfWeek } from "@/lib/training/week";
 import { countedWeeks } from "@/lib/programming/block-progress";
-import { entryWeekWasTrained } from "@/lib/data/program-lifecycle";
+import { entryWeekWasTrained, getProgramRestart } from "@/lib/data/program-lifecycle";
 
 /**
  * Adapting a workout to the gym and correcting a finished one (Batch 4 —
@@ -450,6 +450,61 @@ describe("Trocar / Adicionar exercício mid-workout", () => {
   });
 });
 
+describe("a swap across reps↔seconds carries the new exercise's unit (A-058)", () => {
+  let plankId: string;
+
+  it("in the workout and in the program, a plank is prescribed in seconds, not the old 8–12 reps", async () => {
+    await rehomeDefaultEnrollment();
+    plankId = (await prisma.exercise.findUniqueOrThrow({ where: { slug: "plank" }, select: { id: true } })).id;
+
+    // Dia C, first slot: a loaded rep exercise prescribed 8–12 (the default).
+    const sessionId = await startOn(dayIds[2]);
+    const firstLog = await prisma.workoutExerciseLog.findFirstOrThrow({
+      where: { sessionId },
+      orderBy: { sortOrder: "asc" },
+      select: { id: true, exerciseId: true, repMin: true, repMax: true },
+    });
+    expect([firstLog.repMin, firstLog.repMax]).toEqual([8, 12]);
+    const repExerciseId = firstLog.exerciseId;
+
+    // Trocar → plank (untouched slot): the live log now reads in seconds.
+    expect(await actions.swapExercise(firstLog.id, plankId)).toEqual({ ok: true, exerciseLogId: firstLog.id });
+    const swapped = await prisma.workoutExerciseLog.findUniqueOrThrow({
+      where: { id: firstLog.id },
+      select: { exerciseId: true, repMin: true, repMax: true, substitutedFromExerciseId: true },
+    });
+    expect(swapped).toMatchObject({ exerciseId: plankId, substitutedFromExerciseId: repExerciseId, repMin: 20, repMax: 45 });
+
+    // Finish, then "Usar no programa": the program row becomes a plank in seconds.
+    const set = await prisma.setLog.findFirstOrThrow({ where: { exerciseLogId: firstLog.id, setType: "WORKING" } });
+    await actions.logSet({ setLogId: set.id, weightKg: 0, reps: 40, rir: null });
+    await redirectOf(actions.finishWorkoutSession(sessionId));
+    expect(await actions.keepSwapInProgram(firstLog.id)).toEqual({ ok: true });
+
+    const pe = await prisma.userProgramExercise.findFirstOrThrow({ where: { dayId: dayIds[2], sortOrder: 0 } });
+    expect(pe).toMatchObject({ exerciseId: plankId, repMin: 20, repMax: 45, notes: null });
+
+    await redirectOf(actions.deleteWorkoutSession(sessionId));
+  });
+
+  it("a same-unit swap keeps the program's own range", async () => {
+    await rehomeDefaultEnrollment();
+    const sessionId = await startOn(dayIds[1]);
+    const firstLog = await prisma.workoutExerciseLog.findFirstOrThrow({
+      where: { sessionId },
+      orderBy: { sortOrder: "asc" },
+      select: { id: true, repMin: true, repMax: true },
+    });
+    expect(await actions.swapExercise(firstLog.id, exerciseIds[2])).toEqual({ ok: true, exerciseLogId: firstLog.id });
+    const after = await prisma.workoutExerciseLog.findUniqueOrThrow({
+      where: { id: firstLog.id },
+      select: { repMin: true, repMax: true },
+    });
+    expect([after.repMin, after.repMax]).toEqual([firstLog.repMin, firstLog.repMax]);
+    await actions.discardWorkoutSession(sessionId); // discard returns a result; it never redirects (cf. deleteWorkoutSession)
+  });
+});
+
 describe("the sheet's lists (getExerciseOptions, getTechniqueSheet)", () => {
   it("offers stand-ins not already in the workout, says when the exercise has sets, and searches", async () => {
     const { getExerciseOptions, getTechniqueSheet } = await import("@/lib/data/workout-session");
@@ -744,7 +799,7 @@ describe("deleting an earlier workout that alone took its program week", () => {
 });
 
 describe("deleting a workout finished after its block stopped", () => {
-  it("counts the block's workouts again instead of taking away one it never added", async () => {
+  it("advances the stopped block on finish (A-026), then recomputes the count on delete", async () => {
     const b = await newBlock({ startedAt: new Date(startOfWeek(new Date()).getTime() - 14 * DAY_MS) });
     await trainOn(b.dayIds[0], 50);
     const late = await startOn(b.dayIds[1]);
@@ -753,9 +808,43 @@ describe("deleting a workout finished after its block stopped", () => {
     // Another program started with this workout open: the block stopped, the workout stays linked to it.
     await prisma.programEnrollment.update({ where: { id: b.enrollmentId }, data: { status: "ABANDONED", endedAt: new Date() } });
     await redirectOf(actions.finishWorkoutSession(late));
-    expect(await blockState(b.enrollmentId)).toMatchObject({ completedSessions: 1 });
+    // Finishing on the ABANDONED block now advances it (A-026): both workouts are counted.
+    expect(await blockState(b.enrollmentId)).toMatchObject({ completedSessions: 2 });
+    // Deleting it recomputes the count from the finished workouts that remain (just the first).
     await redirectOf(actions.deleteWorkoutSession(late));
     expect(await blockState(b.enrollmentId)).toMatchObject({ completedSessions: 1 });
+  });
+});
+
+describe("A-026 · finishing a workout on an ABANDONED enrollment advances its resume week", () => {
+  it("moves the week forward without re-activating or re-completing the stopped block", async () => {
+    const weekAgo = new Date(startOfWeek(new Date()).getTime() - 7 * DAY_MS + 12 * 3_600_000);
+    const b = await newBlock({
+      startedAt: new Date(startOfWeek(new Date()).getTime() - 21 * DAY_MS + 12 * 3_600_000),
+      days: 2,
+      durationWeeks: 13,
+    });
+    // A workout done in an earlier calendar week, with the counter set to week 3.
+    const prior = await trainOn(b.dayIds[0], 50);
+    await finishedAt(prior, weekAgo);
+    await prisma.programEnrollment.update({ where: { id: b.enrollmentId }, data: { currentWeek: 3 } });
+
+    // Open a workout while the block is still ACTIVE (so it links to the enrollment),
+    // then stop the block — the open workout stays linked to it.
+    const open = await startOn(b.dayIds[1]);
+    const set = await prisma.setLog.findFirstOrThrow({ where: { sessionId: open, setType: "WORKING" }, orderBy: { setNumber: "asc" } });
+    expect(await actions.logSet({ setLogId: set.id, weightKg: 50, reps: 10, rir: null })).toEqual({ ok: true });
+    await prisma.programEnrollment.update({ where: { id: b.enrollmentId }, data: { status: "ABANDONED", endedAt: new Date() } });
+
+    // Finishing it (the action under test) advances the abandoned block to week 4.
+    await redirectOf(actions.finishWorkoutSession(open));
+    const e = await blockState(b.enrollmentId);
+    expect(e.status).toBe("ABANDONED"); // never re-activated / re-completed
+    expect(e.currentWeek).toBe(4); // advanced from 3
+    const restart = await getProgramRestart(USER_ID, b.programId);
+    expect(restart.resumable?.week).toBe(4);
+
+    await redirectOf(actions.deleteWorkoutSession(open));
   });
 });
 

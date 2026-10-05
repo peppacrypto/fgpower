@@ -116,8 +116,8 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
           <>
             <SwitchProgramButton
               action={resumeProgram.bind(null, program.id)}
-              label={`Retomar da semana ${restart.resumable.week}`}
-              switchLabel={`Retomar da semana ${restart.resumable.week}`}
+              label={restart.resumable.week === 0 ? "Retomar · semana de entrada" : `Retomar da semana ${restart.resumable.week}`}
+              switchLabel={restart.resumable.week === 0 ? "Retomar · semana de entrada" : `Retomar da semana ${restart.resumable.week}`}
               pendingLabel="Retomando…"
               size="md"
               active={switchingFrom}
@@ -187,6 +187,12 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
           />
         </div>
       </div>
+
+      {restart?.resumable?.endedByDurationEdit ? (
+        <p className="mt-2 text-xs text-muted">
+          Você encurtou a duração e o bloco foi encerrado. Retome de onde parou quando quiser.
+        </p>
+      ) : null}
 
       {!isActive && !hasExercises ? (
         <p id="start-needs-exercises" className="mt-2 text-xs text-muted">

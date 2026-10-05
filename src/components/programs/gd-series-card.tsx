@@ -133,7 +133,7 @@ export function GdSeriesCard({
             {runningBlock
               ? `Ver seu bloco · ${runningBlock.name}`
               : resumeBlock && progress?.resume
-                ? `Retomar ${resumeBlock.name} · semana ${progress.resume.week}`
+                ? `Retomar ${resumeBlock.name} · ${progress.resume.week === 0 ? "semana de entrada" : `semana ${progress.resume.week}`}`
                 : nextBlock
                   ? `Continuar: ${nextBlock.name}`
                   : repeatBlock

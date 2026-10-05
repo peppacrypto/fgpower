@@ -10,6 +10,7 @@ import { BodyweightChart } from "@/components/charts/bodyweight-chart";
 import { monoDate } from "@/components/charts/scale";
 import { dayNumberOf } from "@/lib/training/day-rotation";
 import { bodyKind, formatBodyDelta, formatBodyValue, measurementWeek, movingAverage7 } from "@/lib/training/body-weight";
+import { guidanceLastWeek } from "@/lib/training/week-guidance";
 import { PeriodChips, PERIODS } from "../period-chips";
 import { WeighInForm } from "./weigh-in-form";
 import { MeasurementsForm } from "./measurements-form";
@@ -65,7 +66,7 @@ export default async function BodyPage({ searchParams }: PageProps<"/app/progres
     ? measurementWeek({
         templateSlug: plan.enrollment.program.sourceTemplate?.slug ?? null,
         week: plan.weekView.guidanceWeek,
-        durationWeeks: plan.enrollment.program.durationWeeks,
+        lastGuidanceWeek: guidanceLastWeek(plan.enrollment.program.weeklyGuidance),
       })
     : null;
   const weekTag = plan.hasPlan

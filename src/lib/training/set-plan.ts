@@ -257,6 +257,22 @@ export function isTimedHold(exercise: { slug?: string | null; notes?: string | n
   return notes !== "" && SECONDS_NOTE.some((re) => re.test(notes));
 }
 
+/** The default prescription range of a timed hold: 20–45 s (the plank/mobility norm). */
+export const DEFAULT_HOLD_SECONDS_RANGE = { repMin: 20, repMax: 45 } as const;
+/** The default prescription range of a rep exercise: 8–12 (ADDED_EXERCISE_DEFAULTS). */
+export const DEFAULT_REP_RANGE = { repMin: 8, repMax: 12 } as const;
+
+/**
+ * The default prescription range for an exercise in the unit it logs in: a
+ * timed hold (isTimedHold) is prescribed in seconds, everything else in reps.
+ * Used when a swap crosses the reps↔seconds line so the swapped-OUT exercise's
+ * range isn't carried onto the new one — an 8–12 rep range read as an 8–12 s
+ * plank, or a 20–45 s hold read as 20–45 reps (A-058).
+ */
+export function defaultRange(timed: boolean): { repMin: number; repMax: number } {
+  return timed ? { ...DEFAULT_HOLD_SECONDS_RANGE } : { ...DEFAULT_REP_RANGE };
+}
+
 const NBSP = " ";
 
 /**

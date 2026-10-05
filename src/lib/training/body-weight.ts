@@ -167,10 +167,16 @@ export function formatBodyDelta(delta: number, unit: "kg" | "cm"): string {
 export function measurementWeek(p: {
   templateSlug: string | null | undefined;
   week: number;
-  durationWeeks: number | null | undefined;
+  /**
+   * The last week the program's guidance describes (week-guidance
+   * guidanceLastWeek) — the block's benchmark week — not the editable
+   * durationWeeks, so shortening a GD block doesn't ask for the final
+   * measurements on its current hard week (A-059).
+   */
+  lastGuidanceWeek: number | null | undefined;
 }): "measure" | "weigh" | null {
   if (!p.templateSlug || !(GD_SERIES as readonly string[]).includes(p.templateSlug)) return null;
   if (p.templateSlug === "gd-adaptacao") return p.week === 1 ? "weigh" : null;
-  if (p.week === 1 || (p.durationWeeks != null && p.week === p.durationWeeks)) return "measure";
+  if (p.week === 1 || (p.lastGuidanceWeek != null && p.week === p.lastGuidanceWeek)) return "measure";
   return null;
 }

@@ -240,4 +240,16 @@ describe("resumePoint", () => {
       resumePoint({ currentWeek: 7, startedAt: FRIDAY, durationWeeks: 6, trainedThisWeek: false, entryWeekTrained: true }),
     ).toEqual({ week: 6, currentWeek: 6 });
   });
+
+  it("returns the entry week (week 0) when resumed inside it (A-061)", () => {
+    // Activated Friday, trained that entry week, stopped and resumed the SAME week:
+    // the next workout still counts in the entry week, not week 1.
+    expect(
+      resumePoint({ currentWeek: 1, startedAt: FRIDAY, durationWeeks: 4, trainedThisWeek: true, entryWeekTrained: true, inEntryWeek: true }),
+    ).toEqual({ week: 0, currentWeek: 1 });
+    // Past the entry week (a later calendar week), the same block resumes into its first full week.
+    expect(
+      resumePoint({ currentWeek: 1, startedAt: FRIDAY, durationWeeks: 4, trainedThisWeek: false, entryWeekTrained: true, inEntryWeek: false }),
+    ).toEqual({ week: 1, currentWeek: 1 });
+  });
 });

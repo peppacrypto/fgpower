@@ -838,6 +838,12 @@ model ProgramEnrollment {
   /// weeks the user turned into a deload ("Aplicar deload"). Read through
   /// lib/training/deload.ts effectiveDeload, never on its own.
   deloadMondays     Int[]            @default([])
+  /// A-024 · true when a builder "Duração" edit shortened the block at/under the
+  /// weeks already trained and ended it as a STOPPED (ABANDONED) block — NOT a
+  /// real completion, so no PROGRAM_COMPLETED achievement. Read by the re-entry
+  /// surfaces (getProgramRestart) to say "você encurtou a duração; retome de
+  /// onde parou". Only ever set alongside status ABANDONED.
+  endedByDurationEdit Boolean        @default(false)
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
 
@@ -853,6 +859,9 @@ model ProgramEnrollment {
   @@index([userId, status])
   // A-036 · back the ON DELETE CASCADE from UserProgram so deletes don't seq-scan.
   @@index([programId])
+  // A-027 · back "any enrollment started after this block ended" and the
+  // newest-first re-entry candidate scan (getProgramRestart).
+  @@index([userId, startedAt])
 }
 
 // ---------------------------------------------------------------------------

@@ -297,6 +297,7 @@ export function ProgramBuilder({
   equipmentAccess,
   openSession,
   switchFrom,
+  runningWeeksTrained,
   start,
   startFromPage = false,
   discard,
@@ -326,6 +327,8 @@ export function ProgramBuilder({
   openSession: { id: string; name: string } | null;
   /** Another program running now: starting this one is a switch that ends it. */
   switchFrom: { name: string; progress: string } | null;
+  /** A-024 · weeks this program's running block already counted, or null when it is not running. */
+  runningWeeksTrained: number | null;
   /** startProgram, bound to this program. */
   start: (formData: FormData) => void | Promise<void>;
   /** Trained before (stopped or finished): after a save, send to its page, which offers resuming. */
@@ -981,9 +984,23 @@ export function ProgramBuilder({
       showErrors(local.errors, snapshot);
       return false;
     }
+    // A-024 · dropping "Duração" at/under the weeks already trained ends the
+    // running block. Ask once; on "cancel" keep editing. The flag authorizes the
+    // server to end it (as a resumable, stopped block) — without it the shrink
+    // is ignored.
+    const endsBlock =
+      currentStatus === "ACTIVE" &&
+      runningWeeksTrained != null &&
+      savedCadence.durationWeeks != null &&
+      savedCadence.durationWeeks <= runningWeeksTrained;
+    if (endsBlock && !window.confirm(
+      `Isso encerra o bloco agora, na semana ${runningWeeksTrained}. Você poderá retomá-lo de onde parou. Encerrar?`,
+    )) {
+      return false;
+    }
     let result: SaveProgramResult;
     try {
-      result = await saveProgram(programId, payload);
+      result = await saveProgram(programId, { ...payload, confirmShortenDuration: endsBlock });
     } catch (err) {
       if (unstable_isUnrecognizedActionError(err)) {
         // A new build was deployed: reload to pick it up. The edits are in
@@ -1024,7 +1041,9 @@ export function ProgramBuilder({
     setBaseline(JSON.stringify(toState(result.name, result.description, savedDays, stored)));
     setErrors(NO_ERRORS);
     setSavedOnce(true);
-    setCurrentStatus((s) => (s === "ARCHIVED" ? "DRAFT" : s));
+    // A-024 · a confirmed shrink archived the program (now resumable). Otherwise
+    // an archived program edited becomes a draft.
+    setCurrentStatus(result.blockEnded ? "ARCHIVED" : (s) => (s === "ARCHIVED" ? "DRAFT" : s));
     // Another tab's unsaved edits may sit in the slot; leave those.
     clearDraftIf(programId, (d) => isOwnDraft(d) || JSON.stringify(d.program) === JSON.stringify(payload));
     pendingDraft.current = null;

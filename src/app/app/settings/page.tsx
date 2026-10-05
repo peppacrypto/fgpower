@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { getCurrentSession, requireUser } from "@/lib/auth/require-user";
 import { isAdminUser } from "@/lib/auth/roles";
 import { getProfile, getPublicHandle, getPublicProfileOrigin } from "@/lib/data/profile";
+import { prisma } from "@/lib/db";
 import { Masthead } from "@/components/ui/masthead";
 import { Section } from "./section";
 import { ProfileForm } from "./profile-form";
@@ -38,12 +39,17 @@ function isFreshLogin(sessionCreatedAt: Date | string): boolean {
 export default async function SettingsPage({ searchParams }: PageProps<"/app/settings">) {
   const sp = await searchParams;
   const user = await requireUser();
-  const [profile, handle, publicOrigin, session, cookieStore] = await Promise.all([
+  const [profile, handle, publicOrigin, session, cookieStore, activeEnrollment] = await Promise.all([
     getProfile(user.id),
     getPublicHandle(user.id),
     getPublicProfileOrigin(),
     getCurrentSession(),
     cookies(),
+    // Rotina's "Dias por semana" follows the active program's frequency (A-025).
+    prisma.programEnrollment.findFirst({
+      where: { userId: user.id, status: "ACTIVE" },
+      select: { program: { select: { id: true, name: true, daysPerWeek: true } } },
+    }),
   ]);
   if (!profile) throw new Error("Profile not found");
   // The page is dynamic already (it reads the session): the theme control renders the device's choice.
@@ -68,6 +74,15 @@ export default async function SettingsPage({ searchParams }: PageProps<"/app/set
 
       <Section id="rotina" title="Rotina" description="Quando e como você treina — usado para montar e ajustar seu programa.">
         <RoutineForm
+          activeProgram={
+            activeEnrollment
+              ? {
+                  id: activeEnrollment.program.id,
+                  name: activeEnrollment.program.name,
+                  daysPerWeek: activeEnrollment.program.daysPerWeek,
+                }
+              : null
+          }
           initial={{
             daysPerWeek: profile.daysPerWeek,
             sessionMinutes: profile.sessionMinutes,

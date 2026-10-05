@@ -53,6 +53,12 @@ export function ThisWeekCard({
     daysLeft: number;
     /** Workouts a week the plan asks for (its spacing). */
     perWeek: number;
+    /**
+     * This week is judged by another enrollment's row (a neutral entry week of a
+     * program that isn't the active one, A-060): the nudge would be about that
+     * other program, so it is hidden — the meter stays the active program's.
+     */
+    judgedByOther?: boolean;
   };
   /**
    * An entry week (Thursday–Sunday start): the days left in it; `alreadyCounts`
@@ -65,8 +71,12 @@ export function ThisWeekCard({
 }) {
   const streakLine = streakText(streak.current, streak.best);
   const nudge =
-    streak.current >= 1 && streak.thursdayOrLater && nudgeFits(streak.remaining, streak.daysLeft, streak.perWeek)
-      ? streak.test
+    !streak.judgedByOther &&
+    streak.current >= 1 &&
+    streak.thursdayOrLater &&
+    nudgeFits(streak.remaining, streak.daysLeft, streak.perWeek)
+      ? // "1 treino já conta" only when the streak really forgives the week (A-059).
+        streak.test && streak.deload
         ? "Semana de teste: 1 treino já conta"
         : streak.deload
           ? "Semana de deload: 1 treino já conta"

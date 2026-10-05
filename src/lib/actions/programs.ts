@@ -415,6 +415,19 @@ export async function restorePreviousProgram(enrollmentId: string) {
           data: untouched ? { status: "DRAFT", archivedAt: null } : { status: "ARCHIVED", archivedAt: now },
         });
       }
+      // A-028 · a switched-to enrollment with no finished workout of its own is a
+      // shadow: left ABANDONED it would hide the program's real stopped/finished
+      // enrollment behind it (getProgramRestart reads the newest), so "Retomar da
+      // semana N" or a finished block's "Começar GD N" would vanish on undo.
+      // Remove it; its only sessions are discarded starts, which unlink via the
+      // ON DELETE SET NULL on WorkoutSession.enrollmentId. The program above is
+      // untouched by this and keeps its earlier enrollment.
+      const ownFinished = await tx.workoutSession.count({
+        where: { enrollmentId: enrollment.id, status: "COMPLETED", totalWorkingSets: { gt: 0 } },
+      });
+      if (ownFinished === 0) {
+        await tx.programEnrollment.deleteMany({ where: { id: enrollment.id, userId: user.id } });
+      }
     }
     await tx.userProgram.updateMany({
       where: { userId: user.id, status: "ACTIVE", id: { not: previous.programId } },
@@ -680,8 +693,11 @@ async function completedBlockToFollow(userId: string, enrollmentId: unknown) {
     },
   });
   if (!block?.endedAt) return null;
+  // A-027 · any enrollment started after this block ended — of any status —
+  // means the user already moved on (the next block begun, even if since
+  // stopped): don't start another copy from a stale hero/page.
   const startedSince = await prisma.programEnrollment.findFirst({
-    where: { userId, status: "ACTIVE", startedAt: { gt: block.endedAt } },
+    where: { userId, id: { not: block.id }, startedAt: { gt: block.endedAt } },
     select: { id: true },
   });
   return startedSince ? null : block;

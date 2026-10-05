@@ -103,7 +103,7 @@ export function blockEnds(p: {
 }
 
 export interface ResumePoint {
-  /** The program week the next workout counts in: "Retomar da semana N". */
+  /** The program week the next workout counts in: "Retomar da semana N". 0 = the neutral entry week (A-061). */
   week: number;
   /** The week counter to resume the enrollment with. */
   currentWeek: number;
@@ -129,7 +129,14 @@ export function resumePoint(p: {
   /** The last finished workout was done in the current calendar week. */
   trainedThisWeek: boolean;
   entryWeekTrained: boolean;
+  /**
+   * `now` is still inside the enrollment's Thursday–Sunday entry week: the next
+   * workout counts in that neutral entry week (week 0), not in week 1 (A-061).
+   */
+  inEntryWeek?: boolean;
 }): ResumePoint {
+  // Resumed within the entry week: it picks up where it is — the entry week, not week 1.
+  if (p.inEntryWeek) return { week: 0, currentWeek: p.currentWeek };
   const raw = p.trainedThisWeek ? p.currentWeek : p.currentWeek + 1;
   const week = Math.max(1, countedWeeks(raw, p.startedAt, p.entryWeekTrained));
   const weeks = p.durationWeeks && p.durationWeeks > 0 ? p.durationWeeks : null;

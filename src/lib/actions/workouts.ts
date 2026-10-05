@@ -11,6 +11,7 @@ import { startOfWeek } from "@/lib/training/week";
 import { MAX_BOUT_SECONDS, assessOpenSession, boutSeconds, setBouts, staleSaveTiming } from "@/lib/training/stale";
 import { resolveSessionDay } from "@/lib/training/day-match";
 import { planWeek, restartsEachWeek } from "@/lib/training/day-rotation";
+import { defaultRange, isTimedHold } from "@/lib/training/set-plan";
 import { blockEnds, countedWeeks } from "@/lib/programming/block-progress";
 import { getWeekGuidance } from "@/lib/training/week-guidance";
 import { closeBlock, entryWeekWasTrained, recordWorkoutMilestone } from "@/lib/data/program-lifecycle";
@@ -503,17 +504,33 @@ export async function swapExercise(exerciseLogId: string, newExerciseId: string)
     // (HAS_DATA), never under the swap onto the new exercise.
     const open = await lockOpenExerciseLog(tx, user.id, exerciseLogId, true);
     if (!open) return "CLOSED" as const;
-    const target = await tx.exercise.findFirst({ where: { id: newExerciseId, isPublished: true }, select: { id: true } });
+    const target = await tx.exercise.findFirst({ where: { id: newExerciseId, isPublished: true }, select: { id: true, slug: true } });
     if (!target) return "INVALID" as const;
     if (open.exerciseId === newExerciseId) return { sessionId: open.sessionId };
     const withData = await tx.setLog.count({ where: { exerciseLogId, ...SET_HAS_DATA } });
     if (withData > 0) return "HAS_DATA" as const;
     const log = await tx.workoutExerciseLog.findUniqueOrThrow({
       where: { id: exerciseLogId },
-      select: { substitutedFromExerciseId: true, programExercise: { select: { notes: true } } },
+      select: {
+        notes: true,
+        substitutedFromExerciseId: true,
+        exercise: { select: { slug: true } },
+        programExercise: { select: { notes: true, repMin: true, repMax: true } },
+      },
     });
     const original = log.substitutedFromExerciseId ?? open.exerciseId;
     const back = newExerciseId === original;
+    // A swap that crosses the reps↔seconds line must not keep the old range (an
+    // 8–12 rep range becoming an 8–12 s plank, A-058): a back-swap restores the
+    // program exercise's own range, any other cross-unit swap takes the new
+    // exercise's default. Same-unit swaps keep the prescription untouched.
+    const newNotes = back ? (log.programExercise?.notes ?? null) : null;
+    const rangeData =
+      isTimedHold({ slug: log.exercise.slug, notes: log.notes }) === isTimedHold({ slug: target.slug, notes: newNotes })
+        ? {}
+        : back && log.programExercise
+          ? { repMin: log.programExercise.repMin, repMax: log.programExercise.repMax }
+          : defaultRange(isTimedHold({ slug: target.slug, notes: newNotes }));
     // A pick already in the workout is a second copy — refused. The exception
     // is swapping a slot back to its own program exercise: the program itself
     // can prescribe one lift in two slots (a top set and its back-offs, GD
@@ -532,7 +549,8 @@ export async function swapExercise(exerciseLogId: string, newExerciseId: string)
       data: {
         exerciseId: newExerciseId,
         substitutedFromExerciseId: back ? null : original,
-        notes: back ? (log.programExercise?.notes ?? null) : null,
+        notes: newNotes,
+        ...rangeData,
         // A skipped exercise swapped for another: the stand-in is there to be done.
         wasSkipped: false,
       },
@@ -672,16 +690,31 @@ export async function keepSwapInProgram(exerciseLogId: string): Promise<{ ok: bo
       sessionId: true,
       exerciseId: true,
       substitutedFromExerciseId: true,
-      programExercise: { select: { id: true, exerciseId: true, day: { select: { programId: true, program: { select: { userId: true } } } } } },
+      exercise: { select: { slug: true } },
+      programExercise: {
+        select: {
+          id: true,
+          exerciseId: true,
+          notes: true,
+          exercise: { select: { slug: true } },
+          day: { select: { programId: true, program: { select: { userId: true } } } },
+        },
+      },
     },
   });
   const pe = log?.programExercise;
   if (!log || !pe || pe.day.program.userId !== user.id || !log.substitutedFromExerciseId) return { ok: false };
   const from = log.substitutedFromExerciseId;
+  // The day's note goes (it would coach the wrong movement). Across a
+  // reps↔seconds change the swapped-OUT exercise's range would mis-dose the new
+  // one — an 8–12 rep range as an 8–12 s plank — so take the new exercise's
+  // default range instead; a same-unit swap keeps the program's range (A-058).
+  const newTimed = isTimedHold({ slug: log.exercise.slug });
+  const rangeData = isTimedHold({ slug: pe.exercise.slug, notes: pe.notes }) === newTimed ? {} : defaultRange(newTimed);
   const updated = await prisma.$transaction(async (tx) => {
     const changed = await tx.userProgramExercise.updateMany({
       where: { id: pe.id, exerciseId: from },
-      data: { exerciseId: log.exerciseId, notes: null },
+      data: { exerciseId: log.exerciseId, notes: null, ...rangeData },
     });
     // The builder's local draft is judged against the program's updatedAt (draftIsStale).
     if (changed.count > 0) await tx.userProgram.update({ where: { id: pe.day.programId }, data: { updatedAt: new Date() } });
@@ -881,7 +914,17 @@ async function finishSession(
       },
     });
 
-    if (session.enrollment && session.enrollment.status === "ACTIVE" && session.programId) {
+    // A-026 · a workout finished on an ABANDONED enrollment (archived / switched
+    // away with the open workout kept, a supported flow) still advances the
+    // program, so "Retomar" picks up at the right week. advanceProgram never
+    // re-activates or re-completes it: its closeBlock calls are no-ops for a
+    // non-ACTIVE enrollment. A COMPLETED enrollment stays excluded (a redo after
+    // a finish must not advance).
+    if (
+      session.enrollment &&
+      (session.enrollment.status === "ACTIVE" || session.enrollment.status === "ABANDONED") &&
+      session.programId
+    ) {
       blockClosed = await advanceProgram(tx, {
         userId,
         sessionId,

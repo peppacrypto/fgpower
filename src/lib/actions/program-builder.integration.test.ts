@@ -386,4 +386,63 @@ describe("saveProgram", () => {
       sessionUserId = USER_ID;
     }
   });
+
+  it("remaps a stopped (ABANDONED) block's next day and planned total when the program is edited (A-062)", async () => {
+    const created = await prisma.userProgram.create({
+      data: {
+        userId: USER_ID,
+        name: "Escada",
+        status: "ARCHIVED",
+        daysPerWeek: 3,
+        durationWeeks: 6,
+        days: {
+          create: ["Sessão A", "Sessão B", "Sessão C"].map((name, dayIndex) => ({
+            dayIndex,
+            name,
+            exercises: { create: [{ exerciseId, sortOrder: 0 }] },
+          })),
+        },
+      },
+      include: { days: { orderBy: { dayIndex: "asc" } } },
+    });
+    const [, dayB, dayC] = created.days;
+    // Stopped mid-block with the pointer on Sessão C (dayIndex 2), A and B trained.
+    const stopped = await prisma.programEnrollment.create({
+      data: {
+        userId: USER_ID,
+        programId: created.id,
+        status: "ABANDONED",
+        currentWeek: 2,
+        nextDayIndex: 2,
+        plannedSessions: 18,
+        programSnapshot: {},
+        endedAt: new Date(),
+      },
+    });
+
+    // Edit before "Retomar": Sessão A removed; B and C kept (B→0, C→1).
+    const result = await saveProgram(created.id, {
+      name: "Escada",
+      description: "",
+      daysPerWeek: 2,
+      durationWeeks: 6,
+      days: [dayB, dayC].map((d) => ({ id: d.id, name: d.name, focus: d.focus, exercises: [exercise()] })),
+    });
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.dayIds).toEqual([dayB.id, dayC.id]);
+
+    const after = await prisma.programEnrollment.findUniqueOrThrow({
+      where: { id: stopped.id },
+      select: { status: true, nextDayIndex: true, plannedSessions: true },
+    });
+    // Still stopped, now pointing at Sessão C's new index (1), not the stale 2
+    // (which falls to 0 = Sessão B, the day just trained — the A-062 bug).
+    expect(after.status).toBe("ABANDONED");
+    expect(after.nextDayIndex).toBe(1);
+    expect(after.plannedSessions).toBe(12); // 6 weeks × 2 days
+
+    // No ACTIVE enrollment was created by the edit (one-ACTIVE invariant).
+    expect(await prisma.programEnrollment.count({ where: { userId: USER_ID, programId: created.id, status: "ACTIVE" } })).toBe(0);
+  });
 });

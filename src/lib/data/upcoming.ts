@@ -81,6 +81,7 @@ export type UpcomingPlan =
         doneDayIds: Map<string, string>;
         sessionCount: number;
         skipDayIds: Set<string>;
+        carryOver: boolean;
       };
       /** The week's plan and the next workout with its suggested date. */
       up: Upcoming<ProgramDay>;
@@ -140,6 +141,12 @@ export async function getUpcomingPlan(
     doneDayIds: done.byDayId,
     sessionCount: done.sessionCount,
     skipDayIds: openDayIds,
+    // The server-side week-start default (no per-device cookie): a restart-each-
+    // week plan continues last week's sequence when that is the default, so the
+    // push and the summary's "Próximo treino" name the day Today offers, not the
+    // plan's first day (A-010). Today applies the same default, overridable per
+    // device by the week-start cookie.
+    carryOver: own?.weekStart?.byDefault === "continue",
   };
   const up = upcomingWorkout({
     ...weekInput,

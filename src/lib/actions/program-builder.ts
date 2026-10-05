@@ -4,7 +4,8 @@ import { revalidatePath } from "next/cache";
 import { getCurrentSession } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 import { validateBuilderProgram, type BuilderFieldError } from "@/lib/validation/program-builder";
-import { applyWeekLayout } from "@/lib/data/program-lifecycle";
+import { applyWeekLayout, entryWeekWasTrained } from "@/lib/data/program-lifecycle";
+import { countedWeeks } from "@/lib/programming/block-progress";
 import { normalizeGroupKeys } from "@/lib/programming/groups";
 import type { ProgressionStrategy } from "@/lib/training/progression";
 import type { Prisma } from "@/generated/prisma/client";
@@ -59,6 +60,12 @@ export type SaveProgramResult =
       /** The weekly frequency and duration stored. */
       daysPerWeek: number;
       durationWeeks: number | null;
+      /**
+       * A-024 · the duration edit ended the running block (it is now a stopped,
+       * resumable program in "Arquivados"). The builder shows the archived
+       * state and the fact it can be resumed.
+       */
+      blockEnded: boolean;
     }
   | { ok: false; errors: BuilderFieldError[]; message: string | null };
 
@@ -103,6 +110,13 @@ export async function saveProgram(
     daysPerWeek?: number;
     /** "Duração (semanas, opcional)": null clears it; absent leaves it. */
     durationWeeks?: number | null;
+    /**
+     * A-024 · the builder confirmed "Isso encerra o bloco agora": a shrink of
+     * "Duração" at/under the weeks already trained ends the running block.
+     * Without it, such a shrink is ignored (the stored duration is unchanged)
+     * so a running block is never silently completed.
+     */
+    confirmShortenDuration?: boolean;
   },
 ): Promise<SaveProgramResult> {
   const session = await getCurrentSession();
@@ -121,8 +135,9 @@ export async function saveProgram(
   // stray key cleared — bad keys are fixed, never rejected.
   const safeDays = parsed.data.days.map((d) => ({ ...d, exercises: normalizeGroupKeys(d.exercises) }));
   const durationWeeks = parsed.data.durationWeeks === undefined ? program.durationWeeks : parsed.data.durationWeeks;
+  const confirmShortenDuration = input.confirmShortenDuration === true;
 
-  let saved: { dayIds: string[]; exerciseIds: string[][]; daysPerWeek: number };
+  let saved: { dayIds: string[]; exerciseIds: string[][]; daysPerWeek: number; durationWeeks: number | null; blockEnded: boolean };
   try {
     saved = await prisma.$transaction(async (tx) => {
       const oldDays = await tx.userProgramDay.findMany({
@@ -230,11 +245,43 @@ export async function saveProgram(
       // Removed days (still parked) go now.
       await tx.userProgramDay.deleteMany({ where: { programId, dayIndex: { gte: 1000 } } });
 
-      // Keep each active enrollment's "next day" on the same day it pointed at.
+      // Keep each running OR STOPPED enrollment's "next day" on the same day it
+      // pointed at, and its planned total on the new frequency/duration. A
+      // stopped (ABANDONED) block is remapped too: editing it before "Retomar"
+      // (e.g. deleting a day) must not leave the resumed block pointing at the
+      // wrong next day — nextDayIndex is a dayIndex into days the edit just
+      // renumbered (A-062). COMPLETED blocks are left alone ("Repetir bloco"
+      // starts over).
       const enrollments = await tx.programEnrollment.findMany({
-        where: { programId, status: "ACTIVE" },
-        select: { id: true, nextDayIndex: true },
+        where: { programId, status: { in: ["ACTIVE", "ABANDONED"] } },
+        select: { id: true, nextDayIndex: true, plannedSessions: true, status: true, currentWeek: true, startedAt: true },
       });
+
+      // A-024 · a "Duração" edit that drops a running block at/under the weeks
+      // already trained ends it — but only when the builder confirmed, and as a
+      // STOPPED (resumable) block, never a false PROGRAM_COMPLETED for a block
+      // that was never finished. An unconfirmed shrink is ignored (the old
+      // duration is kept). Raising the duration again just lets it continue. The
+      // running block is the one ACTIVE enrollment (never an ABANDONED row that
+      // the broadened query above also returns).
+      const running = program.status === "ACTIVE" ? enrollments.find((e) => e.status === "ACTIVE") : undefined;
+      let effectiveDuration = durationWeeks;
+      let blockEnded = false;
+      if (running && durationWeeks != null) {
+        const trained = countedWeeks(
+          running.currentWeek,
+          running.startedAt,
+          await entryWeekWasTrained(tx, { id: running.id, userId: session.user.id, startedAt: running.startedAt }),
+        );
+        if (durationWeeks <= trained) {
+          if (confirmShortenDuration) blockEnded = true;
+          else effectiveDuration = program.durationWeeks;
+        }
+      }
+
+      // The planned total follows the (possibly clamped) duration, remapped onto
+      // every running/stopped enrollment alongside its next-day pointer (A-062 + A-024).
+      const plannedSessions = effectiveDuration ? effectiveDuration * daysPerWeek : null;
       for (const e of enrollments) {
         const pointed = oldDays.find((d) => d.dayIndex === e.nextDayIndex);
         let next = pointed ? finalDays.findIndex((d) => d.id === pointed.id) : -1;
@@ -243,9 +290,10 @@ export async function saveProgram(
           if (byName.length === 1) next = byName[0];
         }
         if (next < 0) next = Math.min(e.nextDayIndex, Math.max(0, finalDays.length - 1));
-        if (next !== e.nextDayIndex) {
-          await tx.programEnrollment.update({ where: { id: e.id }, data: { nextDayIndex: next } });
-        }
+        const data: Prisma.ProgramEnrollmentUpdateInput = {};
+        if (next !== e.nextDayIndex) data.nextDayIndex = next;
+        if (plannedSessions !== e.plannedSessions) data.plannedSessions = plannedSessions;
+        if (Object.keys(data).length > 0) await tx.programEnrollment.update({ where: { id: e.id }, data });
       }
 
       await tx.userProgram.update({
@@ -254,19 +302,43 @@ export async function saveProgram(
           name,
           description: description || null,
           daysPerWeek,
-          durationWeeks,
-          status: program.status === "ARCHIVED" ? "DRAFT" : program.status,
+          durationWeeks: effectiveDuration,
+          // A confirmed shrink ends the running block: the program joins
+          // "Arquivados". Otherwise an archived program edited back to a draft,
+          // every other status unchanged.
+          status: blockEnded ? "ARCHIVED" : program.status === "ARCHIVED" ? "DRAFT" : program.status,
+          archivedAt: blockEnded ? new Date() : undefined,
         },
       });
-      if (program.status === "ACTIVE") {
-        // The running block follows the new frequency/duration, and its days the week.
-        await tx.programEnrollment.updateMany({
-          where: { programId, status: "ACTIVE" },
-          data: { plannedSessions: durationWeeks ? durationWeeks * daysPerWeek : null },
+      if (blockEnded && running) {
+        // Ended as a STOPPED block: resumable from where it was, flagged so the
+        // re-entry surfaces say why. Empty open starts of it are discarded, as
+        // on archive (a started-but-logged workout stays so it can be finished —
+        // finishing it advances this abandoned block, A-026).
+        await tx.programEnrollment.update({
+          where: { id: running.id },
+          data: { status: "ABANDONED", endedAt: new Date(), endedByDurationEdit: true },
         });
+        await tx.workoutSession.updateMany({
+          where: {
+            userId: session.user.id,
+            programId,
+            status: "IN_PROGRESS",
+            setLogs: { none: { OR: [{ isCompleted: true }, { weightKg: { not: null } }, { reps: { not: null } }] } },
+          },
+          data: { status: "DISCARDED" },
+        });
+      } else if (program.status === "ACTIVE") {
+        // The running block's days follow the new layout on the user's week.
         await applyWeekLayout(tx, session.user.id, programId);
       }
-      return { dayIds: finalDays.map((d) => d.id), exerciseIds: finalDays.map((d) => d.exerciseIds), daysPerWeek };
+      return {
+        dayIds: finalDays.map((d) => d.id),
+        exerciseIds: finalDays.map((d) => d.exerciseIds),
+        daysPerWeek,
+        durationWeeks: effectiveDuration,
+        blockEnded,
+      };
     });
   } catch (err) {
     // e.g. an exercise removed from the catalog meanwhile (FK) or a lost
@@ -279,5 +351,5 @@ export async function saveProgram(
   revalidatePath(`/app/programs/${programId}/edit`);
   revalidatePath("/app/programs");
   revalidatePath("/app/today");
-  return { ok: true, name, description, durationWeeks, ...saved };
+  return { ok: true, name, description, ...saved };
 }

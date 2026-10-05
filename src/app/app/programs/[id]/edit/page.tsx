@@ -4,7 +4,8 @@ import { requireUser } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 import { getEnrollmentProgress, getUserProgram } from "@/lib/data/user-programs";
 import { getActiveEnrollment } from "@/lib/data/dashboard";
-import { getProgramRestart } from "@/lib/data/program-lifecycle";
+import { entryWeekWasTrained, getProgramRestart } from "@/lib/data/program-lifecycle";
+import { countedWeeks } from "@/lib/programming/block-progress";
 import { discardDraft, startProgram } from "@/lib/actions/programs";
 import { pickerExercisesByIds } from "@/app/api/exercises/picker-data";
 import { ProgramBuilder } from "./program-builder";
@@ -41,6 +42,17 @@ export default async function EditProgramPage({ params, searchParams }: PageProp
   // Starting this one while another runs is a switch: the builder's "Iniciar" asks first, naming it.
   const other = activeEnrollment && activeEnrollment.programId !== program.id ? activeEnrollment : null;
   const switchFrom = other ? { name: other.program.name, progress: await getEnrollmentProgress(other) } : null;
+
+  // A-024 · the weeks this program's running block has already counted, so the
+  // builder can warn before "Duração" is dropped at/under them (which ends it).
+  const own = activeEnrollment && activeEnrollment.programId === program.id ? activeEnrollment : null;
+  const runningWeeksTrained = own
+    ? countedWeeks(
+        own.currentWeek,
+        own.startedAt,
+        await entryWeekWasTrained(prisma, { id: own.id, userId: user.id, startedAt: own.startedAt }),
+      )
+    : null;
 
   const initialDays: BuilderDay[] = program.days.map((day) => ({
     id: day.id,
@@ -91,6 +103,7 @@ export default async function EditProgramPage({ params, searchParams }: PageProp
       equipmentAccess={profile?.equipmentAccess ?? null}
       openSession={openSession}
       switchFrom={switchFrom}
+      runningWeeksTrained={runningWeeksTrained}
       start={startProgram.bind(null, program.id)}
       // Stopped midway or finished: its page offers "Retomar da semana N" / the next block, not a restart at week 1.
       startFromPage={!!(restart?.resumable || restart?.completed)}

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { thisWeekRule, programWeekView } from "@/lib/training/week-guidance";
 import { dayNumberOf, mondayOf } from "@/lib/training/day-rotation";
-import { streakWeeksFrom, summarizeStreak, type StreakEnrollment, type StreakSession } from "./streak-weeks";
+import { streakNudgeApplies, streakWeeksFrom, summarizeStreak, type StreakEnrollment, type StreakSession } from "./streak-weeks";
 
 // São Paulo is UTC−3: 15:00Z is midday there. 2026-09-28 is a Monday.
 const at = (iso: string) => new Date(`${iso}T15:00:00Z`);
@@ -424,5 +424,14 @@ describe("weekly streak performance (A-035)", () => {
     // it stays green on slow CI while still catching a regression to the old
     // O(weeks × sessions) formatter construction.
     expect(elapsed).toBeLessThan(200);
+  });
+});
+
+describe("streakNudgeApplies (A-060)", () => {
+  it("hides the nudge only when another enrollment judges the week", () => {
+    expect(streakNudgeApplies("e1", "e1")).toBe(true); // same program
+    expect(streakNudgeApplies(null, "e1")).toBe(true); // no judging row
+    expect(streakNudgeApplies("e1", null)).toBe(true); // no active program
+    expect(streakNudgeApplies("e2", "e1")).toBe(false); // the other program's neutral entry week
   });
 });

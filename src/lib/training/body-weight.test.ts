@@ -89,16 +89,18 @@ describe("weeklyRate / formatRate", () => {
 
 describe("measurementWeek", () => {
   it("asks for measurements in a GD block's first and last weeks", () => {
-    expect(measurementWeek({ templateSlug: "gd-1", week: 1, durationWeeks: 13 })).toBe("measure");
-    expect(measurementWeek({ templateSlug: "gd-1", week: 13, durationWeeks: 13 })).toBe("measure");
-    expect(measurementWeek({ templateSlug: "gd-8", week: 9, durationWeeks: 9 })).toBe("measure");
-    expect(measurementWeek({ templateSlug: "gd-1", week: 7, durationWeeks: 13 })).toBeNull();
+    expect(measurementWeek({ templateSlug: "gd-1", week: 1, lastGuidanceWeek: 13 })).toBe("measure");
+    expect(measurementWeek({ templateSlug: "gd-1", week: 13, lastGuidanceWeek: 13 })).toBe("measure");
+    expect(measurementWeek({ templateSlug: "gd-8", week: 9, lastGuidanceWeek: 9 })).toBe("measure");
+    expect(measurementWeek({ templateSlug: "gd-1", week: 7, lastGuidanceWeek: 13 })).toBeNull();
+    // A shortened block (durationWeeks edited to 5) doesn't ask for the final measurements on its current week (A-059).
+    expect(measurementWeek({ templateSlug: "gd-1", week: 5, lastGuidanceWeek: 13 })).toBeNull();
   });
 
   it("asks for a daily weigh-in in GD Adaptação's first week, and nothing elsewhere", () => {
-    expect(measurementWeek({ templateSlug: "gd-adaptacao", week: 1, durationWeeks: 4 })).toBe("weigh");
-    expect(measurementWeek({ templateSlug: "gd-adaptacao", week: 4, durationWeeks: 4 })).toBeNull();
-    expect(measurementWeek({ templateSlug: "ppl-6x", week: 1, durationWeeks: 8 })).toBeNull();
-    expect(measurementWeek({ templateSlug: null, week: 1, durationWeeks: null })).toBeNull();
+    expect(measurementWeek({ templateSlug: "gd-adaptacao", week: 1, lastGuidanceWeek: 4 })).toBe("weigh");
+    expect(measurementWeek({ templateSlug: "gd-adaptacao", week: 4, lastGuidanceWeek: 4 })).toBeNull();
+    expect(measurementWeek({ templateSlug: "ppl-6x", week: 1, lastGuidanceWeek: 8 })).toBeNull();
+    expect(measurementWeek({ templateSlug: null, week: 1, lastGuidanceWeek: null })).toBeNull();
   });
 });

@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db";
 import { startOfWeek } from "@/lib/training/week";
 import { getActiveEnrollment, getLastWeekReview, getTodayHabit } from "./dashboard";
 import { getSessionRirTargets } from "./workout-session";
+import { getUpcomingPlan } from "@/lib/data/upcoming";
 
 /**
  * Today's habit reads against the real local Postgres, at a fixed "now" (a
@@ -143,6 +144,19 @@ describe("Today's week start (W-089)", () => {
     const sundayNight = new Date(at(1, 6).getTime() + 3_600_000);
     const habit = await getTodayHabit(GD_USER, enrollment, sundayNight);
     expect(habit.program?.nextWeekCarryOver).toBe(true);
+  });
+});
+
+describe("the summary/reminders next day follows Today's week-start default (A-010)", () => {
+  it("names the continue-the-sequence day, not the plan's first day", async () => {
+    const plan = await getUpcomingPlan(GD_USER, NOW, { daysPerWeek: 5, preferredDays: [] });
+    expect(plan.hasPlan).toBe(true);
+    if (!plan.hasPlan) return;
+    // Today continues at Terça after Segunda-on-Sunday; getUpcomingPlan must agree
+    // (before the fix it restarted at Segunda, the day just trained).
+    expect(plan.weekInput.carryOver).toBe(true);
+    expect(plan.up.next?.day.name).toBe("Terça — Inferior");
+    expect(plan.up.next?.day.name).not.toBe("Segunda — Superior");
   });
 });
 

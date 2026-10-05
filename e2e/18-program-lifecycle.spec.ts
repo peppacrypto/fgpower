@@ -303,7 +303,8 @@ test("archiving the active program asks first; it restores from 'Arquivados' and
   await expect(page.getByRole("button", { name: "Recomeçar" })).toBeVisible();
   await Promise.all([
     page.waitForURL(/\/app\/today/, { timeout: 30_000 }),
-    page.getByRole("button", { name: "Retomar da semana 1" }).click(),
+    // Mon–Wed: "Retomar da semana 1". Thu–Sun it was activated in an entry week, so "· semana de entrada" (A-061).
+    page.getByRole("button", { name: /^Retomar (da semana 1|· semana de entrada)$/ }).click(),
   ]);
   expect(sql(`SELECT status || '|' || "completedSessions" FROM "ProgramEnrollment" WHERE id = '${enrollmentId}'`)).toBe(
     "ACTIVE|1",
@@ -560,5 +561,40 @@ test("a new block started Thursday–Sunday in a week the finished one already m
   await expect(week).not.toContainText("Semana de entrada");
   await expect(week.locator("[data-week-counted]")).toHaveText("GD 1 começa na semana que vem.");
   await expect(page.getByRole("button", { name: "Iniciar treino" })).toHaveCount(0);
+});
+
+test("a block stopped and resumed inside its Thursday–Sunday entry week resumes into the entry week, not 'semana 1' (A-061)", async ({
+  page,
+}) => {
+  test.skip(!hasDb, "needs the local dev database");
+  test.skip(!thursdayOrLater(), "an entry week runs Thursday–Sunday");
+  const { userId } = await newUser(page, "b3-resume-entry");
+  await activate(page, "gd-1");
+  const [enrollmentId, programId] = sql(
+    `SELECT id || '|' || "programId" FROM "ProgramEnrollment" WHERE "userId" = '${userId}' AND status = 'ACTIVE'`,
+  ).split("|");
+
+  // One workout this entry week, then archive (ends the enrollment in its entry week).
+  await trainDay(page, programId, "Segunda — Superior (pesado)");
+  await openProgram(page, programId);
+  await menu(page).locator("summary").first().click();
+  await menu(page).getByText("Arquivar…").click();
+  await expect(menu(page).getByRole("alert")).toContainText("semana de entrada");
+  await menu(page).getByRole("button", { name: "Arquivar", exact: true }).click();
+  await expect(page.getByText("Arquivado", { exact: true })).toBeVisible({ timeout: 30_000 });
+
+  // The resume offer names the entry week — not "semana 1".
+  await openProgram(page, programId);
+  await expect(page.getByRole("button", { name: "Retomar · semana de entrada" })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Retomar da semana 1/ })).toHaveCount(0);
+  await Promise.all([
+    page.waitForURL(/\/app\/today\?/, { timeout: 30_000 }),
+    page.getByRole("button", { name: "Retomar · semana de entrada" }).click(),
+  ]);
+
+  // Today confirms the entry week, and the counter is unchanged.
+  await expect(page.getByRole("status")).toContainText("semana de entrada");
+  await expect(page.locator("[data-program-card] [data-week-line]")).toContainText(/Semana de entrada/i);
+  expect(sql(`SELECT status || '|' || "currentWeek" FROM "ProgramEnrollment" WHERE id = '${enrollmentId}'`)).toBe("ACTIVE|1");
 });
 

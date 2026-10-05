@@ -41,8 +41,7 @@ export function ResumeProgramPanel({
         <p className="mt-1.5 text-sm text-muted">
           Seus treinos e a semana continuam de onde pararam —{" "}
           <span className="whitespace-nowrap">
-            semana {resume.week}
-            {resume.weeks ? ` de ${resume.weeks}` : ""}.
+            {resume.week === 0 ? "semana de entrada" : `semana ${resume.week}${resume.weeks ? ` de ${resume.weeks}` : ""}`}.
           </span>
         </p>
         <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-5">
@@ -54,7 +53,7 @@ export function ResumeProgramPanel({
           >
             <SubmitButton size="lg" variant="strong" className="w-full sm:w-auto" pendingLabel="Retomando…">
               <Play className="size-4" />
-              Retomar da semana {resume.week}
+              {resume.week === 0 ? "Retomar · semana de entrada" : `Retomar da semana ${resume.week}`}
             </SubmitButton>
           </InlineActionForm>
           <div className="flex flex-wrap gap-x-5">

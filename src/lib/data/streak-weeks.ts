@@ -78,6 +78,17 @@ export function programWeekTarget(program: StreakEnrollment["program"]): number 
 }
 
 /**
+ * The "Faltam N treinos" nudge (Today's week card and the training-day push)
+ * speaks for the active program's week. When another enrollment judges this
+ * week — a neutral entry week of a program that isn't the active one (A-060) —
+ * the active program's meter and the nudge diverge, so the nudge is hidden.
+ * True when they agree (same enrollment, or no row/active program to clash).
+ */
+export function streakNudgeApplies(thisWeekEnrollmentId: string | null, activeEnrollmentId: string | null): boolean {
+  return activeEnrollmentId == null || thisWeekEnrollmentId == null || thisWeekEnrollmentId === activeEnrollmentId;
+}
+
+/**
  * The plan a week was trained under, from its latest finished workout's frozen
  * snapshot (the structure the week ended on); null when none of its workouts
  * carry one (pre-snapshot rows, or the current week). Lets a past week keep

@@ -1,7 +1,7 @@
 import "server-only";
 import type { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
-import { blockProgress, countedWeeks, entryWeekEnd, resumePoint, type BlockProgress } from "@/lib/programming/block-progress";
+import { blockProgress, countedWeeks, entryWeekEnd, inEntryWeek, resumePoint, type BlockProgress } from "@/lib/programming/block-progress";
 import { blockCompletedSummary, isWorkoutMilestone, workoutMilestoneSummary } from "@/lib/programming/milestones";
 import { layOutWeek } from "@/lib/programming/schedule";
 import { SHOWN_PR_KINDS } from "@/lib/training/personal-records-core";
@@ -283,9 +283,19 @@ export async function getRecentlyCompletedBlock(userId: string, now: Date = new 
   const e = await prisma.programEnrollment.findFirst({
     where: { userId, status: "COMPLETED", endedAt: { gte: new Date(now.getTime() - COMPLETED_BLOCK_WINDOW_MS) } },
     orderBy: { endedAt: "desc" },
+    select: { id: true, endedAt: true },
+  });
+  if (!e?.endedAt) return null;
+  // A-027 · the user already moved on if any enrollment — of any status —
+  // started after this block ended (the next block begun, even if since
+  // stopped). Today then shows the series continuation / resume, not a stale
+  // "Bloco concluído" hero whose "Começar GD N" would fork a duplicate.
+  const startedAfter = await prisma.programEnrollment.findFirst({
+    where: { userId, id: { not: e.id }, startedAt: { gt: e.endedAt } },
     select: { id: true },
   });
-  return e ? describeCompletedBlock(userId, e.id) : null;
+  if (startedAfter) return null;
+  return describeCompletedBlock(userId, e.id);
 }
 
 /** A COMPLETED enrollment of the user, as CompletedBlock (null otherwise). */
@@ -510,34 +520,55 @@ export interface ProgramRestart {
    * `currentWeek` is the week counter to resume it with (block-progress
    * resumePoint: one step back for a block stopped in its last week).
    */
-  resumable: { enrollmentId: string; week: number; weeks: number | null; currentWeek: number } | null;
+  resumable: { enrollmentId: string; week: number; weeks: number | null; currentWeek: number; endedByDurationEdit: boolean } | null;
   /** The program's last enrollment was completed: "Repetir bloco". */
   completed: { enrollmentId: string; completedAt: Date } | null;
 }
 
 /** How a program that isn't running can start again: from where it stopped, or over. */
 export async function getProgramRestart(userId: string, programId: string, now: Date = new Date()): Promise<ProgramRestart> {
-  const last = await prisma.programEnrollment.findFirst({
+  // Newest first, so the first RELEVANT enrollment wins. An ABANDONED
+  // enrollment with no finished workout of its own is a shadow (an activation
+  // undone, a start never trained): left in front it would hide the program's
+  // real stopped/finished enrollment, so "Retomar da semana N" or a finished
+  // block's badge would vanish (A-028). Skip it. A COMPLETED one is always
+  // relevant.
+  const candidates = await prisma.programEnrollment.findMany({
     where: { userId, programId, status: { not: "ACTIVE" } },
     orderBy: { startedAt: "desc" },
+    take: 10,
     select: {
       id: true,
       status: true,
       currentWeek: true,
       startedAt: true,
       endedAt: true,
+      endedByDurationEdit: true,
       program: { select: { durationWeeks: true } },
     },
   });
+  let last: (typeof candidates)[number] | null = null;
+  let lastWorkout: { finishedAt: Date | null } | null = null;
+  for (const c of candidates) {
+    if (c.status === "COMPLETED") {
+      last = c;
+      break;
+    }
+    const workout = await prisma.workoutSession.findFirst({
+      where: { userId, enrollmentId: c.id, ...FINISHED },
+      orderBy: { finishedAt: "desc" },
+      select: { finishedAt: true },
+    });
+    if (workout?.finishedAt) {
+      last = c;
+      lastWorkout = workout;
+      break;
+    }
+  }
   if (!last) return { resumable: null, completed: null };
   if (last.status === "COMPLETED") {
     return { resumable: null, completed: { enrollmentId: last.id, completedAt: last.endedAt ?? last.startedAt } };
   }
-  const lastWorkout = await prisma.workoutSession.findFirst({
-    where: { userId, enrollmentId: last.id, ...FINISHED },
-    orderBy: { finishedAt: "desc" },
-    select: { finishedAt: true },
-  });
   if (!lastWorkout?.finishedAt) return { resumable: null, completed: null };
   const point = resumePoint({
     currentWeek: last.currentWeek,
@@ -545,9 +576,17 @@ export async function getProgramRestart(userId: string, programId: string, now: 
     durationWeeks: last.program.durationWeeks,
     trainedThisWeek: lastWorkout.finishedAt >= startOfWeek(now),
     entryWeekTrained: await entryWeekWasTrained(prisma, { id: last.id, userId, startedAt: last.startedAt }),
+    // Resuming inside the Thursday–Sunday entry week lands back in it, not week 1 (A-061).
+    inEntryWeek: inEntryWeek(last.startedAt, now),
   });
   return {
-    resumable: { enrollmentId: last.id, week: point.week, weeks: last.program.durationWeeks, currentWeek: point.currentWeek },
+    resumable: {
+      enrollmentId: last.id,
+      week: point.week,
+      weeks: last.program.durationWeeks,
+      currentWeek: point.currentWeek,
+      endedByDurationEdit: last.endedByDurationEdit,
+    },
     completed: null,
   };
 }

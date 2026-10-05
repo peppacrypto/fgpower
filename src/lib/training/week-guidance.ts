@@ -49,6 +49,16 @@ export function parseWeeklyGuidance(json: unknown): WeekGuidance[] {
 }
 
 /**
+ * The last week the program's guidance describes — a GD block's benchmark/test
+ * week per the template, independent of the editable durationWeeks (A-059).
+ * Null when there is no guidance. (parseWeeklyGuidance sorts ascending.)
+ */
+export function guidanceLastWeek(json: unknown): number | null {
+  const list = parseWeeklyGuidance(json);
+  return list.length > 0 ? list[list.length - 1].week : null;
+}
+
+/**
  * The week *is* a deload — not a conditional mention ("2+ gatilhos → a semana
  * 7 vira deload", "antes do deload", "se a 7 foi deload"). The templates say
  * it by opening a sentence with it ("Deload: …", "DELOAD PLANEJADO", "Seg-qua:
@@ -90,8 +100,11 @@ export function getWeekGuidance(
   const g = list.find((w) => w.week === Math.max(1, week));
   if (!g) return null;
   const gd = program.templateSlug != null && (GD_SERIES as readonly string[]).includes(program.templateSlug);
-  const lastWeek = program.durationWeeks != null && g.week === program.durationWeeks;
-  const test = gd && program.templateSlug !== "gd-adaptacao" && lastWeek;
+  // The test week is the LAST week the template's guidance describes — never the
+  // editable durationWeeks (A-059): shortening a GD block must not relabel its
+  // current hard week as the benchmark test. (The list is sorted ascending.)
+  const lastGuidanceWeek = list.length > 0 ? list[list.length - 1].week : null;
+  const test = gd && program.templateSlug !== "gd-adaptacao" && lastGuidanceWeek != null && g.week === lastGuidanceWeek;
   return { ...g, deload: isDeloadGuidance(g), test };
 }
 

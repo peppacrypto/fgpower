@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Label, Select, Textarea } from "@/components/ui/input";
 import { formatDuration } from "@/lib/utils/format";
@@ -19,14 +20,21 @@ interface Props {
     enduranceNotes: string;
     limitations: string;
   };
+  /**
+   * The active program, if any: while one runs, the weekly frequency follows it
+   * (applyWeekLayout keeps Profile.daysPerWeek equal to it), so this field is
+   * read-only here and changed from "Editar programa" (A-025).
+   */
+  activeProgram: { id: string; name: string; daysPerWeek: number } | null;
 }
 
 /** The onboarding answers about when and how the user trains. */
-export function RoutineForm({ initial }: Props) {
+export function RoutineForm({ initial, activeProgram }: Props) {
   const { state, pending, onSubmit, onChange, field, formError, saveError } = useProfileSave();
   const [preferredDays, setPreferredDays] = useState<number[]>(initial.preferredDays);
   const [doesEndurance, setDoesEndurance] = useState(initial.doesEndurance);
-  const [daysPerWeekValue, setDaysPerWeekValue] = useState(initial.daysPerWeek);
+  // While a program runs, the displayed frequency is the program's (it governs it).
+  const [daysPerWeekValue, setDaysPerWeekValue] = useState(activeProgram ? activeProgram.daysPerWeek : initial.daysPerWeek);
   const daysPerWeek = field("daysPerWeek");
   const sessionMinutes = field("sessionMinutes");
   const preferred = field("preferredDays");
@@ -48,19 +56,40 @@ export function RoutineForm({ initial }: Props) {
       <div className="grid grid-cols-1 gap-4 min-[400px]:grid-cols-2">
         <div>
           <Label htmlFor="daysPerWeek">Dias por semana</Label>
-          <Select
-            {...daysPerWeek.props}
-            value={daysPerWeekValue}
-            onChange={(e) => setDaysPerWeekValue(Number(e.target.value))}
-            className="mt-1.5"
-          >
-            {[1, 2, 3, 4, 5, 6, 7].map((d) => (
-              <option key={d} value={d}>
-                {d}x/semana
-              </option>
-            ))}
-          </Select>
-          <FieldError name="daysPerWeek" error={daysPerWeek.error} />
+          {activeProgram ? (
+            // Follows the active program; not submitted, so a routine save never reverts it (A-025).
+            <>
+              <div
+                id="daysPerWeek"
+                className="mt-1.5 flex h-11 items-center rounded-[3px] border border-border bg-surface-2 px-3 text-sm text-muted"
+                data-days-per-week="locked"
+              >
+                {activeProgram.daysPerWeek}x/semana
+              </div>
+              <p className="mt-1 text-xs text-muted">
+                Segue o programa ativo ({activeProgram.name}).{" "}
+                <Link href={`/app/programs/${activeProgram.id}/edit`} className="font-semibold text-accent hover:underline">
+                  Alterar em Editar programa
+                </Link>
+              </p>
+            </>
+          ) : (
+            <>
+              <Select
+                {...daysPerWeek.props}
+                value={daysPerWeekValue}
+                onChange={(e) => setDaysPerWeekValue(Number(e.target.value))}
+                className="mt-1.5"
+              >
+                {[1, 2, 3, 4, 5, 6, 7].map((d) => (
+                  <option key={d} value={d}>
+                    {d}x/semana
+                  </option>
+                ))}
+              </Select>
+              <FieldError name="daysPerWeek" error={daysPerWeek.error} />
+            </>
+          )}
         </div>
         <div>
           <Label htmlFor="sessionMinutes">Duração da sessão</Label>
@@ -83,7 +112,8 @@ export function RoutineForm({ initial }: Props) {
         <DaysMatchNote
           daysPerWeek={daysPerWeekValue}
           preferredCount={preferredDays.length}
-          onUseCount={() => setDaysPerWeekValue(preferredDays.length)}
+          // No one-tap fix while the frequency follows the program (A-025).
+          onUseCount={activeProgram ? undefined : () => setDaysPerWeekValue(preferredDays.length)}
         />
         {/* Sentinel: tells the server this form owns preferredDays even when none are picked. */}
         <input type="hidden" name="preferredDays" value="" />

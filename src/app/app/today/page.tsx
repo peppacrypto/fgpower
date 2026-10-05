@@ -18,6 +18,7 @@ import {
   getWeeklyProgress,
 } from "@/lib/data/dashboard";
 import { getBlockProgress, getRecentlyCompletedBlock, getSeriesContinuation } from "@/lib/data/program-lifecycle";
+import { streakNudgeApplies } from "@/lib/data/streak-weeks";
 import { prisma } from "@/lib/db";
 import { Button } from "@/components/ui/button";
 import { SubmitButton } from "@/components/ui/submit-button";
@@ -48,6 +49,7 @@ import {
   completeWeekDone,
   effectiveProgramWeek,
   getWeekGuidance,
+  guidanceLastWeek,
   programWeekView,
   thisWeekRule,
 } from "@/lib/training/week-guidance";
@@ -225,6 +227,10 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
     : null;
   const entry = weekView?.kind === "entry" ? { daysLeft: weekView.daysLeft } : null;
   const streak = habit.streak;
+  // The streak row that judges this week may belong to another enrollment — a
+  // neutral entry week of a program that isn't the active one (A-060): then the
+  // "Faltam N" nudge would be about that other program, so Today hides it.
+  const streakJudgedByOther = !streakNudgeApplies(streak.thisWeek.enrollmentId, enrollment?.id ?? null);
   // The entry week's target (activation day → Sunday), and whether this week already counts through
   // another program (a block finished this week, the program switched from): then it's complete.
   const rule = enrollment
@@ -353,7 +359,7 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
   // weigh-in (W-083), else the team invite (W-139). The fatigue card waits while a workout is
   // open, after a gap (the welcome back says it) and when a block just ended.
   const measure = enrollment
-    ? measurementWeek({ templateSlug, week: weekView?.guidanceWeek ?? 1, durationWeeks: enrollment.program.durationWeeks })
+    ? measurementWeek({ templateSlug, week: weekView?.guidanceWeek ?? 1, lastGuidanceWeek: guidanceLastWeek(enrollment.program.weeklyGuidance) })
     : null;
   const [signal, dismissed, glance] = await Promise.all([
     enrollment && weekView && open.length === 0 && !welcomeBack && !completedBlock
@@ -680,6 +686,7 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
             // Today's workout is done: the days left start tomorrow (never "falta 1" on a trained Sunday).
             daysLeft: nudgeDaysLeft(now, trainedToday),
             perWeek: hasPlan ? daysPerWeek : (profile?.daysPerWeek ?? 3),
+            judgedByOther: streakJudgedByOther,
           }}
           entry={entry ? { ...entry, alreadyCounts: rule.alreadyCounts } : null}
           programName={enrollment?.program.name ?? null}

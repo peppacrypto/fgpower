@@ -47,7 +47,8 @@ export function DaysMatchNote({
 }: {
   daysPerWeek: number;
   preferredCount: number;
-  onUseCount: () => void;
+  /** Omitted when the frequency is read-only (it follows the active program, A-025): no one-tap fix. */
+  onUseCount?: () => void;
 }) {
   const days = plural(preferredCount, "dia marcado", "dias marcados");
   const matches = preferredCount === daysPerWeek;
@@ -58,7 +59,7 @@ export function DaysMatchNote({
           <span className={cn("tag tag--status", matches ? "tag--ok" : "tag--warn")}>
             {daysPerWeek}x por semana · {days}
           </span>
-          {matches ? null : (
+          {matches || !onUseCount ? null : (
             <button
               type="button"
               onClick={onUseCount}
