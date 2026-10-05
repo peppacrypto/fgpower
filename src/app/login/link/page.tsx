@@ -13,6 +13,16 @@ export const metadata: Metadata = {
 };
 
 /**
+ * Per request, never prerendered (A-043). This page redirects on the build-time
+ * read emailEnabled() BEFORE any dynamic API, so with e-mail off at build (prod
+ * today) it could be baked as a static redirect to /login — which turning Resend
+ * on by env alone would not undo, breaking the magic-link landing. Forcing
+ * dynamic evaluates emailEnabled() every request. (Cache Components is off, so
+ * this route-segment-config opt-out is honored.)
+ */
+export const dynamic = "force-dynamic";
+
+/**
  * The sign-in e-mail's link lands here (W-065): the address and the code
  * travel in the fragment (never sent to the server), and signing in takes a
  * tap on "Entrar" — a POST, so a mail scanner that opens the link can't use

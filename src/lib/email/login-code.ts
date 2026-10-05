@@ -2,7 +2,7 @@ import "server-only";
 import { appOrigin } from "@/lib/app-origin";
 import { prisma } from "@/lib/db";
 import { emailTransport } from "./config";
-import { loginCodeBudgetVerdict, loginCodesDailyBudget } from "./login-gate";
+import { loginBudgetWarnReached, loginCodeBudgetVerdict, loginCodesDailyBudget } from "./login-gate";
 import { sendEmail } from "./send";
 import { LOGIN_CODE_LOG_SUBJECT, loginCodeEmail } from "./templates/login-code";
 
@@ -27,7 +27,26 @@ export async function checkLoginCodeBudget(email: string, now: Date = new Date()
     prisma.emailMessage.count({ where: { kind: "LOGIN_CODE", createdAt: { gt: dayAgo } } }),
   ]);
   const dailyBudget = emailTransport() === "resend" ? loginCodesDailyBudget() : Number.POSITIVE_INFINITY;
+  warnIfNearBudget(allLastDay, dailyBudget);
   return loginCodeBudgetVerdict({ addressLastHour, addressLastDay, allLastDay, dailyBudget });
+}
+
+/**
+ * Logs once when the all-addresses daily count enters the warn band, and arms
+ * again once it drops back out — an early notice before e-mail sign-in is
+ * paused for everyone (A-043). Best-effort in-memory state (one web replica).
+ */
+let budgetWarned = false;
+function warnIfNearBudget(allLastDay: number, dailyBudget: number): void {
+  if (loginBudgetWarnReached(allLastDay, dailyBudget)) {
+    if (!budgetWarned) {
+      const pct = Math.round((allLastDay / dailyBudget) * 100);
+      console.warn(`[login-code] daily send budget ${pct}% used (${allLastDay}/${dailyBudget}) — nearing the cap that pauses e-mail sign-in`);
+      budgetWarned = true;
+    }
+  } else {
+    budgetWarned = false;
+  }
 }
 
 /**

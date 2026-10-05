@@ -31,8 +31,36 @@ vi.mock("next/navigation", () => ({
 const workouts = await import("./workouts");
 
 const DAY_MS = 86_400_000;
+const WEEK_MS = 7 * DAY_MS;
 const NOW = new Date();
-const daysAgo = (n: number) => new Date(NOW.getTime() - n * DAY_MS);
+
+// The enrollment is anchored so the CURRENT São Paulo calendar week always IS
+// the program's planned-deload week, on whatever weekday this suite runs.
+//
+// advanceProgram stamps a finished session with effectiveProgramWeek: the
+// enrollment's currentWeek, bumped by one only when NO earlier workout lies in
+// the current calendar week. The deload flag is then read from the guidance for
+// countedWeeks(that week). So a session finished "now" lands in the deload week
+// iff (a) a workout already sits in this calendar week (no bump) and (b)
+// currentWeek's guidance is the deload. Pinning both to the São Paulo week —
+// not to a weekday offset — is what makes this deterministic: startOfWeek(now)
+// is today's 00:00 on a Monday, so the old daysAgo(1) "this week" workout fell
+// into LAST week and the counter bumped to a non-deload week (week 6 → 7).
+const WEEKS_BEFORE_NOW = 5;
+const THIS_MONDAY = startOfWeek(NOW);
+// Monday noon, WEEKS_BEFORE_NOW weeks back: a Monday start has no Thursday–Sunday
+// entry week, so every program week equals one calendar week (countedWeeks(w) === w).
+const ENROLLMENT_STARTED_AT = new Date(THIS_MONDAY.getTime() - WEEKS_BEFORE_NOW * WEEK_MS + 12 * 3_600_000);
+// The program week the current calendar week counts as, from the SAME week
+// primitive the app uses (startOfWeek): the São Paulo week count since the
+// start, + 1. Marking THIS week as the deload keeps the fixture self-consistent.
+const DELOAD_WEEK = Math.round((THIS_MONDAY.getTime() - startOfWeek(ENROLLMENT_STARTED_AT).getTime()) / WEEK_MS) + 1;
+const PRE_DELOAD_WEEK = DELOAD_WEEK - 1;
+// Pre-deload 100 kg workout in the previous calendar week, plus one earlier THIS
+// week placed midway between Monday 00:00 and now, so it never straddles the
+// Monday boundary (a daysAgo(1) would fall into last week on a Monday).
+const PRE_DELOAD_WORKOUT_AT = new Date(THIS_MONDAY.getTime() - WEEK_MS + 12 * 3_600_000);
+const THIS_WEEK_WORKOUT_AT = new Date((THIS_MONDAY.getTime() + NOW.getTime()) / 2);
 
 let enrollmentId: string;
 let programId: string;
@@ -93,11 +121,11 @@ beforeAll(async () => {
       status: "ACTIVE",
       daysPerWeek: 3,
       durationWeeks: 8,
-      // Week 6 is a PLANNED deload (not applied): a statement, not a condition.
+      // DELOAD_WEEK is a PLANNED deload (not applied): a statement, not a condition.
       weeklyGuidance: [
-        { week: 5, rirTarget: 2, notePt: "", setsNotePt: "" },
-        { week: 6, rirTarget: 3, notePt: "", setsNotePt: "Deload: metade das séries, mesmas cargas." },
-        { week: 7, rirTarget: 2, notePt: "", setsNotePt: "" },
+        { week: PRE_DELOAD_WEEK, rirTarget: 2, notePt: "", setsNotePt: "" },
+        { week: DELOAD_WEEK, rirTarget: 3, notePt: "", setsNotePt: "Deload: metade das séries, mesmas cargas." },
+        { week: DELOAD_WEEK + 1, rirTarget: 2, notePt: "", setsNotePt: "" },
       ],
       days: { create: [{ dayIndex: 0, name: "Dia A", exercises: { create: [{ exerciseId: squatId, sortOrder: 0, sets: 3, repMin: 5, repMax: 8, rirTarget: 2, restSeconds: 120 }] } }] },
     },
@@ -105,17 +133,17 @@ beforeAll(async () => {
   });
   programId = program.id;
   dayId = program.days[0].id;
-  // Started on a Monday six weeks ago (no entry week); in week 6 now.
+  // Started on a Monday so the current São Paulo calendar week is DELOAD_WEEK now (no entry week).
   enrollmentId = (
     await prisma.programEnrollment.create({
-      data: { userId: USER_ID, programId, status: "ACTIVE", currentWeek: 6, startedAt: new Date(startOfWeek(NOW).getTime() - 6 * 7 * DAY_MS + 12 * 3_600_000), programSnapshot: {} },
+      data: { userId: USER_ID, programId, status: "ACTIVE", currentWeek: DELOAD_WEEK, startedAt: ENROLLMENT_STARTED_AT, programSnapshot: {} },
     })
   ).id;
 
-  // Pre-deload squat at 100 kg (week 5), earlier this block, plus one this calendar week
-  // so advanceProgram keeps a workout finished now in week 6.
-  await finished({ at: daysAgo(9), programWeek: 5, kg: 100, reps: 8 });
-  await finished({ at: daysAgo(1), programWeek: 6, kg: 100, reps: 8 });
+  // Pre-deload squat at 100 kg (PRE_DELOAD_WEEK) last calendar week, plus one this
+  // calendar week so advanceProgram keeps a session finished now in DELOAD_WEEK.
+  await finished({ at: PRE_DELOAD_WORKOUT_AT, programWeek: PRE_DELOAD_WEEK, kg: 100, reps: 8 });
+  await finished({ at: THIS_WEEK_WORKOUT_AT, programWeek: DELOAD_WEEK, kg: 100, reps: 8 });
 });
 
 afterAll(async () => {

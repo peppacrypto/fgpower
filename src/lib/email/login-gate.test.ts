@@ -3,6 +3,7 @@ import {
   DEFAULT_LOGIN_CODES_DAILY_BUDGET,
   emailOtpGate,
   isEmailOtpPath,
+  loginBudgetWarnReached,
   loginCodeBudgetVerdict,
   loginCodesDailyBudget,
 } from "./login-gate";
@@ -71,5 +72,14 @@ describe("login code budgets", () => {
     expect(loginCodesDailyBudget(undefined)).toBe(DEFAULT_LOGIN_CODES_DAILY_BUDGET);
     expect(loginCodesDailyBudget("50")).toBe(50);
     for (const bad of ["", "0", "-3", "abc", "2.5"]) expect(loginCodesDailyBudget(bad)).toBe(DEFAULT_LOGIN_CODES_DAILY_BUDGET);
+  });
+
+  it("warns from 80% of a finite budget, never on the dev transport's infinite one", () => {
+    expect(loginBudgetWarnReached(63, 80)).toBe(false); // below ceil(0.8*80)=64
+    expect(loginBudgetWarnReached(64, 80)).toBe(true);
+    expect(loginBudgetWarnReached(80, 80)).toBe(true);
+    expect(loginBudgetWarnReached(999, 80)).toBe(true);
+    expect(loginBudgetWarnReached(999, Number.POSITIVE_INFINITY)).toBe(false);
+    expect(loginBudgetWarnReached(5, 0)).toBe(false);
   });
 });

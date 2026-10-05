@@ -33,6 +33,21 @@ export const SIGN_IN_CODE_PATH = "/sign-in/email-otp";
 /** The `code` of the 429 a budget refusal answers (the login form words each one). */
 export const ADDRESS_LIMIT_CODE = "LOGIN_CODE_ADDRESS_LIMIT";
 export const GLOBAL_LIMIT_CODE = "LOGIN_CODE_GLOBAL_LIMIT";
+/** Too many sends from one client IP (login-send-limit); the form's generic 429 copy covers it. */
+export const IP_LIMIT_CODE = "LOGIN_CODE_IP_LIMIT";
+
+/** Fraction of the all-addresses daily budget at which to log a warning (A-043). */
+export const LOGIN_CODES_BUDGET_WARN_RATIO = 0.8;
+
+/**
+ * Whether the all-addresses daily count has reached the warn band — an early,
+ * log-only signal before the hard global refusal. Real spend alerting lives in
+ * the Resend dashboard / billing (owner). Never warns on the dev transport
+ * (an infinite budget).
+ */
+export function loginBudgetWarnReached(allLastDay: number, dailyBudget: number): boolean {
+  return Number.isFinite(dailyBudget) && dailyBudget > 0 && allLastDay >= Math.ceil(dailyBudget * LOGIN_CODES_BUDGET_WARN_RATIO);
+}
 
 export type OtpGateVerdict = null | { status: "NOT_FOUND" } | { status: "BAD_REQUEST"; message: string };
 

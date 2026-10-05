@@ -12,12 +12,14 @@ import {
   ADDRESS_LIMIT_CODE,
   emailOtpGate,
   GLOBAL_LIMIT_CODE,
+  IP_LIMIT_CODE,
   LOGIN_CODE_ATTEMPTS,
   LOGIN_CODE_LENGTH,
   LOGIN_CODE_TTL_SECONDS,
   SEND_CODE_PATH,
   SIGN_IN_CODE_PATH,
 } from "@/lib/email/login-gate";
+import { allowLoginCodeSend, clientIp } from "@/lib/email/login-send-limit";
 
 /**
  * The better-auth routes FGPOWER itself calls, and its two read-only pages.
@@ -140,6 +142,16 @@ export const auth = betterAuth({
       if (ctx.path !== SEND_CODE_PATH) return;
       const email = typeof ctx.body?.email === "string" ? ctx.body.email.trim().toLowerCase() : "";
       if (!z.email().safeParse(email).success) return; // the plugin answers INVALID_EMAIL
+      // Per-IP (and per-address) cap first: a code-only backstop so an
+      // anonymous client can't make unbounded Resend sends (A-043). In memory,
+      // before the DB budget below (which has no IP column).
+      const sendVerdict = allowLoginCodeSend({ ip: clientIp(ctx.headers), email });
+      if (sendVerdict === "ip") {
+        throw new APIError("TOO_MANY_REQUESTS", { message: "Too many sign-in codes from this network", code: IP_LIMIT_CODE });
+      }
+      if (sendVerdict === "address") {
+        throw new APIError("TOO_MANY_REQUESTS", { message: "Too many codes for this address", code: ADDRESS_LIMIT_CODE });
+      }
       const budget = await checkLoginCodeBudget(email);
       if (budget === "address") {
         throw new APIError("TOO_MANY_REQUESTS", { message: "Too many codes for this address", code: ADDRESS_LIMIT_CODE });
