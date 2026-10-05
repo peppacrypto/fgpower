@@ -866,3 +866,35 @@ test("signing out never waits on the reminders: a hung or refused push API, a br
   await confirmSignOut(page, confirm);
   expect(await browserSubscription(page)).toBeNull();
 });
+
+test("ending other devices keeps this session and signs the others out (A-044)", async ({ page, browser }) => {
+  const me = await newOnboardedUser(page, { label: "c6-signout-others" });
+
+  // A second device on the same account — a lost phone.
+  const lost = await browser.newContext({ ...iPhone, timezoneId: "America/Sao_Paulo", locale: "pt-BR" });
+  const lostPage = await lost.newPage();
+  await loginAsTestUser(lostPage, me.email);
+  await lostPage.goto("/app/today");
+  await expect(lostPage).not.toHaveURL(/\/login/);
+  expect(sql(`SELECT count(*) FROM "session" WHERE "userId" = ${sqlText(me.id)}`)).toBe("2");
+
+  // From this device, end every other session.
+  await page.goto("/app/settings");
+  const zone = page.locator("#dados-e-conta");
+  await zone.getByRole("button", { name: "Sair dos outros", exact: true }).click();
+  const confirm = page.getByRole("group", { name: "Confirmar saída dos outros aparelhos" });
+  await confirm.getByRole("button", { name: "Sim, desconectar" }).click();
+  await expect(zone.getByRole("status")).toContainText("os outros aparelhos foram desconectados");
+
+  // This device is still signed in; only its own session row is left.
+  await expect.poll(() => sql(`SELECT count(*) FROM "session" WHERE "userId" = ${sqlText(me.id)}`)).toBe("1");
+  await page.reload();
+  await expect(page).toHaveURL(/\/app\/settings$/);
+  expect(await userIdOf(page)).toBe(me.id);
+
+  // The lost phone is logged out: past its 5-minute session cache, it lands on /login.
+  await dropSessionCache(lost);
+  await lostPage.goto("/app/today");
+  await expect(lostPage).toHaveURL(/\/login/);
+  await lost.close();
+});

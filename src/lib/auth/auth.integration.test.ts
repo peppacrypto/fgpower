@@ -88,7 +88,7 @@ afterAll(async () => {
 
 describe("better-auth's routes", () => {
   it("the app's own routes are the allow-list; the password pair exists only outside production", () => {
-    for (const path of ["/get-session", "/sign-in/social", "/callback/:id", "/sign-out", "/delete-user"]) {
+    for (const path of ["/get-session", "/sign-in/social", "/callback/:id", "/sign-out", "/delete-user", "/revoke-other-sessions"]) {
       expect(isAppAuthRoute(path, true), path).toBe(true);
     }
     expect(isAppAuthRoute("/email-otp/send-verification-otp", true)).toBe(true);
@@ -100,7 +100,7 @@ describe("better-auth's routes", () => {
     }
     // Every allow-listed route is one better-auth still serves (a rename would leave a dead entry).
     const served = new Set(servedRoutes().map(([, path]) => path));
-    const allowed = ["/get-session", "/sign-in/social", "/callback/:id", "/sign-out", "/delete-user", "/ok", "/error"];
+    const allowed = ["/get-session", "/sign-in/social", "/callback/:id", "/sign-out", "/delete-user", "/revoke-other-sessions", "/ok", "/error"];
     for (const path of [...allowed, "/email-otp/send-verification-otp", "/sign-in/email-otp", "/sign-in/email", "/sign-up/email"]) {
       expect(served.has(path), path).toBe(true);
     }
@@ -129,7 +129,6 @@ describe("better-auth's routes", () => {
   it("nothing changes behind the app's back: sessions, password, linked accounts", async () => {
     const other = await signIn(member.email); // a second device
     await expectRefused(await call("POST", "/revoke-sessions", member.cookie), "revoke-sessions");
-    await expectRefused(await call("POST", "/revoke-other-sessions", member.cookie), "revoke-other-sessions");
     await expectRefused(await call("POST", "/change-password", member.cookie, { currentPassword: PASSWORD, newPassword: "another-password-123!" }), "change-password");
     await expectRefused(await call("POST", "/unlink-account", member.cookie, { providerId: "credential" }), "unlink-account");
     await expectRefused(await call("GET", "/list-sessions", member.cookie), "list-sessions (session tokens)");
@@ -172,5 +171,20 @@ describe("better-auth's routes", () => {
     const deleted = await call("POST", "/delete-user", deleting.cookie, {});
     expect(deleted.status).toBe(200);
     expect(await prisma.user.count({ where: { id: deleting.id } })).toBe(0);
+  });
+
+  it("revoke-other-sessions ends every other device but keeps the one that asked (A-044)", async () => {
+    const keep = await signIn(member.email); // the device that asks
+    const lost = await signIn(member.email); // a lost phone, same account
+    expect(await sessionUserId(keep)).toBe(member.id);
+    expect(await sessionUserId(lost)).toBe(member.id);
+
+    const res = await call("POST", "/revoke-other-sessions", keep);
+    expect(res.status).toBe(200);
+    expect(await res.json()).toMatchObject({ status: true });
+
+    // This device stays signed in; the other is out (read past the cookie cache).
+    expect(await sessionUserId(keep)).toBe(member.id);
+    expect(await sessionUserId(lost)).toBeNull();
   });
 });

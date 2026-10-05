@@ -99,6 +99,26 @@ export const DAY_NAME_MAX = 120;
 export const MAX_PROGRAM_DAYS = 14;
 export const MAX_DAY_EXERCISES = 40;
 
+/**
+ * The most non-archived programs (DRAFT + ACTIVE) one account may hold. Create,
+ * duplicate, customize and adapt refuse past this — a single account could
+ * otherwise fork programs without bound and fill the shared Postgres volume
+ * (A-003). Archived programs are the user's history and don't count; the user
+ * frees room by archiving or deleting one.
+ */
+export const MAX_PROGRAMS_PER_USER = 50;
+
+/**
+ * The name a create/rename stores: trimmed and capped to PROGRAM_NAME_MAX,
+ * falling back to a default when blank so "   " never becomes an untitled
+ * program (A-003). createCustomProgram's raw form value is client-controlled,
+ * so the server normalizes it rather than trusting it.
+ */
+export function normalizeProgramName(raw: unknown, fallback = "Meu programa"): string {
+  const trimmed = (typeof raw === "string" ? raw : "").trim().slice(0, PROGRAM_NAME_MAX);
+  return trimmed || fallback;
+}
+
 const bounded = (field: BuilderNumberField) => {
   const { min, max } = BUILDER_LIMITS[field];
   const n = z.coerce.number().min(min).max(max);

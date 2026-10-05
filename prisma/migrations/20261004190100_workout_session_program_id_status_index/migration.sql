@@ -1,0 +1,12 @@
+-- A-037 · scoped session counts per program.
+--
+-- The archived-programs count (/app/programs) and the untrained/draft guards
+-- (deleteUntrainedProgram, discardDraft, and the switch-throwaway check) filter
+-- WorkoutSession by programId, not by userId. WorkoutSession only had
+-- (userId, startedAt) and (userId, status) indexes, so those counts fell back
+-- to a sequential scan of the whole table. This index bounds them to one
+-- program's rows (programId leads; status narrows COMPLETED / not DISCARDED).
+--
+-- NOTE: prisma migrate runs each migration inside a transaction, so this is a
+-- plain CREATE INDEX, never CREATE INDEX CONCURRENTLY.
+CREATE INDEX "WorkoutSession_programId_status_idx" ON "WorkoutSession"("programId", "status");

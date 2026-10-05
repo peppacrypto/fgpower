@@ -197,3 +197,17 @@ describe("getProfileActivities", () => {
     expect(await getProfileActivities(busy, viewer, false)).toEqual({ items: [], hasMore: false });
   });
 });
+
+describe("getPublicProfile previewVersion (A-073)", () => {
+  it("exposes a version that bumps when the profile changes", async () => {
+    const id = await user("preview", { displayName: "Preview One" });
+    const first = await getPublicProfile(`${RUN}preview`.toLowerCase(), null);
+    expect(first?.previewVersion).toBeGreaterThan(0);
+
+    // A later profile edit must move the version so the cached preview re-renders.
+    await new Promise((r) => setTimeout(r, 5));
+    await prisma.profile.update({ where: { userId: id }, data: { bio: "edited" } });
+    const second = await getPublicProfile(`${RUN}preview`.toLowerCase(), null);
+    expect(second?.previewVersion).toBeGreaterThan(first!.previewVersion);
+  });
+});

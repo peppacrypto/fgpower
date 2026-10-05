@@ -5,6 +5,7 @@ import { Input, Label } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { createCustomProgram } from "@/lib/actions/programs";
+import { PROGRAM_NAME_MAX } from "@/lib/validation/program-builder";
 import { requireUser } from "@/lib/auth/require-user";
 
 export const metadata: Metadata = { title: "Criar programa" };
@@ -33,7 +34,7 @@ export default async function NewProgramPage() {
       <form action={createAction} className="mt-6 flex flex-col gap-4">
         <div>
           <Label htmlFor="name">Nome do programa</Label>
-          <Input id="name" name="name" placeholder="Ex.: Meu programa de força" required autoFocus className="mt-1.5" maxLength={80} />
+          <Input id="name" name="name" placeholder="Ex.: Meu programa de força" required autoFocus className="mt-1.5" maxLength={PROGRAM_NAME_MAX} />
         </div>
         <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
           <Button asChild variant="ghost" size="lg">

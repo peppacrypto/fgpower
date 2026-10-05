@@ -65,7 +65,7 @@ import { ExerciseSwapSheet, type SwapSheetMode } from "./exercise-swap-sheet";
 import { TechniqueSheet } from "./technique-sheet";
 import { markWorkoutVisited, readShownExercise, rememberShownExercise } from "./workout-visit";
 import { WorkoutActionError } from "./action-error";
-import { formatRestClock } from "@/lib/validation/program-builder";
+import { EXERCISE_NOTE_MAX, formatRestClock } from "@/lib/validation/program-builder";
 import type { ExecutionExerciseLog, ExecutionGroup, ExecutionSession, ExecutionSetLog } from "./types";
 import type { ExerciseOption } from "@/lib/data/workout-session";
 
@@ -2195,6 +2195,7 @@ export function WorkoutExecutionClient({
                 setEditingNote(false);
               }}
               placeholder="Ex.: banco na posição 4"
+              maxLength={EXERCISE_NOTE_MAX}
               // 16px on phones: iOS zooms into smaller fields on focus.
               className="mt-1.5 w-full rounded-[3px] border border-foreground/50 bg-surface px-3 py-2 text-base sm:text-sm"
               rows={2}

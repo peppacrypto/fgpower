@@ -52,13 +52,25 @@ export async function loadStreakInputs(userId: string, now: Date = new Date()) {
             durationWeeks: true,
             weeklyGuidance: true,
             sourceTemplate: { select: { slug: true } },
-            days: { select: { id: true, dayIndex: true, name: true, _count: { select: { exercises: true } } } },
+            days: { select: { id: true, dayIndex: true, name: true } },
           },
         },
       },
     }),
     prisma.profile.findUnique({ where: { userId }, select: { daysPerWeek: true } }),
   ]);
+  // Count exercises per day with a query bounded to these days' ids (A-037):
+  // a nested relation _count compiles to an unfiltered GROUP BY over the whole
+  // UserProgramExercise table; this groupBy rides the (dayId, sortOrder) index.
+  const dayIds = enrollments.flatMap((e) => e.program.days.map((d) => d.id));
+  const exerciseCounts = dayIds.length
+    ? await prisma.userProgramExercise.groupBy({
+        by: ["dayId"],
+        where: { dayId: { in: dayIds } },
+        _count: { _all: true },
+      })
+    : [];
+  const exerciseCountByDay = new Map(exerciseCounts.map((r) => [r.dayId, r._count._all]));
   return {
     sessions: sessions.flatMap((s): (StreakSession & { id: string })[] =>
       s.finishedAt ? [{ ...s, finishedAt: s.finishedAt, weekTargetSnapshot: parseWeekTargetSnapshot(s.weekTargetSnapshot) }] : [],
@@ -75,7 +87,7 @@ export async function loadStreakInputs(userId: string, now: Date = new Date()) {
           durationWeeks: e.program.durationWeeks,
           weeklyGuidance: e.program.weeklyGuidance,
           templateSlug: e.program.sourceTemplate?.slug ?? null,
-          days: e.program.days.map((d) => ({ id: d.id, dayIndex: d.dayIndex, name: d.name, exerciseCount: d._count.exercises })),
+          days: e.program.days.map((d) => ({ id: d.id, dayIndex: d.dayIndex, name: d.name, exerciseCount: exerciseCountByDay.get(d.id) ?? 0 })),
         },
       }),
     ),

@@ -445,6 +445,16 @@ test("link-preview bots get the preview up front for /t and /u (htmlLimitedBots)
   const odd = await request.get(missing.image.replace(/^\/u\/[^/]+\//, "/u/100%25/"));
   expect(odd.status()).toBe(200);
   expect(odd.headers()["content-type"]).toBe("image/png");
+
+  // A-073: a signed-out burst against the profile preview never 500s or breaks —
+  // renders are cached per version and the render budget falls back to the brand card.
+  const burst = await Promise.all(
+    Array.from({ length: 20 }, () => request.get(`/u/${owner.username}/opengraph-image`)),
+  );
+  for (const res of burst) {
+    expect(res.status()).toBe(200);
+    expect(res.headers()["content-type"]).toBe("image/png");
+  }
   sql(`UPDATE "Activity" SET "shareToken" = NULL, "sharedAt" = NULL WHERE id = ${sqlText(`${token}-a`)}`);
   expect((await preview("WhatsApp/2.23.20.0", `/t/${token}`)).status).toBe(404);
 });

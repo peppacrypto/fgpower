@@ -801,6 +801,8 @@ model ProgramEnrollment {
   // to generate migrations — it does not see this index and would drop it;
   // migrations in this repo are hand-authored.
   @@index([userId, status])
+  // A-036 · back the ON DELETE CASCADE from UserProgram so deletes don't seq-scan.
+  @@index([programId])
 }
 
 // ---------------------------------------------------------------------------
@@ -870,6 +872,14 @@ model WorkoutSession {
 
   @@index([userId, startedAt(sort: Desc)])
   @@index([userId, status])
+  // Scoped session counts per program (A-037): the archived-programs count and
+  // the untrained/draft guards filter by programId, not userId. This composite
+  // also backs the ON DELETE SET NULL from UserProgram (A-036), so no separate
+  // single-column programId index is needed.
+  @@index([programId, status])
+  // A-036 · back the ON DELETE SET NULL actions (enrollment / day delete).
+  @@index([enrollmentId])
+  @@index([programDayId])
 }
 
 model WorkoutExerciseLog {
@@ -902,6 +912,8 @@ model WorkoutExerciseLog {
 
   @@index([sessionId, sortOrder])
   @@index([userId, exerciseId, createdAt(sort: Desc)])
+  // A-036 · back the ON DELETE SET NULL from UserProgramExercise.
+  @@index([programExerciseId])
 }
 
 enum SetType {
@@ -968,6 +980,9 @@ model ExercisePersonalRecord {
 
   @@index([userId, exerciseId, kind, achievedAt(sort: Desc)])
   @@index([userId, achievedAt(sort: Desc)])
+  // A-036 · back the ON DELETE SET NULL (SetLog) and CASCADE (WorkoutSession).
+  @@index([setLogId])
+  @@index([sessionId])
 }
 
 enum BodyMetricKind {
@@ -1130,6 +1145,10 @@ model Notification {
   @@unique([recipientId, dedupeKey])
   @@index([recipientId, readAt, createdAt(sort: Desc)])
   @@index([sessionId])
+  // A-036 · back the ON DELETE CASCADE actions (actor User / FollowRequest / Activity).
+  @@index([actorId])
+  @@index([followRequestId])
+  @@index([activityId])
 }
 
 model UserBlock {
@@ -1226,6 +1245,15 @@ model ReminderPreference {
   askCount            Int       @default(0)
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
+
+  // Paused users are resumed by a single correlated UPDATE each tick (A-091);
+  // this PARTIAL INDEX, which Prisma 7 cannot express in PSL, lets that scan
+  // find the (few) paused rows without a full table scan:
+  //   CREATE INDEX "ReminderPreference_pausedAt_idx"
+  //     ON "ReminderPreference" ("pausedAt") WHERE "pausedAt" IS NOT NULL;
+  // It is created in migration 20261004190200. Do NOT run `prisma migrate dev`
+  // to generate migrations — it does not see this index and would drop it;
+  // migrations in this repo are hand-authored.
 }
 
 /// One browser/device subscribed to Web Push (endpoint allow-listed on write).

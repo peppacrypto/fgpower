@@ -13,6 +13,12 @@ export const dynamic = "force-dynamic";
 export async function POST(request: Request) {
   const secret = process.env.RESEND_WEBHOOK_SECRET?.trim();
   if (!secret) return NextResponse.json({ error: "not found" }, { status: 404 });
+  // Resend events are a few KB; the proxy already caps /api at 256 KB, this
+  // keeps the webhook well under that (A-045).
+  const declared = Number(request.headers.get("content-length") ?? "");
+  if (Number.isFinite(declared) && declared > 64 * 1024) {
+    return NextResponse.json({ error: "payload too large" }, { status: 413 });
+  }
   const body = await request.text();
   if (!verifySvix(secret, request.headers, body)) return NextResponse.json({ error: "bad signature" }, { status: 401 });
 

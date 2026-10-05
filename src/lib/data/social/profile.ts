@@ -57,6 +57,8 @@ export async function getPublicProfile(username: string, viewerId: string | null
     id: user.id,
     name: user.profile.displayName.trim() || user.name,
     username: user.username,
+    /** Bumps when the name, photo, bio or privacy changes, to version the link-preview cache (A-073). */
+    previewVersion: Math.max(user.updatedAt.getTime(), user.profile.updatedAt.getTime()),
     image: user.image,
     bio: user.profile.bio,
     isPublicAccount: user.profile.isPublicAccount,

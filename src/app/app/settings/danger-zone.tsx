@@ -11,6 +11,7 @@ import { SESSION_EXPIRED_ERROR, loginAgainHref } from "@/lib/auth/session-expire
 import { WORKOUT_PREFS_COOKIE } from "@/components/workout/local-workout";
 import { signOutAction } from "./actions";
 import { SignOutRow } from "./sign-out-row";
+import { SignOutOthersRow } from "./sign-out-others-row";
 import { ExportLinks } from "./export-links";
 
 /** Where "Entrar de novo para excluir" comes back to: this panel, open. */
@@ -127,6 +128,10 @@ export function DangerZone({
 
       <div className="border-b border-border py-3">
         <SignOutRow />
+      </div>
+
+      <div className="border-b border-border py-3">
+        <SignOutOthersRow />
       </div>
 
       <div id="excluir-conta" className="mt-4 scroll-mt-4 border-y-2 border-y-danger bg-danger-soft p-4">

@@ -389,3 +389,40 @@ describe("editing the running program keeps past weeks frozen (A-001)", () => {
     expect(summarizeStreak(run(sessions.map(strip), edited)).current).toBe(4);
   });
 });
+
+describe("weekly streak performance (A-035)", () => {
+  it("scans a year of Monday–Friday history well under budget", () => {
+    // Worst case from the finding: a 5-day program activated on a Sunday with a
+    // full year of Monday–Friday workouts (~52 weeks × 5 ≈ 260 sessions).
+    const start = "2025-10-05"; // a Sunday
+    const fiveDays = [0, 1, 2, 3, 4].map((i) => ({ id: `d${i}`, dayIndex: i, name: `Day ${i}`, exerciseCount: 5 }));
+    const enrollments = [enrollment(at(start), { daysPerWeek: 5, days: fiveDays })];
+    const sessions: StreakSession[] = [];
+    for (let w = 0; w < 52; w++) {
+      for (let d = 0; d < 5; d++) {
+        sessions.push({
+          finishedAt: addDays(start, w * 7 + 1 + d), // Mon..Fri of week w
+          enrollmentId: "e1",
+          programDayId: `d${d}`,
+          programDayIndex: d,
+          name: `Day ${d}`,
+          programWeek: w + 1,
+        });
+      }
+    }
+    const now = addDays(start, 52 * 7);
+
+    // First (cold) call: each distinct Date's day number is computed once and
+    // reused within the scan — the real per-request cost.
+    const t0 = performance.now();
+    const rows = streakWeeksFrom({ sessions, enrollments, profileDaysPerWeek: 5, now });
+    const elapsed = performance.now() - t0;
+
+    expect(rows.weeks.length).toBeGreaterThan(50);
+    // Before A-035 this was ~1 s; after caching the formatter and memoizing the
+    // per-Date day number it is well under 50 ms locally. The budget is loose so
+    // it stays green on slow CI while still catching a regression to the old
+    // O(weeks × sessions) formatter construction.
+    expect(elapsed).toBeLessThan(200);
+  });
+});

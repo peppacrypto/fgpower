@@ -225,6 +225,56 @@ describe("runReminderTick", () => {
     expect(resumed.resumedAt?.getTime()).toBe(at(4, 20, 5).getTime());
   });
 
+  it("resume is bulk and bounded: only users with a post-pause workout lift, in one pass (A-091)", async () => {
+    const mk = async (suffix: string) => {
+      const id = `${RUN}-resume-${suffix}`;
+      await prisma.user.create({ data: { id, name: id, email: `${id}@fgpower.test`, emailVerified: true } });
+      return id;
+    };
+    const back = await mk("back"); // paused, then trained after the pause
+    const stillAway = await mk("away"); // paused, no workout since
+    const stale = await mk("stale"); // paused, but the only workout predates the pause
+    const pausedAt = at(4, 12);
+    for (const id of [back, stillAway, stale]) {
+      await prisma.reminderPreference.create({ data: { userId: id, pausedAt, pausedReason: "IGNORED" } });
+    }
+    await prisma.workoutSession.create({
+      data: { userId: back, name: "Back", status: "COMPLETED", startedAt: at(4, 13), finishedAt: at(4, 14) },
+    });
+    await prisma.workoutSession.create({
+      data: { userId: stale, name: "Old", status: "COMPLETED", startedAt: at(4, 11), finishedAt: at(4, 11, 30) },
+    });
+
+    const summary = await tick(at(4, 15), [back, stillAway, stale]);
+    expect(summary.settled.resumed).toBe(1); // only `back`; one pass, no per-user queries
+
+    const prefs = await prisma.reminderPreference.findMany({
+      where: { userId: { in: [back, stillAway, stale] } },
+      select: { userId: true, pausedAt: true, resumedAt: true },
+    });
+    const byId = Object.fromEntries(prefs.map((p) => [p.userId, p]));
+    expect(byId[back].pausedAt).toBeNull();
+    expect(byId[back].resumedAt?.getTime()).toBe(at(4, 15).getTime());
+    expect(byId[stillAway].pausedAt?.getTime()).toBe(pausedAt.getTime());
+    expect(byId[stale].pausedAt?.getTime()).toBe(pausedAt.getTime());
+  });
+
+  it("a dry run counts resumable users without lifting the pause (A-091)", async () => {
+    const id = `${RUN}-resume-dry`;
+    await prisma.user.create({ data: { id, name: id, email: `${id}@fgpower.test`, emailVerified: true } });
+    const pausedAt = at(4, 12);
+    await prisma.reminderPreference.create({ data: { userId: id, pausedAt, pausedReason: "IGNORED" } });
+    await prisma.workoutSession.create({
+      data: { userId: id, name: "Dry", status: "COMPLETED", startedAt: at(4, 13), finishedAt: at(4, 14) },
+    });
+
+    const dry = await tick(at(4, 15), [id], { dryRun: true });
+    expect(dry.settled.resumed).toBe(1);
+    const pref = await prisma.reminderPreference.findUniqueOrThrow({ where: { userId: id } });
+    expect(pref.pausedAt?.getTime()).toBe(pausedAt.getTime()); // not written
+    expect(pref.resumedAt).toBeNull();
+  });
+
   it("two ticks at once: one runs, one row", async () => {
     const u = users.race;
     const [a, b] = await Promise.all([tick(at(0, 18, 5), [u]), tick(at(0, 18, 5), [u])]);

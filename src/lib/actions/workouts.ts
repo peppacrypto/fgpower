@@ -975,16 +975,30 @@ async function advanceProgram(
 ): Promise<boolean> {
   const program = await tx.userProgram.findUnique({
     where: { id: s.programId },
-    include: { days: { orderBy: { dayIndex: "asc" }, include: { _count: { select: { exercises: true } } } } },
+    include: { days: { orderBy: { dayIndex: "asc" } } },
   });
   if (!program || program.days.length === 0) return false;
   const days = program.days;
+  // Trainable days = days holding at least one exercise. A nested relation
+  // _count aggregates the whole UserProgramExercise table (A-037); this runs
+  // inside the finish transaction under FOR UPDATE locks, so it is bounded to
+  // these day ids and rides the (dayId, sortOrder) index. A group only appears
+  // when COUNT >= 1, so its presence is "trainable".
+  const trainableDayIds = new Set(
+    (
+      await tx.userProgramExercise.groupBy({
+        by: ["dayId"],
+        where: { dayId: { in: days.map((d) => d.id) } },
+        _count: { _all: true },
+      })
+    ).map((r) => r.dayId),
+  );
   // The week's plan as trained, frozen on the session so a later edit never
   // re-judges this week's streak/target (spec A-001; read by streak-weeks and
   // block-progress for past weeks).
   const weekTargetSnapshot = {
     daysPerWeek: program.daysPerWeek,
-    trainableDays: days.filter((d) => d._count.exercises > 0).length,
+    trainableDays: trainableDayIds.size,
     dayCount: days.length,
   };
 
@@ -1089,7 +1103,7 @@ async function advanceProgram(
   if (thisDay) doneDayIds.add(thisDay.id);
   const { weekComplete } = planWeek({
     days,
-    isTrainable: (d) => d._count.exercises > 0,
+    isTrainable: (d) => trainableDayIds.has(d.id),
     nextDayIndex,
     daysPerWeek: program.daysPerWeek,
     doneDayIds,

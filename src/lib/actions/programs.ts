@@ -11,6 +11,7 @@ import { applyWeekLayout, getProgramRestart } from "@/lib/data/program-lifecycle
 import { isUntouchedFork } from "@/lib/data/user-programs";
 import { startAdHocWorkoutSession } from "@/lib/actions/workouts";
 import { seriesPosition } from "@/lib/training/program-calendar";
+import { MAX_PROGRAMS_PER_USER, normalizeProgramName } from "@/lib/validation/program-builder";
 import type { Prisma } from "@/generated/prisma/client";
 
 type Tx = Prisma.TransactionClient;
@@ -19,6 +20,18 @@ type Tx = Prisma.TransactionClient;
 const SET_HAS_DATA: Prisma.SetLogWhereInput = {
   OR: [{ isCompleted: true }, { weightKg: { not: null } }, { reps: { not: null } }],
 };
+
+/**
+ * Refuses a new program once the account already holds MAX_PROGRAMS_PER_USER
+ * non-archived ones (A-003). Sends the user back to the shelf with a notice
+ * rather than throwing — they free room by archiving or deleting. Only the
+ * user-initiated create/fork paths call this; starting, resuming or repeating
+ * a program is never blocked.
+ */
+async function enforceProgramQuota(userId: string) {
+  const count = await prisma.userProgram.count({ where: { userId, status: { in: ["DRAFT", "ACTIVE"] } } });
+  if (count >= MAX_PROGRAMS_PER_USER) redirect("/app/programs?limite=1");
+}
 
 /**
  * Fork a canonical WorkoutTemplate into a user-owned UserProgram. Forking
@@ -174,6 +187,7 @@ export async function customizeTemplate(templateSlug: string) {
   const untouched = await findUntouchedCopy(user.id, template);
   if (untouched) redirect(`/app/programs/${untouched}/edit`);
 
+  await enforceProgramQuota(user.id);
   const program = await forkTemplateToProgram(templateSlug, user.id);
   redirect(`/app/programs/${program.id}/edit`);
 }
@@ -240,6 +254,7 @@ export async function adaptTemplate(templateSlug: string, formData: FormData) {
     if (row && valid.has(exerciseId)) swaps.set(rowKey, { exerciseId, replaces: row.exercise.namePt });
   }
 
+  await enforceProgramQuota(user.id);
   const program = await forkTemplateToProgram(template.slug, user.id, {
     swaps,
     name: `${template.namePt} (adaptado)`.slice(0, 120),
@@ -425,12 +440,14 @@ export async function restorePreviousProgram(enrollmentId: string) {
 
 export async function createCustomProgram(name: string) {
   const user = await requireUserOrThrow();
+  await enforceProgramQuota(user.id);
   // Trained as often as the user said they train: a one-day full body is 3×/week, not 1×.
   const profile = await prisma.profile.findUnique({ where: { userId: user.id }, select: { daysPerWeek: true } });
   const program = await prisma.userProgram.create({
     data: {
       userId: user.id,
-      name: name || "Meu programa",
+      // Trimmed and capped (A-003): a blank or ~1 MB name never reaches the row.
+      name: normalizeProgramName(name),
       status: "DRAFT",
       daysPerWeek: Math.max(1, Math.min(7, profile?.daysPerWeek ?? 3)),
     },
@@ -445,6 +462,7 @@ export async function duplicateProgram(programId: string) {
     include: { days: { include: { exercises: true }, orderBy: { dayIndex: "asc" } } },
   });
   if (original.userId !== user.id) throw new Error("FORBIDDEN");
+  await enforceProgramQuota(user.id);
 
   const copy = await prisma.userProgram.create({
     data: {
@@ -584,10 +602,15 @@ export async function deleteUntrainedProgram(programId: string) {
   if (typeof programId !== "string") redirect("/app/programs");
   const program = await prisma.userProgram.findFirst({
     where: { id: programId, userId: user.id },
-    select: { status: true, _count: { select: { sessions: { where: { status: { not: "DISCARDED" } } } } } },
+    select: { status: true },
   });
   if (!program) redirect("/app/programs");
-  if (program.status === "ACTIVE" || program._count.sessions > 0) redirect(`/app/programs/${programId}`);
+  // Bounded count on the (programId, status) index (A-037): a relation _count
+  // here aggregates the whole WorkoutSession table.
+  const trainedSessions = await prisma.workoutSession.count({
+    where: { programId, status: { not: "DISCARDED" } },
+  });
+  if (program.status === "ACTIVE" || trainedSessions > 0) redirect(`/app/programs/${programId}`);
   await prisma.userProgram.deleteMany({ where: { id: programId, userId: user.id } });
   revalidatePath("/app/programs");
   redirect("/app/programs?excluido=1");

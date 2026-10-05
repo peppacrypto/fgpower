@@ -36,6 +36,7 @@ const APP_AUTH_ROUTES: ReadonlySet<string> = new Set([
   "/callback/:id", // …and Google's way back
   "/sign-out", // Settings' "Sair" (signOutAction)
   "/delete-user", // Settings' "Excluir conta"
+  "/revoke-other-sessions", // Settings' "Sair dos outros aparelhos" (signOutOtherDevicesAction) — keeps this session
   SEND_CODE_PATH, // sign-in by e-mail: the code… (emailOtpGate narrows both further)
   SIGN_IN_CODE_PATH, // …and signing in with it
   "/ok", // better-auth's health check

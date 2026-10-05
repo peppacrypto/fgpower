@@ -22,6 +22,7 @@ import { ResumeProgramPanel } from "@/components/programs/resume-program-panel";
 import { BlockProgressMeter } from "@/components/programs/block-progress-meter";
 import { formatAppDate } from "@/lib/training/week";
 import { plural } from "@/lib/utils/format";
+import { MAX_PROGRAMS_PER_USER } from "@/lib/validation/program-builder";
 
 export const metadata: Metadata = { title: "Programas" };
 
@@ -33,7 +34,9 @@ const STATUS_LABEL: Record<string, { label: string; color: string }> = {
 
 export default async function ProgramsPage({ searchParams }: PageProps<"/app/programs">) {
   const user = await requireUser();
-  const deleted = (await searchParams).excluido === "1";
+  const params = await searchParams;
+  const deleted = params.excluido === "1";
+  const limitReached = params.limite === "1";
   const [myPrograms, archived, templates, profile, enrollment, continuation] = await Promise.all([
     prisma.userProgram.findMany({
       where: { userId: user.id, status: { in: ["ACTIVE", "DRAFT"] } },
@@ -50,7 +53,6 @@ export default async function ProgramsPage({ searchParams }: PageProps<"/app/pro
         archivedAt: true,
         updatedAt: true,
         enrollments: { orderBy: { startedAt: "desc" }, take: 1, select: { status: true } },
-        _count: { select: { sessions: { where: { status: "COMPLETED" } } } },
       },
     }),
     listTemplates(),
@@ -59,6 +61,18 @@ export default async function ProgramsPage({ searchParams }: PageProps<"/app/pro
     // Where the GD series goes on (the next block after the one finished), or the program stopped mid-block.
     getSeriesContinuation(user.id),
   ]);
+  // Completed-workout count per archived program, bounded to those ids on the
+  // (programId, status) index (A-037): a relation _count aggregates the whole
+  // WorkoutSession table on every /app/programs load.
+  const archivedCompleted = archived.length
+    ? await prisma.workoutSession.groupBy({
+        by: ["programId"],
+        where: { programId: { in: archived.map((p) => p.id) }, status: "COMPLETED" },
+        _count: { _all: true },
+      })
+    : [];
+  const completedByProgram = new Map(archivedCompleted.map((r) => [r.programId, r._count._all]));
+  const archivedWithCounts = archived.map((p) => ({ ...p, _count: { sessions: completedByProgram.get(p.id) ?? 0 } }));
   const progress = enrollment
     ? await getBlockProgress(prisma, user.id, {
         id: enrollment.id,
@@ -162,6 +176,12 @@ export default async function ProgramsPage({ searchParams }: PageProps<"/app/pro
         </p>
       ) : null}
 
+      {limitReached ? (
+        <p role="status" className="mt-6 border-l-2 border-l-warning bg-surface-2 px-3 py-3 text-sm">
+          Você atingiu o limite de {MAX_PROGRAMS_PER_USER} programas. Arquive ou exclua um para criar outro.
+        </p>
+      ) : null}
+
       <ProtocolLibrary
         label="Biblioteca de programas"
         items={items}
@@ -214,7 +234,7 @@ export default async function ProgramsPage({ searchParams }: PageProps<"/app/pro
           </section>
         ) : null}
 
-        {archived.length > 0 ? <ArchivedPrograms programs={archived} /> : null}
+        {archivedWithCounts.length > 0 ? <ArchivedPrograms programs={archivedWithCounts} /> : null}
 
         {/* While nothing runs, a program stopped mid-block picks up where it was — ahead of a fresh pick. */}
         {continuation.resume && !enrollment ? <ResumeProgramPanel resume={continuation.resume} className="mt-10" /> : null}

@@ -22,7 +22,6 @@ import {
   reminderDeadline,
   settleDelivery,
   shouldPause,
-  shouldResume,
   spMinutes,
   type Decision,
   type ReminderKindName,
@@ -266,21 +265,34 @@ async function settle(now: Date, deps: TickDeps): Promise<TickSummary["settled"]
     }
   }
 
-  // The first workout after a pause lifts it.
-  const paused = await prisma.reminderPreference.findMany({
-    where: { pausedAt: { not: null }, ...only },
-    select: { userId: true, pausedAt: true },
-    take: 2000,
-  });
-  for (const p of paused) {
-    const lastStart = await lastWorkoutStart(p.userId, now);
-    if (!shouldResume({ pausedAt: p.pausedAt, lastWorkoutStartAt: lastStart })) continue;
-    result.resumed += 1;
-    if (!deps.dryRun) {
-      await prisma.reminderPreference.update({
-        where: { userId: p.userId },
-        data: { pausedAt: null, pausedReason: null, resumedAt: now },
-      });
+  // The first workout after a pause lifts it (shouldResume: a workout started
+  // after pausedAt and at or before now). One correlated statement — a bulk
+  // UPDATE ... WHERE EXISTS — instead of scanning every paused user and querying
+  // each one's last workout (A-091). The EXISTS is served by the WorkoutSession
+  // (userId, startedAt) index; the paused rows by the partial index
+  // ReminderPreference(pausedAt) WHERE pausedAt IS NOT NULL (migration 20261004190200).
+  if (!deps.onlyUserIds || deps.onlyUserIds.length > 0) {
+    const onlyFilter = deps.onlyUserIds
+      ? Prisma.sql`AND rp."userId" IN (${Prisma.join(deps.onlyUserIds)})`
+      : Prisma.empty;
+    const resumable = Prisma.sql`
+      rp."pausedAt" IS NOT NULL
+      ${onlyFilter}
+      AND EXISTS (
+        SELECT 1 FROM "WorkoutSession" ws
+        WHERE ws."userId" = rp."userId"
+          AND ws."startedAt" > rp."pausedAt"
+          AND ws."startedAt" <= ${now}
+      )`;
+    if (deps.dryRun) {
+      const [{ count }] = await prisma.$queryRaw<{ count: number }[]>`
+        SELECT count(*)::int AS count FROM "ReminderPreference" rp WHERE ${resumable}`;
+      result.resumed += count;
+    } else {
+      result.resumed += await prisma.$executeRaw`
+        UPDATE "ReminderPreference" rp
+        SET "pausedAt" = NULL, "pausedReason" = NULL, "resumedAt" = ${now}, "updatedAt" = ${now}
+        WHERE ${resumable}`;
     }
   }
   return result;

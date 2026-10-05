@@ -7,19 +7,36 @@ export const APP_TIME_ZONE = "America/Sao_Paulo";
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
+/**
+ * One cached `Intl.DateTimeFormat` per time zone. Constructing a formatter is
+ * expensive and the streak/calendar code calls `wallClock` thousands of times
+ * per render; the options never vary, so build one formatter per zone and
+ * reuse it. Bounded by the number of distinct zones (the app uses one, plus
+ * "UTC" in tests), so the cache never grows unbounded.
+ */
+const wallClockFormatters = new Map<string, Intl.DateTimeFormat>();
+function wallClockFormatter(timeZone: string): Intl.DateTimeFormat {
+  let formatter = wallClockFormatters.get(timeZone);
+  if (!formatter) {
+    formatter = new Intl.DateTimeFormat("en-US", {
+      timeZone,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      weekday: "short",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hourCycle: "h23",
+    });
+    wallClockFormatters.set(timeZone, formatter);
+  }
+  return formatter;
+}
+
 /** The wall-clock date/time parts of `date` in `timeZone` (month 1–12, weekday 0 = Sunday). */
 export function wallClock(date: Date, timeZone: string = APP_TIME_ZONE) {
-  const parts = new Intl.DateTimeFormat("en-US", {
-    timeZone,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    weekday: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hourCycle: "h23",
-  }).formatToParts(date);
+  const parts = wallClockFormatter(timeZone).formatToParts(date);
   const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "0";
   return {
     year: Number(get("year")),

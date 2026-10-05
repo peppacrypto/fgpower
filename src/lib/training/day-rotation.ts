@@ -233,10 +233,24 @@ export function weekStartChoice<D extends RotationDay>(p: {
 
 const DAY_MS = 86_400_000;
 
+/**
+ * Memoized São Paulo calendar day per `Date` instance. The streak scan calls
+ * `dayNumberOf` on the same session/enrollment `Date` many times (once per
+ * calendar week it judges, in two full-session scans), so cache the result on
+ * the `Date` object. A `WeakMap` keeps no `Date` alive and is dropped with it,
+ * so it never grows unbounded; `Date`s here are never mutated after creation,
+ * so the memo never goes stale.
+ */
+const dayNumberCache = new WeakMap<Date, number>();
+
 /** The São Paulo calendar day of `date` as a day number (days since 1970-01-01). */
 export function dayNumberOf(date: Date): number {
+  const cached = dayNumberCache.get(date);
+  if (cached !== undefined) return cached;
   const w = wallClock(date);
-  return Math.floor(Date.UTC(w.year, w.month - 1, w.day) / DAY_MS);
+  const dayNo = Math.floor(Date.UTC(w.year, w.month - 1, w.day) / DAY_MS);
+  dayNumberCache.set(date, dayNo);
+  return dayNo;
 }
 
 /** Weekday (0 = Sunday) of a day number. */
