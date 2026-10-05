@@ -102,7 +102,7 @@ export async function getBlockProgress(
 ): Promise<BlockProgress> {
   const sessions = await db.workoutSession.findMany({
     where: { userId, enrollmentId: e.id, ...FINISHED },
-    select: { programWeek: true, programDayId: true, finishedAt: true },
+    select: { programWeek: true, programDayId: true, finishedAt: true, weekTargetSnapshot: true },
   });
   return blockProgress({
     currentWeek: e.currentWeek,
@@ -159,7 +159,7 @@ export async function closeBlock(db: Db, p: { userId: string; enrollmentId: stri
   }
   const sessions = await db.workoutSession.findMany({
     where: { userId: p.userId, enrollmentId: enrollment.id, ...FINISHED },
-    select: { programWeek: true, programDayId: true, finishedAt: true, totalWorkingSets: true },
+    select: { programWeek: true, programDayId: true, finishedAt: true, totalWorkingSets: true, weekTargetSnapshot: true },
   });
   const progress = blockProgress({
     currentWeek: enrollment.currentWeek,
@@ -312,7 +312,7 @@ export async function describeCompletedBlock(userId: string, enrollmentId: strin
   if (!e) return null;
   const sessions = await prisma.workoutSession.findMany({
     where: { userId, enrollmentId: e.id, ...FINISHED },
-    select: { id: true, programWeek: true, programDayId: true, finishedAt: true },
+    select: { id: true, programWeek: true, programDayId: true, finishedAt: true, weekTargetSnapshot: true },
   });
   const progress = blockProgress({
     currentWeek: e.currentWeek,

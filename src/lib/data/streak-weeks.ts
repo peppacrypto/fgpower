@@ -1,6 +1,7 @@
 import { resolveSessionDay } from "@/lib/training/day-match";
-import { dayNumberOf, mondayOf, repeatsDays } from "@/lib/training/day-rotation";
+import { dayNumberOf, mondayOf } from "@/lib/training/day-rotation";
 import { isPartialEntryWeek } from "@/lib/training/program-calendar";
+import { weekTargetOf, type WeekTargetSnapshot } from "@/lib/training/week-target";
 import { weekCounts, weeklyStreak, type StreakResult, type StreakWeek } from "@/lib/training/streak";
 import { entryWeekTarget, getWeekGuidance } from "@/lib/training/week-guidance";
 import { effectiveDeload } from "@/lib/training/deload";
@@ -40,6 +41,8 @@ export interface StreakSession {
   programDayIndex: number | null;
   name: string;
   programWeek: number | null;
+  /** The week's plan as trained (frozen at advanceProgram); null = read the live program (the current week, and pre-snapshot rows). */
+  weekTargetSnapshot?: WeekTargetSnapshot | null;
 }
 
 export interface StreakEnrollment {
@@ -71,8 +74,25 @@ export interface StreakWeekRow extends StreakWeek {
 /** The target a program sets for a full week (planWeek's): its trainable days, or the frequency when it repeats days. */
 export function programWeekTarget(program: StreakEnrollment["program"]): number {
   const trainable = program.days.filter((d) => d.exerciseCount > 0).length;
-  if (trainable === 0) return Math.max(1, program.daysPerWeek);
-  return repeatsDays(program.daysPerWeek, program.days.length) ? Math.max(trainable, program.daysPerWeek) : trainable;
+  return weekTargetOf(program.daysPerWeek, trainable, program.days.length);
+}
+
+/**
+ * The plan a week was trained under, from its latest finished workout's frozen
+ * snapshot (the structure the week ended on); null when none of its workouts
+ * carry one (pre-snapshot rows, or the current week). Lets a past week keep
+ * its target/count after the program is edited (spec A-001).
+ */
+function frozenWeekPlan(own: StreakSession[]): { planTarget: number; trainableDays: number } | null {
+  let latest: { at: number; snap: WeekTargetSnapshot } | null = null;
+  for (const s of own) {
+    if (!s.weekTargetSnapshot) continue;
+    const at = +s.finishedAt;
+    if (!latest || at >= latest.at) latest = { at, snap: s.weekTargetSnapshot };
+  }
+  if (!latest) return null;
+  const { daysPerWeek, trainableDays, dayCount } = latest.snap;
+  return { planTarget: weekTargetOf(daysPerWeek, trainableDays, dayCount), trainableDays };
 }
 
 /** Whether an enrollment's Thursday–Sunday entry week had a workout (it then moved the week counter). */
@@ -153,14 +173,19 @@ function judgeWeek(
   current: boolean,
 ): StreakWeekRow {
   const program = e.program;
-  const planTarget = programWeekTarget(program);
+  // A past week keeps the plan it was trained under (frozen on its workouts at
+  // advanceProgram); the current week reads the live program, as Today's meter
+  // does. Pre-snapshot rows fall back to the live program too — the backfill
+  // froze them to their program's structure at the time (spec A-001).
+  const frozen = current ? null : frozenWeekPlan(own);
+  const planTarget = frozen ? frozen.planTarget : programWeekTarget(program);
+  const trainableCount = frozen ? frozen.trainableDays : program.days.filter((d) => d.exerciseCount > 0).length;
   const startNo = dayNumberOf(e.startedAt);
   const entryWeek = mondayOf(startNo) === monday && isPartialEntryWeek(e.startedAt);
   const target = entryWeek ? entryWeekTarget(planTarget, e.startedAt) : Math.max(1, planTarget);
 
-  const trainableDays = program.days.filter((d) => d.exerciseCount > 0);
   const distinct = new Set(own.map((s) => resolveSessionDay(s, program.days)?.id ?? `name:${s.name}`)).size;
-  const repeats = Math.max(0, Math.min(own.length - distinct, planTarget - trainableDays.length));
+  const repeats = Math.max(0, Math.min(own.length - distinct, planTarget - trainableCount));
   // What the plan counts — never cut to an entry week's cap (two workouts are two, even in a 1-day entry week).
   const done = Math.min(planTarget, distinct + repeats);
 

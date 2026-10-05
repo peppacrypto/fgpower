@@ -317,3 +317,75 @@ describe("weekly streak weeks", () => {
     });
   });
 });
+
+describe("editing the running program keeps past weeks frozen (A-001)", () => {
+  type Snap = { daysPerWeek: number; trainableDays: number; dayCount: number };
+  const stamp = (s: ReturnType<typeof session>, snap: Snap) => ({ ...s, weekTargetSnapshot: snap });
+  const stampedWeeks = (snap: Snap, ...weeks: StreakSession[][]) => weeks.flat().map((s) => stamp(s, snap));
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- destructure to omit the snapshot (simulate a pre-snapshot row)
+  const strip = ({ weekTargetSnapshot, ...s }: ReturnType<typeof session> & { weekTargetSnapshot?: Snap }) => s;
+  // Four met weeks (Mon/Wed/Fri on A/B/C), programWeek 1..4; now = the empty Monday after.
+  const metWeeks = () => [
+    fullWeek("2026-08-31", 1),
+    fullWeek("2026-09-07", 2),
+    fullWeek("2026-09-14", 3),
+    fullWeek("2026-09-21", 4),
+  ];
+  const now = at("2026-09-28");
+  const dayD = { id: "d3", dayIndex: 3, name: "Sessão D", exerciseCount: 5 };
+  const run = (sessions: StreakSession[], program: Partial<StreakEnrollment["program"]>) =>
+    streakWeeksFrom({ sessions, enrollments: [enrollment(at("2026-08-31"), program)], profileDaysPerWeek: 3, now });
+
+  // --- Deflation: the edit raises the target. Past weeks must keep target 3. ---
+  it("adding a day does not wipe weeks trained under the old frequency", () => {
+    // Trained under A/B/C @ 3×; edited to A/B/C/D @ 4×.
+    const sessions = stampedWeeks({ daysPerWeek: 3, trainableDays: 3, dayCount: 3 }, ...metWeeks());
+    const edited = { days: [...days, dayD], daysPerWeek: 4 };
+    const rows = run(sessions, edited);
+    expect(rows.weeks.map((w) => [w.done, w.target, w.met])).toEqual([
+      [3, 3, true], [3, 3, true], [3, 3, true], [3, 3, true],
+    ]);
+    expect(summarizeStreak(rows).current).toBe(4);
+    // The current week follows the NEW plan (Today's "x/4").
+    expect(rows.thisWeek).toMatchObject({ done: 0, target: 4 });
+    // Without the frozen snapshot the edit silently wipes the run (the bug).
+    expect(summarizeStreak(run(sessions.map(strip), edited)).current).toBe(0);
+  });
+
+  it("raising the weekly frequency does not wipe past weeks", () => {
+    // Trained under A/B/C @ 3×; frequency raised to 4 (now a repeating plan, target 4).
+    const sessions = stampedWeeks({ daysPerWeek: 3, trainableDays: 3, dayCount: 3 }, ...metWeeks());
+    const edited = { days, daysPerWeek: 4 };
+    const rows = run(sessions, edited);
+    expect(rows.weeks.map((w) => w.met)).toEqual([true, true, true, true]);
+    expect(summarizeStreak(rows).current).toBe(4);
+    expect(summarizeStreak(run(sessions.map(strip), edited)).current).toBe(0);
+  });
+
+  // --- Inflation: a 5-day plan trained 3× (never met → current 0); removing/
+  //     emptying the 2 untrained days must NOT retroactively make them met. ---
+  const fiveDays = ["A", "B", "C", "D", "E"].map((n, i) => ({ id: `d${i}`, dayIndex: i, name: `Sessão ${n}`, exerciseCount: 5 }));
+  const trainedThree = () => stampedWeeks({ daysPerWeek: 3, trainableDays: 5, dayCount: 5 }, ...metWeeks()); // A/B/C only
+
+  it("removing the untrained days does not inflate weeks that fell short", () => {
+    const sessions = trainedThree();
+    const edited = { days, daysPerWeek: 3 }; // 5 days → 3 days
+    const rows = run(sessions, edited);
+    expect(rows.weeks.map((w) => [w.done, w.target, w.met])).toEqual([
+      [3, 5, false], [3, 5, false], [3, 5, false], [3, 5, false],
+    ]);
+    expect(summarizeStreak(rows).current).toBe(0);
+    // Without the snapshot the edit fabricates a 4-week streak (the bug).
+    expect(summarizeStreak(run(sessions.map(strip), edited)).current).toBe(4);
+  });
+
+  it("emptying the untrained days does not inflate weeks that fell short", () => {
+    const sessions = trainedThree();
+    const emptied = fiveDays.map((d, i) => (i >= 3 ? { ...d, exerciseCount: 0 } : d));
+    const edited = { days: emptied, daysPerWeek: 3 }; // D & E emptied
+    const rows = run(sessions, edited);
+    expect(rows.weeks.map((w) => w.met)).toEqual([false, false, false, false]);
+    expect(summarizeStreak(rows).current).toBe(0);
+    expect(summarizeStreak(run(sessions.map(strip), edited)).current).toBe(4);
+  });
+});

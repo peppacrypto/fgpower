@@ -242,6 +242,38 @@ Railway's classic `railway.json`/`railway.toml` config-as-code is being sunset
 (build/start/health-check/pre-deploy) are configured directly via the Railway API/CLI
 instead of a committed config file.
 
+**Rollback is not safe for 95e3c69 and later** — those releases run irreversible
+`ALTER TYPE … ADD VALUE` migrations and carry the Batch-5 security sweep, so an
+older image boots but fails on live data and silently reopens fixed holes. Roll
+forward instead; see `docs/RELEASE_SAFETY.md` for the runbook and the
+expand/contract policy for future enum values.
+
+### Deploy runbook
+
+Deploy **only** via `scripts/deploy-prod.sh` — do not run `railway up` by hand.
+The script refuses to deploy unless the working tree is clean and `HEAD` equals
+`origin/main`, unsets the project `RAILWAY_TOKEN` (otherwise the CLI fails with
+"Not signed in"), runs `npm run typecheck` and `npm run test`, tags the live
+build with the short commit SHA (readable at `/api/health` as `sha`), deploys the
+`web` service, and then **reseeds the production database** — the reseed
+(`ssh railway-web -- "npx tsx prisma/seed.ts"`) is mandatory, because new programs,
+evidence and catalog content only reach prod through it. Seeding is idempotent.
+
+Run it from the Claude prompt with: `! bash scripts/deploy-prod.sh`
+
+### Backups & disaster recovery
+
+The production database holds users' permanent training history, so every deploy
+carries a **pre-migration safety net**: `scripts/deploy-prod.sh` runs
+`scripts/backup-prod.sh` before `railway up` (and therefore before the preDeploy
+`prisma migrate deploy`), taking a compressed `pg_dump -Fc` from inside the Postgres
+container to a git-ignored local directory. It fails closed — no backup, no deploy
+(override with `FG_SKIP_BACKUP=1` for a code-only redeploy). Retention, an ad-hoc
+backup, and the restore-drill procedure are documented in
+**`docs/BACKUP_RESTORE.md`**. Platform-level scheduled backups/PITR should also be
+enabled and confirmed in the Railway dashboard (owner-managed — see the Owner
+checklist in that runbook) as a second, off-workstation line of defence.
+
 ## License notes
 
 FGPOWER's own code has no license file committed (all rights reserved by default) —

@@ -509,8 +509,17 @@ export async function swapExercise(exerciseLogId: string, newExerciseId: string)
     });
     const original = log.substitutedFromExerciseId ?? open.exerciseId;
     const back = newExerciseId === original;
-    // This log doesn't hold the pick yet (checked above): any count is another copy of it.
-    if ((await tx.workoutExerciseLog.count({ where: { sessionId: open.sessionId, exerciseId: newExerciseId } })) > 0) {
+    // A pick already in the workout is a second copy — refused. The exception
+    // is swapping a slot back to its own program exercise: the program itself
+    // can prescribe one lift in two slots (a top set and its back-offs, GD
+    // 2/4/6, A-002), so the other holders may be those program slots. A copy
+    // the user added or swapped in (no program slot prescribing it) still
+    // blocks the swap-back. This log doesn't hold the pick yet (checked above).
+    const holders = await tx.workoutExerciseLog.findMany({
+      where: { sessionId: open.sessionId, exerciseId: newExerciseId, id: { not: exerciseLogId } },
+      select: { programExercise: { select: { exerciseId: true } } },
+    });
+    if (holders.some((h) => !(back && h.programExercise?.exerciseId === newExerciseId))) {
       return "DUPLICATE" as const;
     }
     await tx.workoutExerciseLog.update({
@@ -947,6 +956,14 @@ async function advanceProgram(
   });
   if (!program || program.days.length === 0) return false;
   const days = program.days;
+  // The week's plan as trained, frozen on the session so a later edit never
+  // re-judges this week's streak/target (spec A-001; read by streak-weeks and
+  // block-progress for past weeks).
+  const weekTargetSnapshot = {
+    daysPerWeek: program.daysPerWeek,
+    trainableDays: days.filter((d) => d._count.exercises > 0).length,
+    dayCount: days.length,
+  };
 
   // userId keeps these on the (userId, …) indexes.
   const finished = {
@@ -964,7 +981,7 @@ async function advanceProgram(
   if (newer) {
     await tx.workoutSession.update({
       where: { id: s.sessionId },
-      data: { programWeek: newer.programWeek ?? s.enrollment.currentWeek },
+      data: { programWeek: newer.programWeek ?? s.enrollment.currentWeek, weekTargetSnapshot },
     });
     await tx.programEnrollment.update({ where: { id: s.enrollment.id }, data: { completedSessions: { increment: 1 } } });
     return false;
@@ -986,7 +1003,7 @@ async function advanceProgram(
   // 5" of a 4-week block — as a late workout of it (a day of that week left
   // over, done now).
   if (program.durationWeeks && countedWeeks(week, s.enrollment.startedAt, entryWeekTrained) > program.durationWeeks) {
-    await tx.workoutSession.update({ where: { id: s.sessionId }, data: { programWeek: s.enrollment.currentWeek } });
+    await tx.workoutSession.update({ where: { id: s.sessionId }, data: { programWeek: s.enrollment.currentWeek, weekTargetSnapshot } });
     await tx.programEnrollment.update({ where: { id: s.enrollment.id }, data: { completedSessions: { increment: 1 } } });
     return closeBlock(tx, { userId: s.userId, enrollmentId: s.enrollment.id, now: s.now });
   }
@@ -994,7 +1011,7 @@ async function advanceProgram(
   const thisDay = resolveSessionDay(s.session, days);
   const nextDayIndex = thisDay ? nextDayAfter(days, program.daysPerWeek, thisDay, thisWeek) : s.enrollment.nextDayIndex;
 
-  await tx.workoutSession.update({ where: { id: s.sessionId }, data: { programWeek: week } });
+  await tx.workoutSession.update({ where: { id: s.sessionId }, data: { programWeek: week, weekTargetSnapshot } });
   await tx.programEnrollment.update({
     where: { id: s.enrollment.id },
     data: { completedSessions: { increment: 1 }, nextDayIndex, currentWeek: week },

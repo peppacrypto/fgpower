@@ -8,6 +8,7 @@ import { SESSION_EXPIRED_ERROR } from "@/lib/auth/session-expired";
 import { prisma } from "@/lib/db";
 import type { ExerciseContent } from "@/lib/exercises/content";
 import { REPORT_REASON_LABEL, goneWorkoutOf, isReportReason } from "@/lib/social/notification-reports-core";
+import { normalizeText } from "@/lib/utils/normalize-text";
 import type { ActionResult } from "./result";
 
 function linesToArray(text: string): string[] {
@@ -44,6 +45,14 @@ export async function updateExerciseAdmin(exerciseId: string, input: ExerciseAdm
       }
     : null;
 
+  // searchText mirrors the seed (normalizeSearchText): names + aliases, normalized.
+  const aliases = await prisma.exerciseAlias.findMany({
+    where: { exerciseId },
+    select: { alias: true },
+    orderBy: { alias: "asc" },
+  });
+  const searchText = normalizeText([input.nameEn, input.namePt, ...aliases.map((a) => a.alias)].join(" "));
+
   await prisma.exercise.update({
     where: { id: exerciseId },
     data: {
@@ -52,6 +61,9 @@ export async function updateExerciseAdmin(exerciseId: string, input: ExerciseAdm
       isCurated: input.isCurated,
       isPublished: input.isPublished,
       contentPt: contentPt as never,
+      searchText,
+      // Mark the row admin-owned so the post-deploy reseed won't revert these fields (A-040).
+      adminEditedAt: new Date(),
     },
   });
 

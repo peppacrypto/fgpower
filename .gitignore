@@ -50,3 +50,7 @@ src/generated/
 /test-results
 /playwright-report
 /blob-report
+
+# database backups (scripts/backup-prod.sh) — never commit a dump
+/backups
+*.dump

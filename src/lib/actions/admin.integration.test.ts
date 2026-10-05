@@ -35,6 +35,7 @@ const admin = await import("./admin");
 const { getPublicProfile } = await import("@/lib/data/social");
 
 const userIds: string[] = [];
+const exerciseIds: string[] = [];
 async function makeUser(label: string, role = "user") {
   const id = `${RUN_ID}-${label}`;
   await prisma.user.create({
@@ -79,6 +80,7 @@ beforeEach(() => {
 
 afterAll(async () => {
   await prisma.user.deleteMany({ where: { id: { in: userIds } } });
+  await prisma.exercise.deleteMany({ where: { id: { in: exerciseIds } } });
   await prisma.$disconnect();
 });
 
@@ -224,5 +226,35 @@ describe("moderateReport", () => {
     expect(await admin.moderateReport(orphan1, "DISMISS")).toEqual({ ok: true, status: "DISMISSED", resolved: 1 });
     expect(await status(orphan2)).toBe("OPEN");
     await prisma.userReport.deleteMany({ where: { id: { in: [goneB, orphan2] } } });
+  });
+});
+
+describe("updateExerciseAdmin", () => {
+  it("recomputes searchText from the new names + aliases and stamps adminEditedAt (A-040)", async () => {
+    const admin1 = await makeUser("exadmin", "admin");
+    const exercise = await prisma.exercise.create({
+      data: { slug: `${RUN_ID}-ex`, nameEn: "Old Name", namePt: "Nome Antigo", searchText: "old name nome antigo" },
+    });
+    exerciseIds.push(exercise.id);
+    await prisma.exerciseAlias.create({ data: { exerciseId: exercise.id, alias: "apelido", locale: "pt-BR" } });
+
+    current = admin1;
+    await admin.updateExerciseAdmin(exercise.id, {
+      namePt: "Supino Reto",
+      nameEn: "Bench Press",
+      isCurated: false,
+      isPublished: true,
+      setupPt: "",
+      breathingPt: "",
+      coachingCuesPt: "",
+      commonMistakesPt: "",
+      rangeOfMotionPt: "",
+      whyThisExerciseExistsPt: "",
+    });
+
+    const after = await prisma.exercise.findUniqueOrThrow({ where: { id: exercise.id } });
+    expect(after.namePt).toBe("Supino Reto");
+    expect(after.searchText).toBe("bench press supino reto apelido");
+    expect(after.adminEditedAt).not.toBeNull();
   });
 });

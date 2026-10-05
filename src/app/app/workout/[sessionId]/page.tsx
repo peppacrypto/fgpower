@@ -122,7 +122,7 @@ export default async function WorkoutExecutionPage({ params, searchParams }: Pag
   const replaced = replacedLogIds(session.exerciseLogs);
   const groups = workoutGroups(session.exerciseLogs, replaced);
   const exercises = session.exerciseLogs.map((log, index) => {
-    const last = previous.get(log.exerciseId) ?? null;
+    const last = previous.get(log.id) ?? null;
     // The program exercise's own rule, then the program's, then double progression.
     const strategy = log.programExercise?.progressionStrategy ?? session.program?.progressionStrategy ?? "DOUBLE";
     const loadIncrementKg = log.programExercise?.loadIncrementKg ?? profile?.loadIncrementKg ?? 2.5;

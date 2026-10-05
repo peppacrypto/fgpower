@@ -152,6 +152,26 @@ describe("blockProgress", () => {
     const p = blockProgress({ currentWeek: 1, startedAt: MONDAY, durationWeeks: null, daysPerWeek: 3, dayCount: 3, sessions: [] });
     expect(p).toMatchObject({ week: 1, weeks: null, sessionsDone: 0, plannedSessions: null, adherencePct: null });
   });
+
+  it("keeps a finished week's count at the plan it was trained under (A-001)", () => {
+    type Snap = { daysPerWeek: number; trainableDays: number; dayCount: number };
+    const trained = (day: string, snap: Snap): BlockSession => ({
+      programWeek: 1,
+      programDayId: day,
+      finishedAt: plus(MONDAY, 1),
+      weekTargetSnapshot: snap,
+    });
+    // Week 1 trained A, B, A under a repeating A/B plan @ 3× (target 3, done 3).
+    const old: Snap = { daysPerWeek: 3, trainableDays: 2, dayCount: 2 };
+    const sessions = [trained("a", old), trained("b", old), trained("a", old)];
+    // The program is later edited to 3 distinct days @ 3× (live: no longer repeats).
+    const base = { currentWeek: 1, startedAt: MONDAY, durationWeeks: 8, daysPerWeek: 3, dayCount: 3 };
+    expect(blockProgress({ ...base, sessions }).sessionsDone).toBe(3);
+    // Without the snapshot the edit drops the repeating week from 3 to 2 (the bug).
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- destructure to omit the snapshot (simulate a pre-snapshot row)
+    const stripped = sessions.map(({ weekTargetSnapshot, ...s }) => s);
+    expect(blockProgress({ ...base, sessions: stripped }).sessionsDone).toBe(2);
+  });
 });
 
 describe("the entry week", () => {

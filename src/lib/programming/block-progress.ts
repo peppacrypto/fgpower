@@ -1,6 +1,7 @@
 import { isPartialEntryWeek } from "@/lib/training/program-calendar";
 import { startOfWeek } from "@/lib/training/week";
 import { effectiveProgramWeek } from "@/lib/training/week-guidance";
+import { parseWeekTargetSnapshot, type WeekTargetSnapshot } from "@/lib/training/week-target";
 
 /**
  * Where a program block stands — "Semana 3 de 13 · 18 de 65 treinos (92%
@@ -144,6 +145,8 @@ export interface BlockSession {
   programDayId: string | null;
   /** When it was finished: a workout in the entry week makes that week take a number. */
   finishedAt: Date | null;
+  /** The week's plan as trained (frozen at advanceProgram): editing the program later must not re-judge past weeks. Raw JSON; null = read the live plan. */
+  weekTargetSnapshot?: unknown;
 }
 
 export interface BlockProgressInput {
@@ -188,6 +191,18 @@ function weekCount(sessions: readonly BlockSession[], repeats: boolean): number 
   return ids.size + unlinked;
 }
 
+/** The plan a block week was trained under, from its latest finished workout's frozen snapshot (null: none stamped). */
+function frozenBlockPlan(sessions: readonly BlockSession[]): WeekTargetSnapshot | null {
+  let latest: { at: number; snap: WeekTargetSnapshot } | null = null;
+  for (const s of sessions) {
+    const snap = parseWeekTargetSnapshot(s.weekTargetSnapshot);
+    if (!snap) continue;
+    const at = s.finishedAt ? +s.finishedAt : 0;
+    if (!latest || at >= latest.at) latest = { at, snap };
+  }
+  return latest?.snap ?? null;
+}
+
 export function blockProgress(p: BlockProgressInput): BlockProgress {
   const entryWeekTrained = p.sessions.some((s) => s.finishedAt != null && inEntryWeek(p.startedAt, s.finishedAt));
   const offset = entryOffset(p.startedAt, entryWeekTrained);
@@ -204,8 +219,8 @@ export function blockProgress(p: BlockProgressInput): BlockProgress {
     });
   }
   const weeks = p.durationWeeks && p.durationWeeks > 0 ? p.durationWeeks : null;
-  const repeats = p.daysPerWeek > p.dayCount;
-  const target = Math.max(1, p.daysPerWeek);
+  const liveRepeats = p.daysPerWeek > p.dayCount;
+  const liveTarget = Math.max(1, p.daysPerWeek);
   // The last program week of the block reached so far; past the duration the block is over.
   const week = weeks !== null ? Math.min(counted, weeks) : counted;
   const over = weeks !== null && counted > weeks;
@@ -219,18 +234,39 @@ export function blockProgress(p: BlockProgressInput): BlockProgress {
     list.push(s);
     byWeek.set(w, list);
   }
-  const doneIn = (w: number) => Math.min(target, weekCount(byWeek.get(w) ?? [], repeats));
+  // Each week keeps the plan it was trained under (frozen on its workouts);
+  // weeks not yet trained, and pre-snapshot rows, read the live plan — so
+  // raising or lowering the frequency never rewrites a finished week's count
+  // or "N de M treinos" (spec A-001).
+  const planOf = (w: number): { target: number; repeats: boolean } => {
+    const snap = frozenBlockPlan(byWeek.get(w) ?? []);
+    return snap
+      ? { target: Math.max(1, snap.daysPerWeek), repeats: snap.daysPerWeek > snap.dayCount }
+      : { target: liveTarget, repeats: liveRepeats };
+  };
+  const doneIn = (w: number) => {
+    const plan = planOf(w);
+    return Math.min(plan.target, weekCount(byWeek.get(w) ?? [], plan.repeats));
+  };
   let done = 0;
   for (let w = 1; w <= week; w++) done += doneIn(w);
-  // Weeks behind ask for their full target; the week in progress only for what it has.
-  const asked = week === 0 ? 0 : (week - 1) * target + (over ? target : doneIn(week));
+  // Weeks behind ask for their full (frozen) target; the week in progress only for what it has.
+  let asked = 0;
+  for (let w = 1; w < week; w++) asked += planOf(w).target;
+  if (week > 0) asked += over ? planOf(week).target : doneIn(week);
+  // Planned = each counted week's frozen target, plus the live target for the weeks still to come.
+  let plannedSessions: number | null = null;
+  if (weeks !== null) {
+    plannedSessions = 0;
+    for (let w = 1; w <= weeks; w++) plannedSessions += w <= week ? planOf(w).target : liveTarget;
+  }
 
   return {
     entryWeek: counted === 0,
     week,
     weeks,
     sessionsDone: done,
-    plannedSessions: weeks !== null ? weeks * target : null,
+    plannedSessions,
     adherencePct: asked > 0 ? Math.min(100, Math.round((done / asked) * 100)) : null,
   };
 }

@@ -1,5 +1,6 @@
 import "server-only";
 import { prisma } from "@/lib/db";
+import { parseWeekTargetSnapshot } from "@/lib/training/week-target";
 import {
   streakWeeksFrom,
   summarizeStreak,
@@ -34,6 +35,7 @@ export async function loadStreakInputs(userId: string, now: Date = new Date()) {
         programDayIndex: true,
         name: true,
         programWeek: true,
+        weekTargetSnapshot: true,
       },
     }),
     prisma.programEnrollment.findMany({
@@ -59,7 +61,7 @@ export async function loadStreakInputs(userId: string, now: Date = new Date()) {
   ]);
   return {
     sessions: sessions.flatMap((s): (StreakSession & { id: string })[] =>
-      s.finishedAt ? [{ ...s, finishedAt: s.finishedAt }] : [],
+      s.finishedAt ? [{ ...s, finishedAt: s.finishedAt, weekTargetSnapshot: parseWeekTargetSnapshot(s.weekTargetSnapshot) }] : [],
     ),
     enrollments: enrollments.map(
       (e): StreakEnrollment => ({

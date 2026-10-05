@@ -19,6 +19,21 @@ const nextConfig: NextConfig = {
   // the link-preview bots that aren't in it.
   htmlLimitedBots:
     /[\w-]+-Google|Google-[\w-]+|Chrome-Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|Yeti|googleweblight|TelegramBot|Signal|Iframely|Embedly|Pinterest|Bluesky|Mastodon/i,
+  // Canonical host: anyone who reaches us on www.fgpower.monster is sent to
+  // the apex with a 308 (method/body preserving), keeping the path and query.
+  // Requires `www` to be attached as a custom domain on the Railway web
+  // service — otherwise the request hits Railway's *.up.railway.app fallback
+  // (cert mismatch + "Application not found") and this redirect never runs.
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.fgpower.monster" }],
+        destination: "https://fgpower.monster/:path*",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

@@ -22,6 +22,7 @@ interface CuratedExercise {
   evidenceNotesPt: Record<string, string>;
 }
 import { normalizeText } from "../src/lib/utils/normalize-text";
+import { exerciseReseedUpdate } from "../src/lib/exercises/exercise-reseed";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -452,9 +453,16 @@ async function seedCuratedExerciseContent() {
 
   let count = 0;
   for (const c of curated) {
-    const exercise = await prisma.exercise.findUnique({ where: { slug: c.slug } });
+    const exercise = await prisma.exercise.findUnique({
+      where: { slug: c.slug },
+      select: { id: true, adminEditedAt: true },
+    });
     if (!exercise) {
       console.warn(`  curated content: exercise slug "${c.slug}" not found, skipping.`);
+      continue;
+    }
+    if (exercise.adminEditedAt) {
+      console.log(`  curated content: "${c.slug}" has admin edits, leaving content/evidence as-is (A-040).`);
       continue;
     }
 
@@ -655,6 +663,13 @@ async function seedExercises() {
     return;
   }
 
+  // Slugs an admin has edited: the reseed keeps their names + searchText (A-040).
+  const adminEditedSlugs = new Set(
+    (await prisma.exercise.findMany({ where: { adminEditedAt: { not: null } }, select: { slug: true } })).map(
+      (e) => e.slug,
+    ),
+  );
+
   let count = 0;
   for (const ex of exercises) {
     const searchText = normalizeSearchText(ex, []);
@@ -680,20 +695,7 @@ async function seedExercises() {
           instructionsPt: ex.instructionsPt,
           searchText,
         },
-        update: {
-          nameEn: ex.nameEn,
-          namePt: ex.namePt,
-          category: ex.category as never,
-          movementPatternId: ex.movementPattern,
-          equipmentId: ex.equipment,
-          difficulty: ex.difficulty as never,
-          forceType: ex.forceType as never,
-          laterality: ex.laterality as never,
-          mechanics: ex.mechanics as never,
-          instructionsEn: ex.instructionsEn,
-          instructionsPt: ex.instructionsPt,
-          searchText,
-        },
+        update: exerciseReseedUpdate(ex, searchText, adminEditedSlugs.has(ex.slug)),
       });
 
       // Muscles: replace the set each run (cheap, exercise-scoped).

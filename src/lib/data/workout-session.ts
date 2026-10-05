@@ -115,46 +115,66 @@ export interface PreviousPerformance {
  * deload workout (W-128: half the sets, RIR 3-4 on purpose) is never the
  * reference for a normal one — "Na próxima" starts from the last workout
  * before it; within a deload week it is (the same light loads).
- * Keyed by exerciseId.
+ * Keyed by the session's exercise-log id, so a lift's top-set and back-off
+ * slots (same exercise, different program slot — GD 2/4/6, A-002) each read
+ * their own slot's history, not one shared row.
  */
 export async function getPreviousPerformances(userId: string, sessionId: string) {
   const rows = await prisma.$queryRaw<
     {
+      curLogId: string;
       exerciseId: string;
       doneAt: Date;
       prescribedSets: number;
       sets: PreviousPerformance["sets"] | string;
     }[]
   >`
-    WITH last AS (
-      SELECT DISTINCT ON (l."exerciseId")
-        l.id, l."exerciseId", l."prescribedSets", COALESCE(s."finishedAt", l."createdAt") AS "doneAt"
+    WITH cur AS (
+      SELECT c.id AS "curLogId", c."exerciseId", c."programExerciseId",
+        row_number() OVER (PARTITION BY c."exerciseId" ORDER BY c."sortOrder", c.id) AS ord
+      FROM "WorkoutExerciseLog" c
+      WHERE c."sessionId" = ${sessionId} AND c."userId" = ${userId}
+    ), cand AS (
+      SELECT l.id, l."exerciseId", l."programExerciseId", l."prescribedSets",
+        COALESCE(s."finishedAt", l."createdAt") AS "doneAt",
+        row_number() OVER (PARTITION BY l."sessionId", l."exerciseId" ORDER BY l."sortOrder", l.id) AS ord
       FROM "WorkoutExerciseLog" l
       JOIN "WorkoutSession" s ON s.id = l."sessionId"
       WHERE l."userId" = ${userId}
         AND l."sessionId" <> ${sessionId}
         AND s.status = 'COMPLETED'
         AND (NOT s."isDeload" OR (SELECT c."isDeload" FROM "WorkoutSession" c WHERE c.id = ${sessionId}))
-        AND l."exerciseId" IN (
-          SELECT c."exerciseId" FROM "WorkoutExerciseLog" c WHERE c."sessionId" = ${sessionId} AND c."userId" = ${userId}
-        )
+        AND l."exerciseId" IN (SELECT "exerciseId" FROM cur)
         AND EXISTS (
           SELECT 1 FROM "SetLog" x WHERE x."exerciseLogId" = l.id AND x."isCompleted" AND x."setType" = 'WORKING'
         )
-      ORDER BY l."exerciseId", COALESCE(s."finishedAt", l."createdAt") DESC, l."createdAt" DESC
+    ), last AS (
+      SELECT DISTINCT ON (cur."curLogId")
+        cur."curLogId", cur."exerciseId", cand.id, cand."prescribedSets", cand."doneAt"
+      FROM cur
+      JOIN cand ON cand."exerciseId" = cur."exerciseId"
+        AND (
+          (cand."programExerciseId" IS NOT NULL AND cand."programExerciseId" = cur."programExerciseId")
+          OR cand.ord = cur.ord
+        )
+      -- Prefer the same program slot (stable across weeks), then the most
+      -- recent; the ordinal (sortOrder rank) breaks the shared-createdAt tie.
+      ORDER BY cur."curLogId",
+        (cand."programExerciseId" IS NOT NULL AND cand."programExerciseId" = cur."programExerciseId") DESC,
+        cand."doneAt" DESC, cand.id DESC
     )
-    SELECT last."exerciseId", last."doneAt", last."prescribedSets",
+    SELECT last."curLogId", last."exerciseId", last."doneAt", last."prescribedSets",
       json_agg(
         json_build_object('weightKg', x."weightKg", 'reps', x.reps, 'rir', x.rir, 'isExtra', x."isExtra")
         ORDER BY x."setNumber"
       ) AS sets
     FROM last
     JOIN "SetLog" x ON x."exerciseLogId" = last.id AND x."isCompleted" AND x."setType" = 'WORKING'
-    GROUP BY last."exerciseId", last."doneAt", last."prescribedSets"`;
+    GROUP BY last."curLogId", last."exerciseId", last."doneAt", last."prescribedSets"`;
   const out = new Map<string, PreviousPerformance>();
   for (const r of rows) {
     const sets = typeof r.sets === "string" ? (JSON.parse(r.sets) as PreviousPerformance["sets"]) : r.sets;
-    out.set(r.exerciseId, { exerciseId: r.exerciseId, doneAt: new Date(r.doneAt), prescribedSets: r.prescribedSets, sets });
+    out.set(r.curLogId, { exerciseId: r.exerciseId, doneAt: new Date(r.doneAt), prescribedSets: r.prescribedSets, sets });
   }
   return out;
 }
@@ -442,12 +462,34 @@ export async function getExerciseOptions(
 ): Promise<ExerciseOptions | null> {
   const session = await prisma.workoutSession.findFirst({
     where: { id: p.sessionId, userId, status: "IN_PROGRESS" },
-    select: { exerciseLogs: { select: { id: true, exerciseId: true, substitutedFromExerciseId: true } } },
+    select: {
+      exerciseLogs: {
+        select: {
+          id: true,
+          exerciseId: true,
+          substitutedFromExerciseId: true,
+          // Which logs are program slots that prescribe their exercise (A-002):
+          // a slot may swap back to its own exercise while a sibling slot holds it.
+          programExercise: { select: { exerciseId: true } },
+        },
+      },
+    },
   });
   if (!session) return null;
   const log = p.exerciseLogId ? session.exerciseLogs.find((l) => l.id === p.exerciseLogId) : undefined;
   if (p.exerciseLogId && !log) return null;
   const inWorkout = session.exerciseLogs.map((l) => l.exerciseId);
+  // A slot may always be swapped back to its own program exercise, even when
+  // another log already holds it — but only when every other holder is a
+  // program slot that itself prescribes that exercise (a lift's top set and
+  // its back-offs, GD 2/4/6, A-002). A copy the user added or swapped in still
+  // blocks it, so offering the swap-back then would make a redundant copy.
+  const swapBackId = log?.substitutedFromExerciseId ?? null;
+  const allowBack =
+    swapBackId != null &&
+    session.exerciseLogs.every(
+      (l) => l.id === log!.id || l.exerciseId !== swapBackId || l.programExercise?.exerciseId === swapBackId,
+    );
   const hasData = log
     ? (await prisma.setLog.count({
         where: {
@@ -464,7 +506,7 @@ export async function getExerciseOptions(
     // from, isn't in it — unless it was added elsewhere since, and then swapping back is refused.
     return {
       options: items
-        .filter((e) => !inWorkout.includes(e.id))
+        .filter((e) => !inWorkout.includes(e.id) || (allowBack && e.id === swapBackId))
         .map((e) => optionOf(e, e.id === log?.substitutedFromExerciseId ? "ORIGINAL" : "SEARCH")),
       hasData,
     };
@@ -478,7 +520,7 @@ export async function getExerciseOptions(
   const profile = await prisma.profile.findUnique({ where: { userId }, select: { equipmentAccess: true } });
   const base = log.substitutedFromExerciseId ?? log.exerciseId;
   const [original, alternatives] = await Promise.all([
-    log.substitutedFromExerciseId && !inWorkout.includes(log.substitutedFromExerciseId)
+    log.substitutedFromExerciseId && (!inWorkout.includes(log.substitutedFromExerciseId) || allowBack)
       ? prisma.exercise.findUnique({
           where: { id: log.substitutedFromExerciseId },
           select: {

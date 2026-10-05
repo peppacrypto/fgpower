@@ -487,6 +487,106 @@ describe("the sheet's lists (getExerciseOptions, getTechniqueSheet)", () => {
   });
 });
 
+describe("same-exercise top-set and back-off slots each read their own history (A-002)", () => {
+  // A GD 2/4/6-style Monday: one lift in two slots — heavy top sets, then
+  // lighter back-offs — so both program slots share an exerciseId but not a
+  // programExerciseId, and (one nested create) one createdAt. The slots are
+  // told apart by their program slot, not by time.
+  let twoSlot: { programId: string; dayId: string; enrollmentId: string };
+
+  async function twoSlotDay() {
+    const program = await prisma.userProgram.create({
+      data: {
+        userId: USER_ID,
+        name: "Âncora",
+        status: "ACTIVE",
+        daysPerWeek: 1,
+        days: {
+          create: [
+            {
+              dayIndex: 0,
+              name: "Segunda",
+              exercises: {
+                create: [
+                  { exerciseId: exerciseIds[0], sortOrder: 0, sets: 1, repMin: 3, repMax: 5, notes: "TOP SETS" },
+                  { exerciseId: exerciseIds[0], sortOrder: 1, sets: 1, repMin: 6, repMax: 10, notes: "BACK-OFFS" },
+                ],
+              },
+            },
+          ],
+        },
+      },
+      include: { days: true },
+    });
+    const e = await prisma.programEnrollment.create({
+      data: { userId: USER_ID, programId: program.id, status: "ACTIVE", currentWeek: 1, nextDayIndex: 0, programSnapshot: {} },
+    });
+    return { programId: program.id, dayId: program.days[0].id, enrollmentId: e.id };
+  }
+
+  /** Opens the day, ✓'s one working set in each slot (by sortOrder) at the given loads, and finishes. */
+  async function trainSlots(dayId: string, loads: { weightKg: number; reps: number }[]) {
+    const sessionId = await startOn(dayId);
+    const logs = await prisma.workoutExerciseLog.findMany({
+      where: { sessionId },
+      orderBy: { sortOrder: "asc" },
+      select: { id: true },
+    });
+    for (const [i, l] of logs.entries()) {
+      const set = await prisma.setLog.findFirstOrThrow({
+        where: { exerciseLogId: l.id, setType: "WORKING" },
+        orderBy: { setNumber: "asc" },
+      });
+      expect(await actions.logSet({ setLogId: set.id, weightKg: loads[i].weightKg, reps: loads[i].reps, rir: null })).toEqual({ ok: true });
+    }
+    expect(await redirectOf(actions.finishWorkoutSession(sessionId))).toBe(`/app/workout/${sessionId}/summary`);
+    return sessionId;
+  }
+
+  it("the back-off row reads the back-off history, not the top set's", async () => {
+    const { getPreviousPerformances } = await import("@/lib/data/workout-session");
+    twoSlot = await twoSlotDay();
+    // Week 1: top sets 100 kg × 4, back-offs 85 kg × 8.
+    await trainSlots(twoSlot.dayId, [
+      { weightKg: 100, reps: 4 },
+      { weightKg: 85, reps: 8 },
+    ]);
+    // Week 2: the same day again (a fresh in-progress session).
+    const week2 = await startOn(twoSlot.dayId);
+    const [top, back] = await prisma.workoutExerciseLog.findMany({
+      where: { sessionId: week2 },
+      orderBy: { sortOrder: "asc" },
+      select: { id: true },
+    });
+    const previous = await getPreviousPerformances(USER_ID, week2);
+    // Each slot reads its own slot's last time — keyed by the current log id.
+    expect(previous.get(top.id)?.sets.map((s) => s.weightKg)).toEqual([100]);
+    expect(previous.get(back.id)?.sets.map((s) => s.weightKg)).toEqual([85]);
+    await actions.discardWorkoutSession(week2);
+  });
+
+  it("a slot swaps back to its own program exercise even while the sibling slot holds it", async () => {
+    const { getExerciseOptions } = await import("@/lib/data/workout-session");
+    const sessionId = await startOn(twoSlot.dayId);
+    const [top, backOff] = await prisma.workoutExerciseLog.findMany({
+      where: { sessionId },
+      orderBy: { sortOrder: "asc" },
+      select: { id: true, exerciseId: true },
+    });
+    expect(backOff.exerciseId).toBe(exerciseIds[0]); // the sibling still holds the lift
+    const back = exerciseIds[0];
+    // Swap the top-set slot to another exercise.
+    expect(await actions.swapExercise(top.id, exerciseIds[1])).toEqual({ ok: true, exerciseLogId: top.id });
+    // "Do programa" is still offered even though the back-off slot holds the lift.
+    const offered = (await getExerciseOptions(USER_ID, { sessionId, exerciseLogId: top.id }))!.options;
+    expect(offered.some((o) => o.id === back && o.reason === "ORIGINAL")).toBe(true);
+    // And the swap back succeeds, leaving the lift in both slots.
+    expect(await actions.swapExercise(top.id, back)).toEqual({ ok: true, exerciseLogId: top.id });
+    expect(await prisma.workoutExerciseLog.count({ where: { sessionId, exerciseId: back } })).toBe(2);
+    await actions.discardWorkoutSession(sessionId);
+  });
+});
+
 describe("Trocar / Adicionar against each other and against set writes", () => {
   // Each test's workout is discarded at the end, passed or not: an open one with sets would block the next start.
   const open: string[] = [];

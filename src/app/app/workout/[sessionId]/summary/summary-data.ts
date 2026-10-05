@@ -132,7 +132,7 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
     .map((log, index) => {
       const done = log.sets.filter((s) => s.isCompleted && s.setType !== "WARMUP");
       if (done.length === 0) return null;
-      const prev = previous.get(log.exerciseId) ?? null;
+      const prev = previous.get(log.id) ?? null;
       // "Na próxima" is the advice the workout screen will give next time: the
       // same rule (set-plan's adviceFromLastTime) on the same sets — the
       // prescribed working ones (extras are bonus), with a load increase only
@@ -279,16 +279,25 @@ function shareState(
 export type WorkoutSummary = Extract<NonNullable<Awaited<ReturnType<typeof loadWorkoutSummary>>>, { status: "COMPLETED" }>;
 
 /**
- * For each exercise of the session, its most recent COMPLETED log finished
+ * For each exercise log of the session, its most recent COMPLETED log finished
  * BEFORE this session (with at least one working set done) — so a summary
  * opened from the history compares with the time before it, not with later
  * workouts. A deload workout (light on purpose) is never the reference for a
- * normal one; a deload workout compares with anything. One query.
+ * normal one; a deload workout compares with anything. Keyed by the session's
+ * exercise-log id, matched to the same program slot (programExerciseId), with
+ * an ordinal fallback, so a lift's top-set and back-off rows each compare with
+ * their own slot (A-002). One query.
  */
 async function previousPerformances(userId: string, sessionId: string) {
-  const rows = await prisma.$queryRaw<{ exerciseId: string; doneAt: Date; sets: LiteSet[] | string }[]>`
-    WITH last AS (
-      SELECT DISTINCT ON (l."exerciseId") l.id, l."exerciseId", s."finishedAt" AS "doneAt"
+  const rows = await prisma.$queryRaw<{ curLogId: string; doneAt: Date; sets: LiteSet[] | string }[]>`
+    WITH cur AS (
+      SELECT c.id AS "curLogId", c."exerciseId", c."programExerciseId",
+        row_number() OVER (PARTITION BY c."exerciseId" ORDER BY c."sortOrder", c.id) AS ord
+      FROM "WorkoutExerciseLog" c
+      WHERE c."sessionId" = ${sessionId}
+    ), cand AS (
+      SELECT l.id, l."exerciseId", l."programExerciseId", s."finishedAt" AS "doneAt",
+        row_number() OVER (PARTITION BY l."sessionId", l."exerciseId" ORDER BY l."sortOrder", l.id) AS ord
       FROM "WorkoutExerciseLog" l
       JOIN "WorkoutSession" s ON s.id = l."sessionId"
       WHERE l."userId" = ${userId}
@@ -296,24 +305,34 @@ async function previousPerformances(userId: string, sessionId: string) {
         AND s.status = 'COMPLETED'
         AND s."finishedAt" < (SELECT c."finishedAt" FROM "WorkoutSession" c WHERE c.id = ${sessionId})
         AND (NOT s."isDeload" OR (SELECT c."isDeload" FROM "WorkoutSession" c WHERE c.id = ${sessionId}))
-        AND l."exerciseId" IN (SELECT e."exerciseId" FROM "WorkoutExerciseLog" e WHERE e."sessionId" = ${sessionId})
+        AND l."exerciseId" IN (SELECT "exerciseId" FROM cur)
         AND EXISTS (
           SELECT 1 FROM "SetLog" x WHERE x."exerciseLogId" = l.id AND x."isCompleted" AND x."setType" <> 'WARMUP'
         )
-      ORDER BY l."exerciseId", s."finishedAt" DESC
+    ), last AS (
+      SELECT DISTINCT ON (cur."curLogId") cur."curLogId", cand.id, cand."doneAt"
+      FROM cur
+      JOIN cand ON cand."exerciseId" = cur."exerciseId"
+        AND (
+          (cand."programExerciseId" IS NOT NULL AND cand."programExerciseId" = cur."programExerciseId")
+          OR cand.ord = cur.ord
+        )
+      ORDER BY cur."curLogId",
+        (cand."programExerciseId" IS NOT NULL AND cand."programExerciseId" = cur."programExerciseId") DESC,
+        cand."doneAt" DESC, cand.id DESC
     )
-    SELECT last."exerciseId", last."doneAt",
+    SELECT last."curLogId", last."doneAt",
       json_agg(
         json_build_object('weightKg', x."weightKg", 'reps', x.reps, 'isExtra', x."isExtra")
         ORDER BY x."setNumber"
       ) AS sets
     FROM last
     JOIN "SetLog" x ON x."exerciseLogId" = last.id AND x."isCompleted" AND x."setType" <> 'WARMUP'
-    GROUP BY last."exerciseId", last."doneAt"`;
+    GROUP BY last."curLogId", last."doneAt"`;
   const out = new Map<string, { doneAt: Date; sets: LiteSet[] }>();
   for (const r of rows) {
     const sets = typeof r.sets === "string" ? (JSON.parse(r.sets) as LiteSet[]) : r.sets;
-    out.set(r.exerciseId, { doneAt: new Date(r.doneAt), sets });
+    out.set(r.curLogId, { doneAt: new Date(r.doneAt), sets });
   }
   return out;
 }

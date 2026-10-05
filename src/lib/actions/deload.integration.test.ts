@@ -263,8 +263,14 @@ describe("applyDeload / undoDeload", () => {
     await prisma.programEnrollment.update({ where: { id: enrollmentId }, data: { deloadMondays: [] } });
     const normal = await start(dayB);
     expect((await prisma.workoutSession.findUniqueOrThrow({ where: { id: normal } })).isDeload).toBe(false);
+    // getPreviousPerformances is now keyed by the current session's exercise-log id (A-002),
+    // so look up the squat's log in the normal session rather than by its exerciseId.
+    const normalSquat = await prisma.workoutExerciseLog.findFirstOrThrow({
+      where: { sessionId: normal, exerciseId: squat.exerciseId },
+      orderBy: { sortOrder: "asc" },
+    });
     const previous = await getPreviousPerformances(USER_ID, normal);
-    expect(previous.get(squat.exerciseId)?.sets[0]).toMatchObject({ weightKg: 100, reps: 8 });
+    expect(previous.get(normalSquat.id)?.sets[0]).toMatchObject({ weightKg: 100, reps: 8 });
     await workouts.discardWorkoutSession(normal);
   });
 
