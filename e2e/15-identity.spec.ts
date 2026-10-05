@@ -43,7 +43,9 @@ async function onboard(page: Page, opts: { email: string; googleName?: string; n
   await page.goto("/onboarding");
   await page.getByLabel("Nome de exibição").fill(opts.name);
   if (opts.handle !== undefined) await page.getByLabel("Seu @usuário (opcional)").fill(opts.handle);
+  await page.locator("#confirm-adult").check();
   for (let i = 0; i < 3; i++) await page.getByRole("button", { name: "Continuar" }).click();
+  await page.locator('input[name="healthConsent"]').check();
   await Promise.all([
     page.waitForURL(/\/app\/today/, { timeout: 30_000 }),
     page.getByRole("button", { name: "Ver meu plano" }).click(),
@@ -69,9 +71,11 @@ test("onboarding gives every account a public handle", async ({ page }) => {
   await expect(handle).toHaveValue(expected);
   await expect(page.getByText(`/u/${expected}`)).toBeVisible();
   // Enter in the handle field is "next", like in the name field.
+  await page.locator("#confirm-adult").check();
   await handle.press("Enter");
   await expect(page.getByRole("heading", { level: 1, name: /principal objetivo/ })).toBeVisible();
   for (let i = 0; i < 2; i++) await page.getByRole("button", { name: "Continuar" }).click();
+  await page.locator('input[name="healthConsent"]').check();
   await Promise.all([page.waitForURL(/\/app\/today/), page.getByRole("button", { name: "Ver meu plano" }).click()]);
   expect((await handleOf(first)).username).toBe(expected);
 
@@ -115,7 +119,9 @@ test("a typed handle is checked before moving on, then claimed as typed", async 
   await field.fill(`@${mine}`); // a pasted "@" is dropped
   await expect(field).toHaveValue(mine);
   await expect(page.getByText("Disponível ✓")).toBeVisible();
+  await page.locator("#confirm-adult").check();
   for (let i = 0; i < 3; i++) await page.getByRole("button", { name: "Continuar" }).click();
+  await page.locator('input[name="healthConsent"]').check();
   await Promise.all([page.waitForURL(/\/app\/today/), page.getByRole("button", { name: "Ver meu plano" }).click()]);
   expect(await handleOf(email)).toEqual({ username: mine.toLowerCase(), displayUsername: mine });
 
@@ -244,8 +250,10 @@ test("a session that ends mid-wizard signs in again and resumes the wizard, dest
   await loginAsTestUser(page, email);
   await page.goto(`/onboarding?next=${encodeURIComponent(program)}`);
   await page.getByLabel("Nome de exibição").fill("Rita");
+  await page.locator("#confirm-adult").check();
   for (let i = 0; i < 3; i++) await page.getByRole("button", { name: "Continuar" }).click();
   await page.getByLabel(/Limitações/).fill("Joelho esquerdo");
+  await page.locator('input[name="healthConsent"]').check();
 
   // Signed out on another device: the cookie is still here, the session isn't.
   await revokeSessions(email, context);
@@ -273,7 +281,9 @@ test("with the cookie gone mid-wizard, Entrar keeps the wizard's destination", a
   await loginAsTestUser(page, email);
   await page.goto(`/onboarding?next=${encodeURIComponent(program)}`);
   await page.getByLabel("Nome de exibição").fill("Rita");
+  await page.locator("#confirm-adult").check();
   for (let i = 0; i < 3; i++) await page.getByRole("button", { name: "Continuar" }).click();
+  await page.locator('input[name="healthConsent"]').check();
 
   await context.clearCookies();
   await page.getByRole("button", { name: "Ver meu plano" }).click();
@@ -318,19 +328,20 @@ test("an account outside Descobrir is told where its profile lives", async ({ pa
   const handle = `oculta_${tag()}`;
   await onboard(page, { email, name: "Oculta", handle });
   await page.goto("/app/profile");
-  await expect(page.getByText("Seu endereço público")).toHaveCount(0); // discoverable by default
-
-  // As the backfill leaves accounts that never picked a handle.
-  await db.query(
-    `update "Profile" set discoverable = false where "userId" = (select id from "user" where email = $1)`,
-    [email],
-  );
-  await page.reload();
+  // New accounts start out of Descobrir (A-049, private by default): the hint shows.
   await expect(page.getByText("Seu endereço público")).toBeVisible();
   await expect(page.getByText(`/u/${handle}`)).toBeVisible();
   await page.getByRole("link", { name: "Ajustar privacidade" }).click();
   await expect(page).toHaveURL(/\/app\/settings#privacidade/);
   await expect(page.getByRole("switch", { name: /Permitir que sua conta seja descoberta/ })).not.toBeChecked();
+
+  // Once the account opts into discovery, the hint is gone.
+  await db.query(
+    `update "Profile" set discoverable = true where "userId" = (select id from "user" where email = $1)`,
+    [email],
+  );
+  await page.goto("/app/profile");
+  await expect(page.getByText("Seu endereço público")).toHaveCount(0);
 });
 
 // A session cookie that no longer resolves (revoked, or expired on the server)

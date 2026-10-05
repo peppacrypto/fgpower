@@ -139,6 +139,7 @@ export default async function WorkoutSummaryPage({ params, searchParams }: PageP
           link={share.link}
           followerCount={share.followerCount}
           privateNotice={share.privateNotice}
+          moderated={share.moderated}
         />
       </section>
 

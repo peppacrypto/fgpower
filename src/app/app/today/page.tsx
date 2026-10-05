@@ -72,6 +72,8 @@ import { NotificationsBell } from "@/components/nav/notifications-bell";
 import { TeamStrip } from "./team-strip";
 import { FatigueCard } from "./fatigue-card";
 import { WeighInRow } from "./weigh-in-row";
+import { PolicyUpdateNotice } from "./policy-notice";
+import { POLICY_VERSION } from "@/lib/legal/policy";
 
 export const metadata: Metadata = { title: "Hoje" };
 
@@ -401,6 +403,10 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
         </div>
         <NotificationsBell />
       </div>
+
+      {/* A-054 — one-time notice when the accepted policy version trails the
+          current one. New accounts accept at onboarding, so stale is false. */}
+      <PolicyUpdateNotice stale={profile != null && profile.acknowledgedPolicyVersion !== POLICY_VERSION} />
 
       {/* One-time outcome notices (the params are cleared once shown) */}
       {param("descartado") === "1" ? <Notice>Treino descartado.</Notice> : null}

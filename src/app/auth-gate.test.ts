@@ -95,6 +95,7 @@ const OPEN_ACTIONS: Record<string, string> = {
   "app/email/cancelar/actions.ts unsubscribeDigest": "the signed token is the grant",
   "app/email/cancelar/actions.ts resubscribeDigest": "the signed token is the grant",
   "app/app/programs/new/page.tsx createAction": "createCustomProgram checks the session (requireUserOrThrow)",
+  "lib/actions/data-request.ts submitDataRequest": "public LGPD art.18 request form — must work logged-out/suspended (A-050/A-009); per-IP rate-limited",
 };
 
 function files(dir: string, name: RegExp): string[] {

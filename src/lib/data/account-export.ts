@@ -48,6 +48,7 @@ export async function loadAccountExport(userId: string) {
     reminderDeliveries,
     emails,
     dismissals,
+    sessions,
   ] = await Promise.all([
     prisma.user.findUnique({
       where: { id: userId },
@@ -276,6 +277,13 @@ export async function loadAccountExport(userId: string) {
       select: { kind: true, subject: true, status: true, createdAt: true },
     }),
     prisma.userDismissal.findMany({ where: { userId }, orderBy: { createdAt: "asc" }, select: { key: true, createdAt: true } }),
+    // A-051: the sign-in log the account keeps (IP + device, +90 days) — part of
+    // "tudo". The session token itself is a credential and is never exported.
+    prisma.session.findMany({
+      where: { userId },
+      orderBy: { createdAt: "asc" },
+      select: { ipAddress: true, userAgent: true, createdAt: true, updatedAt: true, expiresAt: true },
+    }),
   ]);
 
   return {
@@ -307,6 +315,7 @@ export async function loadAccountExport(userId: string) {
     reminderDeliveries,
     emails,
     dismissals,
+    sessions,
   };
 }
 
@@ -492,7 +501,7 @@ export function toExportJson(data: AccountExportData, now: Date = new Date()) {
   const reminders = data.reminderPreference;
   return {
     format: "fgpower-export",
-    version: 2,
+    version: 3,
     exportedAt: now.toISOString(),
     account: data.user
       ? {
@@ -717,7 +726,10 @@ export function toExportJson(data: AccountExportData, now: Date = new Date()) {
         status: label(REMINDER_STATUS_LABEL, d.status),
         skipReason: d.skipReason,
         sentAt: iso(d.sentAt),
+        // A-051: the full tap/engagement tracking a reminder stamps.
         clickedAt: iso(d.clickedAt),
+        engagedAt: iso(d.engagedAt),
+        ignoredAt: iso(d.ignoredAt),
         createdAt: iso(d.createdAt),
       })),
       emails: data.emails.map((m) => ({
@@ -728,6 +740,14 @@ export function toExportJson(data: AccountExportData, now: Date = new Date()) {
       })),
     },
     dismissedPrompts: data.dismissals.map((d) => ({ key: d.key, at: iso(d.createdAt) })),
+    // A-051: the sign-in sessions the account keeps (IP + device, ~90 days).
+    signInSessions: data.sessions.map((s) => ({
+      device: s.userAgent,
+      ipAddress: s.ipAddress,
+      signedInAt: iso(s.createdAt),
+      lastSeenAt: iso(s.updatedAt),
+      expiresAt: iso(s.expiresAt),
+    })),
   };
 }
 

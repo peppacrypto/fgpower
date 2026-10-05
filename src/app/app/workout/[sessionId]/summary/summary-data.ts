@@ -48,6 +48,8 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
       visibility: true,
       showDetailedLoads: true,
       caption: true,
+      // A-012 · durable moderation marker on the workout (survives a DELETE that removes the Activity).
+      moderatedAt: true,
       enrollmentId: true,
       enrollment: { select: { startedAt: true, status: true } },
       program: { select: { progressionStrategy: true, durationWeeks: true } },
@@ -259,6 +261,8 @@ function shareState(
     visibility: "PRIVATE" | "FOLLOWERS" | "PUBLIC";
     showDetailedLoads: boolean;
     caption: string | null;
+    /** A-012 · set when an admin moderated the workout; outlives a deleted Activity. */
+    moderatedAt: Date | null;
     activity: {
       id: string;
       visibility: "PRIVATE" | "FOLLOWERS" | "PUBLIC";
@@ -272,8 +276,11 @@ function shareState(
   ctx: { fresh: boolean; followerCount: number; askPrivateDefault: boolean; loadsHidden: boolean },
 ) {
   const activity = session.activity;
-  const moderated = Boolean(activity?.moderatedAt);
+  // A-012 · the workout's own marker makes this durable: a DELETE removes the
+  // Activity (and its moderatedAt) but the session keeps its own.
+  const moderated = Boolean(session.moderatedAt || activity?.moderatedAt);
   return {
+    moderated,
     published: activity
       ? {
           id: activity.id,

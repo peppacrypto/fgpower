@@ -93,6 +93,7 @@ export function ShareWorkoutForm({
   link: initialLink,
   followerCount,
   privateNotice,
+  moderated,
 }: {
   sessionId: string;
   workoutName: string;
@@ -103,6 +104,8 @@ export function ShareWorkoutForm({
   followerCount: number;
   /** The one-time question to a PRIVATE default (D-A); `loadsHidden` says "sem as cargas". */
   privateNotice: { loadsHidden: boolean } | null;
+  /** A-012 · the workout is moderated (its Activity may be gone): show only the notice. */
+  moderated: boolean;
 }) {
   const [visibility, setVisibility] = useState<Visibility>(initial.visibility);
   const [showDetailedLoads, setShowDetailedLoads] = useState(initial.showDetailedLoads);
@@ -414,7 +417,7 @@ export function ShareWorkoutForm({
     });
   }
 
-  if (published?.moderated) {
+  if (moderated || published?.moderated) {
     return (
       <div className="flex flex-col gap-1">
         <span className={FIELD}>Quem vê</span>

@@ -29,6 +29,10 @@ export const onboardingSchema = z.object({
   doesEndurance: z.coerce.boolean().default(false),
   enduranceNotes: z.string().trim().max(300).optional().or(z.literal("")),
   limitations: z.string().trim().max(500).optional().or(z.literal("")),
+  // A-049: attested 18+ (owner/legal set the real minimum + minor flow).
+  confirmedAdult: z.boolean().refine((v) => v === true, { message: "Confirme que você tem 18 anos ou mais para continuar." }),
+  // A-008: specific, separate health-data consent (LGPD art. 11).
+  healthConsent: z.boolean().refine((v) => v === true, { message: "É necessário concordar para continuar." }),
 });
 
 export type OnboardingInput = z.infer<typeof onboardingSchema>;

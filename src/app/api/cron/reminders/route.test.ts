@@ -2,6 +2,10 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 const { runReminderTick } = vi.hoisted(() => ({ runReminderTick: vi.fn() }));
 vi.mock("@/lib/reminders/engine", () => ({ runReminderTick }));
+// The tick also purges expired sessions (A-051); mock it so this unit test
+// does not pull in the DB layer (session-maintenance imports @/lib/db).
+const { purgeExpiredSessions } = vi.hoisted(() => ({ purgeExpiredSessions: vi.fn(async () => 0) }));
+vi.mock("@/lib/auth/session-maintenance", () => ({ purgeExpiredSessions }));
 
 import { POST } from "./route";
 
@@ -36,7 +40,7 @@ describe("the reminder tick route", () => {
     const res = await call("?dry=1&now=2026-10-05T10:05:00.000Z", "Bearer s3cret");
     expect(res.status).toBe(200);
     expect(res.headers.get("cache-control")).toBe("no-store");
-    expect(await res.json()).toEqual({ ran: true, sent: 0 });
+    expect(await res.json()).toEqual({ ran: true, sent: 0, purgedSessions: 0 });
     expect(runReminderTick).toHaveBeenLastCalledWith(new Date("2026-10-05T10:05:00.000Z"), { dryRun: true });
 
     expect((await call("?now=yesterday", "Bearer s3cret")).status).toBe(400);

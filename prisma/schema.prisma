@@ -70,6 +70,7 @@ model User {
   reportsReceived  UserReport[]    @relation("ReportReported")
   reportsResolved  UserReport[]    @relation("ReportResolver")
   dismissals       UserDismissal[]
+  dataRequests     DataRequest[]
 
   reminderPreference ReminderPreference?
   pushSubscriptions  PushSubscription[]
@@ -193,6 +194,18 @@ model Profile {
   /// Vibration at the end of a rest and on a record (Settings → Durante o treino).
   hapticsEnabled           Boolean         @default(true)
   onboardingCompletedAt    DateTime?
+  // Age gate (A-049): an attested "18 anos ou mais" at onboarding step 1, before
+  // any health question. Exact minimum age and minor/guardian handling are
+  // owner/legal (policy-content spec); null = never asked (pre-feature rows).
+  confirmedAdultAt         DateTime?
+  // Health-data consent (A-008, LGPD art. 11): the specific, separate consent
+  // captured at the first health input (onboarding step 4). Version pins which
+  // policy text was agreed to, so a bump re-asks (lib/legal/policy POLICY_VERSION).
+  healthDataConsentAt      DateTime?
+  healthDataConsentVersion String?
+  // Policy re-acknowledge (A-054): the POLICY_VERSION the user last accepted.
+  // When it trails POLICY_VERSION, Today shows the one-time re-acknowledge notice.
+  acknowledgedPolicyVersion String?
   // Privacy
   isPublicAccount          Boolean         @default(false)
   /// What a finished workout is published as. New profiles: FOLLOWERS (decision 10);
@@ -202,6 +215,8 @@ model Profile {
   /// No public surface reads body data; kept for a possible future toggle.
   showBodyMetricsPublicly  Boolean         @default(false)
   showCurrentProgram       Boolean         @default(true)
+  /// Column default stays true for existing rows (no backfill); new profiles are
+  /// written discoverable=false by NEW_PROFILE_SHARING (A-049, private by default).
   discoverable             Boolean         @default(true)
   /// Unused since Batch 5 (decision 9); kept so an image rollback still reads it.
   autoShareAchievements    Boolean         @default(true)
@@ -221,6 +236,41 @@ model UserDismissal {
   createdAt DateTime @default(now())
 
   @@id([userId, key])
+}
+
+enum DataRequestKind {
+  ACCESS
+  DELETE
+  CORRECT
+  PORTABILITY
+  OTHER
+}
+
+enum DataRequestStatus {
+  OPEN
+  RESOLVED
+}
+
+/// An LGPD art. 18 data-subject request (access, deletion, correction,
+/// portability…). Filed from the PUBLIC /privacidade/solicitar page so a
+/// logged-out OR suspended user can still exercise their rights (A-050/A-009).
+/// userId is set when the requester was signed in; email is always captured so
+/// a banned/anonymous requester can be answered. Fulfilment is owner/manual
+/// (no automated erasure is wired to this).
+model DataRequest {
+  id         String            @id @default(cuid())
+  userId     String?
+  user       User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
+  email      String
+  kind       DataRequestKind   @default(ACCESS)
+  message    String?
+  status     DataRequestStatus @default(OPEN)
+  createdAt  DateTime          @default(now())
+  resolvedAt DateTime?
+  resolvedById String?
+
+  @@index([status, createdAt])
+  @@index([userId])
 }
 
 // ---------------------------------------------------------------------------
@@ -840,6 +890,10 @@ model WorkoutSession {
   visibility         Visibility         @default(PRIVATE)
   showDetailedLoads  Boolean            @default(false)
   caption            String?
+  /// A-012 · set when an admin moderates the workout (HIDE/DELETE). Durable: it
+  /// outlives the Activity row a DELETE removes, so the owner can't re-publish or
+  /// re-share the workout (lib/social/publish.ts upsertWorkoutActivity).
+  moderatedAt        DateTime?
   daySnapshot        Json? // prescription at the time (immutable)
   /// The week's plan as trained ({ daysPerWeek, trainableDays, dayCount }),
   /// stamped when the workout counts (advanceProgram). Frozen so editing the
@@ -1179,10 +1233,12 @@ enum ReportStatus {
 
 model UserReport {
   id             String       @id @default(cuid())
-  reporterId     String
-  reporter       User         @relation("ReportReporter", fields: [reporterId], references: [id], onDelete: Cascade)
+  /// A-022 · nullable so a report OUTLIVES the reporter deleting their account; the snapshot keeps the evidence.
+  reporterId     String?
+  reporter       User?        @relation("ReportReporter", fields: [reporterId], references: [id], onDelete: SetNull)
   reportedUserId String?
-  reportedUser   User?        @relation("ReportReported", fields: [reportedUserId], references: [id], onDelete: Cascade)
+  /// A-022 · SET NULL (not Cascade): a report survives the reported user leaving too; the snapshot keeps the identity.
+  reportedUser   User?        @relation("ReportReported", fields: [reportedUserId], references: [id], onDelete: SetNull)
   activityId     String?
   activity       Activity?    @relation(fields: [activityId], references: [id], onDelete: SetNull)
   reason         ReportReason

@@ -31,6 +31,11 @@ async function savedProfile(email: string) {
 
 const heading = (page: Page, name: RegExp) => page.getByRole("heading", { level: 1, name });
 
+/** A-049: the attested-18+ box on step 1, required before leaving it. */
+const checkAdult = (page: Page) => page.locator("#confirm-adult").check();
+/** A-008: the health-data consent box on step 4, required to submit. */
+const checkHealthConsent = (page: Page) => page.locator('input[name="healthConsent"]').check();
+
 test("authenticated new user is guided through onboarding", async ({ page }) => {
   const email = `onboarding-${Date.now()}@fgpower.dev`;
   await loginAsTestUser(page, email);
@@ -39,6 +44,7 @@ test("authenticated new user is guided through onboarding", async ({ page }) => 
   await expect(page).toHaveURL(/\/onboarding/);
 
   await page.getByLabel("Nome de exibição").fill("Teste E2E");
+  await checkAdult(page);
   await page.getByRole("button", { name: "Continuar" }).click();
 
   // Step 2: goal — accept the default selection.
@@ -49,10 +55,11 @@ test("authenticated new user is guided through onboarding", async ({ page }) => 
   await expect(page.getByRole("heading", { name: /experiência com treino/i })).toBeVisible();
   await page.getByRole("button", { name: "Continuar" }).click();
 
-  // Step 4: equipment — submit. This triggers a server action + redirect,
-  // so wait for the navigation concurrently to avoid a race where the
-  // button is replaced/detached mid-click.
+  // Step 4: equipment + health-data consent — submit. This triggers a server
+  // action + redirect, so wait for the navigation concurrently to avoid a race
+  // where the button is replaced/detached mid-click.
   await expect(page.getByRole("heading", { name: /onde você vai treinar/i })).toBeVisible();
+  await checkHealthConsent(page);
   await Promise.all([
     page.waitForURL(/\/app\/today/, { timeout: 15_000 }),
     page.getByRole("button", { name: "Ver meu plano" }).click(),
@@ -60,6 +67,29 @@ test("authenticated new user is guided through onboarding", async ({ page }) => 
 
   await expect(page).toHaveURL(/\/app\/today/);
   await expect(page.getByText(/teste/i).first()).toBeVisible();
+});
+
+// B4 A-049/A-008: the wizard cannot leave step 1 without the attested 18+, and
+// "Ver meu plano" stays disabled until the health-data consent is given.
+test("age and health-data consent gate the wizard", async ({ page }) => {
+  await loginAsTestUser(page, uniqueEmail("onb-consent"));
+  await page.goto("/onboarding");
+  await page.getByLabel("Nome de exibição").fill("Consentida");
+
+  // Without the 18+ box, Continuar stays on step 1 and flags the gate.
+  await page.getByRole("button", { name: "Continuar" }).click();
+  await expect(page.getByText("Confirme que você tem 18 anos ou mais para continuar.")).toBeVisible();
+  await expect(heading(page, /Como podemos te chamar/)).toBeVisible();
+
+  await checkAdult(page);
+  for (let i = 0; i < 3; i++) await page.getByRole("button", { name: "Continuar" }).click();
+
+  // On the last step the submit is disabled until the consent box is checked.
+  const submit = page.getByRole("button", { name: "Ver meu plano" });
+  await expect(submit).toBeDisabled();
+  await checkHealthConsent(page);
+  await expect(submit).toBeEnabled();
+  await Promise.all([page.waitForURL(/\/app\/today/, { timeout: 15_000 }), submit.click()]);
 });
 
 // W-002: the name field is the only text input on step 0, so the phone
@@ -82,6 +112,7 @@ test("Enter in the name field goes to the next step instead of submitting", asyn
   await expect(page).toHaveURL(/\/onboarding/);
 
   await name.fill("Marina");
+  await checkAdult(page);
   await name.press("Enter");
   const goal = page.getByRole("heading", { name: /principal objetivo/i });
   await expect(goal).toBeVisible();
@@ -103,6 +134,7 @@ test("the wizard starts from the Google first name and explains each step", asyn
 
   await expect(page.getByLabel("Nome de exibição")).toHaveValue("Maria");
   await expect(page.getByText("Passo 1/4")).toBeVisible();
+  await checkAdult(page);
   await page.getByRole("button", { name: "Continuar" }).click();
   await expect(page.getByText(/Passo 2\/4\s*· Para montar sua recomendação/)).toBeVisible();
   await page.getByRole("button", { name: "Continuar" }).click();
@@ -134,6 +166,7 @@ test("back goes to the previous question and keeps every answer", async ({ page 
   await page.goto("/onboarding");
 
   await page.getByLabel("Nome de exibição").fill("Bianca");
+  await checkAdult(page);
   await page.getByRole("button", { name: "Continuar" }).click();
   await expect(page).toHaveURL(/[?&]passo=2/);
   await page.getByText("Força + Hipertrofia").click();
@@ -165,6 +198,7 @@ test("back goes to the previous question and keeps every answer", async ({ page 
 
   await page.getByRole("button", { name: "Continuar" }).click();
   await page.getByRole("button", { name: "Continuar" }).click();
+  await checkHealthConsent(page);
   await Promise.all([page.waitForURL(/\/app\/today/), page.getByRole("button", { name: "Ver meu plano" }).click()]);
   const saved = await savedProfile(email);
   expect(saved.goal).toBe("STRENGTH_HYPERTROPHY");
@@ -190,6 +224,7 @@ test("each step is announced and its controls are labelled", async ({ page }) =>
   await expect(page.locator("#displayName-error")).toHaveText("Informe seu nome para continuar.");
 
   await name.fill("Rui");
+  await checkAdult(page);
   await page.getByRole("button", { name: "Continuar" }).click();
   await expect(page.getByRole("progressbar", { name: "Passo 2 de 4" })).toBeVisible();
   await expect(page.getByRole("group", { name: /principal objetivo/ })).toBeVisible();
@@ -208,6 +243,7 @@ test("'Emagrecer / definir' is a goal, said honestly", async ({ page }) => {
   await loginAsTestUser(page, email);
   await page.goto("/onboarding");
   await page.getByLabel("Nome de exibição").fill("Lia");
+  await checkAdult(page);
   await page.getByRole("button", { name: "Continuar" }).click();
 
   await expect(page.getByText("Musculação preserva músculo no déficit")).toHaveCount(0);
@@ -220,6 +256,7 @@ test("'Emagrecer / definir' is a goal, said honestly", async ({ page }) => {
 
   await page.getByRole("button", { name: "Continuar" }).click();
   await page.getByRole("button", { name: "Continuar" }).click();
+  await checkHealthConsent(page);
   await Promise.all([page.waitForURL(/\/app\/today/), page.getByRole("button", { name: "Ver meu plano" }).click()]);
   expect((await savedProfile(email)).goal).toBe("FAT_LOSS");
   await page.goto("/app/profile");
@@ -233,6 +270,7 @@ test("narrow phones read every routine and goal answer whole", async ({ page }) 
   await loginAsTestUser(page, email);
   await page.goto("/onboarding");
   await page.getByLabel("Nome de exibição").fill("Lia");
+  await checkAdult(page);
   await page.getByRole("button", { name: "Continuar" }).click();
   await page.getByText("Emagrecer / definir").click();
   await page.getByRole("button", { name: "Continuar" }).click();
@@ -247,6 +285,7 @@ test("narrow phones read every routine and goal answer whole", async ({ page }) 
   expect(d && m && m.y > d.y + d.height && Math.abs(d.width - m.width) < 1 && d.width > 250).toBeTruthy();
 
   await page.getByRole("button", { name: "Continuar" }).click();
+  await checkHealthConsent(page);
   await Promise.all([page.waitForURL(/\/app\/today/), page.getByRole("button", { name: "Ver meu plano" }).click()]);
   expect((await savedProfile(email)).daysPerWeek).toBe(3);
 
@@ -271,8 +310,10 @@ test("onboarding ends where sign-in started", async ({ page }) => {
   await loginAsTestUser(page, uniqueEmail("onb-next"));
   await page.goto(`/onboarding?next=${encodeURIComponent("/app/programs/templates/gd-1")}`);
   await page.getByLabel("Nome de exibição").fill("Nina");
+  await checkAdult(page);
   for (let i = 0; i < 3; i++) await page.getByRole("button", { name: "Continuar" }).click();
   await expect(page).toHaveURL(/next=/); // kept through the steps
+  await checkHealthConsent(page);
   await Promise.all([
     page.waitForURL(/\/app\/programs\/templates\/gd-1/, { timeout: 30_000 }),
     page.getByRole("button", { name: "Ver meu plano" }).click(),
@@ -286,7 +327,9 @@ test("onboarding ends where sign-in started", async ({ page }) => {
   await loginAsTestUser(page, uniqueEmail("onb-next-evil"));
   await page.goto(`/onboarding?next=${encodeURIComponent("https://evil.example")}`);
   await page.getByLabel("Nome de exibição").fill("Nina");
+  await checkAdult(page);
   for (let i = 0; i < 3; i++) await page.getByRole("button", { name: "Continuar" }).click();
+  await checkHealthConsent(page);
   await Promise.all([page.waitForURL(/\/app\/today/), page.getByRole("button", { name: "Ver meu plano" }).click()]);
 });
 
@@ -297,7 +340,9 @@ test("an app page opened before onboarding is where the wizard ends", async ({ p
   await page.goto("/app/programs/templates/gd-1");
   await expect(page).toHaveURL(/\/onboarding\?next=%2Fapp%2Fprograms%2Ftemplates%2Fgd-1$/);
   await page.getByLabel("Nome de exibição").fill("Nina");
+  await checkAdult(page);
   for (let i = 0; i < 3; i++) await page.getByRole("button", { name: "Continuar" }).click();
+  await checkHealthConsent(page);
   await Promise.all([
     page.waitForURL(/\/app\/programs\/templates\/gd-1$/, { timeout: 30_000 }),
     page.getByRole("button", { name: "Ver meu plano" }).click(),
@@ -315,8 +360,10 @@ test("finishing offline keeps the wizard and its answers", async ({ page, contex
   await loginAsTestUser(page, email);
   await page.goto("/onboarding");
   await page.getByLabel("Nome de exibição").fill("Tati");
+  await checkAdult(page);
   for (let i = 0; i < 3; i++) await page.getByRole("button", { name: "Continuar" }).click();
   await page.getByLabel(/Limitações/).fill("Ombro direito sensível");
+  await checkHealthConsent(page);
 
   await context.setOffline(true);
   await page.getByRole("button", { name: "Ver meu plano" }).click();

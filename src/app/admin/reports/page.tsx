@@ -149,7 +149,8 @@ export default async function AdminReportsPage({ searchParams }: PageProps<"/adm
         <ul className="mt-6 flex flex-col gap-4">
           {reports.map((r) => {
             const snap = snapshotOf(r.snapshot);
-            const reporter = toPublicUser(r.reporter);
+            // A-022 · the reporter may have deleted their account (reporterId SET NULL); the report (and its snapshot) stays.
+            const reporter = r.reporter ? toPublicUser(r.reporter) : null;
             // The person reported — or, for a workout report from before reports named one, the workout's author
             // (moderateReport bans the same person).
             const reported = r.reportedUser ?? r.activity?.user ?? null;
@@ -185,7 +186,7 @@ export default async function AdminReportsPage({ searchParams }: PageProps<"/adm
                 <dl className="mt-3 grid grid-cols-[auto_1fr] items-baseline gap-x-3 gap-y-1.5 text-sm">
                   <dt className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-muted">Denunciante</dt>
                   <dd className="min-w-0 [overflow-wrap:anywhere]">
-                    <PersonLink person={reporter} />
+                    {reporter ? <PersonLink person={reporter} /> : <span className="text-muted">Conta excluída</span>}
                   </dd>
                   <dt className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-muted">Denunciado</dt>
                   <dd className="flex min-w-0 flex-wrap items-center gap-2 [overflow-wrap:anywhere]">

@@ -91,7 +91,9 @@ export async function newOnboardedUser(
   await page.goto("/onboarding");
   await page.getByLabel("Nome de exibição").fill(name);
   if (opts.handle !== undefined) await page.getByLabel("Seu @usuário (opcional)").fill(opts.handle);
+  await page.locator("#confirm-adult").check();
   for (let i = 0; i < 3; i++) await page.getByRole("button", { name: "Continuar" }).click();
+  await page.locator('input[name="healthConsent"]').check();
   await Promise.all([
     page.waitForURL(/\/app\/today/, { timeout: 30_000 }),
     page.getByRole("button", { name: "Ver meu plano" }).click(),
@@ -100,7 +102,11 @@ export async function newOnboardedUser(
   const username = sql(`SELECT username FROM "user" WHERE id = ${sqlText(id)}`);
   setProfile(id, {
     isPublicAccount: opts.isPublicAccount,
-    discoverable: opts.discoverable,
+    // New profiles are non-discoverable by default now (A-049); fixtures keep the
+    // old discoverable baseline unless a test opts out, so discovery/search specs
+    // still find their seeded accounts. The real private-by-default is covered by
+    // the onboarding profile-hint test (15-identity).
+    discoverable: opts.discoverable ?? true,
     defaultWorkoutVisibility: opts.defaultWorkoutVisibility,
   });
   return { id, email, username, name };

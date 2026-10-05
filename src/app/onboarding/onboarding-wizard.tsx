@@ -11,6 +11,7 @@ import { ActionErrorText } from "@/components/social/session-expired";
 import { completeOnboarding, type OnboardingFormState } from "@/lib/actions/onboarding";
 import { checkUsername, suggestUsername } from "@/lib/actions/profile";
 import { FAT_LOSS_NOTE } from "@/lib/constants/program-labels";
+import { HEALTH_CONSENT_TEXT } from "@/lib/legal/policy";
 import { publicProfileLabel, slugifyUsername, usernameError, USERNAME_RULE } from "@/lib/validation/username";
 import { STEP_REASONS, TOTAL_STEPS } from "./steps";
 import { DaysMatchNote, WeekdayChips } from "./weekday-chips";
@@ -56,6 +57,10 @@ interface Answers {
   doesEndurance: boolean;
   enduranceNotes: string;
   limitations: string;
+  /** A-049: attested 18+ (step 1). */
+  confirmedAdult: boolean;
+  /** A-008: health-data consent (step 4). */
+  healthConsent: boolean;
 }
 
 type UsernameCheck =
@@ -100,6 +105,8 @@ function sanitizeDraft(raw: unknown, base: Answers): Answers {
     doesEndurance: typeof d.doesEndurance === "boolean" ? d.doesEndurance : base.doesEndurance,
     enduranceNotes: str(d.enduranceNotes, 300, base.enduranceNotes),
     limitations: str(d.limitations, 500, base.limitations),
+    confirmedAdult: typeof d.confirmedAdult === "boolean" ? d.confirmedAdult : base.confirmedAdult,
+    healthConsent: typeof d.healthConsent === "boolean" ? d.healthConsent : base.healthConsent,
   };
 }
 
@@ -137,9 +144,12 @@ export function OnboardingWizard({
     doesEndurance: false,
     enduranceNotes: "",
     limitations: "",
+    confirmedAdult: false,
+    healthConsent: false,
   });
   const [step, setStep] = useState(initialStep);
   const [nameError, setNameError] = useState(false);
+  const [ageError, setAgeError] = useState(false);
   const [usernameCheck, setUsernameCheck] = useState<UsernameCheck | null>(null);
   const storageKey = `fgpower:onboarding:${userId}`;
 
@@ -286,7 +296,10 @@ export function OnboardingWizard({
         const result = await completeOnboarding(prev, formData);
         // Only reached on failure: success redirects.
         saveDraft(answersRef.current);
-        if (result.fieldErrors?.displayName || result.fieldErrors?.username) {
+        // A server-side rejection of a step-0 field — including the 18+ attestation,
+        // whose client gate could be bypassed — lands the user back on step 0.
+        if (result.fieldErrors?.confirmedAdult) setAgeError(true);
+        if (result.fieldErrors?.confirmedAdult || result.fieldErrors?.displayName || result.fieldErrors?.username) {
           showStep(0, "replace");
         }
         return result;
@@ -312,6 +325,11 @@ export function OnboardingWizard({
       }
       if (usernameProblem) {
         document.getElementById("username")?.focus();
+        return;
+      }
+      if (!answers.confirmedAdult) {
+        setAgeError(true);
+        document.getElementById("confirm-adult")?.focus();
         return;
       }
     }
@@ -462,6 +480,33 @@ export function OnboardingWizard({
               </span>
             )}
           </p>
+        </div>
+
+        {/* A-049 — age attestation, before any health question. [OWNER/LEGAL:
+            confirm the minimum age and the handling of minors; this is an
+            attested 18+ gate, not an identity check.] */}
+        <div>
+          <label className="flex items-start gap-2.5 text-sm font-medium">
+            <input
+              id="confirm-adult"
+              type="checkbox"
+              name="confirmedAdult"
+              checked={answers.confirmedAdult}
+              onChange={(e) => {
+                setAgeError(false);
+                update({ confirmedAdult: e.target.checked });
+              }}
+              className="mt-0.5 size-4 shrink-0 accent-accent"
+              aria-invalid={ageError ? true : undefined}
+              aria-describedby={ageError ? "confirm-adult-error" : undefined}
+            />
+            Tenho 18 anos ou mais.
+          </label>
+          {ageError ? (
+            <p id="confirm-adult-error" role="alert" className="mt-1 text-xs font-medium text-danger">
+              Confirme que você tem 18 anos ou mais para continuar.
+            </p>
+          ) : null}
         </div>
       </fieldset>
 
@@ -632,6 +677,27 @@ export function OnboardingWizard({
             A FGPOWER não é um serviço de diagnóstico médico. Para lesões, consulte um profissional de saúde.
           </p>
         </div>
+
+        {/* A-008 — specific, separate health-data consent (LGPD art. 11), shown
+            at the first health input. [OWNER/LEGAL: HEALTH_CONSENT_TEXT and the
+            legal basis are placeholders pending counsel approval.] */}
+        <div className="border-l-2 border-l-accent bg-surface-2 px-3.5 py-3">
+          <label className="flex items-start gap-2.5 text-sm font-medium">
+            <input
+              type="checkbox"
+              name="healthConsent"
+              checked={answers.healthConsent}
+              onChange={(e) => update({ healthConsent: e.target.checked })}
+              className="mt-0.5 size-4 shrink-0 accent-accent"
+            />
+            <span className="font-normal text-foreground/90">
+              {HEALTH_CONSENT_TEXT}{" "}
+              <a href="/privacy" target="_blank" rel="noopener noreferrer" className="font-medium text-accent underline underline-offset-2">
+                Política de Privacidade ↗
+              </a>
+            </span>
+          </label>
+        </div>
       </div>
 
       {next ? <input type="hidden" name="next" value={next} /> : null}
@@ -650,7 +716,7 @@ export function OnboardingWizard({
             Continuar
           </Button>
         ) : (
-          <Button key="submit" type="submit" disabled={pending}>
+          <Button key="submit" type="submit" disabled={pending || !answers.healthConsent}>
             {pending ? "Salvando…" : "Ver meu plano"}
           </Button>
         )}

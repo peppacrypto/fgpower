@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { cookies } from "next/headers";
 import { getCurrentSession, requireUser } from "@/lib/auth/require-user";
 import { isAdminUser } from "@/lib/auth/roles";
@@ -106,6 +107,13 @@ export default async function SettingsPage({ searchParams }: PageProps<"/app/set
 
       <Section id="dados-e-conta" title="Dados e conta">
         <AdminPanelLink isAdmin={isAdminUser(user)} />
+        {/* A-009 — the policy and the art. 18 request channel, reachable from
+            inside the installed PWA (the app shell has no footer). */}
+        <nav aria-label="Privacidade" className="mb-4 flex flex-wrap gap-x-4 gap-y-1 border-b border-border pb-4 text-sm">
+          <Link href="/privacy" className="text-accent hover:underline">Privacidade</Link>
+          <Link href="/terms" className="text-accent hover:underline">Termos</Link>
+          <Link href="/privacidade/solicitar" className="text-accent hover:underline">Solicitar meus dados</Link>
+        </nav>
         <DangerZone
           account={{ email: user.email, name: user.name }}
           freshLogin={freshLogin}

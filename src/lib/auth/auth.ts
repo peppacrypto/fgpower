@@ -20,6 +20,7 @@ import {
   SIGN_IN_CODE_PATH,
 } from "@/lib/email/login-gate";
 import { allowLoginCodeSend, clientIp } from "@/lib/email/login-send-limit";
+import { recountFgForDeletedGiver } from "@/lib/social/fg-maintenance";
 
 /**
  * The better-auth routes FGPOWER itself calls, and its two read-only pages.
@@ -100,6 +101,13 @@ export const auth = betterAuth({
     },
     deleteUser: {
       enabled: true,
+      // A-047 · recount fgCount on the posts this account gave FG to BEFORE the
+      // User row (and its ActivityFG rows) cascade away, so the counters on other
+      // people's posts don't stay inflated. Runs before better-auth's own delete
+      // (better-auth/dist/api/routes/update-user: beforeDelete → deleteUser).
+      beforeDelete: async (user) => {
+        await recountFgForDeletedGiver(user.id);
+      },
     },
   },
 

@@ -1,6 +1,7 @@
 import { timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
 import { runReminderTick } from "@/lib/reminders/engine";
+import { purgeExpiredSessions } from "@/lib/auth/session-maintenance";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 240;
@@ -26,8 +27,13 @@ export async function POST(request: Request) {
     if (Number.isNaN(parsed.getTime())) return NextResponse.json({ error: "bad now" }, { status: 400 });
     now = parsed;
   }
-  const summary = await runReminderTick(now, { dryRun: params.get("dry") === "1" });
-  return NextResponse.json(summary, { headers: { "cache-control": "no-store" } });
+  const dry = params.get("dry") === "1";
+  const summary = await runReminderTick(now, { dryRun: dry });
+  // Periodic data minimization (A-051): drop expired sign-in sessions so the
+  // IP + user agent stored on each one does not outlive the ~90-day session
+  // lifetime the privacy policy states.
+  const purgedSessions = dry ? 0 : await purgeExpiredSessions(now);
+  return NextResponse.json({ ...summary, purgedSessions }, { headers: { "cache-control": "no-store" } });
 }
 
 function bearerMatches(header: string | null, secret: string): boolean {

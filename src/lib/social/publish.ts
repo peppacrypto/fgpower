@@ -12,10 +12,11 @@ import { buildWorkoutActivitySummary } from "@/lib/social/activity-summary";
 /**
  * The sharing defaults onboarding writes into a new profile (decision 10,
  * D-A): new profiles publish to their followers, loads hidden (showLoadsPublicly
- * keeps its false default). Existing profiles keep what they had — a
- * PRIVATE default sees the summary's one-time question instead.
+ * keeps its false default), and are NOT discoverable until the user opts in at
+ * Settings → Privacidade (A-049: private by default). Existing profiles keep
+ * what they had — a PRIVATE default sees the summary's one-time question instead.
  */
-export const NEW_PROFILE_SHARING = { defaultWorkoutVisibility: "FOLLOWERS" } as const;
+export const NEW_PROFILE_SHARING = { defaultWorkoutVisibility: "FOLLOWERS", discoverable: false } as const;
 
 export type WorkoutVisibility = "PRIVATE" | "FOLLOWERS" | "PUBLIC";
 
@@ -69,6 +70,10 @@ export async function upsertWorkoutActivity(opts: {
   });
   if (!session) throw new PublishError("NOT_FOUND");
   if (session.status !== "COMPLETED" || !session.finishedAt) throw new PublishError("NOT_COMPLETED");
+  // A-012 · the durable marker on the workout itself: an admin's DELETE removes the
+  // Activity row (and its own moderatedAt) but leaves this, so the owner can't
+  // re-publish or re-share the workout under a fresh Activity.
+  if (session.moderatedAt) throw new PublishError("MODERATED");
   const existing = session.activity;
   if (existing && opts.createOnly) return null;
   if (existing?.moderatedAt) throw new PublishError("MODERATED");

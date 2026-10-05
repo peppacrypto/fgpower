@@ -134,12 +134,30 @@ async function adminGate(): Promise<AdminGate> {
   }
 }
 
-/** The workout's own visibility follows its post, keeping its save time (the 24 h correction window runs from it). */
-async function makeSessionPrivate(tx: Prisma.TransactionClient, sessionId: string | null) {
+/**
+ * The workout's own visibility follows its post, keeping its save time (the 24 h
+ * correction window runs from it). It also stamps `moderatedAt` on the workout
+ * (A-012): a durable marker that outlives the Activity row a DELETE removes, so
+ * upsertWorkoutActivity (lib/social/publish.ts) refuses to re-publish or re-share
+ * it. `clearCaption` wipes the reported text when the post is deleted outright.
+ */
+async function makeSessionPrivate(
+  tx: Prisma.TransactionClient,
+  sessionId: string | null,
+  opts: { clearCaption?: boolean } = {},
+) {
   if (!sessionId) return;
   const session = await tx.workoutSession.findUnique({ where: { id: sessionId }, select: { updatedAt: true } });
   if (!session) return;
-  await tx.workoutSession.update({ where: { id: sessionId }, data: { visibility: "PRIVATE", updatedAt: session.updatedAt } });
+  await tx.workoutSession.update({
+    where: { id: sessionId },
+    data: {
+      visibility: "PRIVATE",
+      moderatedAt: new Date(),
+      ...(opts.clearCaption ? { caption: null } : {}),
+      updatedAt: session.updatedAt,
+    },
+  });
 }
 
 /**
@@ -243,7 +261,9 @@ export async function moderateReport(
         // share in lib/social/publish.ts, activity-owner.ts, HIDE above). The other way round, a share
         // landing between them deadlocked with this (admin.lock-order.integration.test.ts).
         await tx.activity.delete({ where: { id: activity!.id } });
-        await makeSessionPrivate(tx, activity!.sessionId);
+        // A-012 · clear the reported caption with the post, and stamp the workout
+        // moderated (makeSessionPrivate) so it can't be re-published or re-shared.
+        await makeSessionPrivate(tx, activity!.sessionId, { clearCaption: true });
       });
       status = "ACTIONED";
       resolutionNote = `Publicação excluída: ${workoutName}${cleanNote ? ` — ${cleanNote}` : ""}`;

@@ -36,11 +36,13 @@ async function userIdByEmail(email: string) {
 async function onboardWith(page: Page, opts: { name: string; days?: string[]; limitations?: string }) {
   await page.goto("/onboarding");
   await page.getByLabel("Nome de exibição").fill(opts.name);
+  await page.locator("#confirm-adult").check();
   await page.getByRole("button", { name: "Continuar" }).click();
   await page.getByRole("button", { name: "Continuar" }).click();
   for (const d of opts.days ?? []) await page.getByRole("button", { name: d, exact: true }).click();
   await page.getByRole("button", { name: "Continuar" }).click();
   if (opts.limitations) await page.getByLabel(/Limitações/).fill(opts.limitations);
+  await page.locator('input[name="healthConsent"]').check();
   await Promise.all([
     page.waitForURL(/\/app\/today/, { timeout: 30_000 }),
     page.getByRole("button", { name: "Ver meu plano" }).click(),

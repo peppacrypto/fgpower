@@ -22,7 +22,9 @@ async function finishWizard(page: Page, name: string) {
   // A new e-mail account has no name: the wizard starts blank.
   await expect(field).toHaveValue("");
   await field.fill(name);
+  await page.locator("#confirm-adult").check();
   for (let i = 0; i < 3; i++) await page.getByRole("button", { name: "Continuar" }).click();
+  await page.locator('input[name="healthConsent"]').check();
   await page.getByRole("button", { name: "Ver meu plano" }).click();
 }
 

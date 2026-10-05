@@ -9,6 +9,7 @@ import { findAvailableUsername, isUsernameTaken } from "@/lib/data/profile";
 import { prisma } from "@/lib/db";
 import { onboardingSchema } from "@/lib/validation/onboarding";
 import { NEW_PROFILE_SHARING } from "@/lib/social/publish";
+import { POLICY_VERSION } from "@/lib/legal/policy";
 import { slugifyUsername, usernameError, USERNAME_TAKEN } from "@/lib/validation/username";
 
 export interface OnboardingFormState {
@@ -36,6 +37,8 @@ export async function completeOnboarding(
     doesEndurance: formData.get("doesEndurance") === "on",
     enduranceNotes: formData.get("enduranceNotes") ?? "",
     limitations: formData.get("limitations") ?? "",
+    confirmedAdult: formData.get("confirmedAdult") === "on",
+    healthConsent: formData.get("healthConsent") === "on",
   };
 
   const parsed = onboardingSchema.safeParse(raw);
@@ -62,6 +65,7 @@ export async function completeOnboarding(
     return { error: "Revise os campos destacados.", fieldErrors: { username: handle.error } };
   }
 
+  const now = new Date();
   const answers = {
     displayName: data.displayName,
     goal: data.goal,
@@ -73,7 +77,14 @@ export async function completeOnboarding(
     doesEndurance: data.doesEndurance,
     enduranceNotes: data.doesEndurance ? data.enduranceNotes || null : null,
     limitations: data.limitations || null,
-    onboardingCompletedAt: new Date(),
+    onboardingCompletedAt: now,
+    // A-049/A-008/A-054: the age attestation, the versioned health-data consent
+    // and the accepted policy version, all captured at the point health data is
+    // first collected (this wizard, step 4's limitations being the first).
+    confirmedAdultAt: now,
+    healthDataConsentAt: now,
+    healthDataConsentVersion: POLICY_VERSION,
+    acknowledgedPolicyVersion: POLICY_VERSION,
   };
   await prisma.profile.upsert({
     where: { userId: user.id },

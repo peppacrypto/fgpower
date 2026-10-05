@@ -264,10 +264,10 @@ describe("toTreinosCsv", () => {
 });
 
 describe("toExportJson", () => {
-  it("is v2, readable (names, not ids) and only this account's", async () => {
+  it("is v3, readable (names, not ids) and only this account's", async () => {
     const data = toExportJson(await loadAccountExport(USER_ID), new Date("2026-09-12T12:00:00Z"));
     const text = JSON.stringify(data);
-    expect(data).toMatchObject({ format: "fgpower-export", version: 2, exportedAt: "2026-09-12T12:00:00.000Z" });
+    expect(data).toMatchObject({ format: "fgpower-export", version: 3, exportedAt: "2026-09-12T12:00:00.000Z" });
     expect(data.account).toMatchObject({ email: emailOf(1), name: "Pessoa 1" });
 
     // No raw ids anywhere: not as keys, not as values.
@@ -338,7 +338,7 @@ describe("GET /api/account/export", () => {
     const json = await get();
     expect(json.headers.get("content-type")).toBe("application/json; charset=utf-8");
     expect(json.headers.get("content-disposition")).toMatch(/filename="fgpower-dados-\d{4}-\d{2}-\d{2}\.json"$/);
-    expect((await json.json()).version).toBe(2);
+    expect((await json.json()).version).toBe(3);
   });
 
   it("holds back a burst of exports: the seventh in ten minutes waits, and says how long", async () => {
@@ -348,5 +348,60 @@ describe("GET /api/account/export", () => {
     expect(limited.status).toBe(429);
     expect(Number(limited.headers.get("retry-after"))).toBeGreaterThan(0);
     expect(await limited.text()).toMatch(/^Muitas exportações seguidas\. Tente de novo em \d+ min\.$/);
+  });
+});
+
+describe("signInSessions + reminder engagement (A-051)", () => {
+  it("includes the sign-in log (IP, device, dates) and the reminder tap/engagement marks, at version 3", async () => {
+    // The 90-day sign-in log the account keeps — part of "tudo" (the token itself is never exported).
+    await prisma.session.create({
+      data: {
+        id: `${RUN_ID}-sess`,
+        token: `${RUN_ID}-tok`,
+        userId: USER_ID,
+        ipAddress: "203.0.113.7",
+        userAgent: "Mozilla/5.0 (TestDevice)",
+        createdAt: new Date("2026-09-01T10:00:00Z"),
+        expiresAt: new Date("2026-12-01T10:00:00Z"),
+      },
+    });
+    // A reminder that was tapped and engaged with — the full tracking must surface.
+    await prisma.reminderDelivery.create({
+      data: {
+        userId: USER_ID,
+        kind: "TRAINING_DAY",
+        channel: "PUSH",
+        periodKey: `${RUN_ID}-pk`,
+        status: "SENT",
+        sentAt: new Date("2026-09-01T11:00:00Z"),
+        clickedAt: new Date("2026-09-01T11:05:00Z"),
+        engagedAt: new Date("2026-09-01T11:06:00Z"),
+      },
+    });
+
+    const data = toExportJson(await loadAccountExport(USER_ID), new Date("2026-09-12T12:00:00Z"));
+    expect(data.version).toBe(3);
+
+    // The sign-in session block: device + IP + the dates (never the token).
+    expect(data.signInSessions).toContainEqual(
+      expect.objectContaining({
+        device: "Mozilla/5.0 (TestDevice)",
+        ipAddress: "203.0.113.7",
+        signedInAt: "2026-09-01T10:00:00.000Z",
+        expiresAt: "2026-12-01T10:00:00.000Z",
+      }),
+    );
+    const mine = data.signInSessions.find((s) => s.ipAddress === "203.0.113.7")!;
+    expect(mine.lastSeenAt).toEqual(expect.any(String));
+    expect(JSON.stringify(data.signInSessions)).not.toContain(`${RUN_ID}-tok`);
+
+    // The reminder-tap engagement marks (clickedAt/engagedAt/ignoredAt) are surfaced.
+    const engaged = data.reminders.sent.find((s) => s.engagedAt !== null);
+    expect(engaged).toBeDefined();
+    expect(engaged).toMatchObject({
+      clickedAt: "2026-09-01T11:05:00.000Z",
+      engagedAt: "2026-09-01T11:06:00.000Z",
+      ignoredAt: null,
+    });
   });
 });

@@ -58,6 +58,20 @@ export const getCurrentSession = cache(async () => {
 });
 
 /**
+ * The live session WITHOUT the banned filter. ONLY for data-subject surfaces
+ * (the public data-request page / action, A-009/A-050): a suspended user must
+ * still be identifiable to exercise LGPD art. 18 rights. This grants NO app
+ * access — never use it in a protected page, action or route. In practice a
+ * banned account has no sessions (moderation's BAN deletes them), so this is
+ * usually null; it only helps inside the 5-minute cookie-cache window or for a
+ * not-yet-banned account.
+ */
+export const getCurrentSessionAllowBanned = cache(async () => {
+  if (!(await getCachedSession())) return null;
+  return getLiveSession();
+});
+
+/**
  * Redirects to /login if there is no session. Use in RSC pages. The login
  * page comes back here afterwards, and says "your session expired" when the
  * browser still held a session cookie that no longer works.

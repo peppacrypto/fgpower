@@ -9,7 +9,7 @@ import { SESSION_EXPIRED_PARAM, SESSION_EXPIRED_VALUE } from "@/lib/auth/session
 import { emailEnabled } from "@/lib/email/config";
 import { EmailSignIn } from "./email-sign-in";
 import { GoogleSignInButton } from "./google-sign-in-button";
-import { oauthErrorView } from "./sign-in-errors";
+import { oauthErrorView, BANNED_TEXT } from "./sign-in-errors";
 
 /** `?email=` (the link page's "Pedir um novo link"): prefilled only when it is an address. */
 function prefillEmail(value: string | string[] | undefined): string | null {
@@ -67,6 +67,16 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
                 {oauthError.code ? (
                   <p className="mt-1 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] opacity-80">
                     Código: {oauthError.code}
+                  </p>
+                ) : null}
+                {/* A-009 — a suspended user must still reach their own data (art. 18 §3). */}
+                {oauthError.text === BANNED_TEXT ? (
+                  <p className="mt-2 font-normal text-foreground/85">
+                    Você ainda pode acessar ou excluir seus dados em{" "}
+                    <Link href="/privacidade/solicitar" className="font-semibold underline underline-offset-2">
+                      Solicitar meus dados
+                    </Link>
+                    .
                   </p>
                 ) : null}
               </div>
