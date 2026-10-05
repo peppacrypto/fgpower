@@ -406,6 +406,52 @@ describe("adviceFromLastTime", () => {
     expect(progressionPrincipleSlug("RIR_BASED")).toBe("rir");
     expect(progressionPrincipleSlug("MANUAL")).toBeNull();
   });
+
+  it("a deload holds the last load and never prescribes more (A-005)", () => {
+    const a = adviceFromLastTime({
+      strategy: "DOUBLE",
+      prescribed,
+      lastTime: { sets: done(60, [8, 8, 8]), prescribedSets: 3 }, // would normally be an increase
+      loadIncrementKg: 2.5,
+      deload: true,
+    });
+    expect(a).toMatchObject({ kind: "hold", loadKg: 60 });
+    expect(a?.headline).toContain("Semana leve");
+    expect(`${a?.headline} ${a?.reason}`).not.toMatch(/Suba/);
+  });
+
+  it("eases back to ~90% of the last load after a layoff, never up (A-006)", () => {
+    const a = adviceFromLastTime({
+      strategy: "DOUBLE",
+      prescribed,
+      lastTime: { sets: done(100, [8, 8, 8]), prescribedSets: 3 },
+      loadIncrementKg: 2.5,
+      easeBack: true,
+    });
+    expect(a).toMatchObject({ kind: "hold", loadKg: 90 }); // 100 * 0.9, snapped to the 2.5 step
+    expect(a?.headline).toContain("Volta após pausa");
+    expect(`${a?.headline} ${a?.reason}`).not.toMatch(/Suba/);
+  });
+
+  it("deload wins over ease-back, and neither touches a bodyweight lift (no load to ease)", () => {
+    const both = adviceFromLastTime({
+      strategy: "DOUBLE",
+      prescribed,
+      lastTime: { sets: done(80, [8, 8, 8]), prescribedSets: 3 },
+      loadIncrementKg: 2.5,
+      deload: true,
+      easeBack: true,
+    });
+    expect(both?.headline).toContain("Semana leve");
+    const bw = adviceFromLastTime({
+      strategy: "DOUBLE",
+      prescribed,
+      lastTime: { sets: done(0, [12, 12, 12]), prescribedSets: 3 },
+      loadIncrementKg: 2.5,
+      easeBack: true,
+    });
+    expect(bw).toBeNull(); // top load 0 → falls through; no load-based advice
+  });
 });
 
 describe("parseDecimalInput / formatDecimal", () => {

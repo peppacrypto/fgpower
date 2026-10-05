@@ -92,6 +92,24 @@ async function enrollment() {
   });
 }
 
+// A-007 makes "one ACTIVE enrollment per user" a DB invariant. These fixtures
+// reuse one USER_ID across describes, so activating a new block must first
+// retire the previous ACTIVE enrollment, exactly as the activate-program flow
+// does. `retireActive` abandons the user's ACTIVE enrollment(s) (optionally
+// keeping one); `rehomeDefaultEnrollment` restores the beforeAll enrollment as
+// the sole ACTIVE one for later describes that go back to the home program.
+async function retireActive(exceptId?: string) {
+  await prisma.programEnrollment.updateMany({
+    where: { userId: USER_ID, status: "ACTIVE", ...(exceptId ? { NOT: { id: exceptId } } : {}) },
+    data: { status: "ABANDONED" },
+  });
+}
+
+async function rehomeDefaultEnrollment() {
+  await retireActive(enrollmentId);
+  await prisma.programEnrollment.update({ where: { id: enrollmentId }, data: { status: "ACTIVE" } });
+}
+
 beforeAll(async () => {
   await prisma.user.create({ data: { id: USER_ID, name: USER_ID, email: `${USER_ID}@fgpower.test`, emailVerified: true } });
   await prisma.profile.create({ data: { userId: USER_ID, displayName: "Teste", onboardingCompletedAt: new Date() } });
@@ -167,6 +185,7 @@ async function newBlock(opts: { startedAt: Date; days?: number; durationWeeks?: 
     },
     include: { days: { orderBy: { dayIndex: "asc" } } },
   });
+  await retireActive(); // one ACTIVE enrollment per user (A-007)
   const e = await prisma.programEnrollment.create({
     data: { userId: USER_ID, programId: program.id, status: "ACTIVE", currentWeek: 1, nextDayIndex: 0, programSnapshot: {}, startedAt: opts.startedAt },
   });
@@ -518,6 +537,7 @@ describe("same-exercise top-set and back-off slots each read their own history (
       },
       include: { days: true },
     });
+    await retireActive(); // one ACTIVE enrollment per user (A-007)
     const e = await prisma.programEnrollment.create({
       data: { userId: USER_ID, programId: program.id, status: "ACTIVE", currentWeek: 1, nextDayIndex: 0, programSnapshot: {} },
     });
@@ -762,6 +782,9 @@ describe("a block its last workout closed", () => {
 });
 
 describe("a new workout carries the profile's sharing defaults", () => {
+  // Earlier describes activate their own blocks; go back to the home enrollment (A-007).
+  beforeAll(rehomeDefaultEnrollment);
+
   it("opens with the profile's default visibility and loads flag (what finishing publishes)", async () => {
     const before = await prisma.profile.findUniqueOrThrow({
       where: { userId: USER_ID },
@@ -778,6 +801,116 @@ describe("a new workout carries the profile's sharing defaults", () => {
       await actions.discardWorkoutSession(sessionId);
     } finally {
       await prisma.profile.update({ where: { userId: USER_ID }, data: before });
+    }
+  });
+});
+
+describe('a late "Salvar como feito em …" lands in its own week and re-judges later records (A-016)', () => {
+  const monday = () => startOfWeek(new Date());
+
+  it("takes its own week, not the newer workout's, and strips a record it now beats", async () => {
+    // An isolated exercise so the records are only this test's.
+    const ex = await prisma.exercise.create({
+      data: { slug: `${RUN_ID}-stale-ex`, nameEn: "Stale Lift", namePt: "Levantamento stale", isPublished: true },
+    });
+    const program = await prisma.userProgram.create({
+      data: {
+        userId: USER_ID,
+        name: "Stale block",
+        status: "ACTIVE",
+        daysPerWeek: 2,
+        days: {
+          create: [0, 1].map((dayIndex) => ({
+            dayIndex,
+            name: `Dia ${dayIndex}`,
+            exercises: { create: [{ exerciseId: ex.id, sortOrder: 0, sets: 3 }] },
+          })),
+        },
+      },
+      include: { days: { orderBy: { dayIndex: "asc" } } },
+    });
+    const dayIds = program.days.map((d) => d.id);
+    await retireActive(); // one ACTIVE enrollment per user (A-007)
+    await prisma.programEnrollment.create({
+      data: {
+        userId: USER_ID,
+        programId: program.id,
+        status: "ACTIVE",
+        currentWeek: 1,
+        nextDayIndex: 0,
+        programSnapshot: {},
+        startedAt: new Date(monday().getTime() - 21 * DAY_MS),
+      },
+    });
+
+    try {
+      // Last week: a lighter workout, backdated into the previous calendar week.
+      const lastWed = await trainOn(dayIds[0], 100);
+      await finishedAt(lastWed, new Date(monday().getTime() - 5 * DAY_MS));
+      // This week: a workout that reads as a record against last week's.
+      const thisWeek = await trainOn(dayIds[1], 110);
+      expect((await weekAndSave(thisWeek)).programWeek).toBe(2);
+      expect((await records(thisWeek)).map((r) => r.kind)).toContain("MAX_WEIGHT");
+      await activities.shareWorkoutSession({ sessionId: thisWeek, visibility: "FOLLOWERS", showDetailedLoads: true });
+      expect(await cardRecords(thisWeek)).toContain("MAX_WEIGHT");
+
+      // "Salvar como feito em …": a heavier workout left open last week, saved now.
+      const lastFri = new Date(monday().getTime() - 3 * DAY_MS);
+      const sessionId = await startOn(dayIds[0]);
+      await prisma.workoutSession.update({ where: { id: sessionId }, data: { startedAt: lastFri } });
+      const set = await prisma.setLog.findFirstOrThrow({
+        where: { sessionId, setType: "WORKING" },
+        orderBy: [{ exerciseLog: { sortOrder: "asc" } }, { setNumber: "asc" }],
+      });
+      expect(await actions.logSet({ setLogId: set.id, weightKg: 120, reps: 10, rir: null })).toEqual({ ok: true });
+      await prisma.setLog.update({ where: { id: set.id }, data: { completedAt: lastFri, updatedAt: lastFri } });
+      expect(await redirectOf(actions.finishStaleWorkoutSessionAndOpen(sessionId))).toBe(
+        `/app/workout/${sessionId}/summary`,
+      );
+
+      // Dated in last week (same week as lastWed, programWeek 1) — not week 2.
+      const saved = await prisma.workoutSession.findUniqueOrThrow({
+        where: { id: sessionId },
+        select: { programWeek: true, finishedAt: true },
+      });
+      expect(saved.programWeek).toBe(1);
+      expect(saved.finishedAt!.getTime()).toBe(lastFri.getTime());
+      // It holds the 120 kg record, measured against its own past only.
+      expect((await records(sessionId)).find((r) => r.kind === "MAX_WEIGHT")?.value).toBe(120);
+      // This week's "record" no longer stands — it was beaten earlier — and its card follows.
+      expect((await records(thisWeek)).map((r) => r.kind)).not.toContain("MAX_WEIGHT");
+      expect(await cardRecords(thisWeek)).toEqual([]);
+    } finally {
+      await prisma.workoutSession.deleteMany({ where: { userId: USER_ID, programId: program.id } });
+      await prisma.programEnrollment.deleteMany({ where: { programId: program.id } });
+      await prisma.userProgram.delete({ where: { id: program.id } });
+      await prisma.exercise.deleteMany({ where: { id: ex.id } });
+    }
+  });
+});
+
+describe("an invalid row in an edit commits nothing (A-046)", () => {
+  // trainDay uses the home program; earlier describes activated their own blocks (A-007).
+  beforeAll(rehomeDefaultEnrollment);
+
+  it("rolls the whole edit back and leaves the totals matching the sets", async () => {
+    const session = await trainDay(0, 100); // one working set, 100 × 10 = 1000 kg
+    const set = await prisma.setLog.findFirstOrThrow({ where: { sessionId: session, isCompleted: true } });
+    try {
+      // A valid change followed by a row that isn't one of the workout's sets.
+      const r = await actions.editFinishedWorkout(session, [
+        { setLogId: set.id, weightKg: 120, reps: 10, rir: null },
+        { setLogId: `${RUN_ID}-missing`, weightKg: 50, reps: 5, rir: null },
+      ]);
+      expect(r).toEqual({ ok: false, reason: "INVALID" });
+      // The valid row was rolled back with the invalid one — nothing committed.
+      expect((await prisma.setLog.findUniqueOrThrow({ where: { id: set.id } })).weightKg).toBe(100);
+      // And the stored totals still match the sets.
+      const s = await prisma.workoutSession.findUniqueOrThrow({ where: { id: session } });
+      expect(s.totalVolumeKg).toBe(1000);
+      expect(s.totalWorkingSets).toBe(1);
+    } finally {
+      await redirectOf(actions.deleteWorkoutSession(session));
     }
   });
 });

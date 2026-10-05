@@ -138,6 +138,23 @@ describe("the week's RIR on each exercise", () => {
     expect(rirFloor(0, machine)).toBe(0);
     expect(rirFloor(1, bench)).toBe(1);
   });
+
+  it("a deload week never prescribes below RIR 3, planned or applied (A-018)", () => {
+    // Planned deload (the test wave's week 13): a low-RIR exercise is lifted back to 3,
+    // not left at the wave-shifted 2.5.
+    expect(weekRirTarget(1, week(13), { baseline, exercise: machine })).toBe(3);
+    // Wave-shift puts RIR 2 at 2 + (3.5 − 2) = 3.5, already ≥ 3, so it stays 3.5 (clamp floor is 3).
+    expect(weekRirTarget(2, week(13), { baseline, exercise: machine })).toBe(3.5);
+    // A waved program's applied deload: same floor (the old bug skipped the floor when
+    // baseline != null and sent heavy lifts to 1.5).
+    const applied = appliedDeloadGuidance(getWeekGuidance(wave, 5), 5);
+    expect(weekRirTarget(1, applied, { baseline, exercise: machine })).toBeGreaterThanOrEqual(3);
+    expect(weekRirTarget(0, applied, { baseline, exercise: machine })).toBeGreaterThanOrEqual(3);
+    // Still capped at 4 (or the exercise's own, if higher) and holds untouched.
+    expect(weekRirTarget(3, week(13), { baseline, exercise: bench })).toBe(4);
+    expect(weekRirTarget(4.5, week(13), { baseline, exercise: machine })).toBe(4.5);
+    expect(weekRirTarget(1, week(13), { baseline, exercise: { ...machine, timed: true } })).toBe(1);
+  });
 });
 
 describe("the program week the user is in", () => {

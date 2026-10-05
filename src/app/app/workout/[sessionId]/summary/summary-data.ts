@@ -1,6 +1,6 @@
 import "server-only";
 import { prisma } from "@/lib/db";
-import { getWeeklyProgress } from "@/lib/data/dashboard";
+import { getWeeklyProgress, WELCOME_BACK_AFTER_DAYS } from "@/lib/data/dashboard";
 import { entryWeekWasTrained, getRecentlyCompletedBlock } from "@/lib/data/program-lifecycle";
 import { getWeeklyStreak } from "@/lib/data/streak-data";
 import { getUpcomingPlan } from "@/lib/data/upcoming";
@@ -12,8 +12,14 @@ import { adviceFromLastTime } from "@/lib/training/set-plan";
 import { deriveGroups } from "@/lib/programming/groups";
 import { NOT_BANNED } from "@/lib/social/authorization";
 import { startOfWeek } from "@/lib/training/week";
+import { spDaysBetween } from "@/lib/training/stale";
 import { compareWithLast, setsText, type LastTimeDelta, type LiteSet } from "./dossier";
-import { correctableUntil as correctionDeadline, getSessionRirTargets, isStillEditable } from "@/lib/data/workout-session";
+import {
+  correctableUntil as correctionDeadline,
+  getSessionRirTargets,
+  isStillEditable,
+  lastFinishedWorkoutBefore,
+} from "@/lib/data/workout-session";
 
 /**
  * Everything the workout summary shows, for its owner. `fresh` is whether this
@@ -29,6 +35,7 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
       userId: true,
       name: true,
       status: true,
+      startedAt: true,
       finishedAt: true,
       updatedAt: true,
       durationSeconds: true,
@@ -128,6 +135,16 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
   // Supersets are read over every exercise of the workout, before the ones
   // with nothing done drop out (lib/programming/groups.ts).
   const groups = deriveGroups(session.exerciseLogs);
+  // Ease-back is a whole-session state — the user returned after a real layoff
+  // (the same signal Today shows), not a single lift's reference age: with the
+  // deload week excluded as a reference and on rotating programs a per-lift gap
+  // is routinely >= WELCOME_BACK_AFTER_DAYS on normal weeks too (A-006).
+  // Measured from when this workout was STARTED (the same anchor the live
+  // workout screen uses), so the screen and the summary never disagree for a
+  // session left open across the WELCOME_BACK_AFTER_DAYS cutoff.
+  const lastBefore = await lastFinishedWorkoutBefore(userId, session.startedAt);
+  const sessionEaseBack =
+    !session.isDeload && lastBefore != null && spDaysBetween(lastBefore.finishedAt, session.startedAt) >= WELCOME_BACK_AFTER_DAYS;
   const exercises = session.exerciseLogs
     .map((log, index) => {
       const done = log.sets.filter((s) => s.isCompleted && s.setType !== "WARMUP");
@@ -151,6 +168,9 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
             })
           : null;
       const delta: LastTimeDelta = compareWithLast(done, prev?.sets ?? null);
+      // Ease-back (whole-session, computed once above): the deliberate ~90%
+      // reduction after a layoff is an ease-back, not a decline, so the delta chip
+      // says so instead of "↓ carga". A deload workout has its own "leve de propósito".
       return {
         logId: log.id,
         exerciseId: log.exerciseId,
@@ -158,6 +178,7 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
         slug: log.exercise.slug,
         sets: done,
         delta,
+        easeBack: sessionEaseBack,
         previousText: prev ? setsText(prev.sets) : null,
         previousAt: prev?.doneAt ?? null,
         advice,

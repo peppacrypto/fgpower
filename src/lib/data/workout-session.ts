@@ -208,6 +208,24 @@ export async function getWorkoutUserContext(userId: string, firstWorkouts = 3) {
 }
 
 /**
+ * The user's most recently finished workout before `before`, or null. This is
+ * the welcome-back / ease-back reference: a whole-program layoff (the same
+ * signal Today shows), NOT a single lift's inter-session gap. A lift can recur
+ * more than WELCOME_BACK_AFTER_DAYS apart on a rotating program, and a deload
+ * week's session is excluded as a load reference, so a per-lift age would
+ * mislabel a normal week as a return from a break and fight the post-deload
+ * resume (A-006 / A-017).
+ */
+export async function lastFinishedWorkoutBefore(userId: string, before: Date) {
+  const s = await prisma.workoutSession.findFirst({
+    where: { userId, status: "COMPLETED", finishedAt: { lt: before } },
+    orderBy: { finishedAt: "desc" },
+    select: { finishedAt: true },
+  });
+  return s?.finishedAt ? { finishedAt: s.finishedAt } : null;
+}
+
+/**
  * The program week a workout belongs to and that week's guidance (W-054):
  * the week the workout will be saved in (advanceProgram's rule — the first
  * workout of a new calendar week starts the next program week), counted as

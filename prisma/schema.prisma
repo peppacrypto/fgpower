@@ -793,6 +793,13 @@ model ProgramEnrollment {
 
   sessions WorkoutSession[]
 
+  // At most one ACTIVE enrollment per user is enforced by a PARTIAL UNIQUE
+  // INDEX that Prisma 7 cannot express in PSL:
+  //   CREATE UNIQUE INDEX "ProgramEnrollment_userId_active_key"
+  //     ON "ProgramEnrollment" ("userId") WHERE status = 'ACTIVE';
+  // It is created in migration 20261004181700. Do NOT run `prisma migrate dev`
+  // to generate migrations — it does not see this index and would drop it;
+  // migrations in this repo are hand-authored.
   @@index([userId, status])
 }
 
@@ -846,7 +853,10 @@ model WorkoutSession {
   lingeringPain      Boolean            @default(false)
   highStress         Boolean            @default(false)
   checkInAt          DateTime? // answered
-  /// Opened inside an applied deload week: sets halved at open, RIR raised.
+  /// A deload workout. Applied (W-128: sets halved at open, RIR raised) OR a
+  /// planned deload week (advanceProgram stamps it at finish from week-guidance
+  /// isDeloadGuidance). One signal: skipped as a load reference, by the block
+  /// report, and read as a deload in the summary (A-017/A-005/A-019).
   isDeload           Boolean            @default(false)
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt

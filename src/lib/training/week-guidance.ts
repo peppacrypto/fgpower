@@ -265,16 +265,28 @@ export function rirFloor(exerciseRir: number, exercise: RirExercise): number {
  */
 export function weekRirTarget(
   exerciseRir: number | null,
-  week: (Pick<WeekGuidance, "rirTarget"> & { applied?: boolean }) | null,
+  week: (Pick<WeekGuidance, "rirTarget"> & { applied?: boolean; deload?: boolean }) | null,
   program: { baseline: number | null; exercise?: RirExercise } = { baseline: null },
 ): number | null {
   if (exerciseRir == null) return null;
-  // An applied deload in a program without a wave: at least RIR 3 ("RIR 3-4"), holds aside.
-  if (week?.applied && program.baseline == null) {
-    return program.exercise?.timed ? exerciseRir : Math.max(exerciseRir, DELOAD_MIN_RIR);
+  const timed = program.exercise?.timed === true;
+  // A deload week — planned (its guidance says so) or applied (W-128) — is light
+  // on purpose: every non-timed target rests between RIR 3 and 4, shifted by the
+  // program's wave where there is one, but never below 3 (A-018), and never below
+  // an exercise that already asks for more (the cap keeps it). This one clamp
+  // replaces the old "applied + no wave → RIR 3" case (that is this rule with no
+  // wave to shift) and stops planned deload weeks and waved programs from taking
+  // a deload target down to 1–2.5.
+  if (week?.deload === true || week?.applied === true) {
+    if (timed) return exerciseRir;
+    const cap = Math.max(exerciseRir, WAVE_MAX_RIR);
+    const weekRir = week?.rirTarget ?? null;
+    const shifted =
+      weekRir != null && program.baseline != null ? exerciseRir + (weekRir - program.baseline) : exerciseRir;
+    return Math.round(Math.min(cap, Math.max(DELOAD_MIN_RIR, shifted)) * 2) / 2;
   }
   const weekRir = week?.rirTarget ?? null;
-  if (weekRir == null || program.baseline == null || program.exercise?.timed) return exerciseRir;
+  if (weekRir == null || program.baseline == null || timed) return exerciseRir;
   const shifted = exerciseRir + (weekRir - program.baseline);
   const floor = rirFloor(exerciseRir, program.exercise ?? { freeWeightCompound: false, notes: null, timed: false });
   const cap = Math.max(exerciseRir, WAVE_MAX_RIR);

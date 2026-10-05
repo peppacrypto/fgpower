@@ -11,6 +11,7 @@ import {
   getWorkoutSessionForExecution,
   getWorkoutUserContext,
   getWorkoutWeek,
+  lastFinishedWorkoutBefore,
   rirExerciseOf,
 } from "@/lib/data/workout-session";
 import { weekRirTarget } from "@/lib/training/week-guidance";
@@ -22,7 +23,9 @@ import {
   formatSpTime,
   formatSpWeekdayDate,
   spDayKey,
+  spDaysBetween,
 } from "@/lib/training/stale";
+import { WELCOME_BACK_AFTER_DAYS } from "@/lib/data/dashboard";
 import {
   adviceFromLastTime,
   isBodyweightExercise,
@@ -104,14 +107,19 @@ async function load(sessionId: string, userId: string) {
     getWorkoutWeek(userId, sessionId),
     getRecordBars(userId, sessionId),
   ]);
-  return { loadedAtMs, session, previous, notes, week, bars, ...context };
+  // Whole-program layoff for the welcome-back / ease-back signal, measured from
+  // when this workout was STARTED (the same anchor the summary uses, so the
+  // screen and the summary agree even for a session left open across the
+  // WELCOME_BACK_AFTER_DAYS cutoff) (A-006).
+  const lastWorkout = session ? await lastFinishedWorkoutBefore(userId, session.startedAt) : null;
+  return { loadedAtMs, session, previous, notes, week, bars, lastWorkout, ...context };
 }
 
 export default async function WorkoutExecutionPage({ params, searchParams }: PageProps<"/app/workout/[sessionId]">) {
   const { sessionId } = await params;
   const sp = await searchParams;
   const user = await requireUser();
-  const { loadedAtMs, session, previous, notes, week, bars, profile, finishedWorkouts } = await load(sessionId, user.id);
+  const { loadedAtMs, session, previous, notes, week, bars, lastWorkout, profile, finishedWorkouts } = await load(sessionId, user.id);
 
   if (!session) notFound();
   if (session.userId !== user.id) notFound();
@@ -119,6 +127,16 @@ export default async function WorkoutExecutionPage({ params, searchParams }: Pag
   if (session.status === "DISCARDED") redirect("/app/today");
 
   const now = new Date(loadedAtMs);
+  // A deload week (planned or applied) and a return from a real layoff both ease
+  // today and never prescribe more (A-005, A-006). Ease-back is a WHOLE-SESSION
+  // state — the user has not trained in WELCOME_BACK_AFTER_DAYS (the same signal
+  // Today shows), not a single lift's reference age: with the deload week excluded
+  // as a reference (A-002) and on rotating programs, a per-lift age would be >= 10
+  // days on normal weeks too, mislabelling them and fighting the post-deload resume
+  // (A-017). A deload takes precedence and carries its own raised RIR.
+  const deload = week?.guidance.deload === true;
+  const easeBack =
+    !deload && lastWorkout != null && spDaysBetween(lastWorkout.finishedAt, session.startedAt) >= WELCOME_BACK_AFTER_DAYS;
   const replaced = replacedLogIds(session.exerciseLogs);
   const groups = workoutGroups(session.exerciseLogs, replaced);
   const exercises = session.exerciseLogs.map((log, index) => {
@@ -130,18 +148,22 @@ export default async function WorkoutExecutionPage({ params, searchParams }: Pag
     // The program's week moves the exercise's own target by its wave, never
     // below the exercise's floor (week-guidance weekRirTarget — the summary's
     // "Na próxima" reads the same, getSessionRirTargets).
-    const rirTarget = weekRirTarget(log.rirTarget, week?.guidance ?? null, {
+    const baseRir = weekRirTarget(log.rirTarget, week?.guidance ?? null, {
       baseline: week?.baselineRir ?? null,
       exercise: rirExerciseOf(log),
     });
+    // deload and easeBack are whole-session (computed once above).
+    const rirTarget = easeBack && baseRir != null ? Math.min(5, baseRir + 1) : baseRir;
     const advice = adviceFromLastTime({
       strategy,
       prescribed: { repMin: log.repMin, repMax: log.repMax, rirTarget },
       lastTime: last,
       loadIncrementKg,
       timed,
+      deload,
+      easeBack,
     });
-    const why = progressionPrincipleSlug(strategy);
+    const why = deload || easeBack ? "deloads" : progressionPrincipleSlug(strategy);
     return {
       id: log.id,
       exerciseId: log.exerciseId,

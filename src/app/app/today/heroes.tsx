@@ -392,22 +392,26 @@ export function BlockCompletedHero({ block }: { block: CompletedBlock }) {
       <p className="mt-2 font-mono text-sm text-muted">{stats.join(" · ")}</p>
 
       {block.anchorProgress && block.anchorProgress.length > 0 ? (
-        <ul className="mt-4 flex flex-col border-y border-border" aria-label="1RM estimado, do início ao fim do bloco">
-          {block.anchorProgress.map((a) => (
-            <li key={a.slug} className="flex items-baseline justify-between gap-3 border-t border-border py-2 first:border-t-0">
-              <Link
-                href={`/app/exercises/${a.slug}/history`}
-                className="line-clamp-2 min-w-0 text-sm font-medium leading-snug wrap-break-word hover:text-accent"
-              >
-                {a.exerciseName}
-              </Link>
-              <span className="shrink-0 font-mono text-sm tabular-nums">
-                <span className="text-muted">{formatKg(a.fromKg)} →</span>{" "}
-                <span className={cn("font-bold", a.toKg > a.fromKg && "text-accent")}>{formatKg(a.toKg)}</span>
-              </span>
-            </li>
-          ))}
-        </ul>
+        <div className="mt-4">
+          {/* A-019: the numbers are estimated 1RMs — say so on the hero, not only in the aria-label. */}
+          <p className={cn(monoLabel, "tracking-[0.14em] text-muted")}>1RM estimado · 1ª → última semana</p>
+          <ul className="mt-1.5 flex flex-col border-y border-border" aria-label="1RM estimado, do início ao fim do bloco">
+            {block.anchorProgress.map((a) => (
+              <li key={a.slug} className="flex items-baseline justify-between gap-3 border-t border-border py-2 first:border-t-0">
+                <Link
+                  href={`/app/exercises/${a.slug}/history`}
+                  className="line-clamp-2 min-w-0 text-sm font-medium leading-snug wrap-break-word hover:text-accent"
+                >
+                  {a.exerciseName}
+                </Link>
+                <span className="shrink-0 font-mono text-sm tabular-nums">
+                  <span className="text-muted">{formatKg(a.fromKg)} →</span>{" "}
+                  <span className={cn("font-bold", a.toKg > a.fromKg && "text-accent")}>{formatKg(a.toKg)}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
       ) : null}
 
       <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap">

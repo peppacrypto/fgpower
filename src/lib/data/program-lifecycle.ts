@@ -366,7 +366,9 @@ export async function describeCompletedBlock(userId: string, enrollmentId: strin
 /**
  * The block's most-trained loaded lifts (up to 3, done in at least two
  * program weeks): the best estimated 1RM (Epley, sets of 1–10 reps) in the
- * first and in the last week each was done.
+ * first and in the last NON-DELOAD week each was done. Deload weeks (planned or
+ * applied, WorkoutSession.isDeload — A-017/A-019) are left out, so the block
+ * report never shows an anchor lift "regressing" into its deload.
  */
 async function anchorLifts(userId: string, enrollmentId: string) {
   const rows = await prisma.$queryRaw<
@@ -380,6 +382,7 @@ async function anchorLifts(userId: string, enrollmentId: string) {
     JOIN "Exercise" e ON e.id = l."exerciseId"
     JOIN "SetLog" x ON x."exerciseLogId" = l.id
     WHERE s."userId" = ${userId} AND s."enrollmentId" = ${enrollmentId} AND s.status = 'COMPLETED'
+      AND NOT s."isDeload"
       AND s."programWeek" IS NOT NULL
       AND x."isCompleted" AND x."setType" <> 'WARMUP' AND x."weightKg" > 0 AND x.reps BETWEEN 1 AND 10
     GROUP BY l."exerciseId", e."namePt", e.slug, s."programWeek"`;

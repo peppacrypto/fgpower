@@ -327,11 +327,50 @@ export function adviceFromLastTime(input: {
   loadIncrementKg: number;
   /** A hold (isTimedHold): the advice speaks in seconds (adviceInSeconds). */
   timed?: boolean;
+  /**
+   * Today's workout is a deload — planned or applied (W-128). Light on purpose:
+   * hold the last (pre-deload) loads, never prescribe more (A-005). The raised
+   * RIR comes from the week itself (week-guidance weekRirTarget).
+   */
+  deload?: boolean;
+  /**
+   * First session back after a long layoff (A-006; dashboard
+   * WELCOME_BACK_AFTER_DAYS). Ease in at ~90% of the last load, never more; the
+   * +1 RIR is shown on the screen, not encoded here.
+   */
+  easeBack?: boolean;
 }): NextLoadAdvice | null {
   const sets = (input.lastTime?.sets ?? [])
     .filter((s) => !s.isExtra)
     .map(({ weightKg, reps, rir }) => ({ weightKg, reps, rir }));
   if (sets.length === 0) return null;
+  // A deload or a return from a break never prescribes an increase — the one rule
+  // behind both (A-005, A-006). With no load to move (bodyweight) there is nothing
+  // to ease, so fall through to the normal advice.
+  const topLoad = Math.max(0, ...sets.map((s) => s.weightKg ?? 0));
+  if ((input.deload || input.easeBack) && topLoad > 0) {
+    if (input.deload) {
+      const held: NextLoadAdvice = {
+        kind: "hold",
+        loadKg: topLoad,
+        targetReps: null,
+        headline: `Semana leve · mantenha ${formatKg(topLoad)}`,
+        reason: "Deload: mesma carga, pare com 3+ reps na reserva — nada de subir esta semana.",
+      };
+      return input.timed ? adviceInSeconds(held) : held;
+    }
+    const step = input.loadIncrementKg > 0 ? input.loadIncrementKg : 2.5;
+    const rounded = Math.round(Math.round((topLoad * 0.9) / step) * step * 100) / 100;
+    const eased = rounded > 0 && rounded < topLoad ? rounded : topLoad;
+    const back: NextLoadAdvice = {
+      kind: "hold",
+      loadKg: eased,
+      targetReps: null,
+      headline: `Volta após pausa · ${formatKg(eased)}`,
+      reason: "Comece leve após a pausa: ~90% da carga e 1 rep a mais na reserva (RIR +1).",
+    };
+    return input.timed ? adviceInSeconds(back) : back;
+  }
   const advice = adviseNextLoad({
     strategy: input.strategy,
     prescribed: input.prescribed,

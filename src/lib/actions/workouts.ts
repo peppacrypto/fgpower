@@ -12,6 +12,7 @@ import { MAX_BOUT_SECONDS, assessOpenSession, boutSeconds, setBouts, staleSaveTi
 import { resolveSessionDay } from "@/lib/training/day-match";
 import { planWeek, restartsEachWeek } from "@/lib/training/day-rotation";
 import { blockEnds, countedWeeks } from "@/lib/programming/block-progress";
+import { getWeekGuidance } from "@/lib/training/week-guidance";
 import { closeBlock, entryWeekWasTrained, recordWorkoutMilestone } from "@/lib/data/program-lifecycle";
 import { isStillEditable } from "@/lib/data/workout-session";
 import { buildWorkoutActivitySummary } from "@/lib/social/activity-summary";
@@ -55,6 +56,10 @@ async function openSessionForDay(
       ? prisma.programEnrollment.findUniqueOrThrow({ where: { id: enrollmentId } })
       : prisma.programEnrollment.findFirst({
           where: { userId, programId: day.programId, status: "ACTIVE" },
+          // At most one ACTIVE enrollment exists per user (partial unique index
+          // ProgramEnrollment_userId_active_key); order so that during any
+          // transition / legacy data we bind to the same one Today shows.
+          orderBy: { startedAt: "desc" },
         }),
     // The workout carries the profile's sharing defaults from the start (decision
     // 10): finishing it publishes it that way (finish-hooks → publishOnFinish).
@@ -778,6 +783,9 @@ async function finishSession(
   const now = new Date();
   let finishedAt = now;
   let blockClosed = false;
+  // The exercises of a late ("stale") save, to re-judge the records of the
+  // workouts finished after it once it is slotted earlier in history (A-016).
+  let staleExerciseIds: string[] = [];
 
   const outcome = await prisma.$transaction(async (tx) => {
     // Lock the session row: concurrent set writes (FOR SHARE) and a second
@@ -854,6 +862,7 @@ async function finishSession(
       const timing = staleSaveTiming(session.startedAt, setTimes, now);
       finishedAt = timing.finishedAt;
       durationSeconds = timing.durationSeconds;
+      staleExerciseIds = [...new Set(session.setLogs.map((sl) => sl.exerciseId))];
     } else if (now.getTime() - startedMs > LONG_SESSION_MS) {
       const bouts = setBouts(setTimes);
       const last = bouts[bouts.length - 1];
@@ -908,6 +917,20 @@ async function finishSession(
     }
     // Publishing and the achievements log, after the records (the card lists them).
     published = (await afterFinish({ userId, sessionId, finishedAt, now, milestone })).activityId !== null;
+    // A late save slots in before workouts already finished: judge their records
+    // again — a PR this save now holds no longer stands in their way — and their
+    // shared cards follow (A-016), exactly as an edit or a delete does.
+    if (mode === "stale") {
+      try {
+        const later = await laterWorkoutsWith(userId, staleExerciseIds, finishedAt);
+        if (later.length > 0) {
+          await rescoreRecords(userId, later);
+          await afterRescore(userId, later);
+        }
+      } catch (err) {
+        console.error("Stale save rescore failed", sessionId, err);
+      }
+    }
   }
 
   revalidatePath("/app/today");
@@ -946,7 +969,7 @@ async function advanceProgram(
     sessionId: string;
     enrollment: { id: string; currentWeek: number; nextDayIndex: number; startedAt: Date };
     programId: string;
-    session: { programDayId: string | null; programDayIndex: number | null; name: string };
+    session: { programDayId: string | null; programDayIndex: number | null; name: string; isDeload: boolean };
     now: Date;
   },
 ): Promise<boolean> {
@@ -965,6 +988,22 @@ async function advanceProgram(
     dayCount: days.length,
   };
 
+  // The single deload signal (A-017): a session is a deload when the user applied
+  // one (flagged at open, openSessionForDay) OR its program week is a planned
+  // deload (week-guidance isDeloadGuidance), read for the week this workout counts
+  // as (countedWeeks — a trained Thursday–Sunday entry week took no number). It is
+  // stamped on every programWeek write below, so the week after a deload never
+  // takes the reduced loads as its reference (getPreviousPerformances), the block
+  // report skips it (A-019), and its summary reads as a deload (A-005). An applied
+  // deload is never cleared.
+  const entryWeekTrained = await entryWeekWasTrained(tx, { id: s.enrollment.id, userId: s.userId, startedAt: s.enrollment.startedAt });
+  const effectiveDeloadAt = (programWeek: number | null): boolean =>
+    s.session.isDeload ||
+    (programWeek != null &&
+      getWeekGuidance(program.weeklyGuidance, countedWeeks(programWeek, s.enrollment.startedAt, entryWeekTrained), {
+        durationWeeks: program.durationWeeks,
+      })?.deload === true);
+
   // userId keeps these on the (userId, …) indexes.
   const finished = {
     userId: s.userId,
@@ -975,13 +1014,37 @@ async function advanceProgram(
   };
   const newer = await tx.workoutSession.findFirst({
     where: { ...finished, finishedAt: { gt: s.now } },
-    select: { programWeek: true },
+    select: { id: true },
     orderBy: { finishedAt: "asc" },
   });
   if (newer) {
+    // A late save ("Salvar como feito em …") that lands before newer workouts
+    // belongs to its OWN São Paulo calendar week, never the week those newer
+    // workouts reached (A-016). Take the week of a workout already finished in
+    // its calendar week; if it is the only one there, it opens a newly trained
+    // week after the latest one before it (never winding the counter back). The
+    // newer workouts keep their own week — only their records are judged again
+    // (finishSession's stale rescore). It still carries the effective deload
+    // signal (A-017) and the frozen week target (A-001).
+    const weekStart = startOfWeek(s.now);
+    const nextWeekStart = startOfWeek(new Date(weekStart.getTime() + 7 * 86_400_000));
+    const sameWeek = await tx.workoutSession.findFirst({
+      where: { ...finished, finishedAt: { gte: weekStart, lt: nextWeekStart } },
+      select: { programWeek: true },
+      orderBy: { finishedAt: "desc" },
+    });
+    let staleWeek = sameWeek?.programWeek ?? null;
+    if (staleWeek === null) {
+      const before = await tx.workoutSession.findFirst({
+        where: { ...finished, finishedAt: { lt: weekStart } },
+        select: { programWeek: true },
+        orderBy: { finishedAt: "desc" },
+      });
+      staleWeek = before?.programWeek != null ? before.programWeek + 1 : 1;
+    }
     await tx.workoutSession.update({
       where: { id: s.sessionId },
-      data: { programWeek: newer.programWeek ?? s.enrollment.currentWeek, weekTargetSnapshot },
+      data: { programWeek: staleWeek, weekTargetSnapshot, isDeload: effectiveDeloadAt(staleWeek) },
     });
     await tx.programEnrollment.update({ where: { id: s.enrollment.id }, data: { completedSessions: { increment: 1 } } });
     return false;
@@ -995,15 +1058,18 @@ async function advanceProgram(
   if (thisWeek.length === 0 && (await tx.workoutSession.findFirst({ where: finished, select: { id: true } }))) {
     week += 1;
   }
-  // This workout is saved as finished already: it counts if it was done in the entry week.
-  const entryWeekTrained = await entryWeekWasTrained(tx, { id: s.enrollment.id, userId: s.userId, startedAt: s.enrollment.startedAt });
+  // This workout is saved as finished already: it counts if it was done in the entry
+  // week (entryWeekTrained, computed once above).
 
   // The first workout past the block's last week: the block is over. It closes
   // first, and the workout is kept in the block's last week — never a "Semana
   // 5" of a 4-week block — as a late workout of it (a day of that week left
   // over, done now).
   if (program.durationWeeks && countedWeeks(week, s.enrollment.startedAt, entryWeekTrained) > program.durationWeeks) {
-    await tx.workoutSession.update({ where: { id: s.sessionId }, data: { programWeek: s.enrollment.currentWeek, weekTargetSnapshot } });
+    await tx.workoutSession.update({
+      where: { id: s.sessionId },
+      data: { programWeek: s.enrollment.currentWeek, weekTargetSnapshot, isDeload: effectiveDeloadAt(s.enrollment.currentWeek) },
+    });
     await tx.programEnrollment.update({ where: { id: s.enrollment.id }, data: { completedSessions: { increment: 1 } } });
     return closeBlock(tx, { userId: s.userId, enrollmentId: s.enrollment.id, now: s.now });
   }
@@ -1011,7 +1077,7 @@ async function advanceProgram(
   const thisDay = resolveSessionDay(s.session, days);
   const nextDayIndex = thisDay ? nextDayAfter(days, program.daysPerWeek, thisDay, thisWeek) : s.enrollment.nextDayIndex;
 
-  await tx.workoutSession.update({ where: { id: s.sessionId }, data: { programWeek: week, weekTargetSnapshot } });
+  await tx.workoutSession.update({ where: { id: s.sessionId }, data: { programWeek: week, weekTargetSnapshot, isDeload: effectiveDeloadAt(week) } });
   await tx.programEnrollment.update({
     where: { id: s.enrollment.id },
     data: { completedSessions: { increment: 1 }, nextDayIndex, currentWeek: week },
@@ -1170,7 +1236,7 @@ export async function editFinishedWorkout(sessionId: string, edits: FinishedSetE
       for (const edit of rows) {
         const set = byId.get(edit.setLogId);
         // Only the sets the summary lists: working sets that counted.
-        if (!set || set.setType === "WARMUP" || !set.isCompleted) return "INVALID" as const;
+        if (!set || set.setType === "WARMUP" || !set.isCompleted) throw new InvalidEdit();
         if (edit.remove === true) {
           await tx.setLog.update({
             where: { id: set.id },
@@ -1179,7 +1245,7 @@ export async function editFinishedWorkout(sessionId: string, edits: FinishedSetE
           continue;
         }
         const values = cleanValues(edit);
-        if (!isFilled(values)) return "INVALID" as const;
+        if (!isFilled(values)) throw new InvalidEdit();
         if (values.weightKg === set.weightKg && values.reps === set.reps && values.rir === set.rir) continue;
         await tx.setLog.update({ where: { id: set.id }, data: values });
       }
@@ -1199,6 +1265,7 @@ export async function editFinishedWorkout(sessionId: string, edits: FinishedSetE
     })
     .catch((err) => {
       if (err instanceof EmptyEdit) return "EMPTY" as const;
+      if (err instanceof InvalidEdit) return "INVALID" as const;
       throw err;
     });
   if (typeof outcome === "string") return { ok: false, reason: outcome };
@@ -1213,6 +1280,9 @@ export async function editFinishedWorkout(sessionId: string, edits: FinishedSetE
 
 /** Thrown inside the edit's transaction to roll it back when no working set would be left. */
 class EmptyEdit extends Error {}
+
+/** Thrown inside the edit's transaction to roll it back on an invalid row — nothing partially committed (A-046). */
+class InvalidEdit extends Error {}
 
 // ---------------------------------------------------------------------------
 // The post-workout check-in (W-127): how hard it felt, soreness coming in,

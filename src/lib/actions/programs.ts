@@ -13,6 +13,8 @@ import { startAdHocWorkoutSession } from "@/lib/actions/workouts";
 import { seriesPosition } from "@/lib/training/program-calendar";
 import type { Prisma } from "@/generated/prisma/client";
 
+type Tx = Prisma.TransactionClient;
+
 /** A set "has data" once it is completed or holds a typed load/reps (as in workouts.ts). */
 const SET_HAS_DATA: Prisma.SetLogWhereInput = {
   OR: [{ isCompleted: true }, { weightKg: { not: null } }, { reps: { not: null } }],
@@ -83,21 +85,23 @@ async function forkTemplateToProgram(
   return program;
 }
 
-async function setAsOnlyActiveProgram(userId: string, programId: string) {
+async function setAsOnlyActiveProgram(tx: Tx, userId: string, programId: string) {
   // Only one enrollment is ACTIVE at a time — starting a new program ends
   // (does not delete) any other in-progress one, preserving its history.
-  await prisma.programEnrollment.updateMany({
+  // Runs on the caller's transaction so the abandon-then-create is atomic
+  // under the per-user advisory lock (one ACTIVE enrollment per user).
+  await tx.programEnrollment.updateMany({
     where: { userId, status: "ACTIVE" },
     data: { status: "ABANDONED", endedAt: new Date() },
   });
-  await prisma.userProgram.updateMany({
+  await tx.userProgram.updateMany({
     where: { userId, status: "ACTIVE", id: { not: programId } },
     data: { status: "ARCHIVED", archivedAt: new Date() },
   });
   // Open workouts with nothing logged are abandoned starts: don't let one
   // hold Today's "Treino em andamento" slot for the new program. Sessions
   // with logged sets stay open so the user can finish or discard them.
-  await prisma.workoutSession.updateMany({
+  await tx.workoutSession.updateMany({
     where: { userId, status: "IN_PROGRESS", setLogs: { none: SET_HAS_DATA } },
     data: { status: "DISCARDED" },
   });
@@ -261,33 +265,49 @@ async function startProgramInternal(
   if (program.userId !== userId) throw new Error("FORBIDDEN");
   if (!program.days.some((d) => d.exercises.length > 0)) return { ok: false, reason: "EMPTY" };
 
-  const previous = await prisma.programEnrollment.findFirst({
-    where: { userId, status: "ACTIVE" },
-    orderBy: { startedAt: "desc" },
-    select: { id: true, programId: true },
-  });
-  // Starting the program that is already running would reset it to week 1.
-  if (previous?.programId === programId) return { ok: false, reason: "ALREADY_ACTIVE" };
+  try {
+    return await prisma.$transaction(async (tx) => {
+      // Serialize activation per user (same lock key as openSessionForDay and
+      // restorePreviousProgram) so two taps / two tabs can't both create an
+      // ACTIVE enrollment. `previous` is re-read under the lock.
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${userId}))`;
 
-  await setAsOnlyActiveProgram(userId, programId);
+      const previous = await tx.programEnrollment.findFirst({
+        where: { userId, status: "ACTIVE" },
+        orderBy: { startedAt: "desc" },
+        select: { id: true, programId: true },
+      });
+      // Starting the program that is already running would reset it to week 1.
+      if (previous?.programId === programId) return { ok: false, reason: "ALREADY_ACTIVE" } as const;
 
-  // A finished or archived program started again leaves "Arquivados".
-  await prisma.userProgram.update({ where: { id: programId }, data: { status: "ACTIVE", archivedAt: null } });
+      await setAsOnlyActiveProgram(tx, userId, programId);
 
-  await prisma.programEnrollment.create({
-    data: {
-      userId,
-      programId,
-      status: "ACTIVE",
-      currentWeek: 1,
-      nextDayIndex: program.days[0]?.dayIndex ?? 0,
-      plannedSessions: program.durationWeeks ? program.durationWeeks * program.daysPerWeek : null,
-      programSnapshot: program as never,
-    },
-  });
-  // Its days onto the user's week (Today's schedule) and its frequency onto the profile.
-  await applyWeekLayout(prisma, userId, programId);
-  return { ok: true, previousEnrollmentId: previous?.id ?? null };
+      // A finished or archived program started again leaves "Arquivados".
+      await tx.userProgram.update({ where: { id: programId }, data: { status: "ACTIVE", archivedAt: null } });
+
+      await tx.programEnrollment.create({
+        data: {
+          userId,
+          programId,
+          status: "ACTIVE",
+          currentWeek: 1,
+          nextDayIndex: program.days[0]?.dayIndex ?? 0,
+          plannedSessions: program.durationWeeks ? program.durationWeeks * program.daysPerWeek : null,
+          programSnapshot: program as never,
+        },
+      });
+      // Its days onto the user's week (Today's schedule) and its frequency onto the profile.
+      await applyWeekLayout(tx, userId, programId);
+      return { ok: true, previousEnrollmentId: previous?.id ?? null } as const;
+    });
+  } catch (err) {
+    // The partial unique index (ProgramEnrollment_userId_active_key) is the
+    // real guard: a racing activation that slipped past the re-read hits it.
+    // ProgramEnrollment has no other unique constraint, so P2002 here can only
+    // be that index — treat it as "already running", never a 500.
+    if ((err as { code?: string }).code === "P2002") return { ok: false, reason: "ALREADY_ACTIVE" };
+    throw err;
+  }
 }
 
 export async function startProgram(programId: string) {
@@ -589,28 +609,35 @@ export async function resumeProgram(programId: string) {
     select: { id: true, days: { select: { _count: { select: { exercises: true } } } } },
   });
   if (!program) redirect("/app/programs");
-  const [restart, previous] = await Promise.all([
-    getProgramRestart(user.id, programId),
-    prisma.programEnrollment.findFirst({
+  const restart = await getProgramRestart(user.id, programId);
+  if (!restart.resumable || !program.days.some((d) => d._count.exercises > 0)) redirect(`/app/programs/${programId}`);
+  const resumable = restart.resumable;
+
+  const outcome = await prisma.$transaction(async (tx) => {
+    // Same per-user lock as startProgramInternal: no start/resume/open interleaves.
+    await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${user.id}))`;
+    const previous = await tx.programEnrollment.findFirst({
       where: { userId: user.id, status: "ACTIVE" },
       orderBy: { startedAt: "desc" },
       select: { id: true, programId: true },
-    }),
-  ]);
-  if (previous?.programId === programId) redirect("/app/today");
-  if (!restart.resumable || !program.days.some((d) => d._count.exercises > 0)) redirect(`/app/programs/${programId}`);
-
-  await setAsOnlyActiveProgram(user.id, programId);
-  await prisma.userProgram.update({ where: { id: programId }, data: { status: "ACTIVE", archivedAt: null } });
-  await prisma.programEnrollment.update({
-    where: { id: restart.resumable.enrollmentId },
-    data: { status: "ACTIVE", endedAt: null, currentWeek: restart.resumable.currentWeek },
+    });
+    // Already running this program (a double tap, a stale page): leave it be.
+    if (previous?.programId === programId) return { resumed: false as const, previousId: null };
+    await setAsOnlyActiveProgram(tx, user.id, programId);
+    await tx.userProgram.update({ where: { id: programId }, data: { status: "ACTIVE", archivedAt: null } });
+    await tx.programEnrollment.update({
+      where: { id: resumable.enrollmentId },
+      data: { status: "ACTIVE", endedAt: null, currentWeek: resumable.currentWeek },
+    });
+    await applyWeekLayout(tx, user.id, programId);
+    return { resumed: true as const, previousId: previous?.id ?? null };
   });
-  await applyWeekLayout(prisma, user.id, programId);
+
   revalidatePath("/app/programs");
   revalidatePath("/app/today");
+  if (!outcome.resumed) redirect("/app/today");
   // Today says "<programa> retomado · semana N" (not "Programa ativado"), with the switch's undo when one ended.
-  redirect(previous ? `/app/today?retomado=1&anterior=${previous.id}` : "/app/today?retomado=1");
+  redirect(outcome.previousId ? `/app/today?retomado=1&anterior=${outcome.previousId}` : "/app/today?retomado=1");
 }
 
 /**

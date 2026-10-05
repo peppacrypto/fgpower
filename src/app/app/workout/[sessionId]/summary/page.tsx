@@ -223,6 +223,7 @@ export default async function WorkoutSummaryPage({ params, searchParams }: PageP
                     timed={isTimedHold({ slug: ex.slug })}
                     noLoad={ex.sets.every((s) => s.weightKg === 0)}
                     deload={session.isDeload}
+                    easeBack={ex.easeBack}
                   />
                   {ex.previousText && ex.delta.kind !== "first" ? (
                     <span className="mt-0.5 block font-mono text-[11px] text-muted">
@@ -372,6 +373,7 @@ function DeltaChip({
   timed = false,
   noLoad = false,
   deload = false,
+  easeBack = false,
 }: {
   delta: LastTimeDelta;
   /** A hold: its reps are seconds ("↑ tempo +5 s"). */
@@ -380,9 +382,12 @@ function DeltaChip({
   noLoad?: boolean;
   /** A deload workout (W-128): lighter on purpose, never a decline. */
   deload?: boolean;
+  /** First session back after a long layoff (A-006): the ~90% start is intentional, not a drop. */
+  easeBack?: boolean;
 }) {
   const base = "font-mono text-xs font-bold tabular-nums";
   if (deload && delta.kind !== "first") return <span className={cn(base, "text-muted")}>deload · leve de propósito</span>;
+  if (easeBack && delta.kind !== "first") return <span className={cn(base, "text-muted")}>após pausa · leve de propósito</span>;
   const repsDelta = (sign: string, n: number) =>
     timed ? `tempo ${sign}${formatNumber(n, 0)}\u00a0s` : `reps ${sign}${formatNumber(n, 0)}`;
   switch (delta.kind) {
