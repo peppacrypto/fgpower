@@ -159,6 +159,11 @@ test("other people see the display name the user chose", async ({ browser }) => 
   const carla = await newContext(browser);
   const carlaEmail = uniqueEmail("id-carla");
   await onboard(carla.page, { email: carlaEmail, googleName: "Carla Mendes", name: "Carlinha", handle: `carlinha_${t}` });
+  // New accounts are non-discoverable by default (A-049); Carla opts in so others can find her in Descobrir.
+  await db.query(
+    `update "Profile" set discoverable = true where "userId" = (select id from "user" where email = $1)`,
+    [carlaEmail],
+  );
   const beto = await newContext(browser);
   await onboard(beto.page, { email: uniqueEmail("id-beto"), googleName: "Roberto Alves", name: "Beto", handle: `beto_${t}` });
 

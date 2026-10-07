@@ -428,6 +428,7 @@ export function adviceFromLastTime(input: {
     prescribed: input.prescribed,
     sets,
     loadIncrementKg: input.loadIncrementKg,
+    timed: input.timed,
   });
   const asked = input.lastTime?.prescribedSets ?? 0;
   if (advice?.kind === "increase" && sets.length < asked) {

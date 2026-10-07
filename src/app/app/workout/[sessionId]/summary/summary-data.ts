@@ -8,7 +8,7 @@ import { planWeek } from "@/lib/training/day-rotation";
 import { countedWeeks } from "@/lib/programming/block-progress";
 import type { NextLoadAdvice } from "@/lib/training/next-load";
 import { groupRecordsByExercise } from "@/lib/training/personal-records-core";
-import { adviceFromLastTime } from "@/lib/training/set-plan";
+import { adviceFromLastTime, isTimedHold } from "@/lib/training/set-plan";
 import { deriveGroups } from "@/lib/programming/groups";
 import { NOT_BANNED } from "@/lib/social/authorization";
 import { startOfWeek } from "@/lib/training/week";
@@ -161,6 +161,8 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
         fresh && reference.length > 0
           ? adviceFromLastTime({
               strategy: log.programExercise?.progressionStrategy ?? session.program?.progressionStrategy ?? null,
+              // A timed hold's advice must speak seconds (A-055) — mirror the summary's own isTimedHold check.
+              timed: isTimedHold({ slug: log.exercise.slug }),
               prescribed: { repMin: log.repMin, repMax: log.repMax, rirTarget: rirTargets.get(log.id) ?? log.rirTarget },
               lastTime: {
                 sets: reference.map((s) => ({ weightKg: s.weightKg, reps: s.reps, rir: s.rir, isExtra: false })),

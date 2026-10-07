@@ -375,7 +375,17 @@ export function OnboardingWizard({
   ) : null;
 
   return (
-    <form action={formAction} onSubmit={onSubmit} onKeyDown={onKeyDown} noValidate className="w-full max-w-lg">
+    <form
+      action={formAction}
+      onSubmit={onSubmit}
+      onKeyDown={onKeyDown}
+      // React 19 resets the form after a non-navigating action (an offline "Sem conexão"),
+      // which unchecks the controlled 18+/consent checkboxes and makes the online retry fail.
+      // The form is fully controlled by `answers`, so cancel that reset.
+      onReset={(e) => e.preventDefault()}
+      noValidate
+      className="w-full max-w-lg"
+    >
       <div
         role="progressbar"
         aria-label={`Passo ${step + 1} de ${TOTAL_STEPS}`}

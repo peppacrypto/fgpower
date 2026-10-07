@@ -20,7 +20,14 @@ export function useRestoreFocus() {
   const [trigger] = useState(() => (typeof document === "undefined" ? null : document.activeElement));
   useEffect(
     () => () => {
-      if (trigger instanceof HTMLElement && trigger.isConnected) requestAnimationFrame(() => trigger.focus());
+      if (trigger instanceof HTMLElement && trigger.isConnected)
+        requestAnimationFrame(() => {
+          // Only restore when focus fell to nowhere (the WCAG 2.4.3 case this fixes).
+          // If the sheet was closed by an action that moved focus on purpose — "Revisar"
+          // to the incomplete field, a swap to the new exercise's name — don't steal it.
+          const active = document.activeElement;
+          if (active === null || active === document.body) trigger.focus();
+        });
     },
     [trigger],
   );

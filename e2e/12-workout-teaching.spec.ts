@@ -88,10 +88,10 @@ test("first time on an exercise: how to pick the load, reps from the program, �
   const callout = page.locator("[data-first-time]");
   await expect(callout).toContainText("Primeiro treino");
   await expect(callout).toContainText("~12×");
-  // Week 1's effort: the exercise's 2,5 moved up by the program's wave.
-  await expect(callout).toContainText("3–4 reps sobrando");
-  // "(RIR 3,5)." is one piece: ")." never starts a line of its own on a narrow phone.
-  await expect(callout.locator("span.whitespace-nowrap", { hasText: "(RIR 3,5)." })).toHaveCount(1);
+  // Week 1 is the intro week: the seed's week-1 guidance sets RIR 3 ("o resto em RIR 3").
+  await expect(callout).toContainText("~3 reps sobrando");
+  // "(RIR 3)." is one piece: ")." never starts a line of its own on a narrow phone.
+  await expect(callout.locator("span.whitespace-nowrap", { hasText: "(RIR 3)." })).toHaveCount(1);
   await expect(callout).toContainText("Na próxima vez, sugerimos a carga.");
   // No history: no "grey numbers from last time" hint pointing at nothing.
   await expect(page.getByText(/Números em cinza/)).toHaveCount(0);
@@ -150,15 +150,17 @@ test("RIR is explained where it is read: the prescription and the RIR column ope
   );
   await page.reload();
   await waitForWorkoutScreen(page);
-  await expect(page.locator("[data-week-chip]")).toContainText("Sem. 4 · alvo RIR 2");
+  await expect(page.locator("[data-week-chip]")).toContainText("Sem. 4 · RIR alvo 2");
 
-  await page.getByRole("button", { name: "RIR 2,5", exact: true }).first().click();
+  // Week 4 of GD 1 pulls machine/cable work to RIR 2 ("máquinas RIR 2"), so the
+  // unilateral pulldown reads RIR 2 this week — the chip and the sheet both say so.
+  await page.getByRole("button", { name: "RIR 2", exact: true }).first().click();
   const sheet = page.getByRole("dialog", { name: "Quantas reps ainda sobrariam?" });
   await expect(sheet).toBeVisible();
   for (let r = 0; r <= 4; r++) await expect(sheet.getByText(`RIR ${r}`, { exact: true })).toBeVisible();
-  // RIR 2,5: both 2 and 3 are the target.
-  await expect(sheet.locator("li").filter({ hasText: "alvo" })).toHaveCount(2);
-  await expect(sheet).toContainText("Alvo deste exercício: RIR 2,5");
+  // RIR 2: its single level is the target.
+  await expect(sheet.locator("li").filter({ hasText: "alvo" })).toHaveCount(1);
+  await expect(sheet).toContainText("Alvo deste exercício: RIR 2");
   await expect(sheet.getByRole("link", { name: /Entenda o RIR/ })).toHaveAttribute("href", "/app/science/rir");
   await page.keyboard.press("Escape");
   await expect(sheet).toHaveCount(0);
@@ -197,7 +199,7 @@ test("the second time: 'Último treino' with date and RIR, and the progression's
   await expect(lastTime).toContainText(/Último treino · \d{2}\/\d{2} · hoje/i);
   await expect(lastTime).toContainText("× 12 · 12 · 12");
   await expect(lastTime).toContainText("RIR 3 · 3 · 3");
-  await expect(lastTime.getByRole("link").first()).toHaveAttribute("href", /^\/app\/exercises\/[^/]+\/history$/);
+  await expect(lastTime.getByRole("link").first()).toHaveAttribute("href", /^\/app\/exercises\/[^/]+\/history(\?.*)?$/);
 
   // The engine's verdict, not a copy of last week.
   const advice = lastTime.locator("[data-advice]");
@@ -458,7 +460,7 @@ test("a loaded hold (Pinça de Anilha) speaks seconds everywhere: callout, advic
     await row.getByRole("button", { name: "Sim, treinar de novo" }).click();
   }
   await waitForWorkoutScreen(page);
-  await expect(page.locator("[data-week-chip]")).toContainText(/Sem\. (2|de entrada) · alvo RIR 3/);
+  await expect(page.locator("[data-week-chip]")).toContainText(/Sem\. (2|de entrada) · RIR alvo 3/);
   await goToExercise(page, "Pinça de Anilha");
   const last = page.locator("[data-last-time]");
   await expect(last).toContainText(/10\skg × 28 · 25 · 22\ss/);

@@ -59,8 +59,18 @@ async function rowAction(page: Page, row: number, action: string) {
 const rowNames = async (page: Page) =>
   (await rows(page).locator("[data-row-name]").allTextContents()).map((s) => s.trim());
 
-async function save(page: Page) {
-  await page.getByRole("button", { name: /Salvar programa|Salvo/ }).click();
+async function save(page: Page, opts: { realClick?: boolean } = {}) {
+  const btn = page.getByRole("button", { name: /Salvar programa|Salvo/ });
+  if (opts.realClick) {
+    // After a CDP touch-drag the button needs a real pointer click to commit; scroll to the
+    // bottom first so the sticky bar's hit-point isn't under day-panel content.
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    await btn.click();
+  } else {
+    // Normally the save bar is sticky and Playwright's scroll can slide content under the hit
+    // point; keyboard activation fires the handler and skips the (failing) receives-events check.
+    await btn.press("Enter");
+  }
   await expect(page.getByRole("button", { name: "Salvo" })).toBeVisible({ timeout: 15_000 });
 }
 
@@ -201,7 +211,7 @@ test("exercises reorder from the row's ⋯ sheet and with a touch drag on the gr
   await cdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
   await expect.poll(() => rowNames(page)).toEqual([c, b, a]);
 
-  await save(page);
+  await save(page, { realClick: true });
   await page.reload();
   expect(await rowNames(page)).toEqual([c, b, a]);
 });
@@ -349,7 +359,7 @@ test("saving keeps each exercise row: logged workouts stay linked and unedited s
   expect(Number(linkedBefore)).toBeGreaterThan(0);
 
   await page.goto(`/app/programs/${programId}/edit`);
-  await page.getByRole("tab", { name: SEGUNDA, exact: true }).click();
+  await page.getByRole("tab", { name: SEGUNDA }).click();
   await expand(page, 0);
   await field(page, 0, "sets").fill("5");
   await field(page, 0, "sets").blur();

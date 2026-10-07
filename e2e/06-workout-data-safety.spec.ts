@@ -76,10 +76,10 @@ test("editing the active program keeps the day that was trained marked as done",
   await page.getByRole("link", { name: /GD 1/ }).first().click();
   await page.getByRole("link", { name: "Editar" }).click();
   // The builder's day tabs (Batch 4): the day's "⋯" moves it.
-  await page.getByRole("tab", { name: /^Quinta/ }).click();
+  await page.getByRole("tab", { name: /Quinta/ }).click();
   await page.getByRole("button", { name: /^Opções do dia Quinta/ }).click();
   await page.getByRole("button", { name: "Mover dia para antes" }).click();
-  await page.getByRole("button", { name: /Salvar/ }).first().click();
+  await page.getByRole("button", { name: /Salvar/ }).first().click({ force: true }); // sticky save bar (see spec 08 save())
   // A failed save never reaches "Salvo" (the builder specs' signal); a fixed
   // sleep let this test pass on a save that never happened (A-093).
   await expect(page.getByRole("button", { name: "Salvo" })).toBeVisible({ timeout: 15_000 });

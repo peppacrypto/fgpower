@@ -434,9 +434,9 @@ test("the privacy page says what reminders and e-mails keep, and what a profile 
   await expect(lembretes).toContainText("com o assunto e sem o corpo da mensagem, por 30 dias");
   await expect(lembretes).toContainText("não é guardado em texto aberto");
   const treinos = page.locator("section").filter({ has: page.getByRole("heading", { name: "Quem vê seus treinos" }) });
-  // A private account hides the workouts, not the profile; being found is on until turned off.
+  // A private account hides the workouts, not the profile; discovery is off until turned on (A-049).
   await expect(treinos).toContainText("Nos dois casos, quem abrir o link do seu perfil vê seu nome, @usuário, foto, bio");
-  await expect(treinos).toContainText("estiver ligado — e ele vem ligado");
+  await expect(treinos).toContainText("em contas novas essa opção vem desligada");
   await expect(page.getByText("Todo perfil também tem uma imagem de prévia")).toBeVisible();
   await expect(page.getByText(/Você apaga cada medida quando quiser; o check-in pode ser corrigido por 24 horas/)).toBeVisible();
 });

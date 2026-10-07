@@ -21,5 +21,10 @@ export default defineConfig({
         url: "http://localhost:3055",
         reuseExistingServer: true,
         timeout: 60_000,
+        // The re-engagement specs (27, 30) exercise reminders, which the app only
+        // offers when the scheduler is configured (A-048): REMINDER_SCHEDULER=on +
+        // CRON_SECRET + VAPID keys. CRON_SECRET and the VAPID keys live in .env;
+        // this flips the scheduler on for the test server. Merged over process.env.
+        env: { REMINDER_SCHEDULER: "on" },
       },
 });

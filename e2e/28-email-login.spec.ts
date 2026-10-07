@@ -16,6 +16,22 @@ const codeBox = (page: Page) => page.getByLabel("Código de 6 dígitos");
 /** The form's error line (Next's empty route announcer is an alert too). */
 const alertLine = (page: Page) => page.getByRole("alert").filter({ hasText: /\S/ });
 
+/**
+ * A distinct client IP per test (and per extra context). A-043 caps the login
+ * code-send path per IP (5/min, 30/day); every e2e request otherwise egresses
+ * one IP ("local"), so the shared bucket drains across the suite and later sends
+ * are refused. A fresh `x-forwarded-for` keeps each test on its own IP budget.
+ */
+let ipCounter = 0;
+export function freshIp(): string {
+  ipCounter += 1;
+  return `10.42.${(ipCounter >> 8) & 255}.${ipCounter & 255}`;
+}
+
+test.beforeEach(async ({ page }) => {
+  await page.setExtraHTTPHeaders({ "x-forwarded-for": freshIp() });
+});
+
 async function finishWizard(page: Page, name: string) {
   await expect(page).toHaveURL(/\/onboarding/);
   const field = page.getByLabel("Nome de exibição");
@@ -162,12 +178,12 @@ test("an existing account signs in to the same user; an address past its budget 
   await page.waitForURL(/\/onboarding/, { timeout: 30_000 });
   expect(await userIdOf(page)).toBe(id);
 
-  // Five codes an hour per address: the sixth is refused, and says why.
+  // Three codes a minute per address (A-043): the fourth is refused, and says why.
   const busy = uniqueAddress("mail-budget");
-  const ctx = await browser.newContext(IPHONE);
+  const ctx = await browser.newContext({ ...IPHONE, extraHTTPHeaders: { "x-forwarded-for": freshIp() } });
   const other = await ctx.newPage();
   await other.goto("/login");
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 3; i++) {
     const res = await other.request.post("/api/auth/email-otp/send-verification-otp", {
       data: { email: busy, type: "sign-in" },
       headers: { origin: new URL(other.url()).origin },
@@ -175,7 +191,7 @@ test("an existing account signs in to the same user; an address past its budget 
     expect(res.status()).toBe(200);
   }
   await readOutbox(other, busy, { kind: "LOGIN_CODE" });
-  expect(sql(`SELECT count(*) FROM "EmailMessage" WHERE "toEmail" = ${sqlText(busy)} AND kind = 'LOGIN_CODE'`)).toBe("5");
+  expect(sql(`SELECT count(*) FROM "EmailMessage" WHERE "toEmail" = ${sqlText(busy)} AND kind = 'LOGIN_CODE'`)).toBe("3");
   await other.getByLabel("E-mail", { exact: true }).fill(busy);
   await other.getByRole("button", { name: "Receber link de acesso" }).click();
   await expect(alertLine(other)).toHaveText(
@@ -191,12 +207,13 @@ test("a suspended account is told so — by the code, the link and Google's retu
   sql(
     `INSERT INTO "user" (id, name, email, "emailVerified", banned, "createdAt", "updatedAt") VALUES (${sqlText(id)}, 'Conta Suspensa', ${sqlText(email)}, true, true, now(), now())`,
   );
+  // The ban message now also points to the LGPD data-access/erasure route (B4).
   const suspended = "Esta conta está suspensa e não pode entrar.";
 
   await page.goto("/login");
   const first = await requestLoginEmail(page, email);
   await codeBox(page).fill(codeFrom(first));
-  await expect(alertLine(page)).toHaveText(suspended);
+  await expect(alertLine(page)).toContainText(suspended);
   await expect(page).toHaveURL(/\/login/);
 
   // The link from a new e-mail: the same words, and no "Entrar" that could never work.
@@ -204,13 +221,13 @@ test("a suspended account is told so — by the code, the link and Google's retu
   const second = await requestLoginEmail(page, email);
   await page.goto(linkFrom(second));
   await page.getByRole("button", { name: "Entrar" }).click();
-  await expect(alertLine(page)).toHaveText(suspended);
+  await expect(alertLine(page)).toContainText(suspended);
   await expect(page.getByRole("button", { name: "Entrar" })).toHaveCount(0);
   expect(sql(`SELECT count(*) FROM "session" WHERE "userId" = ${sqlText(id)}`)).toBe("0");
 
   // Google sends the same refusal back as ?error=BANNED_USER: said plainly, no "Código:" line.
   await page.goto("/login?error=BANNED_USER");
-  await expect(alertLine(page)).toHaveText(suspended);
+  await expect(alertLine(page)).toContainText(suspended);
 });
 
 test("only the sign-in routes of the e-mail plugin exist, and they take nothing but address and code", async ({

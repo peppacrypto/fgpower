@@ -4,6 +4,7 @@ import { completeOnboarding } from "./onboarding-helper";
 import {
   QUINTA,
   SEGUNDA,
+  dayNameMatcher,
   gotoMyProgram,
   newUserOnGd1,
   startDayFromToday,
@@ -59,11 +60,14 @@ test("a superset in the next workout reads as one in the preview: its rule, then
   await page.goto("/app/today");
   const hero = page.locator('[data-hero="next"]');
   const dayName = (await hero.getByRole("heading", { level: 2 }).textContent())?.trim() ?? "";
+  // The hero heading drops its weekday prefix on a shifted week (A-076), while the
+  // stored day name keeps it ("Segunda — Superior…"), so match the full name or its suffix.
   // Pair the day's first two exercises (GD's own supersets sit further down its days).
   sql(`UPDATE "UserProgramExercise" SET "groupKey" = 'A' WHERE id IN (
     SELECT pe.id FROM "UserProgramExercise" pe
     JOIN "UserProgramDay" d ON d.id = pe."dayId" JOIN "UserProgram" p ON p.id = d."programId"
-    WHERE p."userId" = ${sqlText(userId)} AND p.status = 'ACTIVE' AND d.name = ${sqlText(dayName)}
+    WHERE p."userId" = ${sqlText(userId)} AND p.status = 'ACTIVE'
+      AND (d.name = ${sqlText(dayName)} OR d.name LIKE ${sqlText(`% — ${dayName}`)})
     ORDER BY pe."sortOrder" LIMIT 2)`);
   await page.reload();
 
@@ -266,7 +270,7 @@ test("an emptied day is skipped and the week counts only the days left to train"
   await page.goto("/app/today");
   // GD 1 is 5×/week over 5 days: with Monday emptied it doesn't repeat a day in its place.
   await expect(page.getByText("Próximo treino")).toBeVisible();
-  await expect(page.getByRole("heading", { level: 2, name: "Terça — Inferior (quadríceps, pesado)" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 2, name: dayNameMatcher("Terça — Inferior (quadríceps, pesado)") })).toBeVisible();
   await expect(page.locator(".reg-frame", { hasText: "Esta semana" })).toContainText("0 / 4");
   const monday = todayDayRow(page, SEGUNDA);
   await expect(monday).toContainText("Sem exercícios");

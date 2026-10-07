@@ -420,8 +420,8 @@ test.describe("weeks as Today counts them", () => {
     const week = page.locator("main section[aria-label]").first();
     await expect(week).toHaveAttribute("aria-label", /^Semana 13 · GD 1,/);
     const mark = week.locator("[data-week-mark]");
-    await expect(mark).toContainText("descarga");
-    await expect(mark).toContainText("semana de descarga, na meta");
+    await expect(mark).toContainText("deload");
+    await expect(mark).toContainText("semana de deload, na meta");
     await expect(mark).not.toContainText("1/5");
   });
 

@@ -28,9 +28,47 @@ export async function newUserOnTemplate(page: Page, label: string, slug: string)
   ]);
 }
 
-/** A program-day row (Today's "Treinos do programa" list). */
+/** Escapes a string for use inside a RegExp. */
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/**
+ * The display name with a leading weekday stripped ("Quinta — Puxar" → "Puxar"),
+ * mirroring the app's `dayNameWithoutWeekday`: the suggested day of a shifted
+ * week drops its weekday prefix (A-076), so a day named after a weekday can show
+ * up either way on Today.
+ */
+function dayNameWithoutWeekday(name: string): string {
+  const stripped = name.replace(/^\s*\p{L}+\s*[—–-]\s*/u, "").trim();
+  return stripped || name;
+}
+
+/**
+ * A matcher for a day's displayed name that accepts either the full "Weekday —
+ * Name" or the weekday-stripped "Name": the suggested day of a shifted week drops
+ * its weekday prefix (A-076), so a day named after a weekday can show up either
+ * way on Today (the hero heading and the "Treinos do programa" list).
+ */
+export function dayNameMatcher(dayName: string): RegExp {
+  const stripped = dayNameWithoutWeekday(dayName);
+  return stripped === dayName
+    ? new RegExp(`^${escapeRegExp(dayName)}$`)
+    : new RegExp(`^(?:${escapeRegExp(dayName)}|${escapeRegExp(stripped)})$`);
+}
+
+/**
+ * A program-day row (Today's "Treinos do programa" list). The suggested day of a
+ * shifted week renders with its weekday prefix stripped (A-076) and the hero card
+ * above the list shows that same stripped name, so the match is scoped to the
+ * "Treinos do programa" section and accepts either the full or the stripped name.
+ */
 export function todayDayRow(page: Page, dayName: string): Locator {
-  return page.locator(".reg-frame").filter({ has: page.getByText(dayName, { exact: true }) }).first();
+  const label = dayNameMatcher(dayName);
+  const section = page
+    .locator("section")
+    .filter({ has: page.getByRole("heading", { name: "Treinos do programa" }) });
+  return section.locator(".reg-frame").filter({ has: page.getByText(label) }).first();
 }
 
 /** A day card on the user's program page. */

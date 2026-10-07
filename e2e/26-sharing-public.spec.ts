@@ -252,7 +252,7 @@ test("who opens a link: a follower goes to the app page, a stranger sees the sha
   await stranger.page.getByRole("button", { name: "Denunciar" }).click();
   await stranger.page.getByRole("radio", { name: "Spam" }).check();
   await stranger.page.getByRole("button", { name: "Enviar denúncia" }).click();
-  await expect(stranger.page.getByText("Denúncia enviada. A equipe do FGPOWER vai analisar.")).toBeVisible({ timeout: 15_000 });
+  await expect(stranger.page.getByText("Denúncia enviada. A FGPOWER vai analisar.")).toBeVisible({ timeout: 15_000 });
   expect(sql(`SELECT count(*) FROM "UserReport" WHERE "reporterId" = ${sqlText(stranger.id)} AND "activityId" = ${sqlText(activityId)}`)).toBe("1");
   await stranger.context.close();
 
@@ -425,7 +425,13 @@ test("link-preview bots get the preview up front for /t and /u (htmlLimitedBots)
     const og = head.match(/<meta property="og:image" content="([^"]+)"/);
     expect(og, `${ua} → ${path}: og:image in <head>`).not.toBeNull();
     const image = new URL(og![1].replace(/&amp;/g, "&"));
-    const png = await request.get(image.pathname + image.search);
+    // The dev server compiles the og-image route on first hit, so a cold first fetch can 404
+    // while Turbopack builds it. Retry briefly; a production build has it ahead of time.
+    let png = await request.get(image.pathname + image.search);
+    for (let i = 0; i < 20 && png.status() !== 200; i++) {
+      await new Promise((r) => setTimeout(r, 500));
+      png = await request.get(image.pathname + image.search);
+    }
     expect(png.status()).toBe(200);
     expect(png.headers()["content-type"]).toBe("image/png");
     expect(pngSize(await png.body())).toEqual({ width: 1200, height: 630 });
@@ -448,9 +454,15 @@ test("link-preview bots get the preview up front for /t and /u (htmlLimitedBots)
 
   // A-073: a signed-out burst against the profile preview never 500s or breaks —
   // renders are cached per version and the render budget falls back to the brand card.
-  const burst = await Promise.all(
-    Array.from({ length: 20 }, () => request.get(`/u/${owner.username}/opengraph-image`)),
-  );
+  // The og route's URL carries a build-hash suffix (Next 16), so burst the real one.
+  const uHtml = await (await request.get(`/u/${owner.username}`, { headers: { "user-agent": "facebookexternalhit/1.1" } })).text();
+  const uOg = uHtml.slice(0, uHtml.indexOf("</head>")).match(/<meta property="og:image" content="([^"]+)"/);
+  const ogUrl = new URL(uOg![1].replace(/&amp;/g, "&"));
+  const ogPath = ogUrl.pathname + ogUrl.search;
+  // Warm it (dev compiles the route on first hit) before the concurrent burst.
+  let warm = await request.get(ogPath);
+  for (let i = 0; i < 20 && warm.status() !== 200; i++) { await new Promise((r) => setTimeout(r, 500)); warm = await request.get(ogPath); }
+  const burst = await Promise.all(Array.from({ length: 20 }, () => request.get(ogPath)));
   for (const res of burst) {
     expect(res.status()).toBe(200);
     expect(res.headers()["content-type"]).toBe("image/png");

@@ -103,7 +103,7 @@ test("a program without exercises can't be started, and says why", async ({ page
   const programUrl = page.url().replace(/\/edit$/, "");
 
   await page.goto(programUrl);
-  await expect(page.getByRole("button", { name: "Iniciar este programa" })).toBeDisabled();
+  await expect(page.getByRole("button", { name: "Ativar este programa" })).toBeDisabled();
   await expect(page.getByText("Adicione ao menos um exercício para iniciar.")).toBeVisible();
   await expect(page.getByRole("link", { name: "Editar programa" })).toHaveAttribute("href", /\/edit$/);
 

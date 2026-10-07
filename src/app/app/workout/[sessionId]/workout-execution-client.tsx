@@ -777,6 +777,8 @@ export function WorkoutExecutionClient({
       );
       el?.scrollIntoView({ block: "center" });
       el?.focus({ preventScroll: true });
+      // A review/correction lands in the box ready to retype (a typed load replaces, not appends).
+      el?.select();
     }
     if (revealCta.current) {
       revealCta.current = false;
@@ -1500,14 +1502,12 @@ export function WorkoutExecutionClient({
 
   /** "Corrigir" on a load that was asked about: its kg box, selected for retyping. */
   function fixLoad(id: string) {
-    setLoadCheck(null);
     const row = rows ? [...rows.prescribed, ...rows.extras].find((r) => r.id === id) : undefined;
     if (!row) return;
-    const el = Array.from(document.querySelectorAll<HTMLInputElement>("input[aria-label]")).find(
-      (input) => input.getAttribute("aria-label") === `${rowName(row)} — ${FIELD_LABEL.weight}`,
-    );
-    el?.focus();
-    el?.select();
+    // Defer to the focus effect so it lands after the load-check clears — focusing
+    // synchronously here was undone by that re-render (the box ended up unfocused).
+    pendingFocus.current = `${rowName(row)} — ${FIELD_LABEL.weight}`;
+    setLoadCheck(null);
   }
 
   /** This row's load is right as typed: never asked about again (and no longer flagged at the finish). */

@@ -1384,7 +1384,9 @@ export function ProgramBuilder({
                 title={label}
                 onClick={() => selectDay(i)}
                 className={cn(
-                  "flex h-11 shrink-0 items-center gap-1.5 whitespace-nowrap border-b-2 px-3 font-mono text-[11px] font-bold uppercase tracking-[0.06em]",
+                  // `relative` keeps the sr-only label's absolute positioning inside the tab; without it,
+                  // the label anchors to <html> at the tab's off-screen x and widens the page on a phone.
+                  "relative flex h-11 shrink-0 items-center gap-1.5 whitespace-nowrap border-b-2 px-3 font-mono text-[11px] font-bold uppercase tracking-[0.06em]",
                   selected
                     ? "border-b-accent bg-surface-2 text-foreground"
                     : "border-b-transparent text-muted hover:bg-surface-2 hover:text-foreground",

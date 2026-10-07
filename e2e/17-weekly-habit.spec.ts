@@ -1,7 +1,7 @@
 import { devices, expect, test, type Page } from "@playwright/test";
 import { hasDb, loginAsTestUser, sql } from "./fixtures";
 import { completeOnboarding } from "./onboarding-helper";
-import { finishAndSave, recordSet, startDayFromToday, uniqueEmail } from "./workout-helpers";
+import { dayNameMatcher, finishAndSave, recordSet, startDayFromToday, uniqueEmail } from "./workout-helpers";
 
 /*
  * Batch 3, cluster A — the weekly habit on Today: the week strip and a weekly
@@ -187,16 +187,16 @@ test("a new week after one that stopped mid-plan: the days left over, continue b
   await expect(choice).toContainText("Da semana passada ficaram");
   await expect(choice.getByRole("listitem")).toHaveText(["Quinta — Puxar (moderado)", "Sexta — Pernas (posterior de coxa e glúteos)"]);
   // The user's real frequency (3) is below the plan's 5 days: the sequence goes on.
-  await expect(hero(page).getByRole("heading", { level: 2 })).toHaveText("Quinta — Puxar (moderado)");
+  await expect(hero(page).getByRole("heading", { level: 2 })).toHaveText(dayNameMatcher("Quinta — Puxar (moderado)"));
   await expect(hero(page)).toContainText(/Dia 4 de 5/i);
   await expect(choice.getByRole("button", { name: "Continuar a sequência" })).toHaveAttribute("aria-pressed", "true");
 
   await choice.getByRole("button", { name: /^Recomeçar/ }).click();
-  await expect(hero(page).getByRole("heading", { level: 2 })).toHaveText("Segunda — Superior (pesado)", { timeout: 30_000 });
+  await expect(hero(page).getByRole("heading", { level: 2 })).toHaveText(dayNameMatcher("Segunda — Superior (pesado)"), { timeout: 30_000 });
   await expect(page.locator("[data-week-start]").getByRole("button", { name: /^Recomeçar/ })).toHaveAttribute("aria-pressed", "true");
   // Kept for this week (a reload shows the same).
   await page.reload();
-  await expect(hero(page).getByRole("heading", { level: 2 })).toHaveText("Segunda — Superior (pesado)");
+  await expect(hero(page).getByRole("heading", { level: 2 })).toHaveText(dayNameMatcher("Segunda — Superior (pesado)"));
 });
 
 test("after a workout the day before the new week, the week continues — never the same heavy day twice in a row", async ({
@@ -216,7 +216,7 @@ test("after a workout the day before the new week, the week continues — never 
   await expect(choice.getByRole("listitem")).toHaveCount(4);
   // A user who usually does all five still goes on with Terça: Segunda was yesterday's (last) workout.
   await expect(choice.getByRole("button", { name: "Continuar a sequência" })).toHaveAttribute("aria-pressed", "true");
-  await expect(hero(page).getByRole("heading", { level: 2 })).toHaveText("Terça — Inferior (quadríceps, pesado)");
+  await expect(hero(page).getByRole("heading", { level: 2 })).toHaveText(dayNameMatcher("Terça — Inferior (quadríceps, pesado)"));
 });
 
 test("a GD block's last week is its test week, and the finished block offers the next one or repeating it", async ({ page }) => {

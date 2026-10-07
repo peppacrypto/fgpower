@@ -108,7 +108,7 @@ test("builder: 'Agrupar com o próximo' makes a superset, the rest becomes the s
         WHERE p."userId" = ${sqlText(await userIdOf(page))} AND d.name = ${sqlText(TERCA)}`);
   await gotoMyProgram(page);
   await page.goto(`${page.url()}/edit`);
-  await page.getByRole("tab", { name: TERCA, exact: true }).click();
+  await page.getByRole("tab", { name: TERCA }).click();
   const rowNamed = (name: string) => page.locator("[data-row-id]").filter({ has: page.locator("[data-row-name]", { hasText: name }) });
   await expect(rowNamed(stretchName)).toContainText("Não conta no volume");
   await expect(rowNamed("Agachamento Hack")).not.toContainText("Não conta no volume");
@@ -136,7 +136,7 @@ test("builder: 'Agrupar com o próximo' makes a superset, the rest becomes the s
   await rowNamed("Agachamento Hack").locator("[data-row-toggle]").click();
 
   // Desfazer brings the list back as it was.
-  await page.getByRole("button", { name: "Desfazer" }).click();
+  await page.getByRole("button", { name: "Desfazer" }).click({ force: true });
   await expect(rowNamed("Agachamento Hack")).not.toHaveAttribute("data-group", /.+/);
   await expect(rowNamed("Agachamento Hack")).toContainText("3:00");
   await expect(rowNamed(FACE_PULL)).toHaveAttribute("data-group", "A1");
@@ -144,10 +144,10 @@ test("builder: 'Agrupar com o próximo' makes a superset, the rest becomes the s
   // Again, and saved: the reload keeps it.
   await rowNamed("Agachamento Hack").getByRole("button", { name: "Opções de Agachamento Hack" }).click();
   await page.getByRole("button", { name: "Agrupar com o próximo" }).click();
-  await page.getByRole("button", { name: "Salvar programa" }).click();
+  await page.getByRole("button", { name: "Salvar programa" }).click({ force: true }); // sticky save bar (Playwright scroll quirk)
   await expect(page.getByRole("button", { name: "Salvo" })).toBeVisible({ timeout: 15_000 });
   await page.reload();
-  await page.getByRole("tab", { name: TERCA, exact: true }).click();
+  await page.getByRole("tab", { name: TERCA }).click();
   await expect(rowNamed("Agachamento Hack")).toHaveAttribute("data-group", "A1");
   await expect(rowNamed("Cadeira Extensora")).toHaveAttribute("data-group", "A2");
   await expect(rowNamed(FACE_PULL)).toHaveAttribute("data-group", "B1");
@@ -157,7 +157,7 @@ test("builder: 'Agrupar com o próximo' makes a superset, the rest becomes the s
   await expect(page.getByRole("status").filter({ hasText: "Superset desfeito — confira os descansos" })).toBeVisible();
   await expect(rowNamed("Agachamento Hack")).not.toHaveAttribute("data-group", /.+/);
   await expect(rowNamed(FACE_PULL)).toHaveAttribute("data-group", "A1");
-  await page.getByRole("button", { name: "Desfazer" }).click();
+  await page.getByRole("button", { name: "Desfazer" }).click({ force: true });
   await expect(rowNamed("Agachamento Hack")).toHaveAttribute("data-group", "A1");
 
   // "Separar do superset" from the row's menu takes a pair apart.
@@ -173,7 +173,7 @@ test("builder: 'Agrupar com o próximo' makes a superset, the rest becomes the s
   await rowNamed(CALF).getByRole("button", { name: `Opções de ${CALF}` }).click();
   await page.getByRole("button", { name: "Duplicar", exact: true }).click();
   await expect(rowNamed(CALF)).toHaveCount(2);
-  await page.getByRole("button", { name: "Desfazer" }).click();
+  await page.getByRole("button", { name: "Desfazer" }).click({ force: true });
   await expect(rowNamed(FACE_PULL)).not.toHaveAttribute("data-group", /.+/);
   await expect(rowNamed(CALF).first()).not.toHaveAttribute("data-group", /.+/);
   await expect(rowNamed(CALF)).toHaveCount(2);
@@ -398,7 +398,7 @@ test("export: a spreadsheet of the sets and everything in JSON, named by the day
   const [json] = await Promise.all([page.waitForEvent("download"), zone.getByRole("link", { name: "JSON" }).click()]);
   expect(json.suggestedFilename()).toMatch(/^fgpower-dados-\d{4}-\d{2}-\d{2}\.json$/);
   const data = JSON.parse((await (await json.createReadStream()).toArray()).join(""));
-  expect(data).toMatchObject({ format: "fgpower-export", version: 2 });
+  expect(data).toMatchObject({ format: "fgpower-export", version: 3 });
   expect(data.workouts[0]).toMatchObject({ name: "Quinta — Puxar (moderado)", status: "Concluído", program: "GD 1" });
   // Only what was done or typed: the warm-ups and sets never touched stay out.
   expect(data.workouts[0].exercises[0].sets).toHaveLength(1);

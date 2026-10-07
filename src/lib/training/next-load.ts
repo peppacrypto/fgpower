@@ -31,6 +31,8 @@ export interface NextLoadInput {
   /** Completed working sets (not extras, not warm-ups) of the reference session, in order. */
   sets: PerformedSet[];
   loadIncrementKg: number;
+  /** A timed hold: its "reps" are seconds, so the advice is worded for seconds (set-plan's adviceInSeconds). */
+  timed?: boolean;
 }
 
 export function adviseNextLoad(input: NextLoadInput): NextLoadAdvice | null {
@@ -73,8 +75,10 @@ export function adviseNextLoad(input: NextLoadInput): NextLoadAdvice | null {
       // average RIR rises a full point above target. Say that, not "faça N reps
       // em todas" (which the user may already be doing) (A-055).
       const targetRir = s.reasonData?.targetRir ?? rirTarget;
+      // A timed hold has no RIR to read: tell it in seconds (held to the top of the range),
+      // which adviceInSeconds turns into "Suba a carga quando segurar N s em todas" (A-055).
       const rirReason =
-        s.reasonKey === "rir-at-target-keep-load" && targetRir != null
+        s.reasonKey === "rir-at-target-keep-load" && targetRir != null && !input.timed
           ? `Suba a carga quando sobrar RIR ${rir(targetRir + 1)}+ em média (alvo ${rir(targetRir)})`
           : `Suba a carga quando fizer ${repMax} reps em todas`;
       return {

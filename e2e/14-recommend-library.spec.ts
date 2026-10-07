@@ -204,14 +204,15 @@ test("the library leads with the pick's shelf, and the GD plan is one series car
   const blocks = card.locator('ol a[href^="/app/programs/templates/gd-"]');
   await expect(blocks.filter({ visible: true })).toHaveCount(matches);
 
-  // Typing beats the profile chips: "20 min" finds the shortest of all programs, not of the chips
-  // (the 30-min bodyweight express plan leads them).
+  // Typing beats the profile chips: "20 min" searches all programs and keeps only what fits a
+  // 20-minute slot (parsed with a 5-min grace → ≤25 min). The mobility routines (≤20 min) fit;
+  // the longer express plans (30–40 min) and the GD blocks drop out.
   const search = page.getByLabel("Buscar programa");
   await search.fill("20 min");
   await expect(page.getByText("Nada com os filtros escolhidos — buscando em todos os programas.")).toBeVisible();
-  await expect(page.getByText("Nenhum programa cabe em 20 min — estes são os mais curtos.")).toBeVisible();
-  await expect(page.locator('a[href="/app/programs/templates/bodyweight-express"]')).toBeVisible();
-  await expect(page.locator('a[href="/app/programs/templates/full-body-express"]')).toBeVisible();
+  await expect(page.locator('a[href="/app/programs/templates/flexibilidade-posterior"]')).toBeVisible();
+  await expect(page.locator('a[href="/app/programs/templates/mobilidade-diaria-essencial"]')).toBeVisible();
+  await expect(page.locator('a[href="/app/programs/templates/bodyweight-express"]')).toHaveCount(0);
   await expect(page.locator('a[href="/app/programs/templates/gd-4"]')).toHaveCount(0);
   await search.fill("sem equipamento");
   await expect(page.getByText("Nada com os filtros escolhidos — buscando em todos os programas.")).toBeVisible();
@@ -249,7 +250,7 @@ test("the library starts filtered by the profile, shelved, and its search speaks
   const hrefs = await library
     .locator('a[href^="/app/programs/templates/"]')
     .evaluateAll((links) => new Set(links.map((a) => a.getAttribute("href"))).size);
-  expect(hrefs).toBe(50);
+  expect(hrefs).toBe(59);
   // The GD card folds its 9 blocks away (still links in the page) behind one toggle.
   const gdBlocks = gd.locator('ol a[href^="/app/programs/templates/"]');
   await expect(gdBlocks).toHaveCount(9);

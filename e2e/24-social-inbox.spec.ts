@@ -394,7 +394,7 @@ test("a profile's ⋯ reports, removes a follower and blocks; blocking hides bot
   await expect(sheet.getByRole("heading", { name: `Denunciar @pedro_${t}` })).toBeVisible();
   await sheet.getByLabel("Assédio ou ofensa").check();
   await sheet.getByRole("button", { name: "Enviar denúncia" }).click();
-  await expect(sheet.getByText("Denúncia enviada. A equipe do FGPOWER vai analisar.")).toBeVisible();
+  await expect(sheet.getByText("Denúncia enviada. A FGPOWER vai analisar.")).toBeVisible();
   await sheet.getByRole("button", { name: "Fechar" }).click();
   await expect(menu).toBeFocused();
   const aboutPedro = `"reporterId" = ${sqlText(me.id)} AND "reportedUserId" = ${sqlText(pest.id)}`;
@@ -468,10 +468,10 @@ test("a report reaches the admin with a preview; hiding the workout closes it fo
   await sheet.getByLabel("Dados falsos (cargas ou treinos inventados)").check();
   await sheet.getByLabel("Detalhes (opcional)").fill(`500 kg no supino? ${t}`);
   await sheet.getByRole("button", { name: "Enviar denúncia" }).click();
-  await expect(sheet.getByText("Denúncia enviada. A equipe do FGPOWER vai analisar.")).toBeVisible();
+  await expect(sheet.getByText("Denúncia enviada. A FGPOWER vai analisar.")).toBeVisible();
   await expect(sheet.getByRole("button", { name: `Bloquear @rui_${t} também` })).toBeVisible();
   await serverRerender(reporter.page);
-  await expect(sheet.getByText("Denúncia enviada. A equipe do FGPOWER vai analisar.")).toBeVisible();
+  await expect(sheet.getByText("Denúncia enviada. A FGPOWER vai analisar.")).toBeVisible();
   await sheet.getByRole("button", { name: "Fechar" }).click();
   await expect(reporter.page.getByRole("dialog")).toHaveCount(0);
 
