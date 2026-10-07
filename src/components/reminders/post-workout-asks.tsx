@@ -3,6 +3,7 @@ import { emailEnabled } from "@/lib/email/config";
 import { vapidPublicKey } from "@/lib/push/config";
 import { getUpcomingPlan } from "@/lib/data/upcoming";
 import { getReminderPreference } from "@/lib/reminders/preferences";
+import { reminderSchedulerEnabled } from "@/lib/reminders/scheduler";
 import { hourLabel, weekdaysLabel } from "@/lib/reminders/settings";
 import { PostWorkoutAskSwitch, type ReminderAskOffer } from "./reminder-ask";
 
@@ -54,6 +55,8 @@ export async function PostWorkoutAsks({
 }
 
 async function askOffer(userId: string): Promise<ReminderAskOffer | null> {
+  // A stopped scheduler delivers nothing (A-048): don't offer reminders at all.
+  if (!reminderSchedulerEnabled()) return null;
   const key = vapidPublicKey();
   const emailOn = emailEnabled();
   if (!key && !emailOn) return null;

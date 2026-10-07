@@ -80,7 +80,16 @@ test("editing the active program keeps the day that was trained marked as done",
   await page.getByRole("button", { name: /^Opções do dia Quinta/ }).click();
   await page.getByRole("button", { name: "Mover dia para antes" }).click();
   await page.getByRole("button", { name: /Salvar/ }).first().click();
-  await page.waitForTimeout(2_000);
+  // A failed save never reaches "Salvo" (the builder specs' signal); a fixed
+  // sleep let this test pass on a save that never happened (A-093).
+  await expect(page.getByRole("button", { name: "Salvo" })).toBeVisible({ timeout: 15_000 });
+  // The reorder persisted: Quinta now sits before Quarta in the day tabs.
+  const dayTabs = page.getByRole("tablist", { name: "Dias do programa" }).getByRole("tab");
+  const dayNames = await dayTabs.allTextContents();
+  const quintaAt = dayNames.findIndex((n) => n.includes("Quinta"));
+  const quartaAt = dayNames.findIndex((n) => n.includes("Quarta"));
+  expect(quintaAt).toBeGreaterThanOrEqual(0);
+  expect(quartaAt).toBeGreaterThan(quintaAt);
 
   await page.goto("/app/today");
   const row = todayDayRow(page, QUINTA);

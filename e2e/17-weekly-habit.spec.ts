@@ -1,6 +1,5 @@
-import { execSync } from "node:child_process";
 import { devices, expect, test, type Page } from "@playwright/test";
-import { loginAsTestUser } from "./fixtures";
+import { hasDb, loginAsTestUser, sql } from "./fixtures";
 import { completeOnboarding } from "./onboarding-helper";
 import { finishAndSave, recordSet, startDayFromToday, uniqueEmail } from "./workout-helpers";
 
@@ -19,20 +18,6 @@ import { finishAndSave, recordSet, startDayFromToday, uniqueEmail } from "./work
 const { defaultBrowserType, ...iPhone } = devices["iPhone 13"];
 test.use({ ...iPhone, timezoneId: "America/Sao_Paulo", locale: "pt-BR" });
 test.describe.configure({ timeout: 120_000 });
-
-function sql(query: string): string {
-  return execSync(`docker exec -i fgpower-postgres sh -c 'psql -U "$POSTGRES_USER" -d fgpower -At -v ON_ERROR_STOP=1'`, {
-    encoding: "utf8",
-    input: query,
-  }).trim();
-}
-const hasDb = (() => {
-  try {
-    return sql("SELECT 1") === "1";
-  } catch {
-    return false;
-  }
-})();
 
 /** 18:00 in São Paulo, `week` weeks from this Monday (0 = this week, -1 = last week) and `day` days after Monday, as stored (UTC). */
 const spAt = (week: number, day: number, hour = 18) =>

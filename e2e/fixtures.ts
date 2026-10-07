@@ -1,10 +1,13 @@
-import { execSync } from "node:child_process";
 import { devices, type Browser, type BrowserContext, type Page } from "@playwright/test";
+import { hasDb, pool, sql, sqlText } from "./db";
 
 /**
- * Shared E2E helpers. Frozen for the Batch 5 clusters: add spec-specific
- * helpers in the spec (or a new helper file), not here.
+ * Shared E2E helpers, built on the single database helper in `./db` (A-092).
+ * No longer frozen: add cross-spec helpers here rather than copying them into a
+ * spec. DB access (`sql`, `sqlText`, `hasDb`, `pool`) is re-exported below so
+ * specs can keep importing it from "./fixtures".
  */
+export { hasDb, pool, sql, sqlText };
 
 /**
  * Logs the browser context in as a fixed E2E test account via the dev-only
@@ -29,23 +32,6 @@ export async function loginAsTestUser(page: Page, email = "e2e@fgpower.dev", nam
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { defaultBrowserType, ...IPHONE_13 } = devices["iPhone 13"];
 export const IPHONE = IPHONE_13;
-
-/**
- * Runs SQL against the LOCAL docker Postgres (container fgpower-postgres) and
- * returns psql's unaligned output ("a|b" rows, one per line). Stops at the
- * first error. Local databases only.
- */
-export function sql(query: string): string {
-  return execSync(`docker exec -i fgpower-postgres sh -c 'psql -U "$POSTGRES_USER" -d fgpower -At -v ON_ERROR_STOP=1'`, {
-    encoding: "utf8",
-    input: query,
-  }).trim();
-}
-
-/** A SQL string literal (single quotes doubled). */
-export function sqlText(value: string): string {
-  return `'${value.replace(/'/g, "''")}'`;
-}
 
 /** The signed-in user's id (better-auth's session endpoint). */
 export async function userIdOf(page: Page): Promise<string> {

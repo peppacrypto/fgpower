@@ -61,22 +61,6 @@ export const getActiveEnrollment = cache(async (userId: string) => {
   };
 });
 
-export async function getRecentSessions(userId: string, limit = 5) {
-  return prisma.workoutSession.findMany({
-    where: { userId, status: "COMPLETED" },
-    orderBy: { finishedAt: "desc" },
-    take: limit,
-    select: {
-      id: true,
-      name: true,
-      finishedAt: true,
-      durationSeconds: true,
-      totalVolumeKg: true,
-      totalWorkingSets: true,
-    },
-  });
-}
-
 export async function getWeeklyProgress(userId: string) {
   const count = await prisma.workoutSession.count({
     where: { userId, status: "COMPLETED", finishedAt: { gte: startOfWeek() }, totalWorkingSets: { gt: 0 } },

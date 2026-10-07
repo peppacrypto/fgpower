@@ -4,29 +4,13 @@
  * W-162 … W-169), on a phone. Batch 5 adds axe-core, light and dark, over the
  * landing and the social and sharing screens (the end of the file).
  */
-import { execSync } from "node:child_process";
 import { test, expect, devices, type Page } from "@playwright/test";
-import { IPHONE, loginAsTestUser, userIdOf } from "./fixtures";
+import { hasDb, IPHONE, loginAsTestUser, sql, userIdOf } from "./fixtures";
 import { completeOnboarding } from "./onboarding-helper";
 import { QUINTA, finishAndSave, newUserOnGd1, recordSet, startDayFromToday, uniqueEmail } from "./workout-helpers";
 
 test.use({ ...devices["iPhone 13"], defaultBrowserType: "chromium", timezoneId: "America/Sao_Paulo", locale: "pt-BR" });
 test.describe.configure({ timeout: 120_000 });
-
-/** Runs SQL on the local dev database (docker compose's fgpower-postgres) — test users only. */
-function sql(query: string): string {
-  return execSync(`docker exec -i fgpower-postgres sh -c 'psql -U "$POSTGRES_USER" -d fgpower -At -v ON_ERROR_STOP=1'`, {
-    encoding: "utf8",
-    input: query,
-  }).trim();
-}
-const hasDb = (() => {
-  try {
-    return sql("SELECT 1") === "1";
-  } catch {
-    return false;
-  }
-})();
 
 async function onboarded(page: Page, label: string) {
   const email = uniqueEmail(label);

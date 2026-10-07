@@ -62,6 +62,7 @@ const PUBLIC_METADATA: Record<string, string> = {
  */
 const GUARDED_ROUTES: Record<string, { why: string; guard: string[] }> = {
   "app/api/auth/[...all]/route.ts": { why: "better-auth's own endpoints", guard: ["toNextJsHandler"] },
+  "app/api/client-error/route.ts": { why: "public client error beacon: PII-free, per-IP rate-limited", guard: [] },
   "app/api/cron/reminders/route.ts": {
     why: "Bearer CRON_SECRET, compared in constant time; 404 without a secret",
     guard: ["process.env.CRON_SECRET", "timingSafeEqual"],
@@ -75,7 +76,6 @@ const GUARDED_ROUTES: Record<string, { why: string; guard: string[] }> = {
   "app/api/test/login/route.ts": { why: "e2e only: 404 in production", guard: ["process.env.NODE_ENV"] },
   "app/api/test/outbox/route.ts": { why: "e2e only: 404 in production", guard: ["process.env.NODE_ENV"] },
   "app/api/test/reminders/route.ts": { why: "e2e only: 404 in production", guard: ["process.env.NODE_ENV"] },
-  "app/api/workout/autosave/route.ts": { why: "saveSetValues checks the session (requireUserOrThrow)", guard: ["saveSetValues"] },
   "app/api/workout/sets/route.ts": { why: "syncSets checks the session (requireUserOrThrow)", guard: ["syncSets"] },
   "app/r/[token]/route.ts": { why: "a signed click link (verifyLink), to an app path only", guard: ["verifyLink", "safeNextPath"] },
   "app/(public)/t/[token]/story.png/route.tsx": { why: "the share token is the grant", guard: ["getSharedWorkout"] },

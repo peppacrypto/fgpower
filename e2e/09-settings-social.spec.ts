@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { test, expect, devices, type Browser, type Page } from "@playwright/test";
-import pg from "pg";
+import { pool as db } from "./db";
 import { loginAsTestUser } from "./fixtures";
 import { uniqueEmail } from "./workout-helpers";
 
@@ -17,15 +17,7 @@ test.use(iPhone);
 test.describe.configure({ timeout: 120_000 });
 
 // Direct DB access only to seed what the UI can't make quickly (a shared
-// workout) and to flip account flags — local databases only, never production.
-const dbUrl = new URL(process.env.DATABASE_URL ?? "postgres://missing");
-if (!["localhost", "127.0.0.1", "::1", "[::1]"].includes(dbUrl.hostname)) {
-  throw new Error("09-settings-social seeds the DB directly — local databases only (check DATABASE_URL).");
-}
-const db = new pg.Pool({ connectionString: process.env.DATABASE_URL });
-test.afterAll(async () => {
-  await db.end();
-});
+// workout) and to flip account flags. Shared pool on DATABASE_URL — see e2e/db.ts.
 
 async function userIdByEmail(email: string) {
   const { rows } = await db.query<{ id: string }>(`select id from "user" where email = $1`, [email]);

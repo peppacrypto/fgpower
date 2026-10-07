@@ -2,8 +2,9 @@
 
 import { cn } from "@/lib/utils/cn";
 import { plural } from "@/lib/utils/format";
+import { WEEKDAYS_SHORT_CAP } from "@/lib/utils/date-names";
 
-export const WEEKDAYS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+export const WEEKDAYS = WEEKDAYS_SHORT_CAP;
 
 /**
  * The seven preferred-day toggles (0 = Sunday … 6 = Saturday) in one row of

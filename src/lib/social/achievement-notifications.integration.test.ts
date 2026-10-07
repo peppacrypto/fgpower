@@ -37,6 +37,17 @@ vi.mock("next/navigation", () => ({
 const actions = await import("@/lib/actions/workouts");
 const { syncMilestoneNotification, syncWeekCompleteNotification } = await import("./achievement-notifications");
 
+/**
+ * Marks one set done through `syncSets` — the single workout write path the app
+ * uses. Test-only helper preserving the old one-shot `logSet` ergonomics (the
+ * `logSet`/`saveSetValues` server actions were removed in A-097).
+ */
+async function logSet(input: Omit<Parameters<typeof actions.syncSets>[0][number], "done">) {
+  const [r] = (await actions.syncSets([{ ...input, done: true }])).results;
+  if (r.ok) return { ok: true as const };
+  return { ok: false as const, reason: r.reason === "GONE" ? ("CLOSED" as const) : r.reason };
+}
+
 async function redirectOf(p: Promise<unknown>): Promise<string> {
   try {
     await p;
@@ -98,7 +109,7 @@ async function train(userId: string, dayId: string, weightKg: number) {
     where: { sessionId, setType: "WORKING" },
     orderBy: [{ exerciseLog: { sortOrder: "asc" } }, { setNumber: "asc" }],
   });
-  expect(await actions.logSet({ setLogId: set.id, weightKg, reps: 10, rir: null })).toEqual({ ok: true });
+  expect(await logSet({ setLogId: set.id, weightKg, reps: 10, rir: null })).toEqual({ ok: true });
   expect(await redirectOf(actions.finishWorkoutSession(sessionId))).toBe(`/app/workout/${sessionId}/summary`);
   return sessionId;
 }

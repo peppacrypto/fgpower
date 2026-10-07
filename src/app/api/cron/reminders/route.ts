@@ -2,6 +2,7 @@ import { timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
 import { runReminderTick } from "@/lib/reminders/engine";
 import { purgeExpiredSessions } from "@/lib/auth/session-maintenance";
+import { heartbeat } from "@/lib/observability/sink";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 240;
@@ -33,6 +34,11 @@ export async function POST(request: Request) {
   // IP + user agent stored on each one does not outlive the ~90-day session
   // lifetime the privacy policy states.
   const purgedSessions = dry ? 0 : await purgeExpiredSessions(now);
+  // Dead-man heartbeat (A-048): a real scheduler tick reached the engine. Fires
+  // on every tick whether or not it won the lease (summary.ran), so a silent
+  // scheduler shows up as a missing heartbeat. A dry run is a manual probe, not
+  // a tick, so it is excluded.
+  if (!dry) heartbeat("reminders", { ran: summary.ran, sent: summary.sent, skipped: summary.skipped, failed: summary.failed });
   return NextResponse.json({ ...summary, purgedSessions }, { headers: { "cache-control": "no-store" } });
 }
 

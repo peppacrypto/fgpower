@@ -1,3 +1,6 @@
+import { type Instrumentation } from "next";
+import { captureServerError, logBootSummary } from "@/lib/observability/sink";
+
 /**
  * Starts the reminder scheduler (W-017) in the Node.js server process: a
  * tick every 5 minutes that POSTs the app's own /api/cron/reminders over
@@ -10,6 +13,9 @@
  */
 export function register() {
   if (process.env.NEXT_RUNTIME !== "nodejs") return;
+  // One-line config summary at boot (A-048), logged whether or not the
+  // scheduler is on, so "scheduler=off" is visible too. No secrets.
+  logBootSummary();
   if (process.env.REMINDER_SCHEDULER !== "on") return;
   if (!process.env.CRON_SECRET) {
     console.warn("[reminders] REMINDER_SCHEDULER=on but CRON_SECRET is unset — scheduler off");
@@ -41,3 +47,23 @@ export function register() {
   g.__fgReminderTimer = setInterval(() => void tick(), 5 * 60_000);
   g.__fgReminderTimer.unref();
 }
+
+/**
+ * Forward every server error Next captures (Server Components, Route Handlers,
+ * Server Actions, the proxy) to the internal sink (A-048). Request headers are
+ * deliberately NOT forwarded — they carry the session cookie.
+ */
+export const onRequestError: Instrumentation.onRequestError = (error, request, context) => {
+  captureServerError({
+    message: error instanceof Error ? error.message : String(error),
+    digest:
+      error && typeof error === "object" && "digest" in error
+        ? String((error as { digest: unknown }).digest)
+        : undefined,
+    stack: error instanceof Error ? error.stack : undefined,
+    path: request.path,
+    method: request.method,
+    routePath: context.routePath,
+    routeType: context.routeType,
+  });
+};

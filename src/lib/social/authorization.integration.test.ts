@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { prisma } from "@/lib/db";
+import { getProfileActivities } from "@/lib/data/social/profile";
 import { activityAccess, canViewActivity, canViewProfile, isBannedUser, isBlocked, isFollowing, NOT_BANNED } from "./authorization";
 import { newShareToken } from "./share-token";
 
@@ -106,6 +107,38 @@ describe("canViewActivity", () => {
   it("a blocked viewer cannot see even a PUBLIC activity", async () => {
     const activity = { userId: blocker, visibility: "PUBLIC" as const };
     expect(await canViewActivity(blocked, activity)).toBe(false);
+  });
+});
+
+// A decided divergence (S1): a PUBLIC post by a PRIVATE account is viewable on
+// the activity page by anyone, but the private account's profile listing only
+// enumerates it for followers. Covering it guards both sides of the rule.
+describe("a PUBLIC post by a PRIVATE account: activity page vs profile listing", () => {
+  it("canViewActivity shows it to a follower, a signed-in stranger and an anonymous viewer", async () => {
+    const activity = { userId: privateUser, visibility: "PUBLIC" as const };
+    expect(await canViewActivity(follower, activity)).toBe(true);
+    expect(await canViewActivity(stranger, activity)).toBe(true);
+    expect(await canViewActivity(null, activity)).toBe(true);
+  });
+
+  it("the profile listing hides it from non-followers, but a follower still sees it", async () => {
+    const post = await prisma.activity.create({
+      data: { userId: privateUser, type: "WORKOUT", visibility: "PUBLIC", summary: {} },
+      select: { id: true },
+    });
+    // The account-level gate the profile page computes (data/social/profile.ts):
+    // a private account's activities are listed only for its owner or a follower.
+    const canView = async (viewerId: string | null) =>
+      viewerId === privateUser || (viewerId ? await isFollowing(viewerId, privateUser) : false);
+
+    const asStranger = await getProfileActivities(privateUser, stranger, await canView(stranger));
+    expect(asStranger.items.map((a) => a.id)).not.toContain(post.id);
+
+    const asAnonymous = await getProfileActivities(privateUser, null, await canView(null));
+    expect(asAnonymous.items.map((a) => a.id)).not.toContain(post.id);
+
+    const asFollower = await getProfileActivities(privateUser, follower, await canView(follower));
+    expect(asFollower.items.map((a) => a.id)).toContain(post.id);
   });
 });
 

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { register } from "./instrumentation";
+import { onRequestError, register } from "./instrumentation";
 
 /** The reminder scheduler (W-017): when it starts, what it calls, and that it starts once. */
 
@@ -85,5 +85,29 @@ describe("register (src/instrumentation.ts)", () => {
     expect(warn).toHaveBeenLastCalledWith(expect.stringContaining("unreachable"));
     await vi.advanceTimersByTimeAsync(5 * 60_000); // 10:00: answered 500
     expect(warn).toHaveBeenLastCalledWith("[reminders] tick answered", 500);
+  });
+
+  it("logs a one-line config summary at boot, with no secret (A-048)", () => {
+    schedulerOn();
+    const info = vi.spyOn(console, "info").mockImplementation(() => {});
+    register();
+    const logged = info.mock.calls.map((args) => args.join(" ")).join("\n");
+    expect(logged).toContain("boot");
+    expect(logged).toContain('"scheduler":"on"');
+    expect(logged).not.toContain("s3cret");
+  });
+
+  it("onRequestError forwards the error to the sink without request headers (A-048)", () => {
+    const error = vi.spyOn(console, "error").mockImplementation(() => {});
+    onRequestError(
+      new Error("boom"),
+      { path: "/api/x", method: "POST", headers: { cookie: "session=secret" } },
+      { routerKind: "App Router", routePath: "/api/x/route", routeType: "route", revalidateReason: undefined },
+    );
+    const logged = error.mock.calls.map((args) => args.join(" ")).join("\n");
+    expect(logged).toContain("boom");
+    expect(logged).toContain("/api/x");
+    expect(logged).not.toContain("secret");
+    expect(logged).not.toContain("cookie");
   });
 });

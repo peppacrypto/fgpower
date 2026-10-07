@@ -6,6 +6,9 @@ export default defineConfig({
   workers: 1,
   retries: 0,
   reporter: [["list"]],
+  // Fail fast if the e2e database is unreachable, instead of dozens of tests
+  // skipping in silence (A-092). See e2e/global-setup.ts and e2e/db.ts.
+  globalSetup: "./e2e/global-setup.ts",
   use: {
     baseURL: process.env.E2E_BASE_URL ?? "http://localhost:3055",
     trace: "retain-on-failure",

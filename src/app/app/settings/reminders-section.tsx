@@ -5,6 +5,7 @@ import { vapidPublicKey } from "@/lib/push/config";
 import { pushDeviceKey } from "@/lib/push/device-key";
 import { getReminderPreference } from "@/lib/reminders/preferences";
 import { isPushHour, DEFAULT_PUSH_HOUR } from "@/lib/reminders/rules";
+import { reminderSchedulerEnabled } from "@/lib/reminders/scheduler";
 import { weekdaysLabel } from "@/lib/reminders/settings";
 import { Section } from "./section";
 import { RemindersForm } from "./reminders-form";
@@ -18,7 +19,8 @@ import { RemindersForm } from "./reminders-form";
 export async function RemindersSection({ userId }: { userId: string }) {
   const key = vapidPublicKey();
   const emailOn = emailEnabled();
-  if (!key && !emailOn) return null;
+  // A stopped scheduler delivers nothing (A-048): don't offer reminders at all.
+  if (!reminderSchedulerEnabled() || (!key && !emailOn)) return null;
 
   const [pref, devices, user, finished] = await Promise.all([
     getReminderPreference(userId),

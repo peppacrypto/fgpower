@@ -1,6 +1,5 @@
-import { execSync } from "node:child_process";
 import { devices, expect, test, type Browser, type Page } from "@playwright/test";
-import { loginAsTestUser } from "./fixtures";
+import { loginAsTestUser, sql } from "./fixtures";
 import { completeOnboarding } from "./onboarding-helper";
 import { newUserOnGd1, uniqueEmail } from "./workout-helpers";
 
@@ -19,14 +18,6 @@ import { newUserOnGd1, uniqueEmail } from "./workout-helpers";
 
 test.use({ ...devices["iPhone 13"], defaultBrowserType: "chromium", timezoneId: "America/Sao_Paulo", locale: "pt-BR" });
 test.describe.configure({ timeout: 120_000 });
-
-/** Runs SQL on the local dev database (docker compose's fgpower-postgres) — test users only. */
-function sql(query: string): string {
-  return execSync(`docker exec -i fgpower-postgres sh -c 'psql -U "$POSTGRES_USER" -d fgpower -At -v ON_ERROR_STOP=1'`, {
-    encoding: "utf8",
-    input: query,
-  }).trim();
-}
 
 const NBSP = " ";
 /** A São Paulo wall-clock instant: `week` weeks from this Monday (0 = this week), `day` 0–6 from Monday, at `hour`. */

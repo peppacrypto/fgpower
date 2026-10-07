@@ -1,6 +1,5 @@
-import { execSync } from "node:child_process";
 import { test, expect, devices, type Locator, type Page } from "@playwright/test";
-import { loginAsTestUser, sqlText, userIdOf } from "./fixtures";
+import { hasDb, loginAsTestUser, sql, sqlText, userIdOf } from "./fixtures";
 import { completeOnboarding } from "./onboarding-helper";
 import {
   QUINTA,
@@ -16,21 +15,6 @@ import {
 test.use({ ...devices["iPhone 13"], defaultBrowserType: "chromium" });
 // Several round trips per test (activate, switch, start, undo) on a dev server.
 test.describe.configure({ timeout: 90_000 });
-
-/** Runs SQL on the local dev database (docker compose's fgpower-postgres). */
-function sql(query: string): string {
-  return execSync(`docker exec -i fgpower-postgres sh -c 'psql -U "$POSTGRES_USER" -d fgpower -At -v ON_ERROR_STOP=1'`, {
-    encoding: "utf8",
-    input: query,
-  }).trim();
-}
-const hasDb = (() => {
-  try {
-    return sql("SELECT 1") === "1";
-  } catch {
-    return false;
-  }
-})();
 
 const bottomNav = (page: Page) => page.getByRole("navigation", { name: "Navegação principal" });
 const activeTab = (page: Page) => bottomNav(page).locator('a[aria-current="page"]');

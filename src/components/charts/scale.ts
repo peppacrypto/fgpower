@@ -1,5 +1,6 @@
 import { wallClock } from "@/lib/training/week";
 import { formatNumber, formatKg, formatVolume, plural } from "@/lib/utils/format";
+import { MONTHS_SHORT_UPPER as MONTHS } from "@/lib/utils/date-names";
 
 /*
  * The pure half of the progression charts (chart.tsx draws them on the
@@ -43,7 +44,6 @@ export interface ChartScale {
 }
 
 const EPS = 1e-9;
-const MONTHS = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ"];
 
 /**
  * "07 SET" on the São Paulo calendar — the dossier's mono date — with the

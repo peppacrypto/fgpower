@@ -1,4 +1,5 @@
 import { getSharedWorkout } from "@/lib/data/share";
+import { dayKey } from "@/lib/training/week";
 import { brandTile } from "@/lib/og/fonts";
 import { pngResponse, renderPng } from "@/lib/og/render";
 import { allowRender, cachedImage, clientIp, rememberImage } from "@/lib/og/render-guard";
@@ -16,7 +17,7 @@ const NOINDEX = { "X-Robots-Tag": "noindex", "Cache-Control": "private, no-store
 
 /** "2026-09-28" on the São Paulo calendar, for the file name. */
 function spDate(date: Date): string {
-  return new Intl.DateTimeFormat("en-CA", { timeZone: "America/Sao_Paulo" }).format(date);
+  return dayKey(date);
 }
 
 export async function GET(request: Request, { params }: { params: Promise<{ token: string }> }) {

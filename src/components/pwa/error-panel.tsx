@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { reportClientError } from "@/lib/observability/client-beacon";
 import { isNetworkError } from "./resume";
 import { useOnline } from "./offline-banner";
 
@@ -27,6 +28,9 @@ export function ErrorPanel({
   useEffect(() => {
     // Surface to the server/observability in dev; digest links to the server log in prod.
     console.error(error);
+    // And beacon it to the server sink (A-048): the boundary carries the digest
+    // the raw window handler lacks. Fire-and-forget; capped client-side.
+    reportClientError({ source: "boundary", message: error.message, stack: error.stack, digest: error.digest });
   }, [error]);
 
   // A connectivity failure heals itself: when the signal returns, re-fetch.

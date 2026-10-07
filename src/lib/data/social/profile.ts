@@ -124,8 +124,3 @@ export async function getProfileActivities(
     hasMore: activities.length > limit,
   };
 }
-
-/** The first page of a profile's activities (kept for callers that don't paginate). */
-export async function getUserPublicActivities(userId: string, viewerId: string | null, canView: boolean) {
-  return (await getProfileActivities(userId, viewerId, canView)).items;
-}

@@ -7,6 +7,7 @@ import { onboardingNextPath } from "@/lib/auth/safe-next";
 import { SESSION_EXPIRED_ERROR } from "@/lib/auth/session-expired";
 import { findAvailableUsername, isUsernameTaken } from "@/lib/data/profile";
 import { prisma } from "@/lib/db";
+import { isUniqueViolation } from "@/lib/db/prisma-error";
 import { onboardingSchema } from "@/lib/validation/onboarding";
 import { NEW_PROFILE_SHARING } from "@/lib/social/publish";
 import { POLICY_VERSION } from "@/lib/legal/policy";
@@ -135,7 +136,7 @@ async function assignUsername(
       await prisma.user.update({ where: { id: userId }, data: { username: value.toLowerCase(), displayUsername: value } });
       return { ok: true, changed: true };
     } catch (err) {
-      if ((err as { code?: string }).code !== "P2002") throw err;
+      if (!isUniqueViolation(err)) throw err;
       if (wanted && !auto) return { ok: false, error: USERNAME_TAKEN };
       wanted = null;
     }

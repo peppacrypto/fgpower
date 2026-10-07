@@ -1,4 +1,6 @@
+import { dayNumberOf } from "@/lib/training/day-rotation";
 import { APP_TIME_ZONE, wallClock } from "@/lib/training/week";
+import { MONTHS_SHORT as MONTHS } from "@/lib/utils/date-names";
 
 /**
  * "há 5 min", "ontem, 18:40", "12 set": when something happened, the way a
@@ -9,16 +11,8 @@ import { APP_TIME_ZONE, wallClock } from "@/lib/training/week";
  * no-break space (the row never wraps "5 / min").
  */
 
-const MONTHS = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
 const NBSP = "\u00a0";
 const MINUTE = 60_000;
-const DAY_MS = 86_400_000;
-
-/** Days since 1970-01-01 of the São Paulo calendar day of `date`. */
-function spDayNo(date: Date): number {
-  const w = wallClock(date);
-  return Math.floor(Date.UTC(w.year, w.month - 1, w.day) / DAY_MS);
-}
 
 /**
  * - under a minute (or a clock a little ahead): "agora";
@@ -34,7 +28,7 @@ export function formatRelativeTime(date: Date | string, now: Date = new Date()):
   if (ms < MINUTE) return "agora";
   if (ms < 60 * MINUTE) return `há ${Math.floor(ms / MINUTE)}${NBSP}min`;
 
-  const days = spDayNo(now) - spDayNo(then);
+  const days = dayNumberOf(now) - dayNumberOf(then);
   const w = wallClock(then);
   if (days <= 0) return `há ${Math.floor(ms / (60 * MINUTE))}${NBSP}h`;
   if (days === 1) return `ontem, ${String(w.hour).padStart(2, "0")}:${String(w.minute).padStart(2, "0")}`;

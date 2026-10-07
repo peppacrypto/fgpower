@@ -47,6 +47,7 @@ import {
   weekdayOfDayNo,
 } from "@/lib/training/day-rotation";
 import { seriesPosition } from "@/lib/training/program-calendar";
+import { MONTHS_SHORT_UPPER as MONTHS, WEEKDAYS_SHORT_UPPER as WEEKDAYS } from "@/lib/utils/date-names";
 import {
   appliedDeloadGuidance,
   completeWeekDone,
@@ -82,8 +83,6 @@ import { POLICY_VERSION } from "@/lib/legal/policy";
 
 export const metadata: Metadata = { title: "Hoje" };
 
-const WEEKDAYS = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SÁB"];
-const MONTHS = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ"];
 /** One-time notice params, cleared from the URL once shown. */
 const NOTICE_PARAMS = ["ativado", "anterior", "descartado", "salvo", "retomado", "excluido", "deload"];
 /** A workout touched this recently is the one to go back to when the app reopens on Today (W-097). */

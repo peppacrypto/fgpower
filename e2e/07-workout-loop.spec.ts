@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { test, expect, devices, type Page } from "@playwright/test";
-import pg from "pg";
+import { pool as db } from "./db";
 import {
   QUINTA,
   expectSetSaved,
@@ -24,21 +24,9 @@ const { defaultBrowserType, ...iPhone } = devices["iPhone 13"];
 test.use({ ...iPhone, timezoneId: "America/Sao_Paulo", locale: "pt-BR" });
 test.describe.configure({ timeout: 150_000 });
 
-// Direct DB access only to check what reached the server and to age a
-// session (the UI can't make a 3-day-old workout) — never production.
-// Prisma stores DateTime as UTC in `timestamp without time zone`: read it back as UTC.
-const db = new pg.Pool({
-  connectionString: process.env.DATABASE_URL,
-  types: {
-    getTypeParser: ((oid: number, format?: "text" | "binary") =>
-      oid === pg.types.builtins.TIMESTAMP
-        ? (value: string) => new Date(`${value.replace(" ", "T")}Z`)
-        : pg.types.getTypeParser(oid, format)) as typeof pg.types.getTypeParser,
-  },
-});
-test.afterAll(async () => {
-  await db.end();
-});
+// Direct DB access only to check what reached the server and to age a session
+// (the UI can't make a 3-day-old workout). Shared pool on DATABASE_URL, which
+// reads Prisma's UTC `timestamp without time zone` back as UTC — see e2e/db.ts.
 
 /** First exercise of the session: its working sets in order. */
 async function firstExerciseSets(sessionId: string) {

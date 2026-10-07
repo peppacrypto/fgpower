@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { test, expect, devices, type Page } from "@playwright/test";
-import pg from "pg";
+import { pool as db } from "./db";
 import { loginAsTestUser } from "./fixtures";
 import { uniqueEmail } from "./workout-helpers";
 
@@ -10,15 +10,7 @@ const { defaultBrowserType, ...iPhone } = devices["iPhone 13"];
 test.use(iPhone);
 test.describe.configure({ timeout: 90_000 });
 
-// Read-only checks of what onboarding saved — local databases only.
-const dbUrl = new URL(process.env.DATABASE_URL ?? "postgres://missing");
-if (!["localhost", "127.0.0.1", "::1", "[::1]"].includes(dbUrl.hostname)) {
-  throw new Error("02-onboarding reads the DB directly — local databases only (check DATABASE_URL).");
-}
-const db = new pg.Pool({ connectionString: process.env.DATABASE_URL });
-test.afterAll(async () => {
-  await db.end();
-});
+// Read-only checks of what onboarding saved (shared pool on DATABASE_URL — see e2e/db.ts).
 
 async function savedProfile(email: string) {
   const { rows } = await db.query<{ goal: string; daysPerWeek: number; preferredDays: number[]; username: string | null }>(

@@ -1,6 +1,7 @@
 import "server-only";
 import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
+import { isUniqueViolation } from "@/lib/db/prisma-error";
 import { emailTransport } from "@/lib/email/config";
 import { sendEmail } from "@/lib/email/send";
 import { withLease } from "@/lib/jobs/lease";
@@ -434,10 +435,6 @@ async function writeSkip(
   } catch (err) {
     if (!isUniqueViolation(err)) throw err;
   }
-}
-
-function isUniqueViolation(err: unknown): boolean {
-  return err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002";
 }
 
 /** Seconds from `now` to 21:30 in São Paulo today (a training-day push is stale after it). */

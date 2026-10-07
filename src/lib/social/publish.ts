@@ -1,6 +1,7 @@
 import "server-only";
 import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
+import { isUniqueViolation } from "@/lib/db/prisma-error";
 import { buildWorkoutActivitySummary } from "@/lib/social/activity-summary";
 
 /**
@@ -135,7 +136,7 @@ export async function upsertWorkoutActivity(opts: {
     });
   } catch (err) {
     // Another writer (auto-publish vs. a tap, two tabs) created it first.
-    if (!(err instanceof Prisma.PrismaClientKnownRequestError) || err.code !== "P2002") throw err;
+    if (!isUniqueViolation(err)) throw err;
     if (opts.createOnly) return null;
     return updateUnmoderated({ sessionId: session.id });
   }

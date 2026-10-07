@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { requireUserOrThrow } from "@/lib/auth/require-user";
 import { SESSION_EXPIRED_ERROR } from "@/lib/auth/session-expired";
 import { prisma } from "@/lib/db";
+import { isUniqueViolation } from "@/lib/db/prisma-error";
 
 export type FavoriteResult = { ok: true; favorited: boolean } | { ok: false; error: string };
 
@@ -33,7 +34,7 @@ export async function toggleFavoriteExercise(exerciseId: string, favorite?: bool
     return { ok: true, favorited: want };
   } catch (err) {
     // A concurrent duplicate create means it's already a favorite.
-    if ((err as { code?: string }).code === "P2002") return { ok: true, favorited: true };
+    if (isUniqueViolation(err)) return { ok: true, favorited: true };
     console.error("toggleFavoriteExercise failed", err);
     return { ok: false, error: "Não foi possível salvar o favorito. Tente de novo." };
   }

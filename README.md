@@ -29,19 +29,23 @@ layer — all covered by unit, integration, and end-to-end tests.
 
 ## Live
 
-- **Production:** see the handoff summary at the end of this session, or `railway
-  status` for the current deployment.
+- **Production:** https://fgpower.monster — the deployed commit's short SHA is readable at
+  `/api/health` (the `sha` field).
 - **GitHub:** `peppacrypto/fgpower`
 
 ## Features
 
-- Google OAuth sign-in (better-auth), with a step-by-step onboarding flow
+- Sign-in with Google OAuth or — when e-mail is configured (off in production until Resend
+  exists) — a passwordless e-mail code / magic link (better-auth), with a step-by-step
+  onboarding flow
 - Full exercise library (876 exercises) — searchable, filterable by muscle/equipment/
   movement pattern, accent-insensitive search (pt-BR + en)
 - Rich exercise detail pages: setup, breathing, coaching cues, common mistakes, range of
-  motion, scientific rationale with real citations and evidence levels (20 flagship
-  exercises fully curated; the rest carry base instructions/muscle/equipment data)
-- Program library with a flagship evidence-informed program (**FGPOWER Adaptation**),
+  motion, scientific rationale with real citations and evidence levels (259 exercises
+  fully curated; the rest carry base instructions/muscle/equipment data)
+- Program library of 59 evidence-informed programs — the flagship **FGPOWER Adaptation**
+  plus 58 curated templates across hypertrophy, strength, general fitness and sports
+  performance, the multi-block **GD** progression series, and a 9-program mobility track —
   each with a full scientific rationale, weekly progression guidance, and cited sources
 - Custom workout builder: drag-and-drop exercise reordering (`@dnd-kit`), per-exercise
   sets/reps/RIR/rest/warm-up configuration, multi-day programs, duplicate/fork/archive
@@ -55,7 +59,7 @@ layer — all covered by unit, integration, and end-to-end tests.
   load without the user confirming
 - Personal records (max weight, rep PR at a given weight, estimated 1RM, session volume),
   computed automatically at the end of every workout
-- Training calendar, full session history, per-exercise progression charts (Recharts)
+- Training calendar, full session history, per-exercise progression charts (custom SVG)
 - Progress overview with period filters, consistency %, and exercise-by-exercise deltas
 - Profile, settings (privacy controls, public username), data export (JSON), account
   deletion (better-auth, with fresh-session enforcement)
@@ -66,6 +70,9 @@ layer — all covered by unit, integration, and end-to-end tests.
   moderation
 - PWA-installable, dark-first design system with a light-mode fallback, WCAG-AA-minded
   contrast and focus states
+- Opt-in training reminders over Web Push (capped at 1/day and 3/week, never on rest or
+  deload days) and an unsubscribable weekly e-mail digest (Resend)
+- Body-weight logging with a trend chart, folded into the progress views
 
 ## Architecture
 
@@ -78,9 +85,13 @@ Browser ──▶ Next.js 16 (App Router, Server Components + Server Actions)
 ```
 
 - Almost every mutation is a **Server Action** (`src/lib/actions/*.ts`) — no separate
-  REST/GraphQL layer for app-internal calls. A handful of real HTTP routes exist where
-  needed: better-auth's catch-all, health check, data export (needs a download response),
-  and a dev-only test-login endpoint for E2E.
+  REST/GraphQL layer for app-internal calls. The 18 real HTTP routes handle what a Server
+  Action can't: better-auth's catch-all, the health check, account data export (needs a
+  file-download response), the mobile execution client's workout endpoints (autosave, sets,
+  exercises, notes, technique), exercise search, the notifications poll, Web-Push
+  subscriptions, e-mail unsubscribe and the Resend webhook, the reminders cron, the
+  share-link redirect (`/r/[token]`), and dev-only test endpoints (login/outbox/reminders)
+  disabled in production.
 - **Data access** is centralized in `src/lib/data/*.ts` (read queries) and
   `src/lib/actions/*.ts` (writes), never inlined ad hoc in a page — every read that
   crosses a user boundary goes through an explicit ownership or authorization check.
@@ -96,7 +107,7 @@ notes.
 
 | Layer | Choice |
 |---|---|
-| Framework | Next.js 16.3 (App Router, Turbopack, React 19.2) |
+| Framework | Next.js 16.3.8 (App Router, Turbopack, React 19.2) |
 | Language | TypeScript (strict) |
 | Styling | Tailwind CSS v4 |
 | Database | PostgreSQL |
@@ -104,7 +115,9 @@ notes.
 | Auth | better-auth 1.7 (Google OAuth + admin role + username field) |
 | Validation | Zod 4 |
 | Drag & drop | `@dnd-kit/core` + `@dnd-kit/sortable` |
-| Charts | Recharts |
+| Charts | Custom SVG components (no chart library) |
+| Transactional e-mail | Resend REST API (login codes, weekly digest) |
+| Push notifications | Web Push (`web-push`, VAPID) |
 | Unit/integration tests | Vitest |
 | E2E tests | Playwright |
 | Deployment | Railway (Railpack build, no Dockerfile) |
@@ -131,14 +144,18 @@ src/
                               feed, notifications, discover, activity)
     admin/                 — admin-only panel
     u/[username]/          — public profile
-    api/                   — better-auth handler, health check, data export, dev-only
-                              test-login
+    api/                   — better-auth handler, health check, account data export,
+                              workout execution endpoints, exercise search, notifications
+                              poll, push subscriptions, e-mail unsubscribe + Resend
+                              webhook, reminders cron, share redirect, dev-only test
+                              endpoints
   components/               — UI primitives, nav, brand, exercise/social components
   lib/
     auth/, data/, actions/  — auth config, read queries, write mutations
     training/               — 1RM, volume, progressive overload (pure, unit-tested)
     programming/             — smart program feedback rules (pure, unit-tested)
-    social/                  — authorization helpers (integration-tested)
+    social/                  — authorization + moderation helpers (integration-tested)
+    email/, push/, reminders/ — Resend e-mail, Web Push, reminder scheduling
     validation/               — Zod schemas
 e2e/                        — Playwright specs
 docs/                       — this repo's required documentation set
@@ -211,21 +228,54 @@ separately in **`docs/PROGRAMMING_RULES.md`**.
 npm run typecheck    # next typegen + tsc --noEmit
 npm run lint         # eslint
 npm test             # vitest — pure-logic unit tests + Postgres-backed integration tests
-npm run test:e2e     # playwright — requires the dev server (npm run dev) or a running deployment
+npm run test:e2e     # playwright (see "Running the E2E suite" below)
 npm run build        # production build
 ```
 
-- **Unit tests** (`src/lib/training/*.test.ts`, `src/lib/programming/rules.test.ts`) —
-  1RM estimation, volume calculations, the progressive-overload engine, and every smart-
-  program-feedback rule, all pure functions with no DB/network dependency.
-- **Integration tests** (`src/lib/social/authorization.integration.test.ts`) — the
-  authorization logic gating every activity/profile read (private accounts, follower-only
-  content, blocking) against a real local Postgres.
-- **E2E tests** (`e2e/*.spec.ts`) — landing → login, onboarding, choosing and starting a
-  program, full workout execution (start → log a set → finish), history, building and
-  saving a custom program, exercise library/detail, science pages. Auth is bootstrapped
-  via a dev-only `/api/test/login` route (disabled in production; see
+- **Unit tests** — pure functions with no DB/network dependency: 1RM estimation, volume,
+  the progressive-overload engine, every smart-program-feedback rule, program scheduling,
+  streaks, the Zod validation schemas, and assorted UI/formatting helpers.
+- **Integration tests** (`*.integration.test.ts`) — run against a **real local Postgres**:
+  the authorization logic gating every activity/profile read (private accounts,
+  follower-only content, blocking), the moderation/report lifecycle, the LGPD data-subject
+  flows (export, account deletion, data requests), e-mail and Web-Push delivery, and the
+  workout write paths. They need `DATABASE_URL` pointed at a reachable Postgres (the Docker
+  container from **Local setup** is enough). `npm test` runs both suites — 160+ test files
+  in total.
+- **E2E tests** (`e2e/*.spec.ts`) — full user journeys: landing → login, onboarding,
+  choosing and starting a program, workout execution (start → log a set → finish), history
+  and progress, building and saving a custom program, the exercise library/detail and
+  science pages, the social inbox/feed/profile, sharing, reminders, and e-mail login. Auth
+  is bootstrapped via a dev-only `/api/test/login` route (disabled in production; see
   `e2e/fixtures.ts`).
+- **E2E database** — the DB-backed specs talk to the local Postgres two ways, both built on
+  `DATABASE_URL` in `e2e/db.ts`: a shared async `pool` for typed reads, and a synchronous
+  `sql()` that runs `psql` inside the `fgpower-postgres` container (override with
+  `E2E_PG_CONTAINER`). A Playwright `globalSetup` (`e2e/global-setup.ts`) proves both paths
+  reach the same database before any test runs, so a stopped container fails the run loudly
+  instead of silently skipping the streak, lifecycle and today-nav specs.
+
+### Running the E2E suite
+
+`playwright.config.ts` supports two modes:
+
+- **Let Playwright start the server (default):** just run `npm run test:e2e`. Playwright
+  starts its own `next dev` on **port 3055** and reuses one already listening there
+  (`reuseExistingServer`). You do **not** need to run `npm run dev` yourself — and if you
+  do, it listens on 3000, so the two never collide. (Starting a *second* `next dev` in the
+  same directory is exactly what Next 16 refuses with "Another next dev server is already
+  running"; the dedicated 3055 port sidesteps that.) A reachable Postgres (`DATABASE_URL`)
+  must be up, because the dev server needs it.
+- **Against an already-running server:** set `E2E_BASE_URL` to its origin, e.g.
+  `E2E_BASE_URL=http://localhost:3000 npm run test:e2e`, or build and start a production
+  server (`npm run build && npm run start`) and point `E2E_BASE_URL` at it. When
+  `E2E_BASE_URL` is set, Playwright starts no server of its own and talks only to that
+  origin.
+
+**Never point `E2E_BASE_URL` at production.** The specs sign in through the dev-only
+`/api/test/login` route (disabled when `NODE_ENV=production`) and create and delete real
+data (workouts, programs, follows, reports); against the live deployment they would fail on
+the missing test route and, where they didn't, would corrupt real users' data.
 
 ## Deployment
 

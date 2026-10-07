@@ -224,14 +224,6 @@ function workoutUrl({ sessionId, blocked }: { sessionId: string; blocked: boolea
   return `/app/workout/${sessionId}${blocked ? "?aviso=em-andamento" : ""}`;
 }
 
-/** Starts (or resumes) a session from a scheduled program day. */
-export async function startWorkoutSessionFromProgramDay(enrollmentId: string, dayId: string) {
-  const user = await requireUserOrThrow();
-  const opened = await openSessionForDay(user.id, dayId, enrollmentId);
-  revalidatePath("/app/today");
-  redirect(workoutUrl(opened));
-}
-
 /** Starts (or resumes) a session from a UserProgramDay. If the user has an
  * ACTIVE enrollment in this program, the session is linked to it so finishing
  * advances the program's day/week progression; otherwise it runs as a
@@ -372,44 +364,9 @@ async function writeSet(
   return { ok: true, isCompleted: result.isCompleted };
 }
 
-/** The set actions' result: a row that is gone reads as closed, as before GONE existed. */
-function asActionResult(r: Awaited<ReturnType<typeof writeSet>>): SetActionResult {
-  if (r.ok) return { ok: true };
-  return { ok: false, reason: r.reason === "GONE" ? "CLOSED" : r.reason };
-}
-
 // The set writes below don't revalidate the workout page: the workout screen
 // owns their state (optimistic, mirrored locally, resent until confirmed), and
 // a full page re-render on every ✓ made each tap wait on ~19 KB of RSC.
-
-/** Marks a set done with its load/reps (✓ in the set table). */
-export async function logSet(input: LogSetInput): Promise<SetActionResult> {
-  const user = await requireUserOrThrow();
-  return asActionResult(await writeSet(user.id, input, true));
-}
-
-/**
- * Autosaves what the user typed in a row without marking it done, so values
- * survive switching exercises, reloads and the phone killing the tab. A done
- * row that loses its load or reps (cleared, or unparseable) stops counting.
- */
-export async function saveSetValues(input: LogSetInput): Promise<SetActionResult> {
-  const user = await requireUserOrThrow();
-  return asActionResult(await writeSet(user.id, input, null));
-}
-
-export async function uncompleteSet(setLogId: string): Promise<SetActionResult> {
-  const user = await requireUserOrThrow();
-  if (typeof setLogId !== "string") return { ok: false, reason: "INVALID" };
-  const result = await prisma.$transaction(async (tx) => {
-    const open = await lockOpenSet(tx, user.id, setLogId);
-    if (!open) return null;
-    await tx.setLog.update({ where: { id: setLogId }, data: { isCompleted: false, completedAt: null } });
-    return open.sessionId;
-  });
-  if (!result) return { ok: false, reason: "CLOSED" };
-  return { ok: true };
-}
 
 /** A row's state as the workout screen wants it on the server (see writeSet for `done`). */
 export interface SetSyncOp extends LogSetInput {

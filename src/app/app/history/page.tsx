@@ -7,6 +7,7 @@ import { requireUser } from "@/lib/auth/require-user";
 import { listSessionsInRange, listAllSessions } from "@/lib/data/history";
 import { dateOfDayNumber, getWeekRows } from "@/lib/data/progress";
 import { dayNumberOf } from "@/lib/training/day-rotation";
+import { MONTHS_FULL as MONTH_LABELS } from "@/lib/utils/date-names";
 import {
   currentMonth,
   daysInMonth as countDaysInMonth,
@@ -30,10 +31,6 @@ export const metadata: Metadata = { title: "Histórico" };
 
 /** Monday-first, like every week in the app (lib/training/week). */
 const WEEKDAY_LABELS = ["SEG", "TER", "QUA", "QUI", "SEX", "SÁB", "DOM"];
-const MONTH_LABELS = [
-  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
-];
 /** Monday-first, spelled out for the day links' names. */
 const WEEKDAY_NAMES = ["segunda", "terça", "quarta", "quinta", "sexta", "sábado", "domingo"];
 const ARROW = "flex size-11 items-center justify-center rounded-[3px]";

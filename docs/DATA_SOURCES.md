@@ -28,7 +28,7 @@ dedication to the public domain, unrestricted.
 ### ⚠️ Exercise photography — the licensing situation (project owner opted to include)
 
 **Current state:** FGPOWER ships the free-exercise-db photos (resized to WebP under
-`public/exercises/<slug>/`, ~39 MB). This is a deliberate decision by the project owner,
+`public/exercises/<slug>/`, 873 folders, ~46 MB). This is a deliberate decision by the project owner,
 made with full knowledge of the licensing caveat documented below — the images add real
 visual value to the library and the owner accepts the risk for this project. The caveat
 and the cleaner alternatives are kept on record here so the decision can be revisited.
@@ -174,6 +174,8 @@ For completeness, these were investigated and explicitly **not** used, with the 
 
 - **Safe to keep extending:** exercise text/metadata (`free-exercise-db`, Unlicense) and
   the scientific evidence base (real papers, DOI-verified).
-- **Deliberately absent today:** exercise photography. This is a real product gap the
-  license situation forced, not an oversight — see the recommended paths in §1 before
-  re-adding any bundled image set.
+- **Shipped by owner decision, licensing caveat on record:** exercise photography. The app
+  serves the free-exercise-db photos (WebP under `public/exercises/<slug>/`, 873 folders,
+  ~46 MB) — a deliberate owner decision made with full knowledge of the licensing caveat in
+  §1, which falls back to a `Dumbbell` icon only for the 3 entries with no source image.
+  Revisit via the cleaner paths in §1 before changing the bundled image set.

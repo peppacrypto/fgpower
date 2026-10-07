@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { requireUserOrThrow } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
+import { isUniqueViolation } from "@/lib/db/prisma-error";
 import { getTemplateBySlug } from "@/lib/data/templates";
 import { adaptRepRange, adaptRowKey } from "@/lib/data/alternatives";
 import { findUndoableSwitch } from "@/lib/data/dashboard";
@@ -332,7 +333,7 @@ async function startProgramInternal(
     // real guard: a racing activation that slipped past the re-read hits it.
     // ProgramEnrollment has no other unique constraint, so P2002 here can only
     // be that index — treat it as "already running", never a 500.
-    if ((err as { code?: string }).code === "P2002") return { ok: false, reason: "ALREADY_ACTIVE" };
+    if (isUniqueViolation(err)) return { ok: false, reason: "ALREADY_ACTIVE" };
     throw err;
   }
 }

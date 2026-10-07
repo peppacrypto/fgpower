@@ -7,14 +7,13 @@ import { listAllSessions } from "@/lib/data/history";
 import { dateOfDayNumber, getWeekRows } from "@/lib/data/progress";
 import { dayNumberOf, mondayOf } from "@/lib/training/day-rotation";
 import { startOfWeek, wallClock } from "@/lib/training/week";
+import { MONTHS_SHORT_UPPER as MONTHS } from "@/lib/utils/date-names";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/misc";
 import { parsePageParam } from "../params";
 import { SessionRow } from "../session-row";
 
 export const metadata: Metadata = { title: "Todo o histórico" };
-
-const MONTHS = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ"];
 
 /** "21–27 SET", "28 SET – 04 OUT", with the year when it isn't this one. */
 function weekRange(start: Date, now: Date) {

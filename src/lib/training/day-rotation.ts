@@ -1,4 +1,9 @@
 import { normalizeText } from "@/lib/utils/normalize-text";
+import {
+  MONTHS_SHORT_UPPER as MONTH_SHORT,
+  WEEKDAYS_FULL as WEEKDAY_LONG,
+  WEEKDAYS_SHORT_UPPER as WEEKDAY_SHORT,
+} from "@/lib/utils/date-names";
 import { wallClock } from "./week";
 
 /**
@@ -420,10 +425,6 @@ export function weekStrip(p: {
     };
   });
 }
-
-const WEEKDAY_SHORT = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SÁB"];
-const WEEKDAY_LONG = ["domingo", "segunda", "terça", "quarta", "quinta", "sexta", "sábado"];
-const MONTH_SHORT = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ"];
 
 /** "SEG · 28 SET" — mono micro-caps. */
 export function formatDayTag(dayNo: number): string {

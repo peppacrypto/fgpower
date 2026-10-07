@@ -1,6 +1,5 @@
-import { execSync } from "node:child_process";
 import { devices, expect, test, type Page } from "@playwright/test";
-import { loginAsTestUser } from "./fixtures";
+import { hasDb, loginAsTestUser, sql } from "./fixtures";
 import { completeOnboarding } from "./onboarding-helper";
 import { finishAndSave, recordSet, sessionIdFromUrl, todayDayRow, uniqueEmail, waitForWorkoutScreen } from "./workout-helpers";
 
@@ -16,21 +15,6 @@ import { finishAndSave, recordSet, sessionIdFromUrl, todayDayRow, uniqueEmail, w
  */
 
 test.use({ ...devices["iPhone 13"], defaultBrowserType: "chromium", timezoneId: "America/Sao_Paulo", locale: "pt-BR" });
-
-/** Runs SQL on the local dev database (docker compose's fgpower-postgres). */
-function sql(query: string): string {
-  return execSync(`docker exec -i fgpower-postgres sh -c 'psql -U "$POSTGRES_USER" -d fgpower -At -v ON_ERROR_STOP=1'`, {
-    encoding: "utf8",
-    input: query,
-  }).trim();
-}
-const hasDb = (() => {
-  try {
-    return sql("SELECT 1") === "1";
-  } catch {
-    return false;
-  }
-})();
 
 const MONTHS = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
 const DAY_MS = 86_400_000;

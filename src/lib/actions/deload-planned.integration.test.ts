@@ -67,6 +67,17 @@ let programId: string;
 let dayId: string;
 let squatId: string;
 
+/**
+ * Marks one set done through `syncSets` — the single workout write path the app
+ * uses. Test-only helper preserving the old one-shot `logSet` ergonomics (the
+ * `logSet`/`saveSetValues` server actions were removed in A-097).
+ */
+async function logSet(input: Omit<Parameters<typeof workouts.syncSets>[0][number], "done">) {
+  const [r] = (await workouts.syncSets([{ ...input, done: true }])).results;
+  if (r.ok) return { ok: true as const };
+  return { ok: false as const, reason: r.reason === "GONE" ? ("CLOSED" as const) : r.reason };
+}
+
 async function redirectOf(p: Promise<unknown>): Promise<string> {
   try {
     await p;
@@ -157,7 +168,7 @@ describe("a planned deload week is one deload signal (A-017)", () => {
     const squatLog = await prisma.workoutExerciseLog.findFirstOrThrow({ where: { sessionId: deloadSession, exerciseId: squatId } });
     const set = await prisma.setLog.findFirstOrThrow({ where: { exerciseLogId: squatLog.id, setType: "WORKING" }, orderBy: { setNumber: "asc" } });
     // The deload week itself: lifted 80 kg (reduced), as a deload workout would.
-    expect(await workouts.logSet({ setLogId: set.id, weightKg: 80, reps: 5, rir: 3 })).toEqual({ ok: true });
+    expect(await logSet({ setLogId: set.id, weightKg: 80, reps: 5, rir: 3 })).toEqual({ ok: true });
     await redirectOf(workouts.finishWorkoutSession(deloadSession));
 
     const saved = await prisma.workoutSession.findUniqueOrThrow({ where: { id: deloadSession } });

@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { test, expect, devices, type Locator, type Page, type Route } from "@playwright/test";
-import pg from "pg";
+import { pool as db } from "./db";
 import {
   QUINTA,
   expectSetSaved,
@@ -31,11 +31,7 @@ test.use({ ...iPhone, timezoneId: "America/Sao_Paulo", locale: "pt-BR" });
 test.describe.configure({ timeout: 150_000 });
 
 // Direct DB access only to seed what the UI can't (limitations text, earlier
-// workouts) and to check what was saved — never production.
-const db = new pg.Pool({ connectionString: process.env.DATABASE_URL });
-test.afterAll(async () => {
-  await db.end();
-});
+// workouts) and to check what was saved. Shared pool on DATABASE_URL — see e2e/db.ts.
 
 async function userIdOf(sessionId: string) {
   const { rows } = await db.query<{ userId: string }>(`select "userId" from "WorkoutSession" where id = $1`, [sessionId]);

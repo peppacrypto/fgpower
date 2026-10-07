@@ -168,6 +168,13 @@ someone to train while fatigued, reward junk volume, or nag. These are product r
   and a 30 ms vibration, by the same rules.
 - **Milestones are sparse and private**: the 10th/25th/50th/100th workout and a completed
   block. They are never posted anywhere unless the user shares them.
+- **Finishing a workout publishes it, at your visibility** (`src/lib/social/publish.ts`
+  `publishOnFinish`, called from `src/lib/workouts/finish-hooks.ts`; product decision 10,
+  approved 2026-09-27). The session carries the profile's sharing default from the moment it
+  starts; new profiles default to **followers-only** (`Profile.defaultWorkoutVisibility =
+  FOLLOWERS`), and a session you mark **private** is never published. Lowering your default
+  affects future workouts only — existing rows were not backfilled. Pinned by
+  `src/lib/social/publish.integration.test.ts`.
 - **A fresh start each Monday**: on Monday and Tuesday Today closes out last week (workouts
   of the target, streak, records dated by their workout, sets per muscle judged as §1 judges
   them — low under 4 fractional sets where the muscle has direct work, high over 28 direct
@@ -180,6 +187,9 @@ someone to train while fatigued, reward junk volume, or nag. These are product r
 - No loss-aversion or guilt copy ("você vai perder…", "não desista", countdowns to losing
   a streak, red warnings on missed days).
 - No leaderboards, no tonnage/volume badges, no badge walls, no rewards for extra sets.
-- No auto-posting to the feed: activities are private unless the user shares them.
+- No feed exposure beyond the visibility you chose: a workout you set to **private** is
+  never published, and records, milestones and body data are never auto-posted. (Finishing
+  a workout *does* publish the workout itself, at your chosen visibility — see "What the app
+  does" above.)
 - Reminders (a later batch) at most **1 a day and 3 a week**, and **never on rest or deload
   days**.

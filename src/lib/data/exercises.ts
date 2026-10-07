@@ -183,11 +183,6 @@ export const getExerciseBySlug = cache(async (slug: string) => {
   });
 });
 
-export async function getExercisesByIds(ids: string[]) {
-  if (ids.length === 0) return [];
-  return prisma.exercise.findMany({ where: { id: { in: ids } }, select: CARD_SELECT });
-}
-
 /** The program the user is running (latest active enrollment), or null. */
 const activeProgramOf = cache(async (userId: string) => {
   const enrollment = await prisma.programEnrollment.findFirst({

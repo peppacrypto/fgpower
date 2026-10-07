@@ -41,6 +41,17 @@ vi.mock("next/navigation", () => ({
 
 const actions = await import("./workouts");
 
+/**
+ * Marks one set done through `syncSets` — the single workout write path the app
+ * uses. Test-only helper preserving the old one-shot `logSet` ergonomics (the
+ * `logSet`/`saveSetValues` server actions were removed in A-097).
+ */
+async function logSet(input: Omit<Parameters<typeof actions.syncSets>[0][number], "done">) {
+  const [r] = (await actions.syncSets([{ ...input, done: true }])).results;
+  if (r.ok) return { ok: true as const };
+  return { ok: false as const, reason: r.reason === "GONE" ? ("CLOSED" as const) : r.reason };
+}
+
 async function redirectOf(p: Promise<unknown>): Promise<string> {
   try {
     await p;
@@ -67,7 +78,7 @@ async function finishedWorkout() {
   const url = await redirectOf(actions.startAdHocWorkoutSession(dayId));
   const sessionId = url.split("/")[3].split("?")[0];
   const set = await prisma.setLog.findFirstOrThrow({ where: { sessionId, setType: "WORKING" }, orderBy: { setNumber: "asc" } });
-  expect(await actions.logSet({ setLogId: set.id, weightKg: 60, reps: 8, rir: null })).toEqual({ ok: true });
+  expect(await logSet({ setLogId: set.id, weightKg: 60, reps: 8, rir: null })).toEqual({ ok: true });
   await redirectOf(actions.finishWorkoutSession(sessionId));
   return sessionId;
 }

@@ -56,6 +56,17 @@ let dayA: string;
 let dayB: string;
 let ex: string[];
 
+/**
+ * Marks one set done through `syncSets` — the single workout write path the app
+ * uses. Test-only helper preserving the old one-shot `logSet` ergonomics (the
+ * `logSet`/`saveSetValues` server actions were removed in A-097).
+ */
+async function logSet(input: Omit<Parameters<typeof workouts.syncSets>[0][number], "done">) {
+  const [r] = (await workouts.syncSets([{ ...input, done: true }])).results;
+  if (r.ok) return { ok: true as const };
+  return { ok: false as const, reason: r.reason === "GONE" ? ("CLOSED" as const) : r.reason };
+}
+
 async function redirectOf(p: Promise<unknown>): Promise<string> {
   try {
     await p;
@@ -255,7 +266,7 @@ describe("applyDeload / undoDeload", () => {
     // Finished: RIR raised (no wave: at least 3), and never the reference for a normal workout.
     const squat = session.exerciseLogs[0];
     const set = squat.sets.find((s) => s.setType === "WORKING")!;
-    expect(await workouts.logSet({ setLogId: set.id, weightKg: 80, reps: 5, rir: 3 })).toEqual({ ok: true });
+    expect(await logSet({ setLogId: set.id, weightKg: 80, reps: 5, rir: 3 })).toEqual({ ok: true });
     await redirectOf(workouts.finishWorkoutSession(light));
     expect((await getSessionRirTargets(USER_ID, light)).get(squat.id)).toBe(3);
 

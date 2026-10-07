@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { test, expect, devices, type Page } from "@playwright/test";
-import pg from "pg";
+import { pool as db } from "./db";
 import {
   QUINTA,
   expectSetSaved,
@@ -30,11 +30,7 @@ const { defaultBrowserType, ...iPhone } = devices["iPhone 13"];
 test.use({ ...iPhone, timezoneId: "America/Sao_Paulo", locale: "pt-BR" });
 test.describe.configure({ timeout: 180_000 });
 
-// Direct DB access only to check what was saved — never production.
-const db = new pg.Pool({ connectionString: process.env.DATABASE_URL });
-test.afterAll(async () => {
-  await db.end();
-});
+// Direct DB access only to check what was saved. Shared pool on DATABASE_URL — see e2e/db.ts.
 
 const FIRST = "Puxada Alta Unilateral no Pulley";
 const SECOND = "Remada Sentada na Polia Baixa";

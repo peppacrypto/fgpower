@@ -7,7 +7,9 @@
  */
 import { describeRecord, groupRecordsByExercise, isShownPrKind, type RecordLike } from "@/lib/training/personal-records-core";
 import { formatSet } from "@/lib/training/set-plan";
+import { wallClock } from "@/lib/training/week";
 import { formatDuration, formatKg, formatNumber, plural } from "@/lib/utils/format";
+import { MONTHS_SHORT } from "@/lib/utils/date-names";
 
 export interface PublicWorkoutExercise {
   name: string;
@@ -125,18 +127,10 @@ export function exerciseLine(e: PublicWorkoutExercise): string {
   return e.bestSet ? `${sets} · ${formatSet(e.bestSet.weightKg, e.bestSet.reps, { timed: e.timed })}` : sets;
 }
 
-const MONTHS = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
-
 /** "28 set 2026" — the São Paulo calendar day. */
 export function formatShareDate(date: Date): string {
-  const parts = new Intl.DateTimeFormat("en-US", {
-    timeZone: "America/Sao_Paulo",
-    year: "numeric",
-    month: "numeric",
-    day: "numeric",
-  }).formatToParts(date);
-  const get = (type: string) => Number(parts.find((p) => p.type === type)?.value);
-  return `${get("day")} ${MONTHS[get("month") - 1]} ${get("year")}`;
+  const w = wallClock(date);
+  return `${w.day} ${MONTHS_SHORT[w.month - 1]} ${w.year}`;
 }
 
 /** A session volume in few characters: "12,4 t" from a tonne up, else "850 kg". */

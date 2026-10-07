@@ -4,7 +4,7 @@ import { PATH_HEADER } from "@/lib/auth/path-header";
 
 /**
  * Global /api request-body cap (A-045). Legitimate /api posts are small JSON
- * (the set outbox, autosave rows, auth credentials, webhook events); 256 KB is
+ * (the set outbox, auth credentials, webhook events); 256 KB is
  * far above any of them. Enforced in the proxy so an oversized body is rejected
  * before any handler reads or JSON-parses it and before the optimistic session
  * check. The Node proxy still buffers the incoming body, but that buffer is

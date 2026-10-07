@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { Prisma } from "@/generated/prisma/client";
+import { isUniqueViolation } from "@/lib/db/prisma-error";
 import { requireUserOrThrow } from "@/lib/auth/require-user";
 import { SESSION_EXPIRED_ERROR } from "@/lib/auth/session-expired";
 import { prisma } from "@/lib/db";
@@ -146,7 +146,7 @@ async function mintShareToken(activityId: string): Promise<{ shareToken: string;
       break;
     } catch (err) {
       // A token collision (96 random bits: never, in practice) — draw again.
-      if (!(err instanceof Prisma.PrismaClientKnownRequestError) || err.code !== "P2002") throw err;
+      if (!isUniqueViolation(err)) throw err;
     }
   }
   const row = await prisma.activity.findUniqueOrThrow({

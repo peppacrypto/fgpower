@@ -8,7 +8,8 @@
  * through the rules below, so they agree on whether it was left open, on the
  * day "Salvar como feito em …" dates it and on how long it took.
  */
-import { wallClock } from "./week";
+import { WEEKDAYS_SHORT } from "@/lib/utils/date-names";
+import { dayKey, wallClock } from "./week";
 
 /** Nobody trains for 8 hours straight: past this, an open session was left open. */
 export const STALE_AFTER_MS = 8 * 60 * 60 * 1000;
@@ -23,8 +24,7 @@ const NO_SET_TIMES_MS = 60 * 60 * 1000;
 
 /** The São Paulo calendar day of `date` as "YYYY-MM-DD" (sortable and comparable as a string). */
 export function spDayKey(date: Date): string {
-  const w = wallClock(date);
-  return `${w.year}-${String(w.month).padStart(2, "0")}-${String(w.day).padStart(2, "0")}`;
+  return dayKey(date);
 }
 
 /** True when the session started on an earlier São Paulo calendar day or more than 8 h ago. */
@@ -145,8 +145,6 @@ export function assessOpenSession(startedAt: Date, rows: OpenSetRow[], now: Date
   };
 }
 
-const WEEKDAYS_PT = ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
-
 /** "20/09" on the São Paulo wall clock. */
 export function formatSpDate(date: Date): string {
   const w = wallClock(date);
@@ -155,7 +153,7 @@ export function formatSpDate(date: Date): string {
 
 /** "sáb, 20/09" on the São Paulo wall clock. */
 export function formatSpWeekdayDate(date: Date): string {
-  return `${WEEKDAYS_PT[wallClock(date).weekday]}, ${formatSpDate(date)}`;
+  return `${WEEKDAYS_SHORT[wallClock(date).weekday]}, ${formatSpDate(date)}`;
 }
 
 /** "07:05" on the São Paulo wall clock. */

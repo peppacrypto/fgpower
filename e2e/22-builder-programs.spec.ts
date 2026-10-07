@@ -1,6 +1,5 @@
-import { execSync } from "node:child_process";
 import { test, expect, devices, type Page } from "@playwright/test";
-import { loginAsTestUser } from "./fixtures";
+import { hasDb, loginAsTestUser, sql } from "./fixtures";
 import { completeOnboarding } from "./onboarding-helper";
 import { newUserOnGd1, uniqueEmail } from "./workout-helpers";
 
@@ -15,21 +14,6 @@ import { newUserOnGd1, uniqueEmail } from "./workout-helpers";
 const { defaultBrowserType, ...iPhone } = devices["iPhone 13"];
 test.use(iPhone);
 test.describe.configure({ timeout: 120_000 });
-
-/** Runs SQL on the local dev database (docker compose's fgpower-postgres). */
-function sql(query: string): string {
-  return execSync(`docker exec -i fgpower-postgres sh -c 'psql -U "$POSTGRES_USER" -d fgpower -At -v ON_ERROR_STOP=1'`, {
-    encoding: "utf8",
-    input: query,
-  }).trim();
-}
-const hasDb = (() => {
-  try {
-    return sql("SELECT 1") === "1";
-  } catch {
-    return false;
-  }
-})();
 
 async function newUser(page: Page, label: string) {
   const email = uniqueEmail(label);

@@ -1,6 +1,6 @@
 import { formatKg } from "@/lib/utils/format";
-import { weekdayFromName } from "@/lib/training/day-rotation";
-import { wallClock } from "@/lib/training/week";
+import { dayNumberOf, weekdayFromName, weekdayOfDayNo } from "@/lib/training/day-rotation";
+import { MONTHS_SHORT, WEEKDAYS_SHORT } from "@/lib/utils/date-names";
 
 export { weekdayFromName };
 
@@ -96,24 +96,17 @@ export function setsText(sets: LiteSet[]): string {
 // ---------------------------------------------------------------------------
 
 const DAY_MS = 86_400_000;
-const WEEKDAYS = ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
-const MONTHS = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
 
 /** The São Paulo calendar day of `date` as a day number (days since 1970-01-01). */
-export function spDayNumber(date: Date): number {
-  const w = wallClock(date);
-  return Math.floor(Date.UTC(w.year, w.month - 1, w.day) / DAY_MS);
-}
+export const spDayNumber = dayNumberOf;
 
 /** Weekday (0 = Sunday) of a day number. */
-export function weekdayOf(dayNo: number): number {
-  return (((dayNo + 4) % 7) + 7) % 7; // 1970-01-01 was a Thursday
-}
+export const weekdayOf = weekdayOfDayNo;
 
 /** "sex 25 set" — styled as mono micro-caps where it's shown. */
 export function formatDayNumber(dayNo: number): string {
   const d = new Date(dayNo * DAY_MS);
-  return `${WEEKDAYS[d.getUTCDay()]} ${String(d.getUTCDate()).padStart(2, "0")} ${MONTHS[d.getUTCMonth()]}`;
+  return `${WEEKDAYS_SHORT[d.getUTCDay()]} ${String(d.getUTCDate()).padStart(2, "0")} ${MONTHS_SHORT[d.getUTCMonth()]}`;
 }
 
 /** "sex 25 set" for an instant, on the São Paulo wall clock. */

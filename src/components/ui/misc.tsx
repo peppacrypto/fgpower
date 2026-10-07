@@ -1,35 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils/cn";
 
-export function Separator({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div role="separator" className={cn("h-px w-full bg-border", className)} {...props} />;
-}
-
-export function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div
-      className={cn("animate-pulse rounded-[var(--radius-sm)] bg-surface-2", className)}
-      {...props}
-    />
-  );
-}
-
-export function ProgressBar({ value, className }: { value: number; className?: string }) {
-  const clamped = Math.max(0, Math.min(100, value));
-  return (
-    <div className={cn("h-2 w-full overflow-hidden bg-surface-2", className)}>
-      <div
-        className="h-full bg-accent transition-[width] duration-300"
-        style={{ width: `${clamped}%` }}
-        role="progressbar"
-        aria-valuenow={clamped}
-        aria-valuemin={0}
-        aria-valuemax={100}
-      />
-    </div>
-  );
-}
-
 export function EmptyState({
   icon,
   title,

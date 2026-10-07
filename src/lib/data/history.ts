@@ -188,7 +188,3 @@ export async function getExercisePersonalRecords(userId: string, exerciseId: str
     select: { id: true, kind: true, value: true, weightKg: true, reps: true, achievedAt: true, sessionId: true },
   });
 }
-
-export async function getExerciseNote(userId: string, exerciseId: string) {
-  return prisma.exerciseUserNote.findUnique({ where: { userId_exerciseId: { userId, exerciseId } } });
-}

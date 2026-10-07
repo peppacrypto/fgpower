@@ -4,11 +4,11 @@ import { ChevronDown } from "lucide-react";
 import { GArrow, GCheck } from "@/components/ui/glyph";
 import { weekdayName, type WeekStripCell } from "@/lib/training/day-rotation";
 import type { WeekGuidanceView } from "@/lib/training/week-guidance";
+import { WEEKDAYS_SHORT_UPPER as WEEKDAY_SHORT } from "@/lib/utils/date-names";
 import { formatNumber, plural, pluralWord } from "@/lib/utils/format";
 import { cn } from "@/lib/utils/cn";
 import { nudgeFits } from "./streak-nudge";
 
-const WEEKDAY_SHORT = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SÁB"];
 const label = "text-[10px] font-bold uppercase tracking-[0.18em] text-muted";
 
 /** The weekly streak line: "4 SEMANAS SEGUIDAS · RECORDE 6" (weekly only — lib/training/streak). */

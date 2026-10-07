@@ -1,6 +1,5 @@
-import { execSync } from "node:child_process";
 import { test, expect, devices, type Page } from "@playwright/test";
-import { loginAsTestUser } from "./fixtures";
+import { hasDb, loginAsTestUser, sql } from "./fixtures";
 import { completeOnboarding } from "./onboarding-helper";
 import { SEGUNDA, finishAndSave, newUserOnGd1, recordSet, startDayFromToday, uniqueEmail } from "./workout-helpers";
 
@@ -9,21 +8,6 @@ import { SEGUNDA, finishAndSave, newUserOnGd1, recordSet, startDayFromToday, uni
  * Batch 2: W-114; Batch 4: rows fold to one line, actions in a ⋯ sheet,
  * multi-select picker). Each test uses a fresh account and a fresh program.
  */
-
-/** Runs SQL on the local dev database (docker compose's fgpower-postgres). */
-function sql(query: string): string {
-  return execSync(`docker exec -i fgpower-postgres sh -c 'psql -U "$POSTGRES_USER" -d fgpower -At -v ON_ERROR_STOP=1'`, {
-    encoding: "utf8",
-    input: query,
-  }).trim();
-}
-const hasDb = (() => {
-  try {
-    return sql("SELECT 1") === "1";
-  } catch {
-    return false;
-  }
-})();
 
 // Drop defaultBrowserType (WebKit): only Chromium is installed for the suite.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

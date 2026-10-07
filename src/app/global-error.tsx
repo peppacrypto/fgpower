@@ -1,5 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
+import { reportClientError } from "@/lib/observability/client-beacon";
+
 // Global error boundary — the last-resort fallback that replaces the root
 // layout when it (or its providers) throws. Must render its own <html>/<body>
 // and gets none of the global CSS, hence the inline styles.
@@ -11,6 +14,11 @@ export default function GlobalError({
   retry: () => void;
 }) {
   const offline = typeof navigator !== "undefined" && !navigator.onLine;
+  // Beacon the "app is down" failure to the server sink (A-048): a root-layout
+  // throw is caught by React here, so the window handler never sees it.
+  useEffect(() => {
+    reportClientError({ source: "boundary", message: error.message, stack: error.stack, digest: error.digest });
+  }, [error]);
   return (
     <html lang="pt-BR">
       <head>

@@ -50,6 +50,17 @@ let enrollmentId: string;
 let dayIds: string[];
 
 /** Runs an action that answers with a redirect; returns the URL it went to. */
+/**
+ * Marks one set done through `syncSets` — the single workout write path the app
+ * uses. Test-only helper preserving the old one-shot `logSet` ergonomics (the
+ * `logSet`/`saveSetValues` server actions were removed in A-097).
+ */
+async function logSet(input: Omit<Parameters<typeof actions.syncSets>[0][number], "done">) {
+  const [r] = (await actions.syncSets([{ ...input, done: true }])).results;
+  if (r.ok) return { ok: true as const };
+  return { ok: false as const, reason: r.reason === "GONE" ? ("CLOSED" as const) : r.reason };
+}
+
 async function redirectOf(p: Promise<unknown>): Promise<string> {
   try {
     await p;
@@ -78,7 +89,7 @@ async function trainOn(dayId: string, weightKg: number, reps = 10) {
     where: { sessionId, setType: "WORKING" },
     orderBy: [{ exerciseLog: { sortOrder: "asc" } }, { setNumber: "asc" }],
   });
-  expect(await actions.logSet({ setLogId: set.id, weightKg, reps, rir: null })).toEqual({ ok: true });
+  expect(await logSet({ setLogId: set.id, weightKg, reps, rir: null })).toEqual({ ok: true });
   expect(await redirectOf(actions.finishWorkoutSession(sessionId))).toBe(`/app/workout/${sessionId}/summary`);
   return sessionId;
 }
@@ -389,7 +400,7 @@ describe("Trocar / Adicionar exercício mid-workout", () => {
   it("refuses to swap an exercise with sets; adds the pick after it with the sets still to do", async () => {
     const [first, second] = logs;
     const set = await prisma.setLog.findFirstOrThrow({ where: { exerciseLogId: first.id, setType: "WORKING" }, orderBy: { setNumber: "asc" } });
-    await actions.logSet({ setLogId: set.id, weightKg: 50, reps: 8, rir: null });
+    await logSet({ setLogId: set.id, weightKg: 50, reps: 8, rir: null });
     expect(await actions.swapExercise(first.id, exerciseIds[2])).toEqual({ ok: false, reason: "HAS_DATA" });
 
     // In a superset (W-104): the stand-in takes the exercise's place in it.
@@ -429,7 +440,7 @@ describe("Trocar / Adicionar exercício mid-workout", () => {
     const second = logs[1];
     expect(await actions.swapExercise(second.id, exerciseIds[4])).toEqual({ ok: true, exerciseLogId: second.id });
     const set = await prisma.setLog.findFirstOrThrow({ where: { exerciseLogId: second.id, setType: "WORKING" } });
-    await actions.logSet({ setLogId: set.id, weightKg: 30, reps: 10, rir: null });
+    await logSet({ setLogId: set.id, weightKg: 30, reps: 10, rir: null });
     await redirectOf(actions.finishWorkoutSession(sessionId));
     const done = await prisma.setLog.findFirstOrThrow({ where: { id: set.id } });
     expect(done.exerciseId).toBe(exerciseIds[4]);
@@ -479,7 +490,7 @@ describe("a swap across reps↔seconds carries the new exercise's unit (A-058)",
 
     // Finish, then "Usar no programa": the program row becomes a plank in seconds.
     const set = await prisma.setLog.findFirstOrThrow({ where: { exerciseLogId: firstLog.id, setType: "WORKING" } });
-    await actions.logSet({ setLogId: set.id, weightKg: 0, reps: 40, rir: null });
+    await logSet({ setLogId: set.id, weightKg: 0, reps: 40, rir: null });
     await redirectOf(actions.finishWorkoutSession(sessionId));
     expect(await actions.keepSwapInProgram(firstLog.id)).toEqual({ ok: true });
 
@@ -614,7 +625,7 @@ describe("same-exercise top-set and back-off slots each read their own history (
         where: { exerciseLogId: l.id, setType: "WORKING" },
         orderBy: { setNumber: "asc" },
       });
-      expect(await actions.logSet({ setLogId: set.id, weightKg: loads[i].weightKg, reps: loads[i].reps, rir: null })).toEqual({ ok: true });
+      expect(await logSet({ setLogId: set.id, weightKg: loads[i].weightKg, reps: loads[i].reps, rir: null })).toEqual({ ok: true });
     }
     expect(await redirectOf(actions.finishWorkoutSession(sessionId))).toBe(`/app/workout/${sessionId}/summary`);
     return sessionId;
@@ -806,7 +817,7 @@ describe("deleting a workout finished after its block stopped", () => {
     await trainOn(b.dayIds[0], 50);
     const late = await startOn(b.dayIds[1]);
     const set = await prisma.setLog.findFirstOrThrow({ where: { sessionId: late, setType: "WORKING" }, orderBy: { setNumber: "asc" } });
-    expect(await actions.logSet({ setLogId: set.id, weightKg: 50, reps: 10, rir: null })).toEqual({ ok: true });
+    expect(await logSet({ setLogId: set.id, weightKg: 50, reps: 10, rir: null })).toEqual({ ok: true });
     // Another program started with this workout open: the block stopped, the workout stays linked to it.
     await prisma.programEnrollment.update({ where: { id: b.enrollmentId }, data: { status: "ABANDONED", endedAt: new Date() } });
     await redirectOf(actions.finishWorkoutSession(late));
@@ -835,7 +846,7 @@ describe("A-026 · finishing a workout on an ABANDONED enrollment advances its r
     // then stop the block — the open workout stays linked to it.
     const open = await startOn(b.dayIds[1]);
     const set = await prisma.setLog.findFirstOrThrow({ where: { sessionId: open, setType: "WORKING" }, orderBy: { setNumber: "asc" } });
-    expect(await actions.logSet({ setLogId: set.id, weightKg: 50, reps: 10, rir: null })).toEqual({ ok: true });
+    expect(await logSet({ setLogId: set.id, weightKg: 50, reps: 10, rir: null })).toEqual({ ok: true });
     await prisma.programEnrollment.update({ where: { id: b.enrollmentId }, data: { status: "ABANDONED", endedAt: new Date() } });
 
     // Finishing it (the action under test) advances the abandoned block to week 4.
@@ -953,7 +964,7 @@ describe('a late "Salvar como feito em …" lands in its own week and re-judges 
         where: { sessionId, setType: "WORKING" },
         orderBy: [{ exerciseLog: { sortOrder: "asc" } }, { setNumber: "asc" }],
       });
-      expect(await actions.logSet({ setLogId: set.id, weightKg: 120, reps: 10, rir: null })).toEqual({ ok: true });
+      expect(await logSet({ setLogId: set.id, weightKg: 120, reps: 10, rir: null })).toEqual({ ok: true });
       await prisma.setLog.update({ where: { id: set.id }, data: { completedAt: lastFri, updatedAt: lastFri } });
       expect(await redirectOf(actions.finishStaleWorkoutSessionAndOpen(sessionId))).toBe(
         `/app/workout/${sessionId}/summary`,

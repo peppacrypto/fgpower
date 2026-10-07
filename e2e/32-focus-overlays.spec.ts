@@ -3,24 +3,12 @@
  * (A-029 scroll clearance, A-030 focus restore, A-031 rest-bar ring,
  * A-079 RIR focus trap, A-080 two-tap announcements), on a phone.
  */
-import { execSync } from "node:child_process";
 import { test, expect, devices, type Page } from "@playwright/test";
+import { hasDb } from "./db";
 import { QUINTA, newUserOnGd1, recordSet, startDayFromToday } from "./workout-helpers";
 
 test.use({ ...devices["iPhone 13"], defaultBrowserType: "chromium", timezoneId: "America/Sao_Paulo", locale: "pt-BR" });
 test.describe.configure({ timeout: 120_000 });
-
-const hasDb = (() => {
-  try {
-    return (
-      execSync(`docker exec -i fgpower-postgres sh -c 'psql -U "$POSTGRES_USER" -d fgpower -At -c "SELECT 1"'`, {
-        encoding: "utf8",
-      }).trim() === "1"
-    );
-  } catch {
-    return false;
-  }
-})();
 
 /** The element the browser reports as focused, as an accessible label or tag. */
 async function activeLabel(page: Page) {

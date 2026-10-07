@@ -47,6 +47,17 @@ const { getSharedWorkout } = await import("@/lib/data/share");
 let exerciseIds: string[];
 let dayId: string;
 
+/**
+ * Marks one set done through `syncSets` — the single workout write path the app
+ * uses. Test-only helper preserving the old one-shot `logSet` ergonomics (the
+ * `logSet`/`saveSetValues` server actions were removed in A-097).
+ */
+async function logSet(input: Omit<Parameters<typeof workouts.syncSets>[0][number], "done">) {
+  const [r] = (await workouts.syncSets([{ ...input, done: true }])).results;
+  if (r.ok) return { ok: true as const };
+  return { ok: false as const, reason: r.reason === "GONE" ? ("CLOSED" as const) : r.reason };
+}
+
 async function redirectOf(p: Promise<unknown>): Promise<string> {
   try {
     await p;
@@ -69,7 +80,7 @@ async function train(weightKg: number, reps = 10): Promise<string> {
     where: { sessionId, setType: "WORKING" },
     orderBy: [{ exerciseLog: { sortOrder: "asc" } }, { setNumber: "asc" }],
   });
-  expect(await workouts.logSet({ setLogId: set.id, weightKg, reps, rir: null })).toEqual({ ok: true });
+  expect(await logSet({ setLogId: set.id, weightKg, reps, rir: null })).toEqual({ ok: true });
   expect(await redirectOf(workouts.finishWorkoutSession(sessionId))).toBe(`/app/workout/${sessionId}/summary`);
   return sessionId;
 }

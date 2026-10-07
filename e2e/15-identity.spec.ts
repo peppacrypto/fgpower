@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { test, expect, devices, type Browser, type Page } from "@playwright/test";
-import pg from "pg";
+import { pool as db } from "./db";
 import { loginAsTestUser } from "./fixtures";
 import { uniqueEmail } from "./workout-helpers";
 
@@ -16,15 +16,7 @@ const { defaultBrowserType, ...iPhone } = devices["iPhone 13"];
 test.use(iPhone);
 test.describe.configure({ timeout: 120_000 });
 
-// Reads what was saved and seeds a clashing handle — local databases only.
-const dbUrl = new URL(process.env.DATABASE_URL ?? "postgres://missing");
-if (!["localhost", "127.0.0.1", "::1", "[::1]"].includes(dbUrl.hostname)) {
-  throw new Error("15-identity reads the DB directly — local databases only (check DATABASE_URL).");
-}
-const db = new pg.Pool({ connectionString: process.env.DATABASE_URL });
-test.afterAll(async () => {
-  await db.end();
-});
+// Reads what was saved and seeds a clashing handle. Shared pool on DATABASE_URL — see e2e/db.ts.
 
 async function handleOf(email: string) {
   const { rows } = await db.query<{ username: string | null; displayUsername: string | null }>(

@@ -6,6 +6,7 @@ import { Prisma } from "@/generated/prisma/client";
 import { requireUserOrThrow } from "@/lib/auth/require-user";
 import { SESSION_EXPIRED_ERROR } from "@/lib/auth/session-expired";
 import { prisma } from "@/lib/db";
+import { isUniqueViolation } from "@/lib/db/prisma-error";
 import { PUBLIC_USER_SELECT, toPublicUser } from "@/lib/data/social/public-user";
 import { activityAccess, canViewActivity, isBlocked } from "@/lib/social/authorization";
 import { createNotification, markRead, markSeen, notificationKey, retractNotification } from "@/lib/social/notifications";
@@ -62,11 +63,6 @@ async function attempt<T extends object>(body: () => Promise<T>): Promise<Social
     if (!(code in ERROR_TEXT)) console.error("social action failed", err);
     return { ok: false, error: ERROR_TEXT[code] ?? "Não foi possível concluir agora. Tente de novo." };
   }
-}
-
-/** A unique-index collision: a concurrent double tap got there first. */
-function isUniqueViolation(err: unknown): boolean {
-  return (err as { code?: string })?.code === "P2002";
 }
 
 /** A string id from a client (server actions are public endpoints: never trust the shape). */

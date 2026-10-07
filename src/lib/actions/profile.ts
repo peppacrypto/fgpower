@@ -6,6 +6,7 @@ import { requireUserOrThrow } from "@/lib/auth/require-user";
 import { SESSION_EXPIRED_ERROR } from "@/lib/auth/session-expired";
 import { findAvailableUsername, isUsernameTaken } from "@/lib/data/profile";
 import { prisma } from "@/lib/db";
+import { isUniqueViolation } from "@/lib/db/prisma-error";
 import {
   EQUIPMENT_ACCESS_OPTIONS,
   EXPERIENCE_LEVELS,
@@ -41,7 +42,7 @@ export async function claimUsername(displayUsername: string): Promise<UsernameRe
     });
   } catch (err) {
     // Lost a race for the same name between the check above and the write.
-    if ((err as { code?: string }).code === "P2002") return { ok: false, error: USERNAME_TAKEN };
+    if (isUniqueViolation(err)) return { ok: false, error: USERNAME_TAKEN };
     console.error("claimUsername failed", err);
     return { ok: false, error: GENERIC_ERROR };
   }
