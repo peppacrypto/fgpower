@@ -8,6 +8,8 @@ import { SESSION_EXPIRED_ERROR } from "@/lib/auth/session-expired";
 import { findAvailableUsername, isUsernameTaken } from "@/lib/data/profile";
 import { prisma } from "@/lib/db";
 import { isUniqueViolation } from "@/lib/db/prisma-error";
+import { autoEnrollFromOnboarding } from "@/lib/programming/auto-enroll";
+import { dayNumberOf } from "@/lib/training/day-rotation";
 import { onboardingSchema } from "@/lib/validation/onboarding";
 import { NEW_PROFILE_SHARING } from "@/lib/social/publish";
 import { POLICY_VERSION } from "@/lib/legal/policy";
@@ -38,6 +40,10 @@ export async function completeOnboarding(
     doesEndurance: formData.get("doesEndurance") === "on",
     enduranceNotes: formData.get("enduranceNotes") ?? "",
     limitations: formData.get("limitations") ?? "",
+    // Optional, for the user's own profile only (never steer the recommender):
+    // age becomes a year of birth, weight the first weigh-in. Empty => undefined.
+    age: formData.get("age"),
+    weight: formData.get("weight"),
     confirmedAdult: formData.get("confirmedAdult") === "on",
     healthConsent: formData.get("healthConsent") === "on",
   };
@@ -78,6 +84,8 @@ export async function completeOnboarding(
     doesEndurance: data.doesEndurance,
     enduranceNotes: data.doesEndurance ? data.enduranceNotes || null : null,
     limitations: data.limitations || null,
+    // Age kept as a year of birth so the stored value never ages; blank clears it.
+    birthYear: data.age ? new Date().getFullYear() - data.age : null,
     onboardingCompletedAt: now,
     // A-049/A-008/A-054: the age attestation, the versioned health-data consent
     // and the accepted policy version, all captured at the point health data is
@@ -92,14 +100,34 @@ export async function completeOnboarding(
     create: { userId: user.id, ...answers, ...NEW_PROFILE_SHARING },
     update: answers,
   });
+  // Weight seeds the first weigh-in on "Corpo" (one BODYWEIGHT value per SP day;
+  // an existing same-day log is kept, never overwritten by a re-run of the wizard).
+  if (data.weight != null) {
+    const day = dayNumberOf(now);
+    await prisma.bodyMetric.upsert({
+      where: { userId_kind_day: { userId: user.id, kind: "BODYWEIGHT", day } },
+      create: { userId: user.id, kind: "BODYWEIGHT", value: Math.round(data.weight * 10) / 10, unit: "kg", day, measuredAt: now },
+      update: {},
+    });
+  }
   // An account made by e-mail has no name (Google gives one): activity cards
   // and avatars read user.name, so the display name fills it in.
   const nameChanged = user.name.trim() === "";
   if (nameChanged) await prisma.user.update({ where: { id: user.id }, data: { name: data.displayName } });
   if (handle.changed || nameChanged) await refreshSessionCache();
 
-  // Back to where sign-in started (a program dossier, a shared profile…).
-  redirect(onboardingNextPath(String(formData.get("next") ?? "")) ?? "/app/today");
+  // The payoff for new users: a ready, personalised plan, already active — Today
+  // opens on it instead of an empty shelf. A nice-to-have, so a failure here
+  // never fails the onboarding (Today falls back to its recommendation panel).
+  const enrolled = await autoEnrollFromOnboarding(user.id).catch((err) => {
+    console.warn("autoEnrollFromOnboarding failed", err);
+    return { activated: false };
+  });
+
+  // A deep link (a program dossier, a shared profile…) wins; otherwise Today —
+  // with the one-time welcome banner when a plan was built.
+  const next = onboardingNextPath(String(formData.get("next") ?? ""));
+  redirect(next ?? (enrolled.activated ? "/app/today?novo=1" : "/app/today"));
 }
 
 type AssignResult = { ok: true; changed: boolean } | { ok: false; error: string };

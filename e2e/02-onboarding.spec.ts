@@ -61,6 +61,50 @@ test("authenticated new user is guided through onboarding", async ({ page }) => 
   await expect(page.getByText(/teste/i).first()).toBeVisible();
 });
 
+// The payoff for a new user: finishing the wizard hands them ONE ready,
+// personalised plan — active, one tap from the first set — instead of an empty
+// Today and a shelf of programs to pick from. Age + weight are saved too.
+test("a new user lands on Today with a ready, active plan (not the library)", async ({ page }) => {
+  const email = uniqueEmail("onb-ready");
+  await loginAsTestUser(page, email);
+  await page.goto("/onboarding");
+
+  await page.getByLabel("Nome de exibição").fill("Novato");
+  await page.getByLabel("Idade (opcional)").fill("28");
+  await page.getByLabel("Peso em kg (opcional)").fill("74.5");
+  await checkAdult(page);
+  // Keep the defaults (iniciante · 3×/semana · academia completa).
+  for (let i = 0; i < 3; i++) await page.getByRole("button", { name: "Continuar" }).click();
+  await checkHealthConsent(page);
+  await Promise.all([
+    page.waitForURL(/\/app\/today/, { timeout: 30_000 }),
+    page.getByRole("button", { name: "Ver meu plano" }).click(),
+  ]);
+
+  // The one-time welcome banner, the active-program hero, and NO "no program yet" prompt.
+  await expect(page.getByText("Seu treino está pronto")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Iniciar treino" })).toBeVisible();
+  await expect(page.getByText("Sem programa ativo.")).toHaveCount(0);
+
+  // Saved: a year of birth, a first weigh-in, and exactly one active program.
+  const { rows } = await db.query<{ birthYear: number | null; weighins: number; active: number }>(
+    `select p."birthYear",
+            (select count(*)::int from "BodyMetric" b where b."userId" = u.id and b.kind = 'BODYWEIGHT') as weighins,
+            (select count(*)::int from "UserProgram" up where up."userId" = u.id and up.status = 'ACTIVE') as active
+       from "user" u join "Profile" p on p."userId" = u.id where u.email = $1`,
+    [email],
+  );
+  expect(rows[0].birthYear).toBe(new Date().getFullYear() - 28);
+  expect(rows[0].weighins).toBe(1);
+  expect(rows[0].active).toBe(1);
+
+  // "Iniciar treino" opens the first workout — straight to training, no library detour.
+  await Promise.all([
+    page.waitForURL(/\/app\/workout\//, { timeout: 30_000 }),
+    page.getByRole("button", { name: "Iniciar treino" }).click(),
+  ]);
+});
+
 // B4 A-049/A-008: the wizard cannot leave step 1 without the attested 18+, and
 // "Ver meu plano" stays disabled until the health-data consent is given.
 test("age and health-data consent gate the wizard", async ({ page }) => {
@@ -285,6 +329,12 @@ test("narrow phones read every routine and goal answer whole", async ({ page }) 
   await page.goto("/app/settings");
   const goal = page.getByLabel("Objetivo");
   await expect(goal.locator("option:checked")).toHaveText("Emagrecer / definir");
+  // Measure only once the select is laid out (a transient 0-width makes `room`
+  // negative) and against the real web font, not a wider fallback (the canvas
+  // measureText below reads the computed font-family).
+  await expect(goal).toBeVisible();
+  await expect.poll(() => goal.evaluate((el) => (el as HTMLSelectElement).clientWidth)).toBeGreaterThan(100);
+  await page.evaluate(() => document.fonts.ready);
   const fits = await goal.evaluate((el) => {
     const s = el as HTMLSelectElement;
     const cs = getComputedStyle(s);

@@ -13,6 +13,8 @@ import { checkUsername, suggestUsername } from "@/lib/actions/profile";
 import { FAT_LOSS_NOTE } from "@/lib/constants/program-labels";
 import { HEALTH_CONSENT_TEXT } from "@/lib/legal/policy";
 import { publicProfileLabel, slugifyUsername, usernameError, USERNAME_RULE } from "@/lib/validation/username";
+// Zod-free constants (A-089: keep zod out of this client bundle).
+import { ONBOARDING_AGE, ONBOARDING_WEIGHT_KG } from "@/lib/validation/onboarding-constants";
 import { STEP_REASONS, TOTAL_STEPS } from "./steps";
 import { DaysMatchNote, WeekdayChips } from "./weekday-chips";
 
@@ -50,6 +52,9 @@ interface Answers {
   usernameAuto: boolean;
   goal: string;
   experience: string;
+  /** Optional age/weight (text inputs; "" = blank). Profile-only — they don't steer the pick. */
+  age: string;
+  weight: string;
   daysPerWeek: number;
   sessionMinutes: number;
   preferredDays: number[];
@@ -96,6 +101,8 @@ function sanitizeDraft(raw: unknown, base: Answers): Answers {
     usernameAuto: typeof d.usernameAuto === "boolean" ? d.usernameAuto : base.usernameAuto,
     goal: oneOf(d.goal, GOALS, base.goal),
     experience: oneOf(d.experience, EXPERIENCE, base.experience),
+    age: str(d.age, 3, base.age),
+    weight: str(d.weight, 6, base.weight),
     daysPerWeek: int(d.daysPerWeek, 1, 7, base.daysPerWeek),
     sessionMinutes: int(d.sessionMinutes, 15, 180, base.sessionMinutes),
     preferredDays: Array.isArray(d.preferredDays)
@@ -137,6 +144,8 @@ export function OnboardingWizard({
     usernameAuto: !hasHandle,
     goal: "HYPERTROPHY",
     experience: "BEGINNER",
+    age: "",
+    weight: "",
     daysPerWeek: 3,
     sessionMinutes: 60,
     preferredDays: [],
@@ -489,6 +498,50 @@ export function OnboardingWizard({
                 {publicProfileLabel(shownHandle, publicOrigin)}
               </span>
             )}
+          </p>
+        </div>
+
+        {/* Idade e peso — opcionais, só para o perfil. Não mudam o programa
+            escolhido (quem decide é objetivo/experiência/dias/equipamento); o
+            peso vira o primeiro registro em "Corpo". */}
+        <div>
+          <div className="grid grid-cols-1 gap-4 min-[360px]:grid-cols-2">
+            <div>
+              <Label htmlFor="age">Idade (opcional)</Label>
+              <Input
+                id="age"
+                name="age"
+                type="number"
+                inputMode="numeric"
+                min={ONBOARDING_AGE.min}
+                max={ONBOARDING_AGE.max}
+                placeholder="Ex.: 30"
+                enterKeyHint="next"
+                className="mt-1.5"
+                value={answers.age}
+                onChange={(e) => update({ age: e.target.value })}
+              />
+            </div>
+            <div>
+              <Label htmlFor="weight">Peso em kg (opcional)</Label>
+              <Input
+                id="weight"
+                name="weight"
+                type="number"
+                inputMode="decimal"
+                step="0.1"
+                min={ONBOARDING_WEIGHT_KG.min}
+                max={ONBOARDING_WEIGHT_KG.max}
+                placeholder="Ex.: 72"
+                enterKeyHint="next"
+                className="mt-1.5"
+                value={answers.weight}
+                onChange={(e) => update({ weight: e.target.value })}
+              />
+            </div>
+          </div>
+          <p className="mt-1.5 text-xs text-muted">
+            Guardamos só no seu perfil. O peso vira seu primeiro registro em “Corpo”.
           </p>
         </div>
 

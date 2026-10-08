@@ -84,7 +84,7 @@ import { POLICY_VERSION } from "@/lib/legal/policy";
 export const metadata: Metadata = { title: "Hoje" };
 
 /** One-time notice params, cleared from the URL once shown. */
-const NOTICE_PARAMS = ["ativado", "anterior", "descartado", "salvo", "retomado", "excluido", "deload"];
+const NOTICE_PARAMS = ["ativado", "anterior", "descartado", "salvo", "retomado", "excluido", "deload", "novo"];
 /** A workout touched this recently is the one to go back to when the app reopens on Today (W-097). */
 const RESUME_WITHIN_MS = 3 * 60 * 60 * 1000;
 
@@ -439,6 +439,21 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
           {weekView?.kind === "week" ? `semana ${weekView.week}` : "semana de entrada"}
         </Notice>
       ) : null}
+      {param("novo") === "1" && enrollment ? (
+        // First visit after onboarding: the plan the wizard built is already
+        // active below. Welcome the user and keep the library one discreet tap away.
+        <div className="mt-6 border-l-2 border-l-accent bg-accent-soft px-3 py-2.5" data-welcome-novo>
+          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent">Seu treino está pronto</p>
+          <p className="mt-1 text-sm text-foreground/90">
+            Montamos <strong>{enrollment.program.name}</strong> a partir das suas respostas — é só começar. Dá para ajustar
+            ou trocar quando quiser.
+          </p>
+          <Link href="/app/programs" className="mt-1 inline-block text-xs font-medium text-accent underline underline-offset-2">
+            Ver outros programas
+          </Link>
+        </div>
+      ) : null}
+
       {undo ? (
         <div className="mt-6 border-l-2 border-l-accent bg-surface-2 px-3 py-2.5">
           <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em]">Programa trocado</p>

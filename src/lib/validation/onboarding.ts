@@ -1,5 +1,11 @@
 import { z } from "zod";
-import { EQUIPMENT_ACCESS_OPTIONS, EXPERIENCE_LEVELS, TRAINING_GOALS } from "./onboarding-constants";
+import {
+  EQUIPMENT_ACCESS_OPTIONS,
+  EXPERIENCE_LEVELS,
+  ONBOARDING_AGE,
+  ONBOARDING_WEIGHT_KG,
+  TRAINING_GOALS,
+} from "./onboarding-constants";
 
 // The option enums live zod-free in `onboarding-constants` so the Settings
 // profile form can import them without zod (A-089). Re-export so every server
@@ -14,6 +20,17 @@ export const onboardingSchema = z.object({
   sessionMinutes: z.coerce.number().int().min(15).max(180),
   equipmentAccess: z.enum(EQUIPMENT_ACCESS_OPTIONS),
   preferredDays: z.array(z.coerce.number().int().min(0).max(6)).default([]),
+  // Optional, collected for the user's own profile (they never gate or steer
+  // the recommender): an empty field passes as `undefined`. Age becomes a year
+  // of birth on save; weight becomes the first BODYWEIGHT weigh-in.
+  age: z.preprocess(
+    (v) => (v === "" || v == null ? undefined : v),
+    z.coerce.number().int().min(ONBOARDING_AGE.min).max(ONBOARDING_AGE.max).optional(),
+  ),
+  weight: z.preprocess(
+    (v) => (v === "" || v == null ? undefined : v),
+    z.coerce.number().min(ONBOARDING_WEIGHT_KG.min).max(ONBOARDING_WEIGHT_KG.max).optional(),
+  ),
   doesEndurance: z.coerce.boolean().default(false),
   enduranceNotes: z.string().trim().max(300).optional().or(z.literal("")),
   limitations: z.string().trim().max(500).optional().or(z.literal("")),

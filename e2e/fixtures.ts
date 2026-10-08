@@ -85,6 +85,11 @@ export async function newOnboardedUser(
     page.getByRole("button", { name: "Ver meu plano" }).click(),
   ]);
   const id = await userIdOf(page);
+  // Onboarding now auto-generates a starter plan (src/lib/programming/auto-enroll).
+  // The suite's fixtures set up their own program state, so reset to the
+  // program-less baseline the specs were written against; a fresh account has
+  // no workouts yet, so the enrollment and the program are the whole of it.
+  sql(`DELETE FROM "ProgramEnrollment" WHERE "userId" = ${sqlText(id)}; DELETE FROM "UserProgram" WHERE "userId" = ${sqlText(id)}`);
   const username = sql(`SELECT username FROM "user" WHERE id = ${sqlText(id)}`);
   setProfile(id, {
     isPublicAccount: opts.isPublicAccount,
