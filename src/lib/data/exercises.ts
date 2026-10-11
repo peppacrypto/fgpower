@@ -183,10 +183,12 @@ export const getExerciseBySlug = cache(async (slug: string) => {
   });
 });
 
-/** The program the user is running (latest active enrollment), or null. */
+/** The primary program the user is running (the scheduled strength plan), or null. */
 const activeProgramOf = cache(async (userId: string) => {
   const enrollment = await prisma.programEnrollment.findFirst({
-    where: { userId, status: "ACTIVE" },
+    // The "No seu programa" hint is about the main scheduled plan, not an
+    // on-demand yoga / mobility plan running alongside it.
+    where: { userId, status: "ACTIVE", track: "primary" },
     orderBy: { startedAt: "desc" },
     select: { program: { select: { id: true, name: true } } },
   });

@@ -49,6 +49,9 @@ interface GeneratedExercise {
   primaryMuscles: string[];
   secondaryMuscles: string[];
   media: { kind: string; url: string; width: number; height: number; sortOrder: number }[];
+  /** Optional YouTube tutorial (currently yoga poses) + its channel attribution. */
+  videoUrl?: string | null;
+  videoCredit?: string | null;
 }
 
 async function seedTaxonomy() {
@@ -693,6 +696,8 @@ async function seedExercises() {
           mechanics: ex.mechanics as never,
           instructionsEn: ex.instructionsEn,
           instructionsPt: ex.instructionsPt,
+          videoUrl: ex.videoUrl ?? null,
+          videoCredit: ex.videoCredit ?? null,
           searchText,
         },
         update: exerciseReseedUpdate(ex, searchText, adminEditedSlugs.has(ex.slug)),

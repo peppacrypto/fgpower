@@ -215,7 +215,8 @@ export async function closeBlock(db: Db, p: { userId: string; enrollmentId: stri
  */
 export async function settleFinishedBlock(userId: string, now: Date = new Date()): Promise<boolean> {
   const e = await prisma.programEnrollment.findFirst({
-    where: { userId, status: "ACTIVE" },
+    // Blocks live in the primary track; yoga / mobility plans have no block to settle.
+    where: { userId, status: "ACTIVE", track: "primary" },
     orderBy: { startedAt: "desc" },
     select: { id: true, currentWeek: true, startedAt: true, program: { select: { durationWeeks: true } } },
   });
@@ -278,20 +279,26 @@ export async function getRecentlyCompletedBlock(userId: string, now: Date = new 
   } catch (err) {
     console.error("settleFinishedBlock failed", userId, err);
   }
-  const active = await prisma.programEnrollment.findFirst({ where: { userId, status: "ACTIVE" }, select: { id: true } });
+  // Only a primary plan fills the hero: an on-demand yoga / mobility plan
+  // running alongside must not hide the "block completed · start GD N" state.
+  const active = await prisma.programEnrollment.findFirst({
+    where: { userId, status: "ACTIVE", track: "primary" },
+    select: { id: true },
+  });
   if (active) return null;
   const e = await prisma.programEnrollment.findFirst({
-    where: { userId, status: "COMPLETED", endedAt: { gte: new Date(now.getTime() - COMPLETED_BLOCK_WINDOW_MS) } },
+    where: { userId, status: "COMPLETED", track: "primary", endedAt: { gte: new Date(now.getTime() - COMPLETED_BLOCK_WINDOW_MS) } },
     orderBy: { endedAt: "desc" },
     select: { id: true, endedAt: true },
   });
   if (!e?.endedAt) return null;
-  // A-027 · the user already moved on if any enrollment — of any status —
-  // started after this block ended (the next block begun, even if since
+  // A-027 · the user already moved on if any primary enrollment — of any status
+  // — started after this block ended (the next block begun, even if since
   // stopped). Today then shows the series continuation / resume, not a stale
-  // "Bloco concluído" hero whose "Começar GD N" would fork a duplicate.
+  // "Bloco concluído" hero whose "Começar GD N" would fork a duplicate. A yoga
+  // plan started later is in another track and does not count as "moved on".
   const startedAfter = await prisma.programEnrollment.findFirst({
-    where: { userId, id: { not: e.id }, startedAt: { gt: e.endedAt } },
+    where: { userId, track: "primary", id: { not: e.id }, startedAt: { gt: e.endedAt } },
     select: { id: true },
   });
   if (startedAfter) return null;
@@ -465,14 +472,15 @@ export async function getSeriesContinuation(userId: string, now: Date = new Date
       select: { program: { select: { id: true, sourceTemplate: { select: { slug: true } } } } },
     }),
     prisma.programEnrollment.findFirst({
-      where: { userId, status: { in: ["COMPLETED", "ABANDONED"] }, endedAt: { not: null } },
+      // Series continuation / "resume stopped block" is about the primary track.
+      where: { userId, track: "primary", status: { in: ["COMPLETED", "ABANDONED"] }, endedAt: { not: null } },
       orderBy: { endedAt: "desc" },
       select: {
         status: true,
         program: { select: { id: true, name: true, status: true, sourceTemplate: { select: { slug: true } } } },
       },
     }),
-    prisma.programEnrollment.findFirst({ where: { userId, status: "ACTIVE" }, select: { id: true } }),
+    prisma.programEnrollment.findFirst({ where: { userId, status: "ACTIVE", track: "primary" }, select: { id: true } }),
   ]);
   const order = (slug: string) => (GD_SERIES as readonly string[]).indexOf(slug);
   const finishedGd = [...new Set(completed.flatMap((e) => e.program.sourceTemplate?.slug ?? []))]

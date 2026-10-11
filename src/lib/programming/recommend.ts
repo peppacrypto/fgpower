@@ -319,9 +319,13 @@ export function recommendTemplates<T extends RecommendableTemplate>(
   const { passed, next } = seriesStanding(history);
   return templates
     .map((template, i) => ({ template, i, fit: templateFit(profile.equipmentAccess, template), score: scoreTemplate(profile, template) }))
-    // Mobility is a complementary track with its own library shelf, never a
-    // primary "Para você" recommendation for a strength/hypertrophy profile.
-    .filter(({ template, fit }) => fit !== "none" && !passed.has(template.slug) && template.goal !== "MOBILITY")
+    // Mobility and yoga are complementary tracks with their own library
+    // shelves, never a primary "Para você" recommendation for a strength /
+    // hypertrophy profile.
+    .filter(
+      ({ template, fit }) =>
+        fit !== "none" && !passed.has(template.slug) && template.goal !== "MOBILITY" && template.goal !== "YOGA",
+    )
     .sort(
       (a, b) =>
         Number(b.template.slug === next) - Number(a.template.slug === next) ||

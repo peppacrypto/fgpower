@@ -6,6 +6,7 @@ export const GOAL_LABEL: Record<string, string> = {
   SPORTS_PERFORMANCE: "Performance esportiva",
   FAT_LOSS: "Emagrecer / definir",
   MOBILITY: "Mobilidade",
+  YOGA: "Yoga",
 };
 
 export const EXPERIENCE_LABEL: Record<string, string> = {
@@ -23,6 +24,7 @@ export const STYLE_LABEL: Record<string, string> = {
   HYBRID: "Híbrido",
   ENDURANCE_SUPPORT: "Suporte à resistência",
   MOBILITY: "Mobilidade & flexibilidade",
+  YOGA: "Yoga",
 };
 
 /** The names people also search by (gym slang keeps the English terms). */
@@ -34,6 +36,7 @@ export const STYLE_ALIASES: Record<string, string> = {
   HYBRID: "",
   ENDURANCE_SUPPORT: "corrida endurance",
   MOBILITY: "mobilidade alongamento flexibilidade soltura aquecimento",
+  YOGA: "yoga ioga asana postura flexibilidade meditacao respiracao vinyasa",
 };
 
 /** What a program needs / what the user has (same wording as onboarding). */
@@ -98,6 +101,7 @@ export const GOAL_HUE: Record<string, { bg: string; fg: string; spine: string }>
   SPORTS_PERFORMANCE: { bg: "var(--tag-pink-bg)", fg: "var(--tag-pink-fg)", spine: "var(--tag-pink-fg)" },
   FAT_LOSS: { bg: "var(--accent-soft)", fg: "var(--accent)", spine: "var(--accent)" },
   MOBILITY: { bg: "var(--tag-teal-bg)", fg: "var(--tag-teal-fg)", spine: "var(--tag-teal-fg)" },
+  YOGA: { bg: "var(--tag-indigo-bg)", fg: "var(--tag-indigo-fg)", spine: "var(--tag-indigo-fg)" },
 };
 
 /** The one honest line for anyone whose goal is losing fat. */

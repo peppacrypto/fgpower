@@ -183,8 +183,9 @@ export async function updateProfile(_prev: ProfileUpdateState, formData: FormDat
   if (data.preferredDays !== undefined) {
     // New preferred days re-lay the active program's week (Today's schedule, reminders).
     try {
+      // Only the primary plan owns the week (yoga / mobility are on-demand).
       const active = await prisma.programEnrollment.findFirst({
-        where: { userId: user.id, status: "ACTIVE" },
+        where: { userId: user.id, status: "ACTIVE", track: "primary" },
         select: { programId: true },
       });
       if (active) await applyWeekLayout(prisma, user.id, active.programId);

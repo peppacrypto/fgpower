@@ -247,10 +247,11 @@ test("the library starts filtered by the profile, shelved, and its search speaks
   const gd = library.getByRole("region", { name: "Plano GD" });
   await expect(gd).toBeVisible();
   // Unfiltered, shelves preview their first cards; every program is still in the page.
+  // 66 = 49 strength + 9 mobility (3631d91) + 7 yoga + 1 flagship (generated: 65).
   const hrefs = await library
     .locator('a[href^="/app/programs/templates/"]')
     .evaluateAll((links) => new Set(links.map((a) => a.getAttribute("href"))).size);
-  expect(hrefs).toBe(59);
+  expect(hrefs).toBe(66);
   // The GD card folds its 9 blocks away (still links in the page) behind one toggle.
   const gdBlocks = gd.locator('ol a[href^="/app/programs/templates/"]');
   await expect(gdBlocks).toHaveCount(9);

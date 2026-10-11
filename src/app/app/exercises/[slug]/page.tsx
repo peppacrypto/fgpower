@@ -86,7 +86,12 @@ export default async function ExerciseDetailPage({ params, searchParams }: PageP
         {backToWorkout ? "Voltar ao treino" : "Exercícios"}
       </Link>
       <div className="grid gap-6 lg:grid-cols-2">
-        <TechniqueFrames name={exercise.namePt} media={exercise.media} />
+        <TechniqueFrames
+          name={exercise.namePt}
+          media={exercise.media}
+          videoUrl={exercise.videoUrl}
+          videoCredit={exercise.videoCredit}
+        />
 
         <div className="flex flex-col gap-4">
           <div className="flex items-start justify-between gap-3">

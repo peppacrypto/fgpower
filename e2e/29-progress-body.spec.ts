@@ -290,7 +290,9 @@ test("Today asks for the weigh-in in the weeks the program asks for it, and stay
   await page.goto("/app/progress/body");
   const banner = page.locator("[data-measure-banner]");
   await expect(banner).toHaveAttribute("data-measure-banner", "measure");
-  await expect(banner).toContainText("Semana de medidas · GD 1 · sem. 1");
+  // The week suffix depends on the weekday the block starts: "sem. 1" Mon–Wed,
+  // "semana de entrada" in a Thu–Sun entry week (A-061). Accept either.
+  await expect(banner).toContainText(/Semana de medidas · GD 1 · (sem\. 1|semana de entrada)/);
   await expect(banner).toContainText("O programa pede o peso médio de 7 dias, cintura e membros.");
 
   // Week 5: nothing asked. Weighed today: nothing shown.

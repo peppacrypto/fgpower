@@ -13,6 +13,8 @@ export interface GeneratedExerciseFields {
   mechanics: string;
   instructionsEn: string[];
   instructionsPt: string[];
+  videoUrl?: string | null;
+  videoCredit?: string | null;
 }
 
 /**
@@ -38,6 +40,9 @@ export function exerciseReseedUpdate(
     mechanics: ex.mechanics as never,
     instructionsEn: ex.instructionsEn,
     instructionsPt: ex.instructionsPt,
+    // Tutorial video tracks the catalog (null clears it), like other content.
+    videoUrl: ex.videoUrl ?? null,
+    videoCredit: ex.videoCredit ?? null,
     ...(adminEdited ? {} : { nameEn: ex.nameEn, namePt: ex.namePt, searchText }),
   };
 }

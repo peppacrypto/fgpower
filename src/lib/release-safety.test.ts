@@ -26,6 +26,8 @@ const REGISTERED_ADDED_ENUM_VALUES = new Set<string>([
   "NotificationType.WORKOUT_MILESTONE", // 20260929100000_social_core (95e3c69) — first roll-forward-only release
   "TrainingGoal.MOBILITY", // 20261003120000_mobility_goal_and_style (3631d91)
   "TrainingStyle.MOBILITY", // 20261003120000_mobility_goal_and_style (3631d91)
+  "TrainingGoal.YOGA", // 20261010120000_yoga_goal_and_style
+  "TrainingStyle.YOGA", // 20261010120000_yoga_goal_and_style
 ]);
 
 const ADD_VALUE = /ALTER\s+TYPE\s+"(\w+)"\s+ADD\s+VALUE\s+(?:IF\s+NOT\s+EXISTS\s+)?'([^']+)'/gi;

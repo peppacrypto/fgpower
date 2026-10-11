@@ -146,6 +146,9 @@ enum TrainingGoal {
   /// Mobility / flexibility programs (templates only; not an onboarding goal —
   /// a complementary track alongside the strength plans, with its own library shelf).
   MOBILITY
+  /// Yoga programs for multiple levels (templates only; not an onboarding goal —
+  /// a complementary track alongside the strength plans, its own library shelf).
+  YOGA
 }
 
 enum ExperienceLevel {
@@ -390,6 +393,13 @@ model Exercise {
   // Structured coaching content (see ExerciseContent type in src/lib/exercises/content.ts)
   contentEn         Json?
   contentPt         Json?
+  // Optional tutorial video (currently yoga poses): a YouTube watch/embed URL
+  // shown as a click-to-load embed on the exercise page and the workout
+  // technique sheet, with `videoCredit` as the visible channel attribution.
+  // Kept as a dedicated field (not ExerciseMedia) so the many thumbnail
+  // queries that take the first image stay image-only and untouched.
+  videoUrl          String?
+  videoCredit       String?
   // Normalized (lowercase, accent-stripped) text used for search
   searchText        String           @default("")
   createdAt         DateTime         @default(now())
@@ -622,6 +632,8 @@ enum TrainingStyle {
   ENDURANCE_SUPPORT
   /// Mobility / flexibility routines (stretches, dynamic drills, foam rolling).
   MOBILITY
+  /// Yoga routines (asana holds and flows); a complementary, on-demand track.
+  YOGA
 }
 
 enum ProgressionStrategy {
@@ -849,18 +861,26 @@ model ProgramEnrollment {
   /// surfaces (getProgramRestart) to say "você encurtou a duração; retome de
   /// onde parou". Only ever set alongside status ABANDONED.
   endedByDurationEdit Boolean        @default(false)
+  /// Which parallel program track this enrollment belongs to: "primary" (the
+  /// scheduled strength plan that owns the user's week — e.g. the GD series),
+  /// "mobility", or "yoga". Denormalized from the program's goal at activation
+  /// (programming/tracks.ts trackOf) so the partial unique index can scope the
+  /// "one active" rule per track. Complementary tracks ("mobility"/"yoga") run
+  /// ON DEMAND alongside the primary one and never claim weekdays.
+  track             String           @default("primary")
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
 
   sessions WorkoutSession[]
 
-  // At most one ACTIVE enrollment per user is enforced by a PARTIAL UNIQUE
-  // INDEX that Prisma 7 cannot express in PSL:
-  //   CREATE UNIQUE INDEX "ProgramEnrollment_userId_active_key"
-  //     ON "ProgramEnrollment" ("userId") WHERE status = 'ACTIVE';
-  // It is created in migration 20261004181700. Do NOT run `prisma migrate dev`
-  // to generate migrations — it does not see this index and would drop it;
-  // migrations in this repo are hand-authored.
+  // At most one ACTIVE enrollment per user PER TRACK is enforced by a PARTIAL
+  // UNIQUE INDEX that Prisma 7 cannot express in PSL:
+  //   CREATE UNIQUE INDEX "ProgramEnrollment_userId_track_active_key"
+  //     ON "ProgramEnrollment" ("userId", "track") WHERE status = 'ACTIVE';
+  // It is created in migration 20261010_enrollment_track_scoped_active (which
+  // replaces the user-wide index from 20261004181700). Do NOT run `prisma
+  // migrate dev` to generate migrations — it does not see this index and would
+  // drop it; migrations in this repo are hand-authored.
   @@index([userId, status])
   // A-036 · back the ON DELETE CASCADE from UserProgram so deletes don't seq-scan.
   @@index([programId])

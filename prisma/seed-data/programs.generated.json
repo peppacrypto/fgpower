@@ -21338,5 +21338,2391 @@
     ]
    }
   ]
- }
+ },
+  {
+    "slug": "yoga-iniciante-fundamentos",
+    "nameEn": "Beginner Yoga — Foundations",
+    "namePt": "Yoga Iniciante — Fundamentos",
+    "taglineEn": "Learn the essential standing and seated poses with long, gentle holds — four short routines that build a calm, confident yoga base.",
+    "taglinePt": "Aprenda as posturas essenciais em pé e sentadas com sustentações longas e suaves — quatro rotinas curtas que constroem uma base de yoga calma e segura.",
+    "descriptionEn": "A four-routine introduction to yoga for complete beginners. Each session teaches a handful of foundational poses held gently and long enough to learn the shape and the breath. Bodyweight only, nothing to buy. You rotate through standing foundations, balance, floor/spine work and a gentle hip-opening wind-down, so across the week your whole body is covered. Range is built gradually and never into pain.",
+    "descriptionPt": "### O que é\n\nUma introdução ao yoga em **quatro rotinas**, pensada para quem está começando do zero. Cada sessão ensina um punhado de posturas fundamentais, sustentadas com calma e por tempo suficiente para você aprender a forma e a respiração.\n\n- **Rotina 1** — fundamentos em pé\n- **Rotina 2** — equilíbrio e base\n- **Rotina 3** — chão e coluna\n- **Rotina 4** — abertura suave de quadril\n\n### Como funciona\n\n- Só peso do corpo — **nada para comprar**.\n- As posturas são sustentadas de forma **longa e suave**, sempre sem dor.\n- A respiração guia tudo: inspire para alongar, expire para relaxar um pouco mais fundo.\n- A meta não é intensidade, é **aprender e criar o hábito**.",
+    "audienceEn": "Complete beginners who want a gentle, structured way into yoga at home with no equipment and no prior experience.",
+    "audiencePt": "Iniciantes totais que querem uma porta de entrada suave e estruturada para o yoga em casa, sem equipamento e sem experiência prévia.",
+    "goal": "YOGA",
+    "experienceLevel": "BEGINNER",
+    "daysPerWeek": 4,
+    "durationWeeks": 4,
+    "sessionMinutes": 20,
+    "equipmentAccess": "HOME_BODYWEIGHT",
+    "trainingStyle": "YOGA",
+    "progressionStrategy": "MANUAL",
+    "rationaleEn": "### Why this works\n\n**Held poses build range of motion.** Static stretching reliably improves flexibility (*medeiros-2016*), and *thomas-2018* indicates meaningful gains come from an accumulated dose of roughly 5+ minutes per muscle group per week — so each routine concentrates enough hold time on its focus area. Four short sessions give whole-body **coverage and adherence** without overwhelming a beginner.\n\n**Warm, then hold.** Each session opens with easier mobilizing shapes (and Cat-Cow where the spine needs waking up), consistent with the general warm-up benefit in *fradkin-2010* and *opplert-2018*; the longer static holds come later, where *behm-2016* shows they safely build range.\n\n**Gentle frequency, done safely.** This matches the ACSM guidance in *garber-2011* for flexibility work on 2-3+ days a week. We hold at a comfortable range and deepen gradually over four weeks — never into pain.",
+    "rationalePt": "### Por que isso funciona\n\n**Posturas sustentadas constroem amplitude.** O alongamento estático melhora a flexibilidade de forma confiável (*medeiros-2016*), e o *thomas-2018* indica que ganhos relevantes vêm de uma dose acumulada de cerca de 5 minutos ou mais por grupo muscular por semana — por isso cada rotina concentra tempo de sustentação suficiente na sua região de foco. Quatro sessões curtas dão **cobertura e constância** para o corpo todo sem sobrecarregar quem está começando.\n\n**Aquecer e depois sustentar.** Cada sessão começa com formas mais fáceis de mobilização (e Gato-Vaca quando a coluna precisa despertar), em linha com o benefício do aquecimento em *fradkin-2010* e *opplert-2018*; as sustentações estáticas mais longas vêm depois, onde *behm-2016* mostra que constroem amplitude com segurança.\n\n**Frequência suave, com segurança.** Isso segue a recomendação da ACSM em *garber-2011* para flexibilidade em 2 a 3 ou mais dias por semana. Sustentamos numa amplitude confortável e aprofundamos aos poucos ao longo de quatro semanas — nunca entrando na dor.",
+    "restGuidanceEn": "Keep rests short and calm: 15-25 s between poses, just enough to switch sides or set up the next shape. Breathe slowly throughout and let each exhale ease you a touch deeper. A session runs about 20 minutes; weeks 3-4 run a few minutes longer as holds lengthen.",
+    "restGuidancePt": "Mantenha os descansos curtos e calmos: 15 a 25 s entre as posturas, só o suficiente para trocar de lado ou montar a próxima forma. Respire devagar o tempo todo e use cada expiração para relaxar um pouco mais fundo. Uma sessão leva cerca de 20 minutos; nas semanas 3 e 4, conte com alguns minutos a mais conforme as sustentações alongam.",
+    "weeklyGuidance": [
+      {
+        "week": 1,
+        "rirTarget": null,
+        "setsNotePt": "Semana 1: 2 séries por postura. Segure cada posição 20-30 s numa amplitude confortável; no Gato-Vaca, 8-10 ciclos lentos. A meta é aprender a forma e a respiração.",
+        "notePt": "Foco em aprender, não em profundidade. Conheça o nome e o formato de cada postura.",
+        "setsNote": "Week 1: 2 sets per pose. Hold each 20-30 s at a comfortable range; Cat-Cow 8-10 slow cycles. The goal is learning the shape and the breath.",
+        "noteEn": "Focus on learning, not depth. Get to know the name and shape of each pose."
+      },
+      {
+        "week": 2,
+        "rirTarget": null,
+        "setsNotePt": "Semana 2: mantenha 2 séries e suba as sustentações para 25-40 s, aprofundando levemente — sempre sem dor.",
+        "notePt": "Comece a sentir o alongamento um pouco mais longe. Respire fundo em cada postura.",
+        "setsNote": "Week 2: keep 2 sets and raise holds to 25-40 s, easing slightly deeper — always pain-free.",
+        "noteEn": "Start feeling the stretch a touch further. Breathe deep in each pose."
+      },
+      {
+        "week": 3,
+        "rirTarget": null,
+        "setsNotePt": "Semana 3: 3 séries nas principais posturas, 30-45 s cada. Agora você acumula mais tempo sob alongamento por região.",
+        "notePt": "A amplitude começa a render. Mantenha a respiração longa e estável.",
+        "setsNote": "Week 3: 3 sets on the main poses, 30-45 s each. Now you accumulate more time under stretch per area.",
+        "noteEn": "Range starts to pay off. Keep the breath long and steady."
+      },
+      {
+        "week": 4,
+        "rirTarget": null,
+        "setsNotePt": "Semana 4: 3 séries, 40-60 s, buscando sua amplitude máxima confortável. Compare com a semana 1.",
+        "notePt": "Semana de consolidação. Você deve alcançar mais longe e se sentir mais firme nas posturas.",
+        "setsNote": "Week 4: 3 sets, 40-60 s, reaching your comfortable maximum. Compare with week 1.",
+        "noteEn": "Consolidation week. You should reach further and feel steadier in the poses."
+      }
+    ],
+    "evidenceKeys": [
+      "thomas-2018-stretching-typology-duration-rom",
+      "medeiros-2016-static-stretching-hamstring-flexibility-review",
+      "opplert-2018-dynamic-stretching-flexibility-performance-review",
+      "behm-2016-acute-stretching-performance-rom-injury-review",
+      "garber-2011-acsm-quantity-quality-exercise",
+      "fradkin-2010-warm-up-physical-performance-meta-analysis"
+    ],
+    "principleSlugs": [
+      "range-of-motion",
+      "warm-up",
+      "training-frequency",
+      "progressive-overload",
+      "beginner-adaptation"
+    ],
+    "days": [
+      {
+        "dayIndex": 0,
+        "nameEn": "Standing Foundations",
+        "namePt": "Fundamentos em Pé",
+        "focusEn": "Posture, legs and the basic standing shapes",
+        "focusPt": "Postura, pernas e as formas básicas em pé",
+        "estimatedMinutes": 20,
+        "exercises": [
+          {
+            "exerciseSlug": "mountain-pose",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 40,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Stand tall and find your base — even weight, long spine, relaxed shoulders. This is the reference for every standing pose.",
+            "notesPt": "As repetições são segundos de sustentação. Fique em pé e ereto e encontre sua base — peso igual, coluna longa, ombros relaxados. Esta é a referência para toda postura em pé."
+          },
+          {
+            "exerciseSlug": "standing-forward-fold",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 45,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Hinge from the hips and hang, knees soft. Let the head and arms be heavy.",
+            "notesPt": "As repetições são segundos de sustentação. Incline a partir do quadril e penda, joelhos leves. Deixe a cabeça e os braços pesados."
+          },
+          {
+            "exerciseSlug": "halfway-lift",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 40,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Hands to the shins, flatten the back to a long line. Learn the straight-spine shape.",
+            "notesPt": "As repetições são segundos de sustentação. Mãos nas canelas, deixe as costas retas numa linha longa. Aprenda a forma de coluna reta."
+          },
+          {
+            "exerciseSlug": "chair-pose",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 40,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Sit the hips back, weight in the heels, arms up. Builds leg strength for standing poses.",
+            "notesPt": "As repetições são segundos de sustentação. Leve o quadril para trás, peso nos calcanhares, braços para cima. Fortalece as pernas para as posturas em pé."
+          },
+          {
+            "exerciseSlug": "warrior-1",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 45,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Front knee over the ankle, hips to the front, arms up. Hold tall and steady. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Joelho da frente sobre o tornozelo, quadril para frente, braços para cima. Mantenha ereto e firme. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "warrior-2",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 45,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Open the hips, arms wide, gaze over the front hand. Keep the torso upright. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Abra o quadril, braços largos, olhar sobre a mão da frente. Mantenha o tronco ereto. Faça os dois lados."
+          }
+        ]
+      },
+      {
+        "dayIndex": 1,
+        "nameEn": "Balance & Base",
+        "namePt": "Equilíbrio & Base",
+        "focusEn": "Standing balance and a steady base",
+        "focusPt": "Equilíbrio em pé e uma base firme",
+        "estimatedMinutes": 19,
+        "exercises": [
+          {
+            "exerciseSlug": "mountain-pose",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 40,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Ground down and lengthen up. Steady the breath before the balances.",
+            "notesPt": "As repetições são segundos de sustentação. Enraíze e alongue para cima. Estabilize a respiração antes dos equilíbrios."
+          },
+          {
+            "exerciseSlug": "tree-pose",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 40,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Foot on the inner calf or thigh (never the knee), hands at the chest or overhead, gaze fixed. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Pé na panturrilha ou coxa internas (nunca no joelho), mãos no peito ou acima da cabeça, olhar fixo. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "chair-pose",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 40,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Sit back and down, chest lifted. Keep the knees from caving in.",
+            "notesPt": "As repetições são segundos de sustentação. Sente para trás e para baixo, peito elevado. Não deixe os joelhos caírem para dentro."
+          },
+          {
+            "exerciseSlug": "warrior-2",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 45,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Strong wide base, front knee bent, arms long. Breathe into the open hips. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Base larga e firme, joelho da frente flexionado, braços longos. Respire em direção ao quadril aberto. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "triangle-pose",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 45,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Straight legs, hand to the shin or a block, top arm up, chest open. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Pernas estendidas, mão na canela ou num bloco, braço de cima para cima, peito aberto. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "childs-pose",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 45,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Sit back onto the heels, arms forward, forehead down. A calm rest to finish.",
+            "notesPt": "As repetições são segundos de sustentação. Sente sobre os calcanhares, braços à frente, testa no chão. Um descanso calmo para encerrar."
+          }
+        ]
+      },
+      {
+        "dayIndex": 2,
+        "nameEn": "Floor & Spine",
+        "namePt": "Chão & Coluna",
+        "focusEn": "Gentle backbends, forward folds and twists",
+        "focusPt": "Extensões suaves, flexões à frente e torções",
+        "estimatedMinutes": 20,
+        "exercises": [
+          {
+            "exerciseSlug": "cat-cow",
+            "sets": 2,
+            "repMin": 8,
+            "repMax": 12,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "Flow slowly between Cat and Cow, one cycle per breath — 8-12 cycles to warm and mobilize the spine before the holds.",
+            "notesPt": "Flua devagar entre Gato e Vaca, um ciclo por respiração — 8 a 12 ciclos para aquecer e mobilizar a coluna antes dos alongamentos."
+          },
+          {
+            "exerciseSlug": "cobra-pose",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 40,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Hands under the shoulders, lift the chest with the hips down. Keep the shoulders relaxed.",
+            "notesPt": "As repetições são segundos de sustentação. Mãos sob os ombros, eleve o peito com o quadril no chão. Mantenha os ombros relaxados."
+          },
+          {
+            "exerciseSlug": "sphinx-pose",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 45,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Forearms down, gentle lift of the chest. A mild, sustainable backbend.",
+            "notesPt": "As repetições são segundos de sustentação. Antebraços no chão, leve elevação do peito. Uma extensão suave e sustentável."
+          },
+          {
+            "exerciseSlug": "seated-forward-fold",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 45,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Legs straight, hinge from the hips toward the feet, knees soft. Lead with the chest.",
+            "notesPt": "As repetições são segundos de sustentação. Pernas estendidas, incline a partir do quadril em direção aos pés, joelhos leves. Conduza com o peito."
+          },
+          {
+            "exerciseSlug": "seated-spinal-twist",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 45,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Lengthen up, then twist from the base of the spine. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Alongue para cima e depois gire a partir da base da coluna. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "childs-pose",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 45,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Rest back onto the heels and let the back release. Slow the breath.",
+            "notesPt": "As repetições são segundos de sustentação. Descanse sobre os calcanhares e deixe as costas relaxarem. Desacelere a respiração."
+          }
+        ]
+      },
+      {
+        "dayIndex": 3,
+        "nameEn": "Gentle Hip Opening",
+        "namePt": "Abertura Suave do Quadril",
+        "focusEn": "Hips, groin and a calming wind-down",
+        "focusPt": "Quadril, virilha e um encerramento calmante",
+        "estimatedMinutes": 20,
+        "exercises": [
+          {
+            "exerciseSlug": "low-lunge",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 45,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Back knee down, hips sinking forward for a front-of-hip stretch. Torso tall. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Joelho de trás no chão, quadril descendo para frente para alongar a frente do quadril. Tronco ereto. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "bound-angle-pose",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 45,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Soles together, knees open, hinge gently forward. Feel the inner thighs.",
+            "notesPt": "As repetições são segundos de sustentação. Solas unidas, joelhos abertos, incline suavemente à frente. Sinta a parte interna das coxas."
+          },
+          {
+            "exerciseSlug": "head-to-knee-pose",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 45,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. One leg straight, fold over it with a long spine. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Uma perna estendida, incline sobre ela com a coluna longa. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "bridge-pose",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 40,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Feet flat, lift the hips, thighs parallel. Keep the neck relaxed.",
+            "notesPt": "As repetições são segundos de sustentação. Pés apoiados, eleve o quadril, coxas paralelas. Mantenha o pescoço relaxado."
+          },
+          {
+            "exerciseSlug": "reclined-spinal-twist",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 45,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Knee across the body toward the floor, shoulders down. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Joelho cruzando o corpo em direção ao chão, ombros no chão. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "corpse-pose",
+            "sets": 2,
+            "repMin": 30,
+            "repMax": 90,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Lie still, eyes closed, body heavy. Let the breath be natural to close the session.",
+            "notesPt": "As repetições são segundos de sustentação. Deite imóvel, olhos fechados, corpo pesado. Deixe a respiração natural para encerrar a sessão."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "yoga-suave-restaurativa",
+    "nameEn": "Gentle & Restorative Yoga",
+    "namePt": "Yoga Suave & Restaurativa",
+    "taglineEn": "Three calming routines of long, supported holds to release tension, quiet the mind and help you unwind.",
+    "taglinePt": "Três rotinas calmantes de sustentações longas e apoiadas para soltar tensão, aquietar a mente e desacelerar.",
+    "descriptionEn": "A slow, restful practice built from supported, long-held poses. Three routines — spine decompression, hips and floor, and deep relaxation — each using very long, easy holds with props (a cushion or folded blanket) wherever they help. Nothing is forced; the aim is to down-regulate, release held tension and rest. Ideal before bed, on rest days, or whenever you feel wound up.",
+    "descriptionPt": "### O que é\n\nUma prática lenta e repousante, feita de posturas **apoiadas e sustentadas por bastante tempo**. São três rotinas:\n\n- **Rotina 1** — descompressão da coluna\n- **Rotina 2** — quadris e chão\n- **Rotina 3** — relaxamento profundo\n\n### Como funciona\n\n- Sustentações **muito longas e fáceis**, com apoios (uma almofada ou cobertor dobrado) sempre que ajudarem.\n- **Nada é forçado**: o objetivo é desacelerar, soltar a tensão acumulada e descansar.\n- Ideal **antes de dormir**, em dias de descanso ou quando você estiver tenso.\n- Respiração lenta e longa o tempo todo.",
+    "audienceEn": "Anyone wanting a calming, low-effort practice to relax and release tension — great for stress, sleep, or active-recovery days.",
+    "audiencePt": "Qualquer pessoa que queira uma prática calmante e de baixo esforço para relaxar e soltar tensão — ótima para estresse, sono ou dias de recuperação ativa.",
+    "goal": "YOGA",
+    "experienceLevel": "BEGINNER",
+    "daysPerWeek": 3,
+    "durationWeeks": 4,
+    "sessionMinutes": 25,
+    "equipmentAccess": "HOME_BODYWEIGHT",
+    "trainingStyle": "YOGA",
+    "progressionStrategy": "MANUAL",
+    "rationaleEn": "### Why this works\n\n**Long, easy holds release tension and build range.** Static stretching improves flexibility (*medeiros-2016*), and longer holds accumulate the per-week dose *thomas-2018* links to meaningful range — here applied gently, for relaxation rather than intensity. *behm-2016* confirms long static holds build range safely when nothing explosive follows, which is exactly the point of a restorative session.\n\n**Minimal warm-up, maximal calm.** Because the holds are passive and supported, only light mobilizing is needed first; the practice is deliberately low-arousal. Slow breathing paired with long holds is what shifts the body toward rest.\n\n**Frequency without strain.** Three easy sessions a week fit comfortably within the ACSM flexibility guidance (*garber-2011*) and can be done daily if desired, since intensity stays low and pain-free.",
+    "rationalePt": "### Por que isso funciona\n\n**Sustentações longas e fáceis soltam tensão e constroem amplitude.** O alongamento estático melhora a flexibilidade (*medeiros-2016*), e sustentações mais longas acumulam a dose semanal que o *thomas-2018* associa a ganhos de amplitude — aqui aplicada de forma suave, para relaxar e não para intensidade. O *behm-2016* confirma que sustentações estáticas longas constroem amplitude com segurança quando nada explosivo vem depois, que é justamente o caso de uma sessão restaurativa.\n\n**Aquecimento mínimo, calma máxima.** Como as sustentações são passivas e apoiadas, basta uma mobilização leve no início; a prática é propositalmente de baixa ativação. Respiração lenta somada a sustentações longas é o que leva o corpo em direção ao descanso.\n\n**Frequência sem esforço.** Três sessões fáceis por semana cabem com folga na recomendação de flexibilidade da ACSM (*garber-2011*) e podem ser feitas diariamente, se quiser, já que a intensidade fica baixa e sem dor.",
+    "restGuidanceEn": "There is no rush here. Take 30-45 s between poses, breathing slowly, and let the body settle before moving. Use a cushion or folded blanket under the hips, knees or head for support. Holds are long (60 s and up); stay only as long as it feels restful.",
+    "restGuidancePt": "Aqui não há pressa. Leve de 30 a 45 s entre as posturas, respirando devagar, e deixe o corpo se acomodar antes de mudar. Use uma almofada ou cobertor dobrado sob o quadril, os joelhos ou a cabeça como apoio. As sustentações são longas (60 s ou mais); fique só o tempo que for confortável.",
+    "weeklyGuidance": [
+      {
+        "week": 1,
+        "rirTarget": null,
+        "setsNotePt": "Semana 1: 1-2 séries por postura. Segure 45-60 s de forma totalmente relaxada, apoiando o corpo nos props. Só respire e solte.",
+        "notePt": "Nada de forçar. Encontre a versão mais confortável de cada postura e descanse nela.",
+        "setsNote": "Week 1: 1-2 sets per pose. Hold 45-60 s fully relaxed, letting props support you. Just breathe and release.",
+        "noteEn": "No forcing. Find the most comfortable version of each pose and rest in it."
+      },
+      {
+        "week": 2,
+        "rirTarget": null,
+        "setsNotePt": "Semana 2: 2 séries, sustentações de 60-90 s. Deixe a respiração ficar mais lenta e longa.",
+        "notePt": "Alongue um pouco o tempo em cada postura. Perceba a tensão se dissolvendo a cada expiração.",
+        "setsNote": "Week 2: 2 sets, holds of 60-90 s. Let the breath grow slower and longer.",
+        "noteEn": "Lengthen the time in each pose a little. Notice tension dissolving with each exhale."
+      },
+      {
+        "week": 3,
+        "rirTarget": null,
+        "setsNotePt": "Semana 3: 2 séries, 90-120 s. Priorize o relaxamento total do rosto, da mandíbula e dos ombros.",
+        "notePt": "Quanto mais você relaxa, mais fundo a postura trabalha. Deixe o peso do corpo ir para o apoio.",
+        "setsNote": "Week 3: 2 sets, 90-120 s. Prioritize fully relaxing the face, jaw and shoulders.",
+        "noteEn": "The more you relax, the deeper the pose works. Let your weight sink into the support."
+      },
+      {
+        "week": 4,
+        "rirTarget": null,
+        "setsNotePt": "Semana 4: 2 séries, 120-180 s nas posturas mais passivas. Esta é uma prática de soltar, não de alcançar.",
+        "notePt": "Semana de aprofundar o descanso. Saia da sessão mais leve do que entrou.",
+        "setsNote": "Week 4: 2 sets, 120-180 s on the most passive poses. This is a practice of letting go, not reaching.",
+        "noteEn": "A week to deepen the rest. Leave each session lighter than you arrived."
+      }
+    ],
+    "evidenceKeys": [
+      "thomas-2018-stretching-typology-duration-rom",
+      "medeiros-2016-static-stretching-hamstring-flexibility-review",
+      "opplert-2018-dynamic-stretching-flexibility-performance-review",
+      "behm-2016-acute-stretching-performance-rom-injury-review",
+      "garber-2011-acsm-quantity-quality-exercise",
+      "fradkin-2010-warm-up-physical-performance-meta-analysis"
+    ],
+    "principleSlugs": [
+      "range-of-motion",
+      "warm-up",
+      "training-frequency",
+      "progressive-overload",
+      "beginner-adaptation"
+    ],
+    "days": [
+      {
+        "dayIndex": 0,
+        "nameEn": "Spine Decompression",
+        "namePt": "Descompressão da Coluna",
+        "focusEn": "Unloading and softening the whole back",
+        "focusPt": "Descarregar e amaciar as costas inteiras",
+        "estimatedMinutes": 25,
+        "exercises": [
+          {
+            "exerciseSlug": "cat-cow",
+            "sets": 2,
+            "repMin": 8,
+            "repMax": 12,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "Flow slowly between Cat and Cow, one cycle per breath — 8-12 cycles to warm and mobilize the spine before the holds.",
+            "notesPt": "Flua devagar entre Gato e Vaca, um ciclo por respiração — 8 a 12 ciclos para aquecer e mobilizar a coluna antes dos alongamentos."
+          },
+          {
+            "exerciseSlug": "childs-pose",
+            "sets": 2,
+            "repMin": 45,
+            "repMax": 90,
+            "rirTarget": null,
+            "restSeconds": 30,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Sit back onto the heels, arms forward or alongside the body. A cushion between hips and heels softens it. Breathe into the back.",
+            "notesPt": "As repetições são segundos de sustentação. Sente sobre os calcanhares, braços à frente ou ao lado do corpo. Uma almofada entre o quadril e os calcanhares amacia a postura. Respire em direção às costas."
+          },
+          {
+            "exerciseSlug": "sphinx-pose",
+            "sets": 2,
+            "repMin": 45,
+            "repMax": 90,
+            "rirTarget": null,
+            "restSeconds": 30,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Forearms down, very gentle lift of the chest. Let the belly and hips stay heavy on the floor.",
+            "notesPt": "As repetições são segundos de sustentação. Antebraços no chão, elevação bem leve do peito. Deixe a barriga e o quadril pesados no chão."
+          },
+          {
+            "exerciseSlug": "reclined-spinal-twist",
+            "sets": 2,
+            "repMin": 60,
+            "repMax": 120,
+            "rirTarget": null,
+            "restSeconds": 30,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Knee across the body, shoulders melting into the floor. A pillow under the knee makes it fully passive. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Joelho cruzando o corpo, ombros derretendo no chão. Um travesseiro sob o joelho deixa a postura totalmente passiva. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "legs-up-the-wall",
+            "sets": 2,
+            "repMin": 90,
+            "repMax": 180,
+            "rirTarget": null,
+            "restSeconds": 30,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Legs resting up the wall, arms relaxed. Let the lower back release completely.",
+            "notesPt": "As repetições são segundos de sustentação. Pernas apoiadas na parede, braços relaxados. Deixe a lombar soltar por completo."
+          },
+          {
+            "exerciseSlug": "corpse-pose",
+            "sets": 1,
+            "repMin": 120,
+            "repMax": 180,
+            "rirTarget": null,
+            "restSeconds": 30,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Lie still and let go entirely. Natural breath, quiet mind, to close.",
+            "notesPt": "As repetições são segundos de sustentação. Deite imóvel e solte por completo. Respiração natural, mente quieta, para encerrar."
+          }
+        ]
+      },
+      {
+        "dayIndex": 1,
+        "nameEn": "Hips & Floor",
+        "namePt": "Quadris & Chão",
+        "focusEn": "Passive hip and groin release",
+        "focusPt": "Soltura passiva de quadril e virilha",
+        "estimatedMinutes": 25,
+        "exercises": [
+          {
+            "exerciseSlug": "bound-angle-pose",
+            "sets": 2,
+            "repMin": 60,
+            "repMax": 120,
+            "rirTarget": null,
+            "restSeconds": 30,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Soles together, knees open and supported on cushions so they can relax fully. Hinge forward only if it stays comfortable.",
+            "notesPt": "As repetições são segundos de sustentação. Solas unidas, joelhos abertos e apoiados em almofadas para que relaxem por completo. Incline à frente só se continuar confortável."
+          },
+          {
+            "exerciseSlug": "happy-baby",
+            "sets": 2,
+            "repMin": 45,
+            "repMax": 90,
+            "rirTarget": null,
+            "restSeconds": 30,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Hold the outer feet, knees toward the armpits, lower back on the floor. Rock gently if it feels good.",
+            "notesPt": "As repetições são segundos de sustentação. Segure as bordas externas dos pés, joelhos em direção às axilas, lombar no chão. Balance suavemente, se agradar."
+          },
+          {
+            "exerciseSlug": "reclined-spinal-twist",
+            "sets": 2,
+            "repMin": 60,
+            "repMax": 120,
+            "rirTarget": null,
+            "restSeconds": 30,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Fully supported twist, breathing into the low back. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Torção totalmente apoiada, respirando em direção à lombar. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "legs-up-the-wall",
+            "sets": 2,
+            "repMin": 90,
+            "repMax": 180,
+            "rirTarget": null,
+            "restSeconds": 30,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Legs up, hips close to the wall. One of the most restful shapes there is.",
+            "notesPt": "As repetições são segundos de sustentação. Pernas para cima, quadril perto da parede. Uma das formas mais repousantes que existem."
+          },
+          {
+            "exerciseSlug": "corpse-pose",
+            "sets": 1,
+            "repMin": 120,
+            "repMax": 180,
+            "rirTarget": null,
+            "restSeconds": 30,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Settle in, let the floor hold you, and rest to finish.",
+            "notesPt": "As repetições são segundos de sustentação. Acomode-se, deixe o chão te sustentar e descanse para encerrar."
+          }
+        ]
+      },
+      {
+        "dayIndex": 2,
+        "nameEn": "Deep Relaxation",
+        "namePt": "Relaxamento Profundo",
+        "focusEn": "A fully calming, down-regulating sequence",
+        "focusPt": "Uma sequência totalmente calmante e desaceleradora",
+        "estimatedMinutes": 26,
+        "exercises": [
+          {
+            "exerciseSlug": "childs-pose",
+            "sets": 2,
+            "repMin": 60,
+            "repMax": 120,
+            "rirTarget": null,
+            "restSeconds": 30,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Rest forward, forehead down, breath slow. Let the shoulders and jaw soften.",
+            "notesPt": "As repetições são segundos de sustentação. Descanse à frente, testa no chão, respiração lenta. Deixe os ombros e a mandíbula amaciarem."
+          },
+          {
+            "exerciseSlug": "seated-forward-fold",
+            "sets": 2,
+            "repMin": 45,
+            "repMax": 90,
+            "rirTarget": null,
+            "restSeconds": 30,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Fold gently over the legs, rounding softly — this is restful, not a deep stretch. Rest the head on a cushion if you like.",
+            "notesPt": "As repetições são segundos de sustentação. Incline suavemente sobre as pernas, arredondando de leve — aqui é descanso, não alongamento profundo. Apoie a cabeça numa almofada, se quiser."
+          },
+          {
+            "exerciseSlug": "bridge-pose",
+            "sets": 2,
+            "repMin": 45,
+            "repMax": 90,
+            "rirTarget": null,
+            "restSeconds": 30,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. A low, supported bridge — place a cushion under the hips so you can rest on it without effort.",
+            "notesPt": "As repetições são segundos de sustentação. Uma ponte baixa e apoiada — coloque uma almofada sob o quadril para descansar sobre ela sem esforço."
+          },
+          {
+            "exerciseSlug": "legs-up-the-wall",
+            "sets": 2,
+            "repMin": 90,
+            "repMax": 180,
+            "rirTarget": null,
+            "restSeconds": 30,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Legs up the wall, eyes closed, breathing slow. Stay as long as it feels good.",
+            "notesPt": "As repetições são segundos de sustentação. Pernas na parede, olhos fechados, respiração lenta. Fique o tempo que for agradável."
+          },
+          {
+            "exerciseSlug": "corpse-pose",
+            "sets": 1,
+            "repMin": 180,
+            "repMax": 300,
+            "rirTarget": null,
+            "restSeconds": 30,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. The longest rest of the week. Nothing to do but breathe and let go.",
+            "notesPt": "As repetições são segundos de sustentação. O descanso mais longo da semana. Nada a fazer além de respirar e soltar."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "yoga-fluxo-vinyasa",
+    "nameEn": "Vinyasa Flow Yoga",
+    "namePt": "Yoga Fluxo (Vinyasa)",
+    "taglineEn": "Four flowing routines that link breath to movement — foundations, warriors, twists and backbends — for strength, mobility and focus.",
+    "taglinePt": "Quatro rotinas fluidas que ligam respiração e movimento — fundamentos, guerreiros, torções e extensões — para força, mobilidade e foco.",
+    "descriptionEn": "A flowing, intermediate practice where poses are linked together and moved through with the breath. Four routines build a foundation flow, a warrior/standing flow, a flow with twists, and a backbend-focused flow. Holds are shorter than in the beginner track because you move more; the result trains mobility, balance and light strength together. Some yoga experience helps.",
+    "descriptionPt": "### O que é\n\nUma prática fluida de nível **intermediário**, em que as posturas se encadeiam e são atravessadas com a respiração. São quatro rotinas:\n\n- **Rotina 1** — fluxo de fundamentos\n- **Rotina 2** — fluxo de guerreiros (em pé)\n- **Rotina 3** — fluxo com torções\n- **Rotina 4** — fluxo com extensões (backbends)\n\n### Como funciona\n\n- As sustentações são **mais curtas** que na trilha iniciante, porque você se move mais.\n- O resultado trabalha **mobilidade, equilíbrio e um pouco de força** ao mesmo tempo.\n- **Alguma experiência** de yoga ajuda.\n- A respiração continua guiando: um movimento por respiração nas transições.",
+    "audienceEn": "Practitioners with some yoga experience who want a more active, flowing practice that builds mobility and light strength.",
+    "audiencePt": "Praticantes com alguma experiência de yoga que querem uma prática mais ativa e fluida, que desenvolve mobilidade e um pouco de força.",
+    "goal": "YOGA",
+    "experienceLevel": "INTERMEDIATE",
+    "daysPerWeek": 4,
+    "durationWeeks": 4,
+    "sessionMinutes": 28,
+    "equipmentAccess": "HOME_BODYWEIGHT",
+    "trainingStyle": "YOGA",
+    "progressionStrategy": "MANUAL",
+    "rationaleEn": "### Why this works\n\n**Movement plus holds trains range and control.** Dynamic shapes prepare the body and maintain performance (*opplert-2018*, *fradkin-2010*), while the shorter static holds within the flow still build range over the week toward the dose in *thomas-2018*. Flowing keeps the heart rate up and makes the practice active rather than purely passive.\n\n**Holds placed intelligently.** Because longer static holds can transiently reduce power (*behm-2016*), a flow keeps holds moderate and distributes them through the sequence — you build range without ever parking in a deep hold before a demanding transition.\n\n**Frequency for skill and range.** Four sessions a week exceed the ACSM flexibility minimum (*garber-2011*) and give enough repetition to improve both mobility and the balance/coordination a flow demands. Progress holds and depth gradually, never into pain.",
+    "rationalePt": "### Por que isso funciona\n\n**Movimento somado a sustentações treina amplitude e controle.** As formas dinâmicas preparam o corpo e mantêm o desempenho (*opplert-2018*, *fradkin-2010*), enquanto as sustentações estáticas mais curtas dentro do fluxo ainda constroem amplitude ao longo da semana, em direção à dose do *thomas-2018*. Fluir mantém a frequência cardíaca elevada e torna a prática ativa, não apenas passiva.\n\n**Sustentações bem posicionadas.** Como sustentações estáticas longas podem reduzir a potência temporariamente (*behm-2016*), o fluxo mantém as sustentações moderadas e as distribui pela sequência — você ganha amplitude sem estacionar numa sustentação profunda logo antes de uma transição exigente.\n\n**Frequência para habilidade e amplitude.** Quatro sessões por semana superam o mínimo de flexibilidade da ACSM (*garber-2011*) e dão repetição suficiente para melhorar tanto a mobilidade quanto o equilíbrio e a coordenação que um fluxo exige. Progrida as sustentações e a profundidade aos poucos, nunca na dor.",
+    "restGuidanceEn": "Flows keep moving, so rests are brief: 10-20 s between poses, mostly to switch sides or reset. Within a routine, move one breath per transition and hold the key poses for the prescribed seconds. Catch your breath in Downward Dog or Child's Pose whenever you need it.",
+    "restGuidancePt": "Os fluxos seguem em movimento, então os descansos são breves: 10 a 20 s entre as posturas, quase sempre para trocar de lado ou reorganizar. Dentro de uma rotina, mova-se uma respiração por transição e segure as posturas-chave pelos segundos indicados. Recupere o fôlego no Cão Olhando para Baixo ou na Postura da Criança sempre que precisar.",
+    "weeklyGuidance": [
+      {
+        "week": 1,
+        "rirTarget": null,
+        "setsNotePt": "Semana 1: 2 séries (rounds) por rotina. Segure as posturas-chave 15-25 s e aprenda a encadear com a respiração.",
+        "notePt": "Foque na transição: um movimento por respiração. A fluidez vem antes da profundidade.",
+        "setsNote": "Week 1: 2 sets (rounds) per routine. Hold the key poses 15-25 s and learn to link them with the breath.",
+        "noteEn": "Focus on the transitions: one movement per breath. Smoothness before depth."
+      },
+      {
+        "week": 2,
+        "rirTarget": null,
+        "setsNotePt": "Semana 2: 2-3 rounds, sustentações de 20-30 s. Comece a sincronizar respiração e movimento com mais naturalidade.",
+        "notePt": "O fluxo fica mais contínuo. Mantenha a respiração ditando o ritmo.",
+        "setsNote": "Week 2: 2-3 rounds, holds of 20-30 s. Start syncing breath and movement more naturally.",
+        "noteEn": "The flow becomes more continuous. Let the breath set the pace."
+      },
+      {
+        "week": 3,
+        "rirTarget": null,
+        "setsNotePt": "Semana 3: 3 rounds, 25-35 s nas posturas-chave. Acrescente um pouco de profundidade sem perder o ritmo.",
+        "notePt": "Mais tempo sob alongamento por round — é aqui que mobilidade e força rendem.",
+        "setsNote": "Week 3: 3 rounds, 25-35 s on key poses. Add a little depth without losing the rhythm.",
+        "noteEn": "More time under stretch per round — where mobility and strength pay off."
+      },
+      {
+        "week": 4,
+        "rirTarget": null,
+        "setsNotePt": "Semana 4: 3 rounds, 30-40 s, com transições firmes e controladas. Você deve fluir com mais força e equilíbrio que na semana 1.",
+        "notePt": "Semana de consolidação. Observe como as transições ficaram mais estáveis e fortes.",
+        "setsNote": "Week 4: 3 rounds, 30-40 s, with firm, controlled transitions. You should flow with more strength and balance than in week 1.",
+        "noteEn": "Consolidation week. Notice how much steadier and stronger the transitions feel."
+      }
+    ],
+    "evidenceKeys": [
+      "thomas-2018-stretching-typology-duration-rom",
+      "medeiros-2016-static-stretching-hamstring-flexibility-review",
+      "opplert-2018-dynamic-stretching-flexibility-performance-review",
+      "behm-2016-acute-stretching-performance-rom-injury-review",
+      "garber-2011-acsm-quantity-quality-exercise",
+      "fradkin-2010-warm-up-physical-performance-meta-analysis"
+    ],
+    "principleSlugs": [
+      "range-of-motion",
+      "warm-up",
+      "training-frequency",
+      "progressive-overload",
+      "beginner-adaptation"
+    ],
+    "days": [
+      {
+        "dayIndex": 0,
+        "nameEn": "Foundation Flow",
+        "namePt": "Fluxo de Fundamentos",
+        "focusEn": "The core vinyasa linking shapes",
+        "focusPt": "As formas que ligam o vinyasa",
+        "estimatedMinutes": 28,
+        "exercises": [
+          {
+            "exerciseSlug": "cat-cow",
+            "sets": 2,
+            "repMin": 8,
+            "repMax": 12,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "Flow slowly between Cat and Cow, one cycle per breath — 8-12 cycles to warm and mobilize the spine before the holds.",
+            "notesPt": "Flua devagar entre Gato e Vaca, um ciclo por respiração — 8 a 12 ciclos para aquecer e mobilizar a coluna antes dos alongamentos."
+          },
+          {
+            "exerciseSlug": "downward-dog",
+            "sets": 3,
+            "repMin": 20,
+            "repMax": 40,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Your home base in the flow. Lengthen the spine, pedal the feet, then settle. Return here between sequences.",
+            "notesPt": "As repetições são segundos de sustentação. Sua base no fluxo. Alongue a coluna, pedale os pés e depois estabilize. Volte aqui entre as sequências."
+          },
+          {
+            "exerciseSlug": "standing-forward-fold",
+            "sets": 2,
+            "repMin": 15,
+            "repMax": 30,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Step or float to the top of the mat and fold. Soft knees, heavy head.",
+            "notesPt": "As repetições são segundos de sustentação. Caminhe ou salte para a frente do tapete e incline. Joelhos leves, cabeça pesada."
+          },
+          {
+            "exerciseSlug": "halfway-lift",
+            "sets": 2,
+            "repMin": 15,
+            "repMax": 25,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Flat back, hands to the shins, on an inhale. Sets up the transition.",
+            "notesPt": "As repetições são segundos de sustentação. Costas retas, mãos nas canelas, numa inspiração. Prepara a transição."
+          },
+          {
+            "exerciseSlug": "high-lunge",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 35,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Step one foot back, front knee at 90°, arms up and tall. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Leve um pé para trás, joelho da frente a 90°, braços para cima e ereto. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "warrior-1",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 35,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Ground the back heel, hips to the front, reach up. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Fixe o calcanhar de trás, quadril para frente, estenda para cima. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "chair-pose",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 30,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Come to standing, sit back and down, arms up. Strong legs to finish the round.",
+            "notesPt": "As repetições são segundos de sustentação. Volte a ficar em pé, sente para trás e para baixo, braços para cima. Pernas firmes para fechar o round."
+          },
+          {
+            "exerciseSlug": "childs-pose",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 45,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Rest and reset the breath before repeating.",
+            "notesPt": "As repetições são segundos de sustentação. Descanse e reorganize a respiração antes de repetir."
+          }
+        ]
+      },
+      {
+        "dayIndex": 1,
+        "nameEn": "Warrior Flow",
+        "namePt": "Fluxo de Guerreiros",
+        "focusEn": "Standing strength, balance and open hips",
+        "focusPt": "Força em pé, equilíbrio e quadril aberto",
+        "estimatedMinutes": 28,
+        "exercises": [
+          {
+            "exerciseSlug": "downward-dog",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 40,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Start and reset here between sides. Long spine, steady breath.",
+            "notesPt": "As repetições são segundos de sustentação. Comece e reorganize aqui entre os lados. Coluna longa, respiração estável."
+          },
+          {
+            "exerciseSlug": "warrior-1",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 35,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Square the hips forward, reach up, bend the front knee. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Alinhe o quadril para frente, estenda para cima, flexione o joelho da frente. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "warrior-2",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 35,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Open the hips, arms wide, gaze forward. Flow straight from Warrior I. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Abra o quadril, braços largos, olhar para frente. Flua direto do Guerreiro I. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "extended-side-angle",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 35,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Forearm to thigh (or hand down), top arm over the ear, one long line. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Antebraço na coxa (ou mão no chão), braço de cima por cima da orelha, uma linha longa. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "triangle-pose",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 35,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Straighten the front leg, reach long, then lower the hand and open the chest. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Estenda a perna da frente, alongue, depois desça a mão e abra o peito. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "warrior-3",
+            "sets": 2,
+            "repMin": 15,
+            "repMax": 30,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Shift onto the front leg and lift the back leg to a line. Reach forward. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Transfira para a perna da frente e eleve a perna de trás até uma linha. Estenda para frente. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "downward-dog",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 40,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Return to Down Dog to finish the round and reset.",
+            "notesPt": "As repetições são segundos de sustentação. Volte ao Cão Olhando para Baixo para fechar o round e reorganizar."
+          }
+        ]
+      },
+      {
+        "dayIndex": 2,
+        "nameEn": "Twist Flow",
+        "namePt": "Fluxo com Torções",
+        "focusEn": "Flowing poses with spinal rotation",
+        "focusPt": "Posturas fluidas com rotação da coluna",
+        "estimatedMinutes": 28,
+        "exercises": [
+          {
+            "exerciseSlug": "high-lunge",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 35,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Front knee at 90°, tall torso. The base for the standing twists. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Joelho da frente a 90°, tronco ereto. A base para as torções em pé. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "pyramid-pose",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 35,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Straighten the front leg, hips square, fold over it with a long spine. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Estenda a perna da frente, quadril alinhado, incline sobre ela com a coluna longa. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "triangle-pose",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 35,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Open into Triangle, top arm reaching up, chest rotating open. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Abra no Triângulo, braço de cima em direção ao teto, peito girando para abrir. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "seated-spinal-twist",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 40,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Come to the floor, lengthen up and twist from the base of the spine. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Vá ao chão, alongue para cima e gire a partir da base da coluna. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "reclined-spinal-twist",
+            "sets": 2,
+            "repMin": 25,
+            "repMax": 45,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Lie back and let the knee fall across, shoulders down. A calmer twist. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Deite e deixe o joelho cair cruzando, ombros no chão. Uma torção mais calma. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "downward-dog",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 40,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. One last Down Dog to lengthen and finish.",
+            "notesPt": "As repetições são segundos de sustentação. Um último Cão Olhando para Baixo para alongar e encerrar."
+          }
+        ]
+      },
+      {
+        "dayIndex": 3,
+        "nameEn": "Backbend Flow",
+        "namePt": "Fluxo com Extensões",
+        "focusEn": "Chest-opening backbends in sequence",
+        "focusPt": "Extensões que abrem o peito em sequência",
+        "estimatedMinutes": 27,
+        "exercises": [
+          {
+            "exerciseSlug": "cat-cow",
+            "sets": 2,
+            "repMin": 8,
+            "repMax": 12,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "Flow slowly between Cat and Cow, one cycle per breath — 8-12 cycles to warm and mobilize the spine before the holds.",
+            "notesPt": "Flua devagar entre Gato e Vaca, um ciclo por respiração — 8 a 12 ciclos para aquecer e mobilizar a coluna antes dos alongamentos."
+          },
+          {
+            "exerciseSlug": "cobra-pose",
+            "sets": 2,
+            "repMin": 15,
+            "repMax": 30,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Low, controlled lift of the chest, hips down. Warm the spine into extension.",
+            "notesPt": "As repetições são segundos de sustentação. Elevação baixa e controlada do peito, quadril no chão. Aqueça a coluna para a extensão."
+          },
+          {
+            "exerciseSlug": "upward-dog",
+            "sets": 2,
+            "repMin": 15,
+            "repMax": 30,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Press up, thighs off the floor, chest open, shoulders back. Flow from Cobra.",
+            "notesPt": "As repetições são segundos de sustentação. Pressione para cima, coxas fora do chão, peito aberto, ombros para trás. Flua da Cobra."
+          },
+          {
+            "exerciseSlug": "downward-dog",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 40,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Lift back to Down Dog to neutralize between backbends.",
+            "notesPt": "As repetições são segundos de sustentação. Volte ao Cão Olhando para Baixo para neutralizar entre as extensões."
+          },
+          {
+            "exerciseSlug": "bridge-pose",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 35,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. On the back, lift the hips, roll the shoulders under. A supported backbend.",
+            "notesPt": "As repetições são segundos de sustentação. De costas, eleve o quadril, role os ombros por baixo. Uma extensão apoiada."
+          },
+          {
+            "exerciseSlug": "camel-pose",
+            "sets": 2,
+            "repMin": 15,
+            "repMax": 30,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Kneel, hands to the low back, lift the chest and arch gently. Come up slowly.",
+            "notesPt": "As repetições são segundos de sustentação. Ajoelhe, mãos na lombar, eleve o peito e arqueie suavemente. Suba devagar."
+          },
+          {
+            "exerciseSlug": "childs-pose",
+            "sets": 2,
+            "repMin": 25,
+            "repMax": 60,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Counter-pose the backbends and let the back settle to finish.",
+            "notesPt": "As repetições são segundos de sustentação. Contraposição das extensões; deixe as costas se acomodarem para encerrar."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "yoga-flexibilidade-quadril",
+    "nameEn": "Flexibility & Hips Yoga",
+    "namePt": "Yoga Flexibilidade & Quadril",
+    "taglineEn": "Three targeted routines of deep hip openers, hamstring and spine work to unlock stiff hips and lengthen the whole posterior chain.",
+    "taglinePt": "Três rotinas focadas de aberturas profundas de quadril, posteriores e coluna para soltar quadris travados e alongar toda a cadeia posterior.",
+    "descriptionEn": "A flexibility-focused practice for people who sit a lot or feel tight through the hips and hamstrings. Three routines target hip openers, the hamstrings and legs, and the spine with twists. Holds are longer to accumulate real range. Intermediate because several poses (pigeon, lizard) are deep; back off to the gentler option whenever needed.",
+    "descriptionPt": "### O que é\n\nUma prática focada em **flexibilidade**, para quem passa muito tempo sentado ou se sente travado no quadril e nos posteriores de coxa. São três rotinas:\n\n- **Rotina 1** — aberturas de quadril\n- **Rotina 2** — posteriores e pernas\n- **Rotina 3** — coluna e torções\n\n### Como funciona\n\n- As sustentações são **mais longas**, para acumular amplitude de verdade.\n- Nível **intermediário**: algumas posturas (pombo, lagarto) são profundas — use a versão mais suave sempre que precisar.\n- Amplitude ganha **aos poucos**, nunca na dor.",
+    "audienceEn": "People with tight hips and hamstrings — desk workers, lifters, runners — who want deeper flexibility work and can handle longer, deeper holds.",
+    "audiencePt": "Pessoas com quadril e posteriores travados — quem trabalha sentado, pratica musculação ou corre — que querem um trabalho de flexibilidade mais profundo e aguentam sustentações mais longas.",
+    "goal": "YOGA",
+    "experienceLevel": "INTERMEDIATE",
+    "daysPerWeek": 3,
+    "durationWeeks": 4,
+    "sessionMinutes": 28,
+    "equipmentAccess": "HOME_BODYWEIGHT",
+    "trainingStyle": "YOGA",
+    "progressionStrategy": "MANUAL",
+    "rationaleEn": "### Why this works\n\n**Deeper range needs accumulated time under stretch.** *thomas-2018* ties meaningful ROM gains to roughly 5+ minutes per muscle group per week, and *medeiros-2016* shows static stretching reliably lengthens the hamstrings — so this track concentrates longer holds on the hips and posterior chain to reach that dose.\n\n**Warm the joints first.** Deep hip openers are safer once the tissues are prepared, consistent with *fradkin-2010* and *opplert-2018*; each routine eases in before the deepest holds.\n\n**Long holds, placed last, done safely.** *behm-2016* confirms long static holds build range safely when nothing explosive follows — ideal for a dedicated flexibility session. We progress depth gradually over four weeks within the ACSM flexibility frequency (*garber-2011*), always pain-free.",
+    "rationalePt": "### Por que isso funciona\n\n**Mais amplitude exige tempo acumulado sob alongamento.** O *thomas-2018* associa ganhos relevantes de amplitude a cerca de 5 minutos ou mais por grupo muscular por semana, e o *medeiros-2016* mostra que o alongamento estático alonga os posteriores de coxa de forma confiável — por isso esta trilha concentra sustentações mais longas no quadril e na cadeia posterior para atingir essa dose.\n\n**Aqueça as articulações primeiro.** Aberturas profundas de quadril são mais seguras com os tecidos preparados, em linha com *fradkin-2010* e *opplert-2018*; cada rotina entra aos poucos antes das sustentações mais profundas.\n\n**Sustentações longas, no fim, com segurança.** O *behm-2016* confirma que sustentações estáticas longas constroem amplitude com segurança quando nada explosivo vem depois — ideal para uma sessão dedicada à flexibilidade. Progredimos a profundidade aos poucos ao longo de quatro semanas, dentro da frequência de flexibilidade da ACSM (*garber-2011*), sempre sem dor.",
+    "restGuidanceEn": "Give yourself 20-30 s between poses — deep holds deserve a brief reset, especially when switching sides. Breathe into each stretch and let each exhale carry you a little deeper, but never past a mild, comfortable tension. Use blocks or a cushion under the hands or hips wherever it helps.",
+    "restGuidancePt": "Dê a si mesmo de 20 a 30 s entre as posturas — sustentações profundas merecem uma breve pausa, especialmente ao trocar de lado. Respire em direção a cada alongamento e deixe cada expiração te levar um pouco mais fundo, mas nunca além de uma tensão leve e confortável. Use blocos ou uma almofada sob as mãos ou o quadril sempre que ajudar.",
+    "weeklyGuidance": [
+      {
+        "week": 1,
+        "rirTarget": null,
+        "setsNotePt": "Semana 1: 2 séries por postura, 30-45 s cada numa amplitude confortável. Aprenda onde cada postura \"pega\" em você.",
+        "notePt": "Mapeie suas áreas mais travadas. Respeite-as e respire nelas.",
+        "setsNote": "Week 1: 2 sets per pose, 30-45 s each at a comfortable range. Learn where each pose 'bites' for you.",
+        "noteEn": "Map your tightest areas. Respect them and breathe into them."
+      },
+      {
+        "week": 2,
+        "rirTarget": null,
+        "setsNotePt": "Semana 2: 2-3 séries, 40-60 s. Aprofunde levemente nas posturas que já ficaram confortáveis.",
+        "notePt": "Mais tempo sob alongamento. Deixe o quadril ceder a cada expiração.",
+        "setsNote": "Week 2: 2-3 sets, 40-60 s. Ease slightly deeper in the poses that already feel comfortable.",
+        "noteEn": "More time under stretch. Let the hips yield with each exhale."
+      },
+      {
+        "week": 3,
+        "rirTarget": null,
+        "setsNotePt": "Semana 3: 3 séries, 50-75 s nas aberturas principais. É aqui que a amplitude nova começa a aparecer.",
+        "notePt": "Você deve notar os quadris mais abertos e os posteriores mais longos.",
+        "setsNote": "Week 3: 3 sets, 50-75 s on the main openers. This is where new range starts to show.",
+        "noteEn": "You should notice the hips more open and the hamstrings longer."
+      },
+      {
+        "week": 4,
+        "rirTarget": null,
+        "setsNotePt": "Semana 4: 3 séries, 60-90 s, buscando sua amplitude máxima confortável. Compare com a semana 1.",
+        "notePt": "Semana de consolidação. O ganho de amplitude é sua recompensa pela constância.",
+        "setsNote": "Week 4: 3 sets, 60-90 s, reaching your comfortable maximum. Compare with week 1.",
+        "noteEn": "Consolidation week. The extra range is your reward for consistency."
+      }
+    ],
+    "evidenceKeys": [
+      "thomas-2018-stretching-typology-duration-rom",
+      "medeiros-2016-static-stretching-hamstring-flexibility-review",
+      "opplert-2018-dynamic-stretching-flexibility-performance-review",
+      "behm-2016-acute-stretching-performance-rom-injury-review",
+      "garber-2011-acsm-quantity-quality-exercise",
+      "fradkin-2010-warm-up-physical-performance-meta-analysis"
+    ],
+    "principleSlugs": [
+      "range-of-motion",
+      "warm-up",
+      "training-frequency",
+      "progressive-overload",
+      "beginner-adaptation"
+    ],
+    "days": [
+      {
+        "dayIndex": 0,
+        "nameEn": "Hip Openers",
+        "namePt": "Abridores de Quadril",
+        "focusEn": "Deep hip and groin opening",
+        "focusPt": "Abertura profunda de quadril e virilha",
+        "estimatedMinutes": 29,
+        "exercises": [
+          {
+            "exerciseSlug": "low-lunge",
+            "sets": 2,
+            "repMin": 30,
+            "repMax": 60,
+            "rirTarget": null,
+            "restSeconds": 25,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Back knee down, hips forward and down for the front of the hip. Ease in before the deeper openers. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Joelho de trás no chão, quadril para frente e para baixo para a frente do quadril. Entre aos poucos antes das aberturas mais profundas. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "lizard-pose",
+            "sets": 2,
+            "repMin": 30,
+            "repMax": 60,
+            "rirTarget": null,
+            "restSeconds": 25,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Both hands inside the front foot, lower to the forearms if comfortable. Deep front-hip and groin stretch. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. As duas mãos por dentro do pé da frente, desça aos antebraços se estiver confortável. Alongamento profundo da frente do quadril e da virilha. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "pigeon-pose",
+            "sets": 2,
+            "repMin": 40,
+            "repMax": 75,
+            "rirTarget": null,
+            "restSeconds": 25,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Front shin forward, back leg long, hips square. Stay upright or fold forward. Feel it in the glute, never the knee. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Canela da frente à frente, perna de trás longa, quadril alinhado. Fique ereto ou incline à frente. Sinta no glúteo, nunca no joelho. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "bound-angle-pose",
+            "sets": 2,
+            "repMin": 40,
+            "repMax": 75,
+            "rirTarget": null,
+            "restSeconds": 25,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Soles together, knees open, hinge gently forward for the inner thighs.",
+            "notesPt": "As repetições são segundos de sustentação. Solas unidas, joelhos abertos, incline suavemente à frente para a parte interna das coxas."
+          },
+          {
+            "exerciseSlug": "garland-pose",
+            "sets": 2,
+            "repMin": 30,
+            "repMax": 60,
+            "rirTarget": null,
+            "restSeconds": 25,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Deep squat, heels down if you can, elbows pressing the knees open. Opens hips and ankles.",
+            "notesPt": "As repetições são segundos de sustentação. Agachamento profundo, calcanhares no chão se conseguir, cotovelos pressionando os joelhos para abrir. Abre quadril e tornozelos."
+          },
+          {
+            "exerciseSlug": "happy-baby",
+            "sets": 2,
+            "repMin": 30,
+            "repMax": 60,
+            "rirTarget": null,
+            "restSeconds": 25,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. On the back, hold the feet, knees to the armpits. A calming hip release to finish.",
+            "notesPt": "As repetições são segundos de sustentação. De costas, segure os pés, joelhos em direção às axilas. Uma soltura calmante de quadril para encerrar."
+          }
+        ]
+      },
+      {
+        "dayIndex": 1,
+        "nameEn": "Hamstrings & Legs",
+        "namePt": "Posteriores & Pernas",
+        "focusEn": "Lengthening the hamstrings and calves",
+        "focusPt": "Alongar posteriores de coxa e panturrilhas",
+        "estimatedMinutes": 28,
+        "exercises": [
+          {
+            "exerciseSlug": "downward-dog",
+            "sets": 2,
+            "repMin": 30,
+            "repMax": 50,
+            "rirTarget": null,
+            "restSeconds": 25,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Pedal the heels to warm the hamstrings and calves, then settle with the heels reaching down.",
+            "notesPt": "As repetições são segundos de sustentação. Pedale os calcanhares para aquecer posteriores e panturrilhas, depois estabilize levando os calcanhares para baixo."
+          },
+          {
+            "exerciseSlug": "standing-forward-fold",
+            "sets": 2,
+            "repMin": 30,
+            "repMax": 60,
+            "rirTarget": null,
+            "restSeconds": 25,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Fold and hang, knees softening as needed. Let gravity lengthen the back of the legs.",
+            "notesPt": "As repetições são segundos de sustentação. Incline e penda, joelhos cedendo conforme precisar. Deixe a gravidade alongar a parte de trás das pernas."
+          },
+          {
+            "exerciseSlug": "pyramid-pose",
+            "sets": 2,
+            "repMin": 30,
+            "repMax": 60,
+            "rirTarget": null,
+            "restSeconds": 25,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. One foot forward, straight legs, fold over the front leg with a long spine. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Um pé à frente, pernas estendidas, incline sobre a perna da frente com a coluna longa. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "seated-forward-fold",
+            "sets": 2,
+            "repMin": 40,
+            "repMax": 75,
+            "rirTarget": null,
+            "restSeconds": 25,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Both legs straight, hinge from the hips toward the feet. The main hamstring hold.",
+            "notesPt": "As repetições são segundos de sustentação. As duas pernas estendidas, incline a partir do quadril em direção aos pés. A sustentação principal dos posteriores."
+          },
+          {
+            "exerciseSlug": "head-to-knee-pose",
+            "sets": 2,
+            "repMin": 40,
+            "repMax": 75,
+            "rirTarget": null,
+            "restSeconds": 25,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. One leg straight, fold over it. Isolates each hamstring in turn. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Uma perna estendida, incline sobre ela. Isola cada posterior por vez. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "wide-legged-forward-fold",
+            "sets": 2,
+            "repMin": 40,
+            "repMax": 75,
+            "rirTarget": null,
+            "restSeconds": 25,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Wide stance, fold and let the crown descend. Hamstrings and inner thighs together.",
+            "notesPt": "As repetições são segundos de sustentação. Base larga, incline e deixe o topo da cabeça descer. Posteriores e parte interna das coxas juntos."
+          }
+        ]
+      },
+      {
+        "dayIndex": 2,
+        "nameEn": "Spine & Twists",
+        "namePt": "Coluna & Torções",
+        "focusEn": "Mobilizing and rotating the spine",
+        "focusPt": "Mobilizar e girar a coluna",
+        "estimatedMinutes": 27,
+        "exercises": [
+          {
+            "exerciseSlug": "cat-cow",
+            "sets": 2,
+            "repMin": 8,
+            "repMax": 12,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "Flow slowly between Cat and Cow, one cycle per breath — 8-12 cycles to warm and mobilize the spine before the holds.",
+            "notesPt": "Flua devagar entre Gato e Vaca, um ciclo por respiração — 8 a 12 ciclos para aquecer e mobilizar a coluna antes dos alongamentos."
+          },
+          {
+            "exerciseSlug": "cobra-pose",
+            "sets": 2,
+            "repMin": 25,
+            "repMax": 45,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Lift the chest, hips down, for gentle extension after the neutral flow.",
+            "notesPt": "As repetições são segundos de sustentação. Eleve o peito, quadril no chão, para uma extensão suave após o fluxo neutro."
+          },
+          {
+            "exerciseSlug": "seated-spinal-twist",
+            "sets": 2,
+            "repMin": 40,
+            "repMax": 75,
+            "rirTarget": null,
+            "restSeconds": 25,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Lengthen up, twist from the base of the spine, use the hand behind for support. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Alongue para cima, gire a partir da base da coluna, use a mão atrás como apoio. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "reclined-spinal-twist",
+            "sets": 2,
+            "repMin": 40,
+            "repMax": 75,
+            "rirTarget": null,
+            "restSeconds": 25,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Knee across the body toward the floor, both shoulders down. A deep, calm twist. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Joelho cruzando o corpo em direção ao chão, os dois ombros no chão. Uma torção profunda e calma. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "bridge-pose",
+            "sets": 2,
+            "repMin": 30,
+            "repMax": 50,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Lift the hips to open the front of the spine and hips. Keep the neck relaxed.",
+            "notesPt": "As repetições são segundos de sustentação. Eleve o quadril para abrir a frente da coluna e do quadril. Mantenha o pescoço relaxado."
+          },
+          {
+            "exerciseSlug": "childs-pose",
+            "sets": 2,
+            "repMin": 30,
+            "repMax": 60,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Round and release the whole back to finish.",
+            "notesPt": "As repetições são segundos de sustentação. Arredonde e solte as costas inteiras para encerrar."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "yoga-forca-equilibrio",
+    "nameEn": "Strength, Balance & Inversions Yoga",
+    "namePt": "Yoga Força, Equilíbrio & Inversões",
+    "taglineEn": "Four advanced routines of balances, arm balances and backbends to build real yoga strength, control and steadiness.",
+    "taglinePt": "Quatro rotinas avançadas de equilíbrios, equilíbrios de braço e extensões para construir força, controle e firmeza de verdade no yoga.",
+    "descriptionEn": "An advanced, strength-oriented practice. Four routines work standing balances, arm balances (crow, dolphin), backbends and a core/strength day. Expect to hold challenging shapes and build toward arm balances — use a cushion in front for safety and progress at your own pace. A solid yoga base and no relevant injuries are assumed.",
+    "descriptionPt": "### O que é\n\nUma prática **avançada** e voltada para a força. São quatro rotinas:\n\n- **Rotina 1** — equilíbrio em pé\n- **Rotina 2** — equilíbrio de braço (corvo, golfinho)\n- **Rotina 3** — extensões (backbends)\n- **Rotina 4** — força e core\n\n### Como funciona\n\n- Você vai **sustentar formas desafiadoras** e construir rumo aos equilíbrios de braço.\n- Use uma **almofada à frente** por segurança e progrida no seu ritmo.\n- Pressupõe **base sólida de yoga** e ausência de lesões relevantes.\n- Qualidade acima de quantidade: saia da postura antes de perder a forma.",
+    "audienceEn": "Experienced practitioners with a solid base who want to build strength, balance and work toward arm balances and deeper backbends.",
+    "audiencePt": "Praticantes experientes, com base sólida, que querem ganhar força e equilíbrio e evoluir rumo a equilíbrios de braço e extensões mais profundas.",
+    "goal": "YOGA",
+    "experienceLevel": "ADVANCED",
+    "daysPerWeek": 4,
+    "durationWeeks": 4,
+    "sessionMinutes": 30,
+    "equipmentAccess": "HOME_BODYWEIGHT",
+    "trainingStyle": "YOGA",
+    "progressionStrategy": "MANUAL",
+    "rationaleEn": "### Why this works\n\n**Holding demanding shapes builds strength and control.** Isometric holds in balances, arm balances and backbends load the muscles under tension and train the balance and coordination those shapes require. Short, hard holds progressed over weeks are a legitimate strength and skill stimulus, consistent with gradual overload (*garber-2011*).\n\n**Warm thoroughly before the hard work.** Balances and arm balances carry more risk cold, so a proper warm-up matters (*fradkin-2010*, *opplert-2018*); each routine ramps up before the peak poses. We keep long passive stretches away from the moments that need power (*behm-2016*).\n\n**Progress conservatively.** Arm balances and deep backbends reward patience. We lengthen holds and depth gradually over four weeks, keep a cushion in front for safety, and never push into pain or past control.",
+    "rationalePt": "### Por que isso funciona\n\n**Sustentar formas exigentes constrói força e controle.** As sustentações isométricas em equilíbrios, equilíbrios de braço e extensões carregam os músculos sob tensão e treinam o equilíbrio e a coordenação que essas formas exigem. Sustentações curtas e difíceis, progredidas ao longo das semanas, são um estímulo legítimo de força e habilidade, em linha com a sobrecarga gradual (*garber-2011*).\n\n**Aqueça bem antes da parte difícil.** Equilíbrios e equilíbrios de braço têm mais risco a frio, então um bom aquecimento importa (*fradkin-2010*, *opplert-2018*); cada rotina sobe de intensidade antes das posturas de pico. Mantemos os alongamentos passivos longos longe dos momentos que precisam de potência (*behm-2016*).\n\n**Progrida com cautela.** Equilíbrios de braço e extensões profundas recompensam a paciência. Alongamos as sustentações e a profundidade aos poucos ao longo de quatro semanas, mantemos uma almofada à frente por segurança e nunca entramos na dor ou além do controle.",
+    "restGuidanceEn": "Rest more than in the other tracks: 30-45 s between the hard poses, so each attempt is fresh and controlled. Quality over quantity — come out of a balance the moment the form breaks. Always keep a cushion in front for arm balances, and stop any pose that pinches a joint.",
+    "restGuidancePt": "Descanse mais do que nas outras trilhas: 30 a 45 s entre as posturas difíceis, para que cada tentativa seja descansada e controlada. Qualidade acima de quantidade — saia de um equilíbrio no instante em que a forma se perde. Mantenha sempre uma almofada à frente para os equilíbrios de braço e interrompa qualquer postura que belisque uma articulação.",
+    "weeklyGuidance": [
+      {
+        "week": 1,
+        "rirTarget": null,
+        "setsNotePt": "Semana 1: 2 séries por postura, sustentações de 10-20 s com forma impecável. Nos equilíbrios de braço, use apoio e tentativas curtas.",
+        "notePt": "Priorize a forma e a segurança. Construa a base antes de buscar tempo.",
+        "setsNote": "Week 1: 2 sets per pose, 10-20 s holds with clean form. On arm balances, use support and short attempts.",
+        "noteEn": "Prioritize form and safety. Build the base before chasing time."
+      },
+      {
+        "week": 2,
+        "rirTarget": null,
+        "setsNotePt": "Semana 2: 2-3 séries, 15-30 s. Comece a estabilizar as posturas de equilíbrio por mais tempo.",
+        "notePt": "Mais estabilidade e menos oscilação. Respiração firme sustenta o equilíbrio.",
+        "setsNote": "Week 2: 2-3 sets, 15-30 s. Start holding the balances steady for longer.",
+        "noteEn": "More stability, less wobble. A steady breath sustains balance."
+      },
+      {
+        "week": 3,
+        "rirTarget": null,
+        "setsNotePt": "Semana 3: 3 séries, 20-40 s. Busque hang time maior nos equilíbrios de braço, ainda com apoio por segurança.",
+        "notePt": "A força aparece: as posturas de pico ficam mais acessíveis e firmes.",
+        "setsNote": "Week 3: 3 sets, 20-40 s. Chase more hang time on arm balances, still with safety support.",
+        "noteEn": "Strength shows: the peak poses feel more accessible and steadier."
+      },
+      {
+        "week": 4,
+        "rirTarget": null,
+        "setsNotePt": "Semana 4: 3-4 séries, 30-45 s, com controle total. Compare com a semana 1: mais força, mais equilíbrio.",
+        "notePt": "Semana de consolidação. Celebre o controle conquistado — sem abrir mão da segurança.",
+        "setsNote": "Week 4: 3-4 sets, 30-45 s, with full control. Compare with week 1: more strength, more balance.",
+        "noteEn": "Consolidation week. Celebrate the control you built — without giving up safety."
+      }
+    ],
+    "evidenceKeys": [
+      "thomas-2018-stretching-typology-duration-rom",
+      "medeiros-2016-static-stretching-hamstring-flexibility-review",
+      "opplert-2018-dynamic-stretching-flexibility-performance-review",
+      "behm-2016-acute-stretching-performance-rom-injury-review",
+      "garber-2011-acsm-quantity-quality-exercise",
+      "fradkin-2010-warm-up-physical-performance-meta-analysis"
+    ],
+    "principleSlugs": [
+      "range-of-motion",
+      "warm-up",
+      "training-frequency",
+      "progressive-overload",
+      "beginner-adaptation"
+    ],
+    "days": [
+      {
+        "dayIndex": 0,
+        "nameEn": "Standing Balance",
+        "namePt": "Equilíbrio em Pé",
+        "focusEn": "One-leg balance and steadiness",
+        "focusPt": "Equilíbrio numa perna e firmeza",
+        "estimatedMinutes": 29,
+        "exercises": [
+          {
+            "exerciseSlug": "tree-pose",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 40,
+            "rirTarget": null,
+            "restSeconds": 30,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Settle into a steady one-leg base and a fixed gaze. The foundation for the harder balances. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Encontre uma base firme numa perna e um olhar fixo. A base para os equilíbrios mais difíceis. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "eagle-pose",
+            "sets": 2,
+            "repMin": 15,
+            "repMax": 30,
+            "rirTarget": null,
+            "restSeconds": 30,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Legs and arms wrapped, hips sinking, elbows lifting. Balance and focus. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Pernas e braços enrolados, quadril afundando, cotovelos subindo. Equilíbrio e foco. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "warrior-3",
+            "sets": 2,
+            "repMin": 15,
+            "repMax": 30,
+            "rirTarget": null,
+            "restSeconds": 30,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Body in one line parallel to the floor, hips level, reaching long. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Corpo numa linha paralela ao chão, quadril nivelado, alongando. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "half-moon-pose",
+            "sets": 2,
+            "repMin": 15,
+            "repMax": 30,
+            "rirTarget": null,
+            "restSeconds": 30,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Hand (or block) down, top leg at hip height, chest open. The peak balance. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Mão (ou bloco) no chão, perna de cima na altura do quadril, peito aberto. O equilíbrio de pico. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "chair-pose",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 40,
+            "rirTarget": null,
+            "restSeconds": 25,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Strong legs, arms up, weight in the heels. Build leg endurance.",
+            "notesPt": "As repetições são segundos de sustentação. Pernas firmes, braços para cima, peso nos calcanhares. Construa resistência nas pernas."
+          },
+          {
+            "exerciseSlug": "downward-dog",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 40,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Lengthen and reset the breath to finish.",
+            "notesPt": "As repetições são segundos de sustentação. Alongue e reorganize a respiração para encerrar."
+          }
+        ]
+      },
+      {
+        "dayIndex": 1,
+        "nameEn": "Arm Balance",
+        "namePt": "Equilíbrio de Braço",
+        "focusEn": "Upper-body strength and arm balancing",
+        "focusPt": "Força de membros superiores e equilíbrio de braço",
+        "estimatedMinutes": 30,
+        "exercises": [
+          {
+            "exerciseSlug": "downward-dog",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 40,
+            "rirTarget": null,
+            "restSeconds": 25,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Warm and load the shoulders before the arm balances. Press the floor away.",
+            "notesPt": "As repetições são segundos de sustentação. Aqueça e carregue os ombros antes dos equilíbrios de braço. Empurre o chão para longe."
+          },
+          {
+            "exerciseSlug": "dolphin-pose",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 40,
+            "rirTarget": null,
+            "restSeconds": 30,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Forearms down, hips up and back. Builds the shoulder strength Crow needs.",
+            "notesPt": "As repetições são segundos de sustentação. Antebraços no chão, quadril para cima e para trás. Constrói a força de ombro que o Corvo exige."
+          },
+          {
+            "exerciseSlug": "crow-pose",
+            "sets": 3,
+            "repMin": 10,
+            "repMax": 25,
+            "rirTarget": null,
+            "restSeconds": 40,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Knees high on the arms, lean forward, lift the feet. Keep a cushion in front. Short, controlled holds.",
+            "notesPt": "As repetições são segundos de sustentação. Joelhos altos nos braços, incline para frente, eleve os pés. Mantenha uma almofada à frente. Sustentações curtas e controladas."
+          },
+          {
+            "exerciseSlug": "boat-pose",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 40,
+            "rirTarget": null,
+            "restSeconds": 30,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Lift the chest, legs toward a V, reach the arms forward. Core for the balances.",
+            "notesPt": "As repetições são segundos de sustentação. Eleve o peito, pernas rumo a um V, estenda os braços para frente. Core para os equilíbrios."
+          },
+          {
+            "exerciseSlug": "downward-dog",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 40,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Decompress the shoulders after the loading.",
+            "notesPt": "As repetições são segundos de sustentação. Descomprima os ombros depois da carga."
+          },
+          {
+            "exerciseSlug": "childs-pose",
+            "sets": 2,
+            "repMin": 25,
+            "repMax": 60,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Rest the wrists and shoulders to finish.",
+            "notesPt": "As repetições são segundos de sustentação. Descanse os punhos e os ombros para encerrar."
+          }
+        ]
+      },
+      {
+        "dayIndex": 2,
+        "nameEn": "Backbends",
+        "namePt": "Extensões",
+        "focusEn": "Deep chest-opening backbends",
+        "focusPt": "Extensões profundas que abrem o peito",
+        "estimatedMinutes": 29,
+        "exercises": [
+          {
+            "exerciseSlug": "cat-cow",
+            "sets": 2,
+            "repMin": 8,
+            "repMax": 12,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "Flow slowly between Cat and Cow, one cycle per breath — 8-12 cycles to warm and mobilize the spine before the holds.",
+            "notesPt": "Flua devagar entre Gato e Vaca, um ciclo por respiração — 8 a 12 ciclos para aquecer e mobilizar a coluna antes dos alongamentos."
+          },
+          {
+            "exerciseSlug": "cobra-pose",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 40,
+            "rirTarget": null,
+            "restSeconds": 25,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Controlled lift of the chest to warm the spine into extension.",
+            "notesPt": "As repetições são segundos de sustentação. Elevação controlada do peito para aquecer a coluna na extensão."
+          },
+          {
+            "exerciseSlug": "upward-dog",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 40,
+            "rirTarget": null,
+            "restSeconds": 25,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Thighs off the floor, chest proud, shoulders back. Deeper than Cobra.",
+            "notesPt": "As repetições são segundos de sustentação. Coxas fora do chão, peito aberto, ombros para trás. Mais profunda que a Cobra."
+          },
+          {
+            "exerciseSlug": "locust-pose",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 40,
+            "rirTarget": null,
+            "restSeconds": 25,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Lift chest, arms and legs, reaching back through the toes. Back-body strength.",
+            "notesPt": "As repetições são segundos de sustentação. Eleve peito, braços e pernas, alongando para trás pelos dedos. Força da cadeia posterior."
+          },
+          {
+            "exerciseSlug": "bow-pose",
+            "sets": 2,
+            "repMin": 15,
+            "repMax": 30,
+            "rirTarget": null,
+            "restSeconds": 30,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Hold the ankles and kick into the hands to lift. A strong backbend.",
+            "notesPt": "As repetições são segundos de sustentação. Segure os tornozelos e empurre contra as mãos para elevar. Uma extensão forte."
+          },
+          {
+            "exerciseSlug": "camel-pose",
+            "sets": 2,
+            "repMin": 15,
+            "repMax": 30,
+            "rirTarget": null,
+            "restSeconds": 30,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Lift the chest and arch back, hips over the knees. Reach for the heels if open. Come up slowly.",
+            "notesPt": "As repetições são segundos de sustentação. Eleve o peito e arqueie para trás, quadril sobre os joelhos. Alcance os calcanhares se estiver aberto. Suba devagar."
+          },
+          {
+            "exerciseSlug": "bridge-pose",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 40,
+            "rirTarget": null,
+            "restSeconds": 25,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Supported backbend to decompress, then Child's Pose if you need it.",
+            "notesPt": "As repetições são segundos de sustentação. Extensão apoiada para descomprimir; depois Postura da Criança, se precisar."
+          }
+        ]
+      },
+      {
+        "dayIndex": 3,
+        "nameEn": "Strength & Core",
+        "namePt": "Força & Core",
+        "focusEn": "Whole-body strength and stability",
+        "focusPt": "Força e estabilidade de corpo inteiro",
+        "estimatedMinutes": 30,
+        "exercises": [
+          {
+            "exerciseSlug": "boat-pose",
+            "sets": 3,
+            "repMin": 20,
+            "repMax": 40,
+            "rirTarget": null,
+            "restSeconds": 30,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Chest lifted, legs to a V, long spine. The core anchor of the day.",
+            "notesPt": "As repetições são segundos de sustentação. Peito elevado, pernas em V, coluna longa. A âncora de core do dia."
+          },
+          {
+            "exerciseSlug": "dolphin-pose",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 40,
+            "rirTarget": null,
+            "restSeconds": 30,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Forearm plank-to-pike shape; strong shoulders and core.",
+            "notesPt": "As repetições são segundos de sustentação. Forma de prancha-a-pique nos antebraços; ombros e core fortes."
+          },
+          {
+            "exerciseSlug": "chair-pose",
+            "sets": 2,
+            "repMin": 25,
+            "repMax": 45,
+            "rirTarget": null,
+            "restSeconds": 25,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Sink low, arms up, hold strong. Leg and spine endurance.",
+            "notesPt": "As repetições são segundos de sustentação. Afunde bem, braços para cima, mantenha firme. Resistência de pernas e coluna."
+          },
+          {
+            "exerciseSlug": "high-lunge",
+            "sets": 2,
+            "repMin": 20,
+            "repMax": 40,
+            "rirTarget": null,
+            "restSeconds": 25,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Deep lunge, tall torso, arms up. Single-leg strength. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Afundo profundo, tronco ereto, braços para cima. Força unilateral. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "half-moon-pose",
+            "sets": 2,
+            "repMin": 15,
+            "repMax": 30,
+            "rirTarget": null,
+            "restSeconds": 30,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Balance and strength together, chest open. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Equilíbrio e força juntos, peito aberto. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "crow-pose",
+            "sets": 2,
+            "repMin": 10,
+            "repMax": 25,
+            "rirTarget": null,
+            "restSeconds": 40,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Finish with arm-balance attempts, cushion in front, short holds.",
+            "notesPt": "As repetições são segundos de sustentação. Encerre com tentativas de equilíbrio de braço, almofada à frente, sustentações curtas."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "saudacao-ao-sol",
+    "nameEn": "Sun Salutation (Surya Namaskar)",
+    "namePt": "Saudação ao Sol (Surya Namaskar)",
+    "taglineEn": "Learn and build the classic Sun Salutation A and B — flowing rounds, one breath per pose, to warm, energize and center.",
+    "taglinePt": "Aprenda e evolua as clássicas Saudações ao Sol A e B — rounds fluidos, uma respiração por postura, para aquecer, energizar e centrar.",
+    "descriptionEn": "The Sun Salutation is the heart of most flowing yoga. This program teaches Surya Namaskar A and B as repeatable rounds, plus a combined flow, each pose moving with one breath. A round takes about a minute, and you repeat it for several rounds. A perfect daily warm-up, a quick energizer, or a standalone flow. Each pose is held about one breath (a few seconds) as you flow.",
+    "descriptionPt": "### O que é\n\nA Saudação ao Sol é o coração de quase todo yoga fluido. Este programa ensina o **Surya Namaskar A e B** como rounds repetíveis, mais um fluxo combinado, com cada postura se movendo a uma respiração.\n\n- **Rotina 1** — Saudação ao Sol A\n- **Rotina 2** — Saudação ao Sol B\n- **Rotina 3** — fluxo combinado A + B\n\n### Como funciona\n\n- Um round leva cerca de um minuto; você o repete por vários rounds (as \"séries\").\n- Cada postura é sustentada por **cerca de uma respiração (poucos segundos)** enquanto você flui.\n- Ótimo como **aquecimento diário**, energizante rápido ou fluxo por si só.\n- Nível **intermediário**: já ajuda conhecer as posturas-base.",
+    "audienceEn": "Practitioners who know the basic poses and want to learn, drill and build the classic Sun Salutation sequences as a warm-up or standalone flow.",
+    "audiencePt": "Praticantes que já conhecem as posturas-base e querem aprender, treinar e evoluir as sequências clássicas de Saudação ao Sol como aquecimento ou fluxo por si só.",
+    "goal": "YOGA",
+    "experienceLevel": "INTERMEDIATE",
+    "daysPerWeek": 3,
+    "durationWeeks": 4,
+    "sessionMinutes": 18,
+    "equipmentAccess": "HOME_BODYWEIGHT",
+    "trainingStyle": "YOGA",
+    "progressionStrategy": "MANUAL",
+    "rationaleEn": "### Why this works\n\n**A flowing sequence is an ideal warm-up.** Moving through the salutation with the breath raises temperature and prepares the whole body, consistent with the warm-up benefits in *fradkin-2010* and the dynamic-movement findings in *opplert-2018* — which is exactly why Sun Salutations traditionally open a practice.\n\n**Short holds, many rounds.** Each pose is held about one breath, so holds stay brief and dynamic rather than deep; this maintains readiness for movement (*behm-2016*) while still cycling the joints through a wide range each round.\n\n**Build by rounds, not by strain.** Progress is simply adding rounds and smoothing the transitions over four weeks. Three sessions a week sit comfortably within general activity and flexibility guidance (*garber-2011*); move within a pain-free range throughout.",
+    "rationalePt": "### Por que isso funciona\n\n**Uma sequência fluida é um aquecimento ideal.** Atravessar a saudação com a respiração eleva a temperatura e prepara o corpo todo, em linha com os benefícios do aquecimento em *fradkin-2010* e com os achados sobre movimento dinâmico em *opplert-2018* — exatamente por isso a Saudação ao Sol tradicionalmente abre a prática.\n\n**Sustentações curtas, muitos rounds.** Cada postura é sustentada por cerca de uma respiração, então as sustentações ficam breves e dinâmicas, não profundas; isso mantém a prontidão para o movimento (*behm-2016*) e ainda leva as articulações por uma ampla amplitude a cada round.\n\n**Evolua por rounds, não por esforço.** A progressão é simplesmente acrescentar rounds e suavizar as transições ao longo de quatro semanas. Três sessões por semana cabem com folga na recomendação geral de atividade e flexibilidade (*garber-2011*); mova-se numa amplitude sem dor o tempo todo.",
+    "restGuidanceEn": "Within a round the poses flow with almost no rest — one breath, one movement. Take 20-40 s between rounds to breathe and reset in Mountain Pose or Downward Dog. The seconds shown on each pose are about one breath; use them as a pace, not a stopwatch.",
+    "restGuidancePt": "Dentro de um round, as posturas fluem quase sem descanso — uma respiração, um movimento. Leve de 20 a 40 s entre os rounds para respirar e reorganizar na Postura da Montanha ou no Cão Olhando para Baixo. Os segundos mostrados em cada postura equivalem a cerca de uma respiração; use-os como ritmo, não como cronômetro.",
+    "weeklyGuidance": [
+      {
+        "week": 1,
+        "rirTarget": null,
+        "setsNotePt": "Semana 1: 3 rounds por rotina (o campo \"séries\" = número de rounds). Vá devagar, aprendendo a ordem e qual respiração acompanha cada postura.",
+        "notePt": "Aprenda a coreografia primeiro. Inspire para abrir/alongar, expire para dobrar/recuar.",
+        "setsNote": "Week 1: 3 rounds per routine (the 'sets' field = number of rounds). Go slowly, learning the order and which breath goes with each pose.",
+        "noteEn": "Learn the choreography first. Inhale to open/lengthen, exhale to fold/step back."
+      },
+      {
+        "week": 2,
+        "rirTarget": null,
+        "setsNotePt": "Semana 2: 4 rounds. Comece a ligar as posturas numa respiração por transição.",
+        "notePt": "O fluxo começa a ficar contínuo. Deixe a respiração puxar o movimento.",
+        "setsNote": "Week 2: 4 rounds. Start linking the poses at one breath per transition.",
+        "noteEn": "The flow starts to feel continuous. Let the breath pull the movement."
+      },
+      {
+        "week": 3,
+        "rirTarget": null,
+        "setsNotePt": "Semana 3: 5 rounds. Sequência fluida e contínua, respiração constante.",
+        "notePt": "Agora é um fluxo de verdade. Mantenha o ritmo estável do começo ao fim.",
+        "setsNote": "Week 3: 5 rounds. A smooth, continuous sequence with steady breathing.",
+        "noteEn": "Now it's a real flow. Keep the pace steady from start to finish."
+      },
+      {
+        "week": 4,
+        "rirTarget": null,
+        "setsNotePt": "Semana 4: 6 rounds (ou mais, se o fôlego permitir). Transições firmes e respiração longa.",
+        "notePt": "Semana de consolidação. Use a saudação como seu aquecimento diário favorito.",
+        "setsNote": "Week 4: 6 rounds (or more if the breath allows). Firm transitions and long breathing.",
+        "noteEn": "Consolidation week. Use the salutation as your favorite daily warm-up."
+      }
+    ],
+    "evidenceKeys": [
+      "thomas-2018-stretching-typology-duration-rom",
+      "medeiros-2016-static-stretching-hamstring-flexibility-review",
+      "opplert-2018-dynamic-stretching-flexibility-performance-review",
+      "behm-2016-acute-stretching-performance-rom-injury-review",
+      "garber-2011-acsm-quantity-quality-exercise",
+      "fradkin-2010-warm-up-physical-performance-meta-analysis"
+    ],
+    "principleSlugs": [
+      "range-of-motion",
+      "warm-up",
+      "training-frequency",
+      "progressive-overload",
+      "beginner-adaptation"
+    ],
+    "days": [
+      {
+        "dayIndex": 0,
+        "nameEn": "Sun Salutation A",
+        "namePt": "Saudação ao Sol A",
+        "focusEn": "The classic Surya Namaskar A round",
+        "focusPt": "O round clássico de Surya Namaskar A",
+        "estimatedMinutes": 16,
+        "exercises": [
+          {
+            "exerciseSlug": "mountain-pose",
+            "sets": 5,
+            "repMin": 3,
+            "repMax": 5,
+            "rirTarget": null,
+            "restSeconds": 5,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Start and end each round here: stand tall, inhale arms up. The 'sets' are the rounds; one breath per pose. Do about 5 rounds.",
+            "notesPt": "As repetições são segundos de sustentação. Comece e termine cada round aqui: em pé e ereto, inspire levando os braços para cima. As \"séries\" são os rounds; uma respiração por postura. Faça cerca de 5 rounds."
+          },
+          {
+            "exerciseSlug": "standing-forward-fold",
+            "sets": 5,
+            "repMin": 3,
+            "repMax": 5,
+            "rirTarget": null,
+            "restSeconds": 5,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Exhale and fold forward over the legs, hands toward the floor.",
+            "notesPt": "As repetições são segundos de sustentação. Expire e incline à frente sobre as pernas, mãos em direção ao chão."
+          },
+          {
+            "exerciseSlug": "halfway-lift",
+            "sets": 5,
+            "repMin": 3,
+            "repMax": 5,
+            "rirTarget": null,
+            "restSeconds": 5,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Inhale, hands to the shins, flat back, gaze forward.",
+            "notesPt": "As repetições são segundos de sustentação. Inspire, mãos nas canelas, costas retas, olhar para frente."
+          },
+          {
+            "exerciseSlug": "upward-dog",
+            "sets": 5,
+            "repMin": 3,
+            "repMax": 5,
+            "rirTarget": null,
+            "restSeconds": 5,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Exhale back to a plank, lower down, then inhale into Up Dog (or Cobra), chest open.",
+            "notesPt": "As repetições são segundos de sustentação. Expire recuando para a prancha, desça e depois inspire no Cão Olhando para Cima (ou Cobra), peito aberto."
+          },
+          {
+            "exerciseSlug": "downward-dog",
+            "sets": 5,
+            "repMin": 5,
+            "repMax": 8,
+            "rirTarget": null,
+            "restSeconds": 10,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Exhale into Down Dog and stay for five breaths — the one longer hold of the round.",
+            "notesPt": "As repetições são segundos de sustentação. Expire no Cão Olhando para Baixo e fique por cinco respirações — a única sustentação mais longa do round."
+          },
+          {
+            "exerciseSlug": "standing-forward-fold",
+            "sets": 5,
+            "repMin": 3,
+            "repMax": 5,
+            "rirTarget": null,
+            "restSeconds": 5,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Step or hop the feet to the hands and fold, exhaling.",
+            "notesPt": "As repetições são segundos de sustentação. Caminhe ou salte os pés até as mãos e incline, expirando."
+          }
+        ]
+      },
+      {
+        "dayIndex": 1,
+        "nameEn": "Sun Salutation B",
+        "namePt": "Saudação ao Sol B",
+        "focusEn": "The more vigorous Surya Namaskar B round",
+        "focusPt": "O round mais vigoroso de Surya Namaskar B",
+        "estimatedMinutes": 18,
+        "exercises": [
+          {
+            "exerciseSlug": "chair-pose",
+            "sets": 5,
+            "repMin": 3,
+            "repMax": 5,
+            "rirTarget": null,
+            "restSeconds": 5,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Start each round here: inhale, sit back into Chair, arms up. The 'sets' are the rounds; one breath per pose. Do about 5 rounds.",
+            "notesPt": "As repetições são segundos de sustentação. Comece cada round aqui: inspire, sente na Cadeira, braços para cima. As \"séries\" são os rounds; uma respiração por postura. Faça cerca de 5 rounds."
+          },
+          {
+            "exerciseSlug": "standing-forward-fold",
+            "sets": 5,
+            "repMin": 3,
+            "repMax": 5,
+            "rirTarget": null,
+            "restSeconds": 5,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Exhale and fold forward over the legs.",
+            "notesPt": "As repetições são segundos de sustentação. Expire e incline à frente sobre as pernas."
+          },
+          {
+            "exerciseSlug": "halfway-lift",
+            "sets": 5,
+            "repMin": 3,
+            "repMax": 5,
+            "rirTarget": null,
+            "restSeconds": 5,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Inhale to a flat back, hands to the shins.",
+            "notesPt": "As repetições são segundos de sustentação. Inspire até as costas ficarem retas, mãos nas canelas."
+          },
+          {
+            "exerciseSlug": "upward-dog",
+            "sets": 5,
+            "repMin": 3,
+            "repMax": 5,
+            "rirTarget": null,
+            "restSeconds": 5,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Exhale through a plank and lower, then inhale into Up Dog, chest open.",
+            "notesPt": "As repetições são segundos de sustentação. Expire passando pela prancha e desça, depois inspire no Cão Olhando para Cima, peito aberto."
+          },
+          {
+            "exerciseSlug": "downward-dog",
+            "sets": 5,
+            "repMin": 3,
+            "repMax": 5,
+            "rirTarget": null,
+            "restSeconds": 5,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Exhale into Down Dog as the hinge of the round.",
+            "notesPt": "As repetições são segundos de sustentação. Expire no Cão Olhando para Baixo como o eixo do round."
+          },
+          {
+            "exerciseSlug": "warrior-1",
+            "sets": 5,
+            "repMin": 4,
+            "repMax": 6,
+            "rirTarget": null,
+            "restSeconds": 5,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Step one foot forward into Warrior I, inhale arms up. Alternate the lead leg each round. Do both sides across rounds.",
+            "notesPt": "As repetições são segundos de sustentação. Avance um pé no Guerreiro I, inspire levando os braços para cima. Alterne a perna da frente a cada round. Faça os dois lados ao longo dos rounds."
+          }
+        ]
+      },
+      {
+        "dayIndex": 2,
+        "nameEn": "Combined Flow (A + B)",
+        "namePt": "Fluxo Combinado (A + B)",
+        "focusEn": "A longer flow mixing both salutations",
+        "focusPt": "Um fluxo mais longo misturando as duas saudações",
+        "estimatedMinutes": 20,
+        "exercises": [
+          {
+            "exerciseSlug": "mountain-pose",
+            "sets": 5,
+            "repMin": 3,
+            "repMax": 5,
+            "rirTarget": null,
+            "restSeconds": 5,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Open each round standing tall, inhale arms up. The 'sets' are the rounds; one breath per pose. Do about 5 rounds.",
+            "notesPt": "As repetições são segundos de sustentação. Abra cada round em pé e ereto, inspire levando os braços para cima. As \"séries\" são os rounds; uma respiração por postura. Faça cerca de 5 rounds."
+          },
+          {
+            "exerciseSlug": "standing-forward-fold",
+            "sets": 5,
+            "repMin": 3,
+            "repMax": 5,
+            "rirTarget": null,
+            "restSeconds": 5,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Exhale and fold forward.",
+            "notesPt": "As repetições são segundos de sustentação. Expire e incline à frente."
+          },
+          {
+            "exerciseSlug": "halfway-lift",
+            "sets": 5,
+            "repMin": 3,
+            "repMax": 5,
+            "rirTarget": null,
+            "restSeconds": 5,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Inhale, flat back, hands to the shins.",
+            "notesPt": "As repetições são segundos de sustentação. Inspire, costas retas, mãos nas canelas."
+          },
+          {
+            "exerciseSlug": "high-lunge",
+            "sets": 5,
+            "repMin": 4,
+            "repMax": 6,
+            "rirTarget": null,
+            "restSeconds": 5,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Step one foot back into a High Lunge, inhale arms up. Alternate sides each round.",
+            "notesPt": "As repetições são segundos de sustentação. Leve um pé para trás no Afundo Alto, inspire levando os braços para cima. Alterne os lados a cada round."
+          },
+          {
+            "exerciseSlug": "downward-dog",
+            "sets": 5,
+            "repMin": 4,
+            "repMax": 6,
+            "rirTarget": null,
+            "restSeconds": 5,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Exhale into Down Dog to link the sequence.",
+            "notesPt": "As repetições são segundos de sustentação. Expire no Cão Olhando para Baixo para ligar a sequência."
+          },
+          {
+            "exerciseSlug": "cobra-pose",
+            "sets": 5,
+            "repMin": 3,
+            "repMax": 5,
+            "rirTarget": null,
+            "restSeconds": 5,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Lower down and inhale into Cobra, chest lifting.",
+            "notesPt": "As repetições são segundos de sustentação. Desça e inspire na Cobra, peito elevando."
+          },
+          {
+            "exerciseSlug": "chair-pose",
+            "sets": 5,
+            "repMin": 3,
+            "repMax": 5,
+            "rirTarget": null,
+            "restSeconds": 5,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Step to the top, inhale and sit into Chair to close the round before standing tall.",
+            "notesPt": "As repetições são segundos de sustentação. Caminhe para a frente, inspire e sente na Cadeira para fechar o round antes de ficar em pé e ereto."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "yoga-pos-treino",
+    "nameEn": "Post-Workout Yoga",
+    "namePt": "Yoga Pós-Treino",
+    "taglineEn": "Three short decompression routines to cool down after lifting — release the muscles you just trained and calm the nervous system.",
+    "taglinePt": "Três rotinas curtas de descompressão para o desaquecimento após o treino — solte os músculos que você acabou de trabalhar e acalme o sistema nervoso.",
+    "descriptionEn": "A short, gentle cool-down to do right after strength training. Three routines map to common training days — a legs day, a push/upper day and a general decompression — stretching exactly what you just worked and winding the body down. Bodyweight only, gentle holds, calming breath. Complements any strength program without adding fatigue.",
+    "descriptionPt": "### O que é\n\nUm desaquecimento curto e suave para fazer **logo após o treino de força**. As três rotinas acompanham os dias de treino mais comuns:\n\n- **Rotina 1** — pós treino de pernas\n- **Rotina 2** — pós treino de empurrar / superior\n- **Rotina 3** — descompressão geral\n\n### Como funciona\n\n- Só peso do corpo, **sustentações suaves** e respiração calmante.\n- Alonga justamente **o que você acabou de trabalhar** e desacelera o corpo.\n- **Complementa** qualquer programa de força sem somar fadiga.\n- Use no fim da sessão de musculação ou à noite.",
+    "audienceEn": "Lifters and anyone training strength who wants a quick, gentle post-workout stretch and cool-down that pairs with their main program.",
+    "audiencePt": "Quem treina força e qualquer pessoa que queira um alongamento e desaquecimento pós-treino rápido e suave para combinar com o programa principal.",
+    "goal": "YOGA",
+    "experienceLevel": "BEGINNER",
+    "daysPerWeek": 3,
+    "durationWeeks": 4,
+    "sessionMinutes": 15,
+    "equipmentAccess": "HOME_BODYWEIGHT",
+    "trainingStyle": "YOGA",
+    "progressionStrategy": "MANUAL",
+    "rationaleEn": "### Why this works\n\n**Stretch when warm.** After training, tissues are warm — the ideal time for flexibility work per *garber-2011*. Gentle static holds here improve range (*medeiros-2016*, *thomas-2018*) without interfering with the session you've just finished, because the hard work is already done.\n\n**Static holds belong after, not before.** *behm-2016* shows long static stretching can transiently reduce power, so it is best placed post-workout rather than before lifting — which is exactly where this program sits.\n\n**Gentle, calming, low dose.** The aim is to decompress and down-regulate, not to add training stress. Short holds and slow breathing help shift the body toward recovery. Done after your strength sessions, it fits neatly within sensible weekly flexibility volume (*garber-2011*), always pain-free.",
+    "rationalePt": "### Por que isso funciona\n\n**Alongue com o corpo aquecido.** Depois do treino, os tecidos estão aquecidos — o momento ideal para o trabalho de flexibilidade segundo *garber-2011*. As sustentações estáticas suaves aqui melhoram a amplitude (*medeiros-2016*, *thomas-2018*) sem atrapalhar a sessão que você acabou de fazer, porque a parte pesada já passou.\n\n**Alongamento estático vem depois, não antes.** O *behm-2016* mostra que o alongamento estático longo pode reduzir a potência temporariamente, então ele fica melhor no pós-treino do que antes de levantar — que é exatamente onde este programa se encaixa.\n\n**Suave, calmante, dose baixa.** O objetivo é descomprimir e desacelerar, não somar estresse de treino. Sustentações curtas e respiração lenta ajudam a levar o corpo à recuperação. Feito após suas sessões de força, encaixa bem num volume semanal sensato de flexibilidade (*garber-2011*), sempre sem dor.",
+    "restGuidanceEn": "Keep it easy — this is a cool-down, not a workout. 15-20 s between poses, breathing slowly to bring the heart rate down. Holds are gentle (30-60 s); never stretch a muscle you've just trained to the point of pain, just to a comfortable release.",
+    "restGuidancePt": "Vá com calma — isto é um desaquecimento, não um treino. De 15 a 20 s entre as posturas, respirando devagar para baixar a frequência cardíaca. As sustentações são suaves (30-60 s); nunca alongue um músculo que você acabou de treinar até a dor, apenas até uma soltura confortável.",
+    "weeklyGuidance": [
+      {
+        "week": 1,
+        "rirTarget": null,
+        "setsNotePt": "Semana 1: 1-2 séries por postura, 30-45 s cada, bem suave. Só solte o que você acabou de treinar.",
+        "notePt": "Sem forçar. Após o treino, o alongamento é para relaxar, não para ganhar recorde de amplitude.",
+        "setsNote": "Week 1: 1-2 sets per pose, 30-45 s each, very gentle. Just release what you just trained.",
+        "noteEn": "No forcing. Post-workout, the stretch is to relax, not to set a range record."
+      },
+      {
+        "week": 2,
+        "rirTarget": null,
+        "setsNotePt": "Semana 2: 2 séries, 35-50 s. Respire fundo e deixe os músculos trabalhados soltarem.",
+        "notePt": "Perceba a diferença no dia seguinte: menos rigidez após as sessões.",
+        "setsNote": "Week 2: 2 sets, 35-50 s. Breathe deep and let the worked muscles release.",
+        "noteEn": "Notice the difference next day: less stiffness after sessions."
+      },
+      {
+        "week": 3,
+        "rirTarget": null,
+        "setsNotePt": "Semana 3: 2 séries, 40-60 s. Mantenha a respiração longa para acelerar o relaxamento.",
+        "notePt": "O desaquecimento vira hábito. Seu corpo começa a pedir esse fechamento.",
+        "setsNote": "Week 3: 2 sets, 40-60 s. Keep the breath long to speed the wind-down.",
+        "noteEn": "The cool-down becomes a habit. Your body starts to ask for this close."
+      },
+      {
+        "week": 4,
+        "rirTarget": null,
+        "setsNotePt": "Semana 4: 2-3 séries, 45-75 s nas áreas mais trabalhadas. Consolide a rotina de desaquecimento.",
+        "notePt": "Semana de consolidação. Encerrar sempre com esse fechamento melhora recuperação e amplitude.",
+        "setsNote": "Week 4: 2-3 sets, 45-75 s on the most-worked areas. Lock in the cool-down routine.",
+        "noteEn": "Consolidation week. Always closing with this wind-down helps recovery and range."
+      }
+    ],
+    "evidenceKeys": [
+      "thomas-2018-stretching-typology-duration-rom",
+      "medeiros-2016-static-stretching-hamstring-flexibility-review",
+      "opplert-2018-dynamic-stretching-flexibility-performance-review",
+      "behm-2016-acute-stretching-performance-rom-injury-review",
+      "garber-2011-acsm-quantity-quality-exercise",
+      "fradkin-2010-warm-up-physical-performance-meta-analysis"
+    ],
+    "principleSlugs": [
+      "range-of-motion",
+      "warm-up",
+      "training-frequency",
+      "progressive-overload",
+      "beginner-adaptation"
+    ],
+    "days": [
+      {
+        "dayIndex": 0,
+        "nameEn": "After Leg Day",
+        "namePt": "Pós Treino de Pernas",
+        "focusEn": "Releasing quads, hamstrings, hips and glutes",
+        "focusPt": "Soltar quadríceps, posteriores, quadril e glúteos",
+        "estimatedMinutes": 15,
+        "exercises": [
+          {
+            "exerciseSlug": "standing-forward-fold",
+            "sets": 2,
+            "repMin": 30,
+            "repMax": 60,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Fold and hang to release the hamstrings and lower back. Soft knees.",
+            "notesPt": "As repetições são segundos de sustentação. Incline e penda para soltar posteriores e lombar. Joelhos leves."
+          },
+          {
+            "exerciseSlug": "low-lunge",
+            "sets": 2,
+            "repMin": 30,
+            "repMax": 60,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Back knee down, hips forward for the quads and hip flexors you just loaded. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Joelho de trás no chão, quadril para frente para os quadríceps e flexores de quadril que você acabou de carregar. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "pigeon-pose",
+            "sets": 2,
+            "repMin": 40,
+            "repMax": 60,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Front shin forward, open the glute gently. Great after squats and lunges. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Canela da frente à frente, abra o glúteo suavemente. Ótima após agachamentos e afundos. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "seated-forward-fold",
+            "sets": 2,
+            "repMin": 30,
+            "repMax": 60,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Legs straight, fold from the hips for the hamstrings.",
+            "notesPt": "As repetições são segundos de sustentação. Pernas estendidas, incline a partir do quadril para os posteriores."
+          },
+          {
+            "exerciseSlug": "reclined-spinal-twist",
+            "sets": 2,
+            "repMin": 30,
+            "repMax": 60,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Gentle twist to release the low back and hips. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Torção suave para soltar a lombar e o quadril. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "legs-up-the-wall",
+            "sets": 1,
+            "repMin": 60,
+            "repMax": 120,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Legs up the wall to drain the legs and calm down. The perfect finish to leg day.",
+            "notesPt": "As repetições são segundos de sustentação. Pernas na parede para descansar as pernas e acalmar. O fechamento perfeito para o dia de pernas."
+          }
+        ]
+      },
+      {
+        "dayIndex": 1,
+        "nameEn": "After Push / Upper Day",
+        "namePt": "Pós Treino de Empurrar / Superior",
+        "focusEn": "Opening chest, shoulders and upper back",
+        "focusPt": "Abrir peito, ombros e parte de cima das costas",
+        "estimatedMinutes": 15,
+        "exercises": [
+          {
+            "exerciseSlug": "childs-pose",
+            "sets": 2,
+            "repMin": 30,
+            "repMax": 60,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Sit back, arms forward, to release the shoulders and lats. Breathe into the back.",
+            "notesPt": "As repetições são segundos de sustentação. Sente para trás, braços à frente, para soltar os ombros e as costas (dorsais). Respire em direção às costas."
+          },
+          {
+            "exerciseSlug": "thread-the-needle",
+            "sets": 2,
+            "repMin": 30,
+            "repMax": 60,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Thread one arm under the body to release the upper back and shoulder. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Passe um braço por baixo do corpo para soltar a parte de cima das costas e o ombro. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "cobra-pose",
+            "sets": 2,
+            "repMin": 30,
+            "repMax": 45,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Gentle chest-opening backbend to counter all the pushing.",
+            "notesPt": "As repetições são segundos de sustentação. Extensão suave que abre o peito para contrabalançar todo o empurrar."
+          },
+          {
+            "exerciseSlug": "sphinx-pose",
+            "sets": 2,
+            "repMin": 30,
+            "repMax": 60,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Forearms down, mild lift, opening the front of the shoulders and chest.",
+            "notesPt": "As repetições são segundos de sustentação. Antebraços no chão, leve elevação, abrindo a frente dos ombros e do peito."
+          },
+          {
+            "exerciseSlug": "seated-spinal-twist",
+            "sets": 2,
+            "repMin": 30,
+            "repMax": 60,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Lengthen and twist to decompress the spine. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Alongue e gire para descomprimir a coluna. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "corpse-pose",
+            "sets": 1,
+            "repMin": 60,
+            "repMax": 120,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Lie still and let the upper body settle to finish.",
+            "notesPt": "As repetições são segundos de sustentação. Deite imóvel e deixe a parte superior do corpo se acomodar para encerrar."
+          }
+        ]
+      },
+      {
+        "dayIndex": 2,
+        "nameEn": "General Decompression",
+        "namePt": "Descompressão Geral",
+        "focusEn": "A full-body wind-down for any session",
+        "focusPt": "Um desaquecimento de corpo inteiro para qualquer sessão",
+        "estimatedMinutes": 15,
+        "exercises": [
+          {
+            "exerciseSlug": "cat-cow",
+            "sets": 2,
+            "repMin": 8,
+            "repMax": 12,
+            "rirTarget": null,
+            "restSeconds": 15,
+            "warmupSets": 0,
+            "notesEn": "Flow slowly between Cat and Cow, one cycle per breath — 8-12 cycles to warm and mobilize the spine before the holds.",
+            "notesPt": "Flua devagar entre Gato e Vaca, um ciclo por respiração — 8 a 12 ciclos para aquecer e mobilizar a coluna antes dos alongamentos."
+          },
+          {
+            "exerciseSlug": "downward-dog",
+            "sets": 2,
+            "repMin": 30,
+            "repMax": 45,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Lengthen the whole back line and decompress the spine.",
+            "notesPt": "As repetições são segundos de sustentação. Alongue toda a linha posterior e descomprima a coluna."
+          },
+          {
+            "exerciseSlug": "childs-pose",
+            "sets": 2,
+            "repMin": 30,
+            "repMax": 60,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Fold forward and let the back and shoulders release.",
+            "notesPt": "As repetições são segundos de sustentação. Incline à frente e deixe as costas e os ombros soltarem."
+          },
+          {
+            "exerciseSlug": "reclined-spinal-twist",
+            "sets": 2,
+            "repMin": 30,
+            "repMax": 60,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Knee across the body, shoulders down, breathing slow. Do both sides.",
+            "notesPt": "As repetições são segundos de sustentação. Joelho cruzando o corpo, ombros no chão, respiração lenta. Faça os dois lados."
+          },
+          {
+            "exerciseSlug": "legs-up-the-wall",
+            "sets": 1,
+            "repMin": 60,
+            "repMax": 120,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. Legs up, arms relaxed, to calm the whole system.",
+            "notesPt": "As repetições são segundos de sustentação. Pernas para cima, braços relaxados, para acalmar o sistema inteiro."
+          },
+          {
+            "exerciseSlug": "corpse-pose",
+            "sets": 1,
+            "repMin": 60,
+            "repMax": 120,
+            "rirTarget": null,
+            "restSeconds": 20,
+            "warmupSets": 0,
+            "notesEn": "The reps are seconds of hold. A final still rest to close any training session.",
+            "notesPt": "As repetições são segundos de sustentação. Um descanso final e imóvel para encerrar qualquer sessão de treino."
+          }
+        ]
+      }
+    ]
+  }
 ]

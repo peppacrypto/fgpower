@@ -13,6 +13,7 @@ import { resolveSessionDay } from "@/lib/training/day-match";
 import { planWeek, restartsEachWeek } from "@/lib/training/day-rotation";
 import { defaultRange, isTimedHold } from "@/lib/training/set-plan";
 import { blockEnds, countedWeeks } from "@/lib/programming/block-progress";
+import { goalFilterForTrack, trackOf } from "@/lib/programming/tracks";
 import { getWeekGuidance } from "@/lib/training/week-guidance";
 import { closeBlock, entryWeekWasTrained, recordWorkoutMilestone } from "@/lib/data/program-lifecycle";
 import { isStillEditable } from "@/lib/data/workout-session";
@@ -57,8 +58,9 @@ async function openSessionForDay(
       ? prisma.programEnrollment.findUniqueOrThrow({ where: { id: enrollmentId } })
       : prisma.programEnrollment.findFirst({
           where: { userId, programId: day.programId, status: "ACTIVE" },
-          // At most one ACTIVE enrollment exists per user (partial unique index
-          // ProgramEnrollment_userId_active_key); order so that during any
+          // At most one ACTIVE enrollment exists per user per track (partial
+          // unique index ProgramEnrollment_userId_track_active_key); scoping by
+          // programId already pins the right one. Order so that during any
           // transition / legacy data we bind to the same one Today shows.
           orderBy: { startedAt: "desc" },
         }),
@@ -68,12 +70,23 @@ async function openSessionForDay(
   ]);
   if (enrollment && enrollment.userId !== userId) throw new Error("FORBIDDEN");
 
+  // Which parallel track this day belongs to. Only in-progress sessions of the
+  // SAME track take part below, so a strength workout in progress never blocks
+  // starting a yoga session (and vice versa), and starting one track's day
+  // never discards another track's open workout. The primary track also
+  // includes ad-hoc (null-program) sessions, as it did before tracks existed.
+  const track = trackOf(day.program.goal);
+  const trackScope: Prisma.WorkoutSessionWhereInput =
+    track === "primary"
+      ? { OR: [{ programId: null }, { program: { is: goalFilterForTrack("primary") } }] }
+      : { program: { is: goalFilterForTrack(track) } };
+
   return prisma.$transaction(async (tx) => {
     // Serialize starts per user so two taps or two tabs can't both create a session.
     await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${userId}))`;
 
     const openRows = await tx.workoutSession.findMany({
-      where: { userId, status: "IN_PROGRESS" },
+      where: { userId, status: "IN_PROGRESS", ...trackScope },
       orderBy: { startedAt: "desc" },
       select: {
         id: true,
@@ -1510,7 +1523,7 @@ async function rollBackProgram(
   if (!s.enrollmentId) return;
   const enrollment = await tx.programEnrollment.findFirst({
     where: { id: s.enrollmentId, userId },
-    select: { id: true, status: true, endedAt: true, programId: true, currentWeek: true, nextDayIndex: true },
+    select: { id: true, status: true, endedAt: true, programId: true, currentWeek: true, nextDayIndex: true, track: true },
   });
   if (!enrollment) return;
   // userId keeps these on the (userId, …) indexes.
@@ -1532,7 +1545,9 @@ async function rollBackProgram(
     enrollment.status === "COMPLETED" &&
     enrollment.endedAt &&
     Math.abs(enrollment.endedAt.getTime() - s.finishedAt.getTime()) < 1000 &&
-    (await tx.programEnrollment.count({ where: { userId, status: "ACTIVE" } })) === 0
+    // Nothing active IN THE SAME TRACK (an on-demand yoga / mobility plan in
+    // another track must not keep a just-reopened block from reactivating).
+    (await tx.programEnrollment.count({ where: { userId, status: "ACTIVE", track: enrollment.track } })) === 0
   ) {
     active = true;
     data.status = "ACTIVE";

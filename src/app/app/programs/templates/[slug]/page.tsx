@@ -11,6 +11,7 @@ import { missingEquipment, joinPt, needLabels } from "@/lib/programming/equipmen
 import { similarPrograms } from "@/lib/programming/similar";
 import { ADAPT_LABEL, EQUIPMENT_LABEL } from "@/lib/constants/program-labels";
 import { getActiveEnrollment } from "@/lib/data/dashboard";
+import { trackOf } from "@/lib/programming/tracks";
 import { getProfile } from "@/lib/data/profile";
 import { getEnrollmentProgress, isUntouchedFork } from "@/lib/data/user-programs";
 import { Button } from "@/components/ui/button";
@@ -52,9 +53,21 @@ export default async function TemplateDetailPage({ params, searchParams }: PageP
   // Already following this template: "Ativar" again would fork a fresh copy
   // and reset the program to week 1 — send the user to their workouts instead,
   // and "Personalizar" becomes "Ajustar meu …": the running program, edited in place.
-  const alreadyActive = activeEnrollment?.program.sourceTemplateId === template.id;
-  // Where the running program stands, for the switch warning.
-  const activeProgress = activeEnrollment ? await getEnrollmentProgress(activeEnrollment) : null;
+  // Activating is track-scoped: a yoga / mobility template starts ALONGSIDE the
+  // primary plan, so "switch" only applies against an active plan in the SAME
+  // track. For a primary template this is the primary enrollment, unchanged.
+  const templateTrack = trackOf(template.goal);
+  const trackActive =
+    templateTrack === "primary"
+      ? activeEnrollment
+      : await prisma.programEnrollment.findFirst({
+          where: { userId: user.id, status: "ACTIVE", track: templateTrack },
+          select: { programId: true, program: { select: { name: true, sourceTemplateId: true } } },
+        });
+  const alreadyActive = trackActive?.program.sourceTemplateId === template.id;
+  // Where the running program stands, for the switch warning (primary only).
+  const activeProgress =
+    templateTrack === "primary" && activeEnrollment ? await getEnrollmentProgress(activeEnrollment) : null;
   const firstDay = template.days.find((d) => d.exercises.length > 0);
   const limitations = profile?.limitations?.trim();
   // The copy of this template the user last worked on — edited, adapted or duplicated.
@@ -134,12 +147,12 @@ export default async function TemplateDetailPage({ params, searchParams }: PageP
     ) : null;
   // With another program running, activating is a switch: both the masthead
   // and the sticky bar say so and ask first (each is its own two-step button).
-  const switchButton = activeEnrollment ? (
+  const switchButton = trackActive ? (
     <SwitchProgramButton
       action={startTemplate.bind(null, template.slug)}
       label="Ativar programa"
       pendingLabel="Ativando…"
-      active={{ name: activeEnrollment.program.name, progress: activeProgress ?? "" }}
+      active={{ name: trackActive.program.name, progress: activeProgress ?? "" }}
     />
   ) : null;
 
@@ -154,7 +167,7 @@ export default async function TemplateDetailPage({ params, searchParams }: PageP
         asChild
         className="h-auto min-h-11 max-w-full whitespace-normal py-2.5 text-center text-balance"
       >
-        <Link href={`/app/programs/${activeEnrollment!.programId}/edit`}>Ajustar meu {activeEnrollment!.program.name}</Link>
+        <Link href={`/app/programs/${trackActive!.programId}/edit`}>Ajustar meu {trackActive!.program.name}</Link>
       </Button>
     </>
   ) : switchButton ? (

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { GLoad } from "@/components/ui/glyph";
+import { YouTubeEmbed } from "@/components/exercises/youtube-embed";
 
 /** What each technique frame is: its visible tag, and how its alt text says it. */
 const FRAME: Record<string, { tag: string; alt: string }> = {
@@ -8,24 +9,48 @@ const FRAME: Record<string, { tag: string; alt: string }> = {
 };
 
 /**
- * An exercise's technique photos, side by side, each tagged with the phase it
- * shows (INÍCIO / FIM) — two near-identical photos read as one otherwise —
- * and described that way to screen readers instead of repeating the name.
+ * An exercise's technique media: a YouTube tutorial (when the exercise has one
+ * — currently yoga poses) as a click-to-load embed, and/or its technique photos
+ * side by side, each tagged with the phase it shows (INÍCIO / FIM) — two
+ * near-identical photos read as one otherwise — and described that way to
+ * screen readers instead of repeating the name. With neither, a placeholder.
  */
 export function TechniqueFrames({
   name,
   media,
+  videoUrl,
+  videoCredit,
 }: {
   name: string;
   media: { id: string; url: string; kind: string; altPt: string | null }[];
+  videoUrl?: string | null;
+  videoCredit?: string | null;
 }) {
-  if (media.length === 0) {
+  if (media.length === 0 && !videoUrl) {
     return (
       <div className="reg-frame flex aspect-[3/4] w-full items-center justify-center text-muted">
         <GLoad className="size-10" />
       </div>
     );
   }
+  if (videoUrl) {
+    return (
+      <div className="flex flex-col gap-2">
+        <YouTubeEmbed url={videoUrl} title={name} credit={videoCredit} />
+        {media.length > 0 ? <TechniqueImages name={name} media={media} /> : null}
+      </div>
+    );
+  }
+  return <TechniqueImages name={name} media={media} />;
+}
+
+function TechniqueImages({
+  name,
+  media,
+}: {
+  name: string;
+  media: { id: string; url: string; kind: string; altPt: string | null }[];
+}) {
   return (
     <div className="reg-frame flex gap-2">
       {media.map((m, i) => {

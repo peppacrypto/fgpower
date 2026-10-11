@@ -589,6 +589,9 @@ export interface TechniqueSheet {
   slug: string;
   namePt: string;
   images: { start: string | null; end: string | null };
+  /** Optional YouTube tutorial (currently yoga poses) + its channel credit. */
+  videoUrl: string | null;
+  videoCredit: string | null;
   cues: string[];
   /** Where the cues come from: curated coaching cues, or the imported step-by-step. */
   source: "coaching" | "instructions" | null;
@@ -608,6 +611,8 @@ export async function getTechniqueSheet(exerciseId: string): Promise<TechniqueSh
       namePt: true,
       contentPt: true,
       instructionsPt: true,
+      videoUrl: true,
+      videoCredit: true,
       media: { orderBy: { sortOrder: "asc" }, select: { url: true, kind: true } },
     },
   });
@@ -621,6 +626,8 @@ export async function getTechniqueSheet(exerciseId: string): Promise<TechniqueSh
     slug: e.slug,
     namePt: e.namePt,
     images: { start: start?.url ?? null, end: end?.url ?? null },
+    videoUrl: e.videoUrl,
+    videoCredit: e.videoCredit,
     cues: cues.slice(0, 3),
     source: coaching.length > 0 ? "coaching" : steps.length > 0 ? "instructions" : null,
   };

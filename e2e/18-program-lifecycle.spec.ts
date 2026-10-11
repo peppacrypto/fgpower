@@ -576,8 +576,10 @@ test("a block stopped and resumed inside its Thursday–Sunday entry week resume
     page.getByRole("button", { name: "Retomar · semana de entrada" }).click(),
   ]);
 
-  // Today confirms the entry week, and the counter is unchanged.
-  await expect(page.getByRole("status")).toContainText("semana de entrada");
+  // Today confirms the entry week, and the counter is unchanged. Scope to the
+  // resume Notice: a bare getByRole("status") also matches the sr-only route/
+  // offline announcers (and the still-streaming skeleton), tripping strict mode.
+  await expect(page.getByRole("status").filter({ hasText: "semana de entrada" })).toBeVisible();
   await expect(page.locator("[data-program-card] [data-week-line]")).toContainText(/Semana de entrada/i);
   expect(sql(`SELECT status || '|' || "currentWeek" FROM "ProgramEnrollment" WHERE id = '${enrollmentId}'`)).toBe("ACTIVE|1");
 });

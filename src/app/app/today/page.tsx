@@ -10,6 +10,7 @@ import {
   WELCOME_BACK_AFTER_DAYS,
   findUndoableSwitch,
   getActiveEnrollment,
+  getComplementaryEnrollments,
   getDaysDoneThisWeek,
   getInProgressSessions,
   getLastWeekReview,
@@ -65,6 +66,7 @@ import { getBodyweightGlance } from "@/lib/data/body-metrics";
 import { ResumeProgramPanel } from "@/components/programs/resume-program-panel";
 import { formatSpDate, formatSpDaysAgo, spDaysBetween } from "@/lib/training/stale";
 import { restorePreviousProgram } from "@/lib/actions/programs";
+import { ComplementaryTracks } from "./complementary-tracks";
 import { StaleSessionRow } from "./stale-session-row";
 import { ResumeWorkout } from "./resume-workout";
 import { ClearParams } from "./clear-params";
@@ -145,9 +147,10 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
   const now = new Date();
   // First: it closes a block whose last week is over, so what's active below is current.
   const completedBlock = await getRecentlyCompletedBlock(user.id, now);
-  const [profile, enrollment, inProgress, weeklyCount, recentPrs, cookieStore] = await Promise.all([
+  const [profile, enrollment, complementary, inProgress, weeklyCount, recentPrs, cookieStore] = await Promise.all([
     getProfile(user.id),
     getActiveEnrollment(user.id),
+    getComplementaryEnrollments(user.id),
     getInProgressSessions(user.id, now),
     getWeeklyProgress(user.id),
     getRecentPersonalRecords(user.id),
@@ -781,6 +784,9 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
           </div>
         </section>
       ) : null}
+
+      {/* On-demand yoga / mobility plans running alongside the primary plan. */}
+      <ComplementaryTracks enrollments={complementary} />
 
       {/* The people you follow (W-139). At most one optional prompt per visit:
           the team invite gives way to the fatigue card and the weigh-in. */}

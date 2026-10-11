@@ -7,20 +7,24 @@ import { assessOpenSession } from "@/lib/training/stale";
 import { dayNumberOf, mondayOf, weekStartChoice } from "@/lib/training/day-rotation";
 import { isPartialEntryWeek } from "@/lib/training/program-calendar";
 import { layOutWeek } from "@/lib/programming/schedule";
+import { trackOf, type ProgramTrack } from "@/lib/programming/tracks";
 import { HIGH_WEEKLY_DIRECT_SETS, LOW_WEEKLY_SETS, SECONDARY_SET_CREDIT } from "@/lib/programming/rules";
 import { loadStreakInputs } from "./streak-data";
 import { entryWeekTrained as entryWeekHadWorkout, streakWeeksFrom, summarizeStreak } from "./streak-weeks";
 
 /**
- * The user's active enrollment with its program's days. Each day's weekday
- * is the user's week as it stands — laid out from the profile's preferred
- * days now (programming/schedule layOutWeek, the rule activation writes onto
- * UserProgramDay.weekday) — so changing the training days in the settings
- * moves Today's schedule and the summary's next date at once.
+ * The user's active PRIMARY enrollment with its program's days — the scheduled
+ * strength/fitness plan that owns the user's week (the GD series, flagships,
+ * custom programs). Each day's weekday is the user's week as it stands — laid
+ * out from the profile's preferred days now (programming/schedule layOutWeek,
+ * the rule activation writes onto UserProgramDay.weekday) — so changing the
+ * training days in the settings moves Today's schedule and the summary's next
+ * date at once. Complementary tracks (yoga / mobility) never fill this slot;
+ * they surface through getComplementaryEnrollments.
  */
 export const getActiveEnrollment = cache(async (userId: string) => {
   const enrollment = await prisma.programEnrollment.findFirst({
-    where: { userId, status: "ACTIVE" },
+    where: { userId, status: "ACTIVE", track: "primary" },
     include: {
       user: { select: { profile: { select: { preferredDays: true } } } },
       program: {
@@ -59,6 +63,55 @@ export const getActiveEnrollment = cache(async (userId: string) => {
     ...rest,
     program: { ...rest.program, days: rest.program.days.map((d, i) => ({ ...d, weekday: layout.weekdays[i] ?? null })) },
   };
+});
+
+export interface ComplementaryEnrollment {
+  enrollmentId: string;
+  track: ProgramTrack;
+  programId: string;
+  programName: string;
+  templateSlug: string | null;
+  /** The program's trainable days (at least one exercise), for the on-demand "Iniciar". */
+  days: { id: string; dayIndex: number; name: string; focus: string | null; exerciseCount: number }[];
+}
+
+/**
+ * The user's active COMPLEMENTARY enrollments — the on-demand yoga / mobility
+ * plans running alongside the primary strength plan. One per track at most
+ * (the partial unique index). These never claim weekdays, so no week layout is
+ * applied; Today lists them as "faça quando quiser" cards whose days open an
+ * ad-hoc session exactly like the primary plan's days do.
+ */
+export const getComplementaryEnrollments = cache(async (userId: string): Promise<ComplementaryEnrollment[]> => {
+  const rows = await prisma.programEnrollment.findMany({
+    where: { userId, status: "ACTIVE", track: { not: "primary" } },
+    orderBy: { startedAt: "asc" },
+    select: {
+      id: true,
+      track: true,
+      program: {
+        select: {
+          id: true,
+          name: true,
+          sourceTemplate: { select: { slug: true } },
+          days: {
+            orderBy: { dayIndex: "asc" },
+            select: { id: true, dayIndex: true, name: true, focus: true, _count: { select: { exercises: true } } },
+          },
+        },
+      },
+    },
+  });
+  return rows.map((e) => ({
+    enrollmentId: e.id,
+    track: (e.track as ProgramTrack) ?? "primary",
+    programId: e.program.id,
+    programName: e.program.name,
+    templateSlug: e.program.sourceTemplate?.slug ?? null,
+    days: e.program.days
+      .map((d) => ({ id: d.id, dayIndex: d.dayIndex, name: d.name, focus: d.focus, exerciseCount: d._count.exercises }))
+      .filter((d) => d.exerciseCount > 0),
+  }));
 });
 
 export async function getWeeklyProgress(userId: string) {
@@ -195,7 +248,7 @@ export async function findUndoableSwitch(
       status: "ABANDONED",
       endedAt: { gte: new Date(now.getTime() - SWITCH_UNDO_WINDOW_MS) },
     },
-    include: { program: { select: { id: true, name: true, durationWeeks: true } } },
+    include: { program: { select: { id: true, name: true, durationWeeks: true, goal: true } } },
   });
   if (!previous?.endedAt) return null;
   const endedAt = previous.endedAt.getTime();
@@ -205,8 +258,10 @@ export async function findUndoableSwitch(
     select: { id: true },
   });
   if (endedLater) return null;
+  // Scoped to the restored program's track: an active yoga / mobility plan in
+  // another track is not part of this (primary) switch and must not block undo.
   const active = await db.programEnrollment.findMany({
-    where: { userId, status: "ACTIVE" },
+    where: { userId, status: "ACTIVE", track: trackOf(previous.program.goal) },
     select: { id: true, programId: true, startedAt: true, updatedAt: true },
   });
   // Started by the switch — or reactivated by it ("Retomar da semana N" resumes an older enrollment).

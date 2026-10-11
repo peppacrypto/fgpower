@@ -16,6 +16,7 @@ import { MAX_PROGRAMS_PER_USER, normalizeProgramName } from "@/lib/validation/pr
 // shares the exact same code without exposing these userId-taking helpers as
 // client-callable server actions.
 import { forkTemplateToProgram, setAsOnlyActiveProgram, startProgramInternal, SET_HAS_DATA } from "@/lib/programming/enroll";
+import { goalFilterForTrack, trackOf } from "@/lib/programming/tracks";
 
 /**
  * Refuses a new program once the account already holds MAX_PROGRAMS_PER_USER
@@ -288,8 +289,10 @@ export async function restorePreviousProgram(enrollmentId: string) {
         await tx.programEnrollment.deleteMany({ where: { id: enrollment.id, userId: user.id } });
       }
     }
+    // Scoped to the restored program's track: undoing a primary switch never
+    // archives an active yoga / mobility plan running alongside it.
     await tx.userProgram.updateMany({
-      where: { userId: user.id, status: "ACTIVE", id: { not: previous.programId } },
+      where: { userId: user.id, status: "ACTIVE", id: { not: previous.programId }, ...goalFilterForTrack(trackOf(previous.program.goal)) },
       data: { status: "ARCHIVED", archivedAt: now },
     });
     await tx.userProgram.update({
@@ -300,10 +303,11 @@ export async function restorePreviousProgram(enrollmentId: string) {
       where: { id: previous.id },
       data: { status: "ACTIVE", endedAt: null },
     });
-    return previous.programId;
+    return { programId: previous.programId, isPrimary: trackOf(previous.program.goal) === "primary" };
   });
-  // The profile's weekly frequency goes back with the program (the switch had set the other one's).
-  if (restored) await applyWeekLayout(prisma, user.id, restored);
+  // The profile's weekly frequency goes back with the program (the switch had
+  // set the other one's) — only for the primary track, which owns the week.
+  if (restored?.isPrimary) await applyWeekLayout(prisma, user.id, restored.programId);
 
   revalidatePath("/app/today");
   revalidatePath("/app/programs");
@@ -501,30 +505,32 @@ export async function resumeProgram(programId: string) {
   if (typeof programId !== "string") redirect("/app/programs");
   const program = await prisma.userProgram.findFirst({
     where: { id: programId, userId: user.id },
-    select: { id: true, days: { select: { _count: { select: { exercises: true } } } } },
+    select: { id: true, goal: true, days: { select: { _count: { select: { exercises: true } } } } },
   });
   if (!program) redirect("/app/programs");
   const restart = await getProgramRestart(user.id, programId);
   if (!restart.resumable || !program.days.some((d) => d._count.exercises > 0)) redirect(`/app/programs/${programId}`);
   const resumable = restart.resumable;
+  const track = trackOf(program.goal);
 
   const outcome = await prisma.$transaction(async (tx) => {
     // Same per-user lock as startProgramInternal: no start/resume/open interleaves.
     await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${user.id}))`;
     const previous = await tx.programEnrollment.findFirst({
-      where: { userId: user.id, status: "ACTIVE" },
+      where: { userId: user.id, status: "ACTIVE", track },
       orderBy: { startedAt: "desc" },
       select: { id: true, programId: true },
     });
     // Already running this program (a double tap, a stale page): leave it be.
     if (previous?.programId === programId) return { resumed: false as const, previousId: null };
-    await setAsOnlyActiveProgram(tx, user.id, programId);
+    await setAsOnlyActiveProgram(tx, user.id, programId, track);
     await tx.userProgram.update({ where: { id: programId }, data: { status: "ACTIVE", archivedAt: null } });
     await tx.programEnrollment.update({
       where: { id: resumable.enrollmentId },
       data: { status: "ACTIVE", endedAt: null, currentWeek: resumable.currentWeek },
     });
-    await applyWeekLayout(tx, user.id, programId);
+    // Only the primary track owns the user's week (see startProgramInternal).
+    if (track === "primary") await applyWeekLayout(tx, user.id, programId);
     return { resumed: true as const, previousId: previous?.id ?? null };
   });
 

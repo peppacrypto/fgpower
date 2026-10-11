@@ -8,6 +8,7 @@ import { GLoad } from "@/components/ui/glyph";
 import { Button } from "@/components/ui/button";
 import { Bone } from "@/components/ui/skeleton";
 import { useRestoreFocus } from "@/components/ui/use-restore-focus";
+import { YouTubeEmbed } from "@/components/exercises/youtube-embed";
 import { SESSION_EXPIRED_ERROR } from "@/lib/auth/session-expired";
 import type { TechniqueSheet as TechniqueData } from "@/lib/data/workout-session";
 import { WorkoutActionError, WorkoutLoggedOutError } from "./action-error";
@@ -156,10 +157,16 @@ export function TechniqueSheet({
             </button>
           </div>
 
-          <div className="mt-3 flex gap-2">
-            {frame(start, "Início")}
-            {frame(end, "Fim")}
-          </div>
+          {sheet?.videoUrl ? (
+            <div className="mt-3">
+              <YouTubeEmbed url={sheet.videoUrl} title={exercise.name} credit={sheet.videoCredit} />
+            </div>
+          ) : (
+            <div className="mt-3 flex gap-2">
+              {frame(start, "Início")}
+              {frame(end, "Fim")}
+            </div>
+          )}
 
           <div className="mt-4" aria-live="polite">
             <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted">

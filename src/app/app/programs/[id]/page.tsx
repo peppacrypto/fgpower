@@ -7,6 +7,7 @@ import { GArrow, GLoad } from "@/components/ui/glyph";
 import { getCurrentSession, requireUser } from "@/lib/auth/require-user";
 import { getEnrollmentProgress, getUserProgram } from "@/lib/data/user-programs";
 import { getActiveEnrollment, getDaysDoneThisWeek, getInProgressSessions } from "@/lib/data/dashboard";
+import { trackOf } from "@/lib/programming/tracks";
 import { analyzeUserProgram } from "@/lib/programming/analyze";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -55,7 +56,16 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
   const isActive = program.status === "ACTIVE";
   // A finished GD block leads on to the next one of the series.
   const nextSlug = restart.completed ? seriesPosition(program.sourceTemplate?.slug)?.nextSlug ?? null : null;
-  const otherActive = activeEnrollment && activeEnrollment.programId !== program.id ? activeEnrollment : null;
+  // "Outro programa ativo" (the switch warning) only counts an active plan in
+  // the SAME track: a yoga / mobility program starts alongside the primary
+  // plan, so viewing it must not warn that it will replace the GD plan.
+  const programTrack = trackOf(program.goal);
+  const otherActive =
+    activeEnrollment &&
+    activeEnrollment.programId !== program.id &&
+    trackOf(activeEnrollment.program.goal) === programTrack
+      ? activeEnrollment
+      : null;
   const ownEnrollment = activeEnrollment && activeEnrollment.programId === program.id ? activeEnrollment : null;
   const doneThisWeek = ownEnrollment
     ? (await getDaysDoneThisWeek(user.id, ownEnrollment.id, program.days)).byDayId

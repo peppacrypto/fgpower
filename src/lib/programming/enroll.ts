@@ -5,6 +5,7 @@ import { isUniqueViolation } from "@/lib/db/prisma-error";
 import { getTemplateBySlug } from "@/lib/data/templates";
 import { adaptRowKey } from "@/lib/data/alternatives";
 import { applyWeekLayout } from "@/lib/data/program-lifecycle";
+import { goalFilterForTrack, trackOf, type ProgramTrack } from "@/lib/programming/tracks";
 import type { Prisma } from "@/generated/prisma/client";
 
 /**
@@ -89,24 +90,28 @@ export async function forkTemplateToProgram(templateSlug: string, userId: string
   return program;
 }
 
-export async function setAsOnlyActiveProgram(tx: Tx, userId: string, programId: string) {
-  // Only one enrollment is ACTIVE at a time — starting a new program ends
-  // (does not delete) any other in-progress one, preserving its history.
-  // Runs on the caller's transaction so the abandon-then-create is atomic
-  // under the per-user advisory lock (one ACTIVE enrollment per user).
+export async function setAsOnlyActiveProgram(tx: Tx, userId: string, programId: string, track: ProgramTrack) {
+  // Only one enrollment is ACTIVE at a time PER TRACK — starting a new program
+  // ends (does not delete) any other in-progress one IN THE SAME TRACK,
+  // preserving its history and leaving the other tracks untouched (so starting
+  // a yoga/mobility plan never archives the primary GD plan, and vice versa).
+  // Runs on the caller's transaction so the abandon-then-create is atomic under
+  // the per-user advisory lock (one ACTIVE enrollment per user per track).
+  const goalFilter = goalFilterForTrack(track);
   await tx.programEnrollment.updateMany({
-    where: { userId, status: "ACTIVE" },
+    where: { userId, status: "ACTIVE", track },
     data: { status: "ABANDONED", endedAt: new Date() },
   });
   await tx.userProgram.updateMany({
-    where: { userId, status: "ACTIVE", id: { not: programId } },
+    where: { userId, status: "ACTIVE", id: { not: programId }, ...goalFilter },
     data: { status: "ARCHIVED", archivedAt: new Date() },
   });
-  // Open workouts with nothing logged are abandoned starts: don't let one
-  // hold Today's "Treino em andamento" slot for the new program. Sessions
-  // with logged sets stay open so the user can finish or discard them.
+  // Open workouts with nothing logged are abandoned starts: don't let one hold
+  // Today's "Treino em andamento" slot for the new program. Scoped to the same
+  // track so starting a yoga session never discards an empty strength session.
+  // Sessions with logged sets stay open so the user can finish or discard them.
   await tx.workoutSession.updateMany({
-    where: { userId, status: "IN_PROGRESS", setLogs: { none: SET_HAS_DATA } },
+    where: { userId, status: "IN_PROGRESS", setLogs: { none: SET_HAS_DATA }, program: { is: goalFilter } },
     data: { status: "DISCARDED" },
   });
 }
@@ -128,22 +133,28 @@ export async function startProgramInternal(
   if (program.userId !== userId) throw new Error("FORBIDDEN");
   if (!program.days.some((d) => d.exercises.length > 0)) return { ok: false, reason: "EMPTY" };
 
+  // Which parallel track this program activates in (trackOf the program's goal).
+  // The "one active" rule and every write below are scoped to it, so a yoga /
+  // mobility plan activates ALONGSIDE the primary strength plan, not over it.
+  const track = trackOf(program.goal);
+
   try {
     return await prisma.$transaction(async (tx) => {
       // Serialize activation per user (same lock key as openSessionForDay and
       // restorePreviousProgram) so two taps / two tabs can't both create an
-      // ACTIVE enrollment. `previous` is re-read under the lock.
+      // ACTIVE enrollment. `previous` is re-read under the lock, scoped to this
+      // track — the primary plan is not the "previous" of a yoga activation.
       await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${userId}))`;
 
       const previous = await tx.programEnrollment.findFirst({
-        where: { userId, status: "ACTIVE" },
+        where: { userId, status: "ACTIVE", track },
         orderBy: { startedAt: "desc" },
         select: { id: true, programId: true },
       });
       // Starting the program that is already running would reset it to week 1.
       if (previous?.programId === programId) return { ok: false, reason: "ALREADY_ACTIVE" } as const;
 
-      await setAsOnlyActiveProgram(tx, userId, programId);
+      await setAsOnlyActiveProgram(tx, userId, programId, track);
 
       // A finished or archived program started again leaves "Arquivados".
       await tx.userProgram.update({ where: { id: programId }, data: { status: "ACTIVE", archivedAt: null } });
@@ -152,6 +163,7 @@ export async function startProgramInternal(
         data: {
           userId,
           programId,
+          track,
           status: "ACTIVE",
           currentWeek: 1,
           nextDayIndex: program.days[0]?.dayIndex ?? 0,
@@ -159,8 +171,11 @@ export async function startProgramInternal(
           programSnapshot: program as never,
         },
       });
-      // Its days onto the user's week (Today's schedule) and its frequency onto the profile.
-      await applyWeekLayout(tx, userId, programId);
+      // Only the PRIMARY track owns the user's week: its days go onto the
+      // weekdays and its frequency onto the profile. Complementary tracks
+      // (yoga / mobility) are on-demand and never claim weekdays, so they don't
+      // touch Profile.daysPerWeek / preferredDays or the primary plan's layout.
+      if (track === "primary") await applyWeekLayout(tx, userId, programId);
       return { ok: true, previousEnrollmentId: previous?.id ?? null } as const;
     });
   } catch (err) {
