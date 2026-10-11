@@ -149,6 +149,11 @@ enum TrainingGoal {
   /// Yoga programs for multiple levels (templates only; not an onboarding goal —
   /// a complementary track alongside the strength plans, its own library shelf).
   YOGA
+  /// Calisthenics SKILL work — pull-up / dip / handstand / planche / front-lever /
+  /// pistol progressions (templates only; not an onboarding goal). A complementary
+  /// "skills" track alongside the main plan. Full bodyweight-strength calisthenics
+  /// programs keep a strength goal and stay primary; only skill routines use this.
+  CALISTHENICS_SKILL
 }
 
 enum ExperienceLevel {
@@ -634,6 +639,9 @@ enum TrainingStyle {
   MOBILITY
   /// Yoga routines (asana holds and flows); a complementary, on-demand track.
   YOGA
+  /// Calisthenics / bodyweight-strength style — used by both the primary
+  /// bodyweight programs and the complementary skill-progression routines.
+  CALISTHENICS
 }
 
 enum ProgressionStrategy {

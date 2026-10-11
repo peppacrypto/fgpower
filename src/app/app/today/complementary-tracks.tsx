@@ -9,6 +9,7 @@ import type { ComplementaryEnrollment } from "@/lib/data/dashboard";
 const TRACK_META: Record<string, { label: string; bg: string; fg: string }> = {
   yoga: { label: "Yoga", bg: "var(--tag-indigo-bg)", fg: "var(--tag-indigo-fg)" },
   mobility: { label: "Mobilidade", bg: "var(--tag-teal-bg)", fg: "var(--tag-teal-fg)" },
+  skills: { label: "Calistenia", bg: "var(--tag-amber-bg)", fg: "var(--tag-amber-fg)" },
 };
 
 /**
@@ -23,7 +24,7 @@ export function ComplementaryTracks({ enrollments }: { enrollments: Complementar
   if (shown.length === 0) return null;
   return (
     <section className="mt-10">
-      <SectionHead label="Yoga & mobilidade" count="faça quando quiser" />
+      <SectionHead label="Yoga, mobilidade & calistenia" count="faça quando quiser" />
       <div className="mt-3 flex flex-col gap-4">
         {shown.map((e) => {
           const meta = TRACK_META[e.track] ?? { label: e.track, bg: "var(--surface-2)", fg: "var(--muted)" };

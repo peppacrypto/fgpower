@@ -9,14 +9,16 @@ import type { TrainingGoal } from "@/generated/prisma/enums";
  * - "primary": the scheduled strength/fitness plan (the GD series, flagships,
  *   custom programs). It owns the user's week — it is the one `getActiveEnrollment`
  *   returns and the only track `applyWeekLayout` lays onto weekdays.
- * - "mobility" / "yoga": complementary, ON-DEMAND tracks. They never claim
- *   weekdays and never archive the primary plan.
+ * - "mobility" / "yoga" / "skills": complementary, ON-DEMAND tracks. They never
+ *   claim weekdays and never archive the primary plan. "skills" is calisthenics
+ *   skill work (pull-up / handstand / planche progressions) done alongside a
+ *   main plan; full bodyweight-strength calisthenics programs stay "primary".
  *
  * The track is denormalized onto ProgramEnrollment.track at activation so the
  * DB can scope the "one active" rule; `trackOf` is the single source of truth
  * that maps a program's goal to its track.
  */
-export type ProgramTrack = "primary" | "mobility" | "yoga";
+export type ProgramTrack = "primary" | "mobility" | "yoga" | "skills";
 
 export const PRIMARY_TRACK: ProgramTrack = "primary";
 
@@ -24,6 +26,7 @@ export const PRIMARY_TRACK: ProgramTrack = "primary";
 export function trackOf(goal: TrainingGoal | null | undefined): ProgramTrack {
   if (goal === "MOBILITY") return "mobility";
   if (goal === "YOGA") return "yoga";
+  if (goal === "CALISTHENICS_SKILL") return "skills";
   return "primary";
 }
 
@@ -42,5 +45,6 @@ export function isComplementaryTrack(track: ProgramTrack): boolean {
 export function goalFilterForTrack(track: ProgramTrack): Prisma.UserProgramWhereInput {
   if (track === "mobility") return { goal: "MOBILITY" };
   if (track === "yoga") return { goal: "YOGA" };
-  return { OR: [{ goal: null }, { goal: { notIn: ["MOBILITY", "YOGA"] as TrainingGoal[] } }] };
+  if (track === "skills") return { goal: "CALISTHENICS_SKILL" };
+  return { OR: [{ goal: null }, { goal: { notIn: ["MOBILITY", "YOGA", "CALISTHENICS_SKILL"] as TrainingGoal[] } }] };
 }

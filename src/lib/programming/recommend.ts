@@ -319,12 +319,17 @@ export function recommendTemplates<T extends RecommendableTemplate>(
   const { passed, next } = seriesStanding(history);
   return templates
     .map((template, i) => ({ template, i, fit: templateFit(profile.equipmentAccess, template), score: scoreTemplate(profile, template) }))
-    // Mobility and yoga are complementary tracks with their own library
-    // shelves, never a primary "Para você" recommendation for a strength /
-    // hypertrophy profile.
+    // Mobility, yoga and calisthenics SKILL routines are complementary tracks
+    // with their own library shelves, never a primary "Para você" recommendation
+    // for a strength / hypertrophy profile. (Full bodyweight-strength calisthenics
+    // programs keep a strength goal and remain recommendable.)
     .filter(
       ({ template, fit }) =>
-        fit !== "none" && !passed.has(template.slug) && template.goal !== "MOBILITY" && template.goal !== "YOGA",
+        fit !== "none" &&
+        !passed.has(template.slug) &&
+        template.goal !== "MOBILITY" &&
+        template.goal !== "YOGA" &&
+        template.goal !== "CALISTHENICS_SKILL",
     )
     .sort(
       (a, b) =>

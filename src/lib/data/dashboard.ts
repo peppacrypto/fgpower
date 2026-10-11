@@ -76,8 +76,8 @@ export interface ComplementaryEnrollment {
 }
 
 /**
- * The user's active COMPLEMENTARY enrollments — the on-demand yoga / mobility
- * plans running alongside the primary strength plan. One per track at most
+ * The user's active COMPLEMENTARY enrollments — the on-demand yoga / mobility /
+ * calisthenics-skill plans running alongside the primary strength plan. One per track at most
  * (the partial unique index). These never claim weekdays, so no week layout is
  * applied; Today lists them as "faça quando quiser" cards whose days open an
  * ad-hoc session exactly like the primary plan's days do.

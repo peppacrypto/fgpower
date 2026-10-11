@@ -27,9 +27,10 @@ Two independent reasons:
    | `20260929100000_social_core` (Batch 5 / 95e3c69) | `NotificationType.WORKOUT_MILESTONE` | `getNotifications` (`src/lib/data/social/notifications.ts`) |
    | `20261003120000_mobility_goal_and_style` (mobility track) | `TrainingGoal.MOBILITY`, `TrainingStyle.MOBILITY` | any template/enrollment read selecting `goal`/`style` |
    | `20261010120000_yoga_goal_and_style` (yoga track) | `TrainingGoal.YOGA`, `TrainingStyle.YOGA` | any template/enrollment read selecting `goal`/`style` |
+   | `20261011120000_calisthenics_goal_and_style` (calisthenics) | `TrainingGoal.CALISTHENICS_SKILL`, `TrainingStyle.CALISTHENICS` | any template/enrollment read selecting `goal`/`style` |
 
-   The earliest image that tolerates today's production schema is the yoga
-   track (`20261010120000_*`). Anything older crashes on live data.
+   The earliest image that tolerates today's production schema is the
+   calisthenics release (`20261011120000_*`). Anything older crashes on live data.
 
 2. **Security sweep.** Batch 5 (95e3c69) added per-page `requireAdmin` gates, the
    better-auth route allowlist that closed the `/update-user` hole, and

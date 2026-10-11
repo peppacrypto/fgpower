@@ -275,6 +275,21 @@ const TIMED_HOLD_SLUGS = new Set([
   "dolphin-pose",
   "crow-pose",
   "thread-the-needle",
+  // Calisthenics skill holds — isometrics scored in seconds (planche / lever /
+  // handstand / L-sit / support / hollow / arch progressions).
+  "tuck-l-sit",
+  "l-sit",
+  "planche-lean",
+  "tuck-planche",
+  "advanced-tuck-planche",
+  "tuck-front-lever",
+  "advanced-tuck-front-lever",
+  "wall-handstand-hold",
+  "freestanding-handstand-hold",
+  "hollow-body-hold",
+  "arch-body-hold",
+  "parallel-bar-support-hold",
+  "german-hang-hold",
 ]);
 
 /**

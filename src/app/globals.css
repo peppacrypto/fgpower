@@ -61,6 +61,8 @@
   --tag-teal-fg: #0f766e;
   --tag-indigo-bg: #eef0ff;
   --tag-indigo-fg: #4338ca;
+  --tag-amber-bg: #fdf0d5;
+  --tag-amber-fg: #b45309;
 
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
@@ -126,6 +128,8 @@
     --tag-teal-fg: #5fd6c4;
     --tag-indigo-bg: #1a1b33;
     --tag-indigo-fg: #a5b4fc;
+    --tag-amber-bg: #2a2109;
+    --tag-amber-fg: #fbbf24;
 
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
     --shadow-md: 0 1px 3px rgba(0, 0, 0, 0.3), 0 8px 20px rgba(0, 0, 0, 0.35);
@@ -168,6 +172,8 @@
   --tag-teal-fg: #5fd6c4;
   --tag-indigo-bg: #1a1b33;
   --tag-indigo-fg: #a5b4fc;
+  --tag-amber-bg: #2a2109;
+  --tag-amber-fg: #fbbf24;
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 1px 3px rgba(0, 0, 0, 0.3), 0 8px 20px rgba(0, 0, 0, 0.35);
@@ -208,6 +214,8 @@
   --color-tag-teal-fg: var(--tag-teal-fg);
   --color-tag-indigo-bg: var(--tag-indigo-bg);
   --color-tag-indigo-fg: var(--tag-indigo-fg);
+  --color-tag-amber-bg: var(--tag-amber-bg);
+  --color-tag-amber-fg: var(--tag-amber-fg);
 
   --radius-sm: var(--radius-sm);
   --radius-md: var(--radius-md);

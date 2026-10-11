@@ -35,7 +35,7 @@ export interface CatalogItem {
 // Groups
 // ---------------------------------------------------------------------------
 
-export type ProgramGroupKey = "gd" | "start" | "core" | "focus" | "mobility" | "yoga" | "sport" | "home";
+export type ProgramGroupKey = "gd" | "start" | "core" | "focus" | "calistenia" | "mobility" | "yoga" | "sport" | "home";
 
 /**
  * Library shelves, in display order. Every template lands in exactly one.
@@ -47,6 +47,7 @@ export const PROGRAM_GROUPS: { key: ProgramGroupKey; short: string; label: strin
   { key: "start", short: "Comece aqui", label: "Comece aqui", blurb: "Para quem está começando ou voltando a treinar." },
   { key: "core", short: "Força", label: "Força & hipertrofia", blurb: "Divisões clássicas para quem já treina." },
   { key: "focus", short: "Especializações", label: "Especializações", blurb: "Foco em um músculo ou método por algumas semanas." },
+  { key: "calistenia", short: "Calistenia", label: "Calistenia", blurb: "Força com o peso do corpo: programas completos e progressões de habilidade (barra, paralelas, parada de mão), do iniciante ao avançado." },
   { key: "mobility", short: "Mobilidade", label: "Mobilidade & flexibilidade", blurb: "Amplitude, soltura e aquecimento — para somar aos seus treinos de força." },
   { key: "yoga", short: "Yoga", label: "Yoga", blurb: "Posturas e fluxos para vários níveis — faça quando quiser, junto dos seus treinos." },
   { key: "sport", short: "Esporte", label: "Esporte", blurb: "Força a serviço de outro esporte." },
@@ -82,10 +83,11 @@ export function programGroup(
   t: Pick<CatalogItem, "slug" | "goal" | "trainingStyle" | "equipmentAccess" | "experienceLevel">,
 ): ProgramGroupKey {
   if (t.slug.startsWith("gd-")) return "gd";
-  // Mobility and yoga are their own shelves regardless of equipment (they are
-  // bodyweight, so these must beat the "home" check below).
+  // Mobility, yoga and calisthenics are their own shelves regardless of
+  // equipment (they are bodyweight, so these must beat the "home" check below).
   if (t.goal === "MOBILITY") return "mobility";
   if (t.goal === "YOGA") return "yoga";
+  if (t.trainingStyle === "CALISTHENICS" || t.goal === "CALISTHENICS_SKILL") return "calistenia";
   if (t.equipmentAccess !== "FULL_GYM") return "home";
   if (isSportTemplate(t)) return "sport";
   if (FOCUS_SLUGS.has(t.slug)) return "focus";

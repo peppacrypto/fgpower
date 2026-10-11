@@ -28,6 +28,8 @@ const REGISTERED_ADDED_ENUM_VALUES = new Set<string>([
   "TrainingStyle.MOBILITY", // 20261003120000_mobility_goal_and_style (3631d91)
   "TrainingGoal.YOGA", // 20261010120000_yoga_goal_and_style
   "TrainingStyle.YOGA", // 20261010120000_yoga_goal_and_style
+  "TrainingGoal.CALISTHENICS_SKILL", // 20261011120000_calisthenics_goal_and_style
+  "TrainingStyle.CALISTHENICS", // 20261011120000_calisthenics_goal_and_style
 ]);
 
 const ADD_VALUE = /ALTER\s+TYPE\s+"(\w+)"\s+ADD\s+VALUE\s+(?:IF\s+NOT\s+EXISTS\s+)?'([^']+)'/gi;

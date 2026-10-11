@@ -7,6 +7,7 @@ export const GOAL_LABEL: Record<string, string> = {
   FAT_LOSS: "Emagrecer / definir",
   MOBILITY: "Mobilidade",
   YOGA: "Yoga",
+  CALISTHENICS_SKILL: "Habilidade",
 };
 
 export const EXPERIENCE_LABEL: Record<string, string> = {
@@ -25,6 +26,7 @@ export const STYLE_LABEL: Record<string, string> = {
   ENDURANCE_SUPPORT: "Suporte à resistência",
   MOBILITY: "Mobilidade & flexibilidade",
   YOGA: "Yoga",
+  CALISTHENICS: "Calistenia",
 };
 
 /** The names people also search by (gym slang keeps the English terms). */
@@ -37,6 +39,7 @@ export const STYLE_ALIASES: Record<string, string> = {
   ENDURANCE_SUPPORT: "corrida endurance",
   MOBILITY: "mobilidade alongamento flexibilidade soltura aquecimento",
   YOGA: "yoga ioga asana postura flexibilidade meditacao respiracao vinyasa",
+  CALISTHENICS: "calistenia calisthenics peso do corpo bodyweight barra fixa paralelas street workout parada de mao handstand planche front lever pistol muscle up",
 };
 
 /** What a program needs / what the user has (same wording as onboarding). */
@@ -102,6 +105,7 @@ export const GOAL_HUE: Record<string, { bg: string; fg: string; spine: string }>
   FAT_LOSS: { bg: "var(--accent-soft)", fg: "var(--accent)", spine: "var(--accent)" },
   MOBILITY: { bg: "var(--tag-teal-bg)", fg: "var(--tag-teal-fg)", spine: "var(--tag-teal-fg)" },
   YOGA: { bg: "var(--tag-indigo-bg)", fg: "var(--tag-indigo-fg)", spine: "var(--tag-indigo-fg)" },
+  CALISTHENICS_SKILL: { bg: "var(--tag-amber-bg)", fg: "var(--tag-amber-fg)", spine: "var(--tag-amber-fg)" },
 };
 
 /** The one honest line for anyone whose goal is losing fat. */

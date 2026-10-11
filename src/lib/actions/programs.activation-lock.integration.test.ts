@@ -32,7 +32,11 @@ let programB: string;
 let exerciseId: string;
 
 /** A user-owned program with one day that has one exercise (so it is startable). */
-async function makeProgram(name: string, exerciseId: string, goal?: "YOGA" | "MOBILITY"): Promise<string> {
+async function makeProgram(
+  name: string,
+  exerciseId: string,
+  goal?: "YOGA" | "MOBILITY" | "CALISTHENICS_SKILL",
+): Promise<string> {
   const program = await prisma.userProgram.create({
     data: {
       userId: USER,
@@ -135,6 +139,20 @@ it("a complementary (yoga) program activates ALONGSIDE the primary one — neith
   // The primary program is untouched (still ACTIVE, not archived by the yoga start).
   const primary = await prisma.userProgram.findUnique({ where: { id: programA }, select: { status: true } });
   expect(primary?.status).toBe("ACTIVE");
+});
+
+it("a calisthenics SKILL program activates ALONGSIDE the primary one — on its own 'skills' track", async () => {
+  const skill = await makeProgram("Skill A", exerciseId, "CALISTHENICS_SKILL");
+  await redirectOf(startProgram(programA));
+  await redirectOf(startProgram(skill));
+
+  const active = await prisma.programEnrollment.findMany({
+    where: { userId: USER, status: "ACTIVE" },
+    select: { programId: true, track: true },
+  });
+  expect(active).toHaveLength(2);
+  expect(active.find((e) => e.programId === programA)?.track).toBe("primary");
+  expect(active.find((e) => e.programId === skill)?.track).toBe("skills");
 });
 
 it("the per-track index still rejects a second ACTIVE enrollment in the SAME track", async () => {

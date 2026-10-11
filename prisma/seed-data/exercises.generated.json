@@ -3415,7 +3415,9 @@
     "height": 427,
     "sortOrder": 1
    }
-  ]
+  ],
+  "videoUrl": "https://www.youtube.com/watch?v=ASL8QnVrA5U",
+  "videoCredit": "Believe Calistenia"
  },
  {
   "sourceId": "Bench_Jump",
@@ -4596,7 +4598,9 @@
     "height": 427,
     "sortOrder": 1
    }
-  ]
+  ],
+  "videoUrl": "https://www.youtube.com/watch?v=umv7w9BgZbo",
+  "videoCredit": "João Martins Personal Trainer"
  },
  {
   "sourceId": "Bodyweight_Walking_Lunge",
@@ -4645,7 +4649,9 @@
     "height": 427,
     "sortOrder": 1
    }
-  ]
+  ],
+  "videoUrl": "https://www.youtube.com/watch?v=_ebTW-9B9d4",
+  "videoCredit": "Alê Shimizu"
  },
  {
   "sourceId": "Bosu_Ball_Cable_Crunch_With_Side_Bends",
@@ -7699,7 +7705,9 @@
     "height": 427,
     "sortOrder": 1
    }
-  ]
+  ],
+  "videoUrl": "https://www.youtube.com/watch?v=tGyLurtdgnQ",
+  "videoCredit": "Gerson PT"
  },
  {
   "sourceId": "Chin_To_Chest_Stretch",
@@ -15106,7 +15114,9 @@
     "height": 427,
     "sortOrder": 1
    }
-  ]
+  ],
+  "videoUrl": "https://www.youtube.com/watch?v=o9t_vAZ_pbo",
+  "videoCredit": "CaliScience - Brasil"
  },
  {
   "sourceId": "Hang_Clean",
@@ -15412,7 +15422,9 @@
     "height": 427,
     "sortOrder": 1
    }
-  ]
+  ],
+  "videoUrl": "https://www.youtube.com/watch?v=X1-2oGDeeMY",
+  "videoCredit": "Ademar Rodrigues Personal"
  },
  {
   "sourceId": "Hanging_Pike",
@@ -17183,7 +17195,9 @@
     "height": 427,
     "sortOrder": 1
    }
-  ]
+  ],
+  "videoUrl": "https://www.youtube.com/watch?v=jRwT8IcQTu0",
+  "videoCredit": "VitalShape_Oficial"
  },
  {
   "sourceId": "Inverted_Row_with_Straps",
@@ -25737,7 +25751,9 @@
     "height": 427,
     "sortOrder": 1
    }
-  ]
+  ],
+  "videoUrl": "https://www.youtube.com/watch?v=8mgsEx0xyeI",
+  "videoCredit": "Believe Calistenia"
  },
  {
   "sourceId": "Pelvic_Tilt_Into_Bridge",
@@ -26044,7 +26060,9 @@
     "height": 427,
     "sortOrder": 1
    }
-  ]
+  ],
+  "videoUrl": "https://www.youtube.com/watch?v=qNRqGqESAWU",
+  "videoCredit": "Leandro Twin"
  },
  {
   "sourceId": "Plate_Pinch",
@@ -27114,7 +27132,9 @@
     "height": 427,
     "sortOrder": 1
    }
-  ]
+  ],
+  "videoUrl": "https://www.youtube.com/watch?v=0r_jpqpuls8",
+  "videoCredit": "Bruno Marafon"
  },
  {
   "sourceId": "Push-Up_Wide",
@@ -27495,7 +27515,9 @@
     "height": 427,
     "sortOrder": 1
    }
-  ]
+  ],
+  "videoUrl": "https://www.youtube.com/watch?v=9ozLIq3Nmkw",
+  "videoCredit": "Tay Training"
  },
  {
   "sourceId": "Pushups_Close_and_Wide_Hand_Positions",
@@ -42156,1339 +42178,2228 @@
    }
   ]
  },
-  {
-    "sourceId": "Mountain_Pose",
-    "slug": "mountain-pose",
-    "nameEn": "Mountain Pose",
-    "namePt": "Postura da Montanha",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "BEGINNER",
-    "forceType": "STATIC",
-    "laterality": "BILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "Stand tall with feet together or hip-width, weight even across both feet (Tadasana).",
-      "Lengthen through the crown of the head, relax the shoulders down and let the arms rest by your sides.",
-      "Breathe slowly and steadily, keeping the whole body lightly engaged."
-    ],
-    "instructionsPt": [
-      "Fique em pé e ereto, pés juntos ou na largura do quadril, com o peso distribuído igualmente nos dois pés (Tadasana).",
-      "Alongue a partir do topo da cabeça, relaxe os ombros para baixo e deixe os braços ao lado do corpo.",
-      "Respire devagar e de forma constante, mantendo o corpo levemente ativo."
-    ],
-    "primaryMuscles": [
-      "spinal-erectors"
-    ],
-    "secondaryMuscles": [
-      "abdominals",
-      "calves"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=5NxDs-ovJU8",
-    "videoCredit": "SIKANA English"
-  },
-  {
-    "sourceId": "Downward_Facing_Dog",
-    "slug": "downward-dog",
-    "nameEn": "Downward-Facing Dog",
-    "namePt": "Cão Olhando para Baixo",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "BEGINNER",
-    "forceType": "STATIC",
-    "laterality": "BILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "From hands and knees, tuck the toes and lift the hips up and back into an inverted V (Adho Mukha Svanasana).",
-      "Press the hands firmly into the floor, lengthen the spine and let the heels reach toward the floor without forcing.",
-      "Keep a slight bend in the knees if the hamstrings are tight. Breathe steadily."
-    ],
-    "instructionsPt": [
-      "De quatro apoios, encaixe os dedos dos pés e eleve o quadril para cima e para trás, formando um V invertido (Adho Mukha Svanasana).",
-      "Pressione firme as mãos no chão, alongue a coluna e leve os calcanhares em direção ao chão sem forçar.",
-      "Mantenha os joelhos levemente flexionados se os posteriores de coxa estiverem tensos. Respire de forma constante."
-    ],
-    "primaryMuscles": [
-      "hamstrings"
-    ],
-    "secondaryMuscles": [
-      "shoulders",
-      "calves",
-      "lats"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=Y0GDgQqt-bA",
-    "videoCredit": "SarahBethYoga"
-  },
-  {
-    "sourceId": "Upward_Facing_Dog",
-    "slug": "upward-dog",
-    "nameEn": "Upward-Facing Dog",
-    "namePt": "Cão Olhando para Cima",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "INTERMEDIATE",
-    "forceType": "STATIC",
-    "laterality": "BILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "Lie face down, hands beside the lower ribs and the tops of the feet on the floor (Urdhva Mukha Svanasana).",
-      "Press into the hands to straighten the arms, lifting the chest and thighs off the floor.",
-      "Roll the shoulders back and down, open the chest and keep the neck long. Avoid if you have low-back pain."
-    ],
-    "instructionsPt": [
-      "Deite de bruços, mãos ao lado das costelas baixas e o peito dos pés no chão (Urdhva Mukha Svanasana).",
-      "Pressione as mãos para estender os braços, elevando o peito e as coxas do chão.",
-      "Leve os ombros para trás e para baixo, abra o peito e mantenha o pescoço longo. Evite se tiver dor lombar."
-    ],
-    "primaryMuscles": [
-      "spinal-erectors"
-    ],
-    "secondaryMuscles": [
-      "chest",
-      "shoulders",
-      "abdominals"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=cPoqV987PkU",
-    "videoCredit": "YogaRenew"
-  },
-  {
-    "sourceId": "Cobra_Pose",
-    "slug": "cobra-pose",
-    "nameEn": "Cobra Pose",
-    "namePt": "Cobra",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "BEGINNER",
-    "forceType": "STATIC",
-    "laterality": "BILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "Lie face down, hands under the shoulders and elbows close to the body (Bhujangasana).",
-      "Press lightly into the hands and lift the chest, keeping the hips and legs on the floor.",
-      "Keep the elbows slightly bent and the shoulders relaxed away from the ears. Breathe into the front of the chest."
-    ],
-    "instructionsPt": [
-      "Deite de bruços, mãos sob os ombros e cotovelos próximos ao corpo (Bhujangasana).",
-      "Pressione levemente as mãos e eleve o peito, mantendo o quadril e as pernas no chão.",
-      "Mantenha os cotovelos um pouco flexionados e os ombros longe das orelhas. Respire em direção à frente do peito."
-    ],
-    "primaryMuscles": [
-      "spinal-erectors"
-    ],
-    "secondaryMuscles": [
-      "chest",
-      "shoulders",
-      "abdominals"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=0p3fnwU5uiI",
-    "videoCredit": "Sivananda Yoga Centre, Gurgaon"
-  },
-  {
-    "sourceId": "Cat_Cow",
-    "slug": "cat-cow",
-    "nameEn": "Cat-Cow",
-    "namePt": "Gato-Vaca",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "BEGINNER",
-    "forceType": "STATIC",
-    "laterality": "BILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "On hands and knees, wrists under the shoulders and knees under the hips.",
-      "Inhale and drop the belly, lifting the chest and tailbone (Cow); exhale and round the spine toward the ceiling (Cat).",
-      "Flow slowly between the two, moving with each breath. One full cycle = one rep."
-    ],
-    "instructionsPt": [
-      "Em quatro apoios, punhos sob os ombros e joelhos sob o quadril.",
-      "Inspire soltando a barriga e elevando o peito e o cóccix (Vaca); expire arredondando a coluna em direção ao teto (Gato).",
-      "Flua devagar entre as duas posições, acompanhando cada respiração. Um ciclo completo = uma repetição."
-    ],
-    "primaryMuscles": [
-      "spinal-erectors"
-    ],
-    "secondaryMuscles": [
-      "abdominals",
-      "middle-back"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=1P_auHRJdNg",
-    "videoCredit": "BrettLarkinYoga"
-  },
-  {
-    "sourceId": "Standing_Forward_Fold",
-    "slug": "standing-forward-fold",
-    "nameEn": "Standing Forward Fold",
-    "namePt": "Flexão à Frente em Pé",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "BEGINNER",
-    "forceType": "STATIC",
-    "laterality": "BILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "From standing, hinge forward from the hips and let the torso hang over the legs (Uttanasana).",
-      "Keep a soft bend in the knees; let the head and arms hang heavy toward the floor.",
-      "Relax the neck and breathe. Come up slowly to avoid dizziness."
-    ],
-    "instructionsPt": [
-      "Em pé, incline o tronco a partir do quadril e deixe-o pender sobre as pernas (Uttanasana).",
-      "Mantenha os joelhos levemente flexionados; deixe a cabeça e os braços penderem pesados em direção ao chão.",
-      "Relaxe o pescoço e respire. Suba devagar para evitar tontura."
-    ],
-    "primaryMuscles": [
-      "hamstrings"
-    ],
-    "secondaryMuscles": [
-      "spinal-erectors",
-      "calves"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=0KzyEgkq7zw",
-    "videoCredit": "Yoga Journal"
-  },
-  {
-    "sourceId": "Halfway_Lift",
-    "slug": "halfway-lift",
-    "nameEn": "Halfway Lift",
-    "namePt": "Meia Flexão à Frente",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "BEGINNER",
-    "forceType": "STATIC",
-    "laterality": "BILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "From a forward fold, bring the hands to the shins or thighs (Ardha Uttanasana).",
-      "Lengthen the spine to a flat back, chest forward and gaze slightly down.",
-      "Draw the shoulders away from the ears and keep the neck in line with the spine."
-    ],
-    "instructionsPt": [
-      "A partir da flexão à frente, leve as mãos às canelas ou coxas (Ardha Uttanasana).",
-      "Alongue a coluna até deixar as costas retas, peito para frente e olhar levemente para baixo.",
-      "Afaste os ombros das orelhas e mantenha o pescoço alinhado com a coluna."
-    ],
-    "primaryMuscles": [
-      "spinal-erectors"
-    ],
-    "secondaryMuscles": [
-      "hamstrings"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=2_yNresGBQE",
-    "videoCredit": "Muscle & Motion"
-  },
-  {
-    "sourceId": "Low_Lunge",
-    "slug": "low-lunge",
-    "nameEn": "Low Lunge",
-    "namePt": "Afundo Baixo",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "BEGINNER",
-    "forceType": "STATIC",
-    "laterality": "UNILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "Step one foot forward between the hands and lower the back knee to the floor (Anjaneyasana).",
-      "Sink the hips gently forward and down until you feel a stretch at the front of the back hip.",
-      "Lift the torso tall; raise the arms overhead if comfortable. Switch sides."
-    ],
-    "instructionsPt": [
-      "Avance um pé para a frente entre as mãos e apoie o joelho de trás no chão (Anjaneyasana).",
-      "Leve o quadril suavemente para frente e para baixo até sentir um alongamento na frente do quadril de trás.",
-      "Levante o tronco ereto; eleve os braços acima da cabeça se estiver confortável. Troque de lado."
-    ],
-    "primaryMuscles": [
-      "quadriceps"
-    ],
-    "secondaryMuscles": [
-      "glutes",
-      "hamstrings"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=MjiC4mGTnTw",
-    "videoCredit": "YogaDownload"
-  },
-  {
-    "sourceId": "High_Lunge",
-    "slug": "high-lunge",
-    "nameEn": "High Lunge",
-    "namePt": "Afundo Alto",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "INTERMEDIATE",
-    "forceType": "STATIC",
-    "laterality": "UNILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "From a forward fold, step one foot far back, keeping the back leg strong and the heel lifted (high lunge).",
-      "Bend the front knee to about 90°, stacking it over the ankle, and lift the torso tall.",
-      "Reach the arms overhead and keep the hips square. Switch sides."
-    ],
-    "instructionsPt": [
-      "A partir da flexão à frente, leve um pé bem para trás, mantendo a perna de trás firme e o calcanhar elevado (afundo alto).",
-      "Flexione o joelho da frente a cerca de 90°, alinhado sobre o tornozelo, e levante o tronco ereto.",
-      "Estenda os braços acima da cabeça e mantenha o quadril alinhado. Troque de lado."
-    ],
-    "primaryMuscles": [
-      "quadriceps"
-    ],
-    "secondaryMuscles": [
-      "glutes",
-      "hamstrings"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=TEiYeMS8lH4",
-    "videoCredit": "Hospital for Special Surgery"
-  },
-  {
-    "sourceId": "Chair_Pose",
-    "slug": "chair-pose",
-    "nameEn": "Chair Pose",
-    "namePt": "Cadeira",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "BEGINNER",
-    "forceType": "STATIC",
-    "laterality": "BILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "Stand with feet together or hip-width and bend the knees as if sitting back into a chair (Utkatasana).",
-      "Keep the weight in the heels and the chest lifted; reach the arms up alongside the ears.",
-      "Draw the lower ribs in and breathe. Hold without letting the knees cave inward."
-    ],
-    "instructionsPt": [
-      "Fique em pé com os pés juntos ou na largura do quadril e flexione os joelhos como se fosse sentar numa cadeira (Utkatasana).",
-      "Mantenha o peso nos calcanhares e o peito elevado; estenda os braços para cima ao lado das orelhas.",
-      "Leve as costelas baixas para dentro e respire. Mantenha sem deixar os joelhos caírem para dentro."
-    ],
-    "primaryMuscles": [
-      "quadriceps"
-    ],
-    "secondaryMuscles": [
-      "glutes",
-      "spinal-erectors",
-      "shoulders"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=ySafTekJ3Ls",
-    "videoCredit": "Yoga With Adriene"
-  },
-  {
-    "sourceId": "Tree_Pose",
-    "slug": "tree-pose",
-    "nameEn": "Tree Pose",
-    "namePt": "Árvore",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "BEGINNER",
-    "forceType": "STATIC",
-    "laterality": "UNILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "Stand tall and shift your weight onto one foot (Vrksasana).",
-      "Place the sole of the other foot on the inner calf or inner thigh — never on the knee.",
-      "Bring the hands together at the chest or overhead and fix your gaze on one point. Switch sides."
-    ],
-    "instructionsPt": [
-      "Fique em pé e ereto e transfira o peso para um dos pés (Vrksasana).",
-      "Apoie a sola do outro pé na panturrilha ou na coxa internas — nunca sobre o joelho.",
-      "Una as mãos à frente do peito ou acima da cabeça e fixe o olhar num ponto. Troque de lado."
-    ],
-    "primaryMuscles": [
-      "calves"
-    ],
-    "secondaryMuscles": [
-      "glutes",
-      "abdominals",
-      "abductors"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=rmnzeVWnv9o",
-    "videoCredit": "YogaRenew"
-  },
-  {
-    "sourceId": "Warrior_I",
-    "slug": "warrior-1",
-    "nameEn": "Warrior I",
-    "namePt": "Guerreiro I",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "BEGINNER",
-    "forceType": "STATIC",
-    "laterality": "UNILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "From standing, step one foot back and turn it out about 45°, keeping both heels grounded (Warrior I).",
-      "Bend the front knee over the ankle and square the hips toward the front.",
-      "Reach the arms overhead and lift the chest. Switch sides."
-    ],
-    "instructionsPt": [
-      "Em pé, leve um pé para trás e gire-o cerca de 45°, mantendo os dois calcanhares no chão (Guerreiro I).",
-      "Flexione o joelho da frente sobre o tornozelo e alinhe o quadril para frente.",
-      "Estenda os braços acima da cabeça e eleve o peito. Troque de lado."
-    ],
-    "primaryMuscles": [
-      "quadriceps"
-    ],
-    "secondaryMuscles": [
-      "glutes",
-      "shoulders"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=FQ11iF9I9K8",
-    "videoCredit": "BrettLarkinYoga"
-  },
-  {
-    "sourceId": "Warrior_II",
-    "slug": "warrior-2",
-    "nameEn": "Warrior II",
-    "namePt": "Guerreiro II",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "BEGINNER",
-    "forceType": "STATIC",
-    "laterality": "UNILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "Step the feet wide, turn the front foot out 90° and the back foot slightly in (Warrior II).",
-      "Bend the front knee over the ankle and extend the arms out to the sides at shoulder height.",
-      "Gaze over the front hand and keep the torso upright, not leaning forward. Switch sides."
-    ],
-    "instructionsPt": [
-      "Afaste bem os pés, gire o pé da frente 90° e o de trás levemente para dentro (Guerreiro II).",
-      "Flexione o joelho da frente sobre o tornozelo e estenda os braços para os lados, na altura dos ombros.",
-      "Olhe por cima da mão da frente e mantenha o tronco ereto, sem inclinar para frente. Troque de lado."
-    ],
-    "primaryMuscles": [
-      "quadriceps"
-    ],
-    "secondaryMuscles": [
-      "glutes",
-      "shoulders",
-      "abductors"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=T8b28IuOl_E",
-    "videoCredit": "Heather Kitchen Yoga"
-  },
-  {
-    "sourceId": "Warrior_III",
-    "slug": "warrior-3",
-    "nameEn": "Warrior III",
-    "namePt": "Guerreiro III",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "INTERMEDIATE",
-    "forceType": "STATIC",
-    "laterality": "UNILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "From standing, shift your weight onto one leg and hinge the torso forward (Warrior III).",
-      "Lift the back leg behind you until the body forms one line parallel to the floor.",
-      "Reach the arms forward or back alongside the body and keep the hips level. Switch sides."
-    ],
-    "instructionsPt": [
-      "Em pé, transfira o peso para uma perna e incline o tronco para frente (Guerreiro III).",
-      "Eleve a perna de trás até o corpo formar uma linha paralela ao chão.",
-      "Estenda os braços para frente ou ao lado do corpo e mantenha o quadril nivelado. Troque de lado."
-    ],
-    "primaryMuscles": [
-      "hamstrings"
-    ],
-    "secondaryMuscles": [
-      "glutes",
-      "spinal-erectors",
-      "shoulders"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=SZm-tY9uKIE",
-    "videoCredit": "Black Yogi Nico Marie"
-  },
-  {
-    "sourceId": "Triangle_Pose",
-    "slug": "triangle-pose",
-    "nameEn": "Triangle Pose",
-    "namePt": "Triângulo",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "BEGINNER",
-    "forceType": "STATIC",
-    "laterality": "UNILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "Stand with the feet wide, front foot turned out 90° (Trikonasana).",
-      "Reach forward over the front leg, then lower the front hand to the shin, ankle or a block.",
-      "Extend the top arm to the ceiling and open the chest; keep both legs straight. Switch sides."
-    ],
-    "instructionsPt": [
-      "Fique em pé com os pés afastados, pé da frente girado 90° (Trikonasana).",
-      "Alongue o tronco sobre a perna da frente e desça a mão da frente até a canela, o tornozelo ou um bloco.",
-      "Estenda o braço de cima em direção ao teto e abra o peito; mantenha as duas pernas estendidas. Troque de lado."
-    ],
-    "primaryMuscles": [
-      "hamstrings"
-    ],
-    "secondaryMuscles": [
-      "adductors",
-      "abdominals",
-      "spinal-erectors"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=Op72srvfIXM",
-    "videoCredit": "Heather Kitchen Yoga"
-  },
-  {
-    "sourceId": "Extended_Side_Angle",
-    "slug": "extended-side-angle",
-    "nameEn": "Extended Side Angle",
-    "namePt": "Ângulo Lateral Estendido",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "INTERMEDIATE",
-    "forceType": "STATIC",
-    "laterality": "UNILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "From Warrior II, lower the front forearm onto the front thigh or the hand to the floor (extended side angle).",
-      "Reach the top arm over the ear, creating one long line from the back heel to the fingertips.",
-      "Keep the chest open toward the ceiling. Switch sides."
-    ],
-    "instructionsPt": [
-      "A partir do Guerreiro II, apoie o antebraço da frente na coxa da frente ou a mão no chão (ângulo lateral estendido).",
-      "Estenda o braço de cima por cima da orelha, formando uma linha longa do calcanhar de trás às pontas dos dedos.",
-      "Mantenha o peito aberto em direção ao teto. Troque de lado."
-    ],
-    "primaryMuscles": [
-      "quadriceps"
-    ],
-    "secondaryMuscles": [
-      "adductors",
-      "lats",
-      "abdominals"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=tdXnuY6OwL0",
-    "videoCredit": "SIKANA English"
-  },
-  {
-    "sourceId": "Half_Moon_Pose",
-    "slug": "half-moon-pose",
-    "nameEn": "Half Moon Pose",
-    "namePt": "Meia-Lua",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "INTERMEDIATE",
-    "forceType": "STATIC",
-    "laterality": "UNILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "From Triangle, bend the front knee and step the back foot in slightly (Ardha Chandrasana).",
-      "Shift the weight onto the front hand (or a block) and lift the back leg to hip height, parallel to the floor.",
-      "Open the chest and reach the top arm up; gaze down for balance. Switch sides."
-    ],
-    "instructionsPt": [
-      "A partir do Triângulo, flexione o joelho da frente e aproxime um pouco o pé de trás (Ardha Chandrasana).",
-      "Transfira o peso para a mão da frente (ou um bloco) e eleve a perna de trás até a altura do quadril, paralela ao chão.",
-      "Abra o peito e estenda o braço de cima; olhe para baixo para equilibrar. Troque de lado."
-    ],
-    "primaryMuscles": [
-      "hamstrings"
-    ],
-    "secondaryMuscles": [
-      "glutes",
-      "abductors",
-      "abdominals"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=EriPRTk1ly0",
-    "videoCredit": "Yoga With Adriene"
-  },
-  {
-    "sourceId": "Wide_Legged_Forward_Fold",
-    "slug": "wide-legged-forward-fold",
-    "nameEn": "Wide-Legged Forward Fold",
-    "namePt": "Flexão à Frente com Pernas Afastadas",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "BEGINNER",
-    "forceType": "STATIC",
-    "laterality": "BILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "Stand with the feet wide and parallel, hands on the hips (Prasarita Padottanasana).",
-      "Hinge forward from the hips with a long spine and bring the hands to the floor under the shoulders.",
-      "Let the crown of the head descend toward the floor; keep the legs active. Come up slowly."
-    ],
-    "instructionsPt": [
-      "Fique em pé com os pés bem afastados e paralelos, mãos no quadril (Prasarita Padottanasana).",
-      "Incline o tronco a partir do quadril com a coluna longa e leve as mãos ao chão sob os ombros.",
-      "Deixe o topo da cabeça descer em direção ao chão; mantenha as pernas ativas. Suba devagar."
-    ],
-    "primaryMuscles": [
-      "hamstrings"
-    ],
-    "secondaryMuscles": [
-      "adductors",
-      "spinal-erectors"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=F7you4Sw1o0",
-    "videoCredit": "Yoga With Adriene"
-  },
-  {
-    "sourceId": "Pyramid_Pose",
-    "slug": "pyramid-pose",
-    "nameEn": "Pyramid Pose",
-    "namePt": "Pirâmide",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "INTERMEDIATE",
-    "forceType": "STATIC",
-    "laterality": "UNILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "Step one foot forward, both legs straight and the hips squared to the front (Parsvottanasana).",
-      "Hinge forward over the front leg with a long spine, hands on the floor or on blocks.",
-      "Keep the front leg straight and the weight even between the feet. Switch sides."
-    ],
-    "instructionsPt": [
-      "Avance um pé, as duas pernas estendidas e o quadril alinhado para frente (Parsvottanasana).",
-      "Incline o tronco sobre a perna da frente com a coluna longa, mãos no chão ou em blocos.",
-      "Mantenha a perna da frente estendida e o peso equilibrado entre os pés. Troque de lado."
-    ],
-    "primaryMuscles": [
-      "hamstrings"
-    ],
-    "secondaryMuscles": [
-      "spinal-erectors",
-      "calves"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=LTe3CO7Vtxs",
-    "videoCredit": "Yoga With Adriene"
-  },
-  {
-    "sourceId": "Lizard_Pose",
-    "slug": "lizard-pose",
-    "nameEn": "Lizard Pose",
-    "namePt": "Lagarto",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "INTERMEDIATE",
-    "forceType": "STATIC",
-    "laterality": "UNILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "From a lunge, bring both hands to the inside of the front foot (lizard pose).",
-      "Lower onto the forearms if comfortable, letting the front knee open to the side.",
-      "Keep the back leg long and strong and breathe into the hip. Switch sides."
-    ],
-    "instructionsPt": [
-      "A partir de um afundo, leve as duas mãos para dentro do pé da frente (postura do lagarto).",
-      "Desça até os antebraços se estiver confortável, deixando o joelho da frente abrir para o lado.",
-      "Mantenha a perna de trás longa e firme e respire em direção ao quadril. Troque de lado."
-    ],
-    "primaryMuscles": [
-      "adductors"
-    ],
-    "secondaryMuscles": [
-      "quadriceps",
-      "glutes",
-      "hamstrings"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=-6MGjYmHdYQ",
-    "videoCredit": "Yoga With Adriene"
-  },
-  {
-    "sourceId": "Pigeon_Pose",
-    "slug": "pigeon-pose",
-    "nameEn": "Pigeon Pose",
-    "namePt": "Pombo",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "INTERMEDIATE",
-    "forceType": "STATIC",
-    "laterality": "UNILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "From hands and knees, bring one knee forward behind the wrist and extend the other leg straight back (pigeon pose).",
-      "Square the hips and keep the back leg long; stay upright or fold forward over the front shin.",
-      "Feel the stretch in the front hip and glute, never in the knee. Switch sides."
-    ],
-    "instructionsPt": [
-      "De quatro apoios, traga um joelho para frente atrás do punho e estenda a outra perna para trás (postura do pombo).",
-      "Alinhe o quadril e mantenha a perna de trás longa; fique ereto ou incline o tronco sobre a canela da frente.",
-      "Sinta o alongamento no quadril e no glúteo da frente, nunca no joelho. Troque de lado."
-    ],
-    "primaryMuscles": [
-      "glutes"
-    ],
-    "secondaryMuscles": [
-      "quadriceps",
-      "spinal-erectors"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=hW9ax9DX5Uw",
-    "videoCredit": "Yoga With Landon"
-  },
-  {
-    "sourceId": "Seated_Forward_Fold",
-    "slug": "seated-forward-fold",
-    "nameEn": "Seated Forward Fold",
-    "namePt": "Flexão à Frente Sentado",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "BEGINNER",
-    "forceType": "STATIC",
-    "laterality": "BILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "Sit with both legs straight out in front, spine tall (Paschimottanasana).",
-      "Hinge forward from the hips and reach toward the feet, leading with the chest.",
-      "Keep a soft bend in the knees if needed; relax the neck and breathe."
-    ],
-    "instructionsPt": [
-      "Sente com as duas pernas estendidas à frente, coluna ereta (Paschimottanasana).",
-      "Incline o tronco a partir do quadril e alcance em direção aos pés, conduzindo com o peito.",
-      "Mantenha os joelhos levemente flexionados se precisar; relaxe o pescoço e respire."
-    ],
-    "primaryMuscles": [
-      "hamstrings"
-    ],
-    "secondaryMuscles": [
-      "spinal-erectors",
-      "calves"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=4VLYUCml5sw",
-    "videoCredit": "YogaRenew"
-  },
-  {
-    "sourceId": "Head_To_Knee_Pose",
-    "slug": "head-to-knee-pose",
-    "nameEn": "Head-to-Knee Pose",
-    "namePt": "Cabeça ao Joelho",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "BEGINNER",
-    "forceType": "STATIC",
-    "laterality": "UNILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "Sit with one leg straight and the other foot drawn to the inner thigh (Janu Sirsasana).",
-      "Hinge forward over the straight leg with a long spine, reaching toward the foot.",
-      "Keep both hips grounded and breathe into the back of the leg. Switch sides."
-    ],
-    "instructionsPt": [
-      "Sente com uma perna estendida e o outro pé encostado na coxa interna (Janu Sirsasana).",
-      "Incline o tronco sobre a perna estendida com a coluna longa, alcançando em direção ao pé.",
-      "Mantenha os dois quadris apoiados e respire em direção à parte de trás da perna. Troque de lado."
-    ],
-    "primaryMuscles": [
-      "hamstrings"
-    ],
-    "secondaryMuscles": [
-      "spinal-erectors",
-      "adductors"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=m_wHNBpSD-0",
-    "videoCredit": "Black Yogi Nico Marie"
-  },
-  {
-    "sourceId": "Bound_Angle_Pose",
-    "slug": "bound-angle-pose",
-    "nameEn": "Bound Angle Pose",
-    "namePt": "Ângulo Fechado (Borboleta)",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "BEGINNER",
-    "forceType": "STATIC",
-    "laterality": "BILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "Sit tall and bring the soles of the feet together, letting the knees fall open (Baddha Konasana).",
-      "Hold the feet or ankles and gently hinge forward from the hips.",
-      "Let the knees relax toward the floor without forcing. Feel the inner thighs open."
-    ],
-    "instructionsPt": [
-      "Sente ereto e una as solas dos pés, deixando os joelhos caírem para os lados (Baddha Konasana).",
-      "Segure os pés ou tornozelos e incline o tronco suavemente a partir do quadril.",
-      "Deixe os joelhos relaxarem em direção ao chão sem forçar. Sinta a parte interna das coxas abrir."
-    ],
-    "primaryMuscles": [
-      "adductors"
-    ],
-    "secondaryMuscles": [
-      "glutes"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=B6tb4TncKhY",
-    "videoCredit": "Yoga With Adriene"
-  },
-  {
-    "sourceId": "Seated_Spinal_Twist",
-    "slug": "seated-spinal-twist",
-    "nameEn": "Seated Spinal Twist",
-    "namePt": "Torção Sentada da Coluna",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "BEGINNER",
-    "forceType": "STATIC",
-    "laterality": "UNILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "Sit with one leg extended and cross the other foot outside the opposite thigh (Ardha Matsyendrasana).",
-      "Inhale to lengthen the spine, then exhale and twist toward the bent knee, hand behind you for support.",
-      "Twist from the base of the spine, not from the neck. Switch sides."
-    ],
-    "instructionsPt": [
-      "Sente com uma perna estendida e cruze o outro pé por fora da coxa oposta (Ardha Matsyendrasana).",
-      "Inspire alongando a coluna, depois expire e gire em direção ao joelho flexionado, mão apoiada atrás.",
-      "Gire a partir da base da coluna, não do pescoço. Troque de lado."
-    ],
-    "primaryMuscles": [
-      "spinal-erectors"
-    ],
-    "secondaryMuscles": [
-      "glutes",
-      "middle-back"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=at_ohf5-5qU",
-    "videoCredit": "YogaDownload"
-  },
-  {
-    "sourceId": "Bridge_Pose",
-    "slug": "bridge-pose",
-    "nameEn": "Bridge Pose",
-    "namePt": "Ponte",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "BEGINNER",
-    "forceType": "STATIC",
-    "laterality": "BILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "Lie on your back, knees bent and feet flat, hip-width apart (Setu Bandha Sarvangasana).",
-      "Press into the feet and lift the hips, keeping the thighs parallel.",
-      "Roll the shoulders under and clasp the hands if comfortable. Keep the neck relaxed."
-    ],
-    "instructionsPt": [
-      "Deite de costas, joelhos flexionados e pés apoiados na largura do quadril (Setu Bandha Sarvangasana).",
-      "Pressione os pés e eleve o quadril, mantendo as coxas paralelas.",
-      "Role os ombros por baixo e entrelace as mãos se estiver confortável. Mantenha o pescoço relaxado."
-    ],
-    "primaryMuscles": [
-      "glutes"
-    ],
-    "secondaryMuscles": [
-      "hamstrings",
-      "spinal-erectors",
-      "chest"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=uvpxf1-_oUk",
-    "videoCredit": "YogaDownload"
-  },
-  {
-    "sourceId": "Camel_Pose",
-    "slug": "camel-pose",
-    "nameEn": "Camel Pose",
-    "namePt": "Camelo",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "INTERMEDIATE",
-    "forceType": "STATIC",
-    "laterality": "BILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "Kneel with the knees hip-width, hands on the lower back and fingers pointing down (Ustrasana).",
-      "Lift the chest, draw the shoulders back and gently arch back; reach for the heels if comfortable.",
-      "Keep the hips over the knees and the neck long. Come up slowly. Avoid with neck or low-back injury."
-    ],
-    "instructionsPt": [
-      "Ajoelhe com os joelhos na largura do quadril, mãos na lombar e dedos apontando para baixo (Ustrasana).",
-      "Eleve o peito, leve os ombros para trás e arqueie suavemente; alcance os calcanhares se estiver confortável.",
-      "Mantenha o quadril sobre os joelhos e o pescoço longo. Suba devagar. Evite com lesão de pescoço ou lombar."
-    ],
-    "primaryMuscles": [
-      "spinal-erectors"
-    ],
-    "secondaryMuscles": [
-      "chest",
-      "quadriceps",
-      "abdominals"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=hm0TJfe0oIg",
-    "videoCredit": "YogaRenew"
-  },
-  {
-    "sourceId": "Bow_Pose",
-    "slug": "bow-pose",
-    "nameEn": "Bow Pose",
-    "namePt": "Arco",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "INTERMEDIATE",
-    "forceType": "STATIC",
-    "laterality": "BILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "Lie face down and bend the knees, reaching back to hold the ankles (Dhanurasana).",
-      "Kick the feet into the hands and lift the chest and thighs off the floor.",
-      "Keep the knees roughly hip-width and breathe steadily. Release slowly."
-    ],
-    "instructionsPt": [
-      "Deite de bruços e flexione os joelhos, alcançando os tornozelos com as mãos (Dhanurasana).",
-      "Empurre os pés contra as mãos e eleve o peito e as coxas do chão.",
-      "Mantenha os joelhos na largura do quadril e respire de forma constante. Solte devagar."
-    ],
-    "primaryMuscles": [
-      "spinal-erectors"
-    ],
-    "secondaryMuscles": [
-      "chest",
-      "quadriceps",
-      "shoulders"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=NYwYxNjco8o",
-    "videoCredit": "YogaRenew"
-  },
-  {
-    "sourceId": "Locust_Pose",
-    "slug": "locust-pose",
-    "nameEn": "Locust Pose",
-    "namePt": "Gafanhoto",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "BEGINNER",
-    "forceType": "STATIC",
-    "laterality": "BILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "Lie face down with the arms alongside the body, palms down (Salabhasana).",
-      "Lift the chest, arms and legs off the floor, reaching back through the toes.",
-      "Keep the neck long and the gaze down. Breathe and lower slowly."
-    ],
-    "instructionsPt": [
-      "Deite de bruços com os braços ao lado do corpo, palmas para baixo (Salabhasana).",
-      "Eleve o peito, os braços e as pernas do chão, alongando para trás pelos dedos dos pés.",
-      "Mantenha o pescoço longo e o olhar para baixo. Respire e desça devagar."
-    ],
-    "primaryMuscles": [
-      "spinal-erectors"
-    ],
-    "secondaryMuscles": [
-      "glutes",
-      "hamstrings",
-      "shoulders"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=0kxczNm1xF4",
-    "videoCredit": "Yoga With Adriene"
-  },
-  {
-    "sourceId": "Boat_Pose",
-    "slug": "boat-pose",
-    "nameEn": "Boat Pose",
-    "namePt": "Barco",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "INTERMEDIATE",
-    "forceType": "STATIC",
-    "laterality": "BILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "Sit with the knees bent and lean back slightly, lifting the feet off the floor (Navasana).",
-      "Straighten the legs toward a V shape if you can, keeping the chest lifted and the spine long.",
-      "Reach the arms forward alongside the legs. Keep the lower back from rounding."
-    ],
-    "instructionsPt": [
-      "Sente com os joelhos flexionados e incline-se um pouco para trás, elevando os pés do chão (Navasana).",
-      "Estenda as pernas formando um V, se conseguir, mantendo o peito elevado e a coluna longa.",
-      "Estenda os braços para frente ao lado das pernas. Não deixe a lombar arredondar."
-    ],
-    "primaryMuscles": [
-      "abdominals"
-    ],
-    "secondaryMuscles": [
-      "quadriceps",
-      "spinal-erectors"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=gWEey6tp7-c",
-    "videoCredit": "Yoga With Tim"
-  },
-  {
-    "sourceId": "Sphinx_Pose",
-    "slug": "sphinx-pose",
-    "nameEn": "Sphinx Pose",
-    "namePt": "Esfinge",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "BEGINNER",
-    "forceType": "STATIC",
-    "laterality": "BILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "Lie face down with the forearms on the floor, elbows under the shoulders (Sphinx Pose).",
-      "Press the forearms down and lift the chest into a gentle backbend.",
-      "Keep the shoulders relaxed and the hips on the floor. Breathe into the chest."
-    ],
-    "instructionsPt": [
-      "Deite de bruços com os antebraços no chão, cotovelos sob os ombros (Postura da Esfinge).",
-      "Pressione os antebraços e eleve o peito numa leve extensão.",
-      "Mantenha os ombros relaxados e o quadril no chão. Respire em direção ao peito."
-    ],
-    "primaryMuscles": [
-      "spinal-erectors"
-    ],
-    "secondaryMuscles": [
-      "chest",
-      "shoulders"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=66cA48-WdGw",
-    "videoCredit": "YogaToday - Online Yoga, Meditation, and Pilates"
-  },
-  {
-    "sourceId": "Happy_Baby",
-    "slug": "happy-baby",
-    "nameEn": "Happy Baby",
-    "namePt": "Bebê Feliz",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "BEGINNER",
-    "forceType": "STATIC",
-    "laterality": "BILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "Lie on your back and draw both knees toward the chest (Ananda Balasana).",
-      "Hold the outer edges of the feet and open the knees toward the armpits.",
-      "Keep the lower back on the floor and gently rock side to side if it feels good."
-    ],
-    "instructionsPt": [
-      "Deite de costas e traga os dois joelhos em direção ao peito (Ananda Balasana).",
-      "Segure as bordas externas dos pés e abra os joelhos em direção às axilas.",
-      "Mantenha a lombar no chão e balance suavemente de um lado para o outro, se agradar."
-    ],
-    "primaryMuscles": [
-      "adductors"
-    ],
-    "secondaryMuscles": [
-      "glutes",
-      "hamstrings"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=C6R7tfAcQjA",
-    "videoCredit": "Black Yogi Nico Marie"
-  },
-  {
-    "sourceId": "Reclined_Spinal_Twist",
-    "slug": "reclined-spinal-twist",
-    "nameEn": "Reclined Spinal Twist",
-    "namePt": "Torção Deitada da Coluna",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "BEGINNER",
-    "forceType": "STATIC",
-    "laterality": "UNILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "Lie on your back and draw one knee toward the chest (Supta Matsyendrasana).",
-      "Guide that knee across the body toward the floor while the opposite arm reaches out to the side.",
-      "Keep both shoulders on the floor and turn the gaze away from the knee. Switch sides."
-    ],
-    "instructionsPt": [
-      "Deite de costas e traga um joelho em direção ao peito (Supta Matsyendrasana).",
-      "Conduza esse joelho cruzando o corpo em direção ao chão enquanto o braço oposto se estende para o lado.",
-      "Mantenha os dois ombros no chão e vire o olhar para o lado oposto ao joelho. Troque de lado."
-    ],
-    "primaryMuscles": [
-      "spinal-erectors"
-    ],
-    "secondaryMuscles": [
-      "glutes",
-      "middle-back"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=sADFnhF-Ln0",
-    "videoCredit": "YanvaYoga (Iana Varshavska)"
-  },
-  {
-    "sourceId": "Legs_Up_The_Wall",
-    "slug": "legs-up-the-wall",
-    "nameEn": "Legs-Up-the-Wall",
-    "namePt": "Pernas na Parede",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "BEGINNER",
-    "forceType": "STATIC",
-    "laterality": "BILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "Sit with one hip against a wall, then swing the legs up as you lie back (Viparita Karani).",
-      "Rest the legs vertically against the wall, hips close to or a few inches from it.",
-      "Let the arms relax and breathe slowly. Stay as long as it feels restful."
-    ],
-    "instructionsPt": [
-      "Sente com um lado do quadril junto à parede e, ao deitar, gire levando as pernas para cima (Viparita Karani).",
-      "Apoie as pernas na vertical contra a parede, com o quadril perto dela ou a poucos centímetros.",
-      "Deixe os braços relaxarem e respire devagar. Fique o tempo que for confortável."
-    ],
-    "primaryMuscles": [
-      "hamstrings"
-    ],
-    "secondaryMuscles": [
-      "calves"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=YHxoiq1YivE",
-    "videoCredit": "Yoga International"
-  },
-  {
-    "sourceId": "Corpse_Pose",
-    "slug": "corpse-pose",
-    "nameEn": "Corpse Pose",
-    "namePt": "Cadáver / Relaxamento (Savasana)",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "BEGINNER",
-    "forceType": "STATIC",
-    "laterality": "BILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "Lie on your back with the legs relaxed and slightly apart, arms by your sides and palms up (Savasana).",
-      "Close the eyes and let the whole body be heavy and still.",
-      "Breathe naturally and release any tension with each exhale."
-    ],
-    "instructionsPt": [
-      "Deite de costas com as pernas relaxadas e levemente afastadas, braços ao lado do corpo e palmas para cima (Savasana).",
-      "Feche os olhos e deixe o corpo inteiro pesado e imóvel.",
-      "Respire naturalmente e solte qualquer tensão a cada expiração."
-    ],
-    "primaryMuscles": [
-      "spinal-erectors"
-    ],
-    "secondaryMuscles": [
-      "neck"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=FCjmosfNevo",
-    "videoCredit": "SarahBethYoga"
-  },
-  {
-    "sourceId": "Garland_Pose",
-    "slug": "garland-pose",
-    "nameEn": "Garland Pose",
-    "namePt": "Guirlanda (Agachamento Profundo)",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "BEGINNER",
-    "forceType": "STATIC",
-    "laterality": "BILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "Stand with the feet a bit wider than hips, toes turned slightly out (Malasana).",
-      "Bend the knees and lower into a deep squat, keeping the heels down if possible.",
-      "Bring the hands together at the chest and press the elbows against the inner knees. Keep the chest lifted."
-    ],
-    "instructionsPt": [
-      "Fique em pé com os pés um pouco mais afastados que o quadril, dedos levemente para fora (Malasana).",
-      "Flexione os joelhos e desça num agachamento profundo, mantendo os calcanhares no chão, se possível.",
-      "Una as mãos à frente do peito e pressione os cotovelos contra a parte interna dos joelhos. Mantenha o peito elevado."
-    ],
-    "primaryMuscles": [
-      "adductors"
-    ],
-    "secondaryMuscles": [
-      "glutes",
-      "quadriceps",
-      "calves"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=jaSgTFAqYcA",
-    "videoCredit": "YogaRenew"
-  },
-  {
-    "sourceId": "Eagle_Pose",
-    "slug": "eagle-pose",
-    "nameEn": "Eagle Pose",
-    "namePt": "Águia",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "ADVANCED",
-    "forceType": "STATIC",
-    "laterality": "UNILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "Stand tall, bend the knees and cross one thigh over the other (Garudasana).",
-      "Wrap the same-side foot behind the opposite calf if you can, then cross the arms with the opposite arm on top.",
-      "Sink the hips and lift the elbows; fix your gaze on one point. Switch sides."
-    ],
-    "instructionsPt": [
-      "Fique em pé e ereto, flexione os joelhos e cruze uma coxa sobre a outra (Garudasana).",
-      "Enrole o pé do mesmo lado atrás da panturrilha oposta, se conseguir, e cruze os braços com o braço oposto por cima.",
-      "Afunde o quadril e eleve os cotovelos; fixe o olhar num ponto. Troque de lado."
-    ],
-    "primaryMuscles": [
-      "shoulders"
-    ],
-    "secondaryMuscles": [
-      "glutes",
-      "abductors",
-      "calves"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=WAf1Lhg605E",
-    "videoCredit": "YogaRenew"
-  },
-  {
-    "sourceId": "Dolphin_Pose",
-    "slug": "dolphin-pose",
-    "nameEn": "Dolphin Pose",
-    "namePt": "Golfinho",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "INTERMEDIATE",
-    "forceType": "STATIC",
-    "laterality": "BILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "From hands and knees, lower onto the forearms with the elbows under the shoulders (Dolphin Pose).",
-      "Tuck the toes and lift the hips up and back, like Downward Dog on the forearms.",
-      "Press the forearms down, lengthen the spine and let the head hang freely. Breathe."
-    ],
-    "instructionsPt": [
-      "De quatro apoios, desça até os antebraços com os cotovelos sob os ombros (Postura do Golfinho).",
-      "Encaixe os dedos dos pés e eleve o quadril para cima e para trás, como um Cão Olhando para Baixo nos antebraços.",
-      "Pressione os antebraços, alongue a coluna e deixe a cabeça pender livremente. Respire."
-    ],
-    "primaryMuscles": [
-      "shoulders"
-    ],
-    "secondaryMuscles": [
-      "hamstrings",
-      "lats",
-      "calves"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=6w4ZoSuBDCg",
-    "videoCredit": "Yoga With Adriene"
-  },
-  {
-    "sourceId": "Crow_Pose",
-    "slug": "crow-pose",
-    "nameEn": "Crow Pose",
-    "namePt": "Corvo",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "ADVANCED",
-    "forceType": "STATIC",
-    "laterality": "BILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "Squat with the hands flat on the floor shoulder-width and the knees resting high on the backs of the arms (Bakasana).",
-      "Lean the weight forward onto the hands and lift one foot, then the other, off the floor.",
-      "Round the upper back, hug the knees in and gaze slightly forward. Keep a cushion in front at first."
-    ],
-    "instructionsPt": [
-      "Agache com as mãos apoiadas no chão na largura dos ombros e os joelhos encostados no alto da parte de trás dos braços (Bakasana).",
-      "Leve o peso para frente sobre as mãos e eleve um pé, depois o outro, do chão.",
-      "Arredonde a parte de cima das costas, abrace os joelhos e olhe levemente para frente. Mantenha uma almofada à frente no início."
-    ],
-    "primaryMuscles": [
-      "shoulders"
-    ],
-    "secondaryMuscles": [
-      "triceps",
-      "abdominals",
-      "forearms"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=GIOy9VK_1h0",
-    "videoCredit": "Dianne Bondy Yoga"
-  },
-  {
-    "sourceId": "Thread_The_Needle",
-    "slug": "thread-the-needle",
-    "nameEn": "Thread the Needle",
-    "namePt": "Agulha na Linha",
-    "category": "STRETCHING",
-    "movementPattern": null,
-    "equipment": "none",
-    "difficulty": "BEGINNER",
-    "forceType": "STATIC",
-    "laterality": "UNILATERAL",
-    "mechanics": "ISOLATION",
-    "instructionsEn": [
-      "From hands and knees, slide one arm under the body, palm up, lowering that shoulder and cheek to the floor (Thread the Needle).",
-      "Let the chest rotate toward the threaded side while the other hand stays planted or reaches overhead.",
-      "Keep the hips over the knees and breathe into the upper back. Switch sides."
-    ],
-    "instructionsPt": [
-      "De quatro apoios, deslize um braço por baixo do corpo, palma para cima, apoiando esse ombro e a bochecha no chão (Agulha na Linha).",
-      "Deixe o peito girar em direção ao lado do braço que passou por baixo enquanto a outra mão permanece apoiada ou se estende acima da cabeça.",
-      "Mantenha o quadril sobre os joelhos e respire em direção à parte de cima das costas. Troque de lado."
-    ],
-    "primaryMuscles": [
-      "shoulders"
-    ],
-    "secondaryMuscles": [
-      "middle-back",
-      "traps"
-    ],
-    "media": [],
-    "videoUrl": "https://www.youtube.com/watch?v=zgHpDtU70zc",
-    "videoCredit": "Yoga by Katy"
-  }
+ {
+  "sourceId": "Mountain_Pose",
+  "slug": "mountain-pose",
+  "nameEn": "Mountain Pose",
+  "namePt": "Postura da Montanha",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Stand tall with feet together or hip-width, weight even across both feet (Tadasana).",
+   "Lengthen through the crown of the head, relax the shoulders down and let the arms rest by your sides.",
+   "Breathe slowly and steadily, keeping the whole body lightly engaged."
+  ],
+  "instructionsPt": [
+   "Fique em pé e ereto, pés juntos ou na largura do quadril, com o peso distribuído igualmente nos dois pés (Tadasana).",
+   "Alongue a partir do topo da cabeça, relaxe os ombros para baixo e deixe os braços ao lado do corpo.",
+   "Respire devagar e de forma constante, mantendo o corpo levemente ativo."
+  ],
+  "primaryMuscles": [
+   "spinal-erectors"
+  ],
+  "secondaryMuscles": [
+   "abdominals",
+   "calves"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=5NxDs-ovJU8",
+  "videoCredit": "SIKANA English"
+ },
+ {
+  "sourceId": "Downward_Facing_Dog",
+  "slug": "downward-dog",
+  "nameEn": "Downward-Facing Dog",
+  "namePt": "Cão Olhando para Baixo",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "From hands and knees, tuck the toes and lift the hips up and back into an inverted V (Adho Mukha Svanasana).",
+   "Press the hands firmly into the floor, lengthen the spine and let the heels reach toward the floor without forcing.",
+   "Keep a slight bend in the knees if the hamstrings are tight. Breathe steadily."
+  ],
+  "instructionsPt": [
+   "De quatro apoios, encaixe os dedos dos pés e eleve o quadril para cima e para trás, formando um V invertido (Adho Mukha Svanasana).",
+   "Pressione firme as mãos no chão, alongue a coluna e leve os calcanhares em direção ao chão sem forçar.",
+   "Mantenha os joelhos levemente flexionados se os posteriores de coxa estiverem tensos. Respire de forma constante."
+  ],
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "shoulders",
+   "calves",
+   "lats"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=Y0GDgQqt-bA",
+  "videoCredit": "SarahBethYoga"
+ },
+ {
+  "sourceId": "Upward_Facing_Dog",
+  "slug": "upward-dog",
+  "nameEn": "Upward-Facing Dog",
+  "namePt": "Cão Olhando para Cima",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Lie face down, hands beside the lower ribs and the tops of the feet on the floor (Urdhva Mukha Svanasana).",
+   "Press into the hands to straighten the arms, lifting the chest and thighs off the floor.",
+   "Roll the shoulders back and down, open the chest and keep the neck long. Avoid if you have low-back pain."
+  ],
+  "instructionsPt": [
+   "Deite de bruços, mãos ao lado das costelas baixas e o peito dos pés no chão (Urdhva Mukha Svanasana).",
+   "Pressione as mãos para estender os braços, elevando o peito e as coxas do chão.",
+   "Leve os ombros para trás e para baixo, abra o peito e mantenha o pescoço longo. Evite se tiver dor lombar."
+  ],
+  "primaryMuscles": [
+   "spinal-erectors"
+  ],
+  "secondaryMuscles": [
+   "chest",
+   "shoulders",
+   "abdominals"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=cPoqV987PkU",
+  "videoCredit": "YogaRenew"
+ },
+ {
+  "sourceId": "Cobra_Pose",
+  "slug": "cobra-pose",
+  "nameEn": "Cobra Pose",
+  "namePt": "Cobra",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Lie face down, hands under the shoulders and elbows close to the body (Bhujangasana).",
+   "Press lightly into the hands and lift the chest, keeping the hips and legs on the floor.",
+   "Keep the elbows slightly bent and the shoulders relaxed away from the ears. Breathe into the front of the chest."
+  ],
+  "instructionsPt": [
+   "Deite de bruços, mãos sob os ombros e cotovelos próximos ao corpo (Bhujangasana).",
+   "Pressione levemente as mãos e eleve o peito, mantendo o quadril e as pernas no chão.",
+   "Mantenha os cotovelos um pouco flexionados e os ombros longe das orelhas. Respire em direção à frente do peito."
+  ],
+  "primaryMuscles": [
+   "spinal-erectors"
+  ],
+  "secondaryMuscles": [
+   "chest",
+   "shoulders",
+   "abdominals"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=0p3fnwU5uiI",
+  "videoCredit": "Sivananda Yoga Centre, Gurgaon"
+ },
+ {
+  "sourceId": "Cat_Cow",
+  "slug": "cat-cow",
+  "nameEn": "Cat-Cow",
+  "namePt": "Gato-Vaca",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "On hands and knees, wrists under the shoulders and knees under the hips.",
+   "Inhale and drop the belly, lifting the chest and tailbone (Cow); exhale and round the spine toward the ceiling (Cat).",
+   "Flow slowly between the two, moving with each breath. One full cycle = one rep."
+  ],
+  "instructionsPt": [
+   "Em quatro apoios, punhos sob os ombros e joelhos sob o quadril.",
+   "Inspire soltando a barriga e elevando o peito e o cóccix (Vaca); expire arredondando a coluna em direção ao teto (Gato).",
+   "Flua devagar entre as duas posições, acompanhando cada respiração. Um ciclo completo = uma repetição."
+  ],
+  "primaryMuscles": [
+   "spinal-erectors"
+  ],
+  "secondaryMuscles": [
+   "abdominals",
+   "middle-back"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=1P_auHRJdNg",
+  "videoCredit": "BrettLarkinYoga"
+ },
+ {
+  "sourceId": "Standing_Forward_Fold",
+  "slug": "standing-forward-fold",
+  "nameEn": "Standing Forward Fold",
+  "namePt": "Flexão à Frente em Pé",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "From standing, hinge forward from the hips and let the torso hang over the legs (Uttanasana).",
+   "Keep a soft bend in the knees; let the head and arms hang heavy toward the floor.",
+   "Relax the neck and breathe. Come up slowly to avoid dizziness."
+  ],
+  "instructionsPt": [
+   "Em pé, incline o tronco a partir do quadril e deixe-o pender sobre as pernas (Uttanasana).",
+   "Mantenha os joelhos levemente flexionados; deixe a cabeça e os braços penderem pesados em direção ao chão.",
+   "Relaxe o pescoço e respire. Suba devagar para evitar tontura."
+  ],
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "spinal-erectors",
+   "calves"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=0KzyEgkq7zw",
+  "videoCredit": "Yoga Journal"
+ },
+ {
+  "sourceId": "Halfway_Lift",
+  "slug": "halfway-lift",
+  "nameEn": "Halfway Lift",
+  "namePt": "Meia Flexão à Frente",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "From a forward fold, bring the hands to the shins or thighs (Ardha Uttanasana).",
+   "Lengthen the spine to a flat back, chest forward and gaze slightly down.",
+   "Draw the shoulders away from the ears and keep the neck in line with the spine."
+  ],
+  "instructionsPt": [
+   "A partir da flexão à frente, leve as mãos às canelas ou coxas (Ardha Uttanasana).",
+   "Alongue a coluna até deixar as costas retas, peito para frente e olhar levemente para baixo.",
+   "Afaste os ombros das orelhas e mantenha o pescoço alinhado com a coluna."
+  ],
+  "primaryMuscles": [
+   "spinal-erectors"
+  ],
+  "secondaryMuscles": [
+   "hamstrings"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=2_yNresGBQE",
+  "videoCredit": "Muscle & Motion"
+ },
+ {
+  "sourceId": "Low_Lunge",
+  "slug": "low-lunge",
+  "nameEn": "Low Lunge",
+  "namePt": "Afundo Baixo",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Step one foot forward between the hands and lower the back knee to the floor (Anjaneyasana).",
+   "Sink the hips gently forward and down until you feel a stretch at the front of the back hip.",
+   "Lift the torso tall; raise the arms overhead if comfortable. Switch sides."
+  ],
+  "instructionsPt": [
+   "Avance um pé para a frente entre as mãos e apoie o joelho de trás no chão (Anjaneyasana).",
+   "Leve o quadril suavemente para frente e para baixo até sentir um alongamento na frente do quadril de trás.",
+   "Levante o tronco ereto; eleve os braços acima da cabeça se estiver confortável. Troque de lado."
+  ],
+  "primaryMuscles": [
+   "quadriceps"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "hamstrings"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=MjiC4mGTnTw",
+  "videoCredit": "YogaDownload"
+ },
+ {
+  "sourceId": "High_Lunge",
+  "slug": "high-lunge",
+  "nameEn": "High Lunge",
+  "namePt": "Afundo Alto",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "STATIC",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "From a forward fold, step one foot far back, keeping the back leg strong and the heel lifted (high lunge).",
+   "Bend the front knee to about 90°, stacking it over the ankle, and lift the torso tall.",
+   "Reach the arms overhead and keep the hips square. Switch sides."
+  ],
+  "instructionsPt": [
+   "A partir da flexão à frente, leve um pé bem para trás, mantendo a perna de trás firme e o calcanhar elevado (afundo alto).",
+   "Flexione o joelho da frente a cerca de 90°, alinhado sobre o tornozelo, e levante o tronco ereto.",
+   "Estenda os braços acima da cabeça e mantenha o quadril alinhado. Troque de lado."
+  ],
+  "primaryMuscles": [
+   "quadriceps"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "hamstrings"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=TEiYeMS8lH4",
+  "videoCredit": "Hospital for Special Surgery"
+ },
+ {
+  "sourceId": "Chair_Pose",
+  "slug": "chair-pose",
+  "nameEn": "Chair Pose",
+  "namePt": "Cadeira",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Stand with feet together or hip-width and bend the knees as if sitting back into a chair (Utkatasana).",
+   "Keep the weight in the heels and the chest lifted; reach the arms up alongside the ears.",
+   "Draw the lower ribs in and breathe. Hold without letting the knees cave inward."
+  ],
+  "instructionsPt": [
+   "Fique em pé com os pés juntos ou na largura do quadril e flexione os joelhos como se fosse sentar numa cadeira (Utkatasana).",
+   "Mantenha o peso nos calcanhares e o peito elevado; estenda os braços para cima ao lado das orelhas.",
+   "Leve as costelas baixas para dentro e respire. Mantenha sem deixar os joelhos caírem para dentro."
+  ],
+  "primaryMuscles": [
+   "quadriceps"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "spinal-erectors",
+   "shoulders"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=ySafTekJ3Ls",
+  "videoCredit": "Yoga With Adriene"
+ },
+ {
+  "sourceId": "Tree_Pose",
+  "slug": "tree-pose",
+  "nameEn": "Tree Pose",
+  "namePt": "Árvore",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Stand tall and shift your weight onto one foot (Vrksasana).",
+   "Place the sole of the other foot on the inner calf or inner thigh — never on the knee.",
+   "Bring the hands together at the chest or overhead and fix your gaze on one point. Switch sides."
+  ],
+  "instructionsPt": [
+   "Fique em pé e ereto e transfira o peso para um dos pés (Vrksasana).",
+   "Apoie a sola do outro pé na panturrilha ou na coxa internas — nunca sobre o joelho.",
+   "Una as mãos à frente do peito ou acima da cabeça e fixe o olhar num ponto. Troque de lado."
+  ],
+  "primaryMuscles": [
+   "calves"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "abdominals",
+   "abductors"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=rmnzeVWnv9o",
+  "videoCredit": "YogaRenew"
+ },
+ {
+  "sourceId": "Warrior_I",
+  "slug": "warrior-1",
+  "nameEn": "Warrior I",
+  "namePt": "Guerreiro I",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "From standing, step one foot back and turn it out about 45°, keeping both heels grounded (Warrior I).",
+   "Bend the front knee over the ankle and square the hips toward the front.",
+   "Reach the arms overhead and lift the chest. Switch sides."
+  ],
+  "instructionsPt": [
+   "Em pé, leve um pé para trás e gire-o cerca de 45°, mantendo os dois calcanhares no chão (Guerreiro I).",
+   "Flexione o joelho da frente sobre o tornozelo e alinhe o quadril para frente.",
+   "Estenda os braços acima da cabeça e eleve o peito. Troque de lado."
+  ],
+  "primaryMuscles": [
+   "quadriceps"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "shoulders"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=FQ11iF9I9K8",
+  "videoCredit": "BrettLarkinYoga"
+ },
+ {
+  "sourceId": "Warrior_II",
+  "slug": "warrior-2",
+  "nameEn": "Warrior II",
+  "namePt": "Guerreiro II",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Step the feet wide, turn the front foot out 90° and the back foot slightly in (Warrior II).",
+   "Bend the front knee over the ankle and extend the arms out to the sides at shoulder height.",
+   "Gaze over the front hand and keep the torso upright, not leaning forward. Switch sides."
+  ],
+  "instructionsPt": [
+   "Afaste bem os pés, gire o pé da frente 90° e o de trás levemente para dentro (Guerreiro II).",
+   "Flexione o joelho da frente sobre o tornozelo e estenda os braços para os lados, na altura dos ombros.",
+   "Olhe por cima da mão da frente e mantenha o tronco ereto, sem inclinar para frente. Troque de lado."
+  ],
+  "primaryMuscles": [
+   "quadriceps"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "shoulders",
+   "abductors"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=T8b28IuOl_E",
+  "videoCredit": "Heather Kitchen Yoga"
+ },
+ {
+  "sourceId": "Warrior_III",
+  "slug": "warrior-3",
+  "nameEn": "Warrior III",
+  "namePt": "Guerreiro III",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "STATIC",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "From standing, shift your weight onto one leg and hinge the torso forward (Warrior III).",
+   "Lift the back leg behind you until the body forms one line parallel to the floor.",
+   "Reach the arms forward or back alongside the body and keep the hips level. Switch sides."
+  ],
+  "instructionsPt": [
+   "Em pé, transfira o peso para uma perna e incline o tronco para frente (Guerreiro III).",
+   "Eleve a perna de trás até o corpo formar uma linha paralela ao chão.",
+   "Estenda os braços para frente ou ao lado do corpo e mantenha o quadril nivelado. Troque de lado."
+  ],
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "spinal-erectors",
+   "shoulders"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=SZm-tY9uKIE",
+  "videoCredit": "Black Yogi Nico Marie"
+ },
+ {
+  "sourceId": "Triangle_Pose",
+  "slug": "triangle-pose",
+  "nameEn": "Triangle Pose",
+  "namePt": "Triângulo",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Stand with the feet wide, front foot turned out 90° (Trikonasana).",
+   "Reach forward over the front leg, then lower the front hand to the shin, ankle or a block.",
+   "Extend the top arm to the ceiling and open the chest; keep both legs straight. Switch sides."
+  ],
+  "instructionsPt": [
+   "Fique em pé com os pés afastados, pé da frente girado 90° (Trikonasana).",
+   "Alongue o tronco sobre a perna da frente e desça a mão da frente até a canela, o tornozelo ou um bloco.",
+   "Estenda o braço de cima em direção ao teto e abra o peito; mantenha as duas pernas estendidas. Troque de lado."
+  ],
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "adductors",
+   "abdominals",
+   "spinal-erectors"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=Op72srvfIXM",
+  "videoCredit": "Heather Kitchen Yoga"
+ },
+ {
+  "sourceId": "Extended_Side_Angle",
+  "slug": "extended-side-angle",
+  "nameEn": "Extended Side Angle",
+  "namePt": "Ângulo Lateral Estendido",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "STATIC",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "From Warrior II, lower the front forearm onto the front thigh or the hand to the floor (extended side angle).",
+   "Reach the top arm over the ear, creating one long line from the back heel to the fingertips.",
+   "Keep the chest open toward the ceiling. Switch sides."
+  ],
+  "instructionsPt": [
+   "A partir do Guerreiro II, apoie o antebraço da frente na coxa da frente ou a mão no chão (ângulo lateral estendido).",
+   "Estenda o braço de cima por cima da orelha, formando uma linha longa do calcanhar de trás às pontas dos dedos.",
+   "Mantenha o peito aberto em direção ao teto. Troque de lado."
+  ],
+  "primaryMuscles": [
+   "quadriceps"
+  ],
+  "secondaryMuscles": [
+   "adductors",
+   "lats",
+   "abdominals"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=tdXnuY6OwL0",
+  "videoCredit": "SIKANA English"
+ },
+ {
+  "sourceId": "Half_Moon_Pose",
+  "slug": "half-moon-pose",
+  "nameEn": "Half Moon Pose",
+  "namePt": "Meia-Lua",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "STATIC",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "From Triangle, bend the front knee and step the back foot in slightly (Ardha Chandrasana).",
+   "Shift the weight onto the front hand (or a block) and lift the back leg to hip height, parallel to the floor.",
+   "Open the chest and reach the top arm up; gaze down for balance. Switch sides."
+  ],
+  "instructionsPt": [
+   "A partir do Triângulo, flexione o joelho da frente e aproxime um pouco o pé de trás (Ardha Chandrasana).",
+   "Transfira o peso para a mão da frente (ou um bloco) e eleve a perna de trás até a altura do quadril, paralela ao chão.",
+   "Abra o peito e estenda o braço de cima; olhe para baixo para equilibrar. Troque de lado."
+  ],
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "abductors",
+   "abdominals"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=EriPRTk1ly0",
+  "videoCredit": "Yoga With Adriene"
+ },
+ {
+  "sourceId": "Wide_Legged_Forward_Fold",
+  "slug": "wide-legged-forward-fold",
+  "nameEn": "Wide-Legged Forward Fold",
+  "namePt": "Flexão à Frente com Pernas Afastadas",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Stand with the feet wide and parallel, hands on the hips (Prasarita Padottanasana).",
+   "Hinge forward from the hips with a long spine and bring the hands to the floor under the shoulders.",
+   "Let the crown of the head descend toward the floor; keep the legs active. Come up slowly."
+  ],
+  "instructionsPt": [
+   "Fique em pé com os pés bem afastados e paralelos, mãos no quadril (Prasarita Padottanasana).",
+   "Incline o tronco a partir do quadril com a coluna longa e leve as mãos ao chão sob os ombros.",
+   "Deixe o topo da cabeça descer em direção ao chão; mantenha as pernas ativas. Suba devagar."
+  ],
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "adductors",
+   "spinal-erectors"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=F7you4Sw1o0",
+  "videoCredit": "Yoga With Adriene"
+ },
+ {
+  "sourceId": "Pyramid_Pose",
+  "slug": "pyramid-pose",
+  "nameEn": "Pyramid Pose",
+  "namePt": "Pirâmide",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "STATIC",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Step one foot forward, both legs straight and the hips squared to the front (Parsvottanasana).",
+   "Hinge forward over the front leg with a long spine, hands on the floor or on blocks.",
+   "Keep the front leg straight and the weight even between the feet. Switch sides."
+  ],
+  "instructionsPt": [
+   "Avance um pé, as duas pernas estendidas e o quadril alinhado para frente (Parsvottanasana).",
+   "Incline o tronco sobre a perna da frente com a coluna longa, mãos no chão ou em blocos.",
+   "Mantenha a perna da frente estendida e o peso equilibrado entre os pés. Troque de lado."
+  ],
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "spinal-erectors",
+   "calves"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=LTe3CO7Vtxs",
+  "videoCredit": "Yoga With Adriene"
+ },
+ {
+  "sourceId": "Lizard_Pose",
+  "slug": "lizard-pose",
+  "nameEn": "Lizard Pose",
+  "namePt": "Lagarto",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "STATIC",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "From a lunge, bring both hands to the inside of the front foot (lizard pose).",
+   "Lower onto the forearms if comfortable, letting the front knee open to the side.",
+   "Keep the back leg long and strong and breathe into the hip. Switch sides."
+  ],
+  "instructionsPt": [
+   "A partir de um afundo, leve as duas mãos para dentro do pé da frente (postura do lagarto).",
+   "Desça até os antebraços se estiver confortável, deixando o joelho da frente abrir para o lado.",
+   "Mantenha a perna de trás longa e firme e respire em direção ao quadril. Troque de lado."
+  ],
+  "primaryMuscles": [
+   "adductors"
+  ],
+  "secondaryMuscles": [
+   "quadriceps",
+   "glutes",
+   "hamstrings"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=-6MGjYmHdYQ",
+  "videoCredit": "Yoga With Adriene"
+ },
+ {
+  "sourceId": "Pigeon_Pose",
+  "slug": "pigeon-pose",
+  "nameEn": "Pigeon Pose",
+  "namePt": "Pombo",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "STATIC",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "From hands and knees, bring one knee forward behind the wrist and extend the other leg straight back (pigeon pose).",
+   "Square the hips and keep the back leg long; stay upright or fold forward over the front shin.",
+   "Feel the stretch in the front hip and glute, never in the knee. Switch sides."
+  ],
+  "instructionsPt": [
+   "De quatro apoios, traga um joelho para frente atrás do punho e estenda a outra perna para trás (postura do pombo).",
+   "Alinhe o quadril e mantenha a perna de trás longa; fique ereto ou incline o tronco sobre a canela da frente.",
+   "Sinta o alongamento no quadril e no glúteo da frente, nunca no joelho. Troque de lado."
+  ],
+  "primaryMuscles": [
+   "glutes"
+  ],
+  "secondaryMuscles": [
+   "quadriceps",
+   "spinal-erectors"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=hW9ax9DX5Uw",
+  "videoCredit": "Yoga With Landon"
+ },
+ {
+  "sourceId": "Seated_Forward_Fold",
+  "slug": "seated-forward-fold",
+  "nameEn": "Seated Forward Fold",
+  "namePt": "Flexão à Frente Sentado",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Sit with both legs straight out in front, spine tall (Paschimottanasana).",
+   "Hinge forward from the hips and reach toward the feet, leading with the chest.",
+   "Keep a soft bend in the knees if needed; relax the neck and breathe."
+  ],
+  "instructionsPt": [
+   "Sente com as duas pernas estendidas à frente, coluna ereta (Paschimottanasana).",
+   "Incline o tronco a partir do quadril e alcance em direção aos pés, conduzindo com o peito.",
+   "Mantenha os joelhos levemente flexionados se precisar; relaxe o pescoço e respire."
+  ],
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "spinal-erectors",
+   "calves"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=4VLYUCml5sw",
+  "videoCredit": "YogaRenew"
+ },
+ {
+  "sourceId": "Head_To_Knee_Pose",
+  "slug": "head-to-knee-pose",
+  "nameEn": "Head-to-Knee Pose",
+  "namePt": "Cabeça ao Joelho",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Sit with one leg straight and the other foot drawn to the inner thigh (Janu Sirsasana).",
+   "Hinge forward over the straight leg with a long spine, reaching toward the foot.",
+   "Keep both hips grounded and breathe into the back of the leg. Switch sides."
+  ],
+  "instructionsPt": [
+   "Sente com uma perna estendida e o outro pé encostado na coxa interna (Janu Sirsasana).",
+   "Incline o tronco sobre a perna estendida com a coluna longa, alcançando em direção ao pé.",
+   "Mantenha os dois quadris apoiados e respire em direção à parte de trás da perna. Troque de lado."
+  ],
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "spinal-erectors",
+   "adductors"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=m_wHNBpSD-0",
+  "videoCredit": "Black Yogi Nico Marie"
+ },
+ {
+  "sourceId": "Bound_Angle_Pose",
+  "slug": "bound-angle-pose",
+  "nameEn": "Bound Angle Pose",
+  "namePt": "Ângulo Fechado (Borboleta)",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Sit tall and bring the soles of the feet together, letting the knees fall open (Baddha Konasana).",
+   "Hold the feet or ankles and gently hinge forward from the hips.",
+   "Let the knees relax toward the floor without forcing. Feel the inner thighs open."
+  ],
+  "instructionsPt": [
+   "Sente ereto e una as solas dos pés, deixando os joelhos caírem para os lados (Baddha Konasana).",
+   "Segure os pés ou tornozelos e incline o tronco suavemente a partir do quadril.",
+   "Deixe os joelhos relaxarem em direção ao chão sem forçar. Sinta a parte interna das coxas abrir."
+  ],
+  "primaryMuscles": [
+   "adductors"
+  ],
+  "secondaryMuscles": [
+   "glutes"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=B6tb4TncKhY",
+  "videoCredit": "Yoga With Adriene"
+ },
+ {
+  "sourceId": "Seated_Spinal_Twist",
+  "slug": "seated-spinal-twist",
+  "nameEn": "Seated Spinal Twist",
+  "namePt": "Torção Sentada da Coluna",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Sit with one leg extended and cross the other foot outside the opposite thigh (Ardha Matsyendrasana).",
+   "Inhale to lengthen the spine, then exhale and twist toward the bent knee, hand behind you for support.",
+   "Twist from the base of the spine, not from the neck. Switch sides."
+  ],
+  "instructionsPt": [
+   "Sente com uma perna estendida e cruze o outro pé por fora da coxa oposta (Ardha Matsyendrasana).",
+   "Inspire alongando a coluna, depois expire e gire em direção ao joelho flexionado, mão apoiada atrás.",
+   "Gire a partir da base da coluna, não do pescoço. Troque de lado."
+  ],
+  "primaryMuscles": [
+   "spinal-erectors"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "middle-back"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=at_ohf5-5qU",
+  "videoCredit": "YogaDownload"
+ },
+ {
+  "sourceId": "Bridge_Pose",
+  "slug": "bridge-pose",
+  "nameEn": "Bridge Pose",
+  "namePt": "Ponte",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Lie on your back, knees bent and feet flat, hip-width apart (Setu Bandha Sarvangasana).",
+   "Press into the feet and lift the hips, keeping the thighs parallel.",
+   "Roll the shoulders under and clasp the hands if comfortable. Keep the neck relaxed."
+  ],
+  "instructionsPt": [
+   "Deite de costas, joelhos flexionados e pés apoiados na largura do quadril (Setu Bandha Sarvangasana).",
+   "Pressione os pés e eleve o quadril, mantendo as coxas paralelas.",
+   "Role os ombros por baixo e entrelace as mãos se estiver confortável. Mantenha o pescoço relaxado."
+  ],
+  "primaryMuscles": [
+   "glutes"
+  ],
+  "secondaryMuscles": [
+   "hamstrings",
+   "spinal-erectors",
+   "chest"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=uvpxf1-_oUk",
+  "videoCredit": "YogaDownload"
+ },
+ {
+  "sourceId": "Camel_Pose",
+  "slug": "camel-pose",
+  "nameEn": "Camel Pose",
+  "namePt": "Camelo",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Kneel with the knees hip-width, hands on the lower back and fingers pointing down (Ustrasana).",
+   "Lift the chest, draw the shoulders back and gently arch back; reach for the heels if comfortable.",
+   "Keep the hips over the knees and the neck long. Come up slowly. Avoid with neck or low-back injury."
+  ],
+  "instructionsPt": [
+   "Ajoelhe com os joelhos na largura do quadril, mãos na lombar e dedos apontando para baixo (Ustrasana).",
+   "Eleve o peito, leve os ombros para trás e arqueie suavemente; alcance os calcanhares se estiver confortável.",
+   "Mantenha o quadril sobre os joelhos e o pescoço longo. Suba devagar. Evite com lesão de pescoço ou lombar."
+  ],
+  "primaryMuscles": [
+   "spinal-erectors"
+  ],
+  "secondaryMuscles": [
+   "chest",
+   "quadriceps",
+   "abdominals"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=hm0TJfe0oIg",
+  "videoCredit": "YogaRenew"
+ },
+ {
+  "sourceId": "Bow_Pose",
+  "slug": "bow-pose",
+  "nameEn": "Bow Pose",
+  "namePt": "Arco",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Lie face down and bend the knees, reaching back to hold the ankles (Dhanurasana).",
+   "Kick the feet into the hands and lift the chest and thighs off the floor.",
+   "Keep the knees roughly hip-width and breathe steadily. Release slowly."
+  ],
+  "instructionsPt": [
+   "Deite de bruços e flexione os joelhos, alcançando os tornozelos com as mãos (Dhanurasana).",
+   "Empurre os pés contra as mãos e eleve o peito e as coxas do chão.",
+   "Mantenha os joelhos na largura do quadril e respire de forma constante. Solte devagar."
+  ],
+  "primaryMuscles": [
+   "spinal-erectors"
+  ],
+  "secondaryMuscles": [
+   "chest",
+   "quadriceps",
+   "shoulders"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=NYwYxNjco8o",
+  "videoCredit": "YogaRenew"
+ },
+ {
+  "sourceId": "Locust_Pose",
+  "slug": "locust-pose",
+  "nameEn": "Locust Pose",
+  "namePt": "Gafanhoto",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Lie face down with the arms alongside the body, palms down (Salabhasana).",
+   "Lift the chest, arms and legs off the floor, reaching back through the toes.",
+   "Keep the neck long and the gaze down. Breathe and lower slowly."
+  ],
+  "instructionsPt": [
+   "Deite de bruços com os braços ao lado do corpo, palmas para baixo (Salabhasana).",
+   "Eleve o peito, os braços e as pernas do chão, alongando para trás pelos dedos dos pés.",
+   "Mantenha o pescoço longo e o olhar para baixo. Respire e desça devagar."
+  ],
+  "primaryMuscles": [
+   "spinal-erectors"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "hamstrings",
+   "shoulders"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=0kxczNm1xF4",
+  "videoCredit": "Yoga With Adriene"
+ },
+ {
+  "sourceId": "Boat_Pose",
+  "slug": "boat-pose",
+  "nameEn": "Boat Pose",
+  "namePt": "Barco",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Sit with the knees bent and lean back slightly, lifting the feet off the floor (Navasana).",
+   "Straighten the legs toward a V shape if you can, keeping the chest lifted and the spine long.",
+   "Reach the arms forward alongside the legs. Keep the lower back from rounding."
+  ],
+  "instructionsPt": [
+   "Sente com os joelhos flexionados e incline-se um pouco para trás, elevando os pés do chão (Navasana).",
+   "Estenda as pernas formando um V, se conseguir, mantendo o peito elevado e a coluna longa.",
+   "Estenda os braços para frente ao lado das pernas. Não deixe a lombar arredondar."
+  ],
+  "primaryMuscles": [
+   "abdominals"
+  ],
+  "secondaryMuscles": [
+   "quadriceps",
+   "spinal-erectors"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=gWEey6tp7-c",
+  "videoCredit": "Yoga With Tim"
+ },
+ {
+  "sourceId": "Sphinx_Pose",
+  "slug": "sphinx-pose",
+  "nameEn": "Sphinx Pose",
+  "namePt": "Esfinge",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Lie face down with the forearms on the floor, elbows under the shoulders (Sphinx Pose).",
+   "Press the forearms down and lift the chest into a gentle backbend.",
+   "Keep the shoulders relaxed and the hips on the floor. Breathe into the chest."
+  ],
+  "instructionsPt": [
+   "Deite de bruços com os antebraços no chão, cotovelos sob os ombros (Postura da Esfinge).",
+   "Pressione os antebraços e eleve o peito numa leve extensão.",
+   "Mantenha os ombros relaxados e o quadril no chão. Respire em direção ao peito."
+  ],
+  "primaryMuscles": [
+   "spinal-erectors"
+  ],
+  "secondaryMuscles": [
+   "chest",
+   "shoulders"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=66cA48-WdGw",
+  "videoCredit": "YogaToday - Online Yoga, Meditation, and Pilates"
+ },
+ {
+  "sourceId": "Happy_Baby",
+  "slug": "happy-baby",
+  "nameEn": "Happy Baby",
+  "namePt": "Bebê Feliz",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Lie on your back and draw both knees toward the chest (Ananda Balasana).",
+   "Hold the outer edges of the feet and open the knees toward the armpits.",
+   "Keep the lower back on the floor and gently rock side to side if it feels good."
+  ],
+  "instructionsPt": [
+   "Deite de costas e traga os dois joelhos em direção ao peito (Ananda Balasana).",
+   "Segure as bordas externas dos pés e abra os joelhos em direção às axilas.",
+   "Mantenha a lombar no chão e balance suavemente de um lado para o outro, se agradar."
+  ],
+  "primaryMuscles": [
+   "adductors"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "hamstrings"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=C6R7tfAcQjA",
+  "videoCredit": "Black Yogi Nico Marie"
+ },
+ {
+  "sourceId": "Reclined_Spinal_Twist",
+  "slug": "reclined-spinal-twist",
+  "nameEn": "Reclined Spinal Twist",
+  "namePt": "Torção Deitada da Coluna",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Lie on your back and draw one knee toward the chest (Supta Matsyendrasana).",
+   "Guide that knee across the body toward the floor while the opposite arm reaches out to the side.",
+   "Keep both shoulders on the floor and turn the gaze away from the knee. Switch sides."
+  ],
+  "instructionsPt": [
+   "Deite de costas e traga um joelho em direção ao peito (Supta Matsyendrasana).",
+   "Conduza esse joelho cruzando o corpo em direção ao chão enquanto o braço oposto se estende para o lado.",
+   "Mantenha os dois ombros no chão e vire o olhar para o lado oposto ao joelho. Troque de lado."
+  ],
+  "primaryMuscles": [
+   "spinal-erectors"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "middle-back"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=sADFnhF-Ln0",
+  "videoCredit": "YanvaYoga (Iana Varshavska)"
+ },
+ {
+  "sourceId": "Legs_Up_The_Wall",
+  "slug": "legs-up-the-wall",
+  "nameEn": "Legs-Up-the-Wall",
+  "namePt": "Pernas na Parede",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Sit with one hip against a wall, then swing the legs up as you lie back (Viparita Karani).",
+   "Rest the legs vertically against the wall, hips close to or a few inches from it.",
+   "Let the arms relax and breathe slowly. Stay as long as it feels restful."
+  ],
+  "instructionsPt": [
+   "Sente com um lado do quadril junto à parede e, ao deitar, gire levando as pernas para cima (Viparita Karani).",
+   "Apoie as pernas na vertical contra a parede, com o quadril perto dela ou a poucos centímetros.",
+   "Deixe os braços relaxarem e respire devagar. Fique o tempo que for confortável."
+  ],
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "calves"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=YHxoiq1YivE",
+  "videoCredit": "Yoga International"
+ },
+ {
+  "sourceId": "Corpse_Pose",
+  "slug": "corpse-pose",
+  "nameEn": "Corpse Pose",
+  "namePt": "Cadáver / Relaxamento (Savasana)",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Lie on your back with the legs relaxed and slightly apart, arms by your sides and palms up (Savasana).",
+   "Close the eyes and let the whole body be heavy and still.",
+   "Breathe naturally and release any tension with each exhale."
+  ],
+  "instructionsPt": [
+   "Deite de costas com as pernas relaxadas e levemente afastadas, braços ao lado do corpo e palmas para cima (Savasana).",
+   "Feche os olhos e deixe o corpo inteiro pesado e imóvel.",
+   "Respire naturalmente e solte qualquer tensão a cada expiração."
+  ],
+  "primaryMuscles": [
+   "spinal-erectors"
+  ],
+  "secondaryMuscles": [
+   "neck"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=FCjmosfNevo",
+  "videoCredit": "SarahBethYoga"
+ },
+ {
+  "sourceId": "Garland_Pose",
+  "slug": "garland-pose",
+  "nameEn": "Garland Pose",
+  "namePt": "Guirlanda (Agachamento Profundo)",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Stand with the feet a bit wider than hips, toes turned slightly out (Malasana).",
+   "Bend the knees and lower into a deep squat, keeping the heels down if possible.",
+   "Bring the hands together at the chest and press the elbows against the inner knees. Keep the chest lifted."
+  ],
+  "instructionsPt": [
+   "Fique em pé com os pés um pouco mais afastados que o quadril, dedos levemente para fora (Malasana).",
+   "Flexione os joelhos e desça num agachamento profundo, mantendo os calcanhares no chão, se possível.",
+   "Una as mãos à frente do peito e pressione os cotovelos contra a parte interna dos joelhos. Mantenha o peito elevado."
+  ],
+  "primaryMuscles": [
+   "adductors"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "quadriceps",
+   "calves"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=jaSgTFAqYcA",
+  "videoCredit": "YogaRenew"
+ },
+ {
+  "sourceId": "Eagle_Pose",
+  "slug": "eagle-pose",
+  "nameEn": "Eagle Pose",
+  "namePt": "Águia",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "ADVANCED",
+  "forceType": "STATIC",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Stand tall, bend the knees and cross one thigh over the other (Garudasana).",
+   "Wrap the same-side foot behind the opposite calf if you can, then cross the arms with the opposite arm on top.",
+   "Sink the hips and lift the elbows; fix your gaze on one point. Switch sides."
+  ],
+  "instructionsPt": [
+   "Fique em pé e ereto, flexione os joelhos e cruze uma coxa sobre a outra (Garudasana).",
+   "Enrole o pé do mesmo lado atrás da panturrilha oposta, se conseguir, e cruze os braços com o braço oposto por cima.",
+   "Afunde o quadril e eleve os cotovelos; fixe o olhar num ponto. Troque de lado."
+  ],
+  "primaryMuscles": [
+   "shoulders"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "abductors",
+   "calves"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=WAf1Lhg605E",
+  "videoCredit": "YogaRenew"
+ },
+ {
+  "sourceId": "Dolphin_Pose",
+  "slug": "dolphin-pose",
+  "nameEn": "Dolphin Pose",
+  "namePt": "Golfinho",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "From hands and knees, lower onto the forearms with the elbows under the shoulders (Dolphin Pose).",
+   "Tuck the toes and lift the hips up and back, like Downward Dog on the forearms.",
+   "Press the forearms down, lengthen the spine and let the head hang freely. Breathe."
+  ],
+  "instructionsPt": [
+   "De quatro apoios, desça até os antebraços com os cotovelos sob os ombros (Postura do Golfinho).",
+   "Encaixe os dedos dos pés e eleve o quadril para cima e para trás, como um Cão Olhando para Baixo nos antebraços.",
+   "Pressione os antebraços, alongue a coluna e deixe a cabeça pender livremente. Respire."
+  ],
+  "primaryMuscles": [
+   "shoulders"
+  ],
+  "secondaryMuscles": [
+   "hamstrings",
+   "lats",
+   "calves"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=6w4ZoSuBDCg",
+  "videoCredit": "Yoga With Adriene"
+ },
+ {
+  "sourceId": "Crow_Pose",
+  "slug": "crow-pose",
+  "nameEn": "Crow Pose",
+  "namePt": "Corvo",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "ADVANCED",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Squat with the hands flat on the floor shoulder-width and the knees resting high on the backs of the arms (Bakasana).",
+   "Lean the weight forward onto the hands and lift one foot, then the other, off the floor.",
+   "Round the upper back, hug the knees in and gaze slightly forward. Keep a cushion in front at first."
+  ],
+  "instructionsPt": [
+   "Agache com as mãos apoiadas no chão na largura dos ombros e os joelhos encostados no alto da parte de trás dos braços (Bakasana).",
+   "Leve o peso para frente sobre as mãos e eleve um pé, depois o outro, do chão.",
+   "Arredonde a parte de cima das costas, abrace os joelhos e olhe levemente para frente. Mantenha uma almofada à frente no início."
+  ],
+  "primaryMuscles": [
+   "shoulders"
+  ],
+  "secondaryMuscles": [
+   "triceps",
+   "abdominals",
+   "forearms"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=GIOy9VK_1h0",
+  "videoCredit": "Dianne Bondy Yoga"
+ },
+ {
+  "sourceId": "Thread_The_Needle",
+  "slug": "thread-the-needle",
+  "nameEn": "Thread the Needle",
+  "namePt": "Agulha na Linha",
+  "category": "STRETCHING",
+  "movementPattern": null,
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "From hands and knees, slide one arm under the body, palm up, lowering that shoulder and cheek to the floor (Thread the Needle).",
+   "Let the chest rotate toward the threaded side while the other hand stays planted or reaches overhead.",
+   "Keep the hips over the knees and breathe into the upper back. Switch sides."
+  ],
+  "instructionsPt": [
+   "De quatro apoios, deslize um braço por baixo do corpo, palma para cima, apoiando esse ombro e a bochecha no chão (Agulha na Linha).",
+   "Deixe o peito girar em direção ao lado do braço que passou por baixo enquanto a outra mão permanece apoiada ou se estende acima da cabeça.",
+   "Mantenha o quadril sobre os joelhos e respire em direção à parte de cima das costas. Troque de lado."
+  ],
+  "primaryMuscles": [
+   "shoulders"
+  ],
+  "secondaryMuscles": [
+   "middle-back",
+   "traps"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=zgHpDtU70zc",
+  "videoCredit": "Yoga by Katy"
+ },
+ {
+  "sourceId": "cal-tuck-l-sit",
+  "slug": "tuck-l-sit",
+  "nameEn": "Tuck L-Sit",
+  "namePt": "L-Sit Agrupado (Tuck)",
+  "category": "STRENGTH",
+  "movementPattern": "trunk-flexion",
+  "equipment": "other-equipment",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Grip two parallettes (or the seat of two sturdy chairs) at hip width, arms fully straight, shoulders pushed down away from your ears.",
+   "Press hard through the hands to lift your hips off the floor, then pull both knees up toward your chest into a tight tuck.",
+   "Point the hips slightly forward and hold with the lower back rounded and the core braced, breathing steadily.",
+   "Lower with control before your form breaks. Progress by holding longer, then by slowly extending the knees toward the full L-Sit."
+  ],
+  "instructionsPt": [
+   "Segure duas parallettes (ou o assento de duas cadeiras firmes) na largura do quadril, braços totalmente estendidos e ombros empurrados para baixo, longe das orelhas.",
+   "Empurre forte pelas mãos para tirar o quadril do chão e puxe os dois joelhos em direção ao peito, bem agrupados.",
+   "Projete o quadril levemente para a frente e sustente com a lombar levemente arredondada e o abdômen contraído, respirando de forma constante.",
+   "Desça com controle antes que a forma quebre. Progrida sustentando por mais tempo e, depois, estendendo os joelhos devagar rumo ao L-Sit completo."
+  ],
+  "primaryMuscles": [
+   "abdominals"
+  ],
+  "secondaryMuscles": [
+   "triceps",
+   "shoulders",
+   "quadriceps"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=HxDP7SqggpI",
+  "videoCredit": "Vitality"
+ },
+ {
+  "sourceId": "cal-l-sit",
+  "slug": "l-sit",
+  "nameEn": "L-Sit",
+  "namePt": "L-Sit",
+  "category": "STRENGTH",
+  "movementPattern": "trunk-flexion",
+  "equipment": "other-equipment",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Support yourself on parallettes or dip bars with arms locked straight and shoulders depressed (pushed down and slightly back).",
+   "Press down into the bars to lift your whole body, then extend both legs straight out in front so your body forms an 'L'.",
+   "Keep the knees locked, toes pointed, and squeeze the quads and lower abs to hold the legs at or above hip height.",
+   "Hold for the prescribed seconds without letting the shoulders shrug or the legs sag, then lower under control."
+  ],
+  "instructionsPt": [
+   "Apoie-se em parallettes ou barras de paralelas com os braços travados retos e os ombros deprimidos (empurrados para baixo e levemente para trás).",
+   "Empurre as barras para baixo para elevar o corpo todo e estenda as duas pernas à frente, formando um 'L' com o corpo.",
+   "Mantenha os joelhos travados, pés em ponta, e contraia o quadríceps e a porção baixa do abdômen para sustentar as pernas na altura do quadril ou acima.",
+   "Sustente pelos segundos prescritos sem encolher os ombros nem deixar as pernas caírem; depois desça com controle."
+  ],
+  "primaryMuscles": [
+   "abdominals"
+  ],
+  "secondaryMuscles": [
+   "triceps",
+   "shoulders",
+   "quadriceps"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=FeiZ1cCxgkY",
+  "videoCredit": "Gabriel Macineli"
+ },
+ {
+  "sourceId": "cal-planche-lean",
+  "slug": "planche-lean",
+  "nameEn": "Planche Lean",
+  "namePt": "Inclinação de Planche (Planche Lean)",
+  "category": "STRENGTH",
+  "movementPattern": "horizontal-push",
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Start in a push-up plank with hands on the floor, turning the hands so the fingers point out to the sides or slightly back to protect the wrists.",
+   "Lock the elbows straight and protract the shoulders (push the floor away so the upper back rounds slightly).",
+   "Keeping the body rigid in a hollow line, shift your shoulders forward past your hands until your wrists bend and you feel the shoulders load heavily.",
+   "Hold that lean for the prescribed seconds, keeping glutes and abs tight; the further forward you lean, the harder it gets."
+  ],
+  "instructionsPt": [
+   "Comece numa posição de prancha de flexão com as mãos no chão, girando-as para que os dedos apontem para os lados ou levemente para trás, protegendo os punhos.",
+   "Trave os cotovelos retos e protraia os ombros (empurre o chão para longe, de modo que a parte alta das costas arredonde um pouco).",
+   "Mantendo o corpo rígido numa linha de 'hollow', desloque os ombros para a frente, além das mãos, até os punhos flexionarem e você sentir os ombros bastante carregados.",
+   "Sustente essa inclinação pelos segundos prescritos, com glúteo e abdômen firmes; quanto mais à frente você inclinar, mais difícil fica."
+  ],
+  "primaryMuscles": [
+   "shoulders"
+  ],
+  "secondaryMuscles": [
+   "chest",
+   "triceps",
+   "forearms"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=vmnbTT1e99U",
+  "videoCredit": "Gui Pinto"
+ },
+ {
+  "sourceId": "cal-pseudo-planche-push-up",
+  "slug": "pseudo-planche-push-up",
+  "nameEn": "Pseudo Planche Push-Up",
+  "namePt": "Flexão Pseudo-Planche",
+  "category": "STRENGTH",
+  "movementPattern": "horizontal-push",
+  "equipment": "none",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PUSH",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Set up in a push-up position with the hands lower than usual, near the waistline, fingers pointing back or out to the sides.",
+   "Lean the shoulders forward past the hands and protract the shoulder blades, keeping the body in a straight hollow line.",
+   "Bend the elbows to lower under control while maintaining the forward lean, then press back up without losing the lean.",
+   "Keep the lean as aggressive as you can control; the more the shoulders stay in front of the hands, the more it trains the planche."
+  ],
+  "instructionsPt": [
+   "Posicione-se como numa flexão, mas com as mãos mais baixas que o normal, perto da linha da cintura, dedos apontando para trás ou para os lados.",
+   "Incline os ombros para a frente, além das mãos, e protraia as escápulas, mantendo o corpo numa linha reta de 'hollow'.",
+   "Flexione os cotovelos para descer com controle mantendo a inclinação à frente e, em seguida, empurre de volta sem perder essa inclinação.",
+   "Mantenha a inclinação tão acentuada quanto conseguir controlar; quanto mais os ombros ficam à frente das mãos, mais o exercício treina o planche."
+  ],
+  "primaryMuscles": [
+   "shoulders"
+  ],
+  "secondaryMuscles": [
+   "chest",
+   "triceps"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=xbyDjaWv8SQ",
+  "videoCredit": "Maykon SW"
+ },
+ {
+  "sourceId": "cal-tuck-planche",
+  "slug": "tuck-planche",
+  "nameEn": "Tuck Planche",
+  "namePt": "Planche Agrupado (Tuck)",
+  "category": "STRENGTH",
+  "movementPattern": "horizontal-push",
+  "equipment": "other-equipment",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Grip two parallettes with arms locked straight, then lean your shoulders well forward of the hands and strongly protract the shoulder blades.",
+   "Pull the knees up to the chest and lift both feet off the floor so your entire bodyweight balances on your hands.",
+   "Round the upper back, push the floor away, and hold with the hips at roughly shoulder height, elbows kept straight the whole time.",
+   "Hold for the prescribed seconds. Keep the lean so your shoulders stay over or in front of your hands to balance; lower before the elbows bend."
+  ],
+  "instructionsPt": [
+   "Segure duas parallettes com os braços travados retos, incline os ombros bem à frente das mãos e protraia fortemente as escápulas.",
+   "Puxe os joelhos até o peito e tire os dois pés do chão, de modo que todo o peso do corpo se equilibre sobre as mãos.",
+   "Arredonde a parte alta das costas, empurre o chão para longe e sustente com o quadril mais ou menos na altura dos ombros, cotovelos sempre retos.",
+   "Sustente pelos segundos prescritos. Mantenha a inclinação para que os ombros fiquem sobre ou à frente das mãos e você consiga equilibrar; desça antes que os cotovelos dobrem."
+  ],
+  "primaryMuscles": [
+   "shoulders"
+  ],
+  "secondaryMuscles": [
+   "chest",
+   "abdominals",
+   "triceps"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=s86nqyQOxC4",
+  "videoCredit": "Treino em FOCO"
+ },
+ {
+  "sourceId": "cal-advanced-tuck-planche",
+  "slug": "advanced-tuck-planche",
+  "nameEn": "Advanced Tuck Planche",
+  "namePt": "Planche Tuck Avançado",
+  "category": "STRENGTH",
+  "movementPattern": "horizontal-push",
+  "equipment": "other-equipment",
+  "difficulty": "ADVANCED",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "From a tuck planche on parallettes, keep the arms locked straight and the shoulders protracted and leaning forward of the hands.",
+   "Open the hip angle so the back becomes flat and parallel to the floor while the knees stay tucked toward the chest (thighs no longer on the belly).",
+   "Brace hard through the lower back and abs to resist the hips dropping, and keep pushing the floor away.",
+   "Hold for the prescribed seconds. This larger lever is much harder than the basic tuck; drop out the moment the elbows unlock or the hips sink."
+  ],
+  "instructionsPt": [
+   "A partir de um tuck planche nas parallettes, mantenha os braços travados retos e os ombros protraídos e inclinados à frente das mãos.",
+   "Abra o ângulo do quadril até as costas ficarem planas e paralelas ao chão, mantendo os joelhos agrupados em direção ao peito (as coxas já não encostam na barriga).",
+   "Contraia forte a lombar e o abdômen para impedir que o quadril caia e continue empurrando o chão para longe.",
+   "Sustente pelos segundos prescritos. Essa alavanca maior é bem mais difícil que o tuck básico; saia assim que os cotovelos destravarem ou o quadril afundar."
+  ],
+  "primaryMuscles": [
+   "shoulders"
+  ],
+  "secondaryMuscles": [
+   "chest",
+   "abdominals",
+   "triceps"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=db9HbLjXL7I",
+  "videoCredit": "Sandro Oliveira Calistenia"
+ },
+ {
+  "sourceId": "cal-tuck-front-lever",
+  "slug": "tuck-front-lever",
+  "nameEn": "Tuck Front Lever",
+  "namePt": "Front Lever Agrupado (Tuck)",
+  "category": "STRENGTH",
+  "movementPattern": "horizontal-pull",
+  "equipment": "pull-up-bar",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Hang from a pull-up bar with an overhand grip, arms straight, and pull the shoulder blades down and back to engage the lats.",
+   "Keeping the arms locked, tuck the knees to the chest and lean back, rolling the hips up until your back faces the floor.",
+   "Aim to get the back horizontal, parallel to the ground, with the knees tucked and the whole body rigid from shoulders to hips.",
+   "Hold for the prescribed seconds, keeping the arms straight and pulling the bar toward your hips; lower with control."
+  ],
+  "instructionsPt": [
+   "Fique pendurado numa barra fixa com pegada pronada, braços retos, e puxe as escápulas para baixo e para trás para ativar o dorsal.",
+   "Mantendo os braços travados, agrupe os joelhos no peito e incline o tronco para trás, rolando o quadril para cima até as costas ficarem viradas para o chão.",
+   "Busque deixar as costas horizontais, paralelas ao solo, com os joelhos agrupados e o corpo rígido dos ombros ao quadril.",
+   "Sustente pelos segundos prescritos, mantendo os braços retos e puxando a barra em direção ao quadril; desça com controle."
+  ],
+  "primaryMuscles": [
+   "lats"
+  ],
+  "secondaryMuscles": [
+   "abdominals",
+   "middle-back",
+   "biceps"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=BwhZYpIdhro",
+  "videoCredit": "Ashton Fitness"
+ },
+ {
+  "sourceId": "cal-advanced-tuck-front-lever",
+  "slug": "advanced-tuck-front-lever",
+  "nameEn": "Advanced Tuck Front Lever",
+  "namePt": "Front Lever Tuck Avançado",
+  "category": "STRENGTH",
+  "movementPattern": "horizontal-pull",
+  "equipment": "pull-up-bar",
+  "difficulty": "ADVANCED",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Set up as in the tuck front lever: straight arms, lats engaged, back horizontal and facing the floor.",
+   "Open the hips so the torso and thighs form a flat line, keeping only the knees bent (shins tucked), which lengthens the lever.",
+   "Keep the arms locked straight and actively pull down on the bar while bracing the abs so the hips do not drop.",
+   "Hold for the prescribed seconds. Because the lever is longer, expect a much harder hold than the basic tuck; lower before the hips sag."
+  ],
+  "instructionsPt": [
+   "Posicione-se como no front lever tuck: braços retos, dorsal ativado, costas horizontais e viradas para o chão.",
+   "Abra o quadril até o tronco e as coxas formarem uma linha plana, mantendo apenas os joelhos dobrados (canelas agrupadas), o que alonga a alavanca.",
+   "Mantenha os braços travados retos e puxe ativamente a barra para baixo enquanto contrai o abdômen para o quadril não cair.",
+   "Sustente pelos segundos prescritos. Como a alavanca é mais longa, espere um hold bem mais difícil que o tuck básico; desça antes que o quadril afunde."
+  ],
+  "primaryMuscles": [
+   "lats"
+  ],
+  "secondaryMuscles": [
+   "abdominals",
+   "middle-back",
+   "biceps"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=D-dOt8Ey5Ig",
+  "videoCredit": "Ashton Fitness"
+ },
+ {
+  "sourceId": "cal-wall-handstand-hold",
+  "slug": "wall-handstand-hold",
+  "nameEn": "Wall Handstand Hold",
+  "namePt": "Parada de Mão na Parede (Hold)",
+  "category": "STRENGTH",
+  "movementPattern": "vertical-push",
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Place your hands on the floor about shoulder width, a hand's length from a wall, fingers spread and gripping the ground.",
+   "Kick up one leg at a time so your heels come to rest against the wall, arms locked straight and head in a neutral position between the arms.",
+   "Push the floor away through the shoulders, squeeze the glutes and abs, and stack hips over shoulders over hands in a tall line.",
+   "Hold for the prescribed seconds, breathing steadily. To build toward a free handstand, practise back-to-wall and chest-to-wall facings."
+  ],
+  "instructionsPt": [
+   "Apoie as mãos no chão na largura dos ombros, a cerca de um palmo da parede, com os dedos abertos agarrando o solo.",
+   "Suba uma perna de cada vez até os calcanhares encostarem na parede, braços travados retos e cabeça em posição neutra entre os braços.",
+   "Empurre o chão para longe pelos ombros, contraia glúteo e abdômen e empilhe quadril sobre ombros sobre mãos numa linha alta.",
+   "Sustente pelos segundos prescritos, respirando de forma constante. Para evoluir à parada livre, pratique de costas e de frente para a parede."
+  ],
+  "primaryMuscles": [
+   "shoulders"
+  ],
+  "secondaryMuscles": [
+   "traps",
+   "triceps",
+   "abdominals"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=Ciy_GL1IpIQ",
+  "videoCredit": "Max Santos"
+ },
+ {
+  "sourceId": "cal-freestanding-handstand-hold",
+  "slug": "freestanding-handstand-hold",
+  "nameEn": "Freestanding Handstand Hold",
+  "namePt": "Parada de Mão Livre (Hold)",
+  "category": "STRENGTH",
+  "movementPattern": "vertical-push",
+  "equipment": "none",
+  "difficulty": "ADVANCED",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Set the hands shoulder width with fingers spread; kick up to balance with hips and heels stacked over the shoulders and hands.",
+   "Balance mainly with the fingers and the heel of the palm: press the fingertips down to stop falling forward, release to stop falling back.",
+   "Keep the arms locked, shoulders pushed up to the ears, and the body in a tight hollow line with glutes and abs engaged.",
+   "Hold for the prescribed seconds. Always know your bail-out (turn or cartwheel out to the side) before kicking up."
+  ],
+  "instructionsPt": [
+   "Posicione as mãos na largura dos ombros com os dedos abertos; suba ao equilíbrio com quadril e calcanhares empilhados sobre ombros e mãos.",
+   "Equilibre-se principalmente com os dedos e a base da palma: pressione as pontas dos dedos para não cair para a frente e alivie para não cair para trás.",
+   "Mantenha os braços travados, ombros empurrados em direção às orelhas e o corpo numa linha de 'hollow' firme, com glúteo e abdômen ativos.",
+   "Sustente pelos segundos prescritos. Saiba sempre como sair (girar ou dar uma estrela para o lado) antes de subir."
+  ],
+  "primaryMuscles": [
+   "shoulders"
+  ],
+  "secondaryMuscles": [
+   "traps",
+   "triceps",
+   "abdominals"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=BO78JUn0DBY",
+  "videoCredit": "ARBON - AutoDomínio Corporal"
+ },
+ {
+  "sourceId": "cal-wall-handstand-push-up",
+  "slug": "wall-handstand-push-up",
+  "nameEn": "Wall Handstand Push-Up",
+  "namePt": "Flexão na Parada de Mão na Parede",
+  "category": "STRENGTH",
+  "movementPattern": "vertical-push",
+  "equipment": "none",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PUSH",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Kick up into a back-to-wall handstand with the hands slightly wider than the shoulders and a hand's length from the wall.",
+   "Keeping the body in a straight line against the wall, bend the elbows to lower the head toward the floor under control.",
+   "Lower until the top of the head lightly touches (or a folded towel/pad), then press back up to fully locked arms.",
+   "Keep the core tight and elbows tracking slightly forward. Reduce range at first, adding depth as strength improves toward the full handstand push-up."
+  ],
+  "instructionsPt": [
+   "Suba numa parada de mão de costas para a parede, com as mãos um pouco mais abertas que os ombros e a cerca de um palmo da parede.",
+   "Mantendo o corpo em linha reta contra a parede, flexione os cotovelos para baixar a cabeça em direção ao chão com controle.",
+   "Desça até o topo da cabeça tocar de leve (ou uma toalha dobrada/almofada) e empurre de volta até os braços travarem totalmente.",
+   "Mantenha o core firme e os cotovelos levemente à frente. Reduza a amplitude no início e aumente a profundidade conforme ganhar força, rumo à flexão completa na parada de mão."
+  ],
+  "primaryMuscles": [
+   "shoulders"
+  ],
+  "secondaryMuscles": [
+   "triceps",
+   "traps"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=6MdyYIRS7FY",
+  "videoCredit": "School of Calisthenics"
+ },
+ {
+  "sourceId": "cal-pike-push-up",
+  "slug": "pike-push-up",
+  "nameEn": "Pike Push-Up",
+  "namePt": "Flexão Pike (em V)",
+  "category": "STRENGTH",
+  "movementPattern": "vertical-push",
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "PUSH",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "From a push-up position, walk the feet toward the hands and lift the hips high so the body forms an inverted 'V' (a pike).",
+   "Set the hands shoulder width, straighten the arms, and point the head down between the arms so your weight tips toward the shoulders.",
+   "Bend the elbows to lower the crown of the head toward the floor just in front of the hands, keeping the hips high.",
+   "Press back up to straight arms. Raise the feet on a step or bench to shift more load onto the shoulders as you get stronger."
+  ],
+  "instructionsPt": [
+   "A partir da posição de flexão, caminhe os pés em direção às mãos e eleve bastante o quadril, formando um 'V' invertido (pike).",
+   "Posicione as mãos na largura dos ombros, estenda os braços e aponte a cabeça para baixo entre os braços, levando o peso para os ombros.",
+   "Flexione os cotovelos para baixar o topo da cabeça em direção ao chão, logo à frente das mãos, mantendo o quadril alto.",
+   "Empurre de volta até esticar os braços. Eleve os pés num degrau ou banco para jogar mais carga nos ombros conforme ficar mais forte."
+  ],
+  "primaryMuscles": [
+   "shoulders"
+  ],
+  "secondaryMuscles": [
+   "triceps",
+   "traps"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=niJaOQvRHJg",
+  "videoCredit": "Miqueias Alves Personal"
+ },
+ {
+  "sourceId": "cal-box-pistol-squat",
+  "slug": "box-pistol-squat",
+  "nameEn": "Box Pistol Squat",
+  "namePt": "Pistol na Caixa (Assistido)",
+  "category": "STRENGTH",
+  "movementPattern": "squat",
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "PUSH",
+  "laterality": "UNILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Stand on one leg in front of a box, bench, or chair, with the other leg extended out in front, arms reaching forward for balance.",
+   "Sit back and down on the standing leg under control until your glutes lightly touch the box, keeping the heel flat.",
+   "Pause briefly, then drive through the whole foot to stand back up on the single leg without pushing off the box.",
+   "Lower the box height (or hold a support/counterweight) to progress toward the full pistol squat. Do all reps on one side, then switch."
+  ],
+  "instructionsPt": [
+   "Fique em pé sobre uma perna à frente de uma caixa, banco ou cadeira, com a outra perna estendida à frente e os braços à frente para equilibrar.",
+   "Sente para trás e para baixo sobre a perna de apoio, com controle, até o glúteo tocar de leve a caixa, mantendo o calcanhar no chão.",
+   "Faça uma pausa curta e empurre por todo o pé para levantar de novo na perna única, sem se impulsionar na caixa.",
+   "Diminua a altura da caixa (ou segure um apoio/contrapeso) para evoluir rumo ao pistol completo. Faça todas as reps de um lado e depois troque."
+  ],
+  "primaryMuscles": [
+   "quadriceps"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "adductors",
+   "calves"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=UXafQ2KkkCQ",
+  "videoCredit": "Dio Calistenia"
+ },
+ {
+  "sourceId": "cal-pistol-squat",
+  "slug": "pistol-squat",
+  "nameEn": "Pistol Squat",
+  "namePt": "Pistol (Agachamento Unilateral Completo)",
+  "category": "STRENGTH",
+  "movementPattern": "squat",
+  "equipment": "none",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PUSH",
+  "laterality": "UNILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Balance on one leg with the other leg held straight out in front, arms extended forward as a counterbalance.",
+   "Push the hips back and bend the standing knee to descend slowly all the way down, keeping the heel flat and the free leg off the floor.",
+   "Reach the bottom with the hamstring near the calf, then drive up through the whole foot to full standing without the free foot touching down.",
+   "Keep the chest up and knee tracking over the toes. Elevate the free leg or slow the descent if balance is hard; progress to the shrimp squat."
+  ],
+  "instructionsPt": [
+   "Equilibre-se numa perna com a outra estendida reta à frente e os braços à frente, servindo de contrapeso.",
+   "Leve o quadril para trás e flexione o joelho de apoio para descer devagar até o fim, mantendo o calcanhar no chão e a perna livre sem tocar o solo.",
+   "Chegue ao fundo com o posterior próximo da panturrilha e suba empurrando por todo o pé até ficar de pé, sem apoiar o pé livre.",
+   "Mantenha o peito erguido e o joelho alinhado aos dedos. Eleve a perna livre ou desça mais devagar se o equilíbrio estiver difícil; depois evolua para o shrimp squat."
+  ],
+  "primaryMuscles": [
+   "quadriceps"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "adductors",
+   "calves"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=PhJ-ztmdHNo",
+  "videoCredit": "Naty Graciano"
+ },
+ {
+  "sourceId": "cal-shrimp-squat",
+  "slug": "shrimp-squat",
+  "nameEn": "Shrimp Squat",
+  "namePt": "Shrimp Squat (Agachamento Camarão)",
+  "category": "STRENGTH",
+  "movementPattern": "squat",
+  "equipment": "none",
+  "difficulty": "ADVANCED",
+  "forceType": "PUSH",
+  "laterality": "UNILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Stand on one leg and bend the other knee behind you, holding that foot or ankle with the opposite hand (free arm out front for balance).",
+   "Keeping the torso fairly upright, squat down on the standing leg until the trailing knee lightly touches the floor behind you.",
+   "Keep the standing heel flat throughout, then drive up through the whole foot back to standing.",
+   "This is harder than the pistol because of the balance and knee demand; start with a shallow range or a small pad under the trailing knee."
+  ],
+  "instructionsPt": [
+   "Fique sobre uma perna e dobre o outro joelho para trás, segurando esse pé ou tornozelo com a mão oposta (o braço livre à frente para equilíbrio).",
+   "Mantendo o tronco bastante ereto, agache sobre a perna de apoio até o joelho de trás tocar de leve o chão atrás de você.",
+   "Mantenha o calcanhar de apoio no chão o tempo todo e suba empurrando por todo o pé até ficar de pé.",
+   "É mais difícil que o pistol pela exigência de equilíbrio e de joelho; comece com amplitude parcial ou uma almofada baixa sob o joelho de trás."
+  ],
+  "primaryMuscles": [
+   "quadriceps"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "hamstrings"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=xfl7SDj0Gzs",
+  "videoCredit": "Flow Motion Fitness"
+ },
+ {
+  "sourceId": "cal-hollow-body-hold",
+  "slug": "hollow-body-hold",
+  "nameEn": "Hollow Body Hold",
+  "namePt": "Hollow Body (Sustentação Côncava)",
+  "category": "STRENGTH",
+  "movementPattern": "anti-extension",
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Lie on your back, press the lower back firmly into the floor, and brace the abs so there is no gap under the spine.",
+   "Extend the arms overhead and the legs out straight, then lift both the shoulders and the legs a few inches off the floor.",
+   "Hold this shallow banana-shaped 'hollow' with the lower back still glued down, breathing without letting the ribs flare.",
+   "To make it easier, bend the knees or keep the arms by your sides; to make it harder, lower the limbs closer to the floor."
+  ],
+  "instructionsPt": [
+   "Deite de costas, pressione a lombar firmemente contra o chão e contraia o abdômen para que não haja vão sob a coluna.",
+   "Estenda os braços acima da cabeça e as pernas esticadas, depois eleve ombros e pernas alguns centímetros do chão.",
+   "Sustente essa leve forma de 'banana' (hollow) com a lombar ainda colada ao chão, respirando sem deixar as costelas abrirem.",
+   "Para facilitar, dobre os joelhos ou mantenha os braços ao lado do corpo; para dificultar, baixe os membros para mais perto do chão."
+  ],
+  "primaryMuscles": [
+   "abdominals"
+  ],
+  "secondaryMuscles": [
+   "quadriceps"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=vETkyYQ4bf0",
+  "videoCredit": "Treino em FOCO"
+ },
+ {
+  "sourceId": "cal-arch-body-hold",
+  "slug": "arch-body-hold",
+  "nameEn": "Arch Body Hold (Superman)",
+  "namePt": "Sustentação em Arco (Superman)",
+  "category": "STRENGTH",
+  "movementPattern": "hip-extension",
+  "equipment": "none",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Lie face down with the arms extended overhead and the legs straight, toes pointed.",
+   "Squeeze the glutes and the muscles of the back to lift the arms, chest, and legs off the floor at the same time.",
+   "Hold this gentle arch with the neck neutral (eyes down), keeping the lift from the hips and upper back, not from cranking the low back.",
+   "Hold for the prescribed seconds. This is the opposite of the hollow and builds the posterior chain that supports levers and planches."
+  ],
+  "instructionsPt": [
+   "Deite de bruços com os braços estendidos acima da cabeça e as pernas retas, pés em ponta.",
+   "Contraia o glúteo e a musculatura das costas para elevar braços, peito e pernas do chão ao mesmo tempo.",
+   "Sustente esse arco suave com o pescoço neutro (olhar para baixo), erguendo a partir do quadril e da parte alta das costas, sem forçar a lombar.",
+   "Sustente pelos segundos prescritos. É o oposto do hollow e desenvolve a cadeia posterior que dá suporte a levers e planches."
+  ],
+  "primaryMuscles": [
+   "spinal-erectors"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "hamstrings",
+   "shoulders"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=DbIaxFa6kuE",
+  "videoCredit": "Treino em FOCO"
+ },
+ {
+  "sourceId": "cal-parallel-bar-support-hold",
+  "slug": "parallel-bar-support-hold",
+  "nameEn": "Parallel Bar Support Hold",
+  "namePt": "Sustentação de Apoio nas Paralelas",
+  "category": "STRENGTH",
+  "movementPattern": "horizontal-push",
+  "equipment": "other-equipment",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Grip two parallel (dip) bars and press up to the top of a dip with the arms fully locked straight.",
+   "Push the shoulders down away from the ears, open the chest, and keep the body in a tall vertical line with legs together.",
+   "Brace the abs and glutes so you do not swing, holding steady and breathing for the prescribed seconds.",
+   "This builds the straight-arm support strength that underpins dips, L-sits, and ring work; on rings, turn the knuckles slightly out (RTO) to progress."
+  ],
+  "instructionsPt": [
+   "Segure duas barras paralelas (de paralelas/dip) e empurre até o topo do mergulho, com os braços totalmente travados retos.",
+   "Empurre os ombros para baixo, longe das orelhas, abra o peito e mantenha o corpo numa linha vertical alta, com as pernas juntas.",
+   "Contraia abdômen e glúteo para não balançar, mantendo-se firme e respirando pelos segundos prescritos.",
+   "Isso desenvolve a força de apoio de braço reto que sustenta mergulhos, L-sits e trabalho em argolas; nas argolas, gire os nós dos dedos levemente para fora (RTO) para progredir."
+  ],
+  "primaryMuscles": [
+   "shoulders"
+  ],
+  "secondaryMuscles": [
+   "triceps",
+   "chest",
+   "abdominals"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=_vPttkLHZMw",
+  "videoCredit": "Calixpert"
+ },
+ {
+  "sourceId": "cal-skin-the-cat",
+  "slug": "skin-the-cat",
+  "nameEn": "Skin the Cat",
+  "namePt": "Skin the Cat (Rolamento na Barra)",
+  "category": "STRENGTH",
+  "movementPattern": "vertical-pull",
+  "equipment": "pull-up-bar",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PULL",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Hang from a bar or rings with straight arms and pull the knees up, then tuck them through the arms toward the chest.",
+   "Continue rolling backward, passing the legs under and behind you until the body inverts and you reach a stretched position behind the bar (the German hang).",
+   "Go only as far as your shoulders allow comfortably, then reverse the motion and roll back through to the start under full control.",
+   "Keep the arms straight throughout and move slowly; never drop into the bottom stretch. Build shoulder range gradually over weeks."
+  ],
+  "instructionsPt": [
+   "Fique pendurado numa barra ou argolas com os braços retos, puxe os joelhos para cima e passe-os entre os braços em direção ao peito.",
+   "Continue rolando para trás, passando as pernas por baixo e atrás de você até o corpo inverter e chegar a uma posição alongada atrás da barra (o German hang).",
+   "Vá apenas até onde seus ombros permitirem com conforto, depois reverta o movimento e role de volta ao início com controle total.",
+   "Mantenha os braços retos o tempo todo e mova-se devagar; nunca se jogue no alongamento final. Ganhe amplitude de ombro aos poucos ao longo das semanas."
+  ],
+  "primaryMuscles": [
+   "lats"
+  ],
+  "secondaryMuscles": [
+   "shoulders",
+   "abdominals",
+   "biceps"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=Ws8ZUkbjtTg",
+  "videoCredit": "Irmãos Calistenicos"
+ },
+ {
+  "sourceId": "cal-german-hang-hold",
+  "slug": "german-hang-hold",
+  "nameEn": "German Hang Hold",
+  "namePt": "German Hang (Sustentação Invertida Atrás)",
+  "category": "STRENGTH",
+  "movementPattern": "shoulder-extension",
+  "equipment": "pull-up-bar",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "STATIC",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "From a hang, roll backward through a skin-the-cat until the body hangs behind the bar with the shoulders fully extended behind you.",
+   "Keep the arms straight and let the chest and shoulders open into the stretch, with the body long and the core lightly braced.",
+   "Hold for the prescribed seconds, controlling the depth so the shoulders feel a strong but comfortable stretch, never a sharp pain.",
+   "Ease out by rolling forward with straight arms. Shorten the hold and reduce range if the shoulders feel strained."
+  ],
+  "instructionsPt": [
+   "A partir de uma suspensão, role para trás num skin the cat até o corpo ficar pendurado atrás da barra, com os ombros em extensão completa atrás de você.",
+   "Mantenha os braços retos e deixe peito e ombros abrirem no alongamento, com o corpo alongado e o core levemente contraído.",
+   "Sustente pelos segundos prescritos, controlando a profundidade para sentir um alongamento forte, porém confortável, nos ombros, nunca uma dor aguda.",
+   "Saia rolando para a frente com os braços retos. Reduza o tempo e a amplitude se os ombros ficarem sobrecarregados."
+  ],
+  "primaryMuscles": [
+   "shoulders"
+  ],
+  "secondaryMuscles": [
+   "lats",
+   "chest",
+   "biceps"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=w0IgABHlQ8Q",
+  "videoCredit": "Strength Project"
+ },
+ {
+  "sourceId": "cal-archer-push-up",
+  "slug": "archer-push-up",
+  "nameEn": "Archer Push-Up",
+  "namePt": "Flexão Arqueiro (Archer)",
+  "category": "STRENGTH",
+  "movementPattern": "horizontal-push",
+  "equipment": "none",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PUSH",
+  "laterality": "UNILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Set up in a wide push-up position, hands well outside shoulder width, body in a straight line.",
+   "Bend one arm to lower your chest toward that hand while the other arm stays nearly straight, sliding out to the side like drawing a bow.",
+   "Lower until the chest is near the bent-arm hand, then press back up and across to the center, keeping the straight arm as a light assist only.",
+   "Do the prescribed reps on one side, then switch. Point the straight-arm fingers out to protect the elbow; it is a near one-arm push-up."
+  ],
+  "instructionsPt": [
+   "Posicione-se numa flexão aberta, mãos bem além da largura dos ombros, corpo em linha reta.",
+   "Flexione um braço para baixar o peito em direção àquela mão enquanto o outro braço fica quase reto, deslizando para o lado como quem puxa um arco.",
+   "Desça até o peito ficar perto da mão do braço flexionado, depois empurre de volta ao centro, usando o braço esticado só como leve apoio.",
+   "Faça as reps prescritas de um lado e depois troque. Aponte os dedos do braço esticado para fora para proteger o cotovelo; é quase uma flexão com um braço só."
+  ],
+  "primaryMuscles": [
+   "chest"
+  ],
+  "secondaryMuscles": [
+   "triceps",
+   "shoulders"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=5nWvLpg97eY",
+  "videoCredit": "Vitor Deorian"
+ },
+ {
+  "sourceId": "cal-archer-pull-up",
+  "slug": "archer-pull-up",
+  "nameEn": "Archer Pull-Up",
+  "namePt": "Barra Fixa Arqueiro (Archer)",
+  "category": "STRENGTH",
+  "movementPattern": "vertical-pull",
+  "equipment": "pull-up-bar",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PULL",
+  "laterality": "UNILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Take a wide overhand grip on the bar, wider than you would for a normal pull-up.",
+   "Pull up and across toward one hand so that your chin comes over that hand, while the other arm straightens out to the side.",
+   "Keep the straightening arm nearly locked, using it only for light support, and keep the working side doing most of the work.",
+   "Lower under control, then alternate sides. This is a key step toward the one-arm pull-up; keep the shoulders packed down throughout."
+  ],
+  "instructionsPt": [
+   "Pegue a barra com pegada pronada aberta, mais larga do que você usaria numa barra fixa normal.",
+   "Puxe para cima e para o lado em direção a uma das mãos, levando o queixo acima dessa mão, enquanto o outro braço se estende para o lado.",
+   "Mantenha o braço que estica quase travado, usando-o só como apoio leve, e deixe o lado que trabalha fazer a maior parte do esforço.",
+   "Desça com controle e alterne os lados. É um passo-chave rumo à barra fixa unilateral; mantenha os ombros 'encaixados' para baixo o tempo todo."
+  ],
+  "primaryMuscles": [
+   "lats"
+  ],
+  "secondaryMuscles": [
+   "biceps",
+   "middle-back"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=got5a-VUz5s",
+  "videoCredit": "Maycon Calistenia"
+ },
+ {
+  "sourceId": "cal-tuck-dragon-flag",
+  "slug": "tuck-dragon-flag",
+  "nameEn": "Tuck Dragon Flag",
+  "namePt": "Dragon Flag Agrupado (Tuck)",
+  "category": "STRENGTH",
+  "movementPattern": "anti-extension",
+  "equipment": "none",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PULL",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Lie on a bench or on the floor and grip a fixed support (bench edge or a low bar) behind your head with both hands.",
+   "Brace the whole body and lift the hips and legs up so you are supported on the upper back and shoulders, not the neck.",
+   "Keep the knees tucked toward the chest and lower the tucked body as one rigid unit until it is just off the floor, then raise it back up.",
+   "Move slowly and never let the lower back arch away from control; progress by extending the legs toward the full dragon flag."
+  ],
+  "instructionsPt": [
+   "Deite num banco ou no chão e segure com as duas mãos um apoio fixo (a borda do banco ou uma barra baixa) atrás da cabeça.",
+   "Contraia o corpo todo e eleve quadril e pernas até se apoiar na parte alta das costas e nos ombros, nunca no pescoço.",
+   "Mantenha os joelhos agrupados em direção ao peito e baixe o corpo agrupado como um bloco rígido até quase tocar o chão, depois suba de novo.",
+   "Mova-se devagar e nunca deixe a lombar arquear fora de controle; progrida estendendo as pernas rumo ao dragon flag completo."
+  ],
+  "primaryMuscles": [
+   "abdominals"
+  ],
+  "secondaryMuscles": [
+   "lats",
+   "spinal-erectors"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=uFaMIhDm0qQ",
+  "videoCredit": "Minus The Gym"
+ },
+ {
+  "sourceId": "cal-dragon-flag",
+  "slug": "dragon-flag",
+  "nameEn": "Dragon Flag",
+  "namePt": "Dragon Flag",
+  "category": "STRENGTH",
+  "movementPattern": "anti-extension",
+  "equipment": "none",
+  "difficulty": "ADVANCED",
+  "forceType": "PULL",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Lie on a bench and grip a solid support behind your head; support your weight on the upper back and shoulders only.",
+   "With the body held completely straight and rigid from shoulders to toes, raise the whole body up toward vertical.",
+   "Lower the straight body as one line, under full control, until it is just above the bench, resisting gravity the entire way down.",
+   "Never let the hips pike or the lower back sag. Do the prescribed reps; if the straight body is too hard, bend the knees slightly to reduce the lever."
+  ],
+  "instructionsPt": [
+   "Deite num banco e segure um apoio firme atrás da cabeça; sustente o peso apenas na parte alta das costas e nos ombros.",
+   "Com o corpo totalmente reto e rígido dos ombros aos pés, eleve o corpo inteiro em direção à vertical.",
+   "Baixe o corpo reto como uma única linha, com controle total, até ficar logo acima do banco, resistindo à gravidade durante toda a descida.",
+   "Nunca deixe o quadril dobrar nem a lombar afundar. Faça as reps prescritas; se o corpo totalmente reto for difícil demais, dobre um pouco os joelhos para reduzir a alavanca."
+  ],
+  "primaryMuscles": [
+   "abdominals"
+  ],
+  "secondaryMuscles": [
+   "lats",
+   "spinal-erectors"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=3FuwY3Z4ux8",
+  "videoCredit": "SaturnoMovement"
+ },
+ {
+  "sourceId": "cal-assisted-nordic-curl",
+  "slug": "assisted-nordic-curl",
+  "nameEn": "Assisted Nordic Hamstring Curl",
+  "namePt": "Nórdico Assistido (Flexora Nórdica)",
+  "category": "STRENGTH",
+  "movementPattern": "hinge",
+  "equipment": "none",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PULL",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Kneel on a pad with the ankles anchored under a heavy couch, a loaded barbell, or held firmly by a partner.",
+   "Keep the body in a straight line from knees to head, hips extended, and brace the glutes and abs.",
+   "Lower the torso toward the floor as slowly as possible, using the hamstrings to resist the fall for as long as you can.",
+   "Catch yourself with the hands when you lose tension, then push off lightly to help back up. Assist with the hands or a band at first; the goal is a longer, more controlled lowering over time."
+  ],
+  "instructionsPt": [
+   "Ajoelhe-se sobre uma almofada com os tornozelos presos sob um sofá pesado, uma barra carregada ou firmemente segurados por um parceiro.",
+   "Mantenha o corpo em linha reta dos joelhos à cabeça, quadril estendido, e contraia glúteo e abdômen.",
+   "Baixe o tronco em direção ao chão o mais devagar possível, usando os posteriores de coxa para resistir à queda o máximo que conseguir.",
+   "Ampare-se com as mãos ao perder a tensão e empurre levemente para voltar. Ajude com as mãos ou um elástico no início; o objetivo é uma descida cada vez mais longa e controlada com o tempo."
+  ],
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "calves"
+  ],
+  "media": [],
+  "videoUrl": "https://www.youtube.com/watch?v=3-4pKUhkzoQ",
+  "videoCredit": "Movement Project PT"
+ }
 ]
