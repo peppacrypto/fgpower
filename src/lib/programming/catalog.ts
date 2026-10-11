@@ -37,16 +37,20 @@ export interface CatalogItem {
 
 export type ProgramGroupKey = "gd" | "start" | "core" | "focus" | "mobility" | "yoga" | "sport" | "home";
 
-/** Library shelves, in display order. Every template lands in exactly one. */
-export const PROGRAM_GROUPS: { key: ProgramGroupKey; label: string; blurb: string }[] = [
-  { key: "gd", label: "Plano GD", blurb: "Blocos em sequência, 5×/semana. Comece pela Adaptação." },
-  { key: "start", label: "Comece aqui", blurb: "Para quem está começando ou voltando a treinar." },
-  { key: "core", label: "Força & hipertrofia", blurb: "Divisões clássicas para quem já treina." },
-  { key: "focus", label: "Especializações", blurb: "Foco em um músculo ou método por algumas semanas." },
-  { key: "mobility", label: "Mobilidade & flexibilidade", blurb: "Amplitude, soltura e aquecimento — para somar aos seus treinos de força." },
-  { key: "yoga", label: "Yoga", blurb: "Posturas e fluxos para vários níveis — faça quando quiser, junto dos seus treinos." },
-  { key: "sport", label: "Esporte", blurb: "Força a serviço de outro esporte." },
-  { key: "home", label: "Casa & mínimo", blurb: "Halteres, kettlebell ou só o peso do corpo." },
+/**
+ * Library shelves, in display order. Every template lands in exactly one.
+ * `short` is the category-tab label (the library browses by category); `label`
+ * and `blurb` are the full heading and one-line description.
+ */
+export const PROGRAM_GROUPS: { key: ProgramGroupKey; short: string; label: string; blurb: string }[] = [
+  { key: "gd", short: "Plano GD", label: "Plano GD", blurb: "Blocos em sequência, 5×/semana. Comece pela Adaptação." },
+  { key: "start", short: "Comece aqui", label: "Comece aqui", blurb: "Para quem está começando ou voltando a treinar." },
+  { key: "core", short: "Força", label: "Força & hipertrofia", blurb: "Divisões clássicas para quem já treina." },
+  { key: "focus", short: "Especializações", label: "Especializações", blurb: "Foco em um músculo ou método por algumas semanas." },
+  { key: "mobility", short: "Mobilidade", label: "Mobilidade & flexibilidade", blurb: "Amplitude, soltura e aquecimento — para somar aos seus treinos de força." },
+  { key: "yoga", short: "Yoga", label: "Yoga", blurb: "Posturas e fluxos para vários níveis — faça quando quiser, junto dos seus treinos." },
+  { key: "sport", short: "Esporte", label: "Esporte", blurb: "Força a serviço de outro esporte." },
+  { key: "home", short: "Casa & mínimo", label: "Casa & mínimo", blurb: "Halteres, kettlebell ou só o peso do corpo." },
 ];
 
 /**

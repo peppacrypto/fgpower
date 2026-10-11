@@ -99,15 +99,18 @@ test("a fat-loss goal gets the honest line and full-body picks", async ({ page }
   await expect(panel(page)).toContainText("Musculação preserva músculo no déficit; quem emagrece é a dieta.");
   await expect(panel(page).getByRole("link", { name: /Sem Medo das Máquinas/ })).toBeVisible();
 
-  // The library's "Emagrecer" preset keeps the program the panel recommends.
+  // In the library the panel still recommends the adaptation, its card is marked
+  // "Para você", and the profile's "Emagrecer" goal is one tap away in Filtros.
   await page.goto("/app/programs");
   await expect(panel(page).getByRole("heading", { level: 2 })).toContainText("Adaptação FGPOWER");
-  const filters = page.getByRole("group", { name: "Filtros" });
-  await expect(filters.getByRole("button", { name: "Emagrecer" })).toHaveAttribute("aria-pressed", "true");
   const library = page.getByRole("region", { name: "Biblioteca de programas" });
   await expect(
     library.locator('a[href="/app/programs/templates/fgpower-adaptation"]').filter({ hasText: "Para você" }),
   ).toBeVisible();
+  await page.getByRole("button", { name: /Filtros/ }).click();
+  const filters = page.getByRole("group", { name: "Filtros" });
+  await filters.getByRole("button", { name: "Usar meu perfil" }).click();
+  await expect(filters.getByRole("button", { name: "Emagrecer" })).toHaveAttribute("aria-pressed", "true");
 });
 
 test("someone who already trains is never started mid-series or off their week", async ({ page }) => {
@@ -179,34 +182,32 @@ test("a minimal-kit beginner starts on the bands plan; the alternates say what g
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
 });
 
-test("the library leads with the pick's shelf, and the GD plan is one series card that starts by profile", async ({ page }) => {
+test("the library's GD plan is one series card, and a typed search beats the profile filter", async ({ page }) => {
   await newUserWith(page, "lib-int5", { experience: "INTERMEDIATE", daysPerWeek: 5 });
   await page.goto("/app/programs");
   const library = page.getByRole("region", { name: "Biblioteca de programas" });
-  const shelves = library.locator("section[aria-label]");
-  // Preset "5× · Intermediário · Academia · Hipertrofia": the pick's shelf comes first, the pick leads it.
-  await expect(shelves.first()).toHaveAttribute("aria-label", "Força & hipertrofia");
-  await expect(shelves.first().locator("a").first()).toContainText("Para você");
-  await expect(shelves.first().locator("a").first()).toContainText("Divisão Clássica");
+
+  // The pick ("Divisão Clássica" for an intermediate) is marked "Para você" among the cards.
+  await expect(library.locator("a").filter({ hasText: "Para você" }).first()).toContainText("Divisão Clássica");
+
   // The GD plan is one card, not nine look-alikes: its rail, and — for someone who already
-  // trains — "Começar pelo GD 1" (a newcomer is sent to the Adaptação).
-  const gd = library.getByRole("region", { name: "Plano GD" });
-  const card = gd.locator('[data-series="gd"]');
+  // trains — "Começar pelo GD 1" (a newcomer is sent to the Adaptação). All nine blocks stay
+  // links in the card (collapsed), so page search finds each by name.
+  const card = library.locator('[data-series="gd"]');
   await expect(card).toContainText("Plano GD");
   await expect(card.getByRole("img", { name: /^9 blocos em sequência/ })).toBeVisible();
   await expect(card.getByRole("link", { name: /Começar pelo GD 1/ })).toHaveAttribute(
     "href",
     "/app/programs/templates/gd-1",
   );
-  // Filtered by the profile: the list opens on the blocks the chips kept, each a link.
-  const matches = Number((await gd.getByText(/^\d+ de 9 blocos$/).innerText()).split(" ")[0]);
-  expect(matches).toBeGreaterThan(0);
-  const blocks = card.locator('ol a[href^="/app/programs/templates/gd-"]');
-  await expect(blocks.filter({ visible: true })).toHaveCount(matches);
+  await expect(card.locator('ol a[href^="/app/programs/templates/gd-"]')).toHaveCount(9);
 
-  // Typing beats the profile chips: "20 min" searches all programs and keeps only what fits a
-  // 20-minute slot (parsed with a 5-min grace → ≤25 min). The mobility routines (≤20 min) fit;
-  // the longer express plans (30–40 min) and the GD blocks drop out.
+  // With the profile preset applied ("5× · Intermediário · Academia · Hipertrofia"), typing beats
+  // the chips: "20 min" searches ALL programs and keeps only what fits a 20-minute slot (parsed
+  // with a 5-min grace → ≤25 min). The mobility routines (≤20 min) fit; the longer express plans
+  // (30–40 min) and the GD blocks drop out.
+  await page.getByRole("button", { name: /Filtros/ }).click();
+  await page.getByRole("group", { name: "Filtros" }).getByRole("button", { name: "Usar meu perfil" }).click();
   const search = page.getByLabel("Buscar programa");
   await search.fill("20 min");
   await expect(page.getByText("Nada com os filtros escolhidos — buscando em todos os programas.")).toBeVisible();
@@ -214,9 +215,6 @@ test("the library leads with the pick's shelf, and the GD plan is one series car
   await expect(page.locator('a[href="/app/programs/templates/mobilidade-diaria-essencial"]')).toBeVisible();
   await expect(page.locator('a[href="/app/programs/templates/bodyweight-express"]')).toHaveCount(0);
   await expect(page.locator('a[href="/app/programs/templates/gd-4"]')).toHaveCount(0);
-  await search.fill("sem equipamento");
-  await expect(page.getByText("Nada com os filtros escolhidos — buscando em todos os programas.")).toBeVisible();
-  await expect(page.getByText(/mostrando todos os programas/)).toHaveCount(0);
   // A program asked for by name comes up even when the chips hide it (and GD 3/4 share "ano 1").
   await search.fill("GD 1");
   await expect(page.getByText("GD 1 está fora dos filtros escolhidos — buscando em todos os programas.")).toBeVisible();
@@ -226,33 +224,27 @@ test("the library leads with the pick's shelf, and the GD plan is one series car
   );
 });
 
-test("the library starts filtered by the profile, shelved, and its search speaks Portuguese", async ({ page }) => {
+test("the library browses by category, keeps the profile preset one tap away, and speaks Portuguese", async ({ page }) => {
   await newUserWith(page, "lib", { equipmentAccess: "HOME_DUMBBELLS", sessionMinutes: 45 });
   await page.goto("/app/programs");
 
-  // The pick for a home-dumbbell beginner leads, and "Criar" doesn't.
+  // The pick for a home-dumbbell beginner leads in the panel, "Criar" isn't the primary action,
+  // and a new user has no "Meus programas" shelf yet.
   await expect(panel(page).getByRole("heading", { level: 2 })).toContainText("Halteres em Casa");
   await expect(page.getByRole("link", { name: "Criar" })).not.toHaveClass(/bg-accent-strong/);
   await expect(page.getByText("Meus programas")).toHaveCount(0);
 
-  const filters = page.getByRole("group", { name: "Filtros" });
-  await expect(filters.getByRole("button", { name: "Casa", exact: true })).toHaveAttribute("aria-pressed", "true");
-  await expect(filters.getByRole("button", { name: "Iniciante" })).toHaveAttribute("aria-pressed", "true");
-  await expect(filters).toContainText("Filtrado pelo seu perfil");
   const library = page.getByRole("region", { name: "Biblioteca de programas" });
-  await expect(library.getByRole("region", { name: "Casa & mínimo" })).toBeVisible();
-  await expect(library.getByRole("region", { name: "Plano GD" })).toHaveCount(0);
 
-  await filters.getByRole("button", { name: "Limpar" }).click();
-  const gd = library.getByRole("region", { name: "Plano GD" });
-  await expect(gd).toBeVisible();
-  // Unfiltered, shelves preview their first cards; every program is still in the page.
-  // 66 = 49 strength + 9 mobility (3631d91) + 7 yoga + 1 flagship (generated: 65).
+  // It opens unfiltered on "Todos", showing EVERY program: 66 distinct template links
+  // (49 strength + 9 mobility + 7 yoga + 1 flagship; the GD card folds its 9 blocks).
   const hrefs = await library
     .locator('a[href^="/app/programs/templates/"]')
     .evaluateAll((links) => new Set(links.map((a) => a.getAttribute("href"))).size);
   expect(hrefs).toBe(66);
-  // The GD card folds its 9 blocks away (still links in the page) behind one toggle.
+
+  // The GD card folds its 9 blocks (still links) behind one toggle; a newcomer starts at the Adaptação.
+  const gd = library.locator('[data-series="gd"]');
   const gdBlocks = gd.locator('ol a[href^="/app/programs/templates/"]');
   await expect(gdBlocks).toHaveCount(9);
   await expect(gdBlocks.filter({ visible: true })).toHaveCount(0);
@@ -260,11 +252,27 @@ test("the library starts filtered by the profile, shelved, and its search speaks
   await gd.getByRole("button", { name: "Ver os 9 blocos" }).click();
   await expect(gdBlocks.filter({ visible: true })).toHaveCount(9);
   await expect(gd.getByRole("button", { name: "Esconder os blocos" })).toHaveAttribute("aria-expanded", "true");
+
+  // Category tabs narrow to one shelf without stacking the rest: "Yoga" shows yoga, drops the dumbbell plan.
+  const tabs = page.getByRole("group", { name: "Categorias" });
+  await tabs.getByRole("button", { name: /^Yoga/ }).click();
+  await expect(library.locator('a[href="/app/programs/templates/yoga-iniciante-fundamentos"]')).toBeVisible();
+  await expect(library.locator('a[href="/app/programs/templates/home-dumbbells"]')).toHaveCount(0);
+  await tabs.getByRole("button", { name: /^Todos/ }).click();
+
+  // The profile preset lives in the Filtros panel: one tap presses the right chips.
+  await page.getByRole("button", { name: /Filtros/ }).click();
+  const filters = page.getByRole("group", { name: "Filtros" });
   await expect(filters.getByRole("button", { name: "5 dias por semana" })).toHaveAttribute("aria-pressed", "false");
   await filters.getByRole("button", { name: "Usar meu perfil" }).click();
+  await expect(filters.getByRole("button", { name: "Casa", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await expect(filters.getByRole("button", { name: "Iniciante" })).toHaveAttribute("aria-pressed", "true");
   await expect(filters).toContainText("Filtrado pelo seu perfil");
+  // Clearing it returns to the whole catalog.
+  await filters.getByRole("button", { name: "Limpar" }).click();
+  await expect(filters).not.toContainText("Filtrado pelo seu perfil");
 
-  // Everyday words find programs: fat loss (with the honest line), no equipment, "treino ABC".
+  // Everyday words find programs, across every category: fat loss (with the honest line), no equipment.
   const search = page.getByLabel("Buscar programa");
   await search.fill("emagrecer");
   await expect(page.getByText(/^Musculação preserva músculo no déficit/)).toBeVisible();
@@ -314,11 +322,11 @@ test("program cards read their days and never widen a 320px screen", async ({ pa
   await newUserWith(page, "cards");
   await page.setViewportSize({ width: 320, height: 700 });
   await page.goto("/app/programs");
-  await page.getByRole("group", { name: "Filtros" }).getByRole("button", { name: "Limpar" }).click();
+  // Opens unfiltered on "Todos": every card is shown, no clearing needed.
   const home = page.locator('a[href="/app/programs/templates/home-dumbbells"]').last();
   await expect(home.getByText("A", { exact: true })).toBeVisible();
   // The GD plan's card (rail and all) fits too.
-  await page.getByRole("region", { name: "Plano GD" }).getByRole("button", { name: "Ver os 9 blocos" }).click();
+  await page.locator('[data-series="gd"]').getByRole("button", { name: "Ver os 9 blocos" }).click();
   const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
   expect(scrollWidth).toBeLessThanOrEqual(320);
   // A GD block found by name is a full card, its weekday-named days read as such.

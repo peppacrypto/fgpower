@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ChevronDown, Search, X } from "lucide-react";
+import { Search, SlidersHorizontal, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { SectionHead } from "@/components/ui/section-head";
 import { ProtocolCard, type ProtocolCardData } from "@/components/programs/protocol-card";
@@ -13,6 +13,7 @@ import {
   LEVEL_OPTIONS,
   NO_FILTERS,
   PLACE_OPTIONS,
+  PROGRAM_GROUPS,
   SEARCH_SUGGESTIONS,
   activeFilterCount,
   applyFilters,
@@ -20,23 +21,25 @@ import {
   programGroup,
   sameFilters,
   searchLibrary,
-  shelveFiltered,
   type LibraryFilters,
-  type Shelf,
+  type ProgramGroupKey,
 } from "@/lib/programming/catalog";
 import { plural } from "@/lib/utils/format";
 import { cn } from "@/lib/utils/cn";
 
+type Category = ProgramGroupKey | "all";
+
 /**
  * The program library: a search bar, then `children` (the user's programs and
  * the "Para você" pick — hidden while a search is active, so results sit right
- * under the bar), then the catalog with chip filters (days · level · place ·
- * goal), shelved by kind. Everything filters instantly on the client. When
- * the page knows the user, the chips start preset from their profile
- * ("Filtrado pelo seu perfil · limpar"). Filtered, the shelf holding the
- * user's pick leads (see shelveFiltered). The GD series is one card (its
- * blocks one tap away) rather than nine look-alike ones — a search still
- * finds each block by name.
+ * under the bar), then the catalog browsed BY CATEGORY. One row of tabs
+ * (Todos · the catalog's shelves) replaces the old stack of shelves: tapping a
+ * tab shows just that category in one clean grid, so the page is never a wall.
+ * The day/level/place/goal chips move behind a "Filtros" button (off by
+ * default, so the library opens showing everything); when the page knows the
+ * user, that panel offers their profile preset in one tap ("Usar meu perfil").
+ * The GD series is one card (its nine blocks one tap away); a search still
+ * finds each block by name, across every category and filter.
  */
 export function ProtocolLibrary({
   label,
@@ -58,7 +61,7 @@ export function ProtocolLibrary({
   runningSlug?: string | null;
   /** Where the user stands in the GD series (blocks finished, the next one, one to resume): the GD card goes on from it. */
   seriesProgress?: SeriesProgress | null;
-  /** Chips preselected from the profile; null/undefined = start unfiltered. */
+  /** The profile preset, offered in the filter panel ("Usar meu perfil"); never auto-applied. */
   preset?: LibraryFilters | null;
   /** Slug of the user's top recommendation (the "Para você" card). */
   pick?: string | null;
@@ -68,38 +71,50 @@ export function ProtocolLibrary({
   children?: React.ReactNode;
 }) {
   const [query, setQuery] = useState("");
-  const [filters, setFilters] = useState<LibraryFilters>(preset ?? NO_FILTERS);
+  const [category, setCategory] = useState<Category>("all");
+  const [filters, setFilters] = useState<LibraryFilters>(NO_FILTERS);
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const searching = query.trim().length > 0;
-  const filtered = useMemo(() => applyFilters(items, filters), [items, filters]);
-  const filtersOn = activeFilterCount(filters) > 0;
+  const filterCount = activeFilterCount(filters);
+  const filtersOn = filterCount > 0;
 
-  // Chips the user may not have picked (the profile preset) must not hide what they typed.
+  // The tabs: "Todos" + every non-empty catalog shelf, in catalog order.
+  const groups = useMemo(() => groupCatalog(items), [items]);
+  const tabs = useMemo(
+    () => [
+      { key: "all" as Category, short: "Todos", count: items.length },
+      ...groups.map((g) => ({ key: g.key as Category, short: g.short, count: g.items.length })),
+    ],
+    [groups, items.length],
+  );
+  // A filter can empty the chosen category; the tab stays, the grid shows the note.
+  const inCategory = useMemo(
+    () => (category === "all" ? items : items.filter((t) => programGroup(t) === category)),
+    [items, category],
+  );
+  const shown = useMemo(() => applyFilters(inCategory, filters), [inCategory, filters]);
+  const activeGroup = category === "all" ? null : PROGRAM_GROUPS.find((g) => g.key === category) ?? null;
+
+  // Chips the user may not have picked (the profile preset) must not hide a typed query.
   const search = useMemo(
-    () => (searching ? searchLibrary(items, filtered, query, filtersOn) : null),
-    [searching, filtered, items, query, filtersOn],
-  );
-  const shelves: Shelf<ProtocolCardData>[] = useMemo(
-    () =>
-      filtersOn ? shelveFiltered(filtered, items, pick) : groupCatalog(filtered).map((g) => ({ ...g, start: null })),
-    [filtersOn, filtered, items, pick],
+    () => (searching ? searchLibrary(items, applyFilters(items, filters), query, filtersOn) : null),
+    [searching, items, filters, query, filtersOn],
   );
 
-  // Unfiltered, each shelf shows its first cards and a "Ver todos" toggle —
-  // 48 cards in a row is a wall on a phone. The rest stay in the HTML (hidden),
-  // so every program is still a link for crawlers and page search.
-  const [openShelves, setOpenShelves] = useState<ReadonlySet<string>>(new Set());
-  const previewShelves = !filtersOn;
+  // The GD series shows as its one card, led by this user; the rest are plain cards.
+  const showGd = category === "all" || category === "gd";
+  const gdShown = showGd ? shown.filter((t) => programGroup(t) === "gd") : [];
+  const rest = shown.filter((t) => programGroup(t) !== "gd");
 
-  // `lead` sits ahead of the numbered cards without a numeral: it isn't one of
-  // the matches the shelf's count counts (the GD series entry, see Shelf.start).
-  const cardsGrid = (list: ProtocolCardData[], first = 1, className = "mt-4", lead: ProtocolCardData | null = null) => (
+  const cardsGrid = (list: ProtocolCardData[], first = 1, className = "mt-4") => (
     <div className={cn("grid grid-cols-[minmax(0,1fr)] gap-3 sm:grid-cols-2", className)}>
-      {lead ? <ProtocolCard key={lead.href} data={{ ...lead, index: null }} /> : null}
       {list.map((item, i) => (
         <ProtocolCard key={item.href} data={{ ...item, index: first + i }} />
       ))}
     </div>
   );
+
+  const canRestorePreset = preset !== null && preset !== undefined && activeFilterCount(preset) > 0;
 
   return (
     <>
@@ -130,19 +145,18 @@ export function ProtocolLibrary({
       {searching ? null : children}
 
       <section aria-label={label} className={searching ? "mt-6" : "mt-12"}>
-        {searching ? null : <SectionHead label={label} count={countLabel(filtered.length, items.length, filtersOn)} />}
-        <FilterChips filters={filters} onChange={setFilters} preset={preset ?? null} />
-
-        {search ? (
-          <div className="mt-6">
+        {searching ? (
+          <div>
             <SectionHead
               label="Resultados"
-              count={search.results.length > 0 ? plural(search.results.length, "programa", "programas") : undefined}
+              count={
+                search && search.results.length > 0 ? plural(search.results.length, "programa", "programas") : undefined
+              }
             />
-            {search.fatLoss ? <HonestLine /> : null}
-            {search.widenedNote ? <p className="mt-3 text-xs text-muted">{search.widenedNote}</p> : null}
-            {search.note ? <p className="mt-3 text-xs text-muted">{search.note}</p> : null}
-            {search.results.length > 0 ? (
+            {search?.fatLoss ? <HonestLine /> : null}
+            {search?.widenedNote ? <p className="mt-3 text-xs text-muted">{search.widenedNote}</p> : null}
+            {search?.note ? <p className="mt-3 text-xs text-muted">{search.note}</p> : null}
+            {search && search.results.length > 0 ? (
               cardsGrid(search.results)
             ) : (
               <EmptySearch
@@ -154,92 +168,112 @@ export function ProtocolLibrary({
               />
             )}
           </div>
-        ) : filtered.length === 0 ? (
-          <div className="mt-6 border-y border-border py-6 text-center">
-            <p className="text-sm font-semibold">Nenhum programa com esses filtros.</p>
-            <button
-              type="button"
-              onClick={() => setFilters(NO_FILTERS)}
-              className="mt-2 inline-flex min-h-11 items-center font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
-            >
-              Limpar filtros
-            </button>
-          </div>
         ) : (
           <>
+            {/* Category tabs (left, scroll) + the Filtros toggle (right, pinned). */}
+            <div className="flex items-center gap-2">
+              <div
+                role="group"
+                aria-label="Categorias"
+                className="-my-1 flex min-w-0 flex-1 gap-1.5 overflow-x-auto py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              >
+                {tabs.map((tab) => {
+                  const selected = category === tab.key;
+                  return (
+                    <button
+                      key={tab.key}
+                      type="button"
+                      aria-pressed={selected}
+                      onClick={() => setCategory(tab.key)}
+                      className={cn(
+                        "flex h-10 shrink-0 items-center gap-1.5 px-3 font-mono text-[11px] font-bold uppercase tracking-[0.08em] transition-colors",
+                        selected
+                          ? "bg-foreground text-background"
+                          : "bg-surface-2 text-foreground/75 hover:bg-[var(--border)] hover:text-foreground",
+                      )}
+                    >
+                      {tab.short}
+                      <span className={cn("tabular-nums", selected ? "text-background/60" : "text-muted")}>
+                        {tab.count}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+              <button
+                type="button"
+                aria-expanded={filtersOpen}
+                aria-controls="library-filters"
+                onClick={() => setFiltersOpen((v) => !v)}
+                className={cn(
+                  "flex h-10 shrink-0 items-center gap-1.5 px-3 font-mono text-[11px] font-bold uppercase tracking-[0.1em] transition-colors",
+                  filtersOn
+                    ? "bg-accent-soft text-accent"
+                    : "bg-surface-2 text-foreground/75 hover:bg-[var(--border)] hover:text-foreground",
+                )}
+              >
+                <SlidersHorizontal className="size-3.5" aria-hidden />
+                Filtros
+                {filtersOn ? <span className="tabular-nums">{filterCount}</span> : null}
+              </button>
+            </div>
+
+            <div id="library-filters" hidden={!filtersOpen}>
+              <FilterChips
+                filters={filters}
+                onChange={setFilters}
+                preset={preset ?? null}
+                onUsePreset={canRestorePreset ? () => setFilters(preset as LibraryFilters) : null}
+              />
+            </div>
+
+            {/* What's shown: the category heading, and how many of it the filters left. */}
+            <p className="mt-5 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+              <span className="font-mono text-[11px] font-bold uppercase tracking-[0.16em]">
+                {activeGroup ? activeGroup.label : "Todos os programas"}
+              </span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
+                {filtersOn ? `${shown.length} de ${inCategory.length}` : plural(shown.length, "programa", "programas")}
+              </span>
+            </p>
+            {activeGroup ? <p className="mt-1 text-xs text-muted">{activeGroup.blurb}</p> : null}
             {filters.goal === "fat-loss" ? <HonestLine /> : null}
-            {shelves.map((group) => {
-              if (group.key === "gd") {
-                const total = items.filter((t) => programGroup(t) === "gd").length;
-                return (
-                  <section key={group.key} aria-label={group.label} className="mt-10 first:mt-8">
-                    <SectionHead
-                      as="h3"
-                      label={group.label}
-                      count={filtersOn ? `${group.items.length} de ${total} blocos` : `${total} blocos`}
-                    />
+
+            {shown.length === 0 ? (
+              <div className="mt-6 border-y border-border py-6 text-center">
+                <p className="text-sm font-semibold">Nenhum programa com esses filtros.</p>
+                <button
+                  type="button"
+                  onClick={() => setFilters(NO_FILTERS)}
+                  className="mt-2 inline-flex min-h-11 items-center font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
+                >
+                  Limpar filtros
+                </button>
+              </div>
+            ) : (
+              <>
+                {gdShown.length > 0 ? (
+                  <div className="mt-4">
                     <GdSeriesCard
-                      // Remount when the filters change, so the list opens on the new matches.
-                      key={filtersOn ? group.items.map((t) => t.slug).join() : "all"}
+                      // Remount when the matches change, so the list opens on them.
+                      key={filtersOn ? gdShown.map((t) => t.slug).join() : "all"}
                       items={items}
                       entry={seriesEntry}
                       running={runningSlug}
                       progress={seriesProgress}
                       pick={pick}
-                      matches={filtersOn ? new Set(group.items.map((t) => t.slug)) : null}
+                      matches={filtersOn ? new Set(gdShown.map((t) => t.slug)) : null}
                     />
-                  </section>
-                );
-              }
-              const collapsible = previewShelves && group.items.length > SHELF_PREVIEW + 1;
-              const open = !collapsible || openShelves.has(group.key);
-              const restId = `shelf-${group.key}-rest`;
-              return (
-                <section key={group.key} aria-label={group.label} className="mt-10 first:mt-8">
-                  <SectionHead as="h3" label={group.label} count={String(group.items.length)} />
-                  <p className="mt-1.5 text-xs text-muted">{group.blurb}</p>
-                  {collapsible ? (
-                    <>
-                      {cardsGrid(group.items.slice(0, SHELF_PREVIEW))}
-                      <div id={restId} hidden={!open}>
-                        {cardsGrid(group.items.slice(SHELF_PREVIEW), SHELF_PREVIEW + 1, "mt-3")}
-                      </div>
-                      <button
-                        type="button"
-                        aria-expanded={open}
-                        aria-controls={restId}
-                        onClick={() =>
-                          setOpenShelves((prev) => {
-                            const next = new Set(prev);
-                            if (open) next.delete(group.key);
-                            else next.add(group.key);
-                            return next;
-                          })
-                        }
-                        className="mt-3 flex min-h-11 w-full items-center justify-center gap-1.5 border border-border font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:bg-surface-2"
-                      >
-                        {open ? "Mostrar menos" : `Ver todos (${group.items.length})`}
-                        <ChevronDown className={cn("size-3.5 transition-transform", open && "rotate-180")} aria-hidden />
-                      </button>
-                    </>
-                  ) : (
-                    cardsGrid(group.items, 1, "mt-4", group.start && { ...group.start, mark: "Início da série" })
-                  )}
-                </section>
-              );
-            })}
+                  </div>
+                ) : null}
+                {rest.length > 0 ? cardsGrid(rest, 1, gdShown.length > 0 ? "mt-3" : "mt-4") : null}
+              </>
+            )}
           </>
         )}
       </section>
     </>
   );
-}
-
-/** Cards a shelf shows before "Ver todos" when the library is unfiltered. */
-const SHELF_PREVIEW = 4;
-
-function countLabel(shown: number, total: number, filtersOn: boolean) {
-  return filtersOn ? `${shown} de ${total}` : String(total);
 }
 
 /** "Musculação preserva músculo no déficit; quem emagrece é a dieta." */
@@ -268,17 +302,19 @@ function FilterChips({
   filters,
   onChange,
   preset,
+  onUsePreset,
 }: {
   filters: LibraryFilters;
   onChange: (f: LibraryFilters) => void;
   preset: LibraryFilters | null;
+  onUsePreset: (() => void) | null;
 }) {
   const count = activeFilterCount(filters);
   const fromProfile = preset !== null && activeFilterCount(preset) > 0 && sameFilters(filters, preset);
-  const canRestore = preset !== null && activeFilterCount(preset) > 0 && !fromProfile;
+  const canRestore = onUsePreset !== null && !fromProfile;
 
   return (
-    <div role="group" aria-label="Filtros" className="mt-4 flex flex-col gap-1.5">
+    <div role="group" aria-label="Filtros" className="mt-3 flex flex-col gap-1.5 border-l-2 border-l-border pl-3">
       {FACETS.map((facet) => (
         <div key={facet.key} className="flex min-w-0 items-center gap-2">
           <span className="w-16 shrink-0 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
@@ -326,7 +362,7 @@ function FilterChips({
         {canRestore ? (
           <>
             {count > 0 ? <span aria-hidden>·</span> : null}
-            <button type="button" onClick={() => onChange(preset)} className="min-h-11 px-1 uppercase text-accent hover:underline">
+            <button type="button" onClick={onUsePreset} className="min-h-11 px-1 uppercase text-accent hover:underline">
               Usar meu perfil
             </button>
           </>
