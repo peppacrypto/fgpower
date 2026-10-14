@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
+import { InstallBanner } from "@/components/pwa/install-banner";
 import { ServiceWorkerRegistration } from "@/components/pwa/service-worker-registration";
 import { ThemeScript } from "@/components/theme/theme-script";
 import { ThemeSync } from "@/components/theme/theme-sync";
@@ -70,6 +71,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         {children}
+        {/* iOS's install prompt (Android's comes from Chrome itself): client-only, fixed, decides by itself. */}
+        <InstallBanner />
         <ServiceWorkerRegistration />
         <ThemeSync />
       </body>

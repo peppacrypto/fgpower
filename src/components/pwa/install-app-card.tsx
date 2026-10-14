@@ -1,13 +1,20 @@
 "use client";
 
-import { useId, useState, useSyncExternalStore } from "react";
+import { useId, useLayoutEffect, useState, useSyncExternalStore } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils/cn";
 import { installCardEligible, type InstallMode } from "./install";
-import { getInstallMode, getServerInstallMode, promptInstall, rememberInstall, subscribeInstall } from "./install-store";
+import {
+  getInstallMode,
+  getServerInstallMode,
+  promptInstall,
+  rememberInstall,
+  showingInstallCard,
+  subscribeInstall,
+} from "./install-store";
 
-/** Where the share button lives, per iOS browser (under step 1). */
-const SHARE_WHERE: Record<Exclude<InstallMode, "prompt">, string> = {
+/** Where the share button lives, per iOS browser (under step 1; the entry banner's hint too). */
+export const SHARE_WHERE: Record<Exclude<InstallMode, "prompt">, string> = {
   "ios-safari": "Na barra do Safari, ou no menu •••",
   "ios-chrome": "Na barra de endereço do Chrome",
   "ios-edge": "No menu ••• do Edge",
@@ -15,7 +22,10 @@ const SHARE_WHERE: Record<Exclude<InstallMode, "prompt">, string> = {
 };
 
 /**
- * "Tenha a FGPOWER na tela inicial" — the app's one install ask.
+ * "Tenha a FGPOWER na tela inicial" — the install ask once the app has earned
+ * it. (iOS also gets the entry banner, install-banner.tsx, in place of the
+ * prompt Chrome shows by itself on Android; it steps aside while this card is
+ * on screen.)
  *
  * Decides by itself whether to render; the page only passes how many
  * workouts the user has finished (`finishedWorkouts`, a count of COMPLETED
@@ -38,11 +48,16 @@ export function InstallAppCard({ finishedWorkouts, className }: { finishedWorkou
   const [installing, setInstalling] = useState(false);
   const [installed, setInstalled] = useState(false);
 
-  if (!installCardEligible(finishedWorkouts)) return null;
+  const eligible = installCardEligible(finishedWorkouts);
   // While the browser's dialog is open the stashed event is already spent:
   // keep the card as it was until the answer comes back.
   const mode: InstallMode | null = installing ? "prompt" : liveMode;
-  if (!mode && !installed) return null;
+  const shown = eligible && (mode !== null || installed);
+  // On screen, the card is the ask: iOS's entry banner steps aside meanwhile
+  // (before paint, so the two never share a frame).
+  useLayoutEffect(() => (shown ? showingInstallCard() : undefined), [shown]);
+
+  if (!shown) return null;
 
   const install = async () => {
     setInstalling(true);
@@ -181,7 +196,7 @@ function GlyphBase({ className, children }: { className?: string; children: Reac
 }
 
 /** iOS's share mark: a tray open at the top, an arrow leaving it. */
-function ShareGlyph({ className }: { className?: string }) {
+export function ShareGlyph({ className }: { className?: string }) {
   return (
     <GlyphBase className={className}>
       <polyline points="8,10 5,10 5,21 19,21 19,10 16,10" />
@@ -192,7 +207,7 @@ function ShareGlyph({ className }: { className?: string }) {
 }
 
 /** A square with a plus — "Adicionar à Tela de Início". */
-function AddGlyph({ className }: { className?: string }) {
+export function AddGlyph({ className }: { className?: string }) {
   return (
     <GlyphBase className={className}>
       <rect x="4" y="4" width="16" height="16" />

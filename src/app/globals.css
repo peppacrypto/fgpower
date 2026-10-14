@@ -237,11 +237,11 @@ html {
      while it is mounted (components/ui/use-scroll-inset.ts); below sm the
      bottom nav is always there. */
   scroll-padding-top: var(--sp-top, 0px);
-  scroll-padding-bottom: var(--sp-bar, 0px);
+  scroll-padding-bottom: calc(var(--sp-bar, 0px) + var(--sp-install, 0px));
 }
 @media (max-width: 639px) {
   html {
-    scroll-padding-bottom: calc(var(--nav-h) + var(--sp-bar, 0px));
+    scroll-padding-bottom: calc(var(--nav-h) + var(--sp-bar, 0px) + var(--sp-install, 0px));
   }
 }
 @media (prefers-color-scheme: dark) {
@@ -261,6 +261,38 @@ body {
   color: var(--foreground);
   font-feature-settings: "cv11", "ss01";
   -webkit-font-smoothing: antialiased;
+  /* Room for iOS's install banner while it floats over the page's end. */
+  padding-bottom: var(--sp-install, 0px);
+}
+
+/* iOS's install banner (components/pwa/install-banner.tsx): on the bottom
+   edge, or just above the bottom nav where there is one. While a bar holds
+   the bottom (data-bottom-bar: builder save, adapt, a template's sticky
+   actions) it steps aside; a browser without :has() can't tell, so there it
+   never shows. */
+[data-install-banner] {
+  bottom: 0;
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
+}
+@media (max-width: 639px) {
+  :root:has([data-bottom-nav]) [data-install-banner] {
+    bottom: var(--nav-h);
+    padding-bottom: 0.75rem;
+  }
+}
+@media (min-width: 640px) {
+  [data-install-banner] {
+    bottom: 1rem;
+    padding-bottom: 0.75rem;
+  }
+}
+:root:has([data-bottom-bar]:not([hidden])) [data-install-banner] {
+  display: none;
+}
+@supports not selector(:has(*)) {
+  [data-install-banner] {
+    display: none;
+  }
 }
 
 /* Default hairline color for any element that turns a border on. Layered

@@ -1,6 +1,8 @@
+import { isWorkoutFocusPath } from "./resume";
+
 /**
  * "Add to home screen" — the pure half: which install path this device has
- * and whether the card should show. No window access here (see install-store
+ * and whether the card (and iOS's entry banner) should show. No window access here (see install-store
  * for the browser side), so it runs in vitest.
  */
 
@@ -77,4 +79,56 @@ export function installMode(input: {
 /** Whether the card shows at all, given the page's count of finished workouts. */
 export function installCardEligible(finishedWorkouts: number): boolean {
   return finishedWorkouts >= INSTALL_CARD_MIN_WORKOUTS;
+}
+
+/**
+ * The entry banner — iOS's stand-in for the install prompt Chrome shows by
+ * itself on Android. Safari never offers to install, so without it an iPhone
+ * user only meets the ask after a finished workout (the card above).
+ */
+export const INSTALL_BANNER_STORAGE_KEY = "fg:install-banner";
+
+/** Closed, it stays closed this long on the device (Chrome's own prompt waits about as much). */
+export const INSTALL_BANNER_SNOOZE_MS = 90 * 86_400_000;
+
+/** The value stored when the banner is closed: when it was. */
+export function parseBannerClosedAt(raw: string | null | undefined): number | null {
+  if (!raw || !/^\d{1,15}$/.test(raw)) return null;
+  return Number(raw);
+}
+
+/**
+ * Screens the banner stays off: the live workout (focus mode, its own
+ * bottom bar), the onboarding wizard, the e-mail sign-in hand-off, the
+ * e-mail pages and the admin.
+ */
+export function installBannerPathAllowed(pathname: string): boolean {
+  if (isWorkoutFocusPath(pathname)) return false;
+  return !/^\/(onboarding|admin|email|login\/link)(\/|$)/.test(pathname);
+}
+
+/**
+ * The banner's mode (the iOS browser it explains), or null. iOS only: on
+ * Android, Chrome shows its own prompt and the card opens the real dialog.
+ * Off when the app runs from the home screen, once the card was closed or
+ * the app installed (InstallMemory), within the snooze after the banner was
+ * closed, on the screens above, and while an install card is on screen —
+ * one ask at a time.
+ */
+export function installBannerMode(input: {
+  standalone: boolean;
+  memory: InstallMemory | null;
+  closedAt: number | null;
+  now: number;
+  cardShown: boolean;
+  pathname: string;
+  ua: string;
+  maxTouchPoints?: number;
+}): Exclude<InstallMode, "prompt"> | null {
+  if (input.standalone || input.memory || input.cardShown) return null;
+  // Either side of now: a clock set back doesn't bring it back early.
+  if (input.closedAt !== null && Math.abs(input.now - input.closedAt) < INSTALL_BANNER_SNOOZE_MS) return null;
+  if (!installBannerPathAllowed(input.pathname)) return null;
+  const ios = iosBrowser(input.ua, input.maxTouchPoints ?? 0);
+  return ios ? `ios-${ios}` : null;
 }

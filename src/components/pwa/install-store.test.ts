@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { INSTALL_STORAGE_KEY } from "./install";
+import { INSTALL_BANNER_SNOOZE_MS, INSTALL_BANNER_STORAGE_KEY, INSTALL_STORAGE_KEY } from "./install";
 
 const ANDROID =
   "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Mobile Safari/537.36";
@@ -109,5 +109,74 @@ describe("install-store", () => {
   it("is inert on the server", async () => {
     const s = await loadStore();
     expect(s.getServerInstallMode()).toBeNull();
+  });
+});
+
+describe("install-store: iOS's entry banner", () => {
+  it("asks on iOS from the first screen; never on Android, where Chrome has its own prompt", async () => {
+    fakeBrowser({ ua: IPHONE });
+    expect((await loadStore()).getInstallBannerMode("/")).toBe("ios-safari");
+
+    fakeBrowser({ ua: ANDROID });
+    expect((await loadStore()).getInstallBannerMode("/")).toBeNull();
+  });
+
+  it("remembers its close on the device for the snooze, and only its own", async () => {
+    const { store } = fakeBrowser({ ua: IPHONE });
+    const s = await loadStore();
+    const onChange = vi.fn();
+    s.subscribeInstall(onChange);
+    s.closeInstallBanner(Date.now());
+    expect(onChange).toHaveBeenCalled();
+    expect(s.getInstallBannerMode("/")).toBeNull();
+    expect(Number(store.get(INSTALL_BANNER_STORAGE_KEY))).toBeGreaterThan(0);
+    // The card (after a workout) is a different ask: still offered.
+    expect(s.getInstallMode()).toBe("ios-safari");
+
+    // A new page load reads it back…
+    expect((await loadStore()).getInstallBannerMode("/")).toBeNull();
+    // …until the snooze is over.
+    store.set(INSTALL_BANNER_STORAGE_KEY, String(Date.now() - INSTALL_BANNER_SNOOZE_MS - 1));
+    expect((await loadStore()).getInstallBannerMode("/")).toBe("ios-safari");
+  });
+
+  it("goes for good with the card's close (or an install)", async () => {
+    const { store } = fakeBrowser({ ua: IPHONE });
+    const s = await loadStore();
+    s.rememberInstall("dismissed");
+    expect(s.getInstallBannerMode("/")).toBeNull();
+    store.set(INSTALL_STORAGE_KEY, "installed");
+    expect((await loadStore()).getInstallBannerMode("/")).toBeNull();
+  });
+
+  it("keeps a closed banner closed for the page's life when storage throws", async () => {
+    fakeBrowser({ ua: IPHONE, storage: "throws" });
+    const s = await loadStore();
+    expect(s.getInstallBannerMode("/")).toBe("ios-safari");
+    expect(() => s.closeInstallBanner()).not.toThrow();
+    expect(s.getInstallBannerMode("/")).toBeNull();
+  });
+
+  it("waits while an install card is on screen, and comes back when it leaves", async () => {
+    fakeBrowser({ ua: IPHONE });
+    const s = await loadStore();
+    const onChange = vi.fn();
+    s.subscribeInstall(onChange);
+    const leaveA = s.showingInstallCard();
+    const leaveB = s.showingInstallCard();
+    expect(onChange).toHaveBeenCalledTimes(2);
+    expect(s.getInstallBannerMode("/app/today")).toBeNull();
+    leaveA();
+    leaveA(); // a repeated goodbye counts once
+    expect(s.getInstallBannerMode("/app/today")).toBeNull();
+    leaveB();
+    expect(s.getInstallBannerMode("/app/today")).toBe("ios-safari");
+  });
+
+  it("never shows inside the installed app, nor on the live workout", async () => {
+    fakeBrowser({ ua: IPHONE, standalone: true });
+    expect((await loadStore()).getInstallBannerMode("/")).toBeNull();
+    fakeBrowser({ ua: IPHONE });
+    expect((await loadStore()).getInstallBannerMode("/app/workout/abc")).toBeNull();
   });
 });

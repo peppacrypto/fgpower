@@ -24,6 +24,7 @@ export function StickyActionsBar({ watchId, children }: { watchId: string; child
     <div
       hidden={!show}
       data-testid="dossier-sticky-actions"
+      data-bottom-bar
       className="sticky bottom-[var(--nav-h)] z-30 mt-10 panel-raised p-3 sm:bottom-4"
     >
       <div className="flex flex-wrap gap-2">{children}</div>

@@ -1,4 +1,13 @@
-import { INSTALL_STORAGE_KEY, installMode, parseInstallMemory, type InstallMemory, type InstallMode } from "./install";
+import {
+  INSTALL_BANNER_STORAGE_KEY,
+  INSTALL_STORAGE_KEY,
+  installBannerMode,
+  installMode,
+  parseBannerClosedAt,
+  parseInstallMemory,
+  type InstallMemory,
+  type InstallMode,
+} from "./install";
 
 /**
  * "Add to home screen" — the browser half: the stashed install dialog, the
@@ -15,6 +24,10 @@ export interface BeforeInstallPromptEvent extends Event {
 let deferredPrompt: BeforeInstallPromptEvent | null = null;
 /** Mirrors the stored memory for this page's life, so a closed card stays closed when storage throws. */
 let sessionMemory: InstallMemory | null = null;
+/** The same for the entry banner: when it was closed. */
+let sessionBannerClosedAt: number | null = null;
+/** Install cards on screen right now: the banner waits while there is one. */
+let cardsShown = 0;
 const listeners = new Set<() => void>();
 let attached = false;
 
@@ -69,7 +82,7 @@ export function attachInstallListeners() {
     rememberInstall("installed");
   });
   window.addEventListener("storage", (e) => {
-    if (e.key === INSTALL_STORAGE_KEY) emit();
+    if (e.key === INSTALL_STORAGE_KEY || e.key === INSTALL_BANNER_STORAGE_KEY) emit();
   });
   if (typeof window.matchMedia === "function") {
     for (const q of DISPLAY_MODES) window.matchMedia(q).addEventListener?.("change", emit);
@@ -99,6 +112,56 @@ export function getInstallMode(): InstallMode | null {
 
 export function getServerInstallMode(): InstallMode | null {
   return null;
+}
+
+function readBannerClosedAt(): number | null {
+  if (sessionBannerClosedAt !== null) return sessionBannerClosedAt;
+  try {
+    return parseBannerClosedAt(window.localStorage.getItem(INSTALL_BANNER_STORAGE_KEY));
+  } catch {
+    return null;
+  }
+}
+
+/** The entry banner's close: remembered on the device for the snooze (for the page's life without storage). */
+export function closeInstallBanner(now = Date.now()) {
+  sessionBannerClosedAt = now;
+  try {
+    window.localStorage.setItem(INSTALL_BANNER_STORAGE_KEY, String(now));
+  } catch {
+    // Closed for this page's life only.
+  }
+  emit();
+}
+
+/**
+ * An install card announces itself while it's on screen (returns the
+ * goodbye), so the entry banner never asks the same thing at the same time.
+ */
+export function showingInstallCard(): () => void {
+  cardsShown += 1;
+  emit();
+  let done = false;
+  return () => {
+    if (done) return;
+    done = true;
+    cardsShown -= 1;
+    emit();
+  };
+}
+
+/** The entry banner's mode on this screen right now (iOS only; a string, so the snapshot is stable). */
+export function getInstallBannerMode(pathname: string): Exclude<InstallMode, "prompt"> | null {
+  return installBannerMode({
+    standalone: isStandalone(),
+    memory: readMemory(),
+    closedAt: readBannerClosedAt(),
+    now: Date.now(),
+    cardShown: cardsShown > 0,
+    pathname,
+    ua: navigator.userAgent,
+    maxTouchPoints: navigator.maxTouchPoints ?? 0,
+  });
 }
 
 /**

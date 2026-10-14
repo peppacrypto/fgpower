@@ -301,3 +301,149 @@ test.describe("Android (Chrome)", () => {
     await expect(card(page)).toHaveCount(0);
   });
 });
+
+/**
+ * iOS's entry banner: Safari never offers to install by itself (Chrome does
+ * on Android), so the app asks from the first screen — compact, on the
+ * bottom edge, above the bottom nav — and steps aside wherever it would get
+ * in the way.
+ */
+test.describe("iPhone entry banner", () => {
+  const banner = (page: Page) => page.locator("[data-install-banner]");
+  const BANNER_KEY = "fg:install-banner";
+
+  /** The banner's top edge and the page's room reserved for it (body padding). */
+  const bannerRoom = (page: Page) =>
+    page.evaluate(() => {
+      const el = document.querySelector("[data-install-banner]") as HTMLElement | null;
+      return {
+        height: el ? el.offsetHeight : 0,
+        padding: parseFloat(getComputedStyle(document.body).paddingBottom),
+      };
+    });
+
+  test("asks on the landing, before any account; nothing stays under it; closing it sticks for the snooze", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await expect(banner(page)).toHaveAttribute("data-install-banner", "ios-safari");
+    await expect(banner(page)).toHaveRole("complementary");
+    await expect(banner(page)).toContainText("Tenha a FGPOWER na tela inicial");
+    await expect(banner(page)).toContainText(/Toque em Compartilhar.*e escolha Adicionar à Tela de Início/);
+    await expect(banner(page)).toContainText("barra do Safari");
+    await expectNoSideScroll(page);
+
+    // On the bottom edge, with the page's end lifted clear of it.
+    const box = (await banner(page).boundingBox())!;
+    expect(Math.round(box.y + box.height)).toBe(page.viewportSize()!.height);
+    await expect.poll(async () => (await bannerRoom(page)).padding).toBeGreaterThan(0);
+    const room = await bannerRoom(page);
+    expect(Math.abs(room.padding - room.height)).toBeLessThanOrEqual(1);
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    const lastLinkBottom = await page.evaluate(() => {
+      const links = [...document.querySelectorAll("main a[href], footer a[href]")];
+      return Math.max(...links.map((a) => a.getBoundingClientRect().bottom));
+    });
+    expect(lastLinkBottom).toBeLessThanOrEqual((await banner(page).boundingBox())!.y + 1);
+
+    // The close: a real touch target; gone on this device, the page's end released.
+    const close = banner(page).getByRole("button", { name: "Fechar" });
+    const closeBox = (await close.boundingBox())!;
+    expect(closeBox.height).toBeGreaterThanOrEqual(44);
+    await close.click();
+    await expect(banner(page)).toHaveCount(0);
+    await expect.poll(async () => (await bannerRoom(page)).padding).toBe(0);
+    expect(Number(await page.evaluate((k) => localStorage.getItem(k), BANNER_KEY))).toBeGreaterThan(0);
+    for (const path of ["/", "/login"]) {
+      await page.goto(path);
+      await page.waitForLoadState("networkidle");
+      await expect(banner(page)).toHaveCount(0);
+    }
+
+    // 90 days on, it asks again.
+    await page.evaluate((k) => localStorage.setItem(k, String(Date.now() - 91 * 86_400_000)), BANNER_KEY);
+    await page.reload();
+    await expect(banner(page)).toBeVisible();
+  });
+
+  test("in the app: above the bottom nav, which stays tappable; aside for sticky bars and the live workout; yields to the card and goes with its close", async ({
+    page,
+  }) => {
+    await newUserOnGd1(page, "banner-app");
+    await page.goto("/app/today");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await expect(banner(page)).toBeVisible();
+    // No card yet (no workout): the banner is the only ask.
+    await expect(card(page)).toHaveCount(0);
+
+    const nav = page.getByRole("navigation", { name: "Navegação principal" });
+    const navBox = (await nav.boundingBox())!;
+    const box = (await banner(page).boundingBox())!;
+    expect(Math.abs(box.y + box.height - navBox.y)).toBeLessThanOrEqual(1);
+    await nav.getByRole("link", { name: "Progresso" }).click();
+    await expect(page).toHaveURL(/\/app\/progress/);
+    await expect(banner(page)).toBeVisible();
+
+    // A template's sticky actions hold the bottom while they show: the banner steps aside.
+    await page.goto("/app/programs/templates/gd-2");
+    await expect(banner(page)).toBeVisible();
+    const sticky = page.getByTestId("dossier-sticky-actions");
+    await page.waitForLoadState("networkidle");
+    // Scrolled past the masthead's buttons once the page has hydrated (the bar watches them).
+    await expect(async () => {
+      await page.evaluate(() => document.getElementById("estrutura")!.scrollIntoView());
+      await expect(sticky).toBeVisible({ timeout: 1_000 });
+    }).toPass();
+    await expect(banner(page)).toBeHidden();
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await expect(sticky).toBeHidden();
+    await expect(banner(page)).toBeVisible();
+
+    // The live workout is focus mode: no banner.
+    await page.goto("/app/today");
+    await startDayFromToday(page, SEGUNDA);
+    await page.waitForLoadState("networkidle");
+    await expect(banner(page)).toHaveCount(0);
+    await recordSet(page, 1, "40", "10");
+    await finishAndSave(page);
+
+    // The summary and Today carry the card: one ask at a time.
+    await expect(card(page)).toHaveAttribute("data-install-card", "ios-safari");
+    await expect(banner(page)).toHaveCount(0);
+    await page.goto("/app/today");
+    await expect(card(page).getByRole("heading", { name: TITLE })).toBeVisible();
+    await expect(banner(page)).toHaveCount(0);
+    // Elsewhere (no card), the banner is back.
+    await page.goto("/app/history");
+    await expect(banner(page)).toBeVisible();
+
+    // The card's "Agora não" is for good — the banner's ask included.
+    await page.goto("/app/today");
+    await card(page).getByRole("button", { name: "Agora não" }).click();
+    await expect(card(page)).toHaveCount(0);
+    await expect(banner(page)).toHaveCount(0);
+    await page.goto("/app/history");
+    await page.waitForLoadState("networkidle");
+    await expect(banner(page)).toHaveCount(0);
+  });
+
+  test("never in the installed app, an in-app browser, or on Android (Chrome asks there)", async ({ browser }) => {
+    const installed = await browser.newContext({ ...iPhone, timezoneId: "America/Sao_Paulo", locale: "pt-BR" });
+    await installed.addInitScript(() => Object.defineProperty(navigator, "standalone", { get: () => true }));
+    const instagram = await browser.newContext({
+      ...iPhone,
+      locale: "pt-BR",
+      userAgent:
+        "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Instagram 334.0.4.32.98 (iPhone14,5; iOS 17_5; pt_BR; pt; scale=3.00; 1170x2532; 614117039)",
+    });
+    const android = await browser.newContext({ ...pixel, timezoneId: "America/Sao_Paulo", locale: "pt-BR" });
+    for (const context of [installed, instagram, android]) {
+      const page = await context.newPage();
+      await page.goto("/");
+      await page.waitForLoadState("networkidle");
+      await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+      await expect(banner(page)).toHaveCount(0);
+      await context.close();
+    }
+  });
+});

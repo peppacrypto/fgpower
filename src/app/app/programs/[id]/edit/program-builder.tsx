@@ -1527,7 +1527,7 @@ export function ProgramBuilder({
         </div>
       </div>
 
-      <div ref={saveBarRef} className="sticky bottom-[var(--nav-h)] z-20 -mx-4 mt-6 border-t-2 border-t-[var(--rule-heavy)] bg-background px-4 py-2 sm:bottom-0 sm:-mx-6 sm:px-6">
+      <div ref={saveBarRef} data-bottom-bar className="sticky bottom-[var(--nav-h)] z-20 -mx-4 mt-6 border-t-2 border-t-[var(--rule-heavy)] bg-background px-4 py-2 sm:bottom-0 sm:-mx-6 sm:px-6">
         {undo ? (
           <div role="status" className="mb-2 flex items-center gap-3 border-l-2 border-l-accent bg-surface-2 py-0.5 pl-3 pr-1">
             <span className="min-w-0 flex-1 text-sm leading-snug">{undo.text}</span>

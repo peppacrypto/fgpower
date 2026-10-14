@@ -27,8 +27,10 @@ export function BottomNav({ force = false }: { force?: boolean }) {
   return (
     // Height is pinned to --nav-h (globals.css) — bar + home-indicator inset —
     // so sticky bars and the app <main> can clear it exactly.
+    // data-bottom-nav: iOS's install banner sits just above it (globals.css).
     <nav
       aria-label="Navegação principal"
+      data-bottom-nav
       className="fixed inset-x-0 bottom-0 z-40 h-[var(--nav-h)] border-t border-border bg-surface/95 backdrop-blur pb-[env(safe-area-inset-bottom)] sm:hidden"
     >
       <ul className="flex h-full items-stretch justify-around">

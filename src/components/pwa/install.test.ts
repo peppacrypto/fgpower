@@ -1,10 +1,14 @@
 import { describe, expect, it } from "vitest";
 import {
+  INSTALL_BANNER_SNOOZE_MS,
+  installBannerMode,
+  installBannerPathAllowed,
   installCardEligible,
   installMode,
   INSTALL_CARD_MIN_WORKOUTS,
   iosBrowser,
   isMobileUa,
+  parseBannerClosedAt,
   parseInstallMemory,
 } from "./install";
 
@@ -122,5 +126,83 @@ describe("parseInstallMemory", () => {
     expect(parseInstallMemory("1")).toBeNull();
     expect(parseInstallMemory(null)).toBeNull();
     expect(parseInstallMemory(undefined)).toBeNull();
+  });
+});
+
+describe("installBannerMode (iOS's entry banner)", () => {
+  const NOW = Date.UTC(2026, 9, 14, 12);
+  const base = { standalone: false, memory: null, closedAt: null, now: NOW, cardShown: false, pathname: "/" } as const;
+
+  it("asks on the first screen in the iOS browsers that can add to the home screen", () => {
+    expect(installBannerMode({ ...base, ua: UA.iosSafari })).toBe("ios-safari");
+    expect(installBannerMode({ ...base, ua: UA.iosSafari26 })).toBe("ios-safari");
+    expect(installBannerMode({ ...base, ua: UA.iosChrome, pathname: "/app/today" })).toBe("ios-chrome");
+    expect(installBannerMode({ ...base, ua: UA.iosEdge, pathname: "/login" })).toBe("ios-edge");
+    expect(installBannerMode({ ...base, ua: UA.iosFirefox, pathname: "/u/ana" })).toBe("ios-firefox");
+    expect(installBannerMode({ ...base, ua: UA.macLike, maxTouchPoints: 5 })).toBe("ios-safari");
+  });
+
+  it("leaves Android to Chrome's own prompt, and skips desktops and in-app browsers", () => {
+    expect(installBannerMode({ ...base, ua: UA.androidChrome })).toBeNull();
+    expect(installBannerMode({ ...base, ua: UA.androidTablet })).toBeNull();
+    expect(installBannerMode({ ...base, ua: UA.desktopChrome })).toBeNull();
+    expect(installBannerMode({ ...base, ua: UA.macLike })).toBeNull();
+    expect(installBannerMode({ ...base, ua: UA.iosInstagram })).toBeNull();
+    expect(installBannerMode({ ...base, ua: UA.iosFacebook })).toBeNull();
+    expect(installBannerMode({ ...base, ua: UA.iosGoogleApp })).toBeNull();
+  });
+
+  it("never shows inside the installed app, nor once the card was closed or the app installed", () => {
+    expect(installBannerMode({ ...base, ua: UA.iosSafari, standalone: true })).toBeNull();
+    expect(installBannerMode({ ...base, ua: UA.iosSafari, memory: "dismissed" })).toBeNull();
+    expect(installBannerMode({ ...base, ua: UA.iosSafari, memory: "installed" })).toBeNull();
+  });
+
+  it("steps aside while an install card is on screen", () => {
+    expect(installBannerMode({ ...base, ua: UA.iosSafari, cardShown: true })).toBeNull();
+  });
+
+  it("closed, it stays closed for the snooze — a clock set back included — then asks again", () => {
+    const day = 86_400_000;
+    expect(INSTALL_BANNER_SNOOZE_MS).toBe(90 * day);
+    expect(installBannerMode({ ...base, ua: UA.iosSafari, closedAt: NOW })).toBeNull();
+    expect(installBannerMode({ ...base, ua: UA.iosSafari, closedAt: NOW - 89 * day })).toBeNull();
+    expect(installBannerMode({ ...base, ua: UA.iosSafari, closedAt: NOW + 30 * day })).toBeNull();
+    expect(installBannerMode({ ...base, ua: UA.iosSafari, closedAt: NOW - 90 * day })).toBe("ios-safari");
+  });
+
+  it("stays off the live workout, the onboarding, the e-mail sign-in hand-off and the admin", () => {
+    expect(installBannerMode({ ...base, ua: UA.iosSafari, pathname: "/app/workout/abc" })).toBeNull();
+    expect(installBannerMode({ ...base, ua: UA.iosSafari, pathname: "/onboarding" })).toBeNull();
+    // The summary keeps the nav (and its own card decides there).
+    expect(installBannerMode({ ...base, ua: UA.iosSafari, pathname: "/app/workout/abc/summary" })).toBe("ios-safari");
+  });
+});
+
+describe("installBannerPathAllowed", () => {
+  it("allows the entry screens and the app's tabs", () => {
+    for (const p of ["/", "/login", "/programs", "/programs/gd-1", "/exercises", "/u/ana", "/t/x", "/app/today", "/app/progress"]) {
+      expect(installBannerPathAllowed(p), p).toBe(true);
+    }
+  });
+
+  it("refuses the focused flows, matching whole segments only", () => {
+    for (const p of ["/app/workout/abc", "/onboarding", "/onboarding/step", "/admin", "/admin/reports", "/email/cancelar", "/login/link"]) {
+      expect(installBannerPathAllowed(p), p).toBe(false);
+    }
+    expect(installBannerPathAllowed("/administrar")).toBe(true);
+    expect(installBannerPathAllowed("/login/linked")).toBe(true);
+  });
+});
+
+describe("parseBannerClosedAt", () => {
+  it("reads back a stored timestamp and nothing else", () => {
+    expect(parseBannerClosedAt("1760443200000")).toBe(1760443200000);
+    expect(parseBannerClosedAt("dismissed")).toBeNull();
+    expect(parseBannerClosedAt("-1")).toBeNull();
+    expect(parseBannerClosedAt("1e12")).toBeNull();
+    expect(parseBannerClosedAt("")).toBeNull();
+    expect(parseBannerClosedAt(null)).toBeNull();
+    expect(parseBannerClosedAt(undefined)).toBeNull();
   });
 });

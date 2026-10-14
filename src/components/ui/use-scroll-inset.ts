@@ -19,7 +19,17 @@ export function useTopBarInset(ref: RefObject<HTMLElement | null>) {
   useInset(ref, "--sp-top");
 }
 
-function useInset(ref: RefObject<HTMLElement | null>, prop: "--sp-bar" | "--sp-top") {
+/**
+ * iOS's install banner (components/pwa/install-banner.tsx): it floats over
+ * the bottom of any page, so its height is reserved both as scroll-padding and
+ * as room at the end of the page (globals.css) — nothing stays under it.
+ * Its own variable: it can share a screen with a bar above.
+ */
+export function useInstallBannerInset(ref: RefObject<HTMLElement | null>) {
+  useInset(ref, "--sp-install");
+}
+
+function useInset(ref: RefObject<HTMLElement | null>, prop: "--sp-bar" | "--sp-top" | "--sp-install") {
   useEffect(() => {
     const el = ref.current;
     if (!el || typeof ResizeObserver === "undefined") return;

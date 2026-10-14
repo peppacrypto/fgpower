@@ -182,7 +182,7 @@ export default async function AdaptTemplatePage({ params, searchParams }: PagePr
             })}
           </div>
 
-          <div className="sticky bottom-[var(--nav-h)] z-20 -mx-4 mt-6 flex items-center gap-2 border-t-2 border-t-[var(--rule-heavy)] bg-background px-4 py-2 sm:bottom-0 sm:-mx-6 sm:justify-end sm:px-6">
+          <div data-bottom-bar className="sticky bottom-[var(--nav-h)] z-20 -mx-4 mt-6 flex items-center gap-2 border-t-2 border-t-[var(--rule-heavy)] bg-background px-4 py-2 sm:bottom-0 sm:-mx-6 sm:justify-end sm:px-6">
             <Button asChild variant="ghost" className="px-3">
               <Link href={templateHref}>Cancelar</Link>
             </Button>
