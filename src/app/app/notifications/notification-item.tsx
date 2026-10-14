@@ -76,15 +76,15 @@ export function NotificationItem({ line }: { line: NotificationLine }) {
     <div className="flex items-center gap-3 py-3.5">
       <Faces line={line} />
       <div className="min-w-0 flex-1">
-        <p className={cn("text-sm [overflow-wrap:anywhere]", isNew && "font-semibold")}>{text}</p>
-        <p className="mt-0.5 font-mono text-[11px] text-muted">
+        <p className={cn("text-[15px] leading-snug [overflow-wrap:anywhere]", isNew && "font-semibold")}>{text}</p>
+        <p className="mt-0.5 text-[13px] tabular-nums text-muted">
           <time dateTime={line.at} title={line.fullTime}>
             {line.timeLabel}
           </time>
         </p>
       </div>
       {isNew ? (
-        <span className="size-2 shrink-0 bg-accent" data-unread-marker>
+        <span className="size-2.5 shrink-0 rounded-full bg-accent" data-unread-marker>
           <span className="sr-only">Nova</span>
         </span>
       ) : null}
@@ -92,9 +92,14 @@ export function NotificationItem({ line }: { line: NotificationLine }) {
   );
 
   return (
-    <div ref={rowRef} className="border-b border-border px-1" data-notification={line.type} data-unread={isNew ? "true" : undefined}>
+    <div
+      ref={rowRef}
+      className="border-b border-border px-4 last:border-b-0"
+      data-notification={line.type}
+      data-unread={isNew ? "true" : undefined}
+    >
       {line.href ? (
-        <Link href={line.href} className="block hover:bg-surface-2/60">
+        <Link href={line.href} className="-mx-4 block px-4 hover:bg-surface-2">
           {content}
         </Link>
       ) : (
@@ -104,7 +109,7 @@ export function NotificationItem({ line }: { line: NotificationLine }) {
       {request ? (
         <div className="pb-3">
           {status === "PENDING" ? (
-            <div className="flex gap-2">
+            <div className="flex gap-2 pl-12">
               <Button size="sm" disabled={pending} onClick={() => respond(true)}>
                 Aceitar
               </Button>
@@ -113,12 +118,12 @@ export function NotificationItem({ line }: { line: NotificationLine }) {
               </Button>
             </div>
           ) : null}
-          <div role="status" tabIndex={-1} data-line-status className="flex flex-wrap items-center gap-2 outline-none">
+          <div role="status" tabIndex={-1} data-line-status className="flex flex-wrap items-center gap-2 pl-12 outline-none">
             {status === "ACCEPTED" ? <span className="tag tag--status tag--ok">Solicitação aceita</span> : null}
             {status === "DECLINED" ? <span className="tag tag--status tag--info">Solicitação recusada</span> : null}
           </div>
           {error ? (
-            <p role="alert" className="mt-2 text-xs text-danger">
+            <p role="alert" className="mt-2 pl-12 text-[13px] text-danger">
               <ActionErrorText error={error} />
             </p>
           ) : null}
@@ -126,7 +131,7 @@ export function NotificationItem({ line }: { line: NotificationLine }) {
       ) : null}
 
       {followBack && actor ? (
-        <div className="pb-3">
+        <div className="pb-3 pl-12">
           <FollowButton
             targetUserId={actor.id}
             username={actor.username}
@@ -145,7 +150,7 @@ export function NotificationItem({ line }: { line: NotificationLine }) {
 /** The person (or, for several FGs, up to three stacked), or the app's mark for your own achievements. */
 function Faces({ line }: { line: NotificationLine }) {
   if (line.actors.length === 0) {
-    return <Lettermark code="FG" className="size-9 shrink-0 text-[10px]" />;
+    return <Lettermark code="FG" className="size-9 shrink-0 rounded-full text-xs" />;
   }
   if (line.actors.length === 1) {
     const a = line.actors[0];
@@ -165,7 +170,7 @@ function Faces({ line }: { line: NotificationLine }) {
           // One initial each: on overlapping faces a second letter is cut in half.
           name={a.name.trim().split(/\s+/)[0] ?? a.name}
           size={28}
-          className={cn("ring-2 ring-background", i > 0 && "-ml-2")}
+          className={cn("ring-2 ring-surface", i > 0 && "-ml-2")}
         />
       ))}
     </span>

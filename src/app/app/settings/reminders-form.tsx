@@ -145,8 +145,8 @@ export function RemindersForm({
     <div className="divide-y divide-border">
       {paused ? (
         <div className="pb-4">
-          <div className="border-l-2 border-l-accent bg-surface-2 px-3.5 py-3">
-            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em]">Lembretes pausados</p>
+          <div className="rounded-[var(--radius-md)] bg-accent-soft px-4 py-3.5">
+            <p className="text-sm font-semibold">Lembretes pausados</p>
             <p className="mt-1 text-sm">
               Pausamos em {formatAppDate(paused, { day: "2-digit", month: "2-digit" })} depois de 2 lembretes seguidos sem
               resposta. Eles voltam sozinhos no seu próximo treino.
@@ -182,7 +182,7 @@ export function RemindersForm({
                 type="button"
                 onClick={disableEverywhere}
                 disabled={pushBusy}
-                className="hit font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-accent underline decoration-2 underline-offset-[3px] disabled:opacity-40"
+                className="hit font-semibold text-accent underline decoration-1 underline-offset-[3px] disabled:opacity-40"
               >
                 Desativar em todos
               </button>
@@ -210,9 +210,11 @@ export function RemindersForm({
                 />
                 <span
                   className={cn(
-                    "pointer-events-none flex h-11 items-center justify-center rounded-[3px] border font-mono text-[13px] font-bold tabular-nums transition-colors",
+                    "pointer-events-none flex h-11 items-center justify-center rounded-[var(--radius-md)] border text-sm tabular-nums transition-colors",
                     "peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ring",
-                    value.hour === h ? "border-accent bg-accent-soft text-accent" : "border-border text-muted",
+                    value.hour === h
+                      ? "border-accent bg-accent-soft font-semibold text-accent shadow-[inset_0_0_0_1px_var(--accent)]"
+                      : "border-border bg-surface font-medium text-foreground",
                   )}
                 >
                   {hourLabel(h)}

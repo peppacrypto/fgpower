@@ -2,10 +2,9 @@ import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils/cn";
 
-// Editorial spec-chips, not pills: square-cut, JetBrains-Mono, micro-caps.
-// No rounded-full, no 1px border — the pill was half the generic look.
+// Small status/category chips: 6px radius, sentence case, tinted fill.
 const badgeVariants = cva(
-  "inline-flex items-center gap-1.5 rounded-[2px] px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.09em]",
+  "inline-flex items-center gap-1.5 rounded-[var(--radius-sm)] px-2 py-0.5 text-xs font-medium",
   {
     variants: {
       variant: {

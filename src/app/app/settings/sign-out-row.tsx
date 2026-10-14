@@ -86,11 +86,11 @@ export function SignOutRow() {
         ) : null}
       </div>
       {confirming ? (
-        <div role="group" aria-label="Confirmar saída" className="border-l-2 border-l-foreground/50 bg-surface-2 px-3.5 py-3">
+        <div role="group" aria-label="Confirmar saída" className="rounded-[var(--radius-md)] bg-surface-2 px-4 py-3.5">
           <p className="text-sm font-medium">Sair desta conta neste aparelho?</p>
           <p className="mt-0.5 text-xs text-muted">Para voltar, é só entrar de novo.</p>
           {unsent ? (
-            <p className="mt-2 border-l-2 border-l-danger pl-2.5 text-xs font-medium text-danger">
+            <p className="mt-2 rounded-[var(--radius-sm)] bg-danger-soft px-2.5 py-1.5 text-xs font-medium text-danger">
               Este aparelho tem {plural(unsent.rows, "série ainda não enviada", "séries ainda não enviadas")} —{" "}
               <Link href={`/app/workout/${unsent.sessionId}`} className="underline underline-offset-2">
                 abra o treino

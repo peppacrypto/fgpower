@@ -18,7 +18,7 @@ import { FocusLanding } from "./focus-landing";
 export const metadata: Metadata = { title: "Feed" };
 
 /** A card's wrapper, where "Carregar mais" lands: a scroll margin, and a ring only for keyboard focus. */
-const LANDING_CARD = "scroll-mt-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";
+const LANDING_CARD = "scroll-mt-4 rounded-[var(--radius-lg)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";
 
 /** "?p=3" → 3 (1…FEED_MAX_PAGES; anything else is the first page). */
 function pageOf(value: string | string[] | undefined): number {
@@ -102,7 +102,7 @@ export default async function FeedPage({ searchParams }: PageProps<"/app/feed">)
           {community.length > 0 ? (
             <section className="mt-10" aria-labelledby="da-comunidade">
               <SectionHead id="da-comunidade" label="Da comunidade" />
-              <p className="mt-2 text-sm text-muted">Treinos públicos recentes. Siga quem te inspira para ver mais aqui.</p>
+              <p className="mt-1 text-sm text-muted">Treinos públicos recentes. Siga quem te inspira para ver mais aqui.</p>
               <div className="mt-4 flex flex-col gap-4">{community.map((a, i) => card(a, i))}</div>
             </section>
           ) : null}
@@ -140,7 +140,7 @@ function FeedEnd({ page, shown, hasMore }: { page: number; shown: number; hasMor
       ) : hasMore ? (
         <p className="text-center text-sm text-muted">Treinos mais antigos ficam no perfil de cada pessoa.</p>
       ) : shown >= FEED_PAGE_SIZE ? (
-        <p className="text-center font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-muted">Fim do feed</p>
+        <p className="text-center text-[13px] text-muted">Fim do feed</p>
       ) : null}
     </div>
   );

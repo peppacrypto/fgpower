@@ -36,13 +36,13 @@ export function PolicyUpdateNotice({ stale }: { stale: boolean }) {
   }
 
   return (
-    <section aria-label="Aviso de privacidade" className="mt-6 border-l-2 border-l-accent bg-surface-2 px-3 py-2.5">
-      <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent">Atualizamos a política</p>
-      <p className="mt-1 text-xs text-foreground/90">
+    <section aria-label="Aviso de privacidade" className="mt-6 rounded-[var(--radius-lg)] bg-surface-2 px-4 py-3.5">
+      <p className="text-[15px] font-semibold">Atualizamos a política</p>
+      <p className="mt-1 text-sm text-foreground/90">
         {/* [OWNER/LEGAL: resumo das mudanças materiais — placeholder.] */}
         Nossa Política de Privacidade e os Termos foram atualizados. Veja o que mudou e confirme que leu.
       </p>
-      <div className="mt-2 flex flex-wrap items-center gap-2">
+      <div className="mt-3 flex flex-wrap items-center gap-2">
         <Button size="sm" variant="outline" asChild>
           <a href="/privacy" target="_blank" rel="noopener noreferrer">Ler a política</a>
         </Button>
@@ -51,7 +51,7 @@ export function PolicyUpdateNotice({ stale }: { stale: boolean }) {
         </Button>
       </div>
       {error ? (
-        <p role="alert" className="mt-1.5 text-xs text-danger">
+        <p role="alert" className="mt-1.5 text-sm text-danger">
           <ActionErrorText error={error} />
         </p>
       ) : null}

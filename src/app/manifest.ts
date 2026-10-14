@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { THEME_COLORS } from "@/lib/theme";
 
 /** Home-screen long-press entries (Android); each opens straight into its screen. */
 const SHORTCUTS = [
@@ -34,8 +35,8 @@ export default function manifest(): MetadataRoute.Manifest {
     // The light --background: the app is light-first, so the Android splash
     // and title bar match what most users land on (the <meta theme-color>
     // in layout.tsx still switches per color scheme once the page loads).
-    background_color: "#fafafb",
-    theme_color: "#fafafb",
+    background_color: THEME_COLORS.light,
+    theme_color: THEME_COLORS.light,
     // Installed apps must work in any orientation (WCAG 1.3.4): phones and
     // tablets on wheelchair / arm mounts and stands are often fixed landscape,
     // and nothing here depends on portrait (the workout, rest bar and nav all

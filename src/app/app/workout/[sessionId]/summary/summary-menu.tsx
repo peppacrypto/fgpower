@@ -9,6 +9,7 @@ import { describeActionFailure, OFFLINE_ERROR } from "@/components/social/run-ac
 import { ActionErrorText } from "@/components/social/session-expired";
 import { deleteWorkoutSession } from "@/lib/actions/workouts";
 import { isSessionExpiredError } from "@/lib/auth/session-expired";
+import { SheetGrip } from "@/components/workout/sheet-grip";
 
 /** A Next.js navigation thrown through an action (the delete's redirect to Today). */
 function isNavigation(err: unknown) {
@@ -78,14 +79,14 @@ export function SummaryMenu({
         aria-expanded={open}
         aria-controls={`summary-menu-${sessionId}`}
         aria-label="Opções do treino"
-        className="flex size-11 items-center justify-center text-muted hover:bg-[var(--border)] hover:text-foreground"
+        className="flex size-11 items-center justify-center rounded-[var(--radius-md)] text-muted hover:bg-surface-2 hover:text-foreground"
       >
         <MoreHorizontal className="size-5" />
       </button>
       {open ? (
         <div
           id={`summary-menu-${sessionId}`}
-          className="absolute right-0 top-full z-30 w-64 max-w-[calc(100vw-2rem)] border border-border border-t-2 border-t-[var(--rule-heavy)] bg-background shadow-[0_8px_24px_rgb(0_0_0/0.18)]"
+          className="absolute right-0 top-full z-30 mt-1 w-64 max-w-[calc(100vw-2rem)] overflow-hidden rounded-[var(--radius-lg)] border border-border bg-surface shadow-[var(--shadow-md)]"
         >
           <ul className="flex flex-col divide-y divide-border">
             <li>
@@ -112,7 +113,7 @@ export function SummaryMenu({
               </button>
             </li>
           </ul>
-          <p className="border-t border-border px-4 py-2 font-mono text-xs text-muted">
+          <p className="border-t border-border px-4 py-2.5 text-[13px] tabular-nums text-muted">
             Correções até {until}, {untilTime}
           </p>
         </div>
@@ -201,10 +202,11 @@ function DeleteSheet({
       <div className="flex h-full w-full items-end justify-center sm:items-center" onClick={pending ? undefined : onClose}>
         <div
           onClick={(e) => e.stopPropagation()}
-          className="panel-raised max-h-[calc(100dvh-env(safe-area-inset-top,0px))] w-full max-w-lg overflow-y-auto overscroll-contain bg-background px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5"
+          className="sheet max-h-[calc(100dvh-env(safe-area-inset-top,0px))] w-full max-w-lg overflow-y-auto overscroll-contain px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3 sm:pt-6"
         >
-          <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-danger">Excluir treino</span>
-          <h2 id="delete-title" className="text-display mt-1 text-2xl font-extrabold wrap-break-word">
+          <SheetGrip />
+          <span className="eyebrow text-danger">Excluir treino</span>
+          <h2 id="delete-title" className="text-display mt-0.5 text-2xl font-semibold wrap-break-word">
             Excluir “{sessionName}”?
           </h2>
           <p id="delete-desc" className="mt-2 text-sm text-muted">
@@ -213,7 +215,7 @@ function DeleteSheet({
               : "As séries e os recordes deste treino somem e ele deixa de contar no programa. Não dá para desfazer."}
           </p>
           {error ? (
-            <p role="alert" className="mt-3 border-l-2 border-l-danger! bg-danger-soft px-3 py-2 text-xs font-medium text-danger">
+            <p role="alert" className="mt-3 rounded-[var(--radius-md)] bg-danger-soft px-3.5 py-2.5 text-[13px] font-medium text-danger">
               <ActionErrorText error={error} />
             </p>
           ) : null}

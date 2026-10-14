@@ -8,7 +8,7 @@ import { ActionErrorText } from "@/components/social/session-expired";
 import { cn } from "@/lib/utils/cn";
 import { dayNoOfIso, formatBodyNumber, useWeighIn } from "./use-weigh-in";
 
-const LABEL = "font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted";
+const LABEL = "text-sm font-medium";
 
 /**
  * Corpo's weigh-in (W-083): the day (today by default, back-dated up to a
@@ -72,7 +72,7 @@ export function WeighInForm({
               onChange={(e) => w.setText(e.target.value)}
               placeholder={last ? formatBodyNumber(last.kg) : undefined}
               aria-invalid={w.error ? true : undefined}
-              className="w-28 pr-9 font-mono tabular-nums"
+              className="w-28 pr-9 tabular-nums"
             />
             <span aria-hidden className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted">
               kg
@@ -84,9 +84,9 @@ export function WeighInForm({
         </Button>
       </div>
       {w.confirm && last ? (
-        <div role="alert" className="border-l-2 border-l-accent bg-surface-2 px-3 py-2 text-xs">
+        <div role="alert" className="rounded-[var(--radius-md)] bg-surface-2 px-3 py-2.5 text-sm">
           <p>
-            Confere? Última pesagem: <span className="font-mono font-semibold">{formatBodyNumber(last.kg)} kg</span>
+            Confere? Última pesagem: <span className="font-semibold tabular-nums">{formatBodyNumber(last.kg)} kg</span>
           </p>
           <div className="mt-1.5 flex flex-wrap gap-2">
             <Button type="button" size="sm" variant="outline" onClick={w.confirmSave}>
@@ -107,7 +107,7 @@ export function WeighInForm({
         </div>
       ) : null}
       {w.error ? (
-        <p role="alert" className="text-xs text-danger">
+        <p role="alert" className="text-sm text-danger">
           <ActionErrorText error={w.error} />
         </p>
       ) : (

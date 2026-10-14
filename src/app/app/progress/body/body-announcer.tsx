@@ -11,7 +11,7 @@ interface Announcement {
 }
 
 /**
- * Says an outcome on Corpo out loud ("Registro excluído: pesagem de 28 SET.")
+ * Says an outcome on Corpo out loud ("Registro excluído: pesagem de 28 set.")
  * from the page's one live region, which Corpo renders above everything that
  * redraws: a list whose last entry was deleted is gone with the server's next
  * render — and a live region inside it with it, before it's read.

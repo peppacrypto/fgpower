@@ -124,14 +124,14 @@ export function ReportSheet({ target, shareToken, canBlock = true, onClose }: Re
       ) : (
         <form onSubmit={submit} className="flex flex-col gap-4 px-5 py-4" noValidate>
           <fieldset>
-            <legend className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted">Motivo</legend>
+            <legend className="text-sm font-semibold">Motivo</legend>
             <div className="mt-2 flex flex-col gap-1.5">
               {REPORT_REASONS.map((code, i) => (
                 <label
                   key={code}
                   className={cn(
-                    "flex min-h-11 cursor-pointer items-center gap-3 rounded-[3px] border px-3.5 py-2 text-[15px] transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-accent",
-                    reason === code ? "border-accent bg-accent-soft shadow-[inset_3px_0_0_var(--accent)]" : "border-border hover:bg-surface-2",
+                    "flex min-h-11 cursor-pointer items-center gap-3 rounded-[var(--radius-md)] border bg-surface px-3.5 py-2 text-[15px] transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-accent",
+                    reason === code ? "border-accent bg-accent-soft font-medium" : "border-border hover:bg-surface-2",
                   )}
                 >
                   <input
@@ -153,7 +153,7 @@ export function ReportSheet({ target, shareToken, canBlock = true, onClose }: Re
             </div>
           </fieldset>
           <div>
-            <label htmlFor="report-details" className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted">
+            <label htmlFor="report-details" className="text-sm font-semibold">
               Detalhes (opcional)
             </label>
             <Textarea
@@ -165,7 +165,7 @@ export function ReportSheet({ target, shareToken, canBlock = true, onClose }: Re
               className="mt-1.5 min-h-20"
               aria-describedby="report-details-count"
             />
-            <p id="report-details-count" className="mt-1 text-right font-mono text-[11px] tabular-nums text-muted">
+            <p id="report-details-count" className="mt-1 text-right text-xs tabular-nums text-muted">
               {details.length}/{REPORT_DETAILS_MAX}
             </p>
           </div>

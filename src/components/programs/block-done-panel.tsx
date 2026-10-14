@@ -8,10 +8,8 @@ import type { CompletedBlock } from "@/lib/data/program-lifecycle";
 import { formatKg, formatNumber, plural, pluralWord } from "@/lib/utils/format";
 import { cn } from "@/lib/utils/cn";
 
-const FIELD = "font-mono text-[10px] font-bold uppercase tracking-[0.16em]";
-
 /**
- * "BLOCO CONCLUÍDO · GD 1": the end of a block, as the dossier records it —
+ * "Bloco concluído · GD 1": the end of a block, as the dossier records it —
  * workouts done of the planned, weeks, records, the main lifts' estimated 1RM
  * from the first week to the last — and what comes next: "Começar GD 2" (the
  * series' next block) with "Repetir bloco" beside it, or, outside the series
@@ -34,11 +32,10 @@ export function BlockDonePanel({
     <section
       aria-labelledby="block-done-title"
       data-testid="block-done"
-      className={cn("relative overflow-hidden panel-raised", className)}
+      className={cn("panel", className)}
     >
-      <span className="absolute left-0 top-0 h-full w-1.5 bg-accent-strong" aria-hidden />
-      <div className="p-5 pl-6 sm:p-7 sm:pl-8">
-        <p className={cn(FIELD, "flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-accent")}>
+      <div className="p-5 sm:p-8">
+        <p className="eyebrow flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-accent">
           <span>{lastOfSeries ? "Plano GD concluído" : "Bloco concluído"}</span>
           {block.series ? (
             <>
@@ -49,11 +46,11 @@ export function BlockDonePanel({
             </>
           ) : null}
         </p>
-        <Heading id="block-done-title" className="text-display mt-1.5 text-2xl font-extrabold leading-tight sm:text-3xl">
+        <Heading id="block-done-title" className="text-display mt-1 text-[1.5rem] font-semibold leading-tight sm:text-[1.75rem]">
           {block.programName}
         </Heading>
 
-        <dl className="mt-4 grid grid-cols-3 divide-x divide-border border-y border-border py-3 text-center">
+        <dl className="mt-4 grid grid-cols-3 gap-2 text-center">
           <Stat
             value={planned ? `${formatNumber(block.sessionsDone, 0)}/${formatNumber(planned, 0)}` : formatNumber(block.sessionsDone, 0)}
             label={pluralWord(planned ?? block.sessionsDone, "treino", "treinos")}
@@ -64,8 +61,8 @@ export function BlockDonePanel({
 
         {block.anchorProgress && block.anchorProgress.length > 0 ? (
           <div className="mt-4">
-            <p className={cn(FIELD, "text-muted")}>1RM estimado · 1ª → última semana</p>
-            <ul className="mt-1.5 flex flex-col gap-1">
+            <p className="eyebrow">1RM estimado · 1ª → última semana</p>
+            <ul className="mt-1.5 flex flex-col gap-1.5">
               {block.anchorProgress.map((a) => (
                 <li key={a.slug} className="flex items-baseline justify-between gap-3 text-sm">
                   <Link href={`/app/exercises/${a.slug}/history`} className="min-w-0 truncate hover:text-accent">
@@ -73,7 +70,7 @@ export function BlockDonePanel({
                   </Link>
                   <span
                     className={cn(
-                      "shrink-0 whitespace-nowrap font-mono text-xs font-bold tabular-nums",
+                      "shrink-0 whitespace-nowrap text-sm font-semibold tabular-nums",
                       a.toKg > a.fromKg ? "text-success" : "text-muted",
                     )}
                   >
@@ -100,7 +97,7 @@ export function BlockDonePanel({
                 className="h-auto min-h-13 w-full flex-col items-start gap-0.5 whitespace-normal py-2.5 text-left sm:w-auto"
               >
                 <span>Começar {block.next.name}</span>
-                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] opacity-75">
+                <span className="text-xs font-medium opacity-80">
                   Bloco {block.next.index} de {block.next.total}
                 </span>
               </SubmitButton>
@@ -137,7 +134,7 @@ export function BlockDonePanel({
             </Button>
           )}
         </div>
-        <p className="mt-3 text-xs text-muted">
+        <p className="mt-3 text-[13px] text-muted">
           {/* Every finished workout of the block — redos, the entry week and a late one included — as the history holds them. */}
           {plural(block.savedWorkouts, "treino fica", "treinos ficam")} no histórico
           {block.next ? `; o ${block.next.name} começa na semana 1.` : "."}
@@ -149,9 +146,9 @@ export function BlockDonePanel({
 
 function Stat({ value, label }: { value: string; label: string }) {
   return (
-    <div className="flex min-w-0 flex-col items-center px-1.5">
-      <dt className="mt-1 text-[9px] uppercase leading-tight tracking-wider text-muted">{label}</dt>
-      <dd className="order-first font-mono text-lg font-bold tabular-nums leading-none">{value}</dd>
+    <div className="flex min-w-0 flex-col items-center rounded-[var(--radius-md)] bg-surface-2 px-1.5 py-3">
+      <dt className="mt-1 text-xs leading-tight text-muted">{label}</dt>
+      <dd className="order-first text-xl font-semibold tabular-nums leading-none">{value}</dd>
     </div>
   );
 }

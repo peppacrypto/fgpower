@@ -11,7 +11,7 @@ export function AdaptSkeleton() {
       <Bone className="mt-2 h-3.5 w-4/5" />
       <div className="mt-8 flex flex-col gap-4">
         {[0, 1].map((i) => (
-          <div key={i} className="border-t-2 border-t-[var(--rule-heavy)] bg-surface">
+          <div key={i} className="card overflow-hidden">
             <div className="border-b border-border px-4 py-3">
               <Bone className="h-4 w-1/2" />
             </div>

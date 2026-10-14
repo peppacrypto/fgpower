@@ -18,7 +18,7 @@ export default async function ScienceIndexPage() {
   const rest = principles.filter((p) => !BEGINNER_PATH.includes(p.slug));
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
+    <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
       <Masthead
         kicker="Por trás dos programas"
         title="Princípios científicos"
@@ -28,7 +28,7 @@ export default async function ScienceIndexPage() {
       {path.length > 0 ? (
         <section className="mt-8">
           <SectionHead label="Comece aqui" count={plural(path.length, "leitura", "leituras")} />
-          <p className="mt-1.5 text-xs text-muted">O que você usa em todo treino, na ordem de leitura.</p>
+          <p className="mt-1 text-[13px] text-muted">O que você usa em todo treino, na ordem de leitura.</p>
           <ol className="mt-4 flex flex-col gap-2">
             {path.map((p, i) => (
               <li key={p.id}>
@@ -53,17 +53,18 @@ export default async function ScienceIndexPage() {
 
 function PrincipleRow({ href, title, summary, step }: { href: string; title: string; summary: string; step?: number }) {
   return (
-    <Link href={href} className="reg-frame is-link group flex items-start gap-3 p-4">
+    <Link href={href} className="card is-link group flex items-start gap-3 p-4 sm:p-5">
+      {/* The step of the reading path ("Comece aqui · 2 de 5" on the principle's page). */}
       {step ? (
-        <span className="w-6 shrink-0 font-mono text-sm font-bold tabular-nums text-accent">
-          {String(step).padStart(2, "0")}
+        <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-accent-soft text-[13px] font-semibold tabular-nums text-accent">
+          {step}
         </span>
       ) : null}
       <span className="min-w-0 flex-1">
-        <span className="block font-semibold group-hover:text-accent">{title}</span>
-        <span className="mt-1 block text-sm text-muted">{summary}</span>
+        <span className="block text-base font-semibold leading-snug group-hover:text-accent">{title}</span>
+        <span className="mt-1 block text-sm leading-relaxed text-muted">{summary}</span>
       </span>
-      <GArrow className="mt-1 size-3.5 shrink-0 text-muted transition-transform group-hover:translate-x-0.5" />
+      <GArrow className="mt-1 size-4 shrink-0 text-muted transition-transform group-hover:translate-x-0.5" />
     </Link>
   );
 }

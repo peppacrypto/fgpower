@@ -43,21 +43,17 @@ export function ErrorPanel({
 
   return (
     <div className="mx-auto flex min-h-[70dvh] w-full max-w-md flex-col justify-center px-4 py-10 sm:px-6">
-      <div className="panel-raised px-5 py-7" role="alert">
-        <span
-          className={`font-mono text-[11px] font-bold uppercase tracking-[0.2em] ${offline ? "text-warning" : "text-danger"}`}
-        >
-          {offline ? "Sem conexão" : "Erro"}
-        </span>
-        <h1 className="text-display mt-2 text-2xl font-extrabold">
+      <div className="panel px-5 py-7" role="alert">
+        <span className={`eyebrow ${offline ? "text-warning" : "text-danger"}`}>{offline ? "Sem conexão" : "Erro"}</span>
+        <h1 className="text-display mt-1 text-2xl font-semibold">
           {offline ? "Sem sinal agora." : "Algo saiu do prumo."}
         </h1>
-        <p className="mt-2 text-sm text-muted">
+        <p className="mt-2 text-[15px] leading-relaxed text-muted">
           {offline
             ? "Não conseguimos falar com o servidor. O que já estava salvo continua salvo, e as séries do treino ficam guardadas neste aparelho. Assim que o sinal voltar, tentamos de novo sozinhos."
             : "Tivemos um problema ao abrir ou salvar isto. Tente de novo; se o erro continuar, recomece pelo botão de baixo."}
         </p>
-        {!offline && error.digest ? <p className="mt-2 font-mono text-[11px] text-muted">ref: {error.digest}</p> : null}
+        {!offline && error.digest ? <p className="mt-2 text-xs tabular-nums text-muted">ref: {error.digest}</p> : null}
         <div className="mt-6 flex flex-col gap-2 sm:flex-row">
           {/* retry() re-fetches the segment from the server; reset() would only
               re-mount the stale tree (e.g. a workout that was actually saved). */}

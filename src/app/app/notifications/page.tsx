@@ -51,7 +51,7 @@ export default async function NotificationsPage() {
         buckets.map(({ bucket, lines: bucketLines }) => (
           <section key={bucket} aria-labelledby={`notificacoes-${bucket}`} className="mt-8">
             <SectionHead id={`notificacoes-${bucket}`} label={BUCKET_LABEL[bucket]} count={plural(bucketLines.length, "aviso", "avisos")} />
-            <div className="mt-2">
+            <div className="card mt-3 overflow-hidden">
               {bucketLines.map((line) => (
                 <NotificationItem key={line.key} line={line} />
               ))}

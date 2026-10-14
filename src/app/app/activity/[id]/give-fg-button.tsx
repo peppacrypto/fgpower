@@ -28,20 +28,20 @@ export function GiveFgButton({
   return (
     <div className={cn("flex flex-col gap-1.5", className)}>
       <Button
-        variant={fg.given ? "secondary" : "outline"}
+        variant="outline"
         disabled={fg.pending || isOwn}
         aria-pressed={fg.given}
         title={FG_TITLE}
         aria-label={`${isOwn ? "FGs no seu treino" : fg.given ? "Remover seu FG" : "Dar FG neste treino"} (${fg.count})`}
         onClick={fg.toggle}
-        className="self-start"
+        className={cn("self-start", fg.given && "border-accent bg-accent-soft text-accent hover:border-accent hover:bg-accent-soft")}
       >
         <Heart className="size-4" fill={fg.given ? "currentColor" : "none"} />
         {fg.count} {fg.count === 1 ? "FG" : "FGs"}
       </Button>
-      {hint && !isOwn && !fg.given ? <p className="text-xs text-muted">{FG_HINT}</p> : null}
+      {hint && !isOwn && !fg.given ? <p className="text-[13px] text-muted">{FG_HINT}</p> : null}
       {fg.error ? (
-        <p role="alert" className="text-xs text-danger">
+        <p role="alert" className="text-[13px] text-danger">
           <ActionErrorText error={fg.error} />
         </p>
       ) : null}

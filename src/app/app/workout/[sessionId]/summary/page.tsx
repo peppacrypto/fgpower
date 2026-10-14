@@ -16,7 +16,7 @@ import { describeRecord, type RecordLike } from "@/lib/training/personal-records
 import { adviceInSeconds, formatSet, isTimedHold } from "@/lib/training/set-plan";
 import { dayNameWithoutWeekday, scheduleShifted } from "@/lib/training/day-rotation";
 import { formatSpTime } from "@/lib/training/stale";
-import { formatDuration, formatKg, formatNumber, formatVolume, plural } from "@/lib/utils/format";
+import { formatDuration, formatKg, formatNumber, plural, pluralWord } from "@/lib/utils/format";
 import { cn } from "@/lib/utils/cn";
 import { isWorkoutMilestone } from "@/lib/programming/milestones";
 import { groupRule } from "@/lib/programming/groups";
@@ -40,8 +40,8 @@ export async function generateMetadata({ params }: PageProps<"/app/workout/[sess
   return workout && workout.userId === auth?.user.id ? { title: `Resumo · ${workout.name}` } : { title: NOT_FOUND_TITLE };
 }
 
-/** Mono micro-caps: the dossier's field labels. */
-const FIELD = "font-mono text-[10px] font-bold uppercase tracking-[0.16em]";
+/** A small label above a value (sentence case, muted). */
+const FIELD = "text-[13px] font-medium text-muted";
 
 /**
  * The "dossiê do treino": saved confirmation, the dated masthead, who sees it,
@@ -83,21 +83,28 @@ export default async function WorkoutSummaryPage({ params, searchParams }: PageP
       return { ...g, text: parts.join(" · ") };
     })
     .filter((g) => g.text !== "");
+  // The recorded data, one figure each: duration, working sets, volume ("3 séries de trabalho").
   const stats = [
-    session.durationSeconds ? formatDuration(session.durationSeconds) : null,
-    plural(session.totalWorkingSets, "série de trabalho", "séries de trabalho"),
-    session.totalVolumeKg ? `${formatVolume(session.totalVolumeKg)} de volume` : null,
-  ].filter(Boolean);
+    session.durationSeconds ? { key: "time", value: formatDuration(session.durationSeconds), label: "duração" } : null,
+    {
+      key: "sets",
+      value: formatNumber(session.totalWorkingSets, 0),
+      label: pluralWord(session.totalWorkingSets, "série de trabalho", "séries de trabalho"),
+    },
+    session.totalVolumeKg
+      ? { key: "volume", value: formatNumber(Math.round(session.totalVolumeKg), 0), label: "kg de volume" }
+      : null,
+  ].filter((x) => x !== null);
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-6 sm:px-6 sm:py-10">
       {corrected ? <ClearParams keys={["corrigido"]} /> : null}
-      {/* Masthead (W-098): the dossier's raised panel with its accent rule, like Today's heroes. */}
-      <header className="relative panel-raised" data-summary-masthead>
-        <span className="absolute left-0 top-0 h-full w-1.5 bg-accent" aria-hidden />
-        <div className="py-5 pl-6 pr-3 sm:py-7 sm:pl-8 sm:pr-5">
+      {/* The verdict first (W-098): done, saved, and what was recorded — then records, the
+          check-in, who sees it and how to share it, each exercise, and what comes next. */}
+      <header className="panel" data-summary-masthead>
+        <div className="p-5 sm:p-7">
           <div className="flex items-start justify-between gap-3">
-            <p className={cn(FIELD, "min-w-0 pt-1 text-xs tracking-[0.18em] text-accent")}>
+            <p className="eyebrow min-w-0 pt-1.5 font-semibold text-accent">
               Treino concluído · <span className="whitespace-nowrap">{formatSpShortDate(session.finishedAt)}</span>
             </p>
             {correctableUntil ? (
@@ -110,28 +117,70 @@ export default async function WorkoutSummaryPage({ params, searchParams }: PageP
               />
             ) : null}
           </div>
-          <p className={cn(FIELD, "mt-2 text-xs tracking-[0.14em] text-muted")}>
+          <h1 className="text-display mt-1 text-[1.75rem] font-semibold leading-tight wrap-break-word sm:text-[2rem]">
+            {session.name}
+          </h1>
+          <p className="mt-1 text-[13px] text-muted">
             Treino nº {ordinal}
             {week ? ` · ${week}` : ""}
             {session.isDeload ? " · deload" : ""}
           </p>
-          <h1 className="text-display mt-1.5 text-3xl font-extrabold tracking-tight wrap-break-word sm:text-4xl">
-            {session.name}
-          </h1>
-          <p className="mt-2 text-sm tabular-nums text-muted">{stats.join(" · ")}</p>
-          <p role="status" className={cn(FIELD, "mt-3 text-xs tracking-[0.14em] text-success")}>
+          <div
+            className={cn(
+              "mt-5 grid gap-2",
+              stats.length === 3 ? "grid-cols-3" : stats.length === 2 ? "grid-cols-2" : "grid-cols-1",
+            )}
+          >
+            {stats.map((stat) => (
+              <p key={stat.key} className="min-w-0 rounded-[var(--radius-md)] bg-surface-2 px-3 py-2.5">
+                <span className="block text-xl font-semibold leading-tight tabular-nums">{stat.value}</span>{" "}
+                <span className="mt-0.5 block text-[13px] leading-snug text-muted">{stat.label}</span>
+              </p>
+            ))}
+          </div>
+          <p role="status" className="mt-4 text-[13px] font-semibold text-success">
             {corrected ? "Correções salvas · recordes recalculados ✓" : "Salvo no histórico ✓"}
           </p>
-          {ordinal === 1 && next ? <p className="mt-3 text-sm">{firstSessionLine(exercises)}</p> : null}
+          {ordinal === 1 && next ? <p className="mt-2 text-sm leading-relaxed">{firstSessionLine(exercises)}</p> : null}
           {milestone ? <DossierStamp ordinal={ordinal} /> : null}
         </div>
       </header>
 
+      {/* Records: one row per exercise, in workout order — or the baseline. */}
+      {shownRecordGroups.length > 0 ? (
+        <section className="mt-8">
+          <SectionHead label="Recordes" count={plural(shownRecordGroups.length, "exercício", "exercícios")} />
+          <div className="mt-3 flex flex-col gap-2">
+            {shownRecordGroups.map((g) => (
+              <Link
+                key={g.exerciseId}
+                href={g.slug ? `/app/exercises/${g.slug}/history` : "/app/progress"}
+                className="group flex items-center gap-3 rounded-[var(--radius-lg)] border border-border bg-surface px-4 py-3 transition-[border-color,box-shadow] hover:border-border-strong hover:shadow-[var(--shadow-sm)]"
+              >
+                <span className="tag tag--mark shrink-0">PR</span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-semibold wrap-break-word">{g.name}</p>
+                  <p className="mt-0.5 text-[13px] tabular-nums text-muted">{g.text}</p>
+                </div>
+                <GArrow className="size-3.5 shrink-0 text-muted transition-transform group-hover:translate-x-0.5" />
+              </Link>
+            ))}
+          </div>
+        </section>
+      ) : allBaseline ? (
+        <section className="mt-6 rounded-[var(--radius-lg)] bg-accent-soft px-4 py-3">
+          <p className="text-sm font-semibold text-accent">
+            Marca inicial · {plural(exercises.length, "exercício registrado", "exercícios registrados")}
+          </p>
+          <p className="mt-0.5 text-[13px] text-foreground">A partir do próximo treino, cada recorde aparece aqui.</p>
+        </section>
+      ) : null}
+
       {/* How it went (effort, soreness, sleep, weight) — optional, owner-only (W-127). */}
       <CheckInSlot userId={user.id} sessionId={session.id} correctableUntil={correctableUntil} />
 
-      {/* Who sees it — near the top, compact; the workout itself is already saved. */}
-      <section aria-label="Compartilhar treino" className="mt-5 border-y border-border py-3">
+      {/* Who sees it and how to share it — the workout itself is already saved. */}
+      <section aria-label="Compartilhar treino" className="mt-6 border-t border-border pt-5">
         <ShareWorkoutForm
           sessionId={session.id}
           workoutName={session.name}
@@ -144,63 +193,27 @@ export default async function WorkoutSummaryPage({ params, searchParams }: PageP
         />
       </section>
 
-      {/* Records: one card per exercise, in workout order — or the baseline. */}
-      {shownRecordGroups.length > 0 ? (
-        <section className="mt-7">
-          <SectionHead label="Recordes" count={plural(shownRecordGroups.length, "exercício", "exercícios")} />
-          <div className="mt-3 flex flex-col gap-2">
-            {shownRecordGroups.map((g) => (
-              <Link
-                key={g.exerciseId}
-                href={g.slug ? `/app/exercises/${g.slug}/history` : "/app/progress"}
-                className="group flex items-center gap-3 border-l-4 border-l-accent-strong bg-accent-soft py-3 pl-4 pr-3"
-              >
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-semibold">{g.name}</p>
-                  <p className="mt-0.5 text-xs text-foreground/80">{g.text}</p>
-                </div>
-                <span className="tag tag--mark shrink-0">PR</span>
-                <GArrow className="size-3.5 shrink-0 text-muted transition-transform group-hover:translate-x-0.5" />
-              </Link>
-            ))}
-          </div>
-        </section>
-      ) : allBaseline ? (
-        <section className="mt-7 border-l-2 border-l-accent bg-surface-2 px-3 py-2.5">
-          <p className={cn(FIELD, "text-[11px] tracking-[0.14em]")}>
-            Marca inicial · {plural(exercises.length, "exercício registrado", "exercícios registrados")}
-          </p>
-          <p className="mt-0.5 text-xs text-muted">A partir do próximo treino, cada recorde aparece aqui.</p>
-        </section>
-      ) : null}
-
       {/* Each exercise: what was done, vs. last time, and what to aim for next. */}
-      <section className="mt-7">
+      <section className="mt-10">
         <SectionHead label="Exercícios" count={exercises.length} />
         <div className="mt-3 flex flex-col gap-2">
-          {exercises.map((ex, i) => (
-            <div
-              key={ex.logId}
-              className={cn("reg-frame p-4", ex.group && "border-l-2 border-l-accent")}
-              data-group={ex.group?.label}
-            >
+          {exercises.map((ex) => (
+            <div key={ex.logId} className="card p-4 sm:p-5" data-group={ex.group?.label}>
               {/* A superset / circuit (W-104): its rule on its first card, as the builder and the
                   workout say it ("Superset A · alterne as séries"), and "A1"/"A2" on each. */}
               {ex.group?.first ? <GroupRuleLine text={groupRule(ex.group)} /> : null}
-              <div className="flex items-baseline gap-3">
-                <span className="w-5 shrink-0 font-mono text-xs text-muted" aria-hidden>
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <p className="min-w-0 flex-1 text-sm font-semibold wrap-break-word">{ex.name}</p>
+              <div className="flex items-baseline gap-2">
                 {ex.group ? (
-                  <span className="shrink-0 font-mono text-[11px] font-bold text-accent">{ex.group.label}</span>
+                  <span className="shrink-0 rounded-[var(--radius-sm)] bg-accent-soft px-1.5 py-0.5 text-xs font-semibold text-accent">
+                    {ex.group.label}
+                  </span>
                 ) : null}
+                <p className="min-w-0 flex-1 text-base font-semibold wrap-break-word">{ex.name}</p>
               </div>
               {ex.swap ? (
-                <div className="mt-1 flex flex-wrap items-center gap-x-3 pl-8 text-xs text-muted" data-swap>
+                <div className="mt-1 flex flex-wrap items-center gap-x-3 text-[13px] text-muted" data-swap>
                   <span>
-                    <span className="font-mono font-bold uppercase tracking-[0.12em]">Trocado</span> · no lugar de{" "}
-                    {ex.swap.fromName}
+                    <span className="font-semibold text-foreground">Trocado</span> · no lugar de {ex.swap.fromName}
                   </span>
                   {/* The same element either way: the refresh after "Usar no programa" keeps its confirmation. */}
                   {next && (ex.swap.canUseInProgram || ex.swap.inProgram) ? (
@@ -208,17 +221,17 @@ export default async function WorkoutSummaryPage({ params, searchParams }: PageP
                   ) : null}
                 </div>
               ) : null}
-              <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 pl-8 font-mono text-sm tabular-nums text-muted">
+              <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-sm tabular-nums text-foreground">
                 {ex.sets.map((s) => (
-                  <span key={s.id} className={s.isExtra ? "text-foreground/70" : undefined}>
-                    {s.isExtra ? <span className="mr-1 text-[10px] font-bold uppercase text-warning">extra</span> : null}
+                  <span key={s.id} className={s.isExtra ? "text-muted" : undefined}>
+                    {s.isExtra ? <span className="mr-1 text-xs font-semibold text-warning">extra</span> : null}
                     {formatSet(s.weightKg, s.reps, { timed: isTimedHold({ slug: ex.slug }) })}
                   </span>
                 ))}
               </div>
               {/* Label over value on phones (the value gets the full width); side by side from sm. */}
-              <dl className="mt-3 grid grid-cols-1 gap-y-0.5 pl-8 sm:grid-cols-[auto_1fr] sm:items-baseline sm:gap-x-3 sm:gap-y-2">
-                <dt className={cn(FIELD, "text-muted")}>Vs. última vez</dt>
+              <dl className="mt-3 grid grid-cols-1 gap-y-0.5 border-t border-border pt-3 sm:grid-cols-[auto_1fr] sm:items-baseline sm:gap-x-4 sm:gap-y-2">
+                <dt className={FIELD}>Vs. última vez</dt>
                 <dd className="min-w-0">
                   <DeltaChip
                     delta={ex.delta}
@@ -228,7 +241,7 @@ export default async function WorkoutSummaryPage({ params, searchParams }: PageP
                     easeBack={ex.easeBack}
                   />
                   {ex.previousText && ex.delta.kind !== "first" ? (
-                    <span className="mt-0.5 block font-mono text-[11px] text-muted">
+                    <span className="mt-0.5 block text-[13px] tabular-nums text-muted">
                       {ex.previousAt ? `${formatSpShortDate(ex.previousAt)}: ` : "antes: "}
                       {withoutZeroLoad(ex.previousText, isTimedHold({ slug: ex.slug }))}
                     </span>
@@ -252,7 +265,7 @@ export default async function WorkoutSummaryPage({ params, searchParams }: PageP
         </div>
       </section>
 
-      {blockDone ? <BlockDonePanel block={blockDone} className="mt-8" /> : next ? <NextUp next={next} /> : <ArchiveExit />}
+      {blockDone ? <BlockDonePanel block={blockDone} className="mt-10" /> : next ? <NextUp next={next} /> : <ArchiveExit />}
       {/* The one ask (reminders or install): after the first workouts, never on a past workout opened from the history. */}
       {next || blockDone ? <PostWorkoutAsks userId={user.id} finishedWorkouts={ordinal} className="mt-6" /> : null}
     </div>
@@ -266,10 +279,7 @@ export default async function WorkoutSummaryPage({ params, searchParams }: PageP
 function DossierStamp({ ordinal }: { ordinal: number }) {
   return (
     <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2" data-testid="dossier-stamp">
-      <span
-        className="inline-block -rotate-2 border-2 border-accent px-2.5 py-1 font-mono text-sm font-extrabold uppercase tracking-[0.18em] text-accent"
-        aria-label={`Dossiê número ${ordinal}`}
-      >
+      <span className="tag tag--mark text-[13px]" aria-label={`Dossiê número ${ordinal}`}>
         Dossiê nº {ordinal}
       </span>
       <span className="text-sm text-muted">{plural(ordinal, "treino registrado", "treinos registrados")} até aqui.</span>
@@ -280,7 +290,7 @@ function DossierStamp({ ordinal }: { ordinal: number }) {
 /** A group's rule in micro-caps: on a narrow phone it wraps at its " · ", never inside a half. */
 function GroupRuleLine({ text }: { text: string }) {
   return (
-    <p className={cn(FIELD, "mb-1.5 pl-8 text-accent")}>
+    <p className="mb-2 text-[13px] font-semibold text-accent">
       {text.split(" · ").map((part, i) => (
         <Fragment key={i}>
           {i > 0 ? " · " : null}
@@ -302,12 +312,12 @@ const DELOAD_ADVICE = {
 function NextAdvice({ advice }: { advice: Pick<NonNullable<WorkoutSummary["exercises"][number]["advice"]>, "kind" | "headline" | "reason"> }) {
   return (
     <>
-      <dt className={cn(FIELD, "mt-2 text-muted sm:mt-0")}>Na próxima</dt>
+      <dt className={cn(FIELD, "mt-2 sm:mt-0")}>Na próxima</dt>
       <dd className="min-w-0">
-        <span className={cn("font-mono text-xs font-bold", advice.kind === "increase" ? "text-accent" : "text-foreground")}>
+        <span className={cn("text-sm font-semibold", advice.kind === "increase" ? "text-accent" : "text-foreground")}>
           {advice.headline}
         </span>
-        <span className="mt-0.5 block text-[11px] text-muted">{advice.reason}</span>
+        <span className="mt-0.5 block text-[13px] leading-snug text-muted">{advice.reason}</span>
       </dd>
     </>
   );
@@ -387,7 +397,7 @@ function DeltaChip({
   /** First session back after a long layoff (A-006): the ~90% start is intentional, not a drop. */
   easeBack?: boolean;
 }) {
-  const base = "font-mono text-xs font-bold tabular-nums";
+  const base = "text-sm font-semibold tabular-nums";
   if (deload && delta.kind !== "first") return <span className={cn(base, "text-muted")}>deload · leve de propósito</span>;
   if (easeBack && delta.kind !== "first") return <span className={cn(base, "text-muted")}>após pausa · leve de propósito</span>;
   const repsDelta = (sign: string, n: number) =>
@@ -455,20 +465,19 @@ function NextUp({ next }: { next: NonNullable<WorkoutSummary["next"]> }) {
         : formatDayNumber(date.dayNo)
     : null;
   return (
-    <section className="relative mt-8 overflow-hidden panel-raised">
-      <span className="absolute left-0 top-0 h-full w-1.5 bg-accent" aria-hidden />
-      <div className="p-5 pl-6 sm:p-7 sm:pl-8">
+    <section className="mt-10 panel">
+      <div className="p-5 sm:p-7">
         {week ? (
           <div className="mb-5">
             <div className="flex items-baseline justify-between gap-3">
-              <span className={cn(FIELD, "text-muted")}>
+              <span className={FIELD}>
                 {week.entry
                   ? `Semana de entrada${weekComplete ? " ✓" : ""}`
                   : weekComplete
                     ? "Semana concluída ✓"
                     : "Esta semana"}
               </span>
-              <span className="font-mono text-sm font-bold tabular-nums">
+              <span className="text-sm font-semibold tabular-nums">
                 {week.done}
                 <span className="text-muted">/{week.target}</span>
               </span>
@@ -477,12 +486,12 @@ function NextUp({ next }: { next: NonNullable<WorkoutSummary["next"]> }) {
               {Array.from({ length: Math.max(1, week.target) }, (_, i) => (
                 <span
                   key={i}
-                  className={cn("h-2 flex-1", i < week.done ? "bg-accent" : "border border-border bg-surface")}
+                  className={cn("h-2 flex-1 rounded-full", i < week.done ? "bg-accent" : "bg-surface-2")}
                 />
               ))}
             </div>
             {week.streak.current >= 2 ? (
-              <p className={cn(FIELD, "mt-2 text-success")}>
+              <p className="mt-2 text-[13px] font-medium text-success">
                 {plural(week.streak.current, "semana seguida", "semanas seguidas")} no alvo
                 {week.streak.best > week.streak.current ? (
                   <span className="text-muted"> · recorde {formatNumber(week.streak.best, 0)}</span>
@@ -494,7 +503,7 @@ function NextUp({ next }: { next: NonNullable<WorkoutSummary["next"]> }) {
 
         {day ? (
           <>
-            <p className={cn(FIELD, "flex flex-wrap gap-x-2 text-[11px] tracking-[0.14em] text-accent")}>
+            <p className="eyebrow flex flex-wrap gap-x-1.5 font-semibold text-accent">
               <span>Próximo treino</span>
               {when ? (
                 <>
@@ -503,10 +512,10 @@ function NextUp({ next }: { next: NonNullable<WorkoutSummary["next"]> }) {
                 </>
               ) : null}
             </p>
-            <h2 className="text-display mt-1.5 text-2xl font-extrabold sm:text-3xl">
+            <h2 className="text-display mt-1 text-2xl font-semibold leading-tight sm:text-[1.75rem]">
               {date && scheduleShifted({ dayName: day.name, dayNo: date.dayNo }) ? dayNameWithoutWeekday(day.name) : day.name}
             </h2>
-            <p className="mt-1 font-mono text-xs text-muted">
+            <p className="mt-1 text-[13px] tabular-nums text-muted">
               {plural(day.exerciseCount, "exercício", "exercícios")}
               {day.estimatedMinutes ? ` · ~${formatDuration(day.estimatedMinutes * 60)}` : ""}
               {date && !date.isToday ? " · data sugerida" : ""}
@@ -534,7 +543,7 @@ function NextUp({ next }: { next: NonNullable<WorkoutSummary["next"]> }) {
           </>
         ) : (
           <>
-            <span className={cn(FIELD, "block text-[11px] tracking-[0.18em] text-accent")}>Próximo passo</span>
+            <span className="eyebrow block font-semibold text-accent">Próximo passo</span>
             <p className="mt-1.5 text-sm text-muted">
               {next.openDaysBlocking > 0
                 ? `${next.openDaysBlocking === 1 ? "Há um treino não finalizado" : "Há treinos não finalizados"}. Salve ou descarte em Hoje para seguir o programa.`

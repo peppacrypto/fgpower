@@ -14,7 +14,7 @@ export const THEME_CHOICES = ["system", "light", "dark"] as const;
 export type ThemeChoice = (typeof THEME_CHOICES)[number];
 
 /** --background of each theme (globals.css): the browser chrome's color. */
-export const THEME_COLORS = { light: "#fafafb", dark: "#0b0c0e" } as const;
+export const THEME_COLORS = { light: "#f7f8f6", dark: "#0f1412" } as const;
 
 const MAX_AGE_SECONDS = 60 * 60 * 24 * 365;
 

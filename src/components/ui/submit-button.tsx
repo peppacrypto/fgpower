@@ -8,7 +8,7 @@ import { Button, type ButtonProps } from "./button";
  * `useFormStatus`: while the bound server action runs it disables itself and,
  * when `pendingLabel` is given, swaps its label — giving tap feedback and
  * preventing double submits. Must be rendered inside the <form> it submits.
- * Keeps the editorial Button shape (square, keel); pass variant/size as usual.
+ * Keeps the Button look; pass variant/size as usual.
  */
 export function SubmitButton({
   pendingLabel,

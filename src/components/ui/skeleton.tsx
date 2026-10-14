@@ -3,9 +3,8 @@ import { cn } from "@/lib/utils/cn";
 import { SkeletonAnnouncement } from "./skeleton-client";
 
 /*
- * Route skeletons (the loading.tsx files under src/app/app) in the dossier
- * style: each one draws its page's silhouette — same container, same section
- * heads, reg-frame placeholders — so a tap lands on something that already
+ * Route skeletons (the loading.tsx files under src/app/app): each one draws its page's silhouette — same container, same section
+ * heads, card placeholders — so a tap lands on something that already
  * looks like the destination while the server renders it. Bones are
  * --surface-2 bars with a slow sheen (`.sk` in globals.css), still under
  * prefers-reduced-motion. Static labels the page always shows (its title,
@@ -24,7 +23,7 @@ import { SkeletonAnnouncement } from "./skeleton-client";
 
 /** One placeholder bar or block. Size it with utilities (h-4 w-24, aspect-square…). */
 export function Bone({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div aria-hidden className={cn("sk rounded-[2px]", className)} {...props} />;
+  return <div aria-hidden className={cn("sk rounded-[var(--radius-sm)]", className)} {...props} />;
 }
 
 /**
@@ -55,15 +54,15 @@ export function SkeletonScreen({
 
 /** A page title that never changes (the h1 text), drawn as the page draws it. */
 export function SkeletonTitle({ className, children }: { className?: string; children: React.ReactNode }) {
-  return <div className={cn("text-2xl font-bold tracking-tight", className)}>{children}</div>;
+  return <div className={cn("text-display text-2xl font-semibold", className)}>{children}</div>;
 }
 
 /** A Masthead (ui/masthead.tsx) while its page loads: the kicker and title as the page draws them. */
 export function SkeletonMasthead({ kicker, title, lead = true }: { kicker: string; title: string; lead?: boolean }) {
   return (
     <div>
-      <span className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-muted">{kicker}</span>
-      <div className="text-display mt-1 text-3xl font-extrabold sm:text-4xl">{title}</div>
+      <span className="eyebrow">{kicker}</span>
+      <div className="text-display mt-0.5 text-[1.75rem] font-semibold leading-tight sm:text-[2rem]">{title}</div>
       {lead ? <Bone className="mt-2.5 h-3.5 w-4/5 max-w-md" /> : null}
     </div>
   );
@@ -81,10 +80,10 @@ export function BoneLines({ lines = 2, className, lineClassName }: { lines?: num
   );
 }
 
-/** A reg-frame list row: a label bone and a short value bone. */
+/** A card list row: a label bone and a short value bone. */
 export function BoneRow({ className }: { className?: string }) {
   return (
-    <div className={cn("reg-frame flex items-center justify-between gap-4 px-5 py-4", className)}>
+    <div className={cn("card flex items-center justify-between gap-4 px-5 py-4", className)}>
       <Bone className="h-4 w-2/5" />
       <Bone className="h-4 w-14" />
     </div>
@@ -101,7 +100,7 @@ export function PageSkeleton({ label, width = "max-w-3xl" }: { label: string; wi
       <Bone className="h-8 w-44" />
       <Bone className="mt-3 h-3.5 w-3/4" />
       <div className="mt-8 flex flex-col gap-3">
-        <div className="reg-frame p-5">
+        <div className="card p-5">
           <Bone className="h-4 w-1/3" />
           <BoneLines lines={2} className="mt-3" />
         </div>

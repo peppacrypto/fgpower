@@ -50,7 +50,7 @@ export function LinkSignIn({ signedIn }: { signedIn: boolean }) {
     // Before hydration (and while an already signed-in visitor moves on).
     return (
       <div aria-busy="true">
-        <h1 className="text-xl font-bold tracking-tight">Entrar na FGPOWER</h1>
+        <h1 className="text-display text-2xl font-semibold">Entrar na FGPOWER</h1>
         <p className="mt-1.5 text-sm text-muted">Abrindo o link…</p>
       </div>
     );
@@ -60,7 +60,7 @@ export function LinkSignIn({ signedIn }: { signedIn: boolean }) {
   if (!link || error?.dead) {
     return (
       <div role={error?.dead ? "alert" : undefined}>
-        <h1 className="text-xl font-bold tracking-tight">Este link expirou ou já foi usado.</h1>
+        <h1 className="text-display text-2xl font-semibold">Este link expirou ou já foi usado.</h1>
         <p className="mt-1.5 text-sm text-muted">
           Cada link vale por 10 minutos e funciona uma vez. Peça outro — chega em instantes.
         </p>
@@ -94,7 +94,7 @@ export function LinkSignIn({ signedIn }: { signedIn: boolean }) {
 
   return (
     <div>
-      <h1 className="text-xl font-bold tracking-tight">Entrar na FGPOWER</h1>
+      <h1 className="text-display text-2xl font-semibold">Entrar na FGPOWER</h1>
       <p className="mt-1.5 text-sm text-muted [overflow-wrap:anywhere]">
         como <span className="font-semibold text-foreground">{maskEmail(link.email)}</span>
       </p>

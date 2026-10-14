@@ -1,6 +1,6 @@
 import { Bone, SkeletonScreen } from "@/components/ui/skeleton";
 
-const GRID = "grid grid-cols-[2.25rem_minmax(0,1fr)_minmax(0,1fr)_3rem_2.75rem] items-center gap-1.5";
+const GRID = "grid grid-cols-[2.25rem_minmax(0,1fr)_minmax(0,1fr)_3rem_3rem] items-center gap-1.5";
 
 /**
  * "Editar séries" (editar/page.tsx) as it lays out: the back link, the kicker
@@ -12,12 +12,12 @@ export function EditSetsSkeleton() {
       <div className="flex h-11 items-center">
         <Bone className="h-3.5 w-20" />
       </div>
-      <div className="mt-2 flex h-4 items-center">
+      <div className="mt-2 flex h-5 items-center">
         <Bone className="h-3 w-48" />
       </div>
-      <div className="mt-1 flex h-18 flex-col justify-around sm:h-10">
-        <Bone className="h-7 w-3/4 sm:w-1/2" />
-        <Bone className="h-7 w-1/2 sm:hidden" />
+      <div className="mt-0.5 flex h-[70px] flex-col justify-around sm:h-10">
+        <Bone className="h-6 w-3/4 sm:w-1/2" />
+        <Bone className="h-6 w-1/2 sm:hidden" />
       </div>
       <Bone className="mt-3 h-3.5 w-full" />
       <Bone className="mt-2 h-3.5 w-4/5" />
@@ -29,10 +29,10 @@ export function EditSetsSkeleton() {
               {Array.from({ length: n }, (_, j) => (
                 <div key={j} className={`${GRID} px-1 py-1`}>
                   <span />
-                  <Bone className="h-11" />
-                  <Bone className="h-11" />
-                  <Bone className="h-11" />
-                  <Bone className="size-11" />
+                  <Bone className="h-12" />
+                  <Bone className="h-12" />
+                  <Bone className="h-12" />
+                  <Bone className="size-12" />
                 </div>
               ))}
             </div>

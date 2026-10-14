@@ -27,7 +27,7 @@ export function WorkoutPreferencesForm({ initial }: { initial: WorkoutPreference
     <div className="divide-y divide-border">
       <div className="pb-4">
         <p id="load-increment-label" className="text-sm font-medium">
-          Salto de carga <span className="font-mono text-xs text-muted">· kg</span>
+          Salto de carga <span className="font-normal text-muted">· kg</span>
         </p>
         <p id="load-increment-desc" className="mt-0.5 text-xs text-muted">
           Quanto a sugestão sobe quando é hora de aumentar a carga (“↑ Suba para…”) e o passo das cargas de aquecimento.

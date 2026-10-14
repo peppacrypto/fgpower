@@ -64,7 +64,7 @@ export function SignOutOthersRow() {
         <div
           role="group"
           aria-label="Confirmar saída dos outros aparelhos"
-          className="border-l-2 border-l-foreground/50 bg-surface-2 px-3.5 py-3"
+          className="rounded-[var(--radius-md)] bg-surface-2 px-4 py-3.5"
         >
           <p className="text-sm font-medium">Sair de todos os outros aparelhos?</p>
           <p className="mt-0.5 text-xs text-muted">
@@ -104,7 +104,7 @@ export function SignOutOthersRow() {
       {done ? (
         <p
           role="status"
-          className="border-l-2 border-l-foreground/50 bg-surface-2 px-3.5 py-2.5 text-xs font-medium text-foreground"
+          className="rounded-[var(--radius-md)] bg-success-soft px-4 py-3 text-sm font-medium text-foreground"
         >
           Pronto — os outros aparelhos foram desconectados.
         </p>

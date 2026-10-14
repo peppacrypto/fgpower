@@ -33,7 +33,7 @@ export function SignOutLink({ firstName }: { firstName: string }) {
       <button
         type="button"
         onClick={() => setConfirming(true)}
-        className="inline-flex min-h-11 items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-muted hover:text-foreground"
+        className="inline-flex min-h-11 items-center gap-1.5 text-[13px] font-medium text-muted hover:text-foreground"
       >
         <LogOut className="size-3.5" aria-hidden />
         Não é você{firstName ? `, ${firstName}` : ""}? Sair
@@ -41,7 +41,7 @@ export function SignOutLink({ firstName }: { firstName: string }) {
     );
   }
   return (
-    <div role="group" aria-label="Confirmar saída" className="border-l-2 border-l-foreground/50 bg-surface-2 px-3.5 py-3 text-left">
+    <div role="group" aria-label="Confirmar saída" className="rounded-[var(--radius-lg)] border border-border bg-surface px-4 py-3.5 text-left shadow-[var(--shadow-sm)]">
       <p className="text-sm font-medium">Sair desta conta neste aparelho?</p>
       <p className="mt-0.5 text-xs text-muted">Para usar outra conta, entre de novo.</p>
       {error ? (
@@ -54,7 +54,7 @@ export function SignOutLink({ firstName }: { firstName: string }) {
           type="button"
           disabled={pending}
           onClick={signOut}
-          className="inline-flex min-h-9 items-center bg-foreground px-3 text-sm font-semibold text-background disabled:opacity-60"
+          className="hit inline-flex min-h-9 items-center rounded-[var(--radius-md)] bg-accent px-3.5 text-sm font-semibold text-accent-foreground hover:bg-accent-hover disabled:opacity-60"
         >
           {pending ? "Saindo…" : error ? "Tentar de novo" : "Sim, sair"}
         </button>
@@ -65,7 +65,7 @@ export function SignOutLink({ firstName }: { firstName: string }) {
             setConfirming(false);
             setError(null);
           }}
-          className="inline-flex min-h-9 items-center border border-foreground/40 px-3 text-sm font-semibold disabled:opacity-60"
+          className="hit inline-flex min-h-9 items-center rounded-[var(--radius-md)] border border-border-strong bg-surface px-3.5 text-sm font-semibold hover:bg-surface-2 disabled:opacity-60"
         >
           Cancelar
         </button>

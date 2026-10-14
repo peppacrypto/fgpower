@@ -10,7 +10,7 @@ import { saveBodyMetrics } from "@/lib/actions/body-metrics";
 import { MEASUREMENT_KINDS, checkBodyValue } from "@/lib/training/body-weight";
 import { parseDecimalInput } from "@/lib/training/set-plan";
 
-const LABEL = "font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted";
+const LABEL = "text-sm font-medium";
 
 /**
  * Corpo's measurements (W-083): the day and any of the six circumferences —
@@ -91,10 +91,10 @@ export function MeasurementsForm({ todayIso, minIso }: { todayIso: string; minIs
           const error = errors[k.kind];
           return (
             <div key={k.kind} className="flex min-w-0 flex-col gap-1">
-              <label htmlFor={`${id}-${k.kind}`} className="text-sm font-semibold">
+              <label htmlFor={`${id}-${k.kind}`} className="text-[15px] font-semibold">
                 {k.label} <span className="font-normal text-muted">(cm)</span>
               </label>
-              <p id={`${id}-${k.kind}-hint`} className="text-[11px] leading-snug text-muted">
+              <p id={`${id}-${k.kind}-hint`} className="text-[13px] leading-snug text-muted">
                 {k.hint}
               </p>
               <div className="relative mt-0.5">
@@ -114,14 +114,14 @@ export function MeasurementsForm({ todayIso, minIso }: { todayIso: string; minIs
                   }}
                   aria-invalid={error ? true : undefined}
                   aria-describedby={`${id}-${k.kind}-hint${error ? ` ${id}-${k.kind}-error` : ""}`}
-                  className="w-28 pr-10 font-mono tabular-nums"
+                  className="w-28 pr-10 tabular-nums"
                 />
                 <span aria-hidden className="pointer-events-none absolute left-[5.25rem] top-1/2 -translate-y-1/2 text-sm text-muted">
                   cm
                 </span>
               </div>
               {error ? (
-                <p id={`${id}-${k.kind}-error`} role="alert" className="text-xs text-danger">
+                <p id={`${id}-${k.kind}-error`} role="alert" className="text-sm text-danger">
                   {error}
                 </p>
               ) : null}
@@ -134,7 +134,7 @@ export function MeasurementsForm({ todayIso, minIso }: { todayIso: string; minIs
           {pending ? "Salvando…" : "Salvar medidas"}
         </Button>
         {formError ? (
-          <p role="alert" className="text-xs text-danger">
+          <p role="alert" className="text-sm text-danger">
             <ActionErrorText error={formError} />
           </p>
         ) : (

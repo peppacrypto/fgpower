@@ -29,7 +29,7 @@ export function SeriesRail({
 }) {
   return (
     <div className={cn("mt-4", className)}>
-      <div className="flex items-end gap-[3px]" role="img" aria-label={railLabel(blocks, current)}>
+      <div className="flex items-end gap-1" role="img" aria-label={railLabel(blocks, current)}>
         {blocks.map((b) => {
           const faint = highlight !== null && !highlight.has(b.slug);
           const isCurrent = b.slug === current;
@@ -37,8 +37,8 @@ export function SeriesRail({
             <div key={b.slug} className="flex min-w-[1.25rem] flex-col items-stretch" style={{ flex: `${b.durationWeeks} 1 0` }}>
               <span
                 className={cn(
-                  "mb-1 text-center font-mono text-[10px] font-bold leading-none tabular-nums",
-                  isCurrent ? "text-foreground" : "text-muted",
+                  "mb-1.5 text-center text-xs leading-none tabular-nums",
+                  isCurrent ? "font-semibold text-accent" : "font-medium text-muted",
                   faint && "opacity-40",
                 )}
               >
@@ -46,9 +46,9 @@ export function SeriesRail({
               </span>
               <span
                 className={cn(
-                  "block w-full",
+                  "block w-full rounded-[var(--radius-sm)]",
                   isPostAdaptation(b.slug, b.experienceLevel) ? POST_ADAPTATION_STEP : (LEVEL_STEP[b.experienceLevel] ?? "h-3"),
-                  isCurrent ? "bg-accent-strong shadow-[inset_0_-2px_0_var(--keel)]" : "bg-foreground/25",
+                  isCurrent ? "bg-accent" : "bg-border-strong",
                   faint && "opacity-30",
                 )}
               />
@@ -57,21 +57,18 @@ export function SeriesRail({
         })}
       </div>
       {years && years.length > 1 ? (
-        <div className="mt-1.5 flex gap-[3px] font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-muted" aria-hidden>
+        <div className="mt-2 flex gap-1 text-xs text-muted" aria-hidden>
           {years.map((y) => (
-            <span key={y.year} className="border-t border-border pt-1" style={{ flex: `${y.weeks} 1 0` }}>
+            <span key={y.year} className="border-t border-border pt-1.5" style={{ flex: `${y.weeks} 1 0` }}>
               Ano {y.year}
             </span>
           ))}
         </div>
       ) : null}
-      <p
-        className="mt-1.5 flex flex-wrap items-end gap-x-2.5 gap-y-1 font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-muted"
-        aria-hidden
-      >
+      <p className="mt-2 flex flex-wrap items-end gap-x-3 gap-y-1 text-xs text-muted" aria-hidden>
         {LEVELS.map(([level, label]) => (
-          <span key={level} className="inline-flex items-end gap-1">
-            <span className={cn("inline-block w-2 bg-foreground/25", LEVEL_STEP[level])} />
+          <span key={level} className="inline-flex items-end gap-1.5">
+            <span className={cn("inline-block w-2 rounded-[var(--radius-sm)] bg-border-strong", LEVEL_STEP[level])} />
             {label}
           </span>
         ))}

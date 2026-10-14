@@ -69,10 +69,12 @@ export default async function EditFinishedWorkoutPage({ params }: Props) {
         <ChevronLeft className="size-4" />
         Resumo
       </Link>
-      <p className="mt-2 font-mono text-xs font-bold uppercase tracking-[0.18em] text-muted">
+      <p className="eyebrow mt-2">
         Editar séries · <span className="whitespace-nowrap">{formatSpShortDate(session.finishedAt)}</span>
       </p>
-      <h1 className="text-display mt-1 text-3xl font-extrabold tracking-tight wrap-break-word">{session.name}</h1>
+      <h1 className="text-display mt-0.5 text-[1.75rem] font-semibold leading-tight wrap-break-word sm:text-[2rem]">
+        {session.name}
+      </h1>
     </>
   );
 
@@ -81,7 +83,7 @@ export default async function EditFinishedWorkoutPage({ params }: Props) {
     return (
       <div className="mx-auto max-w-2xl px-4 py-6 sm:px-6 sm:py-10">
         {header}
-        <p className="mt-4 border-l-2 border-l-warning bg-warning-soft px-3 py-2.5 text-sm text-foreground/90">
+        <p className="mt-4 rounded-[var(--radius-md)] bg-warning-soft px-3.5 py-3 text-sm text-foreground">
           O prazo para corrigir este treino acabou: as séries podem ser editadas até 24 h depois de salvo.
         </p>
         <Button className="mt-5" variant="outline" asChild>
@@ -115,7 +117,7 @@ export default async function EditFinishedWorkoutPage({ params }: Props) {
   return (
     <div className="mx-auto max-w-2xl px-4 py-6 sm:px-6 sm:py-10">
       {header}
-      <p className="mt-2 text-sm text-muted">
+      <p className="mt-2 text-[15px] leading-relaxed text-muted">
         Corrija uma carga ou reps digitadas errado, ou tire uma série que não aconteceu. Os recordes e o volume são
         recalculados. Dá para corrigir até {formatSpShortDate(until)}, {formatSpTime(until)}.
       </p>

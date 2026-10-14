@@ -41,7 +41,7 @@ export function InstallBannerView({ mode, onClose }: { mode: keyof typeof SHARE_
       ref={ref}
       aria-label="Instalar o app"
       data-install-banner={mode}
-      className="fixed inset-x-0 z-30 border-t-2 border-t-[var(--rule-heavy)] bg-surface pl-4 pr-1 pt-3 shadow-lg sm:left-auto sm:right-4 sm:w-[24rem] sm:border-2 sm:border-[var(--rule-heavy)]"
+      className="fixed inset-x-0 z-30 rounded-t-[var(--radius-xl)] border border-b-0 border-border bg-surface pl-4 pr-1 pt-3 shadow-[var(--shadow-md)] sm:left-auto sm:right-4 sm:w-[24rem] sm:rounded-[var(--radius-xl)] sm:border-b"
     >
       <div className="flex items-start gap-3">
         {/* The app's tile, as the sidebar shows it: what lands on the home screen. */}
@@ -60,7 +60,7 @@ export function InstallBannerView({ mode, onClose }: { mode: keyof typeof SHARE_
           type="button"
           onClick={onClose}
           aria-label="Fechar"
-          className="-mt-2 flex size-11 shrink-0 items-center justify-center rounded-[3px] hover:bg-surface-2"
+          className="-mt-2 flex size-11 shrink-0 items-center justify-center rounded-full text-muted hover:bg-surface-2 hover:text-foreground"
         >
           <X className="size-4" />
         </button>

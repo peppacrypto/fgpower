@@ -30,11 +30,10 @@ import type { WorkoutActivitySummary } from "@/lib/social/activity-summary";
 import { profileHref } from "@/lib/social/links";
 import { formatNumber, plural, pluralWord } from "@/lib/utils/format";
 
-const LINK =
-  "inline-flex min-h-11 items-center font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline";
+const LINK = "inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-accent hover:underline";
 
 /** A card's wrapper, where "Carregar mais" lands: a scroll margin, and a ring only for keyboard focus. */
-const LANDING_CARD = "scroll-mt-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";
+const LANDING_CARD = "scroll-mt-4 rounded-[var(--radius-lg)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";
 
 /** The owner's counts open their lists (/app/profile/seguidores, /seguindo). */
 const COUNT_LINK =
@@ -106,12 +105,14 @@ export default async function PublicProfilePage({ params, searchParams }: PagePr
       <div className="flex items-center gap-4">
         <Avatar src={profile.image} name={profile.name} size={72} />
         <div className="min-w-0 flex-1">
-          <h1 className="text-xl font-bold [overflow-wrap:anywhere]">{profile.name}</h1>
-          <p className="truncate text-sm text-muted">@{handle}</p>
+          <h1 className="text-display text-[1.75rem] font-semibold leading-tight [overflow-wrap:anywhere] sm:text-[2rem]">
+            {profile.name}
+          </h1>
+          <p className="mt-0.5 truncate text-[15px] text-muted">@{handle}</p>
         </div>
       </div>
 
-      {profile.bio ? <p className="mt-3 text-sm text-foreground/90 [overflow-wrap:anywhere]">{profile.bio}</p> : null}
+      {profile.bio ? <p className="mt-4 text-[15px] leading-relaxed text-foreground/90 [overflow-wrap:anywhere]">{profile.bio}</p> : null}
 
       {/* The follower count follows the viewer's Seguir / Deixar de seguir below it. */}
       <FollowCountScope userId={profile.id}>
@@ -177,7 +178,7 @@ export default async function PublicProfilePage({ params, searchParams }: PagePr
       {!viewerId ? (
         <div className="mt-4 flex flex-col items-start gap-2">
           {sessionEnded ? (
-            <p role="alert" className="border-l-2 border-l-danger bg-danger-soft px-3.5 py-2.5 text-sm text-danger">
+            <p role="alert" className="rounded-[var(--radius-md)] bg-danger-soft px-4 py-3 text-sm text-danger">
               {SESSION_EXPIRED_ERROR}
             </p>
           ) : null}
@@ -197,12 +198,12 @@ export default async function PublicProfilePage({ params, searchParams }: PagePr
         />
         <div className="mt-4">
           {!profile.canViewActivity ? (
-            <p className="text-sm text-muted">Esta conta é privada. Siga para ver a atividade.</p>
+            <p className="card p-4 text-sm text-muted sm:p-5">Esta conta é privada. Siga para ver a atividade.</p>
           ) : activities.length === 0 ? (
             isOwner ? (
               <OwnerEmptyState visibility={profile.defaultWorkoutVisibility} />
             ) : (
-              <p className="text-sm text-muted">Nenhuma atividade pública ainda.</p>
+              <p className="card p-4 text-sm text-muted sm:p-5">Nenhuma atividade pública ainda.</p>
             )
           ) : (
             <div className="flex flex-col gap-4">
@@ -265,7 +266,7 @@ function ProgramLine({ profile, signedIn, isOwner }: { profile: PublicProfile; s
       </Link>
       {signedIn && !isOwner ? (
         profile.sameProgramAsViewer ? (
-          <p className="mt-1 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted">
+          <p className="mt-1 text-[13px] text-muted">
             Vocês treinam o mesmo programa
           </p>
         ) : (
@@ -286,8 +287,8 @@ function ProgramLine({ profile, signedIn, isOwner }: { profile: PublicProfile; s
 function OwnerEmptyState({ visibility }: { visibility: PublicProfile["defaultWorkoutVisibility"] }) {
   if (visibility === "FOLLOWERS" || visibility === "PUBLIC") {
     return (
-      <div className="border-l-2 border-l-border-strong bg-surface-2 px-3.5 py-3 text-sm">
-        <p className="font-medium">Nenhum treino publicado ainda.</p>
+      <div className="card px-4 pb-1.5 pt-4 text-sm sm:px-5">
+        <p className="text-[15px] font-semibold">Nenhum treino publicado ainda.</p>
         <p className="mt-0.5 text-muted">
           Ao terminar um treino, ele aparece aqui para seus seguidores (ou para todos). Dá para mudar em cada resumo.
         </p>
@@ -298,8 +299,8 @@ function OwnerEmptyState({ visibility }: { visibility: PublicProfile["defaultWor
     );
   }
   return (
-    <div className="border-l-2 border-l-border-strong bg-surface-2 px-3.5 py-3 text-sm">
-      <p className="font-medium">Seus treinos são privados.</p>
+    <div className="card px-4 pb-1.5 pt-4 text-sm sm:px-5">
+      <p className="text-[15px] font-semibold">Seus treinos são privados.</p>
       <p className="mt-0.5 text-muted">
         Para um treino aparecer aqui, compartilhe-o no resumo dele — para seguidores ou para todos.
       </p>

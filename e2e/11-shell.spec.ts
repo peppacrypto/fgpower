@@ -47,10 +47,10 @@ test("Tailwind border/bg utilities beat the global border rule and the dossier p
   expect(dangerBorder).toBe(dangerText);
   expect(plainBorder).not.toBe(accentBorder); // the default hairline still applies
 
-  // A bg utility on a Card (.reg-frame) / .panel-raised wins over the primitive's own surface.
+  // A bg utility on a Card (.card) / .panel wins over the primitive's own surface.
   const [cardTinted, panelTinted, tint, cardPlain, surface] = await probe(
     page,
-    ["reg-frame bg-accent-soft", "panel-raised bg-accent-soft", "bg-accent-soft", "reg-frame", "bg-surface"],
+    ["card bg-accent-soft", "panel bg-accent-soft", "bg-accent-soft", "card", "bg-surface"],
     "backgroundColor",
   );
   expect(cardTinted).toBe(tint);

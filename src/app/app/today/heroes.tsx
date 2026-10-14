@@ -29,38 +29,46 @@ export interface HeroDay {
   exercises: { id: string; groupKey?: string | null; exercise: { namePt: string; slug: string; media?: { url: string }[] } }[];
 }
 
-const monoLabel = "font-mono text-[11px] font-bold uppercase tracking-[0.2em]";
+/** "Sex · 16 out" — a day tag (lib/training/day-rotation formatDayTag) in sentence case. */
+export function dayTag(dayNo: number): string {
+  const tag = formatDayTag(dayNo).toLowerCase();
+  return tag.charAt(0).toUpperCase() + tag.slice(1);
+}
 
-/** "6 exercícios · ~55′" under a day's name. */
-function DayMeta({ day }: { day: HeroDay }) {
+/** "8 exercícios · ~55 min" under a day's name. */
+function DayMeta({ day, className }: { day: HeroDay; className?: string }) {
   return (
-    <div className="mt-2 flex items-center gap-4 font-mono text-sm text-muted">
-      <span>
-        <span className="font-bold text-foreground">{day.exercises.length}</span>{" "}
+    <p className={cn("flex flex-wrap items-center gap-x-2 text-[15px] tabular-nums text-muted", className)}>
+      <span className="whitespace-nowrap">
+        <span className="font-semibold text-foreground">{day.exercises.length}</span>{" "}
         {pluralWord(day.exercises.length, "exercício", "exercícios")}
       </span>
       {day.estimatedMinutes ? (
-        <span>
-          ~<span className="font-bold text-foreground">{day.estimatedMinutes}</span>′
-        </span>
+        <>
+          <span aria-hidden>·</span>
+          <span className="whitespace-nowrap">
+            ~<span className="font-semibold text-foreground">{day.estimatedMinutes}</span> min
+          </span>
+        </>
       ) : null}
-    </div>
+    </p>
   );
 }
 
-/** "SUGERIDO PARA SEG · 28 SET" — or "SUGERIDO PARA AMANHÃ · TER · 29 SET"; each part wraps as a whole. */
+/** "Sugerido para Seg · 28 set" — or "Sugerido para amanhã · Ter · 29 set"; each part wraps as a whole. */
 function SuggestedTag({ dayNo, todayNo }: { dayNo: number; todayNo: number }) {
   return (
-    <span className="tag tag--spec flex-wrap gap-x-[0.4em] gap-y-0.5 uppercase leading-tight">
+    <span className="tag tag--spec flex-wrap gap-x-[0.4em] gap-y-0.5 text-[13px] leading-tight">
       <span className="whitespace-nowrap">Sugerido para{dayNo === todayNo + 1 ? " amanhã ·" : ""}</span>{" "}
-      <span className="whitespace-nowrap">{formatDayTag(dayNo)}</span>
+      <span className="whitespace-nowrap">{dayTag(dayNo)}</span>
     </span>
   );
 }
 
 /**
- * The next workout: what to train today, one tap from the first set.
- * `position` is "DIA 2 DE 5" (the day's place among the plan's days);
+ * The next workout: what to train today, one tap from the first set — the
+ * largest thing on Today, with its one filled action.
+ * `position` is "Dia 2 de 5" (the day's place among the plan's days);
  * `weekStart` the choice after a week that stopped mid-plan (W-089).
  */
 export function NextWorkoutHero({
@@ -88,32 +96,31 @@ export function NextWorkoutHero({
     weekKey: string;
   } | null;
 }) {
-  // Supersets (W-104), as the program page draws them: "A1" before the name, an accent rule
-  // down the members, and the group's rule over its first one.
+  // Supersets (W-104), as the program page names them: the group's rule over its first
+  // member, then "A1", "A2" before each name.
   const slots = deriveGroups(day.exercises.map((ex) => ({ groupKey: ex.groupKey ?? null })));
   return (
-    <div className="relative overflow-hidden panel-raised" data-hero="next">
-      <span className="absolute left-0 top-0 h-full w-1.5 bg-accent" aria-hidden />
-      <div className="p-6 sm:p-8">
+    <div className="panel" data-hero="next">
+      <div className="p-5 sm:p-7">
         {justActivated ? (
-          <span className="mb-2 inline-flex items-center gap-1.5 bg-accent-soft px-2 py-1 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent">
+          <span className="tag tag--mark mb-3">
             <GCheck className="size-3.5" />
             Programa ativado
           </span>
         ) : null}
         <div className="flex items-baseline justify-between gap-3">
-          <span className={cn(monoLabel, "text-accent")}>Próximo treino</span>
+          <span className="eyebrow text-accent">Próximo treino</span>
           {position ? (
-            <span className="shrink-0 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted">
+            <span className="shrink-0 text-[13px] tabular-nums text-muted">
               Dia {position.n} de {position.of}
             </span>
           ) : null}
         </div>
-        <h2 className="text-display mt-2 text-3xl font-extrabold sm:text-4xl">
+        <h2 className="text-display mt-1 text-[1.875rem] font-bold leading-tight wrap-break-word sm:text-[2.25rem]">
           {shifted ? dayNameWithoutWeekday(day.name) : day.name}
         </h2>
-        <DayMeta day={day} />
-        {plannedToday ? <p className="mt-1 text-xs text-muted">Sugerido para hoje ({plannedToday})</p> : null}
+        <DayMeta day={day} className="mt-2" />
+        {plannedToday ? <p className="mt-1 text-[13px] text-muted">Sugerido para hoje ({plannedToday})</p> : null}
 
         {/* The daily loop is "open → start": the button sits right under the title. */}
         <InlineActionForm
@@ -122,42 +129,32 @@ export function NextWorkoutHero({
           className="mt-5"
           errorClassName="mt-2"
         >
-          <SubmitButton size="lg" variant="strong" className="w-full sm:w-auto" pendingLabel="Iniciando…">
+          <SubmitButton size="lg" variant="strong" className="w-full sm:w-auto sm:min-w-56" pendingLabel="Iniciando…">
             <Play className="size-4" />
             Iniciar treino
           </SubmitButton>
         </InlineActionForm>
 
         {/* Exercise preview — each row opens its technique page */}
-        <ol className="mt-5 flex flex-col border-b border-border">
+        <ol className="mt-6 flex flex-col divide-y divide-border border-t border-border">
           {day.exercises.slice(0, PREVIEW_WIDE).map((ex, i) => {
             const slot = slots[i];
             return (
-              <li
-                key={ex.id}
-                data-group={slot?.label}
-                className={cn(
-                  "border-t border-border",
-                  slot && "border-l-2 border-l-accent pl-2",
-                  i >= PREVIEW_PHONE && "hidden sm:block",
-                )}
-              >
-                {slot?.first ? (
-                  <p className="pt-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-accent">{groupRule(slot)}</p>
-                ) : null}
-                <Link href={`/app/exercises/${ex.exercise.slug}`} className="group flex items-center gap-3 py-2">
-                  <div className="relative size-10 shrink-0 overflow-hidden rounded-[3px] bg-surface-2">
+              <li key={ex.id} data-group={slot?.label} className={cn(i >= PREVIEW_PHONE && "hidden sm:block")}>
+                {slot?.first ? <p className="pt-2.5 text-[13px] font-medium text-accent">{groupRule(slot)}</p> : null}
+                <Link href={`/app/exercises/${ex.exercise.slug}`} className="group flex items-center gap-3 py-2.5">
+                  <div className="relative size-11 shrink-0 overflow-hidden rounded-[var(--radius-md)] bg-surface-2">
                     {ex.exercise.media?.[0]?.url ? (
-                      <Image src={ex.exercise.media[0].url} alt="" fill sizes="40px" className="object-cover" />
+                      <Image src={ex.exercise.media[0].url} alt="" fill sizes="44px" className="object-cover" />
                     ) : (
                       <div className="flex h-full items-center justify-center text-muted">
                         <GLoad className="size-4" />
                       </div>
                     )}
                   </div>
-                  <span className="line-clamp-2 min-w-0 flex-1 text-sm font-medium leading-snug wrap-break-word group-hover:text-accent">
+                  <span className="line-clamp-2 min-w-0 flex-1 text-[15px] font-medium leading-snug wrap-break-word group-hover:text-accent">
                     {slot ? (
-                      <span className="mr-1.5 font-mono text-[11px] font-bold text-accent">
+                      <span className="mr-1.5 inline-flex rounded-[var(--radius-sm)] bg-accent-soft px-1.5 text-[13px] font-semibold tabular-nums text-accent">
                         <span aria-hidden>{slot.label}</span>
                         {/* The space is spoken too: "Superset A, 1 de 2: Supino…". */}
                         <span className="sr-only">{`${slot.heading}, ${slot.position} de ${slot.size}: `}</span>
@@ -172,10 +169,7 @@ export function NextWorkoutHero({
           })}
           {day.exercises.length > PREVIEW_PHONE ? (
             <li
-              className={cn(
-                "border-t border-border py-2 pl-[52px] text-xs text-muted",
-                day.exercises.length <= PREVIEW_WIDE && "sm:hidden",
-              )}
+              className={cn("py-2.5 pl-14 text-[13px] text-muted", day.exercises.length <= PREVIEW_WIDE && "sm:hidden")}
             >
               <span className="sm:hidden">+{plural(day.exercises.length - PREVIEW_PHONE, "exercício", "exercícios")}</span>
               <span className="hidden sm:inline">
@@ -229,10 +223,10 @@ function WeekStartChoice({
   );
   return (
     <div className="mt-5 border-t border-border pt-4" data-week-start>
-      <p className={cn(monoLabel, "tracking-[0.14em] text-muted")}>
+      <p className="text-[13px] font-medium text-muted">
         {afterEntryWeek ? "Da semana de entrada" : "Da semana passada"} {leftover.length === 1 ? "ficou" : "ficaram"}
       </p>
-      <ul className="mt-1 flex flex-col text-sm font-medium">
+      <ul className="mt-1 flex flex-col gap-0.5 text-[15px] font-medium">
         {leftover.map((name) => (
           <li key={name} className="wrap-break-word">
             {name}
@@ -267,60 +261,55 @@ export function RestDayHero({
   startDay: { id: string; name: string } | null;
 }) {
   return (
-    <div className="relative overflow-hidden panel-raised" data-hero="rest">
-      <span className="absolute left-0 top-0 h-full w-1.5 bg-[var(--border-strong)]" aria-hidden />
-      <div className="p-6 sm:p-8">
-        <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-          <span className={cn(monoLabel, "text-foreground")}>Descanso hoje</span>
-          {trainedToday ? (
-            <span className="inline-flex items-center gap-1 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent">
-              <GCheck className="size-3.5" />
-              Treino de hoje feito
-            </span>
-          ) : null}
-        </div>
-        <p className="mt-1.5 text-sm text-muted">
-          Próximo: <span className="font-semibold text-foreground">{next.day.name}</span> {whenText(next.dayNo, todayNo)}.
-        </p>
-
-        <div className="mt-5 border-t border-border pt-4">
-          <span className={cn(monoLabel, "text-accent")}>Próximo treino</span>
-          <h2 className="text-display mt-1.5 text-2xl font-extrabold sm:text-3xl">
-            {scheduleShifted({ dayName: next.day.name, dayNo: next.dayNo }) ? dayNameWithoutWeekday(next.day.name) : next.day.name}
-          </h2>
-          <p className="mt-1.5">
-            <SuggestedTag dayNo={next.dayNo} todayNo={todayNo} />
-          </p>
-          <DayMeta day={next.day} />
-        </div>
-
-        <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2">
-          {startDay ? (
-            <InlineActionForm
-              action={startAdHocWorkoutSession.bind(null, startDay.id)}
-              failText="Não foi possível iniciar o treino. Tente de novo."
-              errorClassName="mt-2"
-            >
-              <SubmitButton variant="outline" pendingLabel="Iniciando…">
-                <Play className="size-4" />
-                Treinar mesmo assim
-              </SubmitButton>
-            </InlineActionForm>
-          ) : null}
-          {todaySessionId ? (
-            <Link
-              href={`/app/workout/${todaySessionId}/summary`}
-              className="-my-2 inline-flex items-center gap-1 py-2 text-sm font-semibold text-accent hover:underline"
-            >
-              Ver treino de hoje
-              <GArrow className="size-3.5" />
-            </Link>
-          ) : null}
-        </div>
-        {startDay && startDay.id !== next.day.id ? (
-          <p className="mt-2 text-xs text-muted">Treinar mesmo assim abre {startDay.name}, o próximo desta semana.</p>
+    <div className="panel p-5 sm:p-7" data-hero="rest">
+      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+        <span className="text-[15px] font-semibold">Descanso hoje</span>
+        {trainedToday ? (
+          <span className="tag tag--mark">
+            <GCheck className="size-3.5" />
+            Treino de hoje feito
+          </span>
         ) : null}
       </div>
+
+      <div className="mt-4 border-t border-border pt-4">
+        <span className="eyebrow text-accent">Próximo treino</span>
+        <h2 className="text-display mt-1 text-[1.5rem] font-semibold leading-tight wrap-break-word sm:text-[1.75rem]">
+          {scheduleShifted({ dayName: next.day.name, dayNo: next.dayNo }) ? dayNameWithoutWeekday(next.day.name) : next.day.name}
+        </h2>
+        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2">
+          <SuggestedTag dayNo={next.dayNo} todayNo={todayNo} />
+          <DayMeta day={next.day} />
+        </div>
+        <span className="sr-only"> ({whenText(next.dayNo, todayNo)})</span>
+      </div>
+
+      <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2">
+        {startDay ? (
+          <InlineActionForm
+            action={startAdHocWorkoutSession.bind(null, startDay.id)}
+            failText="Não foi possível iniciar o treino. Tente de novo."
+            errorClassName="mt-2"
+          >
+            <SubmitButton variant="outline" pendingLabel="Iniciando…">
+              <Play className="size-4" />
+              Treinar mesmo assim
+            </SubmitButton>
+          </InlineActionForm>
+        ) : null}
+        {todaySessionId ? (
+          <Link
+            href={`/app/workout/${todaySessionId}/summary`}
+            className="inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-accent hover:underline"
+          >
+            Ver treino de hoje
+            <GArrow className="size-3.5" />
+          </Link>
+        ) : null}
+      </div>
+      {startDay && startDay.id !== next.day.id ? (
+        <p className="mt-2 text-[13px] text-muted">Treinar mesmo assim abre {startDay.name}, o próximo desta semana.</p>
+      ) : null}
     </div>
   );
 }
@@ -344,27 +333,26 @@ export function WeekCompleteHero({
   programName?: string | null;
 }) {
   return (
-    <div className="relative overflow-hidden panel-raised p-6 sm:p-8" data-hero="week-complete" data-week-kind={kind}>
-      <span className="absolute left-0 top-0 h-full w-1.5 bg-accent" aria-hidden />
-      <span className={cn(monoLabel, "inline-flex items-center gap-1.5 text-accent")}>
+    <div className="panel p-5 sm:p-7" data-hero="week-complete" data-week-kind={kind}>
+      <span className="eyebrow inline-flex items-center gap-1.5 text-accent">
         <GCheck className="size-3.5" />
         {kind === "entry" ? "Semana de entrada concluída" : "Semana concluída"}
       </span>
-      <h2 className="text-display mt-2 text-2xl font-extrabold sm:text-3xl">
+      <h2 className="text-display mt-1 text-[1.5rem] font-semibold leading-tight sm:text-[1.75rem]">
         {kind === "entry" ? "Começo feito." : kind === "counted" ? "Semana já na meta." : "Todos os treinos da semana feitos."}
       </h2>
-      <p className="mt-2 text-sm text-muted">
+      <p className="mt-2 text-[15px] text-muted">
         {kind === "counted"
           ? `Descanse. ${programName ?? "O programa"} começa na semana que vem.`
           : "Descanse. Os resultados de cada dia estão logo abaixo."}
       </p>
       {next ? (
-        <p className="mt-4 border-t border-border pt-3 text-sm">
-          <span className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted">Próximo · </span>
+        <p className="mt-5 border-t border-border pt-4 text-[15px]">
+          <span className="text-muted">Próximo · </span>
           <span className="font-semibold">
             {scheduleShifted({ dayName: next.day.name, dayNo: next.dayNo }) ? dayNameWithoutWeekday(next.day.name) : next.day.name}
           </span>{" "}
-          <span className="tag tag--spec uppercase">{formatDayTag(next.dayNo)}</span>
+          <span className="tag tag--spec ml-1 text-[13px]">{dayTag(next.dayNo)}</span>
           <span className="sr-only"> ({whenText(next.dayNo, todayNo)})</span>
         </p>
       ) : null}
@@ -384,38 +372,42 @@ export function BlockCompletedHero({ block }: { block: CompletedBlock }) {
     block.prCount > 0 ? plural(block.prCount, "exercício com recorde", "exercícios com recorde") : null,
   ].filter(Boolean);
   return (
-    <div className="relative overflow-hidden panel-raised p-6 sm:p-8" data-hero="block-complete">
-      <span className="absolute left-0 top-0 h-full w-1.5 bg-accent" aria-hidden />
+    <div className="panel p-5 sm:p-7" data-hero="block-complete">
       <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-        <span className={cn(monoLabel, "inline-flex items-center gap-1.5 text-accent")}>
+        <span className="eyebrow inline-flex items-center gap-1.5 text-accent">
           <GCheck className="size-3.5" />
           {block.series && !block.next ? "Plano GD concluído" : "Bloco concluído"}
         </span>
         {block.series ? (
-          <span className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted">
+          <span className="text-[13px] tabular-nums text-muted">
             Bloco {block.series.index} de {block.series.total}
           </span>
         ) : null}
       </div>
-      <h2 className="text-display mt-2 text-3xl font-extrabold sm:text-4xl">{block.programName}</h2>
-      <p className="mt-2 font-mono text-sm text-muted">{stats.join(" · ")}</p>
+      <h2 className="text-display mt-1 text-[1.875rem] font-bold leading-tight wrap-break-word sm:text-[2.25rem]">
+        {block.programName}
+      </h2>
+      <p className="mt-2 text-[15px] tabular-nums text-muted">{stats.join(" · ")}</p>
 
       {block.anchorProgress && block.anchorProgress.length > 0 ? (
-        <div className="mt-4">
+        <div className="mt-5">
           {/* A-019: the numbers are estimated 1RMs — say so on the hero, not only in the aria-label. */}
-          <p className={cn(monoLabel, "tracking-[0.14em] text-muted")}>1RM estimado · 1ª → última semana</p>
-          <ul className="mt-1.5 flex flex-col border-y border-border" aria-label="1RM estimado, do início ao fim do bloco">
+          <p className="text-[13px] font-medium text-muted">1RM estimado · 1ª → última semana</p>
+          <ul
+            className="mt-1.5 flex flex-col divide-y divide-border border-y border-border"
+            aria-label="1RM estimado, do início ao fim do bloco"
+          >
             {block.anchorProgress.map((a) => (
-              <li key={a.slug} className="flex items-baseline justify-between gap-3 border-t border-border py-2 first:border-t-0">
+              <li key={a.slug} className="flex items-baseline justify-between gap-3 py-2.5">
                 <Link
                   href={`/app/exercises/${a.slug}/history`}
-                  className="line-clamp-2 min-w-0 text-sm font-medium leading-snug wrap-break-word hover:text-accent"
+                  className="line-clamp-2 min-w-0 text-[15px] font-medium leading-snug wrap-break-word hover:text-accent"
                 >
                   {a.exerciseName}
                 </Link>
-                <span className="shrink-0 font-mono text-sm tabular-nums">
+                <span className="shrink-0 text-sm tabular-nums">
                   <span className="text-muted">{formatKg(a.fromKg)} →</span>{" "}
-                  <span className={cn("font-bold", a.toKg > a.fromKg && "text-accent")}>{formatKg(a.toKg)}</span>
+                  <span className={cn("font-semibold", a.toKg > a.fromKg && "text-accent")}>{formatKg(a.toKg)}</span>
                 </span>
               </li>
             ))}
@@ -482,11 +474,13 @@ export function InProgressBlock({
     ? "iniciado hoje"
     : `iniciado em ${String(s.day).padStart(2, "0")}/${String(s.month).padStart(2, "0")}`;
   return (
-    <div className="relative overflow-hidden panel-raised p-6 sm:p-8">
-      <span className="absolute left-0 top-0 h-full w-1.5 bg-warning" aria-hidden />
-      <span className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-warning">Treino em andamento</span>
-      <h2 className="text-display mt-1.5 text-2xl font-extrabold sm:text-3xl">{name}</h2>
-      <p className="mt-1.5 font-mono text-xs text-muted">
+    <div className="panel p-5 sm:p-7">
+      <span className="inline-flex items-center gap-2 text-[13px] font-semibold text-warning">
+        <span aria-hidden className="size-2 shrink-0 rounded-full bg-warning" />
+        Treino em andamento
+      </span>
+      <h2 className="text-display mt-1 text-[1.875rem] font-bold leading-tight wrap-break-word sm:text-[2.25rem]">{name}</h2>
+      <p className="mt-2 text-[15px] tabular-nums text-muted">
         {plural(setsDone, "série registrada", "séries registradas")} · {started}
       </p>
       <div className="mt-5 flex flex-wrap items-center gap-2">

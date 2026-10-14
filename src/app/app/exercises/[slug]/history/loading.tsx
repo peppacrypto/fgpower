@@ -4,15 +4,16 @@ import { Bone, BoneRow, SkeletonScreen } from "@/components/ui/skeleton";
 export function ExerciseHistorySkeleton() {
   return (
     <SkeletonScreen label="o histórico do exercício" className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
-      <Bone className="h-8 w-3/4" />
-      <Bone className="mt-2 h-3.5 w-1/2" />
-      <Bone className="mt-7 h-3 w-32" />
-      <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+      <span className="eyebrow">Meu histórico</span>
+      <Bone className="mt-1.5 h-8 w-3/4" />
+      <Bone className="mt-2.5 h-4 w-1/2" />
+      <Bone className="mt-9 h-4 w-36" />
+      <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
         {[0, 1].map((i) => (
-          <div key={i} className="reg-frame px-5 py-3.5">
-            <Bone className="h-3 w-2/3" />
-            <Bone className="mt-2 h-5 w-1/2" />
-            <Bone className="mt-2 h-2.5 w-12" />
+          <div key={i} className="card p-4">
+            <Bone className="h-3.5 w-2/3" />
+            <Bone className="mt-2 h-6 w-1/2" />
+            <Bone className="mt-2 h-3 w-12" />
           </div>
         ))}
       </div>
@@ -21,7 +22,7 @@ export function ExerciseHistorySkeleton() {
           <Bone key={i} className={`h-11 ${w}`} />
         ))}
       </div>
-      <div className="reg-frame mt-4 p-5">
+      <div className="card mt-4 p-5">
         <Bone className="h-3 w-1/3" />
         <Bone className="mt-2 h-3.5 w-2/3" />
         <Bone className="mt-4 h-32 w-full" />

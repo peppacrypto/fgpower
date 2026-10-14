@@ -28,25 +28,12 @@ export function Logomark({
 }
 
 /** Full "FGPOWER" wordmark lockup: metallic monogram + typographic name. */
-export function Wordmark({
-  className,
-  iconSize = 30,
-  onDark = false,
-}: {
-  className?: string;
-  iconSize?: number;
-  onDark?: boolean;
-}) {
+export function Wordmark({ className, iconSize = 30 }: { className?: string; iconSize?: number }) {
   return (
     <span className={cn("inline-flex items-center gap-2.5 select-none", className)}>
       <Logomark size={iconSize} alt="" />
-      <span
-        className={cn(
-          "text-[17px] font-extrabold tracking-tight",
-          onDark ? "text-white" : "text-foreground",
-        )}
-      >
-        FG<span className="text-accent-strong">POWER</span>
+      <span className="text-[17px] font-extrabold tracking-tight text-foreground">
+        FG<span className="text-accent">POWER</span>
       </span>
     </span>
   );

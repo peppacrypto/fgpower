@@ -12,6 +12,7 @@ import { YouTubeEmbed } from "@/components/exercises/youtube-embed";
 import { SESSION_EXPIRED_ERROR } from "@/lib/auth/session-expired";
 import type { TechniqueSheet as TechniqueData } from "@/lib/data/workout-session";
 import { WorkoutActionError, WorkoutLoggedOutError } from "./action-error";
+import { SheetGrip } from "@/components/workout/sheet-grip";
 
 /** Fetched once per exercise for the life of the page (the content rarely changes). */
 const cache = new Map<string, Promise<TechniqueData | null>>();
@@ -108,7 +109,7 @@ export function TechniqueSheet({
   const end = sheet?.images.end ?? null;
   const frame = (url: string | null, label: string) => (
     <figure className="min-w-0 flex-1">
-      <div className="relative aspect-square w-full overflow-hidden bg-surface">
+      <div className="relative aspect-square w-full overflow-hidden rounded-[var(--radius-md)] bg-surface">
         {url ? (
           <Image src={url} alt={`${exercise.name} — ${label.toLowerCase()} do movimento`} fill sizes="(max-width: 640px) 45vw, 240px" className="object-cover" />
         ) : (
@@ -117,7 +118,7 @@ export function TechniqueSheet({
           </div>
         )}
       </div>
-      <figcaption className="mt-1 font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted">{label}</figcaption>
+      <figcaption className="mt-1.5 text-[13px] font-medium text-muted">{label}</figcaption>
     </figure>
   );
 
@@ -135,14 +136,15 @@ export function TechniqueSheet({
       <div className="flex h-full w-full items-end justify-center sm:items-center" onClick={onClose}>
         <div
           onClick={(e) => e.stopPropagation()}
-          className="panel-raised max-h-[calc(100dvh-env(safe-area-inset-top,0px))] w-full max-w-lg overflow-y-auto overscroll-contain bg-background px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4"
+          className="sheet max-h-[calc(100dvh-env(safe-area-inset-top,0px))] w-full max-w-lg overflow-y-auto overscroll-contain px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3 sm:pt-5"
         >
+          <SheetGrip />
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 pt-1">
-              <span id="technique-kicker" className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent">
+              <span id="technique-kicker" className="eyebrow text-accent">
                 Técnica
               </span>
-              <h2 id="technique-title" className="text-display mt-1 text-xl font-extrabold leading-tight wrap-break-word">
+              <h2 id="technique-title" className="text-display mt-0.5 text-xl font-semibold leading-tight wrap-break-word">
                 {exercise.name}
               </h2>
             </div>
@@ -151,7 +153,7 @@ export function TechniqueSheet({
               type="button"
               onClick={onClose}
               aria-label="Fechar técnica"
-              className="-mr-2 flex size-11 shrink-0 items-center justify-center text-muted hover:text-foreground"
+              className="-mr-2 flex size-11 shrink-0 items-center justify-center rounded-[var(--radius-md)] text-muted hover:bg-surface-2 hover:text-foreground"
             >
               <X className="size-5" />
             </button>
@@ -169,18 +171,22 @@ export function TechniqueSheet({
           )}
 
           <div className="mt-4" aria-live="polite">
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted">
+            <p className="text-[15px] font-semibold">
               {sheet?.source === "instructions" ? "Passo a passo" : "Pontos-chave"}
             </p>
             {data === "missing" ? (
               <p className="mt-2 text-sm text-muted">Sem instruções para este exercício.</p>
             ) : data ? (
               data.cues.length > 0 ? (
-                <ol className="mt-2 flex flex-col gap-2">
+                <ol className="mt-2 flex flex-col gap-2.5">
                   {data.cues.map((cue, i) => (
-                    <li key={i} className="flex gap-3 text-sm leading-snug">
-                      <span className="w-5 shrink-0 font-mono text-xs font-bold leading-5 text-accent">
-                        {String(i + 1).padStart(2, "0")}
+                    <li key={i} className="flex gap-3 text-[15px] leading-snug">
+                      {/* The step's place in the movement, as a list counts it (no decorative "01"). */}
+                      <span
+                        aria-hidden
+                        className="flex size-6 shrink-0 items-center justify-center rounded-full bg-accent-soft text-xs font-semibold tabular-nums text-accent"
+                      >
+                        {i + 1}
                       </span>
                       <span className="min-w-0 flex-1 wrap-break-word">{cue}</span>
                     </li>
@@ -190,11 +196,11 @@ export function TechniqueSheet({
                 <p className="mt-2 text-sm text-muted">Sem instruções escritas para este exercício ainda.</p>
               )
             ) : loggedOut ? (
-              <p role="alert" className="mt-2 border-l-2 border-l-danger! bg-danger-soft px-3 py-2 text-xs font-medium text-danger">
+              <p role="alert" className="mt-2 rounded-[var(--radius-md)] bg-danger-soft px-3 py-2 text-[13px] font-medium text-danger">
                 <WorkoutActionError error={SESSION_EXPIRED_ERROR} loginHref={loginHref} />
               </p>
             ) : failed ? (
-              <div className="mt-2 flex flex-wrap items-center gap-x-3 border-l-2 border-l-warning bg-warning-soft px-3 py-2 text-xs text-foreground/90">
+              <div className="mt-2 flex flex-wrap items-center gap-x-3 rounded-[var(--radius-md)] bg-warning-soft px-3 py-1 text-[13px] text-foreground">
                 <span className="min-w-0 flex-1">Sem conexão — as instruções não carregaram.</span>
                 <button
                   type="button"

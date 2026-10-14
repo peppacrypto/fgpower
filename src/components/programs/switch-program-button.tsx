@@ -35,6 +35,7 @@ export function SwitchProgramButton({
   size = "lg",
   variant = "strong",
   switchLabel = "Trocar para este programa",
+  className,
 }: {
   /** The start server action, bound (kept as the form's own action: works before hydration). */
   action: (formData: FormData) => void | Promise<void>;
@@ -48,13 +49,15 @@ export function SwitchProgramButton({
   variant?: "strong" | "outline";
   /** The switch's first step ("Retomar da semana 5" where "Trocar para este programa" would be vague). */
   switchLabel?: string;
+  /** Extra classes for the button itself (e.g. letting its label wrap inside a floating bar). */
+  className?: string;
 }) {
   const detailsRef = useRef<HTMLDetailsElement>(null);
 
   if (!active) {
     return (
       <InlineActionForm action={action} failText="Não foi possível ativar. Tente de novo." errorClassName="mt-1.5">
-        <SubmitButton size={size} variant={variant} pendingLabel={pendingLabel}>
+        <SubmitButton size={size} variant={variant} pendingLabel={pendingLabel} className={className}>
           {label}
         </SubmitButton>
       </InlineActionForm>
@@ -83,6 +86,7 @@ export function SwitchProgramButton({
           "cursor-pointer list-none select-none group-open:hidden [&::-webkit-details-marker]:hidden",
           // Wraps inside itself on a 320px phone instead of spilling out of the masthead.
           size === "lg" && "h-auto min-h-13 whitespace-normal py-3 text-center text-balance max-sm:px-5",
+          className,
         )}
       >
         {switchLabel}
@@ -90,7 +94,7 @@ export function SwitchProgramButton({
       <InlineActionForm
         action={action}
         failText="Não foi possível trocar. Tente de novo."
-        className="flex w-full flex-col gap-2.5"
+        className="flex w-full flex-col gap-2.5 rounded-[var(--radius-lg)] bg-surface-2 p-3.5"
       >
         <p className="text-sm leading-snug">
           Isso encerra <span className="font-semibold">{active.name}</span> ({active.progress}). Seus treinos salvos

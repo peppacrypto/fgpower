@@ -51,10 +51,10 @@ export function ActionSheet({
       <div className="flex h-full w-full items-end justify-center sm:items-center" onClick={onClose}>
         <div
           onClick={(e) => e.stopPropagation()}
-          className="panel-raised max-h-[100dvh] w-full max-w-lg overflow-y-auto overscroll-contain bg-background pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-4"
+          className="sheet max-h-[100dvh] w-full max-w-lg overflow-y-auto overscroll-contain pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-5"
         >
           <div className="px-5 pb-2">
-            <h2 id={labelledBy} className="text-base font-bold leading-snug wrap-break-word">
+            <h2 id={labelledBy} className="text-[17px] font-semibold leading-snug wrap-break-word">
               {title}
             </h2>
             {subtitle ? <div className="mt-1 text-sm text-muted">{subtitle}</div> : null}

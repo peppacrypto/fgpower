@@ -8,7 +8,8 @@ import { getProfile } from "@/lib/data/profile";
 import { listTemplatesUsingPrinciple, recommendProfileOf, toCatalogItem } from "@/lib/data/templates";
 import { recommendTemplates } from "@/lib/programming/recommend";
 import { beginnerStep, nextPrinciple, BEGINNER_PATH } from "@/lib/programming/principle-order";
-import { Markdown } from "@/components/markdown";
+import { Markdown, splitTakeaway } from "@/components/markdown";
+import { ChevronLeft } from "lucide-react";
 import { GArrow } from "@/components/ui/glyph";
 import { SectionHead } from "@/components/ui/section-head";
 import { EvidenceReferences } from "@/components/ui/evidence-references";
@@ -52,26 +53,44 @@ export default async function PrincipleDetailPage({ params }: PageProps<"/app/sc
   const practice = [...fitting, ...using.filter((t) => !fitting.includes(t))].slice(0, IN_PRACTICE);
   const next = nextPrinciple(all, principle.slug);
   const step = beginnerStep(principle.slug);
+  // Editorial order: the summary, then the practical upshot, then the evidence in detail.
+  const { takeaway, body } = splitTakeaway(principle.bodyPt);
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
+    <article className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-10">
       <Link
         href="/app/science"
-        className="-mt-2 inline-flex min-h-11 items-center gap-1 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted hover:text-foreground"
+        className="-mt-2 -ml-1 inline-flex min-h-11 items-center gap-1 text-sm font-medium text-muted hover:text-foreground"
       >
-        {step ? `Comece aqui · ${step} de ${BEGINNER_PATH.length}` : "Princípios científicos"}
+        <ChevronLeft className="size-4" aria-hidden />
+        Princípios científicos
       </Link>
-      <h1 className="text-display mt-1 text-3xl font-extrabold sm:text-4xl">{principle.titlePt}</h1>
-      <p className="mt-2 text-muted">{principle.summaryPt}</p>
+      {step ? (
+        <p className="eyebrow mt-3 text-accent">
+          Comece aqui · {step} de {BEGINNER_PATH.length}
+        </p>
+      ) : null}
+      <h1 className={`text-display text-[1.75rem] font-semibold leading-tight sm:text-[2.25rem] ${step ? "mt-0.5" : "mt-3"}`}>
+        {principle.titlePt}
+      </h1>
+      <p className="mt-3 text-[17px] leading-relaxed text-muted">{principle.summaryPt}</p>
 
-      <div className="mt-6">
-        <Markdown text={principle.bodyPt} />
-      </div>
+      {takeaway ? (
+        <div className="mt-6 rounded-[var(--radius-lg)] bg-accent-soft p-4 sm:p-5">
+          <p className="eyebrow text-accent">Para o seu treino</p>
+          <Markdown text={takeaway} className="mt-1.5 text-[15px] leading-relaxed text-foreground sm:text-base" />
+        </div>
+      ) : null}
+
+      <section aria-labelledby={takeaway ? "em-detalhe" : undefined} className={takeaway ? "mt-10" : "mt-8"}>
+        {takeaway ? <SectionHead id="em-detalhe" label="Em detalhe" /> : null}
+        <Markdown text={body} className={`max-w-prose text-[15px] leading-relaxed text-foreground sm:text-base ${takeaway ? "mt-3" : ""}`} />
+      </section>
 
       {practice.length > 0 ? (
-        <section className="mt-10">
+        <section className="mt-12">
           <SectionHead label="Na prática" count={plural(using.length, "programa", "programas")} />
-          <p className="mt-1.5 text-xs text-muted">
+          <p className="mt-1 text-[13px] text-muted">
             Programas que aplicam este princípio{answers ? " — os que mais combinam com você primeiro" : ""}.
           </p>
           <div className="mt-4 grid grid-cols-[minmax(0,1fr)] gap-3 sm:grid-cols-2">
@@ -85,23 +104,21 @@ export default async function PrincipleDetailPage({ params }: PageProps<"/app/sc
         </section>
       ) : null}
 
-      <EvidenceReferences items={principle.evidence} className="mt-10" />
+      <EvidenceReferences items={principle.evidence} className="mt-12" />
 
       <Link
         href={next ? `/app/science/${next.slug}` : "/app/science"}
-        className="reg-frame is-link group mt-10 flex items-center gap-3 p-4"
+        className="card is-link group mt-12 flex items-center gap-3 p-4 sm:p-5"
       >
         <span className="min-w-0 flex-1">
-          <span className="block font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
-            {next ? "Próximo princípio" : "Fim da leitura"}
-          </span>
-          <span className="mt-1 block font-semibold group-hover:text-accent">
+          <span className="eyebrow block">{next ? "Próximo princípio" : "Fim da leitura"}</span>
+          <span className="mt-0.5 block text-base font-semibold group-hover:text-accent">
             {next ? next.titlePt : "Todos os princípios"}
           </span>
-          {next ? <span className="mt-0.5 block line-clamp-2 text-sm text-muted">{next.summaryPt}</span> : null}
+          {next ? <span className="mt-1 block line-clamp-2 text-sm text-muted">{next.summaryPt}</span> : null}
         </span>
         <GArrow className="size-4 shrink-0 text-muted transition-transform group-hover:translate-x-0.5" />
       </Link>
-    </div>
+    </article>
   );
 }

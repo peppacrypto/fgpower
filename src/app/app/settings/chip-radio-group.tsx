@@ -15,7 +15,8 @@ export interface ChipOption<T extends string | number> {
 /**
  * One choice among a few chips (Settings: "Salto de carga", "Tema"): a real
  * radio group — arrow keys move and pick, Tab enters on the selected chip —
- * drawn as 44px chips, the picked one inked like the builder's rest chips.
+ * drawn as 44px chips; the picked one wears the green plate and a firmer
+ * border (and a heavier label), so it reads without color too.
  */
 export function ChipRadioGroup<T extends string | number>({
   label,
@@ -77,8 +78,10 @@ export function ChipRadioGroup<T extends string | number>({
               }
             }}
             className={cn(
-              "flex h-11 min-w-12 items-center justify-center px-3 font-mono text-sm font-semibold tabular-nums transition-colors",
-              on ? "bg-foreground text-background" : "bg-surface-2 text-foreground/80 hover:bg-[var(--border)]",
+              "flex h-11 min-w-12 items-center justify-center rounded-[var(--radius-md)] border px-3.5 text-sm tabular-nums transition-colors",
+              on
+                ? "border-accent bg-accent-soft font-semibold text-accent shadow-[inset_0_0_0_1px_var(--accent)]"
+                : "border-border bg-surface font-medium text-foreground hover:border-border-strong hover:bg-surface-2",
             )}
           >
             {o.label}

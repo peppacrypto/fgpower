@@ -24,7 +24,7 @@ const readHeight = () => echoPx(readWorkoutPref(LIMITATIONS_ECHO_PX));
 export function LimitationsBone({ serverPx = 0 }: { serverPx?: number }) {
   const px = useSyncExternalStore(noSubscribe, readHeight, () => serverPx);
   if (!px) return null;
-  return <div aria-hidden data-limitations-bone className="sk mb-3 rounded-[2px]" style={{ height: px - 12 }} />;
+  return <div aria-hidden data-limitations-bone className="sk mb-3 rounded-[var(--radius-md)]" style={{ height: px - 12 }} />;
 }
 
 /**

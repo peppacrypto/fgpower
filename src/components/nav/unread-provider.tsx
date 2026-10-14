@@ -130,7 +130,7 @@ export function useOpenReports(): number | null {
 }
 
 /**
- * The square count badge ("9+" above 9); renders nothing at 0. The digits are
+ * The round count badge ("9+" above 9); renders nothing at 0. The digits are
  * decoration: a screen reader hears `srText` (", 2 notificações novas" by
  * default) as part of the link or label it sits in; "" when the caller says
  * it elsewhere (after a tab's label, say).
@@ -141,7 +141,7 @@ export function UnreadPip({ count, className, srText }: { count: number; classNa
     <span
       data-unread-pip={count}
       className={cn(
-        "inline-flex h-4 min-w-4 items-center justify-center bg-accent px-1 font-mono text-[10px] font-bold leading-none tabular-nums text-accent-foreground",
+        "inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[10px] font-bold leading-none tabular-nums text-accent-foreground",
         className,
       )}
     >

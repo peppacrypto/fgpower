@@ -2,10 +2,10 @@ import * as React from "react";
 import { cn } from "@/lib/utils/cn";
 
 /**
- * FGPOWER glyph family — a single keyline primitive with SQUARE caps and
- * MITER joins (the deliberate anti-"friendly-rounded-lucide" move) plus solid
- * marks. Every semantic concept also has a 2-letter mono Lettermark, so meaning
- * is carried by form + letters, never by a clichéd pictogram or by color alone.
+ * FGPOWER glyph family — the app's own icons (nav, pillars, CTAs), drawn on the
+ * same 24px grid, 1.75 stroke and round caps/joins as the lucide icons used
+ * elsewhere, so the two read as one set. Concepts that need a code also have
+ * a 2-letter Lettermark, so meaning never rests on a pictogram or color alone.
  */
 type GlyphProps = React.SVGProps<SVGSVGElement> & { title?: string };
 
@@ -15,9 +15,9 @@ function Base({ className, title, children, ...props }: GlyphProps & { children:
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth={1.5}
-      strokeLinecap="square"
-      strokeLinejoin="miter"
+      strokeWidth={1.75}
+      strokeLinecap="round"
+      strokeLinejoin="round"
       className={cn("size-4 shrink-0", className)}
       aria-hidden={title ? undefined : true}
       role={title ? "img" : undefined}
@@ -29,12 +29,12 @@ function Base({ className, title, children, ...props }: GlyphProps & { children:
   );
 }
 
-/** House arrow — square caps, miter join. Replaces lucide ArrowUpRight/ArrowRight. */
+/** Forward arrow — "go / open": CTAs and links to a detail. */
 export function GArrow(p: GlyphProps) {
   return (
     <Base {...p}>
-      <line x1="5" y1="19" x2="19" y2="5" />
-      <polyline points="9,5 19,5 19,15" />
+      <line x1="5" y1="12" x2="19" y2="12" />
+      <polyline points="13,6 19,12 13,18" />
     </Base>
   );
 }
@@ -44,8 +44,8 @@ export function GLoad(p: GlyphProps) {
   return (
     <Base {...p}>
       <line x1="4" y1="12" x2="20" y2="12" />
-      <rect x="3" y="8" width="3" height="8" fill="currentColor" stroke="none" />
-      <rect x="18" y="8" width="3" height="8" fill="currentColor" stroke="none" />
+      <rect x="3" y="8" width="3" height="8" rx="1" fill="currentColor" stroke="none" />
+      <rect x="18" y="8" width="3" height="8" rx="1" fill="currentColor" stroke="none" />
     </Base>
   );
 }
@@ -93,7 +93,7 @@ export function GNotes(p: GlyphProps) {
   );
 }
 
-/** Bare square-cap check — "logged / done". Replaces the ✓ emoji and lucide Check. */
+/** Check — "logged / done". */
 export function GCheck(p: GlyphProps) {
   return (
     <Base {...p}>
@@ -102,7 +102,7 @@ export function GCheck(p: GlyphProps) {
   );
 }
 
-/** Home mark — a square hearth, not a rounded house. For the "Hoje" nav item. */
+/** Home mark. For the "Hoje" nav item. */
 export function GToday(p: GlyphProps) {
   return (
     <Base {...p}>
@@ -116,7 +116,7 @@ export function GToday(p: GlyphProps) {
 export function GProgram(p: GlyphProps) {
   return (
     <Base {...p}>
-      <rect x="5" y="4" width="14" height="16" />
+      <rect x="5" y="4" width="14" height="16" rx="2" />
       <line x1="8" y1="9" x2="16" y2="9" />
       <line x1="8" y1="13" x2="16" y2="13" />
       <line x1="8" y1="17" x2="12" y2="17" />
@@ -124,20 +124,19 @@ export function GProgram(p: GlyphProps) {
   );
 }
 
-/** A person as a Swiss column — square shoulders, no round head. For the "Perfil" nav item. */
+/** A person. For the "Perfil" nav item. */
 export function GProfile(p: GlyphProps) {
   return (
     <Base {...p}>
-      <rect x="9" y="4" width="6" height="6" />
-      <polyline points="5,20 5,15 19,15 19,20" />
+      <circle cx="12" cy="8" r="3.5" />
+      <path d="M5 20 c0-3.6 3.1-6 7-6 s7 2.4 7 6" />
     </Base>
   );
 }
 
 /**
- * Lettermark — the primary, unambiguous device: a 2-letter JetBrains-Mono
- * code (what athletes actually say — PR, TR, EX, CO). Renders in a solid
- * accent square by default, or bare when `plain`.
+ * Lettermark — a 2-letter code (what athletes actually say — PR, TR, EX, CO)
+ * in a soft green rounded square by default, or bare when `plain`.
  */
 export function Lettermark({
   code,
@@ -151,10 +150,10 @@ export function Lettermark({
   return (
     <span
       className={cn(
-        "inline-flex items-center justify-center font-mono font-bold tracking-[0.08em] leading-none",
+        "inline-flex items-center justify-center font-semibold tabular-nums leading-none",
         plain
           ? "text-foreground"
-          : "size-[1.6em] bg-accent-soft text-accent text-[0.72em]",
+          : "size-[1.6em] rounded-[var(--radius-sm)] bg-accent-soft text-accent text-[0.72em]",
         className,
       )}
       aria-hidden

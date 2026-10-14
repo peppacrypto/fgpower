@@ -20,14 +20,11 @@ const SECONDARY_HREFS = new Set<string>(SECONDARY_ITEMS.map((i) => i.href));
 
 const within = (pathname: string, href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
-// Square, like the rest of the Dossiê: the lit link carries an accent keel on
-// its left edge and a heavier weight, not a tint alone.
+// The lit link is a soft green plate with a heavier weight, not a hue alone.
 const linkClass = (active: boolean) =>
   cn(
-    "flex items-center gap-3 border-l-2 px-3 py-2.5 text-sm transition-colors",
-    active
-      ? "border-l-accent bg-accent-soft font-semibold text-accent"
-      : "border-l-transparent font-medium text-muted hover:bg-surface-2 hover:text-foreground",
+    "flex items-center gap-3 rounded-[var(--radius-md)] px-3 py-2.5 text-sm transition-colors",
+    active ? "bg-accent-soft font-semibold text-accent" : "font-medium text-muted hover:bg-surface-2 hover:text-foreground",
   );
 
 /** The sidebar's links: the client island of the (server) Sidebar — it lights by the current path. */

@@ -27,17 +27,17 @@ export default async function AdminExercisesPage({ searchParams }: PageProps<"/a
 
   return (
     <div>
-      <h1 className="text-2xl font-bold tracking-tight">Exercícios</h1>
+      <h1 className="text-display text-[1.75rem] font-semibold leading-tight">Exercícios</h1>
       <form className="mt-4" action="/admin/exercises">
         <Input name="q" defaultValue={q} placeholder="Buscar exercício…" />
       </form>
 
-      <div className="mt-6 overflow-x-auto border-t-2 border-t-[var(--rule-heavy)]">
+      <div className="card mt-6 overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-surface-2 text-left text-xs text-muted">
             <tr>
-              <th className="px-4 py-2.5">Nome</th>
-              <th className="px-4 py-2.5">Status</th>
+              <th className="px-4 py-2.5 font-medium">Nome</th>
+              <th className="px-4 py-2.5 font-medium">Status</th>
               <th className="px-4 py-2.5" />
             </tr>
           </thead>

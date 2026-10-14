@@ -45,7 +45,7 @@ export function TeamActivityRow({
         >
           <span className="name block truncate text-sm font-semibold">{name}</span>
           {/* When first: a long workout name truncates, never the time. */}
-          <span className="block truncate font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
+          <span className="block truncate text-[13px] text-muted">
             {timeLabel} · {workoutName}
           </span>
         </Link>
@@ -61,12 +61,12 @@ export function TeamActivityRow({
           }
           onClick={fg.toggle}
           className={cn(
-            "relative z-10 flex min-h-11 min-w-11 shrink-0 items-center justify-center gap-1 rounded-[2px] px-2 text-sm font-semibold transition-colors",
+            "relative z-10 -mr-2 flex min-h-11 min-w-11 shrink-0 items-center justify-center gap-1 rounded-[var(--radius-md)] px-2 text-sm font-semibold transition-colors",
             fg.given ? "text-accent" : "text-muted hover:bg-surface-2",
           )}
         >
           <Heart className="size-4" fill={fg.given ? "currentColor" : "none"} aria-hidden />
-          {fg.count > 0 ? <span className="font-mono text-xs tabular-nums">{fg.count}</span> : null}
+          {fg.count > 0 ? <span className="text-[13px] tabular-nums">{fg.count}</span> : null}
         </button>
       </div>
       {fg.error ? (
@@ -130,11 +130,11 @@ export function TeamInvite({
     <>
       {status}
       <section className="mt-10" aria-labelledby="treine-com-amigos">
-        <div className="border-l-2 border-l-accent bg-surface-2 px-4 py-3.5">
-          <h2 id="treine-com-amigos" className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-accent">
+        <div className="card p-4 sm:p-5">
+          <h2 id="treine-com-amigos" className="text-[17px] font-semibold">
             Treine com amigos
           </h2>
-          <p className="mt-1 text-sm">Siga quem treina com você: os treinos e FGs deles aparecem aqui.</p>
+          <p className="mt-1 text-sm text-muted">Siga quem treina com você: os treinos e FGs deles aparecem aqui.</p>
           <div className="mt-3 flex flex-wrap items-start gap-x-3 gap-y-2">
             <Button variant="outline" size="sm" asChild>
               <Link href="/app/discover">Encontrar pessoas</Link>

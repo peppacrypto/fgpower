@@ -21,7 +21,7 @@ export default async function AdminExerciseEditPage({ params }: PageProps<"/admi
 
   return (
     <div>
-      <h1 className="text-2xl font-bold tracking-tight">{exercise.namePt}</h1>
+      <h1 className="text-display text-[1.75rem] font-semibold leading-tight">{exercise.namePt}</h1>
       <div className="mt-6 max-w-2xl">
         <ExerciseAdminForm
           exerciseId={exercise.id}

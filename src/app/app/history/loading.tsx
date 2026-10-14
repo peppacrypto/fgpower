@@ -5,9 +5,9 @@ import { AllHistorySkeleton } from "./all/loading";
 /** History: the month calendar and the recent workouts under it. */
 function HistorySkeleton() {
   return (
-    <SkeletonScreen label="o histórico" className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
+    <SkeletonScreen label="o histórico" className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
       <SkeletonMasthead kicker="Seus treinos" title="Histórico" lead={false} />
-      <div className="reg-frame mt-6 px-3 pt-3 pb-4 sm:px-5">
+      <div className="card mt-6 px-3 pt-3 pb-4 sm:px-5 sm:pt-4">
         <div className="flex items-center justify-between">
           <Bone className="size-11" />
           <div className="flex flex-col items-center gap-1.5">
@@ -16,8 +16,8 @@ function HistorySkeleton() {
           </div>
           <Bone className="size-11" />
         </div>
-        <div className="mt-3 grid grid-cols-[repeat(7,minmax(0,1fr))_1rem] gap-1 text-center font-mono text-[10px] tracking-wider text-muted">
-          {["SEG", "TER", "QUA", "QUI", "SEX", "SÁB", "DOM", ""].map((d, i) => (
+        <div className="mt-3 grid grid-cols-[repeat(7,minmax(0,1fr))_1rem] gap-1 text-center text-xs text-muted">
+          {["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom", ""].map((d, i) => (
             <div key={i}>{d}</div>
           ))}
         </div>
@@ -33,8 +33,8 @@ function HistorySkeleton() {
           )}
         </div>
       </div>
-      <div className="mt-8 flex flex-col gap-2">
-        <Bone className="mb-1 h-3.5 w-40" />
+      <div className="mt-10 flex flex-col gap-2">
+        <Bone className="mb-1 h-4 w-40" />
         <BoneRow />
         <BoneRow />
       </div>

@@ -14,7 +14,7 @@ export function ProgramSkeleton() {
       </div>
       <div className="mt-8 flex flex-col gap-3">
         {[0, 1, 2].map((i) => (
-          <div key={i} className="reg-frame p-5">
+          <div key={i} className="card p-5">
             <div className="flex items-center justify-between gap-3">
               <Bone className="h-5 w-1/2" />
               <Bone className="h-9 w-20" />

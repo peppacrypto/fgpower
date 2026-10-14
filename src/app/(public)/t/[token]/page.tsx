@@ -71,7 +71,7 @@ export default async function SharedWorkoutPage({ params }: Props) {
   const sessionEnded = !viewerId && (await hadSessionCookie());
 
   return (
-    <div className="mx-auto w-full max-w-xl px-4 py-6 sm:px-6">
+    <div className="mx-auto w-full max-w-xl px-4 py-6 sm:px-6 sm:py-8">
       {viewerId ? <BackLink fallbackHref="/app/feed" className="-mt-2 mb-2" /> : null}
       {isOwner ? <OwnerLinkBanner sessionId={activity.sessionId} /> : null}
 
@@ -79,19 +79,19 @@ export default async function SharedWorkoutPage({ params }: Props) {
         <Avatar src={author.image} name={author.name} size={44} />
         <div className="min-w-0 flex-1">
           {author.username ? (
-            <Link href={profileHref(author.username)} className="block truncate font-semibold hover:underline">
+            <Link href={profileHref(author.username)} className="block truncate text-[15px] font-semibold hover:underline">
               {author.name}
             </Link>
           ) : (
-            <p className="truncate font-semibold">{author.name}</p>
+            <p className="truncate text-[15px] font-semibold">{author.name}</p>
           )}
-          <p className="truncate font-mono text-[11px] text-muted">
+          <p className="truncate text-[13px] text-muted">
             {author.username ? `@${author.username} · ` : ""}
             {formatShareDate(shared.finishedAt)}
           </p>
         </div>
       </div>
-      {activity.caption ? <p className="mt-3 text-sm text-foreground/90 wrap-break-word whitespace-pre-line">{activity.caption}</p> : null}
+      {activity.caption ? <p className="mt-3 text-[15px] leading-relaxed text-foreground/90 wrap-break-word whitespace-pre-line">{activity.caption}</p> : null}
 
       <PublicWorkoutCard
         view={shared.view}

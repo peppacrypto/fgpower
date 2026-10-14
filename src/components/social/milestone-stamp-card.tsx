@@ -1,25 +1,24 @@
 import Link from "next/link";
-import { GArrow } from "@/components/ui/glyph";
+import { GArrow, GCheck } from "@/components/ui/glyph";
 import { formatAppDate } from "@/lib/training/week";
 import { plural, pluralWord } from "@/lib/utils/format";
 import { cn } from "@/lib/utils/cn";
 import { blockStampLine, stampText, type MilestoneStamp } from "./milestone-stamp";
 
-const FIELD = "font-mono text-[10px] font-bold uppercase tracking-[0.16em]";
-const LINK =
-  "inline-flex min-h-11 items-center gap-1 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline";
+const LINK = "inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-accent hover:underline";
 
-/** The stamp itself, as the workout summary prints "DOSSIÊ Nº 50": slightly askew, in ink. */
+/** The milestone's mark ("Dossiê nº 50", "GD 1 concluído"): a soft green chip with a check. */
 function Stamp({ stamp, large = false, className }: { stamp: MilestoneStamp; large?: boolean; className?: string }) {
   return (
     <span
       className={cn(
-        "inline-block max-w-full -rotate-2 border-2 border-accent font-mono font-extrabold uppercase text-accent",
-        large ? "px-3 py-1.5 text-base tracking-[0.18em]" : "px-2.5 py-1 text-sm tracking-[0.16em]",
+        "inline-flex max-w-full items-center gap-1.5 rounded-full bg-accent-soft font-semibold text-accent",
+        large ? "px-3.5 py-1.5 text-base" : "px-3 py-1 text-sm",
         className,
       )}
     >
-      {stampText(stamp)}
+      <GCheck className={large ? "size-4" : "size-3.5"} />
+      <span className="min-w-0 [overflow-wrap:anywhere]">{stampText(stamp)}</span>
     </span>
   );
 }
@@ -49,28 +48,28 @@ export function MilestoneStampCard({
 }) {
   const workout = stamp.kind === "WORKOUT_COUNT" && isOwn && stamp.sessionId ? `/app/workout/${stamp.sessionId}/summary` : null;
   return (
-    <div className="reg-frame p-4" data-stamp={stamp.kind}>
+    <div className="card p-4 sm:p-5" data-stamp={stamp.kind}>
       <div className="flex items-start justify-between gap-3">
         <Stamp stamp={stamp} className="mt-0.5" />
-        <span className="shrink-0 text-xs text-muted">{formatAppDate(createdAt, { day: "2-digit", month: "short" })}</span>
+        <span className="shrink-0 text-[13px] text-muted">{formatAppDate(createdAt, { day: "2-digit", month: "short" })}</span>
       </div>
-      <p className="mt-3 text-sm">{stampLine(stamp)}</p>
+      <p className="mt-3 text-[15px]">{stampLine(stamp)}</p>
       {stamp.kind === "WORKOUT_COUNT" && stamp.workoutName ? (
-        <p className="mt-0.5 text-xs text-muted">
+        <p className="mt-0.5 text-[13px] text-muted">
           {stamp.count}º treino: {stamp.workoutName}
         </p>
       ) : null}
       <div className="mt-2 flex flex-wrap items-center justify-between gap-x-3">
-        <span className={cn(FIELD, "text-muted")}>Só você vê</span>
+        <span className="text-[13px] text-muted">Só você vê</span>
         {workout ? (
           <Link href={workout} className={LINK}>
             Ver o treino
-            <GArrow className="size-3" />
+            <GArrow className="size-3.5" />
           </Link>
         ) : (
           <Link href={`/app/activity/${activityId}`} className={LINK}>
             {stamp.kind === "BLOCK_COMPLETED" ? "Ver o bloco" : "Ver detalhes"}
-            <GArrow className="size-3" />
+            <GArrow className="size-3.5" />
           </Link>
         )}
       </div>
@@ -101,14 +100,13 @@ export function MilestoneStampDetail({
 }) {
   const date = formatAppDate(createdAt, { day: "2-digit", month: "long" });
   return (
-    <section className="relative mt-4 overflow-hidden panel-raised" data-stamp={stamp.kind} aria-labelledby="stamp-title">
-      <span className="absolute left-0 top-0 h-full w-1.5 bg-accent" aria-hidden />
-      <div className="p-5 pl-6 sm:p-7 sm:pl-8">
-        <p className={cn(FIELD, "text-muted")}>Carimbo · só você vê</p>
+    <section className="panel relative mt-4" data-stamp={stamp.kind} aria-labelledby="stamp-title">
+      <div className="p-5 sm:p-7">
+        <p className="eyebrow">Carimbo · só você vê</p>
         <Stamp stamp={stamp} large className="mt-3" />
         {stamp.kind === "WORKOUT_COUNT" ? (
           <>
-            <h1 id="stamp-title" className="mt-4 text-xl font-bold">
+            <h1 id="stamp-title" className="text-display mt-4 text-[1.75rem] font-semibold leading-tight tabular-nums">
               {plural(stamp.count, "treino registrado", "treinos registrados")}
             </h1>
             <p className="mt-1 text-sm text-muted">
@@ -117,13 +115,13 @@ export function MilestoneStampDetail({
             {sessionHref ? (
               <Link href={sessionHref} className={cn(LINK, "mt-2")}>
                 Ver o treino
-                <GArrow className="size-3" />
+                <GArrow className="size-3.5" />
               </Link>
             ) : null}
           </>
         ) : (
           <>
-            <h1 id="stamp-title" className="text-display mt-4 text-2xl font-extrabold leading-tight">
+            <h1 id="stamp-title" className="text-display mt-4 text-[1.75rem] font-semibold leading-tight">
               {stamp.programName}
             </h1>
             <p className="mt-1 text-sm text-muted">
@@ -132,21 +130,21 @@ export function MilestoneStampDetail({
                 : `Encerrado em ${date}.`}
             </p>
             {stamp.weeks != null || stamp.sessionsDone != null ? (
-              <dl className="mt-4 grid grid-cols-2 divide-x divide-border border-y border-border py-3 text-center">
+              <dl className="mt-5 grid grid-cols-2 gap-3">
                 {stamp.sessionsDone != null ? (
-                  <div className="flex flex-col px-2">
-                    <dt className={cn(FIELD, "text-muted")}>
+                  <div className="flex flex-col rounded-[var(--radius-md)] bg-surface-2 px-4 py-3">
+                    <dt className="text-[13px] text-muted">
                       {pluralWord(stamp.plannedSessions ?? stamp.sessionsDone, "treino", "treinos")}
                     </dt>
-                    <dd className="order-first font-mono text-xl font-bold tabular-nums">
+                    <dd className="order-first text-xl font-semibold tabular-nums">
                       {stamp.plannedSessions ? `${stamp.sessionsDone}/${stamp.plannedSessions}` : stamp.sessionsDone}
                     </dd>
                   </div>
                 ) : null}
                 {stamp.weeks != null ? (
-                  <div className="flex flex-col px-2">
-                    <dt className={cn(FIELD, "text-muted")}>{stamp.weeks === 1 ? "semana" : "semanas"}</dt>
-                    <dd className="order-first font-mono text-xl font-bold tabular-nums">{stamp.weeks}</dd>
+                  <div className="flex flex-col rounded-[var(--radius-md)] bg-surface-2 px-4 py-3">
+                    <dt className="text-[13px] text-muted">{stamp.weeks === 1 ? "semana" : "semanas"}</dt>
+                    <dd className="order-first text-xl font-semibold tabular-nums">{stamp.weeks}</dd>
                   </div>
                 ) : null}
               </dl>
@@ -154,7 +152,7 @@ export function MilestoneStampDetail({
             {programHref ? (
               <Link href={programHref} className={cn(LINK, "mt-2")}>
                 Ver o programa
-                <GArrow className="size-3" />
+                <GArrow className="size-3.5" />
               </Link>
             ) : null}
           </>

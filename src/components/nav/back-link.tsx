@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils/cn";
 import { canGoBack, noteBackNavigation } from "./nav-history";
@@ -33,11 +34,11 @@ export function BackLink({
         router.back();
       }}
       className={cn(
-        "inline-flex min-h-11 items-center gap-1 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted hover:text-foreground",
+        "-ml-1 inline-flex min-h-11 items-center gap-1 rounded-[var(--radius-md)] px-1 text-sm font-medium text-muted hover:text-foreground",
         className,
       )}
     >
-      <span aria-hidden>‹</span>
+      <ChevronLeft aria-hidden className="size-4" />
       {label}
     </Link>
   );

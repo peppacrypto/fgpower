@@ -20,7 +20,7 @@ export function DataRequestForm({ defaultEmail, contactEmail }: { defaultEmail: 
 
   if (state.done) {
     return (
-      <div className="mt-8 border-l-2 border-l-accent bg-surface-2 px-3.5 py-3 text-sm">
+      <div className="mt-8 rounded-[var(--radius-md)] bg-accent-soft px-4 py-3 text-sm">
         <p className="font-semibold">Pedido registrado.</p>
         <p className="mt-1 text-muted">
           {/* [OWNER/LEGAL: prazo de resposta — placeholder.] */}
@@ -33,7 +33,7 @@ export function DataRequestForm({ defaultEmail, contactEmail }: { defaultEmail: 
   return (
     <form action={formAction} className="mt-8 flex flex-col gap-5">
       {state.error ? (
-        <p role="alert" className="border-l-2 border-l-danger bg-danger-soft px-3.5 py-2.5 text-sm text-danger">
+        <p role="alert" className="rounded-[var(--radius-md)] bg-danger-soft px-4 py-3 text-sm text-danger">
           {state.error}
         </p>
       ) : null}

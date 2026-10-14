@@ -49,13 +49,13 @@ export function ShareProfileButton({
         <Share2 aria-hidden />
         {label}
       </Button>
-      <p role="status" className={status?.kind === "copied" ? "font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-success" : "sr-only"}>
+      <p role="status" className={status?.kind === "copied" ? "text-[13px] font-medium text-success" : "sr-only"}>
         {status?.kind === "copied" ? "Link do perfil copiado" : ""}
       </p>
       {status?.kind === "failed" ? (
         <p className="text-xs text-muted">
           Não deu para copiar — segure o link para copiar:{" "}
-          <span className="select-all break-all font-mono text-foreground">{status.link}</span>
+          <span className="select-all break-all text-foreground">{status.link}</span>
         </p>
       ) : null}
     </div>

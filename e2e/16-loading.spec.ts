@@ -141,26 +141,23 @@ test("skeleton bones hold still when the user asks for reduced motion", async ({
   expect(await animation()).toBe("none");
 });
 
-test("a pressed card shows it: the marks extend in accent and the panel takes an ink plate", async ({ page }) => {
+test("a pressed card shows it: the card takes an ink plate", async ({ page }) => {
   await onboarded(page, "loading-press");
   await page.goto("/app/exercises");
-  const card = page.locator("a[href^='/app/exercises/'] .reg-frame.is-link").first();
+  const card = page.locator("a[href^='/app/exercises/'] .card.is-link").first();
   await expect(card).toBeVisible();
-  const style = () =>
-    card.evaluate((el) => ({
-      mark: getComputedStyle(el, "::before").borderTopColor,
-      plate: getComputedStyle(el).backgroundImage,
-      accent: getComputedStyle(document.documentElement).getPropertyValue("--accent").trim(),
-    }));
-  const rest = await style();
-  expect(rest.plate).toBe("none");
+  // Clean light (docs/DESIGN.md): no corner marks any more — the press reads as
+  // a faint ink plate over the whole card (.card.is-link:active).
+  const plate = () => card.evaluate((el) => getComputedStyle(el).backgroundImage);
+  expect(await plate()).toBe("none");
 
+  // Measure once the page has settled (photos and late rows shift the grid while they arrive).
+  await page.waitForLoadState("networkidle");
+  await card.scrollIntoViewIfNeeded();
   const box = (await card.boundingBox())!;
-  await page.mouse.move(box.x + box.width / 2, box.y + 40);
+  await page.mouse.move(box.x + box.width / 2, box.y + Math.min(40, box.height / 2));
   await page.mouse.down();
-  await expect.poll(async () => (await style()).plate).not.toBe("none");
-  const pressed = await style();
-  expect(pressed.mark).not.toBe(rest.mark);
+  await expect.poll(plate).toContain("gradient");
   // Moving off before releasing cancels the tap (no navigation).
   await page.mouse.move(0, 0);
   await page.mouse.up();

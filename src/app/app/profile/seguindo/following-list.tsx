@@ -17,8 +17,8 @@ export function FollowingList({ people, hasMore, page }: { people: GraphPerson[]
   const rows = useKeptRows(people);
   if (rows.length === 0) {
     return (
-      <div className="mt-3 border-l-2 border-l-border-strong bg-surface-2 px-3.5 py-3 text-sm">
-        <p className="font-medium">Você ainda não segue ninguém.</p>
+      <div className="card mt-3 p-4 text-sm sm:p-5">
+        <p className="text-[15px] font-semibold">Você ainda não segue ninguém.</p>
         <p className="mt-0.5 text-muted">Os treinos de quem você segue aparecem no seu feed.</p>
         <Button variant="outline" size="sm" asChild className="mt-3">
           <Link href="/app/discover">Encontrar pessoas</Link>
@@ -28,7 +28,7 @@ export function FollowingList({ people, hasMore, page }: { people: GraphPerson[]
   }
   return (
     <>
-      <ul className="mt-2">
+      <ul className="card mt-3 px-4">
         {rows.map((p) => (
           <PersonLine key={p.id} person={p}>
             <FollowButton

@@ -25,8 +25,7 @@ const INVITE_DISMISSAL = "team-invite";
 /** A dismissed invite comes back after this long (the user may have friends by then). */
 const INVITE_SNOOZE_MS = 30 * 24 * 60 * 60 * 1000;
 
-const LINK =
-  "inline-flex min-h-11 items-center font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline";
+const LINK = "inline-flex min-h-11 items-center text-sm font-medium text-accent hover:underline";
 
 export async function TeamStrip({
   userId,
@@ -93,9 +92,9 @@ async function teamStripContent({
         }
       />
       {strip.items.length === 0 ? (
-        <p className="mt-3 text-sm text-muted">Ninguém da sua equipe treinou nos últimos 7 dias.</p>
+        <p className="mt-2 text-sm text-muted">Ninguém da sua equipe treinou nos últimos 7 dias.</p>
       ) : (
-        <ul className="mt-2 divide-y divide-border border-y border-border">
+        <ul className="card mt-2 divide-y divide-border px-4">
           {strip.items.map((item) => (
             <TeamActivityRow
               key={item.id}

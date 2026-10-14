@@ -99,7 +99,7 @@ test("a new user sees no false numbers, a preview and a way forward — and ever
   await expect(page.getByText("Nenhum exercício treinado ainda")).toBeVisible();
 
   await page.goto("/app/history");
-  await expect(page.locator("main").getByText("SEG", { exact: true })).toBeVisible();
+  await expect(page.locator("main").getByText("Seg", { exact: true })).toBeVisible();
   await expect(page.locator("[data-today]")).toHaveCount(1);
   await expect(page.getByRole("link", { name: "Ir para Hoje" })).toHaveAttribute("href", "/app/today");
   await page.goto("/app/history/all");
@@ -257,9 +257,9 @@ test.describe.serial("a lifter four weeks into GD 1", () => {
     // Sets of 11–13 reps give no reliable e1RM: said so instead of a blank chart.
     await expect(page.getByText("1RM estimado: só de séries com até 10 reps — nenhuma neste período.")).toBeVisible();
     // Best marks carry the day they were set; the ledger is folded away below the charts.
-    const heaviest = page.locator(".reg-frame").filter({ hasText: "Maior carga" });
+    const heaviest = page.locator(".card").filter({ hasText: "Maior carga" });
     await expect(heaviest).toContainText(`60${NBSP}kg × 13`);
-    await expect(heaviest).toContainText(/em \d{2} [A-Z]{3}/);
+    await expect(heaviest).toContainText(/em \d{2} [a-z]{3}/);
     await expect(page.getByText(`13 reps com 60${NBSP}kg`)).toBeHidden();
     await page.getByText("Linha do tempo de recordes").click();
     await expect(page.getByText(`13 reps com 60${NBSP}kg`)).toBeVisible();
@@ -548,7 +548,7 @@ test.describe("one span, stamps and record rows", () => {
 
     await page.goto("/app/exercises/pushups/history");
     // "Mais repetições 14 reps" — not again as "Último recorde de reps 14 reps".
-    await expect(page.locator(".reg-frame").filter({ hasText: "Mais repetições" })).toContainText("14 reps");
+    await expect(page.locator(".card").filter({ hasText: "Mais repetições" })).toContainText("14 reps");
     await expect(page.getByText("Último recorde de reps")).toHaveCount(0);
     await page.getByText("Linha do tempo de recordes").click();
     const first = page.locator("[data-record-row]").first();
@@ -562,11 +562,11 @@ test.describe("one span, stamps and record rows", () => {
     // noted on that tile, not repeated in a tile of its own; its long value
     // wraps under its label in the ledger.
     await page.goto("/app/exercises/barbell-bench-press-medium-grip/history");
-    const heaviest = page.locator(".reg-frame").filter({ hasText: "Maior carga" });
+    const heaviest = page.locator(".card").filter({ hasText: "Maior carga" });
     await expect(heaviest).toContainText(`102,5${NBSP}kg × 12`);
     await expect(heaviest).toContainText("Também seu último recorde de reps");
     await expect(page.getByText("Último recorde de reps", { exact: true })).toHaveCount(0);
-    const marks = page.locator("section").filter({ hasText: "Melhores marcas" }).locator(".reg-frame");
+    const marks = page.locator("section").filter({ hasText: "Melhores marcas" }).locator(".card");
     await expect(marks.filter({ hasText: "102,5" })).toHaveCount(1);
     await page.getByText("Linha do tempo de recordes").click();
     await expect(page.locator("[data-record-row]").filter({ hasText: `12 reps com 102,5${NBSP}kg` })).toHaveCount(1);

@@ -22,14 +22,13 @@ export function JoinCta({
   loginAgainHref?: string;
 }) {
   return (
-    <section className="relative mt-6 overflow-hidden panel-raised" aria-labelledby="join-cta-title">
-      <span className="absolute left-0 top-0 h-full w-1.5 bg-accent" aria-hidden />
-      <div className="p-5 pl-6">
-        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-accent">FGPOWER · Grátis · sem cartão</p>
-        <h2 id="join-cta-title" className="text-display mt-1.5 text-2xl font-extrabold wrap-break-word">
+    <section className="panel mt-6" aria-labelledby="join-cta-title">
+      <div className="p-5 sm:p-6">
+        <p className="eyebrow text-accent">FGPOWER · Grátis · sem cartão</p>
+        <h2 id="join-cta-title" className="text-display mt-1 text-[1.375rem] font-semibold leading-tight wrap-break-word sm:text-2xl">
           Treine com {handle ? `@${handle}` : name} na FGPOWER
         </h2>
-        <p className="mt-2 text-sm text-muted">
+        <p className="mt-2 text-[15px] leading-relaxed text-muted">
           Programas com base em evidência, cada série registrada e a carga da próxima vez sugerida pra você.
         </p>
         <div className="mt-5 flex flex-col gap-2 sm:flex-row">

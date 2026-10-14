@@ -110,9 +110,9 @@ function AskFrame({
   className?: string;
 }) {
   return (
-    <section aria-labelledby={titleId} data-reminder-ask className={cn("reg-frame p-5", className)}>
-      <span className="tag tag--field text-accent">Lembretes</span>
-      <h2 id={titleId} className="text-display mt-2 text-xl font-extrabold leading-tight">
+    <section aria-labelledby={titleId} data-reminder-ask className={cn("card p-5 sm:p-6", className)}>
+      <span className="eyebrow text-accent">Lembretes</span>
+      <h2 id={titleId} className="mt-1 text-[17px] font-semibold leading-snug">
         {title}
       </h2>
       {children}
@@ -137,7 +137,7 @@ function Answered({ text, done, className }: { text: string; done: boolean; clas
       tabIndex={-1}
       className={cn(
         "outline-none",
-        done ? "border-l-2 border-l-success bg-surface-2 px-3 py-2 text-sm" : "text-sm text-muted",
+        done ? "rounded-[var(--radius-md)] bg-success-soft px-3.5 py-2.5 text-sm text-foreground" : "text-sm text-muted",
         className,
       )}
     >
@@ -210,9 +210,9 @@ function ReminderAsk({
   }
   return (
     <AskFrame titleId={titleId} title="Lembrar você nos dias de treino?" className={className}>
-      <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11px] font-bold uppercase tracking-[0.14em]">
+      <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-medium">
         <span>{scheduleLabel ? `${scheduleLabel} · às ${hour}` : `Nos dias do seu programa · às ${hour}`}</span>
-        <Link href="/app/settings#rotina" className="hit text-accent underline decoration-2 underline-offset-[3px]">
+        <Link href="/app/settings#rotina" className="hit text-accent underline decoration-1 underline-offset-[3px]">
           Trocar dias
         </Link>
       </p>
@@ -230,7 +230,7 @@ function ReminderAsk({
             <span className="block font-medium">
               E um resumo semanal por <span className="whitespace-nowrap">e-mail</span>
             </span>
-            <span className="block text-xs text-muted [overflow-wrap:anywhere]">No seu primeiro dia de treino, às 7h. Para {email.address}.</span>
+            <span className="block text-[13px] text-muted [overflow-wrap:anywhere]">No seu primeiro dia de treino, às 7h. Para {email.address}.</span>
           </span>
         </label>
       ) : null}

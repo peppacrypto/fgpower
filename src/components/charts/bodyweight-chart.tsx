@@ -3,7 +3,7 @@ import { dateOfDayNumber } from "@/lib/data/progress-core";
 import { formatRate, weeklyRate, type AveragedPoint } from "@/lib/training/body-weight";
 import { formatNumber } from "@/lib/utils/format";
 import { ChartScrubber } from "./chart-scrubber";
-import { formatTick, monoDate, valueScale } from "./scale";
+import { formatTick, shortDate, valueScale } from "./scale";
 
 /** "03/08" — a short numeric date for the spoken summary. */
 function numericDate(day: number) {
@@ -53,10 +53,8 @@ export function BodyweightChart({
   return (
     <figure className={cn("min-w-0 overflow-x-clip", className)} data-chart="Peso">
       <figcaption>
-        <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted">
-          {latestAvg ? "Média 7 dias" : "Peso"}
-        </p>
-        <p className="mt-1 font-mono text-[13px] font-semibold tabular-nums text-foreground" data-bodyweight-headline>
+        <p className="text-[13px] font-medium text-muted">{latestAvg ? "Média 7 dias" : "Peso"}</p>
+        <p className="mt-0.5 text-[15px] font-semibold tabular-nums text-foreground" data-bodyweight-headline>
           <span className="whitespace-nowrap">{latestAvg ? kg(latestAvg.avg) : kg(points[points.length - 1].value)}</span>
           {rate ? (
             <>
@@ -67,12 +65,12 @@ export function BodyweightChart({
         </p>
       </figcaption>
 
-      <div className="mt-3 grid grid-cols-[2.25rem_minmax(0,1fr)] gap-x-2">
+      <div className="mt-3 grid grid-cols-[2.5rem_minmax(0,1fr)] gap-x-2">
         <div aria-hidden className="relative h-32">
           {scale.ticks.map((t) => (
             <span
               key={t}
-              className="absolute right-0 -translate-y-1/2 font-mono text-[10px] leading-none tabular-nums text-muted"
+              className="absolute right-0 -translate-y-1/2 text-xs leading-none tabular-nums text-muted"
               style={{ top: `${yOf(t)}%` }}
             >
               {formatTick(t, "kg")}
@@ -123,15 +121,15 @@ export function BodyweightChart({
               points={points.map((p) => ({
                 x: round(xOf(p.day)),
                 y: round(yOf(p.avg ?? p.value)),
-                date: monoDate(dateOfDayNumber(p.day)),
+                date: shortDate(dateOfDayNumber(p.day)),
                 text: p.avg != null ? `${kg(p.value)} · média ${kg(p.avg)}` : kg(p.value),
               }))}
             />
           </div>
         </div>
         <span aria-hidden />
-        <div aria-hidden className="mt-2 flex items-center justify-between gap-2 font-mono text-[10px] tabular-nums text-muted">
-          <span>{points.length > 1 ? monoDate(dateOfDayNumber(first)) : ""}</span>
+        <div aria-hidden className="mt-2 flex items-center justify-between gap-2 text-xs tabular-nums text-muted">
+          <span>{points.length > 1 ? shortDate(dateOfDayNumber(first)) : ""}</span>
           <span className="inline-flex items-center gap-3">
             <span className="inline-flex items-center gap-1.5">
               <span className="size-1.5 rounded-full bg-foreground/35" />
@@ -139,16 +137,16 @@ export function BodyweightChart({
             </span>
             {withAvg.length > 1 ? (
               <span className="inline-flex items-center gap-1.5">
-                <span className="h-0.5 w-3 bg-accent" />
+                <span className="h-0.5 w-3 rounded-full bg-accent" />
                 média
               </span>
             ) : null}
           </span>
-          <span>{monoDate(dateOfDayNumber(points[points.length - 1].day))}</span>
+          <span>{shortDate(dateOfDayNumber(points[points.length - 1].day))}</span>
         </div>
       </div>
       {withAvg.length === 0 ? (
-        <p className="mt-2 text-xs text-muted">A média aparece a partir de 3 pesagens na mesma semana.</p>
+        <p className="mt-2 text-[13px] text-muted">A média aparece a partir de 3 pesagens na mesma semana.</p>
       ) : null}
     </figure>
   );

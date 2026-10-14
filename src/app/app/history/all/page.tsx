@@ -7,15 +7,16 @@ import { listAllSessions } from "@/lib/data/history";
 import { dateOfDayNumber, getWeekRows } from "@/lib/data/progress";
 import { dayNumberOf, mondayOf } from "@/lib/training/day-rotation";
 import { startOfWeek, wallClock } from "@/lib/training/week";
-import { MONTHS_SHORT_UPPER as MONTHS } from "@/lib/utils/date-names";
+import { MONTHS_SHORT as MONTHS } from "@/lib/utils/date-names";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/misc";
+import { cn } from "@/lib/utils/cn";
 import { parsePageParam } from "../params";
 import { SessionRow } from "../session-row";
 
 export const metadata: Metadata = { title: "Todo o histórico" };
 
-/** "21–27 SET", "28 SET – 04 OUT", with the year when it isn't this one. */
+/** "21–27 set", "28 set – 04 out", with the year when it isn't this one. */
 function weekRange(start: Date, now: Date) {
   const a = wallClock(start);
   const b = wallClock(new Date(start.getTime() + 6 * 86_400_000 + 12 * 3_600_000));
@@ -53,15 +54,15 @@ export default async function AllHistoryPage({ searchParams }: PageProps<"/app/h
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
+    <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
       <Link
         href="/app/history"
-        className="-mt-2 -ml-1 inline-flex min-h-11 items-center gap-0.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted hover:text-foreground"
+        className="-mt-2 -ml-1.5 inline-flex min-h-11 items-center gap-0.5 text-sm font-medium text-muted hover:text-foreground"
       >
-        <ChevronLeft className="size-3.5" aria-hidden />
+        <ChevronLeft className="size-4" aria-hidden />
         Histórico
       </Link>
-      <h1 className="text-2xl font-bold tracking-tight">Todo o histórico</h1>
+      <h1 className="text-display text-[1.75rem] font-semibold leading-tight sm:text-[2rem]">Todo o histórico</h1>
 
       {items.length === 0 ? (
         <div className="mt-8">
@@ -77,7 +78,7 @@ export default async function AllHistoryPage({ searchParams }: PageProps<"/app/h
           />
         </div>
       ) : (
-        <div className="mt-6 flex flex-col gap-7">
+        <div className="mt-8 flex flex-col gap-10">
           {groups.map((g) => {
             const row = ledger.find((w) => w.monday === dayNumberOf(g.start));
             // The week is named by the program it's judged by (the streak's row: the one whose week
@@ -98,25 +99,23 @@ export default async function AllHistoryPage({ searchParams }: PageProps<"/app/h
             const deloadMet = week?.deload === true && week.met;
             return (
               <section key={g.start.getTime()} aria-label={`${label}, ${weekRange(g.start, now)}`}>
-                <div className="mb-2.5 flex items-baseline justify-between gap-3 border-b border-border pb-1.5">
-                  <p className="min-w-0 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-foreground">
+                <div className="mb-3 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
+                  <p className="min-w-0 text-base font-semibold">
                     {label}
                     {week ? (
-                      <span data-week-mark className={week.met ? "text-accent" : "text-muted"}>
+                      <span data-week-mark className={cn("tabular-nums", week.met ? "text-accent" : "font-medium text-muted")}>
                         {" · "}
                         {deloadMet ? "deload" : `${week.done}/${week.target}`}
                         {week.met ? (
                           <>
-                            <GCheck className="ml-1 inline size-3 align-[-1px]" aria-hidden />
+                            <GCheck className="ml-1 inline size-3.5 align-[-2px]" aria-hidden />
                             <span className="sr-only">{deloadMet ? " (semana de deload, na meta)" : " (semana na meta)"}</span>
                           </>
                         ) : null}
                       </span>
                     ) : null}
                   </p>
-                  <span className="shrink-0 font-mono text-[10px] tracking-wider tabular-nums text-muted">
-                    {weekRange(g.start, now)}
-                  </span>
+                  <span className="shrink-0 text-[13px] tabular-nums text-muted">{weekRange(g.start, now)}</span>
                 </div>
                 <div className="flex flex-col gap-2">
                   {g.sessions.map((s) => (

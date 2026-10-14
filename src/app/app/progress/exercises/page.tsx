@@ -10,7 +10,7 @@ import { EmptyState } from "@/components/ui/misc";
 import { SectionHead } from "@/components/ui/section-head";
 import { Sparkline } from "@/components/charts/sparkline";
 import { EmptyChartPreview } from "@/components/charts/empty-chart";
-import { formatValue, monoDate, type ChartUnit } from "@/components/charts/scale";
+import { formatValue, shortDate, type ChartUnit } from "@/components/charts/scale";
 import { plural } from "@/lib/utils/format";
 
 export const metadata: Metadata = { title: "Meus exercícios" };
@@ -47,16 +47,16 @@ export default async function MyExercisesPage() {
     .sort((a, b) => b.latest.date.getTime() - a.latest.date.getTime() || a.namePt.localeCompare(b.namePt, "pt-BR"));
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
+    <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
       <Link
         href="/app/progress"
-        className="-mt-2 -ml-1 inline-flex min-h-11 items-center gap-0.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted hover:text-foreground"
+        className="-mt-2 -ml-1.5 inline-flex min-h-11 items-center gap-0.5 text-sm font-medium text-muted hover:text-foreground"
       >
-        <ChevronLeft className="size-3.5" aria-hidden />
+        <ChevronLeft className="size-4" aria-hidden />
         Progresso
       </Link>
-      <h1 className="text-2xl font-bold tracking-tight">Meus exercícios</h1>
-      <p className="mt-1 text-sm text-muted">Cada exercício que você já treinou, do mais recente ao mais antigo.</p>
+      <h1 className="text-display text-[1.75rem] font-semibold leading-tight sm:text-[2rem]">Meus exercícios</h1>
+      <p className="mt-1.5 text-[15px] text-muted">Cada exercício que você já treinou, do mais recente ao mais antigo.</p>
 
       {rows.length === 0 ? (
         <div className="mt-8">
@@ -72,17 +72,17 @@ export default async function MyExercisesPage() {
           />
         </div>
       ) : (
-        <section className="mt-6">
+        <section className="mt-8">
           <SectionHead label="Exercícios" count={rows.length} />
           <div className="mt-3 flex flex-col gap-2">
             {rows.map((r) => (
               <Link key={r.exerciseId} href={`/app/exercises/${r.slug}/history`}>
                 <Card className="is-link">
-                  <CardContent className="flex items-center gap-3 py-3.5">
+                  <CardContent className="flex items-center gap-3 px-4 py-3.5 sm:px-5">
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium">{r.namePt}</p>
-                      <p className="mt-0.5 font-mono text-[11px] tabular-nums text-muted">
-                        <span className="whitespace-nowrap">{monoDate(r.latest.date)}</span>
+                      <p className="text-[15px] font-medium leading-snug">{r.namePt}</p>
+                      <p className="mt-0.5 text-[13px] tabular-nums text-muted">
+                        <span className="whitespace-nowrap">{shortDate(r.latest.date)}</span>
                         {" · "}
                         <span className="whitespace-nowrap">{bestSetText(r.latest, r.mode)}</span>
                         {" · "}

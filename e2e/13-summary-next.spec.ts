@@ -115,7 +115,7 @@ test("the share row fits a 320px phone: the label goes above the options", async
   const label = page.getByText("Quem vê", { exact: true });
   const group = page.getByRole("radiogroup", { name: "Quem vê" });
 
-  // The label goes beside the options from a 21rem row (a 368px viewport) up.
+  // "Quem vê" names its step above the options at every width (the summary's check-in → who sees it → share sequence).
   for (const width of [320, 360, 367, 368, 390, 414]) {
     await page.setViewportSize({ width, height: 800 });
     for (const option of ["Seguidores", "Público", "Privado"]) {
@@ -135,8 +135,7 @@ test("the share row fits a 320px phone: the label goes above the options", async
     }
     const l = (await label.boundingBox())!;
     const g = (await group.boundingBox())!;
-    if (width < 368) expect(l.y + l.height, `${width}px stacked`).toBeLessThanOrEqual(g.y);
-    else expect(l.y, `${width}px beside`).toBeGreaterThan(g.y); // centred on the row
+    expect(l.y + l.height, `${width}px stacked`).toBeLessThanOrEqual(g.y);
     expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
   }
 });

@@ -22,8 +22,8 @@ function ProfileSkeleton() {
       <div className="flex items-center gap-4">
         <Bone className="size-16 shrink-0 rounded-full" />
         <div className="min-w-0 flex-1">
-          <span className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-muted">Perfil</span>
-          <Bone className="mt-1 h-7 w-3/4" />
+          <span className="eyebrow">Perfil</span>
+          <Bone className="mt-1 h-8 w-3/4" />
         </div>
         <Bone className="size-11 shrink-0" />
       </div>
@@ -36,9 +36,9 @@ function ProfileSkeleton() {
           <Bone key={i} className="h-11" />
         ))}
       </div>
-      <div className="mt-6 grid grid-cols-3 gap-3">
+      <div className="card mt-6 grid grid-cols-3 divide-x divide-border">
         {[0, 1, 2].map((i) => (
-          <div key={i} className="reg-frame flex flex-col items-center p-4">
+          <div key={i} className="flex min-h-24 flex-col items-center justify-center p-4">
             <Bone className="h-7 w-8" />
             <Bone className="mt-2 h-3.5 w-16" />
           </div>

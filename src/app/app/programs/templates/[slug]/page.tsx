@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Play } from "lucide-react";
+import { GCheck } from "@/components/ui/glyph";
 import { requireUser } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 import { getTemplateBySlug, listSeriesTemplates, listTemplates, toCatalogItem } from "@/lib/data/templates";
@@ -95,7 +96,7 @@ export default async function TemplateDetailPage({ params, searchParams }: PageP
     ? similarPrograms(current, catalogItems).map((t) => ({ ...t, href: `/app/programs/templates/${t.slug}` }))
     : [];
 
-  const customize = (size: "md" | "lg") => (
+  const customize = (size: "sm" | "md" | "lg") => (
     <form action={customizeTemplate.bind(null, template.slug)}>
       <SubmitButton size={size} variant="outline" pendingLabel="Abrindo…">
         Personalizar
@@ -104,7 +105,7 @@ export default async function TemplateDetailPage({ params, searchParams }: PageP
   );
   // What "Personalizar" does, said once under the masthead's buttons.
   const customizeHelp = (
-    <p className="basis-full text-xs text-muted" data-testid="customize-help">
+    <p className="basis-full text-[13px] text-muted" data-testid="customize-help">
       Personalizar cria uma cópia sua; o original não muda.
       {editedDraft ? (
         <>
@@ -190,11 +191,19 @@ export default async function TemplateDetailPage({ params, searchParams }: PageP
       {customizeHelp}
     </>
   );
-  // The sticky bar (once the masthead buttons scrolled away): the main action + "Personalizar", compact.
-  const sticky = alreadyActive ? null : switchButton ? (
+  // The floating bar (once the masthead buttons scrolled away): the main action + "Personalizar",
+  // compact enough to sit on one line on a phone.
+  const sticky = alreadyActive ? null : trackActive ? (
     <>
-      {switchButton}
-      {customize("lg")}
+      <SwitchProgramButton
+        action={startTemplate.bind(null, template.slug)}
+        label="Ativar programa"
+        pendingLabel="Ativando…"
+        size="md"
+        active={{ name: trackActive.program.name, progress: activeProgress ?? "" }}
+        className="h-auto min-h-11 whitespace-normal py-2 text-center leading-tight text-balance max-sm:px-4"
+      />
+      {customize("sm")}
     </>
   ) : (
     <>
@@ -212,14 +221,9 @@ export default async function TemplateDetailPage({ params, searchParams }: PageP
 
   const adapt =
     missing.length > 0 && ADAPT_LABEL[access] ? (
-      <div
-        className="mt-4 border-l-2 border-l-warning bg-warning-soft px-4 py-3"
-        data-testid="adapt-panel"
-      >
-        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-warning">
-          Você marcou: {EQUIPMENT_LABEL[access]}
-        </p>
-        <p className="mt-1 text-sm text-foreground/90">
+      <div className="mt-4 rounded-[var(--radius-lg)] bg-warning-soft p-4 sm:p-5" data-testid="adapt-panel">
+        <p className="tag tag--status tag--warn text-[13px] font-semibold">Você marcou: {EQUIPMENT_LABEL[access]}</p>
+        <p className="mt-1.5 text-[15px] leading-snug text-foreground">
           Este programa usa <span className="font-semibold">{joinPt(needLabels(missing))}</span>. Dá para trocar esses
           exercícios por outros com o seu equipamento — você confere cada troca antes de salvar.
         </p>
@@ -232,9 +236,15 @@ export default async function TemplateDetailPage({ params, searchParams }: PageP
   return (
     <>
       {discarded ? (
-        <p role="status" className="mx-auto mt-6 max-w-3xl px-4 font-mono text-[11px] font-bold uppercase tracking-[0.14em] sm:px-6">
-          <span className="border-l-2 border-l-success bg-surface-2 px-3 py-2">Rascunho descartado</span>
-        </p>
+        <div className="mx-auto mt-6 max-w-3xl px-4 sm:px-6">
+          <p
+            role="status"
+            className="flex items-center gap-2 rounded-[var(--radius-md)] bg-success-soft px-4 py-3 text-sm font-medium text-success"
+          >
+            <GCheck className="size-4" />
+            Rascunho descartado
+          </p>
+        </div>
       ) : null}
       <TemplateDossier
         template={template}

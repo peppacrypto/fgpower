@@ -3,35 +3,31 @@ import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils/cn";
 
-// Editorial-dossier buttons: sharp (zero radius), no floating drop shadow.
-// Filled variants get an inked "keel" (inset bottom bevel) for letterpress
-// weight and press down on :active; text variants use a measured underline.
-// Outline is a faint ink plate over a visible foreground keel (≥3:1 — it must
-// read as a button, not a heading) that turns accent on hover/press.
-// `sm` keeps its 36px look but takes a 44px touch target (.hit, globals.css).
+// Buttons (docs/DESIGN.md): 10px radius, no shadow at rest. One filled green
+// for the main action of a screen (primary; `strong` is the same, kept as a
+// name for the hero CTAs), a neutral tonal fill for secondary, a white
+// bordered outline, and plain ghost/link. `sm` keeps its 36px look but takes
+// a 44px touch target (.hit, globals.css).
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-none text-sm font-semibold tracking-[-0.01em] transition-[background-color,color,box-shadow,transform] duration-150 disabled:pointer-events-none disabled:opacity-40 [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--radius-md)] text-sm font-semibold transition-[background-color,color,border-color,box-shadow,transform] duration-150 active:scale-[0.985] disabled:pointer-events-none disabled:opacity-40 [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        primary:
-          "bg-accent text-accent-foreground shadow-[inset_0_-2px_0_var(--keel)] hover:bg-accent-hover active:translate-y-[0.5px] active:shadow-none",
-        strong:
-          "bg-accent-strong text-accent-strong-foreground shadow-[inset_0_-2px_0_var(--keel)] hover:brightness-[1.03] active:translate-y-[0.5px] active:brightness-[0.97] active:shadow-none",
-        secondary: "bg-surface-2 text-foreground hover:bg-[var(--border)] active:translate-y-[0.5px]",
+        primary: "bg-accent text-accent-foreground hover:bg-accent-hover",
+        strong: "bg-accent text-accent-foreground hover:bg-accent-hover",
+        secondary: "bg-surface-2 text-foreground hover:bg-[var(--border)]",
         outline:
-          "bg-[var(--ink-3)] text-foreground border-b-2 border-b-foreground/50 hover:border-b-accent hover:bg-[var(--ink-4)] active:border-b-accent active:bg-[var(--ink-4)] active:translate-y-[0.5px]",
-        ghost: "bg-transparent text-foreground hover:bg-surface-2 active:translate-y-[0.5px]",
-        danger:
-          "bg-danger text-[var(--danger-foreground)] shadow-[inset_0_-2px_0_var(--keel)] hover:brightness-95 active:translate-y-[0.5px] active:shadow-none",
-        link: "h-auto px-0 bg-transparent text-accent underline decoration-2 underline-offset-[3px] decoration-[color-mix(in_oklab,var(--accent)_35%,transparent)] hover:decoration-accent",
+          "border border-border-strong bg-surface text-foreground shadow-[var(--shadow-sm)] hover:border-field hover:bg-surface-2",
+        ghost: "bg-transparent text-foreground hover:bg-surface-2",
+        danger: "bg-danger text-[var(--danger-foreground)] hover:brightness-95",
+        link: "h-auto px-0 bg-transparent text-accent underline decoration-1 underline-offset-[3px] decoration-[color-mix(in_oklab,var(--accent)_40%,transparent)] hover:decoration-accent active:scale-100",
       },
       size: {
         sm: "hit h-9 px-3.5 text-[13px]",
         md: "h-11 px-5",
-        lg: "h-13 px-7 text-base",
+        lg: "h-12 px-6 text-[15px]",
         icon: "size-11",
-        bar: "h-12 w-full px-6 text-[15px] tracking-[0.01em] justify-between",
+        bar: "h-12 w-full px-6 text-[15px] justify-between",
       },
     },
     defaultVariants: { variant: "primary", size: "md" },

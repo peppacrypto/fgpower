@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { cookies } from "next/headers";
-import { GArrow, Lettermark } from "@/components/ui/glyph";
+import { ChevronDown } from "lucide-react";
+import { GArrow } from "@/components/ui/glyph";
+import { cn } from "@/lib/utils/cn";
 import { requireUser } from "@/lib/auth/require-user";
 import { getProfile } from "@/lib/data/profile";
 import {
@@ -48,7 +50,7 @@ import {
   weekdayOfDayNo,
 } from "@/lib/training/day-rotation";
 import { seriesPosition } from "@/lib/training/program-calendar";
-import { MONTHS_SHORT_UPPER as MONTHS, WEEKDAYS_SHORT_UPPER as WEEKDAYS } from "@/lib/utils/date-names";
+import { MONTHS_SHORT, WEEKDAYS_SHORT_CAP as WEEKDAYS } from "@/lib/utils/date-names";
 import {
   appliedDeloadGuidance,
   completeWeekDone,
@@ -324,7 +326,8 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
   // Stale sessions included: their day's row continues that session instead
   // of offering a fresh "Iniciar".
   const states = dayStates(days, [...open, ...stale], doneThisWeek);
-  const dateStr = `${WEEKDAYS[wall.weekday]} · ${String(wall.day).padStart(2, "0")} ${MONTHS[wall.month - 1]}`;
+  // "Qua, 14 out": the masthead's dateline, in sentence case.
+  const dateStr = `${WEEKDAYS[wall.weekday]}, ${wall.day} ${MONTHS_SHORT[wall.month - 1]}`;
   const editHref = enrollment ? `/app/programs/${enrollment.programId}/edit` : "/app/programs";
   const answers = recommendProfileOf(profile);
   const picks =
@@ -393,7 +396,7 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
   });
   // "Agora não" / "Entendi" close this week's signal; an applied deload always shows.
   const fatigue = signal && (signal.level === "applied" || !dismissed) ? signal : null;
-  // In a week that asks for body data, the row stays for the day (saved: "PESO HOJE 81,4 KG");
+  // In a week that asks for body data, the row stays for the day (saved: "Peso hoje 81,4 kg");
   // for the weigh-in habit, only until today's is in.
   const showWeighIn = !fatigue && (measure != null || glance.weighedRecently) && (measure != null || glance.todayKg == null);
 
@@ -401,16 +404,16 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
       <ClearParams keys={NOTICE_PARAMS} />
       {resumeId ? <ResumeWorkout sessionId={resumeId} /> : null}
-      {/* Masthead (the notifications bell on its right) */}
+      {/* Masthead: the day, the greeting, the last workout — the notifications bell on its right */}
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
-          <span className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-muted">{dateStr}</span>
-          <h1 className="text-display mt-1 text-3xl font-extrabold sm:text-4xl">
+          <span className="eyebrow">{dateStr}</span>
+          <h1 className="text-display mt-0.5 text-[1.75rem] font-semibold leading-tight [overflow-wrap:anywhere] sm:text-[2rem]">
             {greeting(wall.hour)}, {firstName}.
           </h1>
           {last ? (
-            <p className="mt-1.5 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-muted" data-last-workout>
-              Último treino · <span className="text-foreground/80">{last.name}</span> ·{" "}
+            <p className="mt-1.5 text-sm text-muted" data-last-workout>
+              Último treino · <span className="font-medium text-foreground">{last.name}</span> ·{" "}
               <span className="whitespace-nowrap">{formatSpDaysAgo(last.finishedAt, now)}</span>
             </p>
           ) : null}
@@ -428,7 +431,7 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
       {saved?.finishedAt ? (
         <Notice>
           <span>Treino de {formatSpDate(saved.finishedAt)} salvo no histórico.</span>
-          <Link href={`/app/workout/${saved.id}/summary`} className="inline-flex items-center gap-1 text-accent">
+          <Link href={`/app/workout/${saved.id}/summary`} className="inline-flex items-center gap-1 font-semibold text-accent hover:underline">
             Ver
             <GArrow className="size-3" />
           </Link>
@@ -445,28 +448,31 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
       {param("novo") === "1" && enrollment ? (
         // First visit after onboarding: the plan the wizard built is already
         // active below. Welcome the user and keep the library one discreet tap away.
-        <div className="mt-6 border-l-2 border-l-accent bg-accent-soft px-3 py-2.5" data-welcome-novo>
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent">Seu treino está pronto</p>
+        <div className={NOTE} data-welcome-novo>
+          <p className="text-[15px] font-semibold text-accent">Seu treino está pronto</p>
           <p className="mt-1 text-sm text-foreground/90">
-            Montamos <strong>{enrollment.program.name}</strong> a partir das suas respostas — é só começar. Dá para ajustar
-            ou trocar quando quiser.
+            Montamos <strong className="font-semibold">{enrollment.program.name}</strong> a partir das suas respostas — é só
+            começar. Dá para ajustar ou trocar quando quiser.
           </p>
-          <Link href="/app/programs" className="mt-1 inline-block text-xs font-medium text-accent underline underline-offset-2">
+          <Link
+            href="/app/programs"
+            className="mt-1 inline-flex min-h-11 items-center text-sm font-medium text-accent underline underline-offset-[3px]"
+          >
             Ver outros programas
           </Link>
         </div>
       ) : null}
 
       {undo ? (
-        <div className="mt-6 border-l-2 border-l-accent bg-surface-2 px-3 py-2.5">
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em]">Programa trocado</p>
-          <p className="mt-0.5 text-xs text-muted">
+        <div className={cn(NOTE, "bg-surface-2")}>
+          <p className="text-[15px] font-semibold">Programa trocado</p>
+          <p className="mt-1 text-sm text-muted">
             {undo.previous.program.name} continua na {undoProgress}, de onde você parou.
           </p>
           <InlineActionForm
             action={restorePreviousProgram.bind(null, undo.previous.id)}
             failText="Não foi possível voltar. Tente de novo."
-            className="mt-2"
+            className="mt-3"
             errorClassName="mt-1.5"
           >
             <SubmitButton size="sm" variant="outline" pendingLabel="Voltando…" className="h-auto min-h-9 max-w-full whitespace-normal py-1.5 text-left">
@@ -477,20 +483,20 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
       ) : null}
 
       {welcomeBack ? (
-        <div className="mt-6 border-l-2 border-l-accent bg-accent-soft px-3 py-2.5 text-xs" data-welcome-back>
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent">Bem-vindo de volta</p>
-          <p className="mt-1 text-foreground/90">
+        <div className={NOTE} data-welcome-back>
+          <p className="text-[15px] font-semibold text-accent">Bem-vindo de volta</p>
+          <p className="mt-1 text-sm text-foreground/90">
             {daysAway} dias desde o último treino. Nos primeiros 1–2 treinos, comece com ~90% das cargas e deixe 1 rep a
             mais na reserva (RIR +1): a força volta rápido.{" "}
-            <Link href="/app/science/deloads" className="font-semibold text-accent underline underline-offset-2">
+            <Link href="/app/science/deloads" className="font-semibold text-accent underline underline-offset-[3px]">
               Por quê?
             </Link>
           </p>
         </div>
       ) : null}
 
-      {/* Focus block */}
-      <div className="mt-8 flex flex-col gap-3">
+      {/* Focus block: the next workout is the largest thing on the screen */}
+      <div className="mt-6 flex flex-col gap-3">
         {stale.map((session) => (
           <StaleSessionRow
             key={session.id}
@@ -556,8 +562,8 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
             programa.
           </p>
         ) : enrollment ? (
-          <div className="border-y-2 border-y-[var(--rule-heavy)] bg-surface-2 p-8 text-center">
-            <p className="text-display text-2xl font-bold">Programa sem exercícios.</p>
+          <div className="card px-6 py-10 text-center">
+            <p className="text-display text-xl font-semibold">Programa sem exercícios.</p>
             <p className="mx-auto mt-2 max-w-sm text-sm text-muted">
               {enrollment.program.name} ainda não tem nada para treinar. Adicione ao menos um exercício, ou escolha um
               programa pronto.
@@ -579,8 +585,8 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
           // the series' next one), why, and one tap to the first set.
           <RecommendedPanel picks={picks} fatLoss={answers?.goal === "FAT_LOSS"} showLinks />
         ) : (
-          <div className="border-y-2 border-y-[var(--rule-heavy)] bg-surface-2 p-8 text-center">
-            <p className="text-display text-2xl font-bold">Sem programa ativo.</p>
+          <div className="card px-6 py-10 text-center">
+            <p className="text-display text-xl font-semibold">Sem programa ativo.</p>
             <p className="mx-auto mt-2 max-w-sm text-sm text-muted">
               Escolha um programa pronto ou monte o seu para começar a treinar.
             </p>
@@ -610,27 +616,23 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
 
       {/* Monday/Tuesday: last week, closed out (W-129) */}
       {review && lastWeekRow && lastWeekRow.trained ? (
-        <div className="mt-6">
+        <div className="mt-4">
           <WeekReviewFrame
             weekKey={weekKey}
             label={
               <>
-                <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted">Semana anterior</span>
-                <p className="mt-1.5 font-mono text-2xl font-bold tabular-nums">
+                <p className="text-[15px] font-semibold">Semana anterior</p>
+                <p className="mt-1 text-2xl font-semibold tabular-nums">
                   {lastWeekRow.done}
-                  <span className="text-base text-muted"> / {lastWeekRow.target}</span>
-                  <span className="ml-2 align-middle font-sans text-[10px] font-bold uppercase tracking-wider text-muted">
-                    treinos
-                  </span>
+                  <span className="text-muted"> / {lastWeekRow.target}</span>
+                  <span className="ml-1.5 text-sm font-normal text-muted">treinos</span>
                 </p>
               </>
             }
           >
-            <ul className="mt-2 flex flex-col gap-1 text-xs text-foreground/90">
+            <ul className="mt-2 flex flex-col gap-1 text-sm text-foreground/90">
               {streakText(streak.current, streak.best) ? (
-                <li className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-accent">
-                  {streakText(streak.current, streak.best)}
-                </li>
+                <li className="font-semibold text-accent">{streakText(streak.current, streak.best)}</li>
               ) : null}
               {lastWeekRow.deload ? <li>Semana de deload: leve de propósito.</li> : null}
               <li>
@@ -653,39 +655,37 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
               </li>
             </ul>
             {review.muscles.length > 0 ? (
-              <details className="group/muscles mt-2 border-t border-border">
-                <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between text-xs font-semibold text-accent [&::-webkit-details-marker]:hidden">
+              <details className="group/muscles mt-3 border-t border-border">
+                <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-sm font-semibold text-accent [&::-webkit-details-marker]:hidden">
                   Séries por músculo
-                  <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted group-open/muscles:hidden">
-                    ver
-                  </span>
+                  <ChevronDown className="size-4 shrink-0 text-muted transition-transform group-open/muscles:rotate-180" aria-hidden />
                 </summary>
                 <ul className="grid grid-cols-1 gap-x-6 pb-1 min-[420px]:grid-cols-2">
                   {review.muscles.slice(0, 8).map((m) => (
-                    <li key={m.name} className="flex items-baseline justify-between gap-3 border-t border-border py-1.5 text-xs">
+                    <li key={m.name} className="flex items-baseline justify-between gap-3 border-t border-border py-2 text-sm">
                       <span className="min-w-0 truncate">{m.name}</span>
-                      <span className="shrink-0 font-mono tabular-nums">
-                        {formatNumber(m.sets, 1)}
-                        {m.low ? <span className="ml-1 text-muted">· abaixo de {LOW_WEEKLY_SETS}</span> : null}
-                        {m.high ? <span className="ml-1 text-muted">· acima de {HIGH_WEEKLY_DIRECT_SETS} diretas</span> : null}
+                      <span className="shrink-0 tabular-nums">
+                        <span className="font-semibold">{formatNumber(m.sets, 1)}</span>
+                        {m.low ? <span className="ml-1 text-[13px] text-muted">· abaixo de {LOW_WEEKLY_SETS}</span> : null}
+                        {m.high ? (
+                          <span className="ml-1 text-[13px] text-muted">· acima de {HIGH_WEEKLY_DIRECT_SETS} diretas</span>
+                        ) : null}
                       </span>
                     </li>
                   ))}
                 </ul>
-                <p className="pb-2 text-[11px] text-muted">
+                <p className="pb-2 text-[13px] text-muted">
                   Séries diretas, mais meia série onde o músculo só ajuda. Referência do app: abaixo de{" "}
                   {LOW_WEEKLY_SETS} é pouco; acima de {HIGH_WEEKLY_DIRECT_SETS} diretas é muito.{" "}
-                  <Link href="/app/science/training-volume" className="font-semibold text-accent underline underline-offset-2">
+                  <Link href="/app/science/training-volume" className="font-semibold text-accent underline underline-offset-[3px]">
                     Volume
                   </Link>
                 </p>
               </details>
             ) : null}
             {guidance?.notePt ? (
-              <p className="mt-2 border-t border-border pt-2 text-xs text-foreground/90">
-                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted">
-                  Esta semana ·{" "}
-                </span>
+              <p className="mt-2 border-t border-border pt-3 text-sm text-foreground/90">
+                <span className="font-medium text-muted">Esta semana · </span>
                 {guidance.notePt}
               </p>
             ) : null}
@@ -693,8 +693,8 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
         </div>
       ) : null}
 
-      {/* The week and the program */}
-      <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+      {/* The week, then where the program stands */}
+      <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
         <ThisWeekCard
           done={weeklyDone}
           target={weeklyTarget}
@@ -733,12 +733,37 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
       {/* Today's weigh-in, when the program asks for one or the habit is on (W-083). */}
       <WeighInRow show={showWeighIn} mode={measure} glance={glance} todayNo={todayNo} />
 
+      {/* Progress, when there is some: the latest records, one row per exercise */}
+      {prRows.length > 0 ? (
+        <section className="mt-10">
+          <SectionHead label="Recordes recentes" />
+          <div className="card mt-3 flex flex-col divide-y divide-border">
+            {prRows.map(({ pr, row }) => (
+              <Link
+                key={pr.id}
+                href={`/app/exercises/${pr.exercise.slug}/history`}
+                className="group flex items-center gap-3 px-4 py-3 first:rounded-t-[var(--radius-lg)] last:rounded-b-[var(--radius-lg)] hover:bg-[var(--ink-2)]"
+              >
+                <div className="min-w-0 flex-1">
+                  {/* Two lines: variants share a long prefix and differ at the end ("… - Pegada Aberta"). */}
+                  <p className="line-clamp-2 text-[15px] font-medium leading-snug wrap-break-word group-hover:text-accent">
+                    {pr.exercise.namePt}
+                  </p>
+                  <p className="truncate text-[13px] text-muted">{row.kinds.join(" · ")}</p>
+                </div>
+                <span className="shrink-0 text-base font-semibold tabular-nums">{row.value}</span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
       {/* Every day of the program, with where it stands this week */}
       {enrollment && days.length > 0 ? (
         <section className="mt-10">
           <SectionHead label="Treinos do programa" count={plural(days.length, "dia", "dias")} />
           {locked ? (
-            <p className="mt-2 text-xs text-muted">Finalize ou descarte o treino em andamento para iniciar outro dia.</p>
+            <p className="mt-2 text-sm text-muted">Finalize ou descarte o treino em andamento para iniciar outro dia.</p>
           ) : null}
           <div className="mt-3 flex flex-col gap-2">
             {days.map((day) => {
@@ -748,36 +773,28 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
               return (
                 <div
                   key={day.id}
-                  className="reg-frame flex flex-wrap items-center gap-x-3 gap-y-2 p-3"
+                  className="card flex flex-wrap items-center gap-x-3 gap-y-2 px-4 py-3"
                   data-active={suggested ? "true" : undefined}
                 >
-                  <span className="w-5 shrink-0 font-mono text-xs text-muted">
-                    {String(day.dayIndex + 1).padStart(2, "0")}
-                  </span>
                   <div className="min-w-[7rem] flex-1">
                     {/* A-076: on the suggested day of a shifted week, strip the name's weekday and
                         drop the fixed weekday tag — the "sugerido" marker + hero give the real day. */}
-                    <p className="text-sm font-semibold leading-snug wrap-break-word">
+                    <p className="text-[15px] font-semibold leading-snug wrap-break-word">
                       {suggested && suggestedShifted ? dayNameWithoutWeekday(day.name) : day.name}
                     </p>
-                    <p className="text-xs text-muted">
+                    <p className="mt-0.5 text-[13px] text-muted">
                       {exerciseCount(day.exercises.length)}
                       {day.weekday != null && !empty && !(suggested && suggestedShifted) ? (
-                        <span className="font-mono text-[10px] uppercase tracking-[0.1em]"> · {WEEKDAYS[day.weekday]}</span>
+                        <span> · {WEEKDAYS[day.weekday]}</span>
                       ) : null}
                       {suggested && suggestedShifted && up.next ? (
-                        <span className="font-mono text-[10px] uppercase tracking-[0.1em]"> · previsto p/ {WEEKDAYS[weekdayOfDayNo(up.next.dayNo)]}</span>
+                        <span> · previsto p/ {WEEKDAYS[weekdayOfDayNo(up.next.dayNo)]}</span>
                       ) : null}
                       <DayStatus state={state} suggested={suggested} />
                     </p>
                   </div>
-                  <DayActions
-                    dayId={day.id}
-                    state={state}
-                    locked={locked}
-                    emphasize={suggested}
-                    editHref={empty ? editHref : undefined}
-                  />
+                  {/* The hero above carries the one filled "Iniciar treino": a row's start stays an outline. */}
+                  <DayActions dayId={day.id} state={state} locked={locked} editHref={empty ? editHref : undefined} />
                 </div>
               );
             })}
@@ -797,30 +814,6 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
         allowInvite={!fatigue && !showWeighIn}
       />
 
-      {/* PRs */}
-      {prRows.length > 0 ? (
-        <section className="mt-10">
-          <SectionHead label="Recordes recentes" />
-          <div className="mt-4 flex flex-col divide-y divide-border border-y border-border">
-            {prRows.map(({ pr, row }) => (
-              <Link
-                key={pr.id}
-                href={`/app/exercises/${pr.exercise.slug}/history`}
-                className="group flex items-center gap-4 py-3.5 hover:bg-surface-2/50"
-              >
-                <Lettermark code="PR" className="size-5 shrink-0 text-[9px]" />
-                <div className="min-w-0 flex-1">
-                  {/* Two lines: variants share a long prefix and differ at the end ("… - Pegada Aberta"). */}
-                  <p className="line-clamp-2 text-sm font-semibold leading-snug wrap-break-word">{pr.exercise.namePt}</p>
-                  <p className="truncate text-[11px] uppercase tracking-wider text-muted">{row.kinds.join(" · ")}</p>
-                </div>
-                <span className="shrink-0 font-mono text-lg font-bold tabular-nums">{row.value}</span>
-              </Link>
-            ))}
-          </div>
-        </section>
-      ) : null}
-
       {/*
         The app on the home screen, after the first workouts (decides by itself).
         Last on the page: it appears after hydration, so nothing below it can jump.
@@ -830,12 +823,15 @@ export default async function TodayPage({ searchParams }: PageProps<"/app/today"
   );
 }
 
-/** A one-time mono status line (discarded, saved, restored). */
+/** A soft note under the masthead (welcome, program switched, welcome back). */
+const NOTE = "mt-6 rounded-[var(--radius-lg)] bg-accent-soft px-4 py-3.5";
+
+/** A one-time status line (discarded, saved, restored). */
 function Notice({ children }: { children: React.ReactNode }) {
   return (
     <p
       role="status"
-      className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 border-l-2 border-l-accent bg-surface-2 px-3 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em]"
+      className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-[var(--radius-md)] bg-surface-2 px-4 py-3 text-sm font-medium"
     >
       {children}
     </p>

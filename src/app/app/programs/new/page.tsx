@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { Input, Label } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { SubmitButton } from "@/components/ui/submit-button";
@@ -23,18 +23,18 @@ export default async function NewProgramPage() {
     <div className="mx-auto max-w-md px-4 pb-10 pt-3 sm:px-6 sm:py-10">
       <Link
         href="/app/programs"
-        className="-ml-1 inline-flex min-h-11 items-center gap-1.5 px-1 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-muted hover:text-foreground"
+        className="-ml-1 inline-flex min-h-11 items-center gap-1 rounded-[var(--radius-md)] px-1 text-sm font-medium text-muted hover:text-foreground"
       >
-        <ArrowLeft className="size-3.5" />
+        <ChevronLeft aria-hidden className="size-4" />
         Programas
       </Link>
-      <h1 className="text-display mt-4 text-2xl font-extrabold">Criar programa</h1>
-      <p className="mt-1 text-sm text-muted">Dê um nome. Você adiciona os dias e exercícios em seguida.</p>
+      <h1 className="text-display mt-4 text-[1.75rem] font-semibold leading-tight sm:text-[2rem]">Criar programa</h1>
+      <p className="mt-1.5 text-[15px] text-muted">Dê um nome. Você adiciona os dias e exercícios em seguida.</p>
 
-      <form action={createAction} className="mt-6 flex flex-col gap-4">
+      <form action={createAction} className="card mt-6 flex flex-col gap-5 p-5">
         <div>
           <Label htmlFor="name">Nome do programa</Label>
-          <Input id="name" name="name" placeholder="Ex.: Meu programa de força" required autoFocus className="mt-1.5" maxLength={PROGRAM_NAME_MAX} />
+          <Input id="name" name="name" placeholder="Ex.: Meu programa de força" required autoFocus className="mt-2" maxLength={PROGRAM_NAME_MAX} />
         </div>
         <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
           <Button asChild variant="ghost" size="lg">
@@ -46,7 +46,7 @@ export default async function NewProgramPage() {
         </div>
       </form>
 
-      <p className="mt-8 border-t border-border pt-4 text-xs text-muted">
+      <p className="mt-6 px-1 text-sm leading-normal text-muted">
         Prefere partir de um pronto? Abra um programa da{" "}
         <Link href="/app/programs" className="font-semibold text-accent hover:underline">
           biblioteca

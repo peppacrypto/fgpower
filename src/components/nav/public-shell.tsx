@@ -24,7 +24,7 @@ export function PublicShell({ pendingOnboarding, children }: { pendingOnboarding
             <Logomark size={28} alt="" />
             {/* The name from 380px (the Wordmark's lockup); below that the mark alone leaves room for both buttons. */}
             <span aria-hidden className="hidden text-[17px] font-extrabold tracking-tight text-foreground min-[380px]:inline">
-              FG<span className="text-accent-strong">POWER</span>
+              FG<span className="text-accent">POWER</span>
             </span>
           </Link>
           <PublicAuthActions pendingOnboarding={pendingOnboarding} />
@@ -35,9 +35,7 @@ export function PublicShell({ pendingOnboarding, children }: { pendingOnboarding
 
       <footer className="border-t border-border pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-6">
         <div className="mx-auto flex max-w-xl flex-wrap items-center justify-between gap-x-4 gap-y-1 px-4 sm:px-6">
-          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted">
-            FGPOWER · Treine com um motivo
-          </span>
+          <span className="text-[13px] text-muted">FGPOWER · Treine com um motivo</span>
           <nav aria-label="Rodapé" className="flex items-center gap-1 text-sm text-muted">
             <Link href="/privacy" className="inline-flex min-h-11 items-center px-1.5 hover:text-foreground">
               Privacidade

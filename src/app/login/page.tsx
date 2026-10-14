@@ -43,9 +43,9 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
           <Wordmark iconSize={34} />
         </div>
 
-        <div className="reg-frame">
+        <div className="card overflow-hidden rounded-[var(--radius-xl)]">
           {/* Brand banner — full art, never cropped */}
-          <div className="relative overflow-hidden rounded-t-[3px]">
+          <div className="relative">
             <Image
               src="/brand/fg-banner-letlive.webp"
               alt="Same weights, different you — FGPOWER"
@@ -63,17 +63,17 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
             <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-surface to-transparent" />
           </div>
 
-          <div className="p-8">
-            <h1 className="text-xl font-bold tracking-tight">Entrar na FGPOWER</h1>
+          <div className="px-6 pb-7 pt-5 sm:px-8 sm:pb-8">
+            <h1 className="text-display text-2xl font-semibold">Entrar na FGPOWER</h1>
             <p className="mt-1.5 text-sm text-muted">
               Sua conta e seu histórico de treino ficam salvos automaticamente.
             </p>
 
             {oauthError ? (
-              <div role="alert" className="mt-5 border-l-2 border-l-danger bg-danger-soft px-3.5 py-2.5 text-sm text-danger">
+              <div role="alert" className="mt-5 rounded-[var(--radius-md)] bg-danger-soft px-4 py-3 text-sm text-danger">
                 <p className="font-medium">{oauthError.text}</p>
                 {oauthError.code ? (
-                  <p className="mt-1 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] opacity-80">
+                  <p className="mt-1 text-xs opacity-80">
                     Código: {oauthError.code}
                   </p>
                 ) : null}
@@ -89,7 +89,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
                 ) : null}
               </div>
             ) : sessionExpired ? (
-              <p role="status" className="mt-5 border-l-2 border-l-accent bg-surface-2 px-3.5 py-2.5 text-sm">
+              <p role="status" className="mt-5 rounded-[var(--radius-md)] bg-accent-soft px-4 py-3 text-sm">
                 <span className="font-semibold">Sua sessão expirou.</span> Entre de novo para continuar de onde parou.
               </p>
             ) : null}
@@ -102,7 +102,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
               <>
                 <div className="my-5 flex items-center gap-3" role="separator" aria-label="ou">
                   <span aria-hidden className="h-px flex-1 bg-border" />
-                  <span aria-hidden className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-muted">
+                  <span aria-hidden className="text-[13px] text-muted">
                     ou
                   </span>
                   <span aria-hidden className="h-px flex-1 bg-border" />

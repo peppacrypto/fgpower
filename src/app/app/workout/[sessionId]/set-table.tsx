@@ -37,7 +37,8 @@ export function fieldLabel(field: DraftField, timed = false): string {
   return field === "reps" && timed ? "segundos" : FIELD_LABEL[field];
 }
 
-const GRID = "grid grid-cols-[2.25rem_minmax(0,1fr)_minmax(0,1fr)_3rem_2.75rem] items-center gap-1.5";
+/** Série · kg · reps · RIR · ✓ — kg and reps take the room; the ✓ is a full 48px target. Mirrored by loading.tsx. */
+const GRID = "grid grid-cols-[2.25rem_minmax(0,1fr)_minmax(0,1fr)_3rem_3rem] items-center gap-1.5";
 
 /**
  * Every set the program prescribes is an open row of boxes (kg · reps · RIR ·
@@ -105,7 +106,7 @@ export function SetTable({
     .filter((r) => r.suggestion.weightKg !== null && r.suggestion.reps !== null)
     .map((r) => `~${formatKg(r.suggestion.weightKg)} × ${r.suggestion.reps}`);
   const hintText = (
-    <p className="mb-2 text-xs text-muted">
+    <p className="mb-2 text-[13px] leading-snug text-muted">
       Números em cinza <span className="italic">em itálico</span> são sugestões
       {hint.source === "progression" ? " (a progressão de hoje)" : " (último treino / série de cima)"}. Toque ✓ para
       usá-los ou digite os seus.
@@ -113,8 +114,8 @@ export function SetTable({
   );
   // The column names sit right above the first rows on screen.
   const columns = (
-    <div className={cn(GRID, "px-1 pb-1.5 font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted")}>
-      <span>Série</span>
+    <div className={cn(GRID, "px-1 pb-1 text-xs font-medium text-muted")}>
+      <span className="text-center">Série</span>
       <span className="text-center">kg</span>
       <span className="text-center">{timed ? "seg" : "reps"}</span>
       <button
@@ -122,7 +123,7 @@ export function SetTable({
         onClick={onExplainRir}
         aria-haspopup="dialog"
         aria-label="O que é RIR?"
-        className="-my-3 inline-flex items-center justify-center gap-0.5 py-3 uppercase underline decoration-dotted underline-offset-2 hover:text-foreground"
+        className="-my-3 inline-flex items-center justify-center gap-0.5 py-3 underline decoration-dotted underline-offset-2 hover:text-foreground"
       >
         RIR <Info className="size-3" />
       </button>
@@ -138,16 +139,16 @@ export function SetTable({
       {warmups.length > 0 ? (
         <section aria-label="Aquecimento" className="mb-3">
           <div className="flex items-center justify-between gap-3">
-            <BlockLabel className="mb-0">
-              Aquecimento · <span className="text-foreground/70">opcional</span>
-            </BlockLabel>
+            <p className="eyebrow">
+              Aquecimento · <span className="font-normal">opcional</span>
+            </p>
             {warmupsHaveData ? null : (
               <button
                 type="button"
                 onClick={onToggleWarmups}
                 aria-expanded={showWarmupRows}
                 aria-label={showWarmupRows ? "Ocultar aquecimento" : "Registrar aquecimento"}
-                className="-my-3 inline-flex min-h-11 shrink-0 items-center gap-1 px-1 text-xs font-semibold text-accent"
+                className="-my-3 inline-flex min-h-11 shrink-0 items-center gap-1 px-1 text-[13px] font-semibold text-accent"
               >
                 {showWarmupRows ? "Ocultar" : "Registrar"}
                 <ChevronDown className={cn("size-3.5 transition-transform", showWarmupRows && "rotate-180")} />
@@ -164,11 +165,12 @@ export function SetTable({
               </div>
             </div>
           ) : (
-            <p className="mt-0.5 text-xs text-muted tabular-nums">
+            // One quiet line (12px keeps it to one line on a 390px phone): the sets come first.
+            <p className="text-xs leading-5 text-muted tabular-nums">
               {plural(warmups.length, "série leve", "séries leves")}
               {ramp.length > 0 ? (
                 <>
-                  : <span className="font-mono text-foreground/80">{ramp.join(" · ")}</span>
+                  : <span className="text-foreground">{ramp.join(" · ")}</span>
                 </>
               ) : (
                 " antes da 1ª série — sem registrar, se preferir"
@@ -181,7 +183,7 @@ export function SetTable({
       <section aria-label="Séries prescritas">
         <div className="flex items-start justify-between gap-2">
           <BlockLabel>
-            Séries do treino <span className="text-foreground">· {prescribedCount}</span>
+            Séries do treino <span className="font-normal text-muted">· {prescribedCount}</span>
           </BlockLabel>
           {hint.mode === "folded" ? (
             <button
@@ -205,9 +207,9 @@ export function SetTable({
       </section>
 
       {extras.length > 0 ? (
-        <section aria-label="Séries extras" className="mt-4 border-t-2 border-dashed border-foreground/35! pt-3">
+        <section aria-label="Séries extras" className="mt-5">
           <BlockLabel>
-            Séries extras <span className="tag tag--mark ml-1 align-middle">além do prescrito</span>
+            Séries extras <span className="tag tag--spec ml-1 align-middle font-medium text-muted">além do prescrito</span>
           </BlockLabel>
           <div className="flex flex-col gap-2.5">
             {extras.map((row) => (
@@ -220,13 +222,14 @@ export function SetTable({
         </section>
       ) : null}
 
+      {/* Optional, so a calm ghost button: the next step below is the strong one. */}
       <button
         type="button"
         onClick={onAddExtra}
         disabled={addingExtra}
-        className="mt-4 flex min-h-12 w-full flex-wrap items-center justify-center gap-x-2 border-2 border-dashed border-foreground/35! px-3 py-2 text-sm font-semibold text-foreground/80 hover:border-accent! hover:text-accent disabled:opacity-50"
+        className="mt-3 flex min-h-11 w-full flex-wrap items-center justify-center gap-x-2 rounded-[var(--radius-md)] px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-surface-2 disabled:opacity-50"
       >
-        <Plus className="size-4" />
+        <Plus className="size-4 text-accent" />
         {addingExtra ? "Adicionando…" : "Adicionar série extra"}
         <span className="font-normal text-muted">
           · {prescribedCount === 1 ? "além da série do treino" : `além das ${prescribedCount} do treino`}
@@ -285,7 +288,7 @@ function RemoveExtraButton({ row, onRemove }: { row: SetTableRowModel; onRemove:
 
 function BlockLabel({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <p className={cn("mb-1.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted", className)}>
+    <p className={cn("mb-1.5 text-[15px] font-semibold leading-snug text-foreground", className)}>
       {children}
     </p>
   );
@@ -380,13 +383,14 @@ function SetRowInputs({
       aria-invalid={row.missing === f || (f === "weight" && checking !== null) ? true : undefined}
       aria-describedby={row.missing === f && !row.error ? missingId : undefined}
       className={cn(
-        "h-11 w-full min-w-0 rounded-[3px] border bg-surface px-1 text-center font-mono text-base font-semibold tabular-nums placeholder:font-normal placeholder:italic placeholder:text-muted",
-        // `!`: the global `* { border-color }` rule is unlayered and would win.
+        "h-12 w-full min-w-0 rounded-[var(--radius-md)] border bg-surface px-1 text-center text-lg font-semibold tabular-nums transition-colors placeholder:font-normal placeholder:italic placeholder:text-muted",
+        // RIR is optional and narrow: a notch smaller than kg and reps.
+        f === "rir" && "text-base",
         row.done
-          ? "border-accent!"
+          ? "border-accent"
           : row.missing === f || (f === "weight" && checking)
-            ? "border-warning! border-2"
-            : "border-foreground/50!",
+            ? "border-2 border-warning"
+            : "border-field",
       )}
     />
   );
@@ -405,7 +409,7 @@ function SetRowInputs({
   return (
     <div
       data-set-row={row.id}
-      // Brought into view with its load question (W-088): clear of the fixed rest bar.
+      // Brought into view with its load question (W-088): clear of the floating rest bar.
       className="scroll-mb-40"
       onFocus={() => setFocused(true)}
       onBlur={(e) => {
@@ -415,13 +419,13 @@ function SetRowInputs({
       <div
         className={cn(
           GRID,
-          "px-1 py-1",
+          "rounded-[var(--radius-md)] px-1 py-1 transition-colors",
           row.done ? "bg-accent-soft" : row.kind === "EXTRA" ? "bg-surface-2" : "",
         )}
       >
         <span
           className={cn(
-            "flex flex-col items-center justify-center gap-0.5 text-center font-mono text-sm font-bold leading-none tabular-nums",
+            "flex flex-col items-center justify-center gap-1 text-center text-[15px] font-semibold leading-none tabular-nums",
             row.kind === "WARMUP" ? "text-muted" : row.kind === "EXTRA" ? "text-warning" : "text-foreground",
           )}
         >
@@ -430,7 +434,7 @@ function SetRowInputs({
             <span
               ref={markRef}
               data-pr-mark
-              className="inline-flex size-[18px] items-center justify-center bg-accent text-[8px] font-bold tracking-[0.04em] text-accent-foreground shadow-[inset_0_-2px_0_var(--keel)]"
+              className="inline-flex items-center justify-center rounded-[var(--radius-sm)] bg-accent px-1 py-0.5 text-xs font-bold leading-none text-accent-foreground"
             >
               PR<span className="sr-only"> · recorde pessoal</span>
             </span>
@@ -446,10 +450,10 @@ function SetRowInputs({
           aria-label={row.done ? `${name} feita — toque para desfazer` : `Concluir ${name.toLowerCase()}`}
           data-sync={row.sync ?? undefined}
           className={cn(
-            "flex size-11 items-center justify-center rounded-[3px] transition-colors",
+            "flex size-12 items-center justify-center rounded-[var(--radius-md)] transition-colors",
             row.done
-              ? "bg-accent text-accent-foreground shadow-[inset_0_-2px_0_var(--keel)]"
-              : "border-2 border-foreground/50! text-foreground/60 hover:border-accent! hover:text-accent",
+              ? "bg-accent text-accent-foreground hover:bg-accent-hover"
+              : "border-2 border-field bg-surface text-muted hover:border-accent hover:text-accent",
           )}
         >
           <Check className={cn("size-5", row.sync === "sending" ? "animate-pulse" : "")} strokeWidth={3} />
@@ -457,7 +461,7 @@ function SetRowInputs({
       </div>
       {checking ? (
         // A load far from the reference (a typo: "225" for 22,5) is asked about before it counts (W-088).
-        <div role="alert" className="mt-1 flex flex-wrap items-center gap-x-3 border-l-2 border-l-warning! bg-warning-soft px-2 py-1 text-xs">
+        <div role="alert" className="mt-1 flex flex-wrap items-center gap-x-3 rounded-[var(--radius-md)] bg-warning-soft px-3 py-1 text-[13px]">
           <span className="min-w-0 flex-1 font-semibold text-foreground">{checking.text}</span>
           <span className="flex shrink-0 gap-1">
             <button
@@ -477,11 +481,11 @@ function SetRowInputs({
           </span>
         </div>
       ) : row.error ? (
-        <p role="alert" className="px-1 pt-1 text-xs font-medium text-danger">
+        <p role="alert" className="px-1 pt-1 text-[13px] font-medium text-danger">
           {row.error}
         </p>
       ) : row.sync === "pending" || row.sync === "held" ? (
-        <p className="px-1 pt-1 font-mono text-xs font-bold uppercase tracking-[0.12em] text-warning">
+        <p className="px-1 pt-1 text-[13px] font-medium text-warning">
           {row.sync === "held" ? "Pendente · entre de novo" : "Pendente · reenviando"}
         </p>
       ) : null}
@@ -489,7 +493,7 @@ function SetRowInputs({
       {missingText && !row.error && !checking ? (
         <p
           id={missingId}
-          className={cn("px-1 pt-1 font-mono text-xs font-bold uppercase tracking-[0.12em] text-warning", focused && "sr-only")}
+          className={cn("px-1 pt-1 text-[13px] font-medium text-warning", focused && "sr-only")}
         >
           {missingText}
         </p>

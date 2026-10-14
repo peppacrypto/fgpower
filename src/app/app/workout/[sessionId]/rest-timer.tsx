@@ -175,7 +175,9 @@ function ago(ms: number) {
   return s < 60 ? `${s} s` : `${Math.floor(s / 60)} min`;
 }
 
-const BAR_BUTTON ="flex h-11 items-center justify-center gap-0.5 rounded-[3px] bg-black/10 text-sm font-semibold hover:bg-black/20";
+/** The bar's ±15 s / pause / skip buttons: tonal 44px plates. */
+const BAR_BUTTON =
+  "flex h-11 items-center justify-center gap-0.5 rounded-[var(--radius-md)] bg-surface-2 text-sm font-semibold text-foreground transition-colors hover:bg-[var(--border)]";
 
 /**
  * The rest bar. The countdown itself is hidden from screen readers (it would
@@ -279,7 +281,10 @@ export function RestTimerBar({
     <button
       type="button"
       onClick={next.onGo}
-      className="-mx-1 flex min-h-10 w-[calc(100%+0.5rem)] items-center justify-between gap-2 px-1 text-left font-mono text-xs font-bold uppercase tracking-[0.14em] hover:underline"
+      className={cn(
+        "-mx-1 flex min-h-10 w-[calc(100%+0.5rem)] items-center justify-between gap-2 rounded-[var(--radius-sm)] px-1 text-left text-[13px] font-semibold hover:underline",
+        ended ? "text-accent-foreground" : "text-accent",
+      )}
     >
       {/* Two lines, not cut: variants differ only at the end ("… - Pegada Aberta", W-166). */}
       <span className="line-clamp-2 min-w-0 wrap-break-word">Próximo · {next.name}</span>
@@ -288,82 +293,108 @@ export function RestTimerBar({
   ) : null;
 
   return (
+    // A floating bar clear of the screen's edges and the home indicator. The
+    // wrapper (its height, gap below included) is what --sp-bar reserves, so
+    // a row or a button scrolled into view always lands above the bar.
     <div
       ref={barRef}
-      data-rest-state={ended ? "ended" : paused ? "paused" : "running"}
-      className={cn(
-        "fixed inset-x-0 bottom-0 z-30 px-4 pt-1.5 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-lg",
-        // Ink, not accent, when it ends: unmistakably different from the running bar in both themes.
-        // Scope --ring so a focused control's outline contrasts with the bar it sits on (WCAG 2.4.7).
-        ended
-          ? "bg-foreground text-background [--ring:var(--background)]"
-          : "bg-accent text-accent-foreground [--ring:var(--accent-foreground)]",
-      )}
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-30 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] max-[359px]:px-2 sm:left-64 sm:px-4"
     >
-      <div className="mx-auto max-w-3xl">
-        {ended ? (
-          <>
-            <div className="flex items-center justify-between gap-3">
-              <div className="min-w-0 py-1">
-                <p className="font-mono text-xs font-bold uppercase tracking-[0.16em]">
-                  {late ? `${noun} terminou há ${ago(now - timer.endsAt)}` : transition ? "Transição concluída" : "Descanso concluído"}
-                </p>
-                {!next && upNext ? <p className="mt-0.5 line-clamp-2 text-sm font-semibold wrap-break-word">{upNext}</p> : null}
-              </div>
-              <button
-                type="button"
-                onClick={onDismiss}
-                aria-label={transition ? "Fechar aviso de transição" : "Fechar aviso de descanso"}
-                className="flex size-11 shrink-0 items-center justify-center rounded-[3px] bg-background/15 hover:bg-background/25"
-              >
-                <X className="size-4" />
-              </button>
-            </div>
-            {nextButton}
-          </>
-        ) : (
-          <>
-            {nextButton ?? (
-              <p className="line-clamp-2 py-1.5 text-xs wrap-break-word">
-                <span className="font-mono text-xs font-bold uppercase tracking-[0.14em]">
-                  {paused ? `${noun} pausad${transition ? "a" : "o"}` : noun}
-                </span>
-                <span className="opacity-85"> · após {timer.after}</span>
-              </p>
-            )}
-            <div className="flex items-center justify-between gap-2">
-              {/* A notch smaller under 360px: the clock and the four buttons share a 320px row. */}
-              <span aria-hidden className="font-mono text-3xl font-bold tabular-nums max-[359px]:text-2xl">
-                {clock(Math.ceil(leftMs / 1000))}
-              </span>
-              {/* Read on demand (role=timer never auto-announces): the visible clock is aria-hidden. */}
-              <span role="timer" className="sr-only">
-                {restTimerSpeech(leftMs, paused)}
-              </span>
-              <div className="flex shrink-0 items-center gap-1.5 max-[359px]:gap-1">
-                <button type="button" onClick={() => onAdjust(-15)} aria-label="Menos 15 segundos" className={cn(BAR_BUTTON, "px-2.5")}>
-                  <Minus className="size-3.5" />
-                  15s
-                </button>
-                <button type="button" onClick={() => onAdjust(15)} aria-label="Mais 15 segundos" className={cn(BAR_BUTTON, "px-2.5")}>
-                  <Plus className="size-3.5" />
-                  15s
-                </button>
+      <div
+        data-rest-state={ended ? "ended" : paused ? "paused" : "running"}
+        className={cn(
+          "pointer-events-auto mx-auto max-w-[46rem] rounded-[var(--radius-xl)] border shadow-[var(--shadow-md)]",
+          // Green when it ends — time for the next set: unmistakably different from the running bar in both themes.
+          // Scope --ring so a focused control's outline contrasts with the bar it sits on (WCAG 2.4.7).
+          ended
+            ? "border-accent bg-accent text-accent-foreground [--ring:var(--accent-foreground)]"
+            : "border-border bg-surface text-foreground",
+        )}
+      >
+        <div className="px-3.5 pb-3 pt-1.5 max-[359px]:px-3">
+          {ended ? (
+            <>
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0 py-1">
+                  <p className="text-[15px] font-semibold">
+                    {late ? `${noun} terminou há ${ago(now - timer.endsAt)}` : transition ? "Transição concluída" : "Descanso concluído"}
+                  </p>
+                  {!next && upNext ? <p className="mt-0.5 line-clamp-2 text-sm wrap-break-word tabular-nums">{upNext}</p> : null}
+                </div>
                 <button
                   type="button"
-                  onClick={onTogglePause}
-                  aria-label={paused ? `Retomar ${noun.toLowerCase()}` : `Pausar ${noun.toLowerCase()}`}
-                  className={cn(BAR_BUTTON, "size-11")}
+                  onClick={onDismiss}
+                  aria-label={transition ? "Fechar aviso de transição" : "Fechar aviso de descanso"}
+                  className="flex size-11 shrink-0 items-center justify-center rounded-[var(--radius-md)] bg-[color-mix(in_oklab,var(--accent-foreground)_14%,transparent)] hover:bg-[color-mix(in_oklab,var(--accent-foreground)_24%,transparent)]"
                 >
-                  {paused ? <Play className="size-4" /> : <Pause className="size-4" />}
-                </button>
-                <button type="button" onClick={onDismiss} aria-label={`Pular ${noun.toLowerCase()}`} className={cn(BAR_BUTTON, "size-11")}>
                   <X className="size-4" />
                 </button>
               </div>
-            </div>
-          </>
-        )}
+              {nextButton}
+            </>
+          ) : (
+            <>
+              {nextButton ?? (
+                <p className="line-clamp-2 py-1.5 text-[13px] leading-snug wrap-break-word">
+                  <span className="font-semibold">{paused ? `${noun} pausad${transition ? "a" : "o"}` : noun}</span>
+                  <span className="text-muted"> · após {timer.after}</span>
+                </p>
+              )}
+              <div className="flex items-center justify-between gap-2">
+                {/* A notch smaller under 360px: the clock and the four buttons share a 320px row. */}
+                <span
+                  aria-hidden
+                  className={cn(
+                    "text-[2rem] font-semibold leading-none tabular-nums max-[359px]:text-[1.625rem]",
+                    paused && "text-muted",
+                  )}
+                >
+                  {clock(Math.ceil(leftMs / 1000))}
+                </span>
+                {/* Read on demand (role=timer never auto-announces): the visible clock is aria-hidden. */}
+                <span role="timer" className="sr-only">
+                  {restTimerSpeech(leftMs, paused)}
+                </span>
+                <div className="flex shrink-0 items-center gap-1.5 max-[359px]:gap-1">
+                  <button
+                    type="button"
+                    onClick={() => onAdjust(-15)}
+                    aria-label="Menos 15 segundos"
+                    className={cn(BAR_BUTTON, "px-2.5 max-[359px]:px-2")}
+                  >
+                    <Minus className="size-3.5" />
+                    15s
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onAdjust(15)}
+                    aria-label="Mais 15 segundos"
+                    className={cn(BAR_BUTTON, "px-2.5 max-[359px]:px-2")}
+                  >
+                    <Plus className="size-3.5" />
+                    15s
+                  </button>
+                  <button
+                    type="button"
+                    onClick={onTogglePause}
+                    aria-label={paused ? `Retomar ${noun.toLowerCase()}` : `Pausar ${noun.toLowerCase()}`}
+                    className={cn(BAR_BUTTON, "size-11")}
+                  >
+                    {paused ? <Play className="size-4" /> : <Pause className="size-4" />}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={onDismiss}
+                    aria-label={`Pular ${noun.toLowerCase()}`}
+                    className={cn(BAR_BUTTON, "size-11")}
+                  >
+                    <X className="size-4" />
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

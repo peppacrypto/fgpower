@@ -333,7 +333,7 @@ test("a follow still reads right after going into a workout and back (W-045, W-1
 
   // Descobrir: follow from a search result, open the profile, come back.
   await page.goto(`/app/discover?q=${encodeURIComponent(`bea_${t}`)}`);
-  const row = page.locator(".reg-frame").filter({ has: page.getByRole("link", { name: new RegExp(`bea_${t}`) }) });
+  const row = page.locator(".card").filter({ has: page.getByRole("link", { name: new RegExp(`bea_${t}`) }) });
   await clickAction(page, row.getByRole("button", { name: "Seguir", exact: true }));
   await expect(row.getByRole("button", { name: "Seguindo" })).toBeVisible();
   await Promise.all([page.waitForURL(new RegExp(`/u/bea_${t}$`)), row.getByRole("link", { name: new RegExp(`bea_${t}`) }).click()]);
@@ -365,11 +365,11 @@ test("Descobrir suggests people, follows in place and invites a friend (W-047, W
   await page.goto("/app/discover");
   await expect(page.getByText("Encontre amigos pelo nome ou @usuário.")).toBeVisible();
   const same = page.locator("section").filter({ has: page.getByRole("heading", { name: "Treinando o mesmo programa" }) });
-  const doraRow = same.locator(".reg-frame").filter({ has: page.getByRole("link", { name: new RegExp(`dora_${t}`) }) });
+  const doraRow = same.locator(".card").filter({ has: page.getByRole("link", { name: new RegExp(`dora_${t}`) }) });
   await expect(doraRow).toContainText(`Dora ${t}`);
   await expect(doraRow).toContainText(/Treinando: GD 1/i);
   const active = page.locator("section").filter({ has: page.getByRole("heading", { name: "Ativos esta semana" }) });
-  const eduRow = active.locator(".reg-frame").filter({ has: page.getByRole("link", { name: new RegExp(`edu_${t}`) }) });
+  const eduRow = active.locator(".card").filter({ has: page.getByRole("link", { name: new RegExp(`edu_${t}`) }) });
   await expect(eduRow).toContainText(/Treinou hoje · Pull B/i);
   // Nobody twice on the page.
   await expect(page.getByRole("link", { name: new RegExp(`dora_${t}`) })).toHaveCount(1);
@@ -397,10 +397,10 @@ test("Descobrir suggests people, follows in place and invites a friend (W-047, W
   await page.goto(`/app/discover?q=${encodeURIComponent(myName)}`);
   await expect(page.getByRole("link", { name: new RegExp(meHandle) })).toHaveCount(0);
   await page.goto(`/app/discover?q=${encodeURIComponent(`@dora_${t}`)}`);
-  const result = page.locator(".reg-frame").filter({ has: page.getByRole("link", { name: new RegExp(`dora_${t}`) }) });
+  const result = page.locator(".card").filter({ has: page.getByRole("link", { name: new RegExp(`dora_${t}`) }) });
   await expect(result.getByRole("button", { name: "Seguindo" })).toBeVisible();
   await page.goto(`/app/discover?q=${encodeURIComponent(`edu_${t}`)}`);
-  const eduResult = page.locator(".reg-frame").filter({ has: page.getByRole("link", { name: new RegExp(`edu_${t}`) }) });
+  const eduResult = page.locator(".card").filter({ has: page.getByRole("link", { name: new RegExp(`edu_${t}`) }) });
   await clickAction(page, eduResult.getByRole("button", { name: "Seguir", exact: true }));
   await expect(eduResult.getByRole("button", { name: "Seguindo" })).toBeVisible();
   await page.reload();

@@ -318,22 +318,22 @@ test("the library browses by category, keeps the profile preset one tap away, an
   await expect(page.getByRole("button", { name: "Limpar busca" })).toHaveCount(1);
 });
 
-test("program cards read their days and never widen a 320px screen", async ({ page }) => {
+test("program cards lead with the weekly commitment and never widen a 320px screen", async ({ page }) => {
   await newUserWith(page, "cards");
   await page.setViewportSize({ width: 320, height: 700 });
   await page.goto("/app/programs");
   // Opens unfiltered on "Todos": every card is shown, no clearing needed.
   const home = page.locator('a[href="/app/programs/templates/home-dumbbells"]').last();
-  await expect(home.getByText("A", { exact: true })).toBeVisible();
+  // Name, purpose, then the commitment to compare by (the session structure lives on the program's page).
+  await expect(home.locator("[data-commitment]")).toHaveText(/^3 dias\/semana · ~\d+ min · 8 semanas$/);
   // The GD plan's card (rail and all) fits too.
   await page.locator('[data-series="gd"]').getByRole("button", { name: "Ver os 9 blocos" }).click();
   const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
   expect(scrollWidth).toBeLessThanOrEqual(320);
-  // A GD block found by name is a full card, its weekday-named days read as such.
+  // A GD block found by name is a full card, with its weekly commitment.
   await page.getByLabel("Buscar programa").fill("GD Adaptação");
   const gd = page.locator('a[href="/app/programs/templates/gd-adaptacao"]').first();
-  await expect(gd).toContainText("SEG · SUP A");
-  await expect(gd).toContainText("QUA · TÉC");
+  await expect(gd.locator("[data-commitment]")).toHaveText(/^5 dias\/semana · ~\d+ min · 4 semanas$/);
   // Led by what it builds (L-gd-taglines): no "Bloco 1 de 9 · …" on the card — the dossier's rail says where it sits.
   await expect(gd).toContainText("Aprenda os movimentos, calibre o RIR e prepare articulações e cargas para o GD 1");
   await expect(gd).not.toContainText(/Bloco \d de 9/);

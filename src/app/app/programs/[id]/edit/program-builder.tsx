@@ -23,6 +23,8 @@ import {
   ArrowRight,
   ArrowUp,
   CalendarRange,
+  Check,
+  ChevronLeft,
   Copy,
   Link2,
   Link2Off,
@@ -31,6 +33,7 @@ import {
   Repeat,
   Trash2,
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SubmitButton } from "@/components/ui/submit-button";
@@ -1185,16 +1188,16 @@ export function ProgramBuilder({
       <div className="flex items-center justify-between gap-2">
         <Link
           href={`/app/programs/${programId}`}
-          className="-ml-1 inline-flex min-h-11 items-center gap-1.5 px-1 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-muted hover:text-foreground"
+          className="-ml-1 inline-flex min-h-11 items-center gap-1 rounded-[var(--radius-md)] px-1 text-sm font-medium text-muted hover:text-foreground"
         >
-          <ArrowLeft className="size-3.5" />
+          <ChevronLeft aria-hidden className="size-4" />
           Programa
         </Link>
         {canDiscard ? (
           <button
             type="button"
             onClick={() => setSheet({ kind: "discard" })}
-            className="-mr-2 min-h-11 px-2 text-xs font-medium text-muted hover:text-danger"
+            className="-mr-2 min-h-11 rounded-[var(--radius-md)] px-2 text-sm font-medium text-muted hover:text-danger"
           >
             Descartar rascunho
           </button>
@@ -1202,18 +1205,13 @@ export function ProgramBuilder({
       </div>
 
       <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1">
-        <h1 className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-foreground">Editar programa</h1>
-        <span
-          className={cn(
-            "font-mono text-[10px] font-bold uppercase tracking-[0.14em]",
-            currentStatus === "ACTIVE" ? "text-accent" : "text-muted",
-          )}
-        >
-          · {currentStatus === "ACTIVE" ? "Ativo" : currentStatus === "DRAFT" ? "Rascunho" : "Arquivado"}
-        </span>
+        <h1 className="eyebrow">Editar programa</h1>
+        <Badge variant={currentStatus === "ACTIVE" ? "accent" : "default"}>
+          {currentStatus === "ACTIVE" ? "Ativo" : currentStatus === "DRAFT" ? "Rascunho" : "Arquivado"}
+        </Badge>
       </div>
       {sourceTemplate ? (
-        <p className="mt-0.5 text-xs text-muted">
+        <p className="mt-1 text-[13px] text-muted">
           Sua cópia de{" "}
           <Link href={`/app/programs/templates/${sourceTemplate.slug}`} className="font-semibold text-accent hover:underline">
             {sourceTemplate.name}
@@ -1223,9 +1221,9 @@ export function ProgramBuilder({
       ) : null}
 
       {currentStatus === "ACTIVE" ? (
-        <div className="mt-3 border-l-2 border-l-accent bg-surface-2 px-3 py-2" data-testid="active-program-note">
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-accent">Programa ativo</p>
-          <p className="mt-0.5 text-sm text-foreground/90">
+        <div className="mt-4 rounded-[var(--radius-lg)] bg-accent-soft px-4 py-3" data-testid="active-program-note">
+          <p className="text-sm font-semibold text-accent">Programa ativo</p>
+          <p className="mt-0.5 text-sm text-foreground">
             As mudanças valem a partir do próximo treino.
             {openSession ? (
               <>
@@ -1238,12 +1236,12 @@ export function ProgramBuilder({
       ) : null}
 
       {notice && noticeOpen ? (
-        <div role="status" className="mt-3 flex items-start gap-3 border-l-2 border-l-success bg-surface-2 px-3 py-2">
+        <div role="status" className="mt-4 flex items-start gap-3 rounded-[var(--radius-lg)] bg-success-soft py-3 pl-4 pr-2">
           <div className="min-w-0 flex-1">
-            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-success">
+            <p className="text-sm font-semibold text-success">
               {notice.kind === "copy" ? "Cópia criada" : "Adaptado ao seu equipamento"}
             </p>
-            <p className="mt-0.5 text-sm text-foreground/90">
+            <p className="mt-0.5 text-sm text-foreground">
               {notice.kind === "copy"
                 ? "Você está editando a cópia. O original continua como estava."
                 : notice.swaps > 0
@@ -1254,7 +1252,7 @@ export function ProgramBuilder({
           <button
             type="button"
             onClick={() => setNoticeOpen(false)}
-            className="-my-1 -mr-2 min-h-11 px-2 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted hover:text-foreground"
+            className="-my-1.5 min-h-11 shrink-0 rounded-[var(--radius-md)] px-3 text-sm font-semibold text-muted hover:text-foreground"
           >
             OK
           </button>
@@ -1262,76 +1260,78 @@ export function ProgramBuilder({
       ) : null}
 
       {draftOffer ? (
-        <div role="status" className="mt-3 border-l-2 border-l-warning bg-warning-soft px-3.5 py-3">
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-warning">
-            Rascunho neste aparelho · {draftTime.format(draftOffer.savedAt)}
+        <div role="status" className="mt-4 rounded-[var(--radius-lg)] bg-warning-soft px-4 py-3">
+          <p className="text-sm font-semibold text-warning">
+            Rascunho neste aparelho · <span className="tabular-nums">{draftTime.format(draftOffer.savedAt)}</span>
           </p>
-          <p className="mt-1 text-sm text-foreground/90">
+          <p className="mt-0.5 text-sm text-foreground">
             {draftIsStale
               ? "Há alterações não salvas de antes da última vez que este programa foi salvo."
               : "Há alterações não salvas da sua última edição."}
           </p>
-          <div className="mt-2.5 flex flex-wrap gap-1.5">
-            <Button size="sm" className="px-3" onClick={restoreDraft}>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Button size="sm" onClick={restoreDraft}>
               Restaurar alterações não salvas
             </Button>
-            <Button size="sm" variant="ghost" className="px-2.5" onClick={dismissDraft}>
+            <Button size="sm" variant="ghost" onClick={dismissDraft}>
               Descartar
             </Button>
           </div>
         </div>
       ) : null}
 
-      <Input
-        id="program-name"
-        value={name}
-        maxLength={PROGRAM_NAME_MAX}
-        aria-label="Nome do programa"
-        aria-invalid={errors.name ? true : undefined}
-        aria-describedby={errors.name ? "program-name-error" : undefined}
-        onChange={(e) => {
-          setName(e.target.value);
-          setSavedOnce(false);
-          if (errors.name && e.target.value.trim()) setErrors((er) => ({ ...er, name: null }));
-        }}
-        onBlur={() => {
-          if (!name.trim()) setErrors((er) => ({ ...er, name: NAME_REQUIRED }));
-        }}
-        placeholder="Nome do programa"
-        // An underline, not a box: no invalid ring from the Input (the danger underline says it), and
-        // focus still shows as the accent underline while the name is missing.
-        className={cn(
-          "mt-2 rounded-none border-0 border-b-2 border-b-transparent px-0 text-2xl font-bold tracking-tight shadow-none focus-visible:border-b-accent focus-visible:outline-none aria-[invalid=true]:ring-0 aria-[invalid=true]:focus-visible:border-b-accent",
-          errors.name && "border-b-danger",
-        )}
-      />
-      {errors.name ? (
-        <p id="program-name-error" role="alert" className="mt-1 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-danger">
-          {errors.name}
-        </p>
-      ) : null}
-      {/* Grows with the text: a GD block's long tagline is read whole, not cut at two lines. */}
-      <AutoGrowText
-        id="program-description"
-        value={description}
-        maxLength={PROGRAM_DESCRIPTION_MAX}
-        maxHeight={220}
-        aria-label="Descrição"
-        onValueChange={(value) => {
-          setDescription(value);
-          setSavedOnce(false);
-          if (errors.description) setErrors((er) => ({ ...er, description: null }));
-        }}
-        placeholder="Descrição (opcional)"
-        className="mt-1 min-h-11 rounded-[3px] border border-transparent bg-transparent px-0 py-2 text-base leading-snug text-muted placeholder:text-muted/80 hover:border-foreground/20 focus-visible:outline-none sm:text-sm"
-      />
-      {errors.description ? (
-        <p role="alert" className="mt-1 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-danger">
-          {errors.description}
-        </p>
-      ) : null}
+      {/* The program's masthead: its name, what it is for and its week, edited in place. */}
+      <div className="panel mt-4 p-4 sm:p-6">
+        {/* Grows with the text: a long name ("Seu plano — Hipertrofia · 3×/semana") is read whole on a phone.
+            The field's box shows on hover and focus; a missing name wears the danger border. */}
+        <AutoGrowText
+          id="program-name"
+          singleLine
+          value={name}
+          maxLength={PROGRAM_NAME_MAX}
+          maxHeight={160}
+          aria-label="Nome do programa"
+          aria-invalid={errors.name ? true : undefined}
+          aria-describedby={errors.name ? "program-name-error" : undefined}
+          onValueChange={(value) => {
+            setName(value);
+            setSavedOnce(false);
+            if (errors.name && value.trim()) setErrors((er) => ({ ...er, name: null }));
+          }}
+          onBlur={() => {
+            if (!name.trim()) setErrors((er) => ({ ...er, name: NAME_REQUIRED }));
+          }}
+          placeholder="Nome do programa"
+          className={cn(INLINE_FIELD, "text-display py-1 text-[1.625rem] font-semibold leading-tight sm:text-[1.875rem]")}
+        />
+        {errors.name ? (
+          <p id="program-name-error" role="alert" className="mt-1.5 text-[13px] font-medium text-danger">
+            {errors.name}
+          </p>
+        ) : null}
+        {/* Grows with the text: a GD block's long tagline is read whole, not cut at two lines. */}
+        <AutoGrowText
+          id="program-description"
+          value={description}
+          maxLength={PROGRAM_DESCRIPTION_MAX}
+          maxHeight={220}
+          aria-label="Descrição"
+          onValueChange={(value) => {
+            setDescription(value);
+            setSavedOnce(false);
+            if (errors.description) setErrors((er) => ({ ...er, description: null }));
+          }}
+          placeholder="Descrição (opcional)"
+          className={cn(INLINE_FIELD, "mt-1 min-h-11 py-2 text-base leading-normal text-muted placeholder:text-muted/80 sm:text-[15px]")}
+        />
+        {errors.description ? (
+          <p role="alert" className="mt-1.5 text-[13px] font-medium text-danger">
+            {errors.description}
+          </p>
+        ) : null}
 
-      <CadenceChips cadence={cadence} dayCount={days.length} errors={errors.cadence} onChange={changeCadence} />
+        <CadenceChips cadence={cadence} dayCount={days.length} errors={errors.cadence} onChange={changeCadence} />
+      </div>
 
       <VolumeStrip
         volume={volume}
@@ -1342,12 +1342,12 @@ export function ProgramBuilder({
         }}
       />
 
-      {/* Day tabs: one row that scrolls sideways ("D1 SEG · SUP"), full names in the box below. */}
-      <div className="-mx-4 mt-4 flex items-center gap-1 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:-mx-6 sm:px-6 [&::-webkit-scrollbar]:hidden">
+      {/* Day tabs: one row that scrolls sideways ("D1 Seg · Sup"), the full name in the day's card below. */}
+      <div className="-mx-4 mt-6 flex items-center gap-1.5 overflow-x-auto px-4 py-0.5 [scrollbar-width:none] sm:-mx-6 sm:px-6 [&::-webkit-scrollbar]:hidden">
         <div
           role="tablist"
           aria-label="Dias do programa"
-          className="flex items-center gap-1"
+          className="flex items-center gap-1.5"
           onKeyDown={(e) => {
             const last = days.length - 1;
             // From the tab that has focus (normally the selected one: roving tabindex).
@@ -1386,15 +1386,21 @@ export function ProgramBuilder({
                 className={cn(
                   // `relative` keeps the sr-only label's absolute positioning inside the tab; without it,
                   // the label anchors to <html> at the tab's off-screen x and widens the page on a phone.
-                  "relative flex h-11 shrink-0 items-center gap-1.5 whitespace-nowrap border-b-2 px-3 font-mono text-[11px] font-bold uppercase tracking-[0.06em]",
+                  "relative flex h-11 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-[var(--radius-md)] border px-3.5 text-sm transition-colors",
                   selected
-                    ? "border-b-accent bg-surface-2 text-foreground"
-                    : "border-b-transparent text-muted hover:bg-surface-2 hover:text-foreground",
+                    ? "border-accent bg-accent-soft font-semibold text-accent"
+                    : "border-border bg-surface font-medium text-foreground/80 hover:border-border-strong hover:text-foreground",
                 )}
               >
-                <span className={selected ? "text-accent" : undefined}>D{i + 1}</span>
-                {token && token !== String(i + 1) ? <span>{token}</span> : null}
-                {dayHasErrors(day) ? <span aria-hidden className="text-danger">!</span> : null}
+                <span className="tabular-nums">D{i + 1}</span>
+                {token && token !== String(i + 1) ? (
+                  <span className={selected ? undefined : "text-muted"}>{sentenceToken(token)}</span>
+                ) : null}
+                {dayHasErrors(day) ? (
+                  <span aria-hidden className="font-bold text-danger">
+                    !
+                  </span>
+                ) : null}
                 {/* Keep the visible face the start of the accessible name (WCAG 2.5.3); full name follows. */}
                 <span className="sr-only">: {label}{dayHasErrors(day) ? " (com erro)" : ""}</span>
               </button>
@@ -1406,16 +1412,17 @@ export function ProgramBuilder({
           onClick={addDay}
           disabled={days.length >= MAX_PROGRAM_DAYS}
           aria-label="Adicionar dia"
-          className="flex h-11 shrink-0 items-center gap-1 border border-dashed border-border-strong px-3 font-mono text-[11px] font-bold uppercase tracking-[0.06em] text-muted hover:bg-surface-2 hover:text-foreground disabled:opacity-40"
+          className="flex h-11 shrink-0 items-center gap-1 rounded-[var(--radius-md)] px-3 text-sm font-semibold text-accent hover:bg-accent-soft disabled:opacity-40"
         >
-          <Plus className="size-3.5" />
+          <Plus className="size-4" />
           Dia
         </button>
       </div>
 
-      <div id="day-panel" role="tabpanel" aria-labelledby={`day-tab-${activeDay.key}`}>
-        <div className="bg-surface-2 px-3 py-2.5">
-          <div className="flex items-center gap-1">
+      <div id="day-panel" role="tabpanel" aria-labelledby={`day-tab-${activeDay.key}`} className="mt-3">
+        {/* The day's card: its name (the section's title) and focus, edited in place; "⋯" holds the rest. */}
+        <div className="card px-4 py-2">
+          <div className="flex items-start gap-1">
             <label htmlFor="day-name" className="sr-only">
               Nome do dia
             </label>
@@ -1426,7 +1433,7 @@ export function ProgramBuilder({
               maxLength={DAY_NAME_MAX}
               aria-invalid={errors.days[activeDay.key] ? true : undefined}
               onValueChange={renameDay}
-              className="min-h-11 flex-1 rounded-[3px] border border-transparent bg-transparent px-1.5 py-2 text-base font-semibold leading-snug hover:border-foreground/30 sm:text-sm"
+              className={cn(INLINE_FIELD, "min-h-11 flex-1 py-2 text-[17px] font-semibold leading-snug")}
             />
             <button
               type="button"
@@ -1434,7 +1441,7 @@ export function ProgramBuilder({
               onClick={() => setSheet({ kind: "day" })}
               aria-haspopup="dialog"
               aria-label={`Opções do dia ${activeDayLabel}`}
-              className="flex size-11 shrink-0 items-center justify-center text-muted hover:bg-surface hover:text-foreground"
+              className="-mr-2 flex size-11 shrink-0 items-center justify-center rounded-[var(--radius-md)] text-muted hover:bg-surface-2 hover:text-foreground"
             >
               <MoreHorizontal className="size-5" />
             </button>
@@ -1449,34 +1456,31 @@ export function ProgramBuilder({
             maxLength={DAY_FOCUS_MAX}
             onValueChange={changeFocus}
             placeholder="Foco do dia (opcional)"
-            className="min-h-11 rounded-[3px] border border-transparent bg-transparent px-1.5 py-2.5 text-base leading-snug text-muted placeholder:text-muted/80 hover:border-foreground/30 sm:text-sm"
+            className={cn(INLINE_FIELD, "min-h-11 py-2.5 text-base leading-snug text-muted placeholder:text-muted/80 sm:text-[15px]")}
           />
         </div>
         {errors.days[activeDay.key] ? (
-          <p role="alert" className="mt-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-danger">
+          <p role="alert" className="mt-1.5 px-1 text-[13px] font-medium text-danger">
             {errors.days[activeDay.key]}
           </p>
         ) : null}
 
-        <div className="mt-4">
+        <div className="mt-5">
           {activeDay.exercises.length === 0 ? (
-            <p className="border-y-2 border-y-[var(--rule-heavy)] bg-surface-2 p-6 text-center text-sm text-muted">
-              Nenhum exercício neste dia ainda.
-            </p>
+            <div className="card flex flex-col items-center gap-4 px-5 py-8 text-center">
+              <p className="text-[15px] text-muted">Nenhum exercício neste dia ainda.</p>
+              <Button variant="outline" data-add-exercises disabled={room <= 0} onClick={() => openPicker()}>
+                <Plus className="size-4" />
+                Adicionar exercícios
+              </Button>
+            </div>
           ) : (
             <>
-              <div className="mb-2 flex items-center justify-between gap-3">
-                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <span className="pl-1 text-[13px] font-medium tabular-nums text-muted">
                   {plural(activeDay.exercises.length, "exercício", "exercícios")}
                 </span>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="h-11 px-3"
-                  data-add-exercises
-                  disabled={room <= 0}
-                  onClick={() => openPicker()}
-                >
+                <Button size="sm" variant="outline" data-add-exercises disabled={room <= 0} onClick={() => openPicker()}>
                   <Plus className="size-4" />
                   Adicionar exercícios
                 </Button>
@@ -1511,76 +1515,74 @@ export function ProgramBuilder({
                   </div>
                 </SortableContext>
               </DndContext>
+
+              <Button variant="outline" className="mt-3 w-full" disabled={room <= 0} onClick={() => openPicker()}>
+                <Plus className="size-4" />
+                Adicionar mais exercícios
+              </Button>
             </>
           )}
-
-          <Button
-            variant="outline"
-            className="mt-3 w-full"
-            data-add-exercises={activeDay.exercises.length === 0 ? true : undefined}
-            disabled={room <= 0}
-            onClick={() => openPicker()}
-          >
-            <Plus className="size-4" />
-            {activeDay.exercises.length === 0 ? "Adicionar exercícios" : "Adicionar mais exercícios"}
-          </Button>
         </div>
       </div>
 
-      <div ref={saveBarRef} data-bottom-bar className="sticky bottom-[var(--nav-h)] z-20 -mx-4 mt-6 border-t-2 border-t-[var(--rule-heavy)] bg-background px-4 py-2 sm:bottom-0 sm:-mx-6 sm:px-6">
-        {undo ? (
-          <div role="status" className="mb-2 flex items-center gap-3 border-l-2 border-l-accent bg-surface-2 py-0.5 pl-3 pr-1">
-            <span className="min-w-0 flex-1 text-sm leading-snug">{undo.text}</span>
-            <button
-              type="button"
-              onClick={() => {
-                undo.restore();
-                setUndo(null);
-              }}
-              className="min-h-11 shrink-0 px-3 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
-            >
-              Desfazer
-            </button>
-          </div>
-        ) : null}
-        {summary ? (
-          <p role="alert" className="mb-2 border-l-2 border-l-danger bg-danger-soft px-3 py-2 text-xs font-medium text-danger">
-            {summary}
-          </p>
-        ) : null}
-        <div className="flex flex-wrap items-center justify-end gap-2">
-          {settled && hasExercises && !saving ? (
-            currentStatus === "ACTIVE" ? (
-              <Button asChild variant="strong">
-                <Link href="/app/today">Ir para Hoje</Link>
-              </Button>
-            ) : startFromPage ? (
-              <Button asChild variant="strong">
-                <Link href={`/app/programs/${programId}`}>Retomar ou recomeçar</Link>
-              </Button>
-            ) : (
-              <SwitchProgramButton
-                action={start}
-                label="Ativar este programa"
-                switchLabel="Ativar este programa"
-                pendingLabel="Ativando…"
-                size="md"
-                active={switchFrom}
-              />
-            )
-          ) : (
-            <p aria-live="polite" className="mr-auto font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-warning">
-              {dirty && !saving ? "Alterações não salvas" : ""}
+      {/* The save bar floats over the page's end, above the bottom nav on a phone. */}
+      <div ref={saveBarRef} data-bottom-bar className="sticky bottom-[var(--nav-h)] z-20 mt-6 pb-2 sm:bottom-0 sm:pb-4">
+        <div className="rounded-[var(--radius-xl)] border border-border bg-surface p-2.5 shadow-[var(--shadow-md)] sm:p-3">
+          {undo ? (
+            <div role="status" className="mb-2 flex items-center gap-3 rounded-[var(--radius-md)] bg-surface-2 py-0.5 pl-3 pr-0.5">
+              <span className="min-w-0 flex-1 text-sm leading-snug">{undo.text}</span>
+              <button
+                type="button"
+                onClick={() => {
+                  undo.restore();
+                  setUndo(null);
+                }}
+                className="min-h-11 shrink-0 rounded-[var(--radius-md)] px-3 text-sm font-semibold text-accent hover:bg-accent-soft"
+              >
+                Desfazer
+              </button>
+            </div>
+          ) : null}
+          {summary ? (
+            <p role="alert" className="mb-2 rounded-[var(--radius-md)] bg-danger-soft px-3 py-2 text-[13px] font-medium leading-snug text-danger">
+              {summary}
             </p>
-          )}
-          <Button
-            onClick={handleSave}
-            disabled={saving}
-            variant={settled ? "ghost" : "primary"}
-            className={cn(settled && "text-success")}
-          >
-            {saving ? "Salvando…" : settled ? "Salvo" : "Salvar programa"}
-          </Button>
+          ) : null}
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            {settled && hasExercises && !saving ? (
+              currentStatus === "ACTIVE" ? (
+                <Button asChild variant="strong">
+                  <Link href="/app/today">Ir para Hoje</Link>
+                </Button>
+              ) : startFromPage ? (
+                <Button asChild variant="strong">
+                  <Link href={`/app/programs/${programId}`}>Retomar ou recomeçar</Link>
+                </Button>
+              ) : (
+                <SwitchProgramButton
+                  action={start}
+                  label="Ativar este programa"
+                  switchLabel="Ativar este programa"
+                  pendingLabel="Ativando…"
+                  size="md"
+                  active={switchFrom}
+                />
+              )
+            ) : (
+              <p aria-live="polite" className="mr-auto pl-1.5 text-[13px] font-medium text-warning">
+                {dirty && !saving ? "Alterações não salvas" : ""}
+              </p>
+            )}
+            <Button
+              onClick={handleSave}
+              disabled={saving}
+              variant={settled ? "ghost" : "primary"}
+              className={cn(settled && "text-success")}
+            >
+              {settled && !saving ? <Check aria-hidden /> : null}
+              {saving ? "Salvando…" : settled ? "Salvo" : "Salvar programa"}
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -1713,7 +1715,7 @@ export function ProgramBuilder({
                   moveExerciseToDay(sheetRow.rowId, d.key);
                 }}
               >
-                <span className="font-mono text-xs font-bold text-muted">D{i + 1}</span> {d.name || `Dia ${i + 1}`}
+                <span className="tabular-nums text-muted">D{i + 1}</span> {d.name || `Dia ${i + 1}`}
               </SheetItem>
             ),
           )}
@@ -1868,9 +1870,21 @@ function insertAt<T>(list: T[], index: number, item: T): T[] {
   return [...list.slice(0, at), item, ...list.slice(at)];
 }
 
-const CHIP_LABEL = "font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted";
+/** An in-place text field (the program's name and description, the day's name and focus): its box shows on hover and focus. */
+const INLINE_FIELD =
+  "-mx-2 w-[calc(100%+1rem)] rounded-[var(--radius-md)] border border-transparent bg-transparent px-2 text-foreground transition-colors hover:border-border-strong focus-visible:border-field aria-[invalid=true]:border-danger aria-[invalid=true]:ring-1 aria-[invalid=true]:ring-danger";
+
+/** "SEG · SUP A" → "Seg · Sup A": day tokens in sentence case; ids ("A", "1", "B2") stay as they are. */
+function sentenceToken(token: string): string {
+  return token
+    .split(" ")
+    .map((w) => (w.length <= 2 ? w : w.charAt(0) + w.slice(1).toLocaleLowerCase("pt-BR")))
+    .join(" ");
+}
+
+const CHIP_LABEL = "text-[13px] font-medium leading-snug text-muted";
 const STEP_BUTTON =
-  "flex h-11 w-10 shrink-0 items-center justify-center rounded-[2px] border border-border font-mono text-base font-bold text-foreground/80 hover:bg-surface-2 disabled:opacity-30";
+  "flex h-11 w-10 shrink-0 items-center justify-center rounded-[var(--radius-md)] bg-surface-2 text-lg font-medium text-foreground hover:bg-[var(--border)] disabled:opacity-35";
 
 /**
  * The header's stat chips: "Treinos por semana" (at least one per day; more
@@ -1899,9 +1913,11 @@ function CadenceChips({
         ? `${dayCount} dias em ${cadence.daysPerWeek} treinos: os dias se alternam (${alternation(dayCount, cadence.daysPerWeek)}).`
         : "Cada dia uma vez por semana.";
   return (
-    <div className="mt-3">
-      <div className="grid grid-cols-2 divide-x divide-border border-y border-border">
-        <div className="flex min-w-0 flex-col gap-1.5 py-2.5 pr-3">
+    <div className="mt-4 border-t border-border pt-4">
+      {/* Each column's control sits on its bottom edge, so a label that wraps keeps them in line.
+          Side by side from 360px (a stepper is ~136px); stacked on a 320px phone. */}
+      <div className="grid grid-cols-1 gap-x-4 gap-y-4 min-[360px]:grid-cols-2">
+        <div className="flex min-w-0 flex-col justify-between gap-1.5">
           <label htmlFor="program-daysPerWeek" className={CHIP_LABEL}>
             Treinos por semana
           </label>
@@ -1934,7 +1950,7 @@ function CadenceChips({
             </button>
           </div>
         </div>
-        <div className="flex min-w-0 flex-col gap-1.5 py-2.5 pl-3">
+        <div className="flex min-w-0 flex-col justify-between gap-1.5">
           <label htmlFor="program-durationWeeks" className={CHIP_LABEL}>
             Duração (semanas, opcional)
           </label>
@@ -1943,7 +1959,7 @@ function CadenceChips({
             value={cadence.durationWeeks}
             invalid={!!errors.durationWeeks}
             placeholder="—"
-            suffix={cadence.durationWeeks ? "sem." : undefined}
+            suffix={cadence.durationWeeks ? (cadence.durationWeeks === 1 ? "semana" : "semanas") : undefined}
             onCommit={(n) =>
               onChange({
                 durationWeeks:
@@ -1955,9 +1971,9 @@ function CadenceChips({
           />
         </div>
       </div>
-      <p className="mt-1.5 text-xs text-muted">{hint}</p>
+      <p className="mt-2.5 text-[13px] leading-snug text-muted">{hint}</p>
       {errors.daysPerWeek || errors.durationWeeks ? (
-        <p role="alert" className="mt-1 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-danger">
+        <p role="alert" className="mt-1 text-[13px] font-medium text-danger">
           {errors.daysPerWeek ?? errors.durationWeeks}
         </p>
       ) : null}
@@ -1996,7 +2012,7 @@ function NumberBox({
     onCommit(n === null ? null : Math.round(n));
   };
   return (
-    <div className="flex min-w-0 items-baseline gap-1">
+    <div className="flex min-w-0 items-center gap-2">
       <Input
         id={id}
         data-cadence
@@ -2011,9 +2027,9 @@ function NumberBox({
           if (e.key === "Enter") e.currentTarget.blur();
         }}
         // aria-invalid draws the danger border and ring (the Input's own).
-        className="h-11 w-12 px-1.5 text-center font-mono text-lg font-bold tabular-nums"
+        className="h-11 w-12 shrink-0 px-1 text-center text-lg font-semibold tabular-nums"
       />
-      {suffix ? <span className="font-mono text-xs font-bold text-muted">{suffix}</span> : null}
+      {suffix ? <span className="text-sm text-muted">{suffix}</span> : null}
     </div>
   );
 }

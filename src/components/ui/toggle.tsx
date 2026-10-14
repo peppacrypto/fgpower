@@ -4,9 +4,9 @@ import { ActionErrorText } from "@/components/social/session-expired";
 
 /**
  * A labelled on/off switch row used by the autosaving blocks (Settings). The
- * whole row (at least 44px tall) is the target; the switch is drawn square,
- * Dossiê-style — a ruled track with a square knob that inks accent when on —
- * over a real checkbox (role="switch"), which keeps the keyboard, the checked
+ * whole row (at least 44px tall) is the target; the switch — a rounded track
+ * whose knob slides right and turns the track green when on — is drawn over a
+ * real checkbox (role="switch"), which keeps the keyboard, the checked
  * state and the name for assistive tech.
  */
 export function Toggle({
@@ -47,11 +47,11 @@ export function Toggle({
         />
         <span
           aria-hidden
-          className="h-6 w-11 border border-foreground/50 bg-surface-2 transition-colors peer-checked:border-accent peer-checked:bg-accent peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ring peer-disabled:opacity-50"
+          className="h-6 w-11 rounded-full border border-field bg-surface-2 transition-colors peer-checked:border-accent peer-checked:bg-accent peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ring peer-disabled:opacity-50"
         />
         <span
           aria-hidden
-          className="pointer-events-none absolute left-1 top-1 size-4 bg-foreground/70 transition-transform duration-150 peer-checked:translate-x-5 peer-checked:bg-accent-foreground"
+          className="pointer-events-none absolute left-1 top-1 size-4 rounded-full bg-foreground/70 transition-transform duration-150 peer-checked:translate-x-5 peer-checked:bg-accent-foreground"
         />
       </span>
     </label>

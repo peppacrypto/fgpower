@@ -4,8 +4,8 @@ import {
   defaultStep,
   formatTick,
   formatValue,
-  monoDate,
   placePoints,
+  shortDate,
   summarize,
   valueScale,
   type ChartInputPoint,
@@ -14,9 +14,9 @@ import {
 
 /**
  * A progression chart drawn on the server as plain SVG + HTML (no chart
- * library, nothing blank while a bundle loads), in the dossier's terms: a
- * field label and a mono headline with the change ("60 → 65 kg · +5 kg (+8%)
- * desde 07 SET"), hairline rules at a few tick values of a domain that
+ * library, nothing blank while a bundle loads): a small label and a
+ * headline with the change ("60 → 65 kg · +5 kg (+8%) desde 07 set") in
+ * tabular figures, hairline rules at a few tick values of a domain that
  * follows the data, one accent line, and dots only where they mean something
  * — the latest session and the sessions that set a record. The plot is an
  * image with a spoken summary; a hairline readout follows a drag or a hover.
@@ -51,8 +51,8 @@ export function ProgressChart({
     // overflow-x: clip — nothing a chart draws may ever widen the page.
     <figure className={cn("min-w-0 overflow-x-clip", className)} data-chart={label}>
       <figcaption>
-        <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted">{label}</p>
-        <p className="mt-1 font-mono text-[13px] font-semibold tabular-nums text-foreground">
+        <p className="text-[13px] font-medium text-muted">{label}</p>
+        <p className="mt-0.5 text-[15px] font-semibold tabular-nums text-foreground">
           <span className="whitespace-nowrap">{summary.parts[0]}</span>
           {summary.parts[1] ? (
             <>
@@ -64,14 +64,14 @@ export function ProgressChart({
         </p>
       </figcaption>
 
-      <div className="mt-3 grid grid-cols-[2.25rem_minmax(0,1fr)] gap-x-2">
+      <div className="mt-3 grid grid-cols-[2.5rem_minmax(0,1fr)] gap-x-2">
         {/* Tick values, each centered on its rule. */}
         <div aria-hidden className="relative h-32">
           {scale.ticks.map((t) => (
             <span
               key={t}
               data-tick={t}
-              className="absolute right-0 -translate-y-1/2 font-mono text-[10px] leading-none tabular-nums text-muted"
+              className="absolute right-0 -translate-y-1/2 text-xs leading-none tabular-nums text-muted"
               style={{ top: `${yOf(t)}%` }}
             >
               {formatTick(t, unit)}
@@ -127,7 +127,7 @@ export function ProgressChart({
                 points={placed.map((p) => ({
                   x: round(p.x),
                   y: round(p.y),
-                  date: monoDate(p.date),
+                  date: shortDate(p.date),
                   text: p.detail ?? formatValue(p.value, unit),
                 }))}
               />
@@ -136,15 +136,15 @@ export function ProgressChart({
         </div>
 
         <span aria-hidden />
-        <div aria-hidden className="mt-2 flex items-center justify-between gap-2 font-mono text-[10px] tabular-nums text-muted">
-          <span>{placed.length > 1 ? monoDate(placed[0].date) : ""}</span>
+        <div aria-hidden className="mt-2 flex items-center justify-between gap-2 text-xs tabular-nums text-muted">
+          <span>{placed.length > 1 ? shortDate(placed[0].date) : ""}</span>
           {hasRecords ? (
             <span className="inline-flex items-center gap-1.5">
               <span className="size-2 rounded-full border-2 border-accent bg-surface" />
               recorde
             </span>
           ) : null}
-          <span>{placed.length > 0 ? monoDate(placed[placed.length - 1].date) : ""}</span>
+          <span>{placed.length > 0 ? shortDate(placed[placed.length - 1].date) : ""}</span>
         </div>
       </div>
     </figure>

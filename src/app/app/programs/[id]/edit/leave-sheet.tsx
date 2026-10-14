@@ -50,13 +50,13 @@ export function LeaveSheet({
       <div className="flex h-full w-full items-end justify-center sm:items-center" onClick={saving ? undefined : onStay}>
         <div
           onClick={(e) => e.stopPropagation()}
-          className="panel-raised max-h-[100dvh] w-full max-w-lg overflow-y-auto overscroll-contain bg-background px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5"
+          className="sheet max-h-[100dvh] w-full max-w-lg overflow-y-auto overscroll-contain px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-6 sm:px-6"
         >
-          <span className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-warning">Alterações não salvas</span>
-          <h2 id="leave-title" className="text-display mt-1 text-2xl font-extrabold">
+          <span className="eyebrow text-warning">Alterações não salvas</span>
+          <h2 id="leave-title" className="text-display mt-0.5 text-[1.375rem] font-semibold leading-tight">
             Sair sem salvar?
           </h2>
-          <p id="leave-desc" className="mt-2 text-sm text-muted">
+          <p id="leave-desc" className="mt-2 text-[15px] leading-normal text-muted">
             Você mudou este programa e ainda não salvou. Se sair agora, essas mudanças se perdem.
           </p>
 
@@ -74,7 +74,7 @@ export function LeaveSheet({
               type="button"
               disabled={saving}
               onClick={onDiscard}
-              className="min-h-11 px-3 text-xs font-medium text-muted hover:text-danger disabled:opacity-40"
+              className="min-h-11 rounded-[var(--radius-md)] px-3 text-sm font-medium text-muted hover:text-danger disabled:opacity-40"
             >
               Descartar e sair
             </button>

@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils/cn";
 import { SESSION_EXPIRED_ERROR } from "@/lib/auth/session-expired";
 import type { ExerciseOption, ExerciseOptions } from "@/lib/data/workout-session";
 import { WorkoutActionError, WorkoutLoggedOutError } from "./action-error";
+import { SheetGrip } from "@/components/workout/sheet-grip";
 
 /** Why an exercise is offered, as its tag says it. */
 const REASON: Record<ExerciseOption["reason"], string | null> = {
@@ -140,18 +141,20 @@ export function ExerciseSwapSheet({
         e.preventDefault();
         if (!busy) onClose();
       }}
-      className="m-0 h-dvh max-h-dvh w-dvw max-w-dvw bg-transparent p-0 text-foreground backdrop:bg-black/50 sm:m-auto sm:h-auto sm:max-h-[85vh] sm:w-full sm:max-w-lg"
+      className="m-0 h-dvh max-h-dvh w-dvw max-w-dvw bg-transparent p-0 text-foreground backdrop:bg-black/45 sm:m-auto sm:h-auto sm:max-h-[85vh] sm:w-full sm:max-w-lg"
       data-swap-sheet
     >
-      <div className="flex h-dvh flex-col bg-background sm:h-auto sm:max-h-[85vh] sm:border-t-2 sm:border-t-[var(--rule-heavy)]">
-        {/* Full screen on phones: clear the status bar (installed PWA draws under it). */}
-        <div className="border-b border-border px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:pt-3">
+      {/* A tall sheet on phones (the list and the keyboard share the screen), clear of the status bar
+          (installed PWA draws under it); a centered panel from sm. */}
+      <div className="sheet mt-[max(0.75rem,env(safe-area-inset-top))] flex h-[calc(100dvh-max(0.75rem,env(safe-area-inset-top)))] flex-col overflow-hidden sm:mt-0 sm:h-auto sm:max-h-[85vh]">
+        <div className="border-b border-border px-4 pb-3 pt-3 sm:pt-5">
+          <SheetGrip className="mb-2" />
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 pt-1">
-              <span id="swap-kicker" className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent">
+              <span id="swap-kicker" className="eyebrow text-accent">
                 {mode.kind === "add" ? "Adicionar exercício" : "Trocar exercício"}
               </span>
-              <h2 id="swap-title" className="text-display mt-1 text-xl font-extrabold leading-tight wrap-break-word">
+              <h2 id="swap-title" className="text-display mt-0.5 text-xl font-semibold leading-tight wrap-break-word">
                 {mode.kind === "add" ? "No fim do treino" : mode.exerciseName}
               </h2>
             </div>
@@ -160,13 +163,13 @@ export function ExerciseSwapSheet({
               onClick={onClose}
               disabled={busy}
               aria-label="Fechar"
-              className="-mr-2 flex size-11 shrink-0 items-center justify-center text-muted hover:text-foreground disabled:opacity-40"
+              className="-mr-2 flex size-11 shrink-0 items-center justify-center rounded-[var(--radius-md)] text-muted hover:bg-surface-2 hover:text-foreground disabled:opacity-40"
             >
               <X className="size-5" />
             </button>
           </div>
           {hasData ? (
-            <p className="mt-2 border-l-2 border-l-warning bg-warning-soft px-3 py-2 text-xs text-foreground/90" data-swap-has-data>
+            <p className="mt-2 rounded-[var(--radius-md)] bg-warning-soft px-3 py-2.5 text-[13px] text-foreground" data-swap-has-data>
               <span className="font-semibold">Este exercício já tem séries registradas.</span> O escolhido entra como
               novo exercício logo depois dele — o que você já fez continua salvo.
             </p>
@@ -193,19 +196,19 @@ export function ExerciseSwapSheet({
 
         <div className="flex-1 overflow-y-auto overscroll-contain px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3">
           {error ? (
-            <p role="alert" className="mb-3 border-l-2 border-l-danger! bg-danger-soft px-3 py-2 text-xs font-medium text-danger">
+            <p role="alert" className="mb-3 rounded-[var(--radius-md)] bg-danger-soft px-3 py-2.5 text-[13px] font-medium text-danger">
               <WorkoutActionError error={error} loginHref={loginHref} />
             </p>
           ) : null}
-          <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted">
+          <p className="eyebrow">
             {searching ? "Resultados" : mode.kind === "add" ? "Mais usados" : "Sugestões para trocar"}
           </p>
           {loggedOut ? (
-            <p role="alert" className="mt-2 border-l-2 border-l-danger! bg-danger-soft px-3 py-2 text-xs font-medium text-danger">
+            <p role="alert" className="mt-2 rounded-[var(--radius-md)] bg-danger-soft px-3 py-2.5 text-[13px] font-medium text-danger">
               <WorkoutActionError error={SESSION_EXPIRED_ERROR} loginHref={loginHref} />
             </p>
           ) : failed ? (
-            <div className="mt-2 flex flex-wrap items-center gap-x-3 border-l-2 border-l-warning bg-warning-soft px-3 py-2 text-xs text-foreground/90">
+            <div className="mt-2 flex flex-wrap items-center gap-x-3 rounded-[var(--radius-md)] bg-warning-soft px-3 py-1 text-[13px] text-foreground">
               <span className="min-w-0 flex-1">Sem conexão — a lista não carregou.</span>
               <button
                 type="button"
@@ -227,7 +230,7 @@ export function ExerciseSwapSheet({
               {searching ? "Nenhum exercício encontrado." : "Nenhuma sugestão para este exercício — busque pelo nome."}
             </p>
           ) : (
-            <ul className={cn("mt-2 flex flex-col divide-y divide-border border-y border-border", loading && "opacity-60")}>
+            <ul className={cn("mt-1 flex flex-col divide-y divide-border", loading && "opacity-60")}>
               {options.map((o) => {
                 const tag = REASON[o.reason];
                 const saving = busyId === o.id;
@@ -238,9 +241,9 @@ export function ExerciseSwapSheet({
                       disabled={busy}
                       onClick={() => onPick(o, how)}
                       aria-label={`${how === "swap" ? "Trocar por" : "Adicionar"} ${o.namePt}`}
-                      className="flex min-h-16 w-full items-center gap-3 py-2 text-left hover:bg-surface-2 disabled:opacity-60"
+                      className="-mx-2 flex min-h-16 w-[calc(100%+1rem)] items-center gap-3 rounded-[var(--radius-md)] px-2 py-2 text-left hover:bg-surface-2 disabled:opacity-60"
                     >
-                      <span className="relative size-14 shrink-0 overflow-hidden rounded-[3px] bg-surface-2">
+                      <span className="relative size-14 shrink-0 overflow-hidden rounded-[var(--radius-md)] bg-surface-2">
                         {o.imageUrl ? (
                           <Image src={o.imageUrl} alt="" fill sizes="56px" className="object-cover" />
                         ) : (
@@ -254,10 +257,10 @@ export function ExerciseSwapSheet({
                         <span className="block text-sm font-semibold leading-snug wrap-break-word">{o.namePt}</span>
                         <span className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-muted">
                           {o.equipment ? <span>{o.equipment}</span> : null}
-                          {tag ? <span className="tag tag--mark text-xs">{tag}</span> : null}
+                          {tag ? <span className="tag tag--spec text-xs">{tag}</span> : null}
                         </span>
                       </span>
-                      <span className="shrink-0 font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent">
+                      <span className="shrink-0 text-[13px] font-semibold text-accent">
                         {saving ? (how === "swap" ? "Trocando…" : "Adicionando…") : how === "swap" ? "Trocar" : "Adicionar"}
                       </span>
                     </button>

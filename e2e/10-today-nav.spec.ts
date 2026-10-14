@@ -271,7 +271,7 @@ test("an emptied day is skipped and the week counts only the days left to train"
   // GD 1 is 5×/week over 5 days: with Monday emptied it doesn't repeat a day in its place.
   await expect(page.getByText("Próximo treino")).toBeVisible();
   await expect(page.getByRole("heading", { level: 2, name: dayNameMatcher("Terça — Inferior (quadríceps, pesado)") })).toBeVisible();
-  await expect(page.locator(".reg-frame", { hasText: "Esta semana" })).toContainText("0 / 4");
+  await expect(page.locator(".card", { hasText: "Esta semana" })).toContainText("0 / 4");
   const monday = todayDayRow(page, SEGUNDA);
   await expect(monday).toContainText("Sem exercícios");
   await expect(monday.getByRole("link", { name: "Editar" })).toHaveAttribute("href", `/app/programs/${programId}/edit`);

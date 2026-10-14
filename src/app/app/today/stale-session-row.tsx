@@ -76,20 +76,20 @@ export function StaleSessionRow({
     });
 
   return (
-    <div data-testid="stale-session" className="border-l-2 border-l-warning bg-warning-soft px-3 py-2.5">
-      <p className="text-sm font-semibold leading-snug">
+    <div data-testid="stale-session" className="rounded-[var(--radius-lg)] bg-warning-soft px-4 py-3.5">
+      <p className="text-[15px] font-semibold leading-snug">
         Treino de {dayLabel} não finalizado
         {setsDone > 0 ? ` · ${setsDone === 1 ? "1 série" : `${setsDone} séries`}` : ""}
       </p>
-      <p className="mt-0.5 truncate font-mono text-[11px] text-muted">{name}</p>
+      <p className="mt-0.5 truncate text-[13px] text-muted">{name}</p>
       {unsynced > 0 ? (
-        <p className="mt-1.5 text-xs leading-snug">
+        <p className="mt-1.5 text-sm leading-snug">
           {unsynced === 1
             ? "1 série ficou só neste aparelho. Abra o treino para enviá-la antes de salvar."
             : `${unsynced} séries ficaram só neste aparelho. Abra o treino para enviá-las antes de salvar.`}
         </p>
       ) : null}
-      <div className="mt-2.5 flex flex-wrap items-center gap-2">
+      <div className="mt-3 flex flex-wrap items-center gap-2">
         {unsynced > 0 ? (
           <Button size="sm" asChild>
             <Link href={workoutHref}>Revisar e salvar</Link>
@@ -105,7 +105,7 @@ export function StaleSessionRow({
         <DiscardSessionButton sessionId={sessionId} setsDone={setsDone} size="sm" />
       </div>
       {message ? (
-        <p role="alert" className="mt-2 text-xs text-danger">
+        <p role="alert" className="mt-2 text-sm text-danger">
           {message}
         </p>
       ) : null}

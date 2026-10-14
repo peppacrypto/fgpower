@@ -95,7 +95,7 @@ export function AdaptSwapChoice({
 
   return (
     <div className="mt-2 flex items-start gap-3" data-swap-choice>
-      <span className="relative size-11 shrink-0 overflow-hidden rounded-[3px] bg-surface-2">
+      <span className="relative size-11 shrink-0 overflow-hidden rounded-[var(--radius-md)] bg-surface-2">
         {chosen?.imageUrl ? (
           <Image src={chosen.imageUrl} alt="" fill sizes="44px" className="object-cover" />
         ) : (
@@ -105,10 +105,10 @@ export function AdaptSwapChoice({
         )}
       </span>
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-semibold leading-snug wrap-break-word" data-swap-chosen>
+        <p className="text-[15px] font-semibold leading-snug wrap-break-word" data-swap-chosen>
           {keep ? original.namePt : chosen?.namePt}
         </p>
-        <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.08em] text-muted">
+        <p className="mt-0.5 text-[13px] text-muted" data-swap-meta>
           {keep
             ? `${original.equipmentNamePt ?? ""} · mantido`
             : [chosen?.equipmentNamePt, chosen ? REASON[chosen.reason] : null].filter(Boolean).join(" · ")}
@@ -116,12 +116,12 @@ export function AdaptSwapChoice({
       </div>
       <label
         className={cn(
-          "relative flex h-11 shrink-0 items-center gap-1 px-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.08em] focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-[var(--ring)]",
+          "relative flex h-11 shrink-0 items-center gap-1 rounded-[var(--radius-md)] px-3 text-sm font-semibold focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-[var(--ring)]",
           "bg-surface-2 text-foreground hover:bg-[var(--border)]",
         )}
       >
         Trocar
-        <ChevronDown className="size-3.5" aria-hidden />
+        <ChevronDown className="size-4" aria-hidden />
         <select
           name={name}
           value={value}

@@ -1,6 +1,7 @@
 "use client";
 
 import { Fragment, useCallback, useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
+import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input, Textarea } from "@/components/ui/input";
 import { SaveStatus } from "@/components/ui/save-status";
@@ -23,8 +24,8 @@ export interface CheckInValues {
   notes: string | null;
 }
 
-const MONO = "font-mono text-[11px] font-bold uppercase tracking-[0.14em]";
-const LEGEND = "font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted";
+/** A field's name above it ("Esforço do treino", "Peso hoje"). */
+const LEGEND = "text-sm font-medium text-foreground";
 const NOTE_MAX = 500;
 /** A-074: push a typed note to the server this long after the last keystroke, not only on blur. */
 const NOTE_DEBOUNCE_MS = 600;
@@ -43,7 +44,7 @@ export function checkInParts(v: CheckInValues): string[] {
   ].filter((p): p is string => p !== null);
 }
 
-/** An answered check-in in one mono line, with its note below — the collapsed card, and the read-only one after 24 h. */
+/** An answered check-in in one line, with its note below — the collapsed card, and the read-only one after 24 h. */
 export function CheckInLine({
   values,
   className,
@@ -56,9 +57,9 @@ export function CheckInLine({
 }) {
   const parts = checkInParts(values);
   return (
-    <section aria-label="Check-in do treino" className={cn("reg-frame px-3 py-2", className)} data-check-in="answered">
+    <section aria-label="Check-in do treino" className={cn("card px-4 py-2", className)} data-check-in="answered">
       <div className="flex min-h-9 items-center justify-between gap-3">
-        <p className={cn(MONO, "min-w-0")}>
+        <p className="min-w-0 text-[13px] font-medium tabular-nums">
           <span className="text-muted">Check-in · </span>
           {/* Each answer stays whole; the line breaks at the separators. */}
           {parts.length > 0
@@ -75,7 +76,7 @@ export function CheckInLine({
       {/* Spaced by a margin, not padding: a clamped box clips at its padding edge, so padding
           would show the top of the note's third line under the second. */}
       {values.notes ? (
-        <p className="mb-1 line-clamp-2 text-xs text-foreground/90 wrap-break-word" data-check-in-note>
+        <p className="mb-1.5 line-clamp-2 text-[13px] text-muted wrap-break-word" data-check-in-note>
           {values.notes}
         </p>
       ) : null}
@@ -200,9 +201,9 @@ export function CheckInCard({
       );
     }
     return (
-      <section aria-label="Check-in do treino" className={cn("reg-frame px-3 py-1", className)} data-check-in="skipped">
+      <section aria-label="Check-in do treino" className={cn("card px-4 py-1", className)} data-check-in="skipped">
         <div className="flex min-h-11 items-center justify-between gap-3">
-          <p className={MONO}>Check-in do treino</p>
+          <p className="text-sm font-medium">Check-in do treino</p>
           <Button
             ref={foldedAction}
             size="sm"
@@ -253,9 +254,9 @@ export function CheckInCard({
   const fieldError = weightError ?? errorFor("bodyweightKg");
 
   return (
-    <section aria-labelledby={`${id}-title`} className={cn("reg-frame p-4", className)} data-check-in="open">
-      <p className={cn(MONO, "text-accent")}>Check-in · opcional</p>
-      <h2 id={`${id}-title`} ref={title} tabIndex={-1} className="mt-1 text-lg font-bold tracking-tight outline-none">
+    <section aria-labelledby={`${id}-title`} className={cn("card p-4 sm:p-5", className)} data-check-in="open">
+      <p className="eyebrow text-accent">Check-in · opcional</p>
+      <h2 id={`${id}-title`} ref={title} tabIndex={-1} className="mt-0.5 text-[17px] font-semibold leading-snug outline-none">
         Como foi o treino?
       </h2>
       <p className="mt-0.5 text-sm text-muted">Leva 10 segundos e ajuda a ver sinais de fadiga. Só você vê.</p>
@@ -291,7 +292,7 @@ export function CheckInCard({
 
       <fieldset className="mt-4">
         <legend className={LEGEND}>Recuperação</legend>
-        <div className="mt-1.5 flex flex-wrap gap-1.5">
+        <div className="mt-2 flex flex-wrap gap-2">
           {(
             [
               ["shortSleep", "Dormi menos de 6 h"],
@@ -305,12 +306,14 @@ export function CheckInCard({
               aria-pressed={value[field]}
               onClick={() => update({ [field]: !value[field] } as Partial<CheckInValues>)}
               className={cn(
-                "min-h-11 rounded-[2px] border px-3 py-1.5 text-left font-mono text-[11px] font-semibold leading-snug transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent",
+                "inline-flex min-h-11 items-center gap-1.5 rounded-[var(--radius-md)] border px-3 py-1.5 text-left text-[13px] font-medium leading-snug transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent",
                 value[field]
-                  ? "border-accent bg-accent text-accent-foreground"
-                  : "border-foreground/40 bg-surface text-foreground hover:border-foreground/70",
+                  ? "border-accent bg-accent-soft font-semibold text-accent"
+                  : "border-border-strong bg-surface text-foreground hover:border-field",
               )}
             >
+              {/* Picked: a check as well as the color (the state reads without it). */}
+              {value[field] ? <Check aria-hidden className="size-3.5 shrink-0" strokeWidth={3} /> : null}
               {label}
             </button>
           ))}
@@ -323,7 +326,7 @@ export function CheckInCard({
       </fieldset>
 
       <div className="mt-4">
-        <label htmlFor={`${id}-kg`} className={LEGEND}>
+        <label htmlFor={`${id}-kg`} className={cn(LEGEND, "block")}>
           {weightLabel}
         </label>
         <div className="mt-1.5 flex items-center gap-3">
@@ -346,13 +349,13 @@ export function CheckInCard({
               placeholder={lastKg != null ? formatNumber(lastKg, 1) : undefined}
               aria-invalid={fieldError ? true : undefined}
               aria-describedby={`${id}-kg-hint`}
-              className="w-28 pr-9 font-mono tabular-nums"
+              className="w-28 pr-9 tabular-nums"
             />
             <span aria-hidden className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted">
               kg
             </span>
           </div>
-          <p id={`${id}-kg-hint`} className="text-xs text-muted">
+          <p id={`${id}-kg-hint`} className="text-[13px] text-muted">
             vai também para Corpo
           </p>
         </div>
@@ -364,7 +367,7 @@ export function CheckInCard({
       </div>
 
       <div className="mt-4">
-        <label htmlFor={`${id}-note`} className={LEGEND}>
+        <label htmlFor={`${id}-note`} className={cn(LEGEND, "block")}>
           Nota
         </label>
         <Textarea
@@ -415,7 +418,7 @@ export function CheckInCard({
   );
 }
 
-/** A 1–10 / 0–10 scale of native radios drawn as square segments (arrow keys move along it). */
+/** A 1–10 / 0–10 scale of native radios drawn as one segmented row (arrow keys move along it). */
 function Scale({
   name,
   legend,
@@ -444,12 +447,12 @@ function Scale({
   return (
     <fieldset className={className} aria-describedby={`${name}-hint`}>
       <legend className={LEGEND}>{legend}</legend>
-      <div className={cn("mt-1.5 grid gap-px border border-foreground/40 bg-foreground/40", cols)}>
+      <div className={cn("mt-2 grid gap-px overflow-hidden rounded-[var(--radius-md)] border border-field bg-[var(--border-strong)]", cols)}>
         {steps.map((n) => (
           <label
             key={n}
             className={cn(
-              "relative flex min-h-11 cursor-pointer items-center justify-center font-mono text-sm font-semibold tabular-nums transition-colors has-[:focus-visible]:z-10 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-1 has-[:focus-visible]:outline-accent",
+              "relative flex min-h-11 cursor-pointer items-center justify-center text-[15px] font-semibold tabular-nums transition-colors has-[:focus-visible]:z-10 has-[:focus-visible]:outline-2 has-[:focus-visible]:-outline-offset-2 has-[:focus-visible]:outline-accent",
               value === n ? "bg-accent text-accent-foreground" : "bg-surface text-foreground hover:bg-surface-2",
             )}
           >
@@ -468,7 +471,7 @@ function Scale({
           <span key={`fill-${i}`} aria-hidden className="hidden bg-surface max-[359px]:block" />
         ))}
       </div>
-      <p id={`${name}-hint`} className="mt-1 text-[11px] text-muted">
+      <p id={`${name}-hint`} className="mt-1 text-xs text-muted">
         {hint}
       </p>
     </fieldset>

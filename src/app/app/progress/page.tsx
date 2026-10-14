@@ -1,8 +1,7 @@
 import { Fragment } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BarChart3, CalendarDays, Scale, TrendingUp } from "lucide-react";
-import { GArrow, Lettermark } from "@/components/ui/glyph";
+import { GArrow } from "@/components/ui/glyph";
 import { requireUser } from "@/lib/auth/require-user";
 import {
   consistencyOf,
@@ -32,9 +31,10 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/misc";
+import { SectionHead } from "@/components/ui/section-head";
 import { Sparkline } from "@/components/charts/sparkline";
 import { EmptyChartPreview } from "@/components/charts/empty-chart";
-import { formatValue, monoDate } from "@/components/charts/scale";
+import { formatValue, shortDate } from "@/components/charts/scale";
 import { WeeklyTrainingChart } from "@/components/charts/weekly-training-chart";
 import { MuscleVolumeBars } from "@/components/charts/muscle-volume-bars";
 import { dayNumberOf, mondayOf } from "@/lib/training/day-rotation";
@@ -79,9 +79,9 @@ function bodyCardText(p: { avg: number | null; rate: WeeklyRate | null; lastKg: 
 function weeksText(w: WeekColumns, since: string) {
   const current = w.columns[w.columns.length - 1];
   const thisWeek = current ? `esta semana ${current.done} de ${current.target}` : "";
-  if (w.avgDone == null) return { headline: `esta semana: ${current?.done ?? 0} de ${current?.target ?? 0}`, aria: `Treinos por semana: ${thisWeek}.` };
+  if (w.avgDone == null) return { headline: `Esta semana: ${current?.done ?? 0} de ${current?.target ?? 0}`, aria: `Treinos por semana: ${thisWeek}.` };
   return {
-    headline: `média ${w.avgDone} por semana · meta ${w.targetText}`,
+    headline: `Média ${w.avgDone} por semana · meta ${w.targetText}`,
     aria: `Treinos por semana desde ${since}: média ${w.avgDone} por semana, meta ${w.targetText}; ${w.metWeeks} de ${plural(w.completeWeeks, "semana completa", "semanas completas")} na meta; ${thisWeek}.`,
   };
 }
@@ -110,7 +110,7 @@ export default async function ProgressPage({ searchParams }: PageProps<"/app/pro
   const weeks = weekColumns(weekRows, period);
   const volume = muscleVolume(muscleRows, weeks.columns);
   const todayNo = dayNumberOf(now);
-  const weeksWords = weeksText(weeks, weeks.columns[0] ? monoDate(dateOfDayNumber(weeks.columns[0].monday)) : "");
+  const weeksWords = weeksText(weeks, weeks.columns[0] ? shortDate(dateOfDayNumber(weeks.columns[0].monday)) : "");
   const averaged = movingAverage7(weighIns).filter((p) => startDay == null || p.day >= startDay);
   const averages = averaged.flatMap((p) => (p.avg != null ? [p.avg] : []));
   const bodyRate = weeklyRate(averaged);
@@ -122,7 +122,7 @@ export default async function ProgressPage({ searchParams }: PageProps<"/app/pro
     lastKg: weighIns.length > 0 ? weighIns[weighIns.length - 1].value : null,
     measures: latestMeasurements.map((m) => `${bodyKind(m.kind)?.label ?? ""} ${formatBodyValue(m.latest.value, "cm")}`),
   });
-  // "desde 27 JUL" under both tiles: the same weeks (never before the first workout's week).
+  // "desde 27 jul" under both tiles: the same weeks (never before the first workout's week).
   // "Tudo" counts every workout, so its tile dates its own first week — the
   // same Monday as the weeks on target unless the history is older than
   // their 400 days (then each tile says where it starts).
@@ -160,69 +160,72 @@ export default async function ProgressPage({ searchParams }: PageProps<"/app/pro
   const periodSpan = PERIODS.find((p) => p.value === period)?.span ?? "";
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
-      <div className="flex items-baseline justify-between gap-4">
-        <h1 className="text-2xl font-bold tracking-tight">Progresso</h1>
+    <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
+      <div className="flex items-end justify-between gap-4">
+        <div className="min-w-0">
+          <span className="eyebrow">Seus números</span>
+          <h1 className="text-display mt-0.5 text-[1.75rem] font-semibold leading-tight sm:text-[2rem]">Progresso</h1>
+        </div>
         {/* Every past workout, by date and on the calendar. */}
         <Link
           href="/app/history"
-          className="-my-2 inline-flex min-h-11 items-center gap-1 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
+          className="inline-flex min-h-11 shrink-0 items-center gap-1 text-sm font-medium text-accent hover:underline"
         >
           Histórico
           <GArrow className="size-3" />
         </Link>
       </div>
 
-      <PeriodChips period={period} basePath="/app/progress" className="mt-4" />
+      <PeriodChips period={period} basePath="/app/progress" className="mt-5" />
 
       {/* Two tiles as one table: each one's title, number and "desde" are a row
           (subgrid), so the numbers and the "desde" lines sit level side by side
           even when only one title wraps. */}
-      <div className="mt-6 grid grid-cols-2 gap-x-3">
+      <div className="mt-6 grid grid-cols-2 gap-x-3 sm:gap-x-4">
         <Link
           href="/app/history"
-          aria-label={`Treinos concluídos: ${summary.sessionCount}${workoutsSince ? ` desde ${monoDate(workoutsSince).toLowerCase()}` : ""} — ver histórico`}
+          aria-label={`Treinos concluídos: ${summary.sessionCount}${workoutsSince ? ` desde ${shortDate(workoutsSince)}` : ""} — ver histórico`}
           className="row-span-3 grid grid-rows-subgrid"
         >
           <Card className="is-link row-span-3 grid grid-rows-subgrid">
-            <CardContent className="row-span-3 grid grid-rows-subgrid pt-5">
-              <p className="flex items-start justify-between gap-2 text-xs font-medium text-muted">
+            <CardContent className="row-span-3 grid grid-rows-subgrid p-4 sm:p-5">
+              <p className="flex items-start justify-between gap-2 text-[13px] font-medium text-muted">
                 Treinos concluídos
-                <GArrow className="mt-0.5 size-3 shrink-0" />
+                <GArrow className="mt-1 size-3 shrink-0" />
               </p>
-              <p className="mt-1 font-mono text-2xl font-bold tabular-nums">{summary.sessionCount}</p>
+              <p className="mt-1 text-[2rem] font-bold leading-none tabular-nums">{summary.sessionCount}</p>
               {workoutsSince ? (
-                <p className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-muted">desde {monoDate(workoutsSince)}</p>
+                <p className="mt-2 text-[13px] tabular-nums text-muted">desde {shortDate(workoutsSince)}</p>
               ) : null}
             </CardContent>
           </Card>
         </Link>
         <Card data-consistency={consistency.state} className="row-span-3 grid grid-rows-subgrid">
-          <CardContent className="row-span-3 grid grid-rows-subgrid pt-5">
-            <p className="text-xs font-medium text-muted">Semanas na meta</p>
+          <CardContent className="row-span-3 grid grid-rows-subgrid p-4 sm:p-5">
+            <p className="text-[13px] font-medium text-muted">Semanas na meta</p>
             {consistency.state === "ratio" ? (
               <>
-                <p className="mt-1 font-mono text-2xl font-bold tabular-nums">
+                <p className="mt-1 text-[2rem] font-bold leading-none tabular-nums">
                   {consistency.met}
-                  <span className="text-base text-muted">/{consistency.total}</span>
+                  <span className="text-xl font-semibold text-muted">/{consistency.total}</span>
                 </p>
                 {consistency.since ? (
-                  <p className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-muted">
-                    desde {monoDate(consistency.since)}
-                  </p>
+                  <p className="mt-2 text-[13px] tabular-nums text-muted">desde {shortDate(consistency.since)}</p>
                 ) : null}
               </>
             ) : consistency.state === "early" ? (
               <>
-                <p className="mt-1.5 text-base font-bold">{consistency.week === 1 ? "Primeira semana" : "Segunda semana"}</p>
-                <p className="mt-0.5 text-[11px] leading-snug text-muted">
+                <p className="mt-1 text-lg font-semibold leading-snug">
+                  {consistency.week === 1 ? "Primeira semana" : "Segunda semana"}
+                </p>
+                <p className="mt-2 text-[13px] leading-snug text-muted">
                   {consistency.week === 1 ? "A conta começa após 2 semanas completas." : "A conta começa na próxima semana."}
                 </p>
               </>
             ) : (
               <>
-                <p className="mt-1 font-mono text-2xl font-bold tabular-nums text-muted">—</p>
-                <p className="mt-0.5 text-[11px] leading-snug text-muted">Começa no seu primeiro treino.</p>
+                <p className="mt-1 text-[2rem] font-bold leading-none tabular-nums text-muted">—</p>
+                <p className="mt-2 text-[13px] leading-snug text-muted">Começa no seu primeiro treino.</p>
               </>
             )}
           </CardContent>
@@ -233,14 +236,14 @@ export default async function ProgressPage({ searchParams }: PageProps<"/app/pro
         <Link
           href={`/app/programs/${enrollment.programId}`}
           aria-label={`Programa atual: ${enrollment.program.name} — ver programa`}
-          className="mt-3 block"
+          className="mt-3 block sm:mt-4"
         >
           <Card className="is-link" data-program-progress>
-            <CardContent className="py-4">
+            <CardContent className="p-4 sm:p-5">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="text-xs font-medium text-muted">Programa atual</p>
-                  <p className="truncate font-semibold">{enrollment.program.name}</p>
+                  <p className="text-[13px] font-medium text-muted">Programa atual</p>
+                  <p className="truncate text-base font-semibold">{enrollment.program.name}</p>
                 </div>
                 <GArrow className="mt-1 size-3 shrink-0 text-muted" />
               </div>
@@ -253,64 +256,60 @@ export default async function ProgressPage({ searchParams }: PageProps<"/app/pro
       ) : null}
 
       {consistency.state !== "not-started" && weeks.columns.length > 0 ? (
-        <section id="semanas" className="mt-8" aria-labelledby="semanas-titulo">
-          <h2 id="semanas-titulo" className="mb-1 flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-muted">
-            <CalendarDays className="size-4" aria-hidden />
-            Treinos por semana
-          </h2>
-          <p className="mb-3 font-mono text-[12px] font-semibold tabular-nums" data-weeks-headline>
+        <section id="semanas" className="mt-10" aria-labelledby="semanas-titulo">
+          <SectionHead id="semanas-titulo" label="Treinos por semana" />
+          <p className="mt-0.5 text-sm tabular-nums text-muted" data-weeks-headline>
             {weeksWords.headline}
           </p>
-          <WeeklyTrainingChart columns={weeks.columns} todayOffset={todayNo - mondayOf(todayNo)} summary={weeksWords.aria} />
+          <div className="card mt-3 p-4 sm:p-5">
+            <WeeklyTrainingChart columns={weeks.columns} todayOffset={todayNo - mondayOf(todayNo)} summary={weeksWords.aria} />
+          </div>
         </section>
       ) : null}
 
-      <section className="mt-8" aria-labelledby="evolucao">
-        <h2 id="evolucao" className="mb-3 flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-muted">
-          <TrendingUp className="size-4" />
-          Evolução por exercício
-        </h2>
+      <section className="mt-10" aria-labelledby="evolucao">
+        <SectionHead id="evolucao" label="Evolução por exercício" />
         {evolution.length === 0 ? (
-          <EmptyState
-            icon={<EmptyChartPreview />}
-            title="Sua evolução aparece aqui"
-            description="Depois de 2 treinos do mesmo exercício, a comparação entre eles aparece aqui — carga, repetições ou tempo."
-            action={
-              <Button variant="strong" asChild className="mt-1">
-                <Link href={enrollment ? "/app/today" : "/app/programs"}>
-                  {enrollment ? "Ver próximo treino" : "Escolher um programa"}
-                </Link>
-              </Button>
-            }
-          />
+          <div className="mt-3">
+            <EmptyState
+              icon={<EmptyChartPreview />}
+              title="Sua evolução aparece aqui"
+              description="Depois de 2 treinos do mesmo exercício, a comparação entre eles aparece aqui — carga, repetições ou tempo."
+              action={
+                <Button variant="strong" asChild className="mt-1">
+                  <Link href={enrollment ? "/app/today" : "/app/programs"}>
+                    {enrollment ? "Ver próximo treino" : "Escolher um programa"}
+                  </Link>
+                </Button>
+              }
+            />
+          </div>
         ) : (
           <>
-            <p className="-mt-1 mb-3 text-xs text-muted">
-              Primeira × última sessão de cada exercício {periodSpan}.
-            </p>
-            <div className="flex flex-col gap-2">
+            <p className="mt-0.5 text-sm text-muted">Primeira × última sessão de cada exercício {periodSpan}.</p>
+            <div className="mt-3 flex flex-col gap-2">
               {evolution.slice(0, TOP_EXERCISES).map((e) => (
                 <Link key={e.slug} href={`/app/exercises/${e.slug}/history?period=${period}`}>
                   <Card className="is-link">
-                    <CardContent className="py-3.5">
+                    <CardContent className="px-4 py-3.5 sm:px-5">
                       <div className="flex items-baseline justify-between gap-3">
-                        <p className="min-w-0 flex-1 text-sm font-medium">{e.namePt}</p>
+                        <p className="min-w-0 flex-1 text-[15px] font-medium leading-snug">{e.namePt}</p>
                         <span
                           data-direction={e.comparison.direction}
                           className={cn(
-                            "shrink-0 font-mono tabular-nums",
+                            "shrink-0 tabular-nums",
                             e.comparison.direction === "up"
-                              ? "text-sm font-semibold text-success"
+                              ? "text-[15px] font-semibold text-success"
                               : e.comparison.direction === "down"
-                                ? "text-sm font-semibold text-muted"
-                                : "text-[10px] font-semibold uppercase tracking-wider text-muted",
+                                ? "text-[15px] font-semibold text-muted"
+                                : "text-[13px] font-medium text-muted",
                           )}
                         >
                           {e.comparison.pctText}
                         </span>
                       </div>
                       <div className="mt-1 flex items-center justify-between gap-3">
-                        <p className="min-w-0 font-mono text-[11px] tabular-nums text-muted">
+                        <p className="min-w-0 text-[13px] tabular-nums text-muted">
                           <Arrowed text={e.comparison.detail} />
                         </p>
                         {e.trend.length > 1 ? (
@@ -332,7 +331,7 @@ export default async function ProgressPage({ searchParams }: PageProps<"/app/pro
         {series.length > 0 || consistency.state !== "not-started" ? (
           <Link
             href="/app/progress/exercises"
-            className="mt-3 inline-flex min-h-11 items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
+            className="mt-2 inline-flex min-h-11 items-center gap-1 text-sm font-medium text-accent hover:underline"
           >
             Meus exercícios
             <GArrow className="size-3" />
@@ -341,50 +340,48 @@ export default async function ProgressPage({ searchParams }: PageProps<"/app/pro
       </section>
 
       {consistency.state !== "not-started" ? (
-        <section id="musculos" className="mt-8" aria-labelledby="musculos-titulo">
-          <h2 id="musculos-titulo" className="mb-1 flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-muted">
-            <BarChart3 className="size-4" aria-hidden />
-            Séries por músculo
-          </h2>
+        <section id="musculos" className="mt-10" aria-labelledby="musculos-titulo">
+          <SectionHead id="musculos-titulo" label="Séries por músculo" />
           {volume.basis ? (
             <>
-              <p className="mb-3 font-mono text-[12px] font-semibold" data-muscles-headline>
+              <p className="mt-0.5 text-sm tabular-nums text-muted" data-muscles-headline>
                 {volume.basis === "parcial"
-                  ? "esta semana, parcial"
-                  : `média por semana treinada · ${plural(volume.basis.weeks, "semana", "semanas")}`}
+                  ? "Esta semana, parcial"
+                  : `Média por semana treinada · ${plural(volume.basis.weeks, "semana", "semanas")}`}
               </p>
-              <MuscleVolumeBars rows={volume.rows} />
-              <p className="mt-3 text-xs text-muted">
+              <div className="card mt-3 px-4 py-2 sm:px-5">
+                <MuscleVolumeBars rows={volume.rows} />
+              </div>
+              <p className="mt-3 text-[13px] leading-relaxed text-muted">
                 Séries de trabalho concluídas; as de apoio contam metade. Semanas de deload ficam de fora. A faixa de 10–20 é
                 uma referência para hipertrofia, não uma meta — programas com prioridades deixam alguns músculos abaixo de
                 propósito. Ombros somam deltoide anterior, lateral e posterior.
               </p>
               <Link
                 href="/app/science/training-volume"
-                className="mt-1 inline-flex min-h-11 items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
+                className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-accent hover:underline"
               >
                 Volume por músculo
                 <GArrow className="size-3" />
               </Link>
             </>
           ) : (
-            <p className="text-sm text-muted">Nenhuma semana treinada {periodSpan}.</p>
+            <p className="mt-2 text-sm text-muted">Nenhuma semana treinada {periodSpan}.</p>
           )}
         </section>
       ) : null}
 
-      <section className="mt-8" aria-labelledby="recordes">
-        <h2 id="recordes" className="mb-3 flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-muted">
-          <Lettermark code="PR" className="size-5 text-[9px]" />
-          Recordes recentes
-        </h2>
+      <section className="mt-10" aria-labelledby="recordes">
+        <SectionHead id="recordes" label="Recordes recentes" />
         {summary.recentPrs.length === 0 ? (
-          <EmptyState
-            title="Nenhum recorde neste período"
-            description="Um recorde aparece quando você supera uma marca sua — a primeira sessão de cada exercício vira a marca inicial."
-          />
+          <div className="mt-3">
+            <EmptyState
+              title="Nenhum recorde neste período"
+              description="Um recorde aparece quando você supera uma marca sua — a primeira sessão de cada exercício vira a marca inicial."
+            />
+          </div>
         ) : (
-          <div className="flex flex-col gap-2">
+          <div className="mt-3 flex flex-col gap-2">
             {summary.recentPrs.map((pr) => {
               const timed = isTimedHold({ slug: pr.slug });
               const records = pr.records.flatMap((r) => {
@@ -394,18 +391,16 @@ export default async function ProgressPage({ searchParams }: PageProps<"/app/pro
               return (
                 <Link key={pr.exerciseId} href={`/app/exercises/${pr.slug}/history`}>
                   <Card className="is-link">
-                    <CardContent className="py-3.5">
+                    <CardContent className="px-4 py-3.5 sm:px-5">
                       <div className="flex items-baseline justify-between gap-3">
-                        <span className="min-w-0 flex-1 text-sm font-medium">{pr.namePt}</span>
-                        <span className="shrink-0 font-mono text-[11px] tabular-nums text-muted">
-                          {monoDate(pr.achievedAt)}
-                        </span>
+                        <span className="min-w-0 flex-1 text-[15px] font-medium leading-snug">{pr.namePt}</span>
+                        <span className="shrink-0 text-[13px] tabular-nums text-muted">{shortDate(pr.achievedAt)}</span>
                       </div>
-                      <p className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-xs">
+                      <p className="mt-1 flex flex-wrap gap-x-4 gap-y-0.5 text-sm">
                         {records.map((r) => (
                           <span key={r.label} className="whitespace-nowrap">
                             <span className="text-muted">{r.label}</span>{" "}
-                            <span className="font-mono font-semibold tabular-nums">{r.value}</span>
+                            <span className="font-semibold tabular-nums">{r.value}</span>
                           </span>
                         ))}
                       </p>
@@ -419,43 +414,40 @@ export default async function ProgressPage({ searchParams }: PageProps<"/app/pro
       </section>
 
       {/* Body data (W-083): the user's alone — a way into Corpo. */}
-      <section className="mt-8" aria-labelledby="corpo">
-        <h2 id="corpo" className="mb-3 flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-muted">
-          <Scale className="size-4" aria-hidden />
-          Corpo
-        </h2>
+      <section className="mt-10" aria-labelledby="corpo">
+        <SectionHead id="corpo" label="Corpo" />
         {hasBody ? (
-          <Link href="/app/progress/body" aria-label={`Corpo: ${bodyCard.name} — abrir`} data-body-card>
+          <Link href="/app/progress/body" aria-label={`Corpo: ${bodyCard.name} — abrir`} data-body-card className="mt-3 block">
             <Card className="is-link">
-              <CardContent className="py-3.5">
+              <CardContent className="px-4 py-3.5 sm:px-5">
                 <div className="flex items-center justify-between gap-3">
                   <div className="min-w-0">
                     {bodyCard.avg != null ? (
-                      <p className="font-mono text-sm font-semibold tabular-nums">
-                        <span className="text-muted">Média 7 dias </span>
+                      <p className="text-[15px] font-semibold tabular-nums">
+                        <span className="font-normal text-muted">Média 7 dias </span>
                         {/* The rate may take its own line (320px), never run under the sparkline;
                             the separator stays at the end of the first line, never opens the second. */}
                         <span className="whitespace-nowrap">
                           {bodyCard.avg}
-                          {bodyCard.rate ? <span className="text-muted">{`${NBSP}·`}</span> : null}
+                          {bodyCard.rate ? <span className="font-normal text-muted">{`${NBSP}·`}</span> : null}
                         </span>
                         {bodyCard.rate ? (
                           <>
                             {" "}
-                            <span className="whitespace-nowrap text-muted">{bodyCard.rate}</span>
+                            <span className="whitespace-nowrap font-normal text-muted">{bodyCard.rate}</span>
                           </>
                         ) : null}
                       </p>
                     ) : bodyCard.last != null ? (
-                      <p className="font-mono text-sm font-semibold tabular-nums">
-                        <span className="text-muted">Última pesagem </span>
+                      <p className="text-[15px] font-semibold tabular-nums">
+                        <span className="font-normal text-muted">Última pesagem </span>
                         {bodyCard.last}
                       </p>
                     ) : (
-                      <p className="text-sm font-medium">Peso e medidas</p>
+                      <p className="text-[15px] font-medium">Peso e medidas</p>
                     )}
                     {bodyCard.measures ? (
-                      <p className="mt-1 truncate font-mono text-[11px] tabular-nums text-muted">{bodyCard.measures}</p>
+                      <p className="mt-1 truncate text-[13px] tabular-nums text-muted">{bodyCard.measures}</p>
                     ) : null}
                   </div>
                   {averages.length > 1 ? (
@@ -475,11 +467,11 @@ export default async function ProgressPage({ searchParams }: PageProps<"/app/pro
         ) : (
           <Link
             href="/app/progress/body"
-            className="reg-frame is-link flex min-h-11 items-center justify-between gap-3 px-4 py-3 text-sm font-medium"
+            className="card is-link mt-3 flex min-h-11 items-center justify-between gap-3 px-4 py-3.5 text-[15px] font-medium sm:px-5"
             data-body-card="empty"
           >
             Registrar peso e medidas
-            <GArrow className="size-3 shrink-0" />
+            <GArrow className="size-3 shrink-0 text-muted" />
           </Link>
         )}
       </section>

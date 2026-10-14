@@ -18,8 +18,7 @@ const STATUS: Record<Visibility, string> = {
   PUBLIC: "Qualquer pessoa pode ver este treino — mesmo sem conta.",
 };
 
-const LINK =
-  "inline-flex min-h-11 items-center font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline";
+const LINK = "inline-flex min-h-11 items-center text-sm font-semibold text-accent hover:underline";
 
 /**
  * The owner's "Quem vê" on their published workout (W-143): Privado ·
@@ -95,7 +94,7 @@ export function OwnerControls({
     <section ref={sectionRef} id="quem-ve" aria-labelledby="quem-ve-titulo" className="mt-8 scroll-mt-6">
       <SectionHead id="quem-ve-titulo" label="Quem vê" />
       {moderated ? (
-        <p className="mt-3 border-l-2 border-l-danger bg-danger-soft px-3.5 py-2.5 text-sm text-danger">
+        <p className="mt-3 rounded-[var(--radius-md)] bg-danger-soft px-4 py-3 text-sm text-danger">
           Esta publicação foi ocultada pela moderação.
         </p>
       ) : (
@@ -107,19 +106,19 @@ export function OwnerControls({
             disabled={saving || deleting}
             className="mt-3"
           />
-          <p className="mt-2 flex flex-wrap items-baseline justify-between gap-x-3 text-xs text-muted">
+          <p className="mt-2 flex flex-wrap items-baseline justify-between gap-x-3 text-[13px] text-muted">
             <span>{STATUS[visibility]}</span>
-            <span role="status" className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-success">
+            <span role="status" className="font-medium text-success">
               {saving ? "" : saved}
             </span>
           </p>
           {linkShared ? (
-            <p className="mt-1 text-xs text-muted">O link de compartilhamento está ativo: quem tiver o link também vê.</p>
+            <p className="mt-1 text-[13px] text-muted">O link de compartilhamento está ativo: quem tiver o link também vê.</p>
           ) : null}
         </>
       )}
       {error ? (
-        <p role="alert" className="mt-2 text-xs text-danger">
+        <p role="alert" className="mt-2 text-[13px] text-danger">
           <ActionErrorText error={error} />
         </p>
       ) : null}

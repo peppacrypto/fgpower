@@ -7,7 +7,7 @@ import { getBodyweightPoints, getMeasurements, getRecentWeighIns } from "@/lib/d
 import { getUpcomingPlan } from "@/lib/data/upcoming";
 import { SectionHead } from "@/components/ui/section-head";
 import { BodyweightChart } from "@/components/charts/bodyweight-chart";
-import { monoDate } from "@/components/charts/scale";
+import { shortDate } from "@/components/charts/scale";
 import { dayNumberOf } from "@/lib/training/day-rotation";
 import { bodyKind, formatBodyDelta, formatBodyValue, measurementWeek, movingAverage7 } from "@/lib/training/body-weight";
 import { guidanceLastWeek } from "@/lib/training/week-guidance";
@@ -27,10 +27,9 @@ const MAX_BACKDATE_DAYS = 366;
 function isoOfDay(day: number) {
   return new Date(day * DAY_MS).toISOString().slice(0, 10);
 }
-const dayLabel = (day: number) => monoDate(dateOfDayNumber(day));
-/** EmptyState's panel (components/ui/misc), drawn here around the weigh-in form. */
-const EMPTY_PANEL =
-  "flex flex-col items-center justify-center gap-3 border-y-2 border-y-[var(--rule-heavy)] bg-surface-2 px-6 py-14 text-center";
+const dayLabel = (day: number) => shortDate(dateOfDayNumber(day));
+/** EmptyState's card (components/ui/misc), drawn here around the weigh-in form. */
+const EMPTY_PANEL = "card flex flex-col items-center justify-center gap-3 px-6 py-10 text-center";
 
 /**
  * Corpo (W-083): the weight — daily weigh-ins and the 7-day average that
@@ -76,22 +75,22 @@ export default async function BodyPage({ searchParams }: PageProps<"/app/progres
     : "";
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
+    <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
       <Link
         href="/app/progress"
-        className="-mt-2 -ml-1 inline-flex min-h-11 items-center gap-0.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted hover:text-foreground"
+        className="-mt-2 -ml-1.5 inline-flex min-h-11 items-center gap-0.5 text-sm font-medium text-muted hover:text-foreground"
       >
-        <ChevronLeft className="size-3.5" aria-hidden />
+        <ChevronLeft className="size-4" aria-hidden />
         Progresso
       </Link>
-      <h1 className="text-2xl font-bold tracking-tight">Corpo</h1>
-      <p className="mt-1 text-sm text-muted">Só você vê. Nada daqui aparece no feed nem no seu perfil.</p>
+      <h1 className="text-display text-[1.75rem] font-semibold leading-tight sm:text-[2rem]">Corpo</h1>
+      <p className="mt-1.5 text-[15px] text-muted">Só você vê. Nada daqui aparece no feed nem no seu perfil.</p>
       {/* Above everything that redraws: a list whose last entry is deleted is gone before it's said. */}
       <BodyAnnouncer />
 
       {ask && plan.hasPlan ? (
-        <div className="mt-4 border-l-2 border-l-accent bg-surface-2 px-3 py-2.5" data-measure-banner={ask}>
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em]">
+        <div className="mt-5 rounded-[var(--radius-lg)] bg-accent-soft px-4 py-3.5" data-measure-banner={ask}>
+          <p className="text-[15px] font-semibold">
             {/* "Semana de medidas · GD 1 · sem. 13": the fixed parts stay whole; a long program name may wrap. */}
             {ask === "measure" ? (
               <>
@@ -102,7 +101,7 @@ export default async function BodyPage({ searchParams }: PageProps<"/app/progres
               "Pese-se toda manhã"
             )}
           </p>
-          <p className="mt-0.5 text-xs text-foreground/90">
+          <p className="mt-1 text-sm text-foreground/90">
             {ask === "measure"
               ? "O programa pede o peso médio de 7 dias, cintura e membros."
               : "A média de 7 dias começa aqui: de manhã, depois do banheiro, antes de comer."}
@@ -110,9 +109,9 @@ export default async function BodyPage({ searchParams }: PageProps<"/app/progres
         </div>
       ) : null}
 
-      {empty ? null : <PeriodChips period={period} basePath="/app/progress/body" className="mt-4" />}
+      {empty ? null : <PeriodChips period={period} basePath="/app/progress/body" className="mt-5" />}
 
-      <section className="mt-6" aria-labelledby={empty ? "corpo-vazio" : "peso"}>
+      <section className="mt-8" aria-labelledby={empty ? "corpo-vazio" : "peso"}>
         {/* With no data yet the weigh-in form sits in the empty state (EmptyState's look). It keeps
             one place in the tree either way, so the first save — which redraws the page with its
             list — keeps the form's focus and its "Salvo ✓". */}
@@ -139,16 +138,18 @@ export default async function BodyPage({ searchParams }: PageProps<"/app/progres
         {empty ? null : (
           <>
             {averaged.length > 0 ? (
-              <BodyweightChart points={averaged} className="mt-6" />
+              <div className="card mt-5 p-4 sm:p-5">
+                <BodyweightChart points={averaged} />
+              </div>
             ) : (
               <p className="mt-6 text-sm text-muted">Nenhuma pesagem {periodSpan}.</p>
             )}
-            <p className="mt-3 text-xs text-muted">
+            <p className="mt-3 text-[13px] text-muted">
               O peso varia 1–2 kg de um dia para o outro (água, sal, digestão). A média de 7 dias mostra a tendência.
             </p>
             {recent.length > 0 ? (
               <>
-                <SectionHead as="h3" label="Pesagens" count={recent.length} className="mt-6" />
+                <SectionHead as="h3" label="Pesagens" count={recent.length} className="mt-8" />
                 <BodyEntries
                   noun="pesagem"
                   className="mt-2"
@@ -171,7 +172,7 @@ export default async function BodyPage({ searchParams }: PageProps<"/app/progres
           <MeasurementsForm todayIso={todayIso} minIso={minIso} />
         </div>
         {measurements.length > 0 ? (
-          <div className="mt-6 flex flex-col divide-y divide-border border-y border-border" data-measurements>
+          <div className="card mt-6 flex flex-col divide-y divide-border px-4" data-measurements>
             {measurements.map((m) => {
               const config = bodyKind(m.kind);
               if (!config) return null;
@@ -181,20 +182,20 @@ export default async function BodyPage({ searchParams }: PageProps<"/app/progres
                   <summary className="flex min-h-11 cursor-pointer list-none items-center gap-3 py-2 [&::-webkit-details-marker]:hidden">
                     {/* The words wrap on their side; the chevron keeps the first line's end. */}
                     <span className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-0.5">
-                      <span className="text-sm font-semibold">{config.label}</span>
-                      <span className="font-mono text-sm font-semibold tabular-nums">{formatBodyValue(m.latest.value, "cm")}</span>
+                      <span className="text-[15px] font-semibold">{config.label}</span>
+                      <span className="text-[15px] font-semibold tabular-nums">{formatBodyValue(m.latest.value, "cm")}</span>
                       {/* The change may wrap to its own line: its separator ends the line above, never opens it. */}
-                      <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-muted">
+                      <span className="text-[13px] tabular-nums text-muted">
                         · {dayLabel(m.latest.day)}
                         {since ? " ·" : null}
                       </span>
                       {since ? (
-                        <span className="font-mono text-[11px] text-muted">
+                        <span className="text-[13px] tabular-nums text-muted">
                           {formatBodyDelta(m.latest.value - since.value, "cm")} desde {dayLabel(since.day)}
                         </span>
                       ) : null}
                     </span>
-                    <ChevronDown className="size-3.5 shrink-0 text-muted transition-transform group-open/m:rotate-180" aria-hidden />
+                    <ChevronDown className="size-4 shrink-0 text-muted transition-transform group-open/m:rotate-180" aria-hidden />
                   </summary>
                   <BodyEntries
                     noun={config.label.toLowerCase()}
@@ -211,7 +212,7 @@ export default async function BodyPage({ searchParams }: PageProps<"/app/progres
             })}
           </div>
         ) : (
-          <p className="mt-4 text-xs text-muted">
+          <p className="mt-4 text-[13px] text-muted">
             Meça no mesmo horário e do mesmo lado a cada vez — no começo e no fim de cada bloco já basta.
           </p>
         )}

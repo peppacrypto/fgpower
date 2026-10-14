@@ -70,7 +70,15 @@ function noticeFor(field: BuilderNumberField, commit: NumberCommit): Notice | nu
   return null;
 }
 
-const FIELD_LABEL = "font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted";
+const FIELD_LABEL = "text-[13px] font-medium leading-snug text-muted";
+
+/** A rest chip ("2:00", "Outro"): a 36px plate with a 44px touch target (.hit); the picked one is the green one. */
+const CHIP =
+  "hit flex h-9 items-center justify-center rounded-[var(--radius-md)] border px-3 text-sm transition-colors";
+const chipTone = (on: boolean) =>
+  on
+    ? "border-accent bg-accent-soft font-semibold text-accent"
+    : "border-border bg-surface font-medium text-foreground hover:border-border-strong hover:bg-surface-2";
 
 /** The member after this one ("A2"), for a switch's "Troca para A2". */
 function nextLabel(group: GroupSlot): string {
@@ -190,16 +198,17 @@ export function ExerciseRow({
       data-expanded={expanded || undefined}
       data-group={group?.label}
       className={cn(
-        "reg-frame",
-        // A group's members sit together on one accent rule (W-104), joined by a hairline.
-        group && "border-l-2 border-l-accent",
-        group && !group.first && "-mt-2 border-t border-t-border",
-        isDragging && "z-10 opacity-60",
+        "card",
+        // A group's members (W-104) read as one card: joined edge to edge, a hairline between them,
+        // under the group's line ("Superset A · alterne as séries").
+        group && !group.first && "-mt-2 rounded-t-none border-t-0",
+        group && !group.last && "rounded-b-none",
+        isDragging && "z-10 opacity-60 shadow-[var(--shadow-md)]",
       )}
     >
       {group?.first ? (
-        <div className="flex items-center justify-between gap-2 border-b border-border pl-3">
-          <p className="min-w-0 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-accent" data-group-rule>
+        <div className="flex items-center justify-between gap-2 rounded-t-[calc(var(--radius-lg)-1px)] border-b border-border bg-accent-soft pl-4 pr-1">
+          <p className="min-w-0 py-2 text-[13px] font-medium leading-snug text-accent" data-group-rule>
             {groupRule(group)}
           </p>
           {onUngroup ? (
@@ -207,7 +216,7 @@ export function ExerciseRow({
               type="button"
               onClick={onUngroup}
               aria-label={`Desagrupar ${group.heading}`}
-              className="flex min-h-11 shrink-0 items-center gap-1 px-2.5 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted hover:text-foreground"
+              className="flex min-h-11 shrink-0 items-center gap-1.5 rounded-[var(--radius-md)] px-2.5 text-[13px] font-medium text-muted hover:text-foreground"
             >
               <Link2Off className="size-3.5" />
               Desagrupar
@@ -221,7 +230,7 @@ export function ExerciseRow({
           type="button"
           {...attributes}
           {...listeners}
-          className="flex w-10 shrink-0 cursor-grab touch-none select-none items-center justify-center text-muted hover:text-foreground active:cursor-grabbing"
+          className="flex w-10 shrink-0 cursor-grab touch-none select-none items-center justify-center rounded-l-[var(--radius-lg)] text-muted/70 hover:text-foreground active:cursor-grabbing"
           aria-label={`Arrastar ${name} para reordenar`}
         >
           <GripVertical className="size-5" />
@@ -232,11 +241,11 @@ export function ExerciseRow({
           aria-expanded={expanded}
           aria-controls={editorId}
           onClick={onToggle}
-          className="flex min-h-16 min-w-0 flex-1 items-center gap-3 py-2.5 pr-1 text-left"
+          className="flex min-h-[4.5rem] min-w-0 flex-1 items-center gap-3 py-3 pr-1 text-left"
         >
-          <span className="relative size-9 shrink-0 overflow-hidden rounded-[3px] bg-surface-2">
+          <span className="relative size-12 shrink-0 overflow-hidden rounded-[var(--radius-md)] bg-surface-2">
             {meta?.imageUrl ? (
-              <Image src={meta.imageUrl} alt="" fill sizes="36px" className="object-cover" />
+              <Image src={meta.imageUrl} alt="" fill sizes="48px" className="object-cover" />
             ) : (
               <span className="flex h-full items-center justify-center text-muted">
                 <GLoad className="size-4" />
@@ -244,9 +253,9 @@ export function ExerciseRow({
             )}
           </span>
           <span className="min-w-0 flex-1">
-            <span className="block text-sm font-semibold leading-snug wrap-break-word">
+            <span className="block text-[15px] font-semibold leading-snug wrap-break-word">
               {group ? (
-                <span className="mr-1.5 font-mono text-[11px] font-bold text-accent" data-group-label>
+                <span className="mr-1.5 tabular-nums text-accent" data-group-label>
                   <span aria-hidden>{group.label}</span>
                   <span className="sr-only">
                     {group.heading}, {group.position} de {group.size}:
@@ -255,7 +264,7 @@ export function ExerciseRow({
               ) : null}
               <span data-row-name>{name}</span>
             </span>
-            <span className="mt-0.5 block font-mono text-[11px] leading-relaxed tabular-nums text-muted">
+            <span className="mt-0.5 block text-[13px] leading-relaxed tabular-nums text-muted">
               {/* Wraps between the parts ("3 × 6–10 · RIR 2 · 2:30") and before a tag, never inside one;
                   the chevron rides the last. (All on one unbreakable run, "Nota" and "Não conta no
                   volume" ran out of a 320px row.) */}
@@ -287,15 +296,17 @@ export function ExerciseRow({
           onClick={onOpenActions}
           aria-haspopup="dialog"
           aria-label={`Opções de ${name}`}
-          className="flex w-11 shrink-0 items-center justify-center text-muted hover:bg-surface-2 hover:text-foreground"
+          className="m-1 flex w-11 shrink-0 items-center justify-center rounded-[var(--radius-md)] text-muted hover:bg-surface-2 hover:text-foreground"
         >
           <MoreHorizontal className="size-5" />
         </button>
       </div>
 
       {expanded ? (
-        <div id={editorId} className="border-t border-border px-3 pb-3 pt-3">
-          <div className="grid grid-cols-2 gap-x-3 gap-y-3 sm:grid-cols-4">
+        <div id={editorId} className="border-t border-border px-4 pb-4 pt-4">
+          {/* Columns only as wide as a stepper (~136px) fits: one on a 320px phone, two on phones and
+              tablets (the sidebar takes a tablet's width), four on a desktop. */}
+          <div className="grid grid-cols-1 gap-x-4 gap-y-4 min-[360px]:grid-cols-2 lg:grid-cols-4">
             <FieldBox label="Séries">
               <Stepper label="séries" onStep={(d) => step("sets", d)} value={exercise.sets} field="sets">
                 <NumberField {...numberProps("sets", "Séries")} />
@@ -304,7 +315,7 @@ export function ExerciseRow({
             <FieldBox label="Repetições">
               <div className="flex items-center gap-1">
                 <NumberField {...numberProps("repMin", "Rep. mín")} wide />
-                <span className="font-mono text-muted" aria-hidden>
+                <span className="text-muted" aria-hidden>
                   –
                 </span>
                 <NumberField {...numberProps("repMax", "Rep. máx")} wide />
@@ -330,7 +341,7 @@ export function ExerciseRow({
             </FieldBox>
           </div>
           {rirHelp ? (
-            <p id={`${id}-rir-help`} className="mt-2 border-l-2 border-l-accent bg-surface-2 px-2.5 py-1.5 text-xs leading-snug text-foreground/85">
+            <p id={`${id}-rir-help`} className="mt-3 rounded-[var(--radius-md)] bg-surface-2 px-3 py-2 text-[13px] leading-snug text-foreground">
               <span className="font-semibold">RIR</span> = repetições na reserva: quantas você ainda faria ao parar a série.
               RIR 2 = pare com ~2 sobrando. Vazio = sem alvo.
             </p>
@@ -365,7 +376,7 @@ export function ExerciseRow({
             <p
               id={hintId}
               role={hint.tone === "error" ? "alert" : "status"}
-              className="mt-2.5 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-danger"
+              className={cn("mt-3 text-[13px] font-medium leading-snug", hint.tone === "error" ? "text-danger" : "text-warning")}
             >
               {hint.text}
             </p>
@@ -379,7 +390,7 @@ export function ExerciseRow({
 function FieldBox({ label, help, children }: { label: string; help?: React.ReactNode; children: React.ReactNode }) {
   return (
     <div className="flex min-w-0 flex-col gap-1">
-      <span className={cn(FIELD_LABEL, "flex min-h-4 items-center gap-1")}>
+      <span className={cn(FIELD_LABEL, "flex min-h-5 items-center gap-1.5")}>
         {label}
         {help}
       </span>
@@ -389,7 +400,7 @@ function FieldBox({ label, help, children }: { label: string; help?: React.React
 }
 
 const STEP_BUTTON =
-  "flex h-11 w-10 shrink-0 items-center justify-center border border-foreground/30 font-mono text-lg font-bold text-foreground/80 hover:bg-surface-2 disabled:opacity-30";
+  "flex h-11 w-10 shrink-0 items-center justify-center rounded-[var(--radius-md)] bg-surface-2 text-lg font-medium text-foreground hover:bg-[var(--border)] disabled:opacity-35";
 
 function Stepper({
   label,
@@ -406,10 +417,10 @@ function Stepper({
 }) {
   const { min, max } = BUILDER_LIMITS[field];
   return (
-    <div className="flex items-center">
+    <div className="flex items-center gap-1">
       <button
         type="button"
-        className={cn(STEP_BUTTON, "border-r-0")}
+        className={STEP_BUTTON}
         aria-label={`Diminuir ${label}`}
         disabled={value === null || value <= min}
         onClick={() => onStep(-1)}
@@ -419,7 +430,7 @@ function Stepper({
       {children}
       <button
         type="button"
-        className={cn(STEP_BUTTON, "border-l-0")}
+        className={STEP_BUTTON}
         aria-label={`Aumentar ${label}`}
         disabled={value !== null && value >= max}
         onClick={() => onStep(1)}
@@ -439,7 +450,7 @@ function RirHelpButton({ open, controls, onToggle }: { open: boolean; controls: 
       aria-controls={controls}
       aria-label="O que é RIR?"
       onClick={onToggle}
-      className="relative flex size-4 items-center justify-center rounded-full border border-current text-[9px] font-bold normal-case tracking-normal hover:text-foreground after:absolute after:-inset-3.5 after:content-['']"
+      className="relative flex size-[1.125rem] items-center justify-center rounded-full border border-current text-[11px] font-semibold hover:text-foreground after:absolute after:-inset-3.5 after:content-['']"
     >
       ?
     </button>
@@ -474,7 +485,7 @@ function RestField({
       <legend className={cn(FIELD_LABEL, "mb-1")}>
         {switching ? `Troca para ${nextLabel(group)}` : group ? "Descanso após a rodada" : "Descanso"}
       </legend>
-      <div className="flex flex-wrap gap-1">
+      <div className="flex flex-wrap gap-2">
         {presets.map((s) => (
           <button
             key={s}
@@ -484,10 +495,7 @@ function RestField({
               setCustomOpen(false);
               onPick(s);
             }}
-            className={cn(
-              "flex h-11 min-w-12 items-center justify-center px-2 font-mono text-sm font-semibold tabular-nums",
-              !custom && value === s ? "bg-foreground text-background" : "bg-surface-2 text-foreground/80 hover:bg-[var(--border)]",
-            )}
+            className={cn(CHIP, chipTone(!custom && value === s), "min-w-[3.25rem] tabular-nums")}
           >
             {formatRestClock(s)}
           </button>
@@ -496,10 +504,7 @@ function RestField({
           type="button"
           aria-pressed={custom}
           onClick={() => setCustomOpen(true)}
-          className={cn(
-            "flex h-11 items-center justify-center px-3 font-mono text-[11px] font-bold uppercase tracking-[0.08em]",
-            custom ? "bg-foreground text-background" : "bg-surface-2 text-foreground/80 hover:bg-[var(--border)]",
-          )}
+          className={cn(CHIP, chipTone(custom))}
         >
           Outro
         </button>
@@ -507,7 +512,7 @@ function RestField({
       {custom ? (
         <div className="mt-2 flex items-center gap-2">
           {children}
-          <span className="font-mono text-xs text-muted">s · {formatRestClock(value)}</span>
+          <span className="text-sm tabular-nums text-muted">s · {formatRestClock(value)}</span>
         </div>
       ) : null}
     </fieldset>
@@ -552,8 +557,8 @@ function NoteField({
             placeholder="Ex.: desça em 3 s; banco a 30°"
             onValueChange={(v) => onChange(v === "" ? null : v)}
             className={cn(
-              "mt-1 min-h-16 rounded-[3px] border border-foreground/50 bg-surface px-3 py-2.5 text-base leading-snug text-foreground placeholder:text-muted sm:text-sm",
-              invalid && "border-2 border-danger",
+              "mt-1.5 min-h-16 rounded-[var(--radius-md)] border border-field bg-surface px-3.5 py-2.5 text-base leading-snug text-foreground transition-colors placeholder:text-muted hover:border-foreground/60 sm:text-sm",
+              invalid && "border-danger ring-1 ring-danger hover:border-danger",
             )}
           />
         </>
@@ -561,15 +566,15 @@ function NoteField({
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="-ml-1 inline-flex min-h-11 items-center px-1 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-accent hover:underline"
+          className="-ml-1.5 inline-flex min-h-11 items-center rounded-[var(--radius-md)] px-1.5 text-sm font-semibold text-accent hover:underline"
         >
           + Nota para o treino
         </button>
       )}
       {machineNote ? (
-        <p className="mt-2 border-l-2 border-l-border-strong pl-2.5 text-xs text-muted">
-          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em]">Sua nota da máquina</span>{" "}
-          {machineNote} <span className="text-muted/80">· edite durante o treino</span>
+        <p className="mt-2 rounded-[var(--radius-md)] bg-surface-2 px-3 py-2 text-[13px] leading-snug text-muted">
+          <span className="font-medium text-foreground">Sua nota da máquina:</span> {machineNote}{" "}
+          <span>· edite durante o treino</span>
         </p>
       ) : null}
     </div>
@@ -647,13 +652,13 @@ function NumberField({
         if (e.key === "Enter") e.currentTarget.blur();
       }}
       className={cn(
-        "h-11 min-w-0 rounded-none border bg-surface px-1 text-center font-mono text-base tabular-nums placeholder:text-muted",
-        wide ? "w-14 rounded-[3px]" : "w-11",
+        "h-11 shrink-0 rounded-[var(--radius-md)] border bg-surface px-1 text-center text-base font-medium tabular-nums text-foreground transition-colors placeholder:text-muted",
+        wide ? "w-14" : "w-12",
         tone === "error"
-          ? "border-2 border-danger"
+          ? "border-danger ring-1 ring-danger"
           : tone === "adjusted"
-            ? "border-foreground/50 border-b-2 border-b-danger"
-            : "border-foreground/50",
+            ? "border-warning ring-1 ring-warning"
+            : "border-field hover:border-foreground/60",
       )}
     />
   );

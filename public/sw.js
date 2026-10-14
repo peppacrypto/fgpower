@@ -14,7 +14,7 @@
 // hashed); navigations still get the offline page.
 // Bump CACHE_NAME whenever a SHELL_ASSETS file changes (offline.html included):
 // the browser only reinstalls the worker, and re-precaches, when sw.js changes.
-const CACHE_NAME = "fgpower-shell-v4";
+const CACHE_NAME = "fgpower-shell-v5";
 const STATIC_CACHE = "fgpower-static-v2";
 const OFFLINE_URL = "/offline.html";
 const SHELL_ASSETS = [

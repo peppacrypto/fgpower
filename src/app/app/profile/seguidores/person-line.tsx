@@ -24,14 +24,14 @@ export function PersonLine({
         <Avatar src={person.image} name={person.name} size={40} />
       </span>
       <span className="min-w-0">
-        <span className="block truncate text-sm font-semibold">{person.name}</span>
-        {person.username ? <span className="block truncate font-mono text-xs text-muted">@{person.username}</span> : null}
+        <span className="block truncate text-[15px] font-semibold">{person.name}</span>
+        {person.username ? <span className="block truncate text-[13px] text-muted">@{person.username}</span> : null}
       </span>
     </>
   );
   return (
     <li
-      className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-border py-3 has-[[data-removed]]:opacity-60"
+      className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-border py-3 last:border-b-0 has-[[data-removed]]:opacity-60"
       data-person={person.username ?? person.id}
     >
       {person.username ? (
@@ -85,7 +85,7 @@ export function MoreLink({ shown, hasMore, page, href }: { shown: number; hasMor
           </Link>
         </Button>
       ) : hasMore ? (
-        <p className="text-center text-xs text-muted">Mostrando as {plural(shown, "pessoa mais recente", "pessoas mais recentes")}.</p>
+        <p className="text-center text-[13px] text-muted">Mostrando as {plural(shown, "pessoa mais recente", "pessoas mais recentes")}.</p>
       ) : null}
     </div>
   );

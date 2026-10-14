@@ -7,7 +7,7 @@ export interface ScrubPoint {
   x: number;
   /** 0–100, top → bottom. */
   y: number;
-  /** "21 SET" — the readout's first line. */
+  /** "21 set" — the readout's first line. */
   date: string;
   /** "65 kg × 6" — its second line. */
   text: string;
@@ -21,7 +21,7 @@ const TOUCH_LINGER_MS = 1600;
 /**
  * The one client piece of a progression chart (the chart is drawn on the
  * server): drag or hover across the plot and a hairline snaps to the nearest
- * session, with its date and set in a square readout. It only enhances — the
+ * session, with its date and set in a small floating readout. It only enhances — the
  * session list under the charts has every value as text, and the chart's
  * aria-label sums it up — so it stays out of the accessibility tree.
  *
@@ -114,13 +114,13 @@ export function ChartScrubber({ points }: { points: ScrubPoint[] }) {
             data-chart-readout
             // Placed (and shown) by the layout effect above, before paint.
             style={{ left: 0, visibility: "hidden" }}
-            className={`pointer-events-none absolute z-10 flex max-w-[calc(100%+0.75rem)] flex-col border-l-2 border-l-accent bg-surface-2 px-2 py-1 font-mono tabular-nums shadow-[var(--shadow-sm)] ${
+            className={`pointer-events-none absolute z-10 flex max-w-[calc(100%+0.75rem)] flex-col rounded-[var(--radius-sm)] border border-border bg-surface px-2 py-1 tabular-nums shadow-[var(--shadow-md)] ${
               // Away from the point: at the bottom when the point is in the top part of the plot.
               p.y < 45 ? "-bottom-1" : "-top-1"
             }`}
           >
-            <span className="truncate text-[10px] uppercase tracking-wider text-muted">{p.date}</span>
-            <span className="truncate text-[11px] font-semibold text-foreground">{p.text}</span>
+            <span className="truncate text-xs leading-4 text-muted">{p.date}</span>
+            <span className="truncate text-[13px] font-semibold leading-4 text-foreground">{p.text}</span>
           </span>
         </>
       ) : null}

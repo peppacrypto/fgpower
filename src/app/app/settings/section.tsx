@@ -19,11 +19,11 @@ export function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section id={id} className="mt-8 scroll-mt-4">
+    <section id={id} className="mt-10 scroll-mt-4">
       <SectionHead label={title} />
-      {description ? <p className="mt-1.5 text-xs text-muted">{description}</p> : null}
+      {description ? <p className="mt-1 text-[13px] text-muted">{description}</p> : null}
       <Card className="mt-3">
-        <CardContent className="pt-5">{children}</CardContent>
+        <CardContent className="p-4 sm:p-5">{children}</CardContent>
       </Card>
     </section>
   );

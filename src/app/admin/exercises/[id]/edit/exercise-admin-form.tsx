@@ -102,7 +102,7 @@ export function ExerciseAdminForm({
       </Button>
 
       <div className="border-t border-border pt-6">
-        <h3 className="text-sm font-bold uppercase tracking-wide text-muted">Evidência científica vinculada</h3>
+        <h3 className="text-[15px] font-semibold">Evidência científica vinculada</h3>
         <div className="mt-3 flex flex-col gap-2">
           {evidenceLinks.map((ev) => (
             <div key={ev.sourceId} className="flex items-center justify-between rounded-[var(--radius-sm)] bg-surface-2 px-3 py-2 text-sm">

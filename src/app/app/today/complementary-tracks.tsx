@@ -25,34 +25,31 @@ export function ComplementaryTracks({ enrollments }: { enrollments: Complementar
   return (
     <section className="mt-10">
       <SectionHead label="Yoga, mobilidade & calistenia" count="faça quando quiser" />
-      <div className="mt-3 flex flex-col gap-4">
+      <div className="mt-3 flex flex-col gap-3">
         {shown.map((e) => {
           const meta = TRACK_META[e.track] ?? { label: e.track, bg: "var(--surface-2)", fg: "var(--muted)" };
           return (
-            <div key={e.enrollmentId} className="reg-frame p-3">
+            <div key={e.enrollmentId} className="card px-4 py-3">
               <div className="flex items-center justify-between gap-2">
                 <Link
                   href={`/app/programs/${e.programId}`}
-                  className="text-sm font-semibold leading-snug wrap-break-word hover:underline"
+                  className="inline-flex min-h-11 items-center text-[15px] font-semibold leading-snug wrap-break-word hover:text-accent"
                 >
                   {e.programName}
                 </Link>
                 <span
-                  className="shrink-0 rounded px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.12em]"
+                  className="shrink-0 rounded-[var(--radius-sm)] px-2 py-0.5 text-xs font-medium"
                   style={{ backgroundColor: meta.bg, color: meta.fg }}
                 >
                   {meta.label}
                 </span>
               </div>
-              <div className="mt-1 flex flex-col">
+              <div className="flex flex-col divide-y divide-border border-t border-border">
                 {e.days.map((day) => (
-                  <div
-                    key={day.id}
-                    className="flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-border pt-2 mt-2"
-                  >
+                  <div key={day.id} className="flex flex-wrap items-center gap-x-3 gap-y-2 py-2.5">
                     <div className="min-w-[7rem] flex-1">
-                      <p className="text-sm leading-snug wrap-break-word">{day.name}</p>
-                      <p className="text-xs text-muted">
+                      <p className="text-[15px] leading-snug wrap-break-word">{day.name}</p>
+                      <p className="mt-0.5 text-[13px] text-muted">
                         {exerciseCount(day.exerciseCount)}
                         {day.focus ? <span className="wrap-break-word"> · {day.focus}</span> : null}
                       </p>

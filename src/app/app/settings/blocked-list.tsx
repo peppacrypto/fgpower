@@ -45,7 +45,7 @@ export function BlockedList({ people, notice }: { people: BlockedPerson[]; notic
       {showNotice ? (
         <p
           role="status"
-          className="mb-3 border-l-2 border-l-accent bg-surface-2 px-3 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em]"
+          className="mb-3 rounded-[var(--radius-md)] bg-accent-soft px-4 py-2.5 text-sm font-medium"
         >
           Conta bloqueada.
         </p>
@@ -91,10 +91,10 @@ function BlockedRow({ person }: { person: BlockedPerson }) {
       </span>
       {/* basis-40: on a narrow phone the button wraps under the name instead of squeezing it. */}
       <div className="min-w-0 flex-1 basis-40">
-        <p ref={nameRef} tabIndex={-1} className="truncate text-sm font-semibold outline-none">
+        <p ref={nameRef} tabIndex={-1} className="truncate text-[15px] font-semibold outline-none">
           {person.name}
         </p>
-        {person.username ? <p className="truncate font-mono text-xs text-muted">@{person.username}</p> : null}
+        {person.username ? <p className="truncate text-[13px] text-muted">@{person.username}</p> : null}
       </div>
       <div className="ml-auto shrink-0">
         {unblocked ? null : (
@@ -104,7 +104,7 @@ function BlockedRow({ person }: { person: BlockedPerson }) {
         )}
         <span
           role="status"
-          className={unblocked ? "font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted" : "sr-only"}
+          className={unblocked ? "text-[13px] font-medium text-muted" : "sr-only"}
         >
           {unblocked ? (
             <>

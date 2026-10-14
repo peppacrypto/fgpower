@@ -1,23 +1,25 @@
 /**
  * The one e-mail layout (login codes, the weekly digest, admin alerts): a
- * 600 px table in the Dossiê's light tokens, inline styles only (mail
+ * 600 px table in the app's light tokens (docs/DESIGN.md), inline styles only (mail
  * clients drop <style>), plus a plain-text mirror of the same lines. Every
  * value is escaped here — templates pass plain strings, never HTML. Pure.
  */
 
-const INK = "#1c1d1f";
-const MUTED = "#5c6672";
-const BG = "#fafafb";
+const INK = "#17201b";
+const MUTED = "#5e6a63";
+const BG = "#f7f8f6";
 const SURFACE = "#ffffff";
-const ACCENT = "#4d6a06";
-const CTA_BG = "#b4e600";
-const CTA_INK = "#14210a";
+const BORDER = "#e1e6e1";
+const ACCENT = "#246b4a";
+const CTA_BG = "#246b4a";
+const CTA_INK = "#ffffff";
 const SANS = "Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
 const MONO = "ui-monospace,SFMono-Regular,Menlo,Consolas,monospace";
-const MICRO_CAPS = `font-family:${MONO};font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase`;
+/** The small line above a title or section (the app's `.eyebrow`). */
+const EYEBROW = `font-family:${SANS};font-size:13px;font-weight:500`;
 
 export type EmailBlock =
-  /** A section head: mono micro-caps over a 2px rule ("SEMANA PASSADA"). */
+  /** A section head ("Semana passada"). */
   | { type: "heading"; text: string }
   | { type: "paragraph"; text: string; muted?: boolean; strong?: boolean }
   /** A code to type, large and spaced ("482 913"). */
@@ -34,7 +36,7 @@ export interface EmailLink {
 export interface EmailContent {
   /** Hidden preview text most clients show next to the subject. */
   preheader?: string;
-  /** Mono line above the title ("FGPOWER · RESUMO SEMANAL · SEG 29 SET"). */
+  /** Small line above the title ("FGPOWER · Resumo semanal · seg 29 set"). */
   kicker: string;
   title: string;
   blocks: EmailBlock[];
@@ -69,7 +71,7 @@ function safeHref(href: string): string {
 function blockHtml(block: EmailBlock): string {
   switch (block.type) {
     case "heading":
-      return `<tr><td style="padding:24px 0 8px"><div style="${MICRO_CAPS};color:${INK};border-bottom:2px solid ${INK};padding-bottom:6px">${esc(block.text)}</div></td></tr>`;
+      return `<tr><td style="padding:24px 0 6px"><div style="font-family:${SANS};font-size:16px;font-weight:600;color:${INK};border-bottom:1px solid ${BORDER};padding-bottom:8px">${esc(block.text)}</div></td></tr>`;
     case "paragraph":
       return `<tr><td style="padding:6px 0;font-family:${SANS};font-size:15px;line-height:1.5;color:${block.muted ? MUTED : INK}${block.strong ? ";font-weight:700" : ""}">${esc(block.text)}</td></tr>`;
     case "code":
@@ -87,6 +89,7 @@ function blockHtml(block: EmailBlock): string {
 function blockText(block: EmailBlock): string {
   switch (block.type) {
     case "heading":
+      // Plain text has no weight to set a section apart: capitals do it.
       return `\n${block.text.toUpperCase()}`;
     case "paragraph":
       return block.text;
@@ -99,7 +102,7 @@ function blockText(block: EmailBlock): string {
 
 export function renderEmail(content: EmailContent): { html: string; text: string } {
   const cta = content.cta
-    ? `<tr><td style="padding:24px 0 8px"><a href="${esc(safeHref(content.cta.href))}" style="display:inline-block;background:${CTA_BG};color:${CTA_INK};font-family:${SANS};font-size:15px;font-weight:700;text-decoration:none;padding:14px 22px;border:2px solid ${CTA_INK}">${esc(content.cta.label)}</a></td></tr>`
+    ? `<tr><td style="padding:24px 0 8px"><a href="${esc(safeHref(content.cta.href))}" style="display:inline-block;background:${CTA_BG};color:${CTA_INK};font-family:${SANS};font-size:15px;font-weight:600;text-decoration:none;padding:14px 22px;border-radius:10px">${esc(content.cta.label)}</a></td></tr>`
     : "";
   const footerLinks = (content.footer.links ?? [])
     .map((l) => `<a href="${esc(safeHref(l.href))}" style="color:${ACCENT};text-decoration:underline">${esc(l.label)}</a>`)
@@ -107,7 +110,7 @@ export function renderEmail(content: EmailContent): { html: string; text: string
   const footer = [
     ...content.footer.lines.map((line) => `<div>${esc(line)}</div>`),
     footerLinks ? `<div style="margin-top:6px">${footerLinks}</div>` : "",
-    `<div style="margin-top:10px;${MICRO_CAPS};color:${MUTED}">FGPOWER · fgpower.monster</div>`,
+    `<div style="margin-top:10px;${EYEBROW};color:${MUTED}">FGPOWER · fgpower.monster</div>`,
   ].join("");
 
   const html = `<!doctype html>
@@ -123,15 +126,15 @@ export function renderEmail(content: EmailContent): { html: string; text: string
 ${content.preheader ? `<div style="display:none;max-height:0;overflow:hidden;opacity:0">${esc(content.preheader)}</div>` : ""}
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${BG}">
 <tr><td align="center" style="padding:24px 12px">
-<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background:${SURFACE};border:1px solid #d9dce1">
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background:${SURFACE};border:1px solid ${BORDER};border-radius:14px">
 <tr><td style="padding:28px 28px 32px">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-<tr><td style="${MICRO_CAPS};color:${ACCENT}">${esc(content.kicker)}</td></tr>
-<tr><td style="padding-top:8px;font-family:${SANS};font-size:24px;line-height:1.25;font-weight:800;color:${INK}">${esc(content.title)}</td></tr>
+<tr><td style="${EYEBROW};color:${MUTED}">${esc(content.kicker)}</td></tr>
+<tr><td style="padding-top:6px;font-family:${SANS};font-size:24px;line-height:1.25;font-weight:600;color:${INK}">${esc(content.title)}</td></tr>
 ${content.blocks.map(blockHtml).join("\n")}
 ${cta}
 ${(content.afterCta ?? []).map(blockHtml).join("\n")}
-<tr><td style="padding-top:28px;border-top:1px solid #d9dce1;font-family:${SANS};font-size:12px;line-height:1.5;color:${MUTED}">${footer}</td></tr>
+<tr><td style="padding-top:28px;border-top:1px solid ${BORDER};font-family:${SANS};font-size:12px;line-height:1.5;color:${MUTED}">${footer}</td></tr>
 </table>
 </td></tr>
 </table>

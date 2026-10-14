@@ -1,6 +1,6 @@
 import { wallClock } from "@/lib/training/week";
 import { formatNumber, formatKg, formatVolume, plural } from "@/lib/utils/format";
-import { MONTHS_SHORT_UPPER as MONTHS } from "@/lib/utils/date-names";
+import { MONTHS_SHORT, MONTHS_SHORT_UPPER as MONTHS } from "@/lib/utils/date-names";
 
 /*
  * The pure half of the progression charts (chart.tsx draws them on the
@@ -53,6 +53,17 @@ const EPS = 1e-9;
 export function monoDate(date: Date, now: Date = new Date()): string {
   const w = wallClock(date);
   const text = `${String(w.day).padStart(2, "0")} ${MONTHS[w.month - 1]}`;
+  return w.year === wallClock(now).year ? text : `${text} ${w.year}`;
+}
+
+/**
+ * "07 set" on the São Paulo calendar — the charts' and Progress's date, in
+ * sentence case — with the year when it isn't this year's ("22 set 2025").
+ * (monoDate is the older all-caps form, still used by an exercise's history.)
+ */
+export function shortDate(date: Date, now: Date = new Date()): string {
+  const w = wallClock(date);
+  const text = `${String(w.day).padStart(2, "0")} ${MONTHS_SHORT[w.month - 1]}`;
   return w.year === wallClock(now).year ? text : `${text} ${w.year}`;
 }
 
@@ -195,7 +206,7 @@ export interface ChartSummary {
   headline: string;
   /** The headline's two halves ("60 → 65 kg", "+5 kg (+8%)"), to wrap between them on a narrow screen. */
   parts: [string] | [string, string];
-  /** "desde 07 SET" / "em 07 SET". */
+  /** "desde 07 set" / "em 07 set". */
   since: string;
   /** The chart's text alternative. */
   ariaLabel: string;
@@ -217,7 +228,7 @@ export function summarize(label: string, placed: PlacedPoint[], unit: ChartUnit,
     return {
       headline: formatValue(last.value, unit),
       parts: [formatValue(last.value, unit)],
-      since: `em ${monoDate(last.date, now)}`,
+      since: `em ${shortDate(last.date, now)}`,
       ariaLabel: `${label}: ${formatValue(last.value, unit)} em ${numericDate(last.date)}, a primeira sessão registrada.`,
     };
   }
@@ -233,7 +244,7 @@ export function summarize(label: string, placed: PlacedPoint[], unit: ChartUnit,
     `${label}: de ${formatValue(first.value, unit)} para ${formatValue(last.value, unit)} ` +
     `entre ${numericDate(first.date)} e ${numericDate(last.date)}, em ${placed.length} sessões` +
     (peak > last.value + 1e-6 ? `; máxima ${formatValue(peak, unit)}.` : ".");
-  return { headline, parts: [range, change], since: `desde ${monoDate(first.date, now)}`, ariaLabel };
+  return { headline, parts: [range, change], since: `desde ${shortDate(first.date, now)}`, ariaLabel };
 }
 
 /**

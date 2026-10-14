@@ -532,21 +532,21 @@ function LimitationsEcho({
   onClose: () => void;
 }) {
   const tag = (
-    <span className="mr-1.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-warning">Você informou</span>
+    <span className="mr-1.5 font-semibold text-warning">Você informou</span>
   );
   const closeButton = (
     <button
       type="button"
       aria-label="Fechar o que você informou"
       onClick={onClose}
-      className="flex size-9 shrink-0 items-center justify-center text-muted hover:text-foreground"
+      className="flex size-9 shrink-0 items-center justify-center rounded-[var(--radius-md)] text-muted hover:text-foreground"
     >
       <X className="size-4" />
     </button>
   );
   if (mode === "line" && !open) {
     return (
-      <div data-limitations className="mb-3 flex items-center border-l-2 border-l-warning! bg-warning-soft pl-3 text-xs">
+      <div data-limitations className="mb-3 flex items-center rounded-[var(--radius-md)] bg-warning-soft pl-3 text-xs">
         <button
           type="button"
           onClick={onToggle}
@@ -570,7 +570,7 @@ function LimitationsEcho({
     </span>
   );
   return (
-    <div data-limitations className="mb-3 flex items-start border-l-2 border-l-warning! bg-warning-soft pl-3 text-xs">
+    <div data-limitations className="mb-3 flex items-start rounded-[var(--radius-md)] bg-warning-soft pl-3 text-xs leading-snug">
       <div className="min-w-0 flex-1 py-1.5">
         {foldable ? (
           <button type="button" onClick={onToggle} aria-expanded={open} className="flex w-full items-start gap-1 text-left">
@@ -1728,15 +1728,15 @@ export function WorkoutExecutionClient({
   if (!exercise || !rows) {
     return (
       <div className="mx-auto flex min-h-[70dvh] w-full max-w-md flex-col justify-center gap-4 px-4 py-10">
-        <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent">Treino vazio</span>
-        <h1 className="text-display text-2xl font-extrabold leading-tight">Nenhum exercício neste treino.</h1>
+        <span className="eyebrow text-accent">Treino vazio</span>
+        <h1 className="text-display text-2xl font-semibold leading-tight">Nenhum exercício neste treino.</h1>
         <p className="text-sm text-muted">
           {session.programId
             ? `“${session.name}” ainda não tem exercícios. Adicione-os no editor do programa e inicie o dia de novo — ou descarte este treino.`
             : "Este treino não tem exercícios. Descarte-o para voltar a Hoje."}
         </p>
         {finishError ? (
-          <p role="alert" className="border-l-2 border-l-danger bg-danger-soft px-3 py-2 text-xs font-medium text-danger">
+          <p role="alert" className="rounded-[var(--radius-md)] bg-danger-soft px-3 py-2 text-[13px] font-medium text-danger">
             <WorkoutActionError error={finishError} loginHref={loginHref} />
           </p>
         ) : null}
@@ -1811,18 +1811,20 @@ export function WorkoutExecutionClient({
     : null;
 
   return (
-    <div className="flex min-h-dvh flex-col pb-40">
+    // Room at the end for the floating rest bar (its height is --sp-bar while it is up),
+    // so the last set row and the next step always scroll clear above it.
+    <div className="flex min-h-dvh flex-col pb-[max(10rem,calc(var(--sp-bar,0px)+2rem))]">
       {liveRegion}
       {/* Sticks below the status-bar inset the app shell paints (installed PWA draws under it). */}
       <header ref={headerRef} className="sticky top-[env(safe-area-inset-top,0px)] z-20 border-b border-border bg-background/95 px-4 py-3 backdrop-blur">
         <div className="mx-auto flex max-w-3xl items-center justify-between gap-3">
           <div className="min-w-0">
-            <p className="truncate text-sm font-semibold">{session.name}</p>
+            <p className="truncate text-[15px] font-semibold leading-5">{session.name}</p>
             <button
               type="button"
               onClick={() => setShowOverview((v) => !v)}
               aria-expanded={showOverview}
-              className="-mx-1 -my-1.5 inline-flex min-h-11 items-center gap-1 rounded-[3px] px-1 text-xs text-muted hover:text-foreground"
+              className="-mx-1 -my-1.5 inline-flex min-h-11 items-center gap-1 rounded-[var(--radius-sm)] px-1 text-[13px] text-muted hover:text-foreground"
             >
               <span className="text-left">
                 Exercício {exerciseIndex + 1} de {total} ·{" "}
@@ -1845,44 +1847,47 @@ export function WorkoutExecutionClient({
           </Button>
         </div>
         {session.week ? (
-          <div className="mx-auto max-w-3xl">
+          // A flex row, not a line box: the 28px button's -4px margins keep the row at 20px.
+          <div className="mx-auto flex max-w-3xl">
             <button
               type="button"
               onClick={() => setWeekOpen((v) => !v)}
               aria-expanded={weekOpen}
               data-week-chip
-              // A 44px tap target (the gym's size) around a 28px chip: the ::after
+              // A 44px tap target (the gym's size) around a 28px line: the ::after
               // reaches 16px down, outside the layout (clear of "ver todos" above) —
-              // so a chip that wraps on a narrow phone still pushes the header down
+              // so a line that wraps on a narrow phone still pushes the header down
               // instead of running into its edge.
-              className="relative -my-1 inline-flex min-h-7 max-w-full flex-wrap items-center gap-x-1.5 gap-y-0.5 py-1 text-left font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted after:absolute after:inset-x-0 after:top-0 after:-bottom-4 after:content-[''] hover:text-foreground"
+              className="relative -my-1 inline-flex min-h-7 max-w-full flex-wrap items-center gap-x-1.5 gap-y-0.5 py-1 text-left text-[13px] text-muted after:absolute after:inset-x-0 after:top-0 after:-bottom-4 after:content-[''] hover:text-foreground"
             >
-              <span className="whitespace-nowrap bg-surface-2 px-1.5 py-0.5 text-foreground">{weekChip}</span>
-              <span className="whitespace-nowrap text-accent">
+              <span className="whitespace-nowrap tabular-nums">{weekChip}</span>
+              <span aria-hidden>·</span>
+              <span className="whitespace-nowrap font-medium text-accent">
                 Instruções
                 {/* A long week line ("Sem. de entrada · alvo RIR 3") keeps one line on a 390px phone. */}
                 <span className={weekChip.length >= 20 ? "max-[419px]:hidden" : "max-[359px]:hidden"}> da semana</span>
               </span>
-              <ChevronDown className={cn("size-3 shrink-0 text-accent transition-transform", weekOpen && "rotate-180")} />
+              <ChevronDown className={cn("size-3.5 shrink-0 text-accent transition-transform", weekOpen && "rotate-180")} />
             </button>
           </div>
         ) : null}
         {session.week && weekOpen ? (
-          <div className="mx-auto mt-2 max-w-3xl border-l-2 border-l-accent bg-surface-2 px-3 py-2.5 text-xs" data-week-guidance>
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted">
+          <div
+            className="mx-auto mt-2 max-w-3xl rounded-[var(--radius-md)] bg-surface-2 px-3.5 py-3 text-[13px] leading-relaxed"
+            data-week-guidance
+          >
+            <p className="font-semibold text-foreground">
               {session.week.title}
               {session.week.test ? " · semana de teste" : session.week.deload ? " · deload" : ""}
               {session.week.rirTarget != null ? ` · RIR alvo ${formatDecimal(session.week.rirTarget)}` : ""}
             </p>
             {session.week.rirTarget != null ? (
-              <p className="mt-1.5 leading-relaxed text-muted">
-                O RIR de cada exercício já segue esta semana, sem descer do mínimo de cada um.
-              </p>
+              <p className="mt-1.5 text-muted">O RIR de cada exercício já segue esta semana, sem descer do mínimo de cada um.</p>
             ) : null}
-            {session.week.notePt ? <p className="mt-1.5 leading-relaxed text-foreground/90">{session.week.notePt}</p> : null}
+            {session.week.notePt ? <p className="mt-1.5 text-foreground">{session.week.notePt}</p> : null}
             {session.week.setsNotePt ? (
-              <p className="mt-1.5 leading-relaxed text-foreground/90">
-                <span className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted">Séries · </span>
+              <p className="mt-1.5 text-foreground">
+                <span className="font-semibold">Séries · </span>
                 {session.week.setsNotePt}
               </p>
             ) : null}
@@ -1897,7 +1902,7 @@ export function WorkoutExecutionClient({
         ) : null}
         <div role="status" className="mx-auto max-w-3xl">
           {waiting > 0 && loggedOut ? (
-            <p className="mt-1.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-warning">
+            <p className="mt-1.5 text-[13px] font-medium text-warning">
               Sessão expirada —{" "}
               <Link href={loginHref} className="-my-3 inline-block py-3 text-accent underline underline-offset-2">
                 entre de novo
@@ -1905,12 +1910,12 @@ export function WorkoutExecutionClient({
               para enviar {waitingText}
             </p>
           ) : waiting > 0 ? (
-            <p className="tag tag--status tag--warn mt-1.5 font-mono">{waitingText} aguardando conexão</p>
+            <p className="tag tag--status tag--warn mt-1.5 text-[13px]">{waitingText} aguardando conexão</p>
           ) : null}
         </div>
 
         {showOverview ? (
-          <div className="mx-auto mt-3 max-w-3xl panel-raised">
+          <div className="mx-auto mt-3 max-w-3xl overflow-hidden panel">
             <ul className="divide-y divide-border">
               {session.exercises.map((ex, i) => {
                 const r = rowsByExercise[i];
@@ -1926,17 +1931,14 @@ export function WorkoutExecutionClient({
                       aria-current={i === exerciseIndex ? "true" : undefined}
                       data-group={ex.group?.label}
                       className={cn(
-                        "flex w-full items-center gap-3 px-4 py-2.5 text-left hover:bg-surface-2",
+                        "flex min-h-12 w-full items-center gap-3 px-4 py-2.5 text-left hover:bg-surface-2",
                         i === exerciseIndex && "bg-accent-soft",
-                        // A superset's members share a 2px accent rule down the left (W-104).
-                        ex.group && "border-l-2 border-l-accent pl-3.5",
                       )}
                     >
-                      <span className="w-5 shrink-0 font-mono text-xs text-muted">
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
+                      <span className="w-5 shrink-0 text-center text-[13px] tabular-nums text-muted">{i + 1}</span>
+                      {/* A superset's members carry their label (W-104): "A1", "A2". */}
                       {ex.group ? (
-                        <span className="shrink-0 font-mono text-xs font-bold text-accent">
+                        <span className="shrink-0 rounded-[var(--radius-sm)] bg-accent-soft px-1.5 py-0.5 text-xs font-semibold text-accent">
                           <span className="sr-only">{ex.group.heading}, </span>
                           {ex.group.label}
                         </span>
@@ -1946,11 +1948,11 @@ export function WorkoutExecutionClient({
                         {ex.exerciseName}
                       </span>
                       {ex.wasSkipped ? (
-                        <span className="tag tag--mark shrink-0">Pulado</span>
+                        <span className="tag tag--spec shrink-0 text-muted">Pulado</span>
                       ) : rowsComplete(r, false) ? (
                         <GCheck className="size-4 shrink-0 text-accent" />
                       ) : (
-                        <span className="shrink-0 font-mono text-xs text-muted">
+                        <span className="shrink-0 text-[13px] tabular-nums text-muted">
                           {doneCount}/{r.prescribed.length}
                           {extrasDone > 0 ? ` +${extrasDone}` : ""}
                         </span>
@@ -1964,7 +1966,7 @@ export function WorkoutExecutionClient({
                   type="button"
                   onClick={openAdd}
                   aria-haspopup="dialog"
-                  className="flex min-h-11 w-full items-center gap-3 px-4 py-2.5 text-left text-sm font-semibold text-accent hover:bg-surface-2"
+                  className="flex min-h-12 w-full items-center gap-3 px-4 py-2.5 text-left text-sm font-semibold text-accent hover:bg-surface-2"
                 >
                   <Plus className="size-4 w-5 shrink-0" />
                   Adicionar exercício
@@ -1975,10 +1977,10 @@ export function WorkoutExecutionClient({
         ) : null}
       </header>
 
-      <div className="mx-auto w-full max-w-3xl flex-1 px-4 py-5">
+      <div className="mx-auto w-full max-w-3xl flex-1 px-4 pb-5 pt-4">
         {showNotice ? (
-          <div className="mb-4 flex items-start gap-2 border-l-2 border-l-warning! bg-warning-soft px-3 py-2.5 text-xs">
-            <p className="flex-1 text-foreground/90">
+          <div className="mb-4 flex items-start gap-2 rounded-[var(--radius-md)] bg-warning-soft px-3 py-2.5 text-[13px]">
+            <p className="flex-1 text-foreground">
               <span className="font-semibold">Este treino ainda está em andamento.</span> Finalize ou descarte-o para
               começar outro.
             </p>
@@ -2011,7 +2013,7 @@ export function WorkoutExecutionClient({
         {group ? (
           // The superset's members, one tap from each other (W-104): who's done, whose turn.
           <nav aria-label={group.heading} className="mb-3" data-group-strip>
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-accent">{groupRule(group)}</p>
+            <p className="text-[13px] font-semibold text-accent">{groupRule(group)}</p>
             <ul className="mt-1.5 grid grid-cols-2 gap-1.5">
               {group.memberIndexes.map((i) => {
                 const member = session.exercises[i];
@@ -2029,16 +2031,16 @@ export function WorkoutExecutionClient({
                         finished ? "concluído" : `${doneSets} de ${plural(r.prescribed.length, "série", "séries")}`
                       }`}
                       className={cn(
-                        "flex min-h-11 w-full min-w-0 items-center gap-1.5 border px-2 text-left text-xs",
-                        current ? "border-accent bg-accent-soft font-semibold" : "border-border hover:bg-surface-2",
+                        "flex min-h-11 w-full min-w-0 items-center gap-1.5 rounded-[var(--radius-md)] border px-2.5 text-left text-[13px] transition-colors",
+                        current ? "border-accent bg-accent-soft font-semibold" : "border-border bg-surface hover:bg-surface-2",
                       )}
                     >
-                      <span className="shrink-0 font-mono font-bold text-accent">{member.group?.label}</span>
+                      <span className="shrink-0 font-semibold text-accent">{member.group?.label}</span>
                       <span className="line-clamp-1 min-w-0 flex-1 wrap-break-word">{member.exerciseName}</span>
                       {finished ? (
                         <GCheck className="size-3.5 shrink-0 text-accent" />
                       ) : (
-                        <span className="shrink-0 font-mono tabular-nums text-muted">
+                        <span className="shrink-0 tabular-nums text-muted">
                           {doneSets}/{r.prescribed.length}
                         </span>
                       )}
@@ -2054,20 +2056,23 @@ export function WorkoutExecutionClient({
         <h1
           ref={headingRef}
           tabIndex={-1}
-          className={cn("text-xl font-bold leading-tight wrap-break-word outline-none", exercise.substitutedFromName ? "mb-1" : "mb-3")}
+          className={cn(
+            "text-display text-[1.375rem] font-semibold leading-tight wrap-break-word outline-none",
+            exercise.substitutedFromName ? "mb-1" : "mb-3",
+          )}
         >
           {group ? (
             <>
-              <span className="font-mono text-accent">{group.label} ·</span>{" "}
+              <span className="text-accent">{group.label} ·</span>{" "}
             </>
           ) : null}
           {exercise.exerciseName}
         </h1>
         {exercise.substitutedFromName ? (
-          <p className="mb-3 font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted" data-substituted>
+          <p className="mb-3 text-[13px] text-muted" data-substituted>
             <ArrowLeftRight aria-hidden className="mr-1 inline size-3.5 align-[-2px] text-accent" />
-            Trocado ·{" "}
-            <span className="font-sans font-medium normal-case tracking-normal">no lugar de {exercise.substitutedFromName}</span>
+            <span className="font-semibold text-foreground">Trocado</span> ·{" "}
+            <span>no lugar de {exercise.substitutedFromName}</span>
           </p>
         ) : null}
 
@@ -2075,7 +2080,7 @@ export function WorkoutExecutionClient({
           <button
             onClick={() => goTo(exerciseIndex - 1)}
             disabled={exerciseIndex === 0}
-            className="flex size-11 shrink-0 items-center justify-center rounded-[3px] border border-border disabled:opacity-30"
+            className="flex size-11 shrink-0 items-center justify-center rounded-[var(--radius-md)] border border-border bg-surface text-foreground transition-colors hover:bg-surface-2 disabled:opacity-30"
             aria-label="Exercício anterior"
           >
             <ChevronLeft className="size-5" />
@@ -2087,18 +2092,19 @@ export function WorkoutExecutionClient({
               onClick={() => setTechniqueOpen(true)}
               aria-haspopup="dialog"
               aria-label={`Ver técnica de ${exercise.exerciseName}`}
-              className="relative size-14 shrink-0 overflow-hidden rounded-[var(--radius-md)] bg-surface-2"
+              className="relative size-12 shrink-0 overflow-hidden rounded-[var(--radius-md)] bg-surface-2"
             >
               {exercise.imageUrl ? (
-                <Image src={exercise.imageUrl} alt="" fill sizes="56px" className="object-cover" />
+                <Image src={exercise.imageUrl} alt="" fill sizes="48px" className="object-cover" />
               ) : (
                 <span className="flex h-full items-center justify-center text-muted">
                   <GLoad className="size-5" />
                 </span>
               )}
             </button>
-            <p className="flex min-w-0 flex-1 flex-wrap gap-x-2 gap-y-0.5 text-xs text-muted">
-              <span className="text-sm font-semibold text-foreground">
+            {/* The target: sets × reps, then the effort and the rest. */}
+            <p className="flex min-w-0 flex-1 flex-wrap gap-x-2 gap-y-0.5 text-[13px] text-muted">
+              <span className="text-base font-semibold leading-snug text-foreground">
                 <span className="whitespace-nowrap">{plural(exercise.prescribedSets, "série", "séries")}</span>{" "}
                 <span className="whitespace-nowrap">
                   ×{" "}
@@ -2135,8 +2141,8 @@ export function WorkoutExecutionClient({
             onClick={() => goTo(exerciseIndex + 1)}
             disabled={atEnd}
             className={cn(
-              "flex size-11 shrink-0 items-center justify-center rounded-[3px] border disabled:opacity-30",
-              complete && !atEnd ? "border-accent bg-accent-soft text-accent" : "border-border",
+              "flex size-11 shrink-0 items-center justify-center rounded-[var(--radius-md)] border transition-colors disabled:opacity-30",
+              complete && !atEnd ? "border-accent bg-accent-soft text-accent" : "border-border bg-surface hover:bg-surface-2",
             )}
             aria-label="Próximo exercício"
           >
@@ -2144,12 +2150,13 @@ export function WorkoutExecutionClient({
           </button>
         </div>
 
-        <div className="mt-3 flex flex-wrap items-center gap-x-3">
+        {/* The exercise's tools: technique, swap, skip, note — each opens in place or in a sheet. */}
+        <div className="mt-2 flex flex-wrap items-center gap-x-3">
           <button
             type="button"
             onClick={() => setTechniqueOpen(true)}
             aria-haspopup="dialog"
-            className="-mx-2 inline-flex min-h-11 items-center gap-1 px-2 text-xs text-accent hover:underline"
+            className="-mx-2 inline-flex min-h-11 items-center gap-1 px-2 text-[13px] font-medium text-accent hover:underline"
           >
             <Info className="size-3.5" />
             Ver técnica
@@ -2159,7 +2166,7 @@ export function WorkoutExecutionClient({
             type="button"
             onClick={openSwap}
             aria-haspopup="dialog"
-            className="-mx-2 inline-flex min-h-11 items-center gap-1 px-2 text-xs text-accent hover:underline"
+            className="-mx-2 inline-flex min-h-11 items-center gap-1 px-2 text-[13px] font-medium text-accent hover:underline"
           >
             <ArrowLeftRight className="size-3.5" />
             Trocar
@@ -2175,9 +2182,9 @@ export function WorkoutExecutionClient({
                   announce("Toque em pular de novo para confirmar.");
                 }
               }}
-              // Under 360px the four actions keep one line with the short words ("Pular"); the name stays whole.
+              // On a narrower phone the four actions keep one line with the short words ("Pular"); the name stays whole.
               aria-label={confirmSkip ? "Confirmar pular?" : "Pular exercício"}
-              className={`-mx-2 inline-flex min-h-11 items-center gap-1 px-2 text-xs ${
+              className={`-mx-2 inline-flex min-h-11 items-center gap-1 px-2 text-[13px] ${
                 confirmSkip ? "font-semibold text-danger" : "text-muted hover:text-foreground"
               }`}
             >
@@ -2191,7 +2198,7 @@ export function WorkoutExecutionClient({
                 </>
               ) : (
                 <>
-                  Pular<span className="max-[359px]:hidden"> exercício</span>
+                  Pular<span className="max-[379px]:hidden"> exercício</span>
                 </>
               )}
             </button>
@@ -2201,7 +2208,7 @@ export function WorkoutExecutionClient({
               type="button"
               onClick={() => setEditingNote(true)}
               aria-label="Adicionar nota do exercício/máquina"
-              className="-mx-2 inline-flex min-h-11 items-center gap-1 px-2 text-xs text-muted hover:text-foreground"
+              className="-mx-2 inline-flex min-h-11 items-center gap-1 px-2 text-[13px] text-muted hover:text-foreground"
             >
               <Plus className="size-3.5" />
               Nota
@@ -2214,7 +2221,7 @@ export function WorkoutExecutionClient({
           <div className="mt-1">
             <label
               htmlFor="exercise-note"
-              className="flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted"
+              className="flex items-center gap-1.5 text-[13px] font-medium text-muted"
             >
               <GNotes className="size-3.5" />
               Nota do exercício/máquina
@@ -2248,13 +2255,13 @@ export function WorkoutExecutionClient({
               placeholder="Ex.: banco na posição 4"
               maxLength={EXERCISE_NOTE_MAX}
               // 16px on phones: iOS zooms into smaller fields on focus.
-              className="mt-1.5 w-full rounded-[3px] border border-foreground/50 bg-surface px-3 py-2 text-base sm:text-sm"
+              className="mt-1.5 w-full rounded-[var(--radius-md)] border border-field bg-surface px-3 py-2 text-base sm:text-sm"
               rows={2}
             />
             <div className="flex items-center justify-between gap-2">
-              <p className="text-xs text-muted">Fica salva para as próximas vezes neste exercício.</p>
+              <p className="text-[13px] text-muted">Fica salva para as próximas vezes neste exercício.</p>
               {/* Tapping it blurs the box, which saves. */}
-              <button type="button" className="-my-2 min-h-11 shrink-0 px-2 text-xs font-semibold text-accent">
+              <button type="button" className="-my-2 min-h-11 shrink-0 px-2 text-[13px] font-semibold text-accent">
                 OK
               </button>
             </div>
@@ -2264,7 +2271,7 @@ export function WorkoutExecutionClient({
             type="button"
             onClick={() => setEditingNote(true)}
             aria-label={`Nota do exercício/máquina: ${noteValue} — toque para editar`}
-            className="mt-1 flex min-h-11 w-full items-center gap-2 border-l-2 border-l-foreground/40 bg-surface-2 px-3 py-2 text-left text-xs text-foreground/90 hover:bg-[var(--border)]"
+            className="mt-1 flex min-h-11 w-full items-center gap-2 rounded-[var(--radius-md)] bg-surface-2 px-3 py-2 text-left text-[13px] text-foreground hover:bg-[var(--border)]"
           >
             <GNotes className="size-3.5 shrink-0 text-muted" />
             <span className="line-clamp-2 min-w-0 flex-1 wrap-break-word">{noteValue}</span>
@@ -2275,7 +2282,7 @@ export function WorkoutExecutionClient({
         <div
           role="status"
           className={cn(
-            "flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.12em]",
+            "flex items-center gap-2 text-[13px] font-medium",
             note ? "mt-1 min-h-5" : "",
           )}
         >
@@ -2289,7 +2296,7 @@ export function WorkoutExecutionClient({
               <button
                 type="button"
                 onClick={() => saveNote(exercise.exerciseId, exercise.persistentNote)}
-                className="-my-3 min-h-11 px-1 uppercase text-accent underline underline-offset-2"
+                className="-my-3 min-h-11 px-1 text-accent underline underline-offset-2"
               >
                 Tentar de novo
               </button>
@@ -2298,7 +2305,7 @@ export function WorkoutExecutionClient({
         </div>
 
         {exercise.wasSkipped ? (
-          <div className="mt-3 flex items-center justify-between gap-3 bg-surface-2 px-3 py-2 text-xs">
+          <div className="mt-3 flex items-center justify-between gap-3 rounded-[var(--radius-md)] bg-surface-2 px-3 py-1 text-[13px]">
             <span className="text-muted">Exercício pulado — só as séries já marcadas com ✓ contam.</span>
             <button
               type="button"
@@ -2318,7 +2325,7 @@ export function WorkoutExecutionClient({
               type="button"
               onClick={() => setNotesExpanded((v) => !v)}
               aria-expanded={notesExpanded}
-              className="mt-3 flex w-full items-start gap-2 border-l-2 border-l-accent bg-surface-2 px-3 py-2 text-left text-xs text-foreground/90"
+              className="mt-3 flex w-full items-start gap-2 rounded-[var(--radius-md)] bg-surface-2 px-3 py-2 text-left text-xs leading-snug text-foreground"
             >
               <span className={cn("min-w-0 flex-1", !notesExpanded && "line-clamp-2")}>{exercise.notes}</span>
               <ChevronDown
@@ -2328,24 +2335,25 @@ export function WorkoutExecutionClient({
               <span className="sr-only">{notesExpanded ? "Mostrar menos" : "Ler tudo"}</span>
             </button>
           ) : (
-            <p className="mt-3 border-l-2 border-l-accent bg-surface-2 px-3 py-2 text-xs text-foreground/90">
+            <p className="mt-3 rounded-[var(--radius-md)] bg-surface-2 px-3 py-2 text-xs leading-snug text-foreground">
               {exercise.notes}
             </p>
           )
         ) : null}
 
         {hasHistory ? (
-          <div className="mt-4 border-l-2 border-l-border-strong bg-surface-2" data-last-time>
+          // Last time is the reference (quiet); the progression's verdict for today is the line that stands out.
+          <div className="mt-3 overflow-hidden rounded-[var(--radius-lg)] border border-border bg-surface" data-last-time>
             <Link
               href={`/app/exercises/${exercise.exerciseSlug}/history?from=${encodeURIComponent(`/app/workout/${session.id}`)}`}
               aria-label={`Último treino${exercise.lastTime ? `, ${exercise.lastTime.date}, ${exercise.lastTime.ago}` : ""} — ver o histórico do exercício`}
-              className="flex min-h-10 items-center justify-between gap-2 px-3.5 pt-1 font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted hover:text-foreground"
+              className="flex min-h-10 items-center justify-between gap-2 px-3.5 pt-1 text-[13px] font-medium text-muted hover:text-foreground"
             >
               <span>
                 Último treino
                 {exercise.lastTime ? (
                   // "· 19/09 ·" and "há 7 dias" each wrap as a whole: never "dias" (or a "·") alone on a line.
-                  <span className="font-medium">
+                  <span className="font-normal tabular-nums">
                     {" "}
                     <span className="whitespace-nowrap">· {exercise.lastTime.date} ·</span>{" "}
                     <span className="whitespace-nowrap">{exercise.lastTime.ago}</span>
@@ -2354,18 +2362,18 @@ export function WorkoutExecutionClient({
               </span>
               <ChevronRight className="size-4 shrink-0 text-accent" />
             </Link>
-            <div className="flex flex-wrap gap-x-4 gap-y-1 px-3.5 pb-3 font-mono text-sm tabular-nums">
+            <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 px-3.5 pb-3 text-sm tabular-nums">
               {lastSummary ? (
                 <>
                   <span>{lastSummary.text}</span>
-                  {lastSummary.rir ? <span className="text-xs leading-5 text-muted">RIR {lastSummary.rir}</span> : null}
+                  {lastSummary.rir ? <span className="text-[13px] text-muted">RIR {lastSummary.rir}</span> : null}
                 </>
               ) : (
                 exercise.previousSets.map((s, i) => (
                   <span key={i} className={cn("whitespace-nowrap", s.isExtra && "text-muted")}>
                     {s.isExtra ? "+" : ""}
                     {formatSet(s.weightKg, s.reps, { timed: exercise.timed })}
-                    {s.rir !== null ? <span className="text-xs text-muted"> · {formatRir(s.rir)}</span> : null}
+                    {s.rir !== null ? <span className="text-[13px] text-muted"> · {formatRir(s.rir)}</span> : null}
                   </span>
                 ))
               )}
@@ -2375,10 +2383,10 @@ export function WorkoutExecutionClient({
                 data-advice={advice.kind}
                 className={cn("border-t border-border px-3.5 py-2.5", advice.kind === "increase" && "bg-accent-soft")}
               >
-                <p className={cn("text-sm font-bold", advice.kind === "increase" ? "text-accent" : "text-foreground")}>
+                <p className={cn("text-[15px] font-semibold", advice.kind === "increase" ? "text-accent" : "text-foreground")}>
                   {advice.headline}
                 </p>
-                <p className="mt-0.5 text-xs text-muted">
+                <p className="mt-0.5 text-[13px] leading-snug text-muted">
                   {advice.reason}
                   {advice.whyHref ? (
                     <>
@@ -2394,15 +2402,15 @@ export function WorkoutExecutionClient({
                 </p>
               </div>
             ) : exercise.strategy === "RIR_BASED" && exercise.previousSets.some((s) => !s.isExtra && s.rir === null) ? (
-              <p className="border-t border-border px-3.5 py-2.5 text-xs text-muted">
+              <p className="border-t border-border px-3.5 py-2.5 text-[13px] text-muted">
                 Anote o {rirButton("RIR")} de cada série: neste exercício a carga da próxima vez vem dele.
               </p>
             ) : null}
           </div>
         ) : !exercise.wasSkipped ? (
-          <div className="mt-3 border-l-2 border-l-accent bg-accent-soft px-3 py-2.5 text-xs text-foreground/90" data-first-time>
+          <div className="mt-3 rounded-[var(--radius-md)] bg-accent-soft px-3 py-2.5 text-[13px] leading-snug text-foreground" data-first-time>
             <p>
-              <span className="mr-1.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent">
+              <span className="mr-1.5 font-semibold text-accent">
                 {session.firstWorkout ? "Primeiro treino" : "Primeira vez neste exercício"}
               </span>
               {exercise.bodyweight ? (
@@ -2490,7 +2498,7 @@ export function WorkoutExecutionClient({
         </div>
 
         {exerciseError ? (
-          <p role="alert" className="mt-2 text-xs font-medium text-danger">
+          <p role="alert" className="mt-2 text-[13px] font-medium text-danger">
             <WorkoutActionError error={exerciseError} loginHref={loginHref} />
           </p>
         ) : null}
@@ -2515,13 +2523,10 @@ export function WorkoutExecutionClient({
         ) : (
           <Button
             ref={ctaRef}
-            className={cn(
-              "mt-6 w-full scroll-mb-40",
-              // Until the exercise is done: a quieter but clearly tappable button (not a bare underline).
-              !complete && "border border-foreground/25 shadow-[inset_0_-2px_0_var(--keel)]",
-            )}
+            className="mt-6 w-full scroll-mb-40"
             size="lg"
-            variant={complete ? "primary" : "secondary"}
+            // Until the exercise is done: a quieter but clearly tappable outline (not a bare underline).
+            variant={complete ? "primary" : "outline"}
             onClick={() => goTo(nextIndex)}
           >
             Próximo exercício

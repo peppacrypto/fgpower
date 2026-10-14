@@ -11,7 +11,11 @@ export const PERIODS: { value: ProgressPeriod; label: string; span: string }[] =
   { value: "all", label: "Tudo", span: "desde o início" },
 ];
 
-/** The period filter row (Progress and an exercise's history): square chips, the current one inked. */
+/**
+ * The period filter (Progress, Corpo and an exercise's history): one row of
+ * equal segments from sm, three to a row on a phone so none falls off the
+ * screen; the current one on the soft green plate.
+ */
 export function PeriodChips({
   period,
   basePath,
@@ -25,7 +29,7 @@ export function PeriodChips({
   className?: string;
 }) {
   return (
-    <nav aria-label="Período" className={cn("flex flex-wrap gap-1.5", className)}>
+    <nav aria-label="Período" className={cn("grid grid-cols-3 gap-1.5 sm:flex sm:flex-wrap", className)}>
       {PERIODS.map((p) => {
         const params = new URLSearchParams({ ...extraParams, period: p.value });
         const current = p.value === period;
@@ -34,11 +38,12 @@ export function PeriodChips({
             key={p.value}
             href={`${basePath}?${params.toString()}`}
             aria-current={current ? "page" : undefined}
-            className={
+            className={cn(
+              "inline-flex min-h-11 items-center justify-center rounded-[var(--radius-md)] border px-3.5 text-sm tabular-nums transition-colors",
               current
-                ? "inline-flex min-h-11 items-center rounded-[2px] border border-accent bg-accent-soft px-3 text-xs font-semibold text-accent"
-                : "inline-flex min-h-11 items-center rounded-[2px] px-3 text-xs text-muted hover:bg-surface-2"
-            }
+                ? "border-accent bg-accent-soft font-semibold text-accent"
+                : "border-border bg-surface text-muted hover:border-border-strong hover:text-foreground",
+            )}
           >
             {p.label}
           </Link>

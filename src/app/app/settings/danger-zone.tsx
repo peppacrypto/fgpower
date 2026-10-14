@@ -116,11 +116,11 @@ export function DangerZone({
 
   return (
     // Rows on the section's own panel (no panel inside the panel), the
-    // irreversible one last, on its red band.
+    // irreversible one last, set apart by space and a soft red plate.
     <div className="flex flex-col">
       <div className="border-b border-border pb-4">
         <p className="text-sm font-medium">Exportar meus dados</p>
-        <p className="text-xs text-muted">
+        <p className="text-[13px] text-muted">
           Seus treinos em planilha (uma linha por série) ou tudo o que a conta guarda, em JSON.
         </p>
         <ExportLinks className="mt-2.5" />
@@ -134,9 +134,9 @@ export function DangerZone({
         <SignOutOthersRow />
       </div>
 
-      <div id="excluir-conta" className="mt-4 scroll-mt-4 border-y-2 border-y-danger bg-danger-soft p-4">
+      <div id="excluir-conta" className="mt-6 scroll-mt-4 rounded-[var(--radius-md)] bg-danger-soft p-4">
         <p className="text-sm font-semibold text-danger">Excluir conta</p>
-        <p className="mt-0.5 text-xs text-foreground/85">
+        <p className="mt-0.5 text-[13px] text-foreground/85">
           Remove permanentemente sua conta e todo o seu histórico de treino. Não pode ser desfeito.
         </p>
 
@@ -155,21 +155,21 @@ export function DangerZone({
             Excluir minha conta
           </Button>
         ) : (
-          <div role="group" aria-labelledby="excluir-conta-titulo" className="mt-3 flex flex-col gap-2.5 border-l-2 border-l-danger pl-3">
+          <div role="group" aria-labelledby="excluir-conta-titulo" className="mt-3 flex flex-col gap-2.5 rounded-[var(--radius-md)] bg-surface p-3.5">
             <h3 id="excluir-conta-titulo" ref={headingRef} tabIndex={-1} className="text-sm font-semibold outline-none wrap-break-word">
-              Excluir a conta <span className="font-mono text-[13px]">{account.email}</span>?
+              Excluir a conta <span className="font-normal [overflow-wrap:anywhere]">{account.email}</span>?
             </h3>
-            <p className="text-xs text-foreground/85">
+            <p className="text-[13px] text-foreground/85">
               Isso apaga para sempre seus programas, treinos, recordes e publicações. Não dá para desfazer.
             </p>
             <ExportLinks variant="inline" />
             {!fresh ? (
-              <p className="text-xs font-medium text-foreground">
+              <p className="text-[13px] font-medium text-foreground">
                 Por segurança, excluir a conta pede um login feito nas últimas 24 horas.
               </p>
             ) : null}
             {error ? (
-              <p role="alert" className="text-xs font-medium text-danger">
+              <p role="alert" className="text-[13px] font-medium text-danger">
                 {error}
                 {error === SESSION_EXPIRED_ERROR ? (
                   <>

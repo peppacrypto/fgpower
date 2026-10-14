@@ -135,9 +135,9 @@ test("a home-dumbbell user's picker starts on their equipment", async ({ page })
   await openPicker(page);
   await expect(picker(page).getByRole("button", { name: "Seu equipamento" })).toHaveAttribute("aria-pressed", "true");
   await expect(picker(page).locator('[aria-busy="true"]')).toHaveCount(0);
-  const lines = await pickerRows(page).locator("span.font-mono").allInnerTexts();
+  const lines = await pickerRows(page).locator("[data-exercise-meta]").allInnerTexts();
   expect(lines.length).toBeGreaterThan(5);
-  for (const line of lines) expect(line).not.toMatch(/MÁQUINA|CABO|BARRA RETA|SMITH/);
+  for (const line of lines) expect(line).not.toMatch(/máquina|cabo|barra reta|smith/i);
 });
 
 test("the picker's Favoritos find by muscle like Todos, and browsing leaves stretches out", async ({ page }) => {
@@ -441,7 +441,7 @@ test("cards and dossiers say what a program needs, and a home user adapts one af
     "Remada Unilateral com Halter",
   );
   const kept = await swaps.filter({ hasText: "Sem substituto" }).count();
-  for (const line of await swaps.locator("[data-swap-choice] p.font-mono").allTextContents()) {
+  for (const line of await swaps.locator("[data-swap-choice] [data-swap-meta]").allTextContents()) {
     expect(line).toMatch(/^(Halteres|Peso do corpo|Sem equipamento|Banco) · /);
   }
   // Keep one on purpose ("tenho acesso"): the counts follow.

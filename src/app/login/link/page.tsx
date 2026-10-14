@@ -39,7 +39,7 @@ export default async function LoginLinkPage() {
         <div className="mb-6 flex justify-center">
           <Wordmark iconSize={34} />
         </div>
-        <div className="reg-frame p-8">
+        <div className="card rounded-[var(--radius-xl)] px-6 py-7 sm:p-8">
           <LinkSignIn signedIn={Boolean(session)} />
         </div>
         <p className="mt-6 text-center text-sm text-muted">

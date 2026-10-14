@@ -44,8 +44,9 @@ interface ShareLink {
   version: number;
 }
 
-const FIELD = "font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted";
-const TEXT_ACTION = "inline-flex min-h-11 items-center font-mono text-[11px] font-bold uppercase tracking-[0.14em] hover:underline";
+/** "Quem vê", "Fora do app": the block's two steps, named in plain words. */
+const FIELD = "text-[13px] font-semibold text-foreground";
+const TEXT_ACTION = "inline-flex min-h-11 items-center text-[13px] font-semibold hover:underline";
 const OFFLINE_SHARE = "Sem conexão — tente de novo quando o sinal voltar.";
 const SHARE_FAILED = "Não foi possível preparar o compartilhamento. Tente de novo.";
 
@@ -421,7 +422,7 @@ export function ShareWorkoutForm({
     return (
       <div className="flex flex-col gap-1">
         <span className={FIELD}>Quem vê</span>
-        <p className="text-xs text-muted">Esta publicação foi ocultada pela moderação. Só você vê este treino.</p>
+        <p className="text-[13px] text-muted">Esta publicação foi ocultada pela moderação. Só você vê este treino.</p>
       </div>
     );
   }
@@ -436,21 +437,19 @@ export function ShareWorkoutForm({
         type="checkbox"
         checked={showDetailedLoads}
         onChange={(e) => setShowDetailedLoads(e.target.checked)}
-        className="size-4 accent-accent"
+        className="size-[18px] accent-[var(--accent)]"
       />
       Mostrar kg e reps
     </label>
   );
 
   return (
-    // A container: the label sits beside the three options only where they all
-    // fit with room to spare ("Seguidores" in semibold is ~76px of text; at a
-    // 21rem row each segment has ~6px more, so a wider fallback font before
-    // the webfont loads doesn't clip it either). Narrower (a 320–360px phone)
-    // the label goes above them and the options take the full width.
-    <div ref={root} className="@container flex flex-col gap-2.5">
+    // Two steps, each named above its controls: "Quem vê" (the three options
+    // take the full width on a phone, so "Seguidores" in semibold never clips)
+    // and "Fora do app".
+    <div ref={root} className="flex flex-col gap-2.5">
       {notice ? (
-        <div className="border-l-2 border-l-accent bg-surface-2 px-3 py-2.5" data-private-default-notice>
+        <div className="rounded-[var(--radius-md)] bg-accent-soft px-3.5 py-3" data-private-default-notice>
           <p className="text-sm">
             Seus treinos estão privados. Quer mostrar aos seus seguidores{notice.loadsHidden ? ", sem as cargas" : ""}?
           </p>
@@ -465,23 +464,18 @@ export function ShareWorkoutForm({
         </div>
       ) : null}
 
-      <div className="flex flex-col items-stretch gap-1.5 @min-[21rem]:flex-row @min-[21rem]:items-center @min-[21rem]:gap-3">
-        <span id={`share-${sessionId}`} className={`shrink-0 ${FIELD}`}>
+      <div className="flex flex-col items-stretch gap-2">
+        <span id={`share-${sessionId}`} className={FIELD}>
           Quem vê
         </span>
-        <VisibilityControl
-          value={visibility}
-          onChange={choose}
-          labelledBy={`share-${sessionId}`}
-          className="@min-[21rem]:flex-1"
-        />
+        <VisibilityControl value={visibility} onChange={choose} labelledBy={`share-${sessionId}`} className="sm:max-w-md" />
       </div>
 
       {visibility === "PRIVATE" ? (
         <>
           {isOut ? (
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="text-xs text-muted">
+              <p className="text-[13px] text-muted">
                 Publicado para {published?.visibility === "PUBLIC" ? "todos" : "seguidores"}. Tornar privado tira do feed.
               </p>
               <Button size="sm" variant="outline" disabled={busy} onClick={() => save("PRIVATE")}>
@@ -489,7 +483,7 @@ export function ShareWorkoutForm({
               </Button>
             </div>
           ) : (
-            <p className="text-xs text-muted">
+            <p className="text-[13px] text-muted">
               {link ? "Fora do feed — só quem tem o link vê este treino." : "Só você vê este treino."}
             </p>
           )}
@@ -522,7 +516,7 @@ export function ShareWorkoutForm({
           ) : null}
 
           {isOut && unchanged ? (
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[11px] font-bold uppercase tracking-[0.14em]">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] font-semibold">
               <span className="inline-flex items-center gap-1 text-success">
                 <GCheck className="size-3.5" />
                 Publicado
@@ -538,19 +532,19 @@ export function ShareWorkoutForm({
             </Button>
           )}
           {visibility === "FOLLOWERS" && followerCount === 0 ? (
-            <p className="text-xs text-muted">Você ainda não tem seguidores — no feed, por enquanto, só você vê.</p>
+            <p className="text-[13px] text-muted">Você ainda não tem seguidores — no feed, por enquanto, só você vê.</p>
           ) : null}
         </>
       )}
 
       {error ? (
-        <p role="alert" className="text-xs font-medium text-danger">
+        <p role="alert" className="text-[13px] font-medium text-danger">
           <ActionErrorText error={error} />
         </p>
       ) : null}
 
       {/* Out of the app: the story image and a link that opens without an account. */}
-      <div className="mt-1 border-t border-border pt-3" role="group" aria-labelledby={`share-out-${sessionId}`}>
+      <div className="mt-1.5 border-t border-border pt-4" role="group" aria-labelledby={`share-out-${sessionId}`}>
         <span id={`share-out-${sessionId}`} className={FIELD}>
           Fora do app
         </span>
@@ -566,12 +560,12 @@ export function ShareWorkoutForm({
         </div>
 
         {readyFile ? (
-          <p className="mt-2 text-xs text-muted">Imagem pronta. Toque para enviar.</p>
+          <p className="mt-2 text-[13px] text-muted">Imagem pronta. Toque para enviar.</p>
         ) : link ? (
           <>
-            <p className="mt-2 text-xs text-muted">Link ativo: quem tiver o link vê este treino, sem precisar de conta.</p>
+            <p className="mt-2 text-[13px] text-muted">Link ativo: quem tiver o link vê este treino, sem precisar de conta.</p>
             {linkStale ? (
-              <p className="mt-1 text-xs text-muted">
+              <p className="mt-1 text-[13px] text-muted">
                 O link ainda mostra o treino como antes.{" "}
                 <button
                   type="button"
@@ -585,7 +579,7 @@ export function ShareWorkoutForm({
             ) : null}
             {confirmRevoke ? (
               <div className="mt-2" role="group" aria-label="Desativar o link">
-                <p className="text-xs">Desativar o link? Quem abrir o link antigo verá “link desativado”.</p>
+                <p className="text-[13px]">Desativar o link? Quem abrir o link antigo verá “link desativado”.</p>
                 <div className="mt-1.5 flex flex-wrap gap-2">
                   <Button type="button" size="sm" variant="danger" disabled={revoking} onClick={revoke}>
                     {revoking ? "Desativando…" : "Desativar"}
@@ -624,7 +618,7 @@ export function ShareWorkoutForm({
             )}
           </>
         ) : (
-          <p className="mt-2 text-xs text-muted">
+          <p className="mt-2 text-[13px] text-muted">
             {revoked
               ? "Link desativado."
               : showDetailedLoads
@@ -634,12 +628,12 @@ export function ShareWorkoutForm({
         )}
 
         {copied && !copied.ok ? (
-          <p className="mt-2 text-xs text-muted">
-            Não deu para copiar. Link: <span className="select-all break-all font-mono text-foreground">{copied.url}</span>
+          <p className="mt-2 text-[13px] text-muted">
+            Não deu para copiar. Link: <span className="select-all break-all text-foreground">{copied.url}</span>
           </p>
         ) : null}
         {shareError ? (
-          <p role="alert" className="mt-2 text-xs font-medium text-danger">
+          <p role="alert" className="mt-2 text-[13px] font-medium text-danger">
             <ActionErrorText error={shareError} />
           </p>
         ) : null}

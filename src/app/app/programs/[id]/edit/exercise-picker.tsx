@@ -47,10 +47,13 @@ async function fetchPage(url: string, signal: AbortSignal): Promise<PickerPage> 
   return page;
 }
 
+/** A filter chip: a 36px plate with a 44px touch target (.hit; its row pads for it); the one on is the green one. */
 const CHIP =
-  "flex h-11 shrink-0 items-center px-3 font-mono text-[11px] font-semibold uppercase tracking-[0.06em] transition-colors";
+  "hit flex h-9 shrink-0 items-center rounded-[var(--radius-md)] border px-3 text-sm transition-colors";
 const chipTone = (on: boolean) =>
-  on ? "bg-foreground text-background" : "bg-surface-2 text-foreground/75 hover:bg-[var(--border)] hover:text-foreground";
+  on
+    ? "border-accent bg-accent-soft font-semibold text-accent"
+    : "border-border bg-surface font-medium text-foreground hover:border-border-strong hover:bg-surface-2";
 
 /**
  * The builder's exercise picker, full screen on a phone. Several exercises
@@ -59,7 +62,7 @@ const chipTone = (on: boolean) =>
  * six times. Each opening starts clean: empty search, the user's equipment
  * ("Seu equipamento", unless they train in a full gym), the muscle it was
  * opened for. Rows show the equipment and never cut the name; an exercise
- * already in the day is tagged "NO DIA". Results come from GET
+ * already in the day is tagged "No dia". Results come from GET
  * /api/exercises/search, 24 at a time ("Carregar mais"), and stay on screen,
  * dimmed, while the next query loads.
  *
@@ -82,7 +85,7 @@ export function ExercisePicker({
   onAdd?: (exercises: PickerExercise[]) => void;
   /** Single pick: called with the exercise tapped, then the picker closes. */
   onSelect?: (exercise: PickerExercise) => void;
-  /** Exercises already in the day ("NO DIA"). */
+  /** Exercises already in the day ("No dia"). */
   inDayIds?: string[];
   /** Room left in the day. */
   maxSelect?: number;
@@ -240,27 +243,28 @@ export function ExercisePicker({
       onClose={onClose}
       onCancel={onClose}
       aria-labelledby="picker-title"
-      className="m-0 h-dvh max-h-dvh w-dvw max-w-dvw bg-transparent p-0 text-foreground backdrop:bg-black/50 sm:m-auto sm:h-[85vh] sm:max-h-[85vh] sm:w-full sm:max-w-lg sm:rounded-[3px]"
+      className="m-0 h-dvh max-h-dvh w-dvw max-w-dvw bg-transparent p-0 text-foreground backdrop:bg-black/45 sm:m-auto sm:h-[85vh] sm:max-h-[85vh] sm:w-full sm:max-w-lg sm:rounded-[var(--radius-xl)] sm:shadow-[var(--shadow-md)]"
     >
-      <div className="flex h-dvh flex-col bg-surface sm:h-[85vh] sm:rounded-[3px] sm:border-t-2 sm:border-t-[var(--rule-heavy)]">
+      <div className="flex h-dvh flex-col overflow-hidden bg-surface sm:h-[85vh] sm:rounded-[var(--radius-xl)] sm:border sm:border-border">
         {/* Full screen on phones: clear the status bar / notch (installed PWA
-            draws under it) and keep the search at 16px so iOS doesn't zoom. */}
-        <div className="border-b border-border px-4 pb-2 pt-[max(0.75rem,env(safe-area-inset-top))] sm:pt-3">
+            draws under it) and keep the search at 16px so iOS doesn't zoom.
+            Search first: the title, the box, then the list's tabs. */}
+        <div className="border-b border-border px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-5 sm:pt-4">
           <div className="flex items-center justify-between gap-2">
-            <h2 id="picker-title" ref={titleRef} tabIndex={-1} className="font-mono outline-none text-[11px] font-bold uppercase tracking-[0.16em] text-muted">
+            <h2 id="picker-title" ref={titleRef} tabIndex={-1} className="text-[17px] font-semibold leading-snug outline-none">
               {title}
             </h2>
             <button
               type="button"
               onClick={onClose}
               aria-label="Fechar"
-              className="-mr-2 flex size-11 shrink-0 items-center justify-center rounded-[3px] hover:bg-surface-2"
+              className="-mr-2 flex size-11 shrink-0 items-center justify-center rounded-[var(--radius-md)] text-muted hover:bg-surface-2 hover:text-foreground"
             >
-              <X className="size-4" />
+              <X className="size-5" />
             </button>
           </div>
-          <div className="relative">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted" />
+          <div className="relative mt-2">
+            <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted" />
             <Input
               ref={searchRef}
               type="search"
@@ -277,20 +281,21 @@ export function ExercisePicker({
                 }
               }}
               placeholder="Buscar exercício…"
-              className="pl-9 pr-10 text-base sm:text-sm [&::-webkit-search-cancel-button]:hidden"
+              className="pl-10 pr-11 text-base sm:text-sm [&::-webkit-search-cancel-button]:hidden"
             />
             {query ? (
               <button
                 type="button"
                 onClick={() => setQuery("")}
                 aria-label="Limpar busca"
-                className="absolute right-0 top-0 flex size-11 items-center justify-center text-muted hover:text-foreground"
+                className="absolute right-0 top-0 flex size-11 items-center justify-center rounded-[var(--radius-md)] text-muted hover:text-foreground"
               >
                 <X className="size-4" />
               </button>
             ) : null}
           </div>
-          <div role="tablist" aria-label="Lista" className="mt-2 grid grid-cols-3 border-b border-border">
+          {/* A segmented control: Todos / Favoritos / Recentes. */}
+          <div role="tablist" aria-label="Lista" className="mt-3 grid grid-cols-3 gap-1 rounded-[var(--radius-md)] bg-surface-2 p-1">
             {PICKER_TABS.map((t) => (
               <button
                 key={t.key}
@@ -299,8 +304,10 @@ export function ExercisePicker({
                 aria-selected={tab === t.key}
                 onClick={() => setTab(t.key)}
                 className={cn(
-                  "-mb-px flex h-11 items-center justify-center border-b-2 font-mono text-[11px] font-bold uppercase tracking-[0.12em]",
-                  tab === t.key ? "border-b-accent text-foreground" : "border-b-transparent text-muted hover:text-foreground",
+                  "hit flex h-9 items-center justify-center rounded-[calc(var(--radius-md)-3px)] text-sm transition-colors",
+                  tab === t.key
+                    ? "bg-surface font-semibold text-foreground shadow-[var(--shadow-sm)]"
+                    : "font-medium text-muted hover:text-foreground",
                 )}
               >
                 {t.label}
@@ -310,7 +317,7 @@ export function ExercisePicker({
         </div>
 
         <div className="flex-1 overflow-y-auto overscroll-contain" aria-busy={pending || undefined}>
-          <div className="flex flex-col gap-1.5 px-4 pt-3" role="group" aria-label="Filtros">
+          <div className="flex flex-col gap-0.5 px-4 pt-2 sm:px-5" role="group" aria-label="Filtros">
             <ChipRow label="Músculo">
               {VOLUME_MUSCLES.map((m) => (
                 <button
@@ -325,7 +332,7 @@ export function ExercisePicker({
                 </button>
               ))}
             </ChipRow>
-            <ChipRow label="Equip.">
+            <ChipRow label="Equipamento">
               {equipmentAccess && equipmentAccess !== "FULL_GYM" ? (
                 <button
                   type="button"
@@ -350,8 +357,8 @@ export function ExercisePicker({
             </ChipRow>
           </div>
 
-          <div className="flex min-h-11 items-center justify-between gap-3 px-4 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted">
-            <span aria-live="polite">
+          <div className="flex min-h-11 items-center justify-between gap-3 px-4 text-[13px] font-medium text-muted sm:px-5">
+            <span aria-live="polite" className="tabular-nums">
               {shown && !failed ? plural(shown.total, "exercício", "exercícios") : pending ? "Buscando…" : ""}
             </span>
             {filtersOn ? (
@@ -361,7 +368,7 @@ export function ExercisePicker({
                   setMuscle(null);
                   setEquipment(null);
                 }}
-                className="-mr-2 min-h-11 px-2 uppercase text-accent hover:underline"
+                className="-mr-2 min-h-11 rounded-[var(--radius-md)] px-2 font-semibold text-accent hover:underline"
               >
                 Limpar filtros
               </button>
@@ -388,7 +395,7 @@ export function ExercisePicker({
           ) : shown.items.length === 0 ? (
             <p className={cn("px-4 py-6 text-center text-sm text-muted", stale && "opacity-60")}>{emptyText}</p>
           ) : (
-            <ul className={cn("divide-y divide-border border-t border-border transition-opacity", stale && "opacity-60")}>
+            <ul className={cn("divide-y divide-border border-y border-border transition-opacity", stale && "opacity-60")}>
               {shown.items.map((ex) => {
                 const isSelected = selectedIds.has(ex.id);
                 const blocked = multi && full && !isSelected;
@@ -401,16 +408,14 @@ export function ExercisePicker({
                       aria-disabled={blocked || undefined}
                       onClick={() => (blocked ? undefined : toggle(ex))}
                       className={cn(
-                        "flex min-h-16 w-full items-center gap-3 px-4 py-2 text-left transition-colors",
-                        isSelected
-                          ? "bg-accent-soft shadow-[inset_3px_0_0_var(--accent),inset_0_-2px_0_var(--keel)]"
-                          : "hover:bg-[var(--ink-2)]",
+                        "flex min-h-[4.5rem] w-full items-center gap-3 px-4 py-2.5 text-left transition-colors sm:px-5",
+                        isSelected ? "bg-accent-soft" : "hover:bg-[var(--ink-2)]",
                         blocked && "opacity-45",
                       )}
                     >
-                      <span className="relative size-11 shrink-0 overflow-hidden rounded-[3px] bg-surface-2">
+                      <span className="relative size-12 shrink-0 overflow-hidden rounded-[var(--radius-md)] bg-surface-2">
                         {ex.imageUrl ? (
-                          <Image src={ex.imageUrl} alt="" fill className="object-cover" sizes="44px" />
+                          <Image src={ex.imageUrl} alt="" fill className="object-cover" sizes="48px" />
                         ) : (
                           <span className="flex h-full items-center justify-center text-muted">
                             <GLoad className="size-5" />
@@ -418,8 +423,12 @@ export function ExercisePicker({
                         )}
                       </span>
                       <span className="min-w-0 flex-1">
-                        <span className="block text-sm font-semibold leading-snug wrap-break-word">{ex.namePt}</span>
-                        <span className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 font-mono text-[10px] uppercase tracking-[0.08em] text-muted">
+                        {/* The name is the row's one span.block (e2e reads it); the equipment · muscle line below. */}
+                        <span className="block text-[15px] font-semibold leading-snug wrap-break-word">{ex.namePt}</span>
+                        <span
+                          data-exercise-meta
+                          className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] leading-snug text-muted"
+                        >
                           {[ex.equipment, ex.primaryMuscle].filter(Boolean).join(" · ")}
                           {inDay.has(ex.id) ? <span className="tag tag--mark">No dia</span> : null}
                         </span>
@@ -428,8 +437,8 @@ export function ExercisePicker({
                         <span
                           aria-hidden
                           className={cn(
-                            "flex size-6 shrink-0 items-center justify-center border-2",
-                            isSelected ? "border-accent bg-accent text-accent-foreground" : "border-foreground/40",
+                            "flex size-6 shrink-0 items-center justify-center rounded-[var(--radius-sm)] border-2 transition-colors",
+                            isSelected ? "border-accent bg-accent text-accent-foreground" : "border-field bg-surface",
                           )}
                         >
                           {isSelected ? <Check className="size-4" strokeWidth={3} /> : null}
@@ -443,7 +452,7 @@ export function ExercisePicker({
           )}
 
           {shown && shown.hasMore && !failed ? (
-            <div className="px-4 py-3">
+            <div className="px-4 py-3 sm:px-5">
               <Button variant="outline" className="w-full" disabled={pending} onClick={loadMore}>
                 {loadingMore ? "Carregando…" : `Carregar mais (${shown.items.length} de ${shown.total})`}
               </Button>
@@ -453,9 +462,9 @@ export function ExercisePicker({
         </div>
 
         {multi ? (
-          <div className="border-t-2 border-t-[var(--rule-heavy)] bg-surface px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 sm:pb-3">
+          <div className="border-t border-border bg-surface px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 sm:px-5 sm:pb-4">
             {full && Number.isFinite(maxSelect) ? (
-              <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-warning" role="status">
+              <p className="mb-2 text-[13px] font-medium text-warning" role="status">
                 {maxSelect <= 0
                   ? "Não cabem mais exercícios neste dia"
                   : `Limite do dia: ${plural(maxSelect, "exercício selecionado", "exercícios selecionados")}`}
@@ -463,11 +472,11 @@ export function ExercisePicker({
             ) : null}
             <div className="flex items-center gap-2">
               {selected.length > 0 ? (
-                <Button variant="ghost" className="px-3" onClick={() => setSelected([])}>
+                <Button variant="ghost" size="lg" className="px-4" onClick={() => setSelected([])}>
                   Limpar
                 </Button>
               ) : null}
-              <Button variant="strong" className="flex-1" disabled={selected.length === 0} onClick={add}>
+              <Button variant="strong" size="lg" className="flex-1" disabled={selected.length === 0} onClick={add}>
                 {selected.length === 0
                   ? "Toque para selecionar"
                   : `Adicionar ${plural(selected.length, "exercício", "exercícios")}`}
@@ -483,9 +492,10 @@ export function ExercisePicker({
 /** A labelled row of chips that scrolls sideways inside itself on a narrow phone. */
 function ChipRow({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="flex min-w-0 items-center gap-2">
-      <span className="w-14 shrink-0 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted">{label}</span>
-      <div className="-mr-4 flex min-w-0 flex-1 gap-1 overflow-x-auto pr-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <div className="flex min-w-0 items-center gap-3">
+      <span className="w-[5.5rem] shrink-0 text-[13px] font-medium text-muted">{label}</span>
+      {/* py-1 leaves room for the chips' 44px touch targets inside the scroller. */}
+      <div className="-mr-4 flex min-w-0 flex-1 gap-1.5 overflow-x-auto py-1 pr-4 [scrollbar-width:none] sm:-mr-5 sm:pr-5 [&::-webkit-scrollbar]:hidden">
         {children}
       </div>
     </div>

@@ -8,9 +8,8 @@ import { claimUsername } from "@/lib/actions/profile";
 import { runAction } from "@/components/social/run-action";
 import { ActionErrorText } from "@/components/social/session-expired";
 import { publicProfileLabel, USERNAME_RULE } from "@/lib/validation/username";
-import { cn } from "@/lib/utils/cn";
 
-const MONO = "font-mono text-[11px] font-bold uppercase tracking-[0.12em]";
+const LINK = "inline-flex min-h-11 items-center text-sm font-semibold text-accent hover:underline";
 
 const noopSubscribe = () => () => {};
 
@@ -87,7 +86,7 @@ export function UsernameForm({ initialUsername, publicOrigin }: { initialUsernam
         <div className="flex min-w-0 flex-1">
           <span
             aria-hidden
-            className="flex items-center rounded-l-[3px] border border-r-0 border-foreground/50 bg-surface-2 px-3 font-mono text-sm text-muted"
+            className="flex items-center rounded-l-[var(--radius-md)] border border-r-0 border-field bg-surface-2 px-3 text-sm text-muted"
           >
             @
           </span>
@@ -128,26 +127,26 @@ export function UsernameForm({ initialUsername, publicOrigin }: { initialUsernam
       ) : (
         <div id="username-status" className="mt-2">
           {editing ? (
-            <p className="font-mono text-xs text-muted">
+            <p className="text-[13px] text-muted [overflow-wrap:anywhere]">
               {publicProfileLabel(value.trim() || "seu_usuario", publicOrigin)}
             </p>
           ) : saved && savedUrl ? (
             <div className="flex flex-col gap-1.5">
-              {/* "Salvo ✓" sits above the link: side by side, the long mono
+              {/* "Salvo ✓" sits above the link: side by side, the long
                   URL wraps on a phone and strands the separator. */}
-              {justSaved ? <p className={cn(MONO, "text-success")}>Salvo ✓</p> : null}
-              <p className="font-mono text-xs text-foreground [overflow-wrap:anywhere]">
+              {justSaved ? <p className="text-[13px] font-medium text-success">Salvo ✓</p> : null}
+              <p className="text-[13px] text-foreground [overflow-wrap:anywhere]">
                 {publicProfileLabel(saved.toLowerCase(), publicOrigin)}
               </p>
-              <p className="flex flex-wrap items-center gap-x-4 gap-y-1">
-                <Link href={`/u/${saved.toLowerCase()}`} className={cn(MONO, "text-accent underline decoration-2 underline-offset-[3px]")}>
+              <p className="-my-1 flex flex-wrap items-center gap-x-5">
+                <Link href={`/u/${saved.toLowerCase()}`} className={LINK}>
                   Ver perfil
                 </Link>
-                <button type="button" onClick={copyLink} className={cn(MONO, "text-accent underline decoration-2 underline-offset-[3px]")}>
+                <button type="button" onClick={copyLink} className={LINK}>
                   {copied ? "Link copiado ✓" : "Copiar link"}
                 </button>
                 {canShare ? (
-                  <button type="button" onClick={share} className={cn(MONO, "text-accent underline decoration-2 underline-offset-[3px]")}>
+                  <button type="button" onClick={share} className={LINK}>
                     Compartilhar
                   </button>
                 ) : null}

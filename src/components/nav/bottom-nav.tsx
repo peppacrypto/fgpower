@@ -45,7 +45,7 @@ export function BottomNav({ force = false }: { force?: boolean }) {
               <Link
                 href={item.href}
                 aria-current={active ? "page" : undefined}
-                className="flex h-full touch-manipulation select-none active:bg-[var(--ink-3)]"
+                className="group flex h-full touch-manipulation select-none"
               >
                 <TabFace
                   item={item}
@@ -63,7 +63,7 @@ export function BottomNav({ force = false }: { force?: boolean }) {
 }
 
 /**
- * A tab's icon, label and accent keel. Lives inside the <Link> so it can read
+ * A tab's icon and label; lit, the icon sits on a soft green pill. Lives inside the <Link> so it can read
  * the link's pending state (useLinkStatus): the tapped tab lights the moment
  * the navigation starts, before the next page has answered.
  */
@@ -94,27 +94,23 @@ function TabFace({
       data-pending={pending ? "true" : undefined}
       data-lit={on ? "true" : undefined}
       className={cn(
-        // Lit is more than a hue (accent vs muted is ~1.1:1 in light mode):
-        // a bolder label and the keel below carry it for colour-blind eyes and in glare.
-        "relative flex w-full flex-col items-center justify-center gap-1 text-[11px] transition-colors duration-100",
-        on ? "font-bold text-accent" : "font-medium text-muted",
-        pending && "bg-[var(--ink-3)]",
+        // Lit is more than a hue: the pill behind the icon and a bolder label
+        // carry it for colour-blind eyes and in glare.
+        "relative flex w-full flex-col items-center justify-center gap-0.5 text-xs transition-colors duration-100",
+        on ? "font-semibold text-accent" : "font-medium text-muted",
       )}
     >
-      <span className="relative">
-        <Icon className="size-5" strokeWidth={on ? 2.4 : 2} />
-        <UnreadPip count={badge} srText="" className="absolute -right-3 -top-1.5" />
+      <span
+        className={cn(
+          "relative flex h-7 w-12 items-center justify-center rounded-full transition-colors duration-100",
+          on ? "bg-accent-soft" : "group-active:bg-[var(--ink-3)]",
+        )}
+      >
+        <Icon className="size-5" strokeWidth={on ? 2.1 : 1.75} />
+        <UnreadPip count={badge} srText="" className="absolute -right-1 -top-1" />
       </span>
       {item.label}
       {badge > 0 ? <span className="sr-only">, {plural(badge, "notificação nova", "notificações novas")}</span> : null}
-      {/* The keel: the accent rule under a lit tab (square, like the buttons' bevel). */}
-      <span
-        aria-hidden
-        className={cn(
-          "absolute inset-x-4 bottom-0 h-[3px] bg-accent transition-opacity duration-100",
-          on ? "opacity-100" : "opacity-0",
-        )}
-      />
     </span>
   );
 }

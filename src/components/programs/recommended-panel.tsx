@@ -23,8 +23,8 @@ export interface RecommendedPick {
 const needsAdapt = (p: RecommendedPick) => p.adapt ?? p.reasons.some((r) => r.kind === "adapt");
 
 /**
- * "RECOMENDADO PARA VOCÊ": the best-fitting ready-made program for the
- * user's onboarding answers, why it fits (mono chips), and two alternates.
+ * "Recomendado para você": the best-fitting ready-made program for the
+ * user's onboarding answers, why it fits (✓ chips), and two alternates.
  * "Ativar e começar" activates it and opens its first workout in one tap —
  * so it is only shown while no program is running (Today's empty state, the
  * top of the program library).
@@ -55,20 +55,17 @@ export function RecommendedPanel({
     <section
       aria-labelledby="recommended-title"
       data-testid="recommended-panel"
-      className={cn("relative overflow-hidden panel-raised", className)}
+      className={cn("panel", className)}
     >
-      <span className="absolute left-0 top-0 h-full w-1.5 bg-accent" aria-hidden />
-      <div className="p-6 sm:p-8">
-        <span className="block font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-accent">
-          Recomendado para você
-        </span>
-        <h2 id="recommended-title" className="text-display mt-2 text-2xl font-extrabold leading-tight sm:text-3xl">
+      <div className="p-5 sm:p-8">
+        <span className="eyebrow block text-accent">Recomendado para você</span>
+        <h2 id="recommended-title" className="text-display mt-1 text-[1.5rem] font-semibold leading-tight sm:text-[1.75rem]">
           {pick.namePt}
         </h2>
         <PickTagline tagline={pick.taglinePt} />
         <Reasons reasons={pick.reasons} className="mt-3" />
         {fatLoss ? (
-          <p className="mt-3 border-l-2 border-l-accent pl-2.5 text-xs leading-snug text-foreground/85">
+          <p className="mt-3 rounded-[var(--radius-md)] bg-accent-soft px-3.5 py-2.5 text-sm leading-snug text-foreground">
             {FAT_LOSS_NOTE}
           </p>
         ) : null}
@@ -107,23 +104,23 @@ export function RecommendedPanel({
 
         {alternates.length > 0 ? (
           <div className="mt-6">
-            <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted">Outras opções</span>
-            <ul className="mt-1.5 flex flex-col border-b border-border">
+            <span className="eyebrow">Outras opções</span>
+            <ul className="mt-1 flex flex-col border-b border-border">
               {alternates.map((alt) => (
                 <li key={alt.slug} className="border-t border-border">
                   <Link href={href(alt.slug)} className="group flex items-center gap-3 py-2.5">
                     {/* Names like "Halteres em Casa — Base Full-Body para Iniciantes" get two
                         lines and the facts wrap: at 320px a single truncated line left ~18 characters. */}
                     <span className="min-w-0 flex-1">
-                      <span className="line-clamp-2 text-sm font-semibold leading-snug group-hover:text-accent">
+                      <span className="line-clamp-2 text-[15px] font-semibold leading-snug group-hover:text-accent">
                         {alt.namePt}
                       </span>
-                      <span className="mt-0.5 block font-mono text-[10px] uppercase leading-snug tracking-[0.08em] text-muted">
-                        {/* Wraps between facts, never inside one ("HALTERES EM / CASA"). */}
+                      <span className="mt-0.5 block text-[13px] leading-snug text-muted">
+                        {/* Wraps between facts, never inside one ("Halteres em / casa"). */}
                         {alt.reasons.map((r) => r.label.replace(/ /g, "\u00a0")).join("\u00a0· ")}
                       </span>
                     </span>
-                    <GArrow className="size-3.5 shrink-0 text-muted transition-transform group-hover:translate-x-0.5" />
+                    <GArrow className="size-4 shrink-0 text-muted transition-transform group-hover:translate-x-0.5" />
                   </Link>
                 </li>
               ))}
@@ -135,14 +132,14 @@ export function RecommendedPanel({
           <div className="mt-4 flex flex-wrap gap-x-5">
             <Link
               href="/app/programs"
-              className="inline-flex min-h-11 items-center gap-1 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
+              className="inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-accent hover:underline"
             >
               Ver todos os programas
-              <GArrow className="size-3" />
+              <GArrow className="size-3.5" />
             </Link>
             <Link
               href="/app/programs/new"
-              className="inline-flex min-h-11 items-center font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted hover:text-foreground"
+              className="inline-flex min-h-11 items-center text-sm font-semibold text-muted hover:text-foreground"
             >
               Criar do zero
             </Link>
@@ -153,19 +150,19 @@ export function RecommendedPanel({
   );
 }
 
-/** "✓ 3×/SEMANA · ✓ INICIANTE · …" — ticked where the program matches what the user said. */
+/** "✓ 3×/semana · ✓ Iniciante · …" — ticked where the program matches what the user said. */
 export function Reasons({ reasons, className }: { reasons: ReasonChip[]; className?: string }) {
   return (
-    <ul aria-label="Por que este programa" className={cn("flex flex-wrap gap-1", className)}>
+    <ul aria-label="Por que este programa" className={cn("flex flex-wrap gap-1.5", className)}>
       {reasons.map((r) => (
         <li
           key={r.label}
           className={cn(
-            "inline-flex h-6 items-center gap-1 bg-surface px-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.08em]",
-            r.kind === "adapt" ? "text-warning" : r.match ? "text-foreground" : "text-muted",
+            "inline-flex min-h-7 items-center gap-1 rounded-[var(--radius-sm)] bg-surface-2 px-2 py-0.5 text-[13px] font-medium",
+            r.kind === "adapt" ? "bg-warning-soft text-warning" : r.match ? "text-foreground" : "text-muted",
           )}
         >
-          {r.match ? <GCheck className="size-3 text-accent" aria-hidden /> : null}
+          {r.match ? <GCheck className="size-3.5 text-accent" aria-hidden /> : null}
           {r.label}
           {/* The tick is decorative: say it for screen readers too. */}
           <span className="sr-only">
@@ -181,13 +178,13 @@ export function Reasons({ reasons, className }: { reasons: ReasonChip[]; classNa
   );
 }
 
-/** The pick's tagline, led by its outcome (a GD block's place in the series goes to a mono line). */
+/** The pick's tagline, led by its outcome (a GD block's place in the series goes to a small line above it). */
 function PickTagline({ tagline }: { tagline: string }) {
   const { outcome, meta } = splitSeriesTagline(tagline);
   return (
     <>
-      {meta ? <p className="mt-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted">{meta}</p> : null}
-      <p className="mt-1.5 line-clamp-3 text-sm text-muted wrap-break-word">{outcome}</p>
+      {meta ? <p className="mt-1 text-[13px] font-medium text-muted">{meta}</p> : null}
+      <p className="mt-1.5 line-clamp-3 text-[15px] leading-snug text-muted wrap-break-word">{outcome}</p>
     </>
   );
 }

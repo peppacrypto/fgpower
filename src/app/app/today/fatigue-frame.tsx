@@ -110,12 +110,12 @@ export function FatigueFrame({
         tabIndex={-1}
         aria-label={level === "applied" ? "Deload aplicado" : "Sinal de fadiga"}
         data-fatigue={level}
-        className="mt-6 border-l-2 border-l-accent bg-surface-2 px-3 py-2.5 outline-none"
+        className="card mt-4 p-4 outline-none sm:p-5"
       >
         {children}
         {level === "deload" ? (
           <>
-            <div className="mt-2 flex flex-wrap items-center gap-2">
+            <div className="mt-3 flex flex-wrap items-center gap-2">
               <Button
                 size="sm"
                 variant="outline"
@@ -133,7 +133,7 @@ export function FatigueFrame({
                 Agora não
               </Button>
             </div>
-            <p className="mt-1.5 text-[11px] text-muted">Treinos já iniciados ficam como estão.</p>
+            <p className="mt-1.5 text-[13px] text-muted">Treinos já iniciados ficam como estão.</p>
             {confirming ? (
               <ConfirmSheet
                 title="Aplicar deload nesta semana?"
@@ -167,7 +167,7 @@ export function FatigueFrame({
           </div>
         )}
         {error ? (
-          <p role="alert" className="mt-1.5 text-xs text-danger">
+          <p role="alert" className="mt-1.5 text-sm text-danger">
             <ActionErrorText error={error} />
           </p>
         ) : null}

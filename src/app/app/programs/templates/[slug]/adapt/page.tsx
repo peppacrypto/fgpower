@@ -92,26 +92,24 @@ export default async function AdaptTemplatePage({ params, searchParams }: PagePr
     <div className="mx-auto max-w-3xl px-4 pb-6 pt-3 sm:px-6 sm:py-8">
       <Link
         href={templateHref}
-        className="-ml-1 inline-flex min-h-11 items-center gap-1.5 px-1 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-muted hover:text-foreground"
+        className="-ml-1 inline-flex min-h-11 items-center gap-1.5 rounded-[var(--radius-md)] px-1 text-sm font-medium text-muted hover:text-foreground"
       >
-        <ArrowLeft className="size-3.5" />
+        <ArrowLeft className="size-4" />
         {template.namePt}
       </Link>
 
-      <p className="mt-2 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-muted">
-        {EQUIPMENT_LABEL[access]} · revise antes de salvar
-      </p>
-      <h1 className="text-display mt-1 text-2xl font-extrabold sm:text-3xl">
+      <p className="eyebrow mt-3">{EQUIPMENT_LABEL[access]} · revise antes de salvar</p>
+      <h1 className="text-display mt-0.5 text-[1.75rem] font-semibold leading-tight [overflow-wrap:anywhere] sm:text-[2rem]">
         {ADAPT_LABEL[access]}: {template.namePt}
       </h1>
-      <p className="mt-2 text-sm text-muted">
+      <p className="mt-2 text-[15px] leading-relaxed text-muted">
         {swaps.length === 0
           ? "Todos os exercícios deste programa já cabem no seu equipamento."
           : `${plural(swaps.length, "exercício pede", "exercícios pedem")} o que você não tem, em ${plural(daysTouched, "dia", "dias")}. Sugerimos uma troca para ${withStandIn.length < swaps.length ? "os que têm substituto" : "cada um"} — mesmo músculo e movimento, com o seu equipamento. Séries e descanso seguem o plano; ajustamos as repetições quando o substituto é mais difícil ou mais fácil.`}
       </p>
-      <p className="mt-1 text-xs text-muted">Salvar cria uma cópia sua; o original não muda.</p>
+      <p className="mt-1.5 text-[13px] text-muted">Salvar cria uma cópia sua; o original não muda.</p>
       {changed ? (
-        <p role="status" className="mt-4 border-l-2 border-l-warning bg-warning-soft px-3.5 py-3 text-sm">
+        <p role="status" className="mt-4 rounded-[var(--radius-md)] bg-warning-soft px-4 py-3 text-sm">
           Este programa foi atualizado enquanto você revisava. Confira as trocas abaixo e salve de novo.
         </p>
       ) : null}
@@ -119,34 +117,31 @@ export default async function AdaptTemplatePage({ params, searchParams }: PagePr
       <InlineActionForm action={adaptTemplate.bind(null, template.slug)} failText="Não foi possível salvar. Tente de novo.">
         <AdaptSwapCounts initial={withStandIn}>
           <div className="mt-6 flex flex-col gap-4">
-            {days.map(({ day, rows }, i) => {
+            {days.map(({ day, rows }) => {
               const kept = rows.filter((r) => r.kind === "keep");
               const swapped = rows.filter((r) => r.kind === "swap");
               return (
-                <section key={day.id} aria-labelledby={`adapt-day-${day.id}`} className="border-t-2 border-t-[var(--rule-heavy)] bg-surface">
-                  <div className="flex items-baseline justify-between gap-3 border-b border-border bg-surface-2/60 px-4 py-3">
-                    <div className="flex min-w-0 items-baseline gap-3">
-                      <span className="font-mono text-sm font-bold text-muted">{String(i + 1).padStart(2, "0")}</span>
-                      <h2 id={`adapt-day-${day.id}`} className="font-bold">
-                        {day.namePt}
-                      </h2>
-                    </div>
-                    <span className="shrink-0 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted">
+                <section key={day.id} aria-labelledby={`adapt-day-${day.id}`} className="card overflow-hidden">
+                  <div className="flex items-baseline justify-between gap-3 border-b border-border px-4 py-3 sm:px-5">
+                    <h2 id={`adapt-day-${day.id}`} className="min-w-0 text-base font-semibold leading-snug wrap-break-word">
+                      {day.namePt}
+                    </h2>
+                    <span className="shrink-0 text-[13px] tabular-nums text-muted">
                       <DaySwapCount names={swapped.flatMap((r) => (r.kind === "swap" && r.pick ? [r.field] : []))} />
                     </span>
                   </div>
                   <ul className="divide-y divide-border">
                     {swapped.map((r) =>
                       r.kind === "swap" ? (
-                        <li key={r.ex.id} className="px-4 py-3" data-testid="adapt-swap">
+                        <li key={r.ex.id} className="px-4 py-3.5 sm:px-5" data-testid="adapt-swap">
                           <p className="flex flex-wrap items-baseline gap-x-2 text-sm">
                             <span className="text-muted line-through decoration-1">{r.ex.exercise.namePt}</span>
-                            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-muted">
+                            <span className="text-[13px] tabular-nums text-muted">
                               {r.ex.exercise.equipment?.namePt} · {r.ex.sets}×{r.ex.repMin === r.ex.repMax ? r.ex.repMin : `${r.ex.repMin}-${r.ex.repMax}`}
                             </span>
                           </p>
                           {r.kind === "swap" && r.reps?.shift ? (
-                            <p className="mt-1 text-xs text-muted">
+                            <p className="mt-1 text-[13px] leading-snug text-muted">
                               {r.reps.shift === "harder"
                                 ? `Variação mais difícil — sugerimos ${r.ex.sets}×${r.reps.repMin} rep${r.reps.repMin > 1 ? "s" : ""}, parando 1–2 antes da falha.`
                                 : `Variação mais fácil — dá para subir para ${r.ex.sets}×${r.reps.repMax} reps.`}
@@ -160,7 +155,7 @@ export default async function AdaptTemplatePage({ params, searchParams }: PagePr
                               defaultId={r.pick.id}
                             />
                           ) : (
-                            <p className="mt-1.5 text-xs text-warning">
+                            <p className="mt-1.5 text-[13px] leading-snug text-warning">
                               Sem substituto com o seu equipamento — fica o original. Dá para trocar depois, no editor.
                               <input type="hidden" name={r.field} value="keep" />
                             </p>
@@ -169,8 +164,8 @@ export default async function AdaptTemplatePage({ params, searchParams }: PagePr
                       ) : null,
                     )}
                     {kept.length > 0 ? (
-                      <li className="px-4 py-2.5 text-xs text-muted">
-                        <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em]">
+                      <li className="px-4 py-3 text-[13px] leading-snug text-muted sm:px-5">
+                        <span className="font-semibold text-foreground">
                           {swapped.length > 0 ? `Mantidos (${kept.length})` : "Todos mantidos"}
                         </span>{" "}
                         {kept.map((r) => r.ex.exercise.namePt).join(" · ")}
@@ -182,7 +177,10 @@ export default async function AdaptTemplatePage({ params, searchParams }: PagePr
             })}
           </div>
 
-          <div data-bottom-bar className="sticky bottom-[var(--nav-h)] z-20 -mx-4 mt-6 flex items-center gap-2 border-t-2 border-t-[var(--rule-heavy)] bg-background px-4 py-2 sm:bottom-0 sm:-mx-6 sm:justify-end sm:px-6">
+          <div
+            data-bottom-bar
+            className="sticky bottom-[calc(var(--nav-h)+0.5rem)] z-20 mt-6 flex items-center gap-2 rounded-[var(--radius-xl)] border border-border bg-surface p-2 shadow-[var(--shadow-md)] sm:bottom-4 sm:justify-end sm:p-2.5"
+          >
             <Button asChild variant="ghost" className="px-3">
               <Link href={templateHref}>Cancelar</Link>
             </Button>

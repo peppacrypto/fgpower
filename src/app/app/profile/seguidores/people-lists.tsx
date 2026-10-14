@@ -26,7 +26,7 @@ export function RequestList({ requests }: { requests: { id: string; requester: P
   return (
     <section aria-labelledby="solicitacoes" className="mt-8">
       <SectionHead id="solicitacoes" label="Solicitações" count={plural(requests.length, "pedido", "pedidos")} />
-      <ul className="mt-2">
+      <ul className="card mt-3 px-4">
         {rows.map((r) => (
           <PersonLine key={r.id} person={r.requester}>
             <RequestActions requestId={r.id} name={r.requester.name} />
@@ -46,8 +46,8 @@ export function FollowerList({ people, hasMore, page }: { people: GraphPerson[];
   const [removed, setRemoved] = useState<ReadonlySet<string>>(() => new Set());
   if (rows.length === 0) {
     return (
-      <div className="mt-3 border-l-2 border-l-border-strong bg-surface-2 px-3.5 py-3 text-sm">
-        <p className="font-medium">Ninguém segue você ainda.</p>
+      <div className="card mt-3 p-4 text-sm sm:p-5">
+        <p className="text-[15px] font-semibold">Ninguém segue você ainda.</p>
         <p className="mt-0.5 text-muted">Siga quem treina com você: muita gente segue de volta.</p>
         <Button variant="outline" size="sm" asChild className="mt-3">
           <Link href="/app/discover">Encontrar pessoas</Link>
@@ -57,7 +57,7 @@ export function FollowerList({ people, hasMore, page }: { people: GraphPerson[];
   }
   return (
     <>
-      <ul className="mt-2">
+      <ul className="card mt-3 px-4">
         {rows.map((p) => (
           <PersonLine key={p.id} person={p}>
             {p.relation === "NONE" && !removed.has(p.id) ? (

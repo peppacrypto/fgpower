@@ -52,7 +52,7 @@ export function WeekReviewFrame({
   }
 
   return (
-    <section aria-label="Semana anterior" data-week-review className="reg-frame p-5">
+    <section aria-label="Semana anterior" data-week-review className="card p-5">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">{label}</div>
         <button

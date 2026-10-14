@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatPct, monoDate, placePoints, sparkPath, summarize, valueScale, type ChartInputPoint } from "./scale";
+import { formatPct, monoDate, placePoints, shortDate, sparkPath, summarize, valueScale, type ChartInputPoint } from "./scale";
 
 const NBSP = " ";
 const at = (iso: string) => new Date(iso);
@@ -76,7 +76,7 @@ describe("summarize", () => {
     );
     const s = summarize("Melhor carga por sessão", placed, "kg", NOW);
     expect(s.headline).toBe(`60 → 65${NBSP}kg · +5${NBSP}kg (+8%)`);
-    expect(s.since).toBe("desde 07 SET");
+    expect(s.since).toBe("desde 07 set");
     expect(s.ariaLabel).toBe(
       `Melhor carga por sessão: de 60${NBSP}kg para 65${NBSP}kg entre 07/09 e 21/09, em 2 sessões.`,
     );
@@ -106,7 +106,7 @@ describe("summarize", () => {
     );
     expect(summarize("Tempo", two, "seconds").headline).toBe(`30 → 30${NBSP}s · mesma marca`);
     const one = placePoints([{ key: "a", date: at("2026-09-07T15:00:00Z"), value: 30 }], { lo: 25, hi: 35, ticks: [] });
-    expect(summarize("Tempo", one, "seconds", NOW)).toMatchObject({ headline: `30${NBSP}s`, since: "em 07 SET" });
+    expect(summarize("Tempo", one, "seconds", NOW)).toMatchObject({ headline: `30${NBSP}s`, since: "em 07 set" });
   });
 
   it("uses the São Paulo day for dates (an evening workout is not tomorrow)", () => {
@@ -116,6 +116,11 @@ describe("summarize", () => {
 
   it("adds the year to a date from another year", () => {
     expect(monoDate(at("2025-09-22T15:00:00Z"), at("2026-09-27T12:00:00Z"))).toBe("22 SET 2025");
+  });
+
+  it("writes the sentence-case date the same way", () => {
+    expect(shortDate(at("2026-09-22T01:30:00Z"), at("2026-09-27T12:00:00Z"))).toBe("21 set");
+    expect(shortDate(at("2025-09-22T15:00:00Z"), at("2026-09-27T12:00:00Z"))).toBe("22 set 2025");
   });
 });
 

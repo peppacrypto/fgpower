@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 /**
- * The dossier's sticky start bar, shown only once the masthead's own buttons
+ * The dossier's floating start bar, shown only once the masthead's own buttons
  * have scrolled out of view above — so the first screen never shows the same
  * CTA twice. Hidden until then (and before hydration).
  */
@@ -25,9 +25,11 @@ export function StickyActionsBar({ watchId, children }: { watchId: string; child
       hidden={!show}
       data-testid="dossier-sticky-actions"
       data-bottom-bar
-      className="sticky bottom-[var(--nav-h)] z-30 mt-10 panel-raised p-3 sm:bottom-4"
+      className="sticky bottom-[calc(var(--nav-h)+0.5rem)] z-30 mt-10 rounded-[var(--radius-xl)] border border-border bg-surface p-2.5 shadow-[var(--shadow-md)] sm:bottom-4 sm:p-3"
     >
-      <div className="flex flex-wrap gap-2">{children}</div>
+      {/* One line on a phone: the main button's label wraps inside it rather than pushing
+          "Personalizar" to a second row; an open switch confirmation takes the whole width. */}
+      <div className="flex items-center gap-2 has-[details[open]]:flex-wrap">{children}</div>
     </div>
   );
 }

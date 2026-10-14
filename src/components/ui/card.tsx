@@ -1,11 +1,10 @@
 import * as React from "react";
 import { cn } from "@/lib/utils/cn";
 
-// A flat panel pinned by corner registration marks — no 1px border, no soft
-// shadow, no big radius. Add `is-link` for interactive hover (marks extend +
-// turn accent). See `.reg-frame` in globals.css.
+// The one container (`.card` in globals.css): white surface, soft hairline,
+// 14px radius. Add `is-link` when the whole card is a link or button.
 export function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("reg-frame", className)} {...props} />;
+  return <div className={cn("card", className)} {...props} />;
 }
 
 export function CardContent({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {

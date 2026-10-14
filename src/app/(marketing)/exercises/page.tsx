@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { GLoad } from "@/components/ui/glyph";
 import { getCurrentSession } from "@/lib/auth/require-user";
+import { prisma } from "@/lib/db";
 import { countUnclassifiedPatterns, listExercises } from "@/lib/data/exercises";
 import { listEquipment, listMovementPatterns } from "@/lib/data/taxonomy";
 import { MUSCLE_GROUPS, MUSCLE_GROUP_LABEL } from "@/lib/constants/muscle-groups";
@@ -12,6 +13,7 @@ import { ExerciseCard } from "@/components/exercises/exercise-card";
 import { hasLibraryFilters, libraryHref, parseLibraryParams } from "@/components/exercises/library-params";
 import { EmptyState } from "@/components/ui/misc";
 import { Button } from "@/components/ui/button";
+import { Masthead } from "@/components/ui/masthead";
 
 export const metadata: Metadata = { title: "Exercícios" };
 
@@ -22,7 +24,7 @@ export default async function PublicExerciseLibraryPage({ searchParams }: PagePr
   if (session) redirect("/app/exercises");
 
   const state = parseLibraryParams(sp);
-  const [{ items, total, page, totalPages }, equipment, movementPatterns, unclassified] = await Promise.all([
+  const [{ items, total, page, totalPages }, equipment, movementPatterns, unclassified, catalogTotal] = await Promise.all([
     listExercises({
       q: state.q,
       muscleGroup: state.muscleGroup,
@@ -34,6 +36,8 @@ export default async function PublicExerciseLibraryPage({ searchParams }: PagePr
     listEquipment(),
     listMovementPatterns(),
     countUnclassifiedPatterns(),
+    // The whole catalog, counted as the home page counts it.
+    prisma.exercise.count({ where: { isPublished: true } }),
   ]);
 
   const muscleGroups = MUSCLE_GROUPS.map((group) => ({ group, namePt: MUSCLE_GROUP_LABEL[group].pt }));
@@ -42,10 +46,12 @@ export default async function PublicExerciseLibraryPage({ searchParams }: PagePr
 
   return (
     <MarketingShell>
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
-        <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-accent">Biblioteca</p>
-        <h1 className="text-display mt-2 text-4xl font-semibold">Exercícios</h1>
-        <p className="mt-3 max-w-lg text-muted">Como executar, por que executar, e a ciência por trás.</p>
+      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
+        <Masthead
+          kicker="Técnica e ciência"
+          title="Exercícios"
+          lead="Como executar, por que executar, e a ciência por trás."
+        />
 
         <div className="mt-8">
           <ExerciseFilterBar
@@ -53,6 +59,7 @@ export default async function PublicExerciseLibraryPage({ searchParams }: PagePr
             equipment={equipment}
             movementPatterns={movementPatterns}
             total={total}
+            catalogTotal={catalogTotal}
             unclassifiedPatterns={unclassified}
           >
             {items.length === 0 ? (
@@ -75,9 +82,10 @@ export default async function PublicExerciseLibraryPage({ searchParams }: PagePr
                 />
               </div>
             ) : (
-              <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+              // A list on a phone (thumbnail, name, muscle, equipment), a grid from sm up.
+              <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3 lg:grid-cols-3 xl:grid-cols-4">
                 {items.map((ex) => (
-                  <ExerciseCard key={ex.id} exercise={ex} href={`${BASE}/${ex.slug}`} />
+                  <ExerciseCard key={ex.id} exercise={ex} href={`${BASE}/${ex.slug}`} compact />
                 ))}
               </div>
             )}
@@ -89,7 +97,7 @@ export default async function PublicExerciseLibraryPage({ searchParams }: PagePr
                     <Link href={libraryHref(BASE, state, page - 1) as never}>Anterior</Link>
                   </Button>
                 ) : null}
-                <span className="px-2 font-mono text-[11px] tabular-nums text-muted">
+                <span className="px-2 text-[13px] tabular-nums text-muted">
                   Página {page} de {totalPages}
                 </span>
                 {page < totalPages ? (

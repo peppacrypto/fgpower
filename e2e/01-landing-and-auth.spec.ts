@@ -28,15 +28,14 @@ test("an unknown URL is a pt-BR 404 with the public chrome and ways back", async
   await expect(page.getByRole("link", { name: "Ver programas" })).toHaveAttribute("href", "/programs");
 });
 
-test("the dark landing keeps its white hairlines in light mode (no grey token frames)", async ({ browser }) => {
+test("the landing wears the light theme's tokens, like the rest of the site", async ({ browser }) => {
   const context = await browser.newContext({ colorScheme: "light" });
   const page = await context.newPage();
   await page.goto("/");
   const header = page.locator("header").first();
-  const color = await header.evaluate((el) => getComputedStyle(el).borderBottomColor);
-  // border-white/10 — a translucent white, not the light theme's #e4e7ec.
-  expect(color).not.toBe("rgb(228, 231, 236)");
-  expect(color).toMatch(/(oklab\(0\.99|rgba\(255, 255, 255)/);
+  // The --border hairline (#e1e6e1) and the --background page (#f7f8f6): no dark chrome of its own.
+  expect(await header.evaluate((el) => getComputedStyle(el).borderBottomColor)).toBe("rgb(225, 230, 225)");
+  expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe("rgb(247, 248, 246)");
   await context.close();
 });
 
@@ -45,13 +44,13 @@ test("installed-app metadata matches the light background and keeps content belo
   request,
 }) => {
   const manifest = await (await request.get("/manifest.webmanifest")).json();
-  expect(manifest.background_color).toBe("#fafafb");
-  expect(manifest.theme_color).toBe("#fafafb");
+  expect(manifest.background_color).toBe("#f7f8f6");
+  expect(manifest.theme_color).toBe("#f7f8f6");
   await page.goto("/login");
   await expect(page.locator('meta[name="apple-mobile-web-app-status-bar-style"]')).toHaveAttribute("content", "default");
   await expect(page.locator('meta[name="theme-color"][media="(prefers-color-scheme: light)"]')).toHaveAttribute(
     "content",
-    "#fafafb",
+    "#f7f8f6",
   );
 });
 
@@ -61,20 +60,26 @@ test("the landing says it's free, shows the real app and previews well when shar
   await expect(page.getByRole("link", { name: "Criar conta grátis" }).first()).toHaveAttribute("href", "/login");
   await expect(page.getByText(/para sempre/i)).toHaveCount(0);
   await expect(page.getByRole("heading", { name: "Abra, treine, registre." })).toBeVisible();
-  const screens = page.getByRole("list", { name: "Telas do app" });
-  // The scroll row is reachable by keyboard (it scrolls sideways on phones).
-  await expect(screens).toHaveAttribute("tabindex", "0");
+  // The hero's picture is the app itself: Today, with a cut of the live workout.
+  const hero = page.getByRole("group", { name: "Telas do app" });
+  for (const alt of [
+    "Tela Hoje: o próximo treino, os exercícios e a semana",
+    "Tela de treino: carga, repetições, RIR e o descanso contando",
+  ]) {
+    await expect(hero.getByRole("img", { name: alt })).toBeVisible();
+  }
   for (const alt of [
     "Tela Hoje: o próximo treino, os exercícios e a semana",
     "Tela de treino: carga, repetições, RIR e o descanso contando",
     "Resumo do treino: tempo, séries e volume, o check-in, quem vê, como compartilhar e os recordes",
   ]) {
-    const img = screens.getByRole("img", { name: alt });
+    const img = page.getByRole("img", { name: alt });
     await img.scrollIntoViewIfNeeded();
     await expect(img).toBeVisible();
     await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
   }
-  await expect(page.getByText("Fig. 01")).toBeVisible();
+  // Real programs, linked to their pages.
+  await expect(page.getByRole("link", { name: /Full Body Iniciante/ }).first()).toHaveAttribute("href", "/programs/full-body-beginner");
   await expect(page.getByText("Crie sua conta grátis e monte seu perfil de treino em menos de um minuto.")).toBeVisible();
 
   // The preview: a JPEG small enough for WhatsApp, as a large card.

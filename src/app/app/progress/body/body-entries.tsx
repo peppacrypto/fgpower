@@ -11,7 +11,7 @@ import { announceBody } from "./body-announcer";
 
 export interface BodyEntryRow {
   id: string;
-  /** "28 SET". */
+  /** "28 set". */
   date: string;
   /** "81,4 kg". */
   value: string;
@@ -66,13 +66,13 @@ export function BodyEntries({ entries, noun, className }: { entries: BodyEntryRo
       <ul ref={list} tabIndex={-1} className="flex flex-col divide-y divide-border border-y border-border outline-none">
         {shown.map((e) => (
           <li key={e.id} className="flex min-h-11 flex-wrap items-center gap-x-3 gap-y-1 py-1" data-body-entry>
-            <span className="w-14 shrink-0 font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-muted">{e.date}</span>
-            <span className="font-mono text-sm font-semibold tabular-nums">{e.value}</span>
+            <span className="w-16 shrink-0 text-[13px] tabular-nums text-muted">{e.date}</span>
+            <span className="text-[15px] font-semibold tabular-nums">{e.value}</span>
             {e.fromWorkout ? <span className="tag tag--mark">treino</span> : null}
             <span className="flex-1" />
             {asking === e.id ? (
               <span className="flex items-center gap-1" role="group" aria-label={`Excluir ${noun} de ${e.date}?`}>
-                <span className="text-xs font-semibold">Excluir?</span>
+                <span className="text-sm font-semibold">Excluir?</span>
                 <Button size="sm" variant="ghost" className="text-danger" onClick={() => remove(e)}>
                   Sim
                 </Button>
@@ -107,7 +107,7 @@ export function BodyEntries({ entries, noun, className }: { entries: BodyEntryRo
         ))}
       </ul>
       {error ? (
-        <p role="alert" className="mt-1.5 text-xs text-danger">
+        <p role="alert" className="mt-1.5 text-sm text-danger">
           <ActionErrorText error={error} />
         </p>
       ) : null}

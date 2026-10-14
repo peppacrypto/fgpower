@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
+import { Check, WifiOff } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { isWorkoutFocusPath } from "./resume";
 
@@ -81,14 +82,15 @@ export function OfflineBanner() {
           aria-hidden
           data-offline-banner={online ? "back" : "offline"}
           className={cn(
-            "pointer-events-none fixed inset-x-0 flex h-7 items-center gap-2 overflow-hidden whitespace-nowrap px-4 font-mono text-[11px] sm:left-64 sm:px-6",
+            "pointer-events-none fixed inset-x-0 flex h-8 items-center gap-2 overflow-hidden whitespace-nowrap px-4 text-[13px] sm:left-64 sm:px-6",
             atBottom
-              ? "bottom-0 z-20 box-content border-t-2 pb-[env(safe-area-inset-bottom,0px)]"
-              : "top-[env(safe-area-inset-top,0px)] z-30 border-b-2",
-            online ? "border-success bg-success-soft" : "border-warning bg-warning-soft",
+              ? "bottom-0 z-20 box-content border-t pb-[env(safe-area-inset-bottom,0px)]"
+              : "top-[env(safe-area-inset-top,0px)] z-30 border-b",
+            online ? "border-border bg-success-soft" : "border-border bg-warning-soft",
           )}
         >
-          <span className={cn("shrink-0 font-bold uppercase tracking-[0.16em]", online ? "text-success" : "text-warning")}>
+          {online ? <Check className="size-3.5 shrink-0 text-success" /> : <WifiOff className="size-3.5 shrink-0 text-warning" />}
+          <span className={cn("shrink-0 font-semibold", online ? "text-success" : "text-warning")}>
             {online ? "Conexão de volta" : "Sem conexão"}
           </span>
           {online || !atBottom ? null : (

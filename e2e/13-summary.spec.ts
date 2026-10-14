@@ -85,7 +85,7 @@ test("first workout: saved and dated, one baseline line instead of records, next
   // The baseline, not a wall of "records".
   await expect(page.getByText("Marca inicial · 1 exercício registrado")).toBeVisible();
   await expect(page.locator(".tag--mark", { hasText: "PR" })).toHaveCount(0);
-  const card = page.locator(".reg-frame").filter({ hasText: EXERCISE });
+  const card = page.locator(".card").filter({ hasText: EXERCISE });
   await expect(card.getByText("1ª vez · marca inicial")).toBeVisible();
   // What to aim for next time, from these sets (8–12 reps: add reps before load).
   await expect(card.getByText("Na próxima")).toBeVisible();
@@ -140,7 +140,7 @@ test("first workout: saved and dated, one baseline line instead of records, next
   await expect(records).toHaveCount(1);
   await expect(records).toHaveAttribute("href", /\/app\/exercises\/[^/]+\/history$/);
   await expect(records).toContainText(/carga 42,5\s?kg · 1RM est\. 56,7\s?kg · 12 reps com 40\s?kg/);
-  const card2 = page.locator(".reg-frame").filter({ hasText: EXERCISE });
+  const card2 = page.locator(".card").filter({ hasText: EXERCISE });
   await expect(card2.getByText(/^↑ carga \+2,5\s?kg$/)).toBeVisible();
   await expect(card2.getByText(/40\s?kg × 10, 10, 9$/)).toBeVisible();
   await expectNoSideScroll(page);
@@ -189,7 +189,7 @@ test("a deload workout's summary says it's light on purpose: '· deload', no dec
   expect(sql(`SELECT "isDeload"::text FROM "WorkoutSession" WHERE id = ${sqlText(deload)}`)).toBe("true");
 
   await expect(page.getByText(/^Treino nº 2( · [^·]+)? · deload$/)).toBeVisible();
-  const card = page.locator(".reg-frame").filter({ hasText: EXERCISE });
+  const card = page.locator(".card").filter({ hasText: EXERCISE });
   // Vs. last time: never a decline — the drop is the point.
   await expect(card.getByText("deload · leve de propósito")).toBeVisible();
   await expect(card.getByText(/↓/)).toHaveCount(0);
@@ -265,7 +265,7 @@ test("fewer sets than prescribed: no load increase, no false decline; share radi
   await recordSet(page, 1, "40", "12");
   await finishAndSave(page);
 
-  const card = page.locator(".reg-frame").filter({ hasText: EXERCISE });
+  const card = page.locator(".card").filter({ hasText: EXERCISE });
   // A rep record on that set — and vs. last time agrees with it, saying the missing sets as such.
   await expect(page.getByRole("link").filter({ hasText: EXERCISE })).toContainText(/12 reps com 40\s?kg/);
   const vsLast = card.locator("dd").first();

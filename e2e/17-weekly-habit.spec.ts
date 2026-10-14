@@ -83,7 +83,7 @@ const thursdayOrLater = () => {
   return ["Thu", "Fri", "Sat", "Sun"].includes(day);
 };
 
-const hero = (page: Page) => page.locator(".panel-raised").first();
+const hero = (page: Page) => page.locator(".panel").first();
 const weekCard = (page: Page) => page.locator("[data-week-card]");
 const programCard = (page: Page) => page.locator("[data-program-card]");
 

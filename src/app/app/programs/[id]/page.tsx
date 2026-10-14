@@ -30,6 +30,7 @@ import { getProfile } from "@/lib/data/profile";
 import { NOT_FOUND_TITLE } from "@/components/ui/not-found-panel";
 import { deriveGroups, groupRule } from "@/lib/programming/groups";
 import { cn } from "@/lib/utils/cn";
+import { plural, pluralWord } from "@/lib/utils/format";
 
 export async function generateMetadata({ params }: PageProps<"/app/programs/[id]">): Promise<Metadata> {
   const { id } = await params;
@@ -79,16 +80,28 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
   const editHref = `/app/programs/${program.id}/edit`;
   // A copy of a GD block carries its tagline: led by the outcome, its place as a mono line.
   const description = program.description ? splitSeriesTagline(program.description) : null;
+  // The weekly demand, as the library cards say it: "5 dias/semana · ~55 min · 13 semanas · 5 treinos".
+  const minutes = program.days.map((d) => d.estimatedMinutes).filter((m): m is number => m != null && m > 0);
+  const demand = [
+    `${program.daysPerWeek} ${pluralWord(program.daysPerWeek, "dia", "dias")}/semana`,
+    minutes.length > 0 ? `~${Math.round(minutes.reduce((a, b) => a + b, 0) / minutes.length)} min` : null,
+    program.durationWeeks ? plural(program.durationWeeks, "semana", "semanas") : null,
+    program.days.length > 0 ? plural(program.days.length, "treino", "treinos") : null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
   // Where the running program stands, for the switch and archive warnings.
   const activeProgress = activeEnrollment ? await getEnrollmentProgress(activeEnrollment) : null;
   const switchingFrom = otherActive ? { name: otherActive.program.name, progress: activeProgress ?? "" } : null;
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
+    <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-10">
       <div className="flex items-start justify-between gap-3">
-        <div>
-          <div className="flex flex-wrap items-center gap-2">
-            <h1 className="text-2xl font-bold tracking-tight">{program.name}</h1>
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+            <h1 className="text-display min-w-0 text-[1.75rem] font-semibold leading-tight [overflow-wrap:anywhere] sm:text-[2rem]">
+              {program.name}
+            </h1>
             <Badge variant={isActive || restart.completed ? "accent" : program.status === "DRAFT" ? "default" : "warning"}>
               {isActive
                 ? "Ativo"
@@ -100,27 +113,27 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
             </Badge>
           </div>
           {program.sourceTemplate ? (
-            <p className="mt-1 text-sm text-muted">
+            <p className="mt-1.5 text-sm text-muted">
               Baseado em{" "}
-              <Link href={`/app/programs/templates/${program.sourceTemplate.slug}`} className="text-accent underline underline-offset-2">
+              <Link
+                href={`/app/programs/templates/${program.sourceTemplate.slug}`}
+                className="font-medium text-accent underline decoration-1 underline-offset-2"
+              >
                 {program.sourceTemplate.namePt}
               </Link>
             </p>
           ) : null}
           {description ? (
             <>
-              {description.meta ? (
-                <p className="mt-1 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted">
-                  {description.meta}
-                </p>
-              ) : null}
-              <p className="mt-1 text-sm text-muted wrap-break-word">{description.outcome}</p>
+              {description.meta ? <p className="mt-1.5 text-[13px] font-medium text-muted">{description.meta}</p> : null}
+              <p className="mt-1 text-[15px] leading-snug text-muted wrap-break-word">{description.outcome}</p>
             </>
           ) : null}
+          {demand ? <p className="mt-3 text-sm font-medium tabular-nums">{demand}</p> : null}
         </div>
       </div>
 
-      <div className="mt-5 flex flex-wrap items-start gap-2">
+      <div className="mt-5 flex flex-wrap items-start gap-2 border-b border-border pb-5">
         {!isActive && hasExercises && restart.resumable ? (
           // Stopped midway: pick it up where it was, or start it over.
           <>
@@ -199,13 +212,13 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
       </div>
 
       {restart?.resumable?.endedByDurationEdit ? (
-        <p className="mt-2 text-xs text-muted">
+        <p className="mt-3 text-[13px] text-muted">
           Você encurtou a duração e o bloco foi encerrado. Retome de onde parou quando quiser.
         </p>
       ) : null}
 
       {!isActive && !hasExercises ? (
-        <p id="start-needs-exercises" className="mt-2 text-xs text-muted">
+        <p id="start-needs-exercises" className="mt-3 text-[13px] text-muted">
           Adicione ao menos um exercício para iniciar.{" "}
           <Link href={editHref} className="inline-flex min-h-11 items-center font-semibold text-accent hover:underline">
             Editar programa
@@ -218,7 +231,7 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
           {feedback.map((f) => (
             <div
               key={f.code}
-              className="reg-frame flex items-start gap-2.5 px-3.5 py-3 text-sm"
+              className="card flex items-start gap-2.5 px-3.5 py-3 text-sm"
             >
               {f.severity === "notice" ? (
                 <AlertTriangle className="mt-0.5 size-4 shrink-0 text-warning" />
@@ -228,12 +241,12 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
               <span className="text-foreground/90">{f.messagePt}</span>
             </div>
           ))}
-          <p className="text-xs text-muted">Isso é uma orientação, não uma proibição.</p>
+          <p className="text-[13px] text-muted">Isso é uma orientação, não uma proibição.</p>
         </div>
       ) : null}
 
       {isActive && openWithData ? (
-        <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 border-l-2 border-l-warning! bg-warning-soft px-3 py-2 text-xs text-foreground/90">
+        <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-[var(--radius-lg)] bg-warning-soft px-4 py-3 text-sm text-foreground">
           <p className="min-w-0 flex-1">
             Você tem um treino em andamento: <span className="font-semibold">{openWithData.name}</span>. Finalize ou
             descarte-o para iniciar outro dia.
@@ -253,12 +266,12 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
 
       <div className="mt-6 flex flex-col gap-3">
         {program.days.map((day) => (
-          <div key={day.id} className="reg-frame p-4">
+          <div key={day.id} className="card p-4 sm:p-5">
             <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
               <div className="min-w-[7rem] flex-1">
-                <h3 className="font-semibold wrap-break-word">{day.name}</h3>
+                <h3 className="text-base font-semibold leading-snug wrap-break-word">{day.name}</h3>
                 {isActive ? (
-                  <p className="text-xs text-muted">
+                  <p className="mt-0.5 text-[13px] text-muted">
                     {exerciseCount(day.exercises.length)}
                     <DayStatus state={states.get(day.id) ?? { kind: "idle" }} suggested={false} />
                   </p>
@@ -278,16 +291,21 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
                 // Supersets (W-104): an accent rule down the members, "A1" before each name.
                 const slot = deriveGroups(list)[j];
                 return (
-                  <li key={ex.id} data-group={slot?.label} className={cn(slot && "border-l-2 border-l-accent pl-2")}>
+                  <li key={ex.id} data-group={slot?.label} className={cn(
+                      slot && "-mx-2 bg-accent-soft/40 px-2",
+                      slot?.first && "rounded-t-[var(--radius-md)]",
+                      slot?.last && "rounded-b-[var(--radius-md)]",
+                    )}
+                  >
                     {slot?.first ? (
-                      <p className="pt-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-accent">
+                      <p className="pt-2 text-[13px] font-semibold text-accent">
                         {groupRule(slot)}
                       </p>
                     ) : null}
                     <Link href={`/app/exercises/${ex.exercise.slug}`} className="group flex min-h-12 items-center gap-3 py-1.5 text-sm">
-                      <div className="relative size-9 shrink-0 overflow-hidden rounded-[3px] bg-surface-2">
+                      <div className="relative size-10 shrink-0 overflow-hidden rounded-[var(--radius-md)] bg-surface-2">
                         {ex.exercise.media?.[0]?.url ? (
-                          <Image src={ex.exercise.media[0].url} alt="" fill sizes="36px" className="object-cover" />
+                          <Image src={ex.exercise.media[0].url} alt="" fill sizes="40px" className="object-cover" />
                         ) : (
                           <div className="flex h-full items-center justify-center text-muted">
                             <GLoad className="size-4" />
@@ -297,19 +315,19 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
                       {/* Whole, however many lines: names differ at the end ("… Pegada Média" / "… Pegada
                           Aberta"), and at 320px even three lines cut GD's longer ones ("Extensão de Tríceps na
                           Corda Acima da Cabeça"). The catalog's longest name is 71 characters. */}
-                      <span className="min-w-0 flex-1 leading-snug wrap-break-word group-hover:text-accent">
+                      <span className="min-w-0 flex-1 text-[15px] leading-snug wrap-break-word group-hover:text-accent">
                         {slot ? (
-                          <span className="mr-1.5 font-mono text-[11px] font-bold text-accent">
+                          <span className="mr-1.5 font-semibold tabular-nums text-accent">
                             <span aria-hidden>{slot.label}</span>
                             <span className="sr-only">{`${slot.heading}, ${slot.position} de ${slot.size}:`}</span>
                           </span>
                         ) : null}
                         {ex.exercise.namePt}
                       </span>
-                      <span className="shrink-0 font-mono tabular-nums text-muted">
+                      <span className="shrink-0 text-[13px] font-medium tabular-nums text-muted">
                         {ex.sets}×{ex.repMin === ex.repMax ? ex.repMin : `${ex.repMin}-${ex.repMax}`}
                       </span>
-                      <GArrow className="size-3.5 shrink-0 text-muted" />
+                      <GArrow className="size-4 shrink-0 text-muted" />
                     </Link>
                   </li>
                 );

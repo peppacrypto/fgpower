@@ -405,11 +405,11 @@ test("bodyweight exercises: ✓ needs only the reps, a plank counts seconds, and
   // No load anywhere: next time measures against today's reps and times, it doesn't suggest loads.
   await expect(page.getByText(/^Primeira sessão registrada\. Na próxima, suas reps e tempos de hoje viram a\sreferência\.$/)).toBeVisible();
   await expect(page.getByText(/sugerimos suas cargas/)).toHaveCount(0);
-  const pushups = page.locator(".reg-frame").filter({ hasText: "Flexão de Braço" });
+  const pushups = page.locator(".card").filter({ hasText: "Flexão de Braço" });
   await expect(pushups.getByText(/^×\s8$/)).toBeVisible();
   await expect(pushups.getByText(/^×\s10$/)).toBeVisible();
   await expect(pushups).not.toContainText("kg");
-  const plank = page.locator(".reg-frame").filter({ hasText: "Prancha" });
+  const plank = page.locator(".card").filter({ hasText: "Prancha" });
   await expect(plank.getByText(/^20\ss$/)).toBeVisible();
   await expect(plank).not.toContainText("kg");
 
@@ -437,7 +437,7 @@ test("a loaded hold (Pinça de Anilha) speaks seconds everywhere: callout, advic
     await expectSetSaved(page, `Série ${n}`);
   }
   await finishAndSave(page);
-  const card = page.locator(".reg-frame").filter({ hasText: "Pinça de Anilha" });
+  const card = page.locator(".card").filter({ hasText: "Pinça de Anilha" });
   await expect(card.getByText(/^10\skg × 28\ss$/)).toBeVisible();
   await expect(card).toContainText("Mantenha 10 kg · segure 23\u00a0s");
   await expect(card).toContainText("Suba a carga quando segurar 30\u00a0s em todas");
@@ -476,7 +476,7 @@ test("a loaded hold (Pinça de Anilha) speaks seconds everywhere: callout, advic
   }
   await finishAndSave(page);
   await expect(page.locator("a").filter({ hasText: "PR" }).filter({ hasText: "Pinça de Anilha" })).toContainText("30\u00a0s com 10 kg");
-  await expect(page.locator(".reg-frame").filter({ hasText: "Pinça de Anilha" })).toContainText(/10\skg × 28, 25, 22\ss/);
+  await expect(page.locator(".card").filter({ hasText: "Pinça de Anilha" })).toContainText(/10\skg × 28, 25, 22\ss/);
 
   await page.goto("/app/exercises/plate-pinch/history");
   await expect(page.getByText("Último recorde de tempo")).toBeVisible();

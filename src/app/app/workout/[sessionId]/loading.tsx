@@ -7,7 +7,7 @@ import { SummarySkeleton } from "./summary/loading";
 import { EditSetsSkeleton } from "./summary/editar/loading";
 
 /** The set table's columns (set-table.tsx GRID): Série · kg · reps · RIR · ✓. */
-const GRID = "grid grid-cols-[2.25rem_minmax(0,1fr)_minmax(0,1fr)_3rem_2.75rem] items-center gap-1.5";
+const GRID = "grid grid-cols-[2.25rem_minmax(0,1fr)_minmax(0,1fr)_3rem_3rem] items-center gap-1.5";
 
 /**
  * The live workout, drawn block by block as workout-execution-client.tsx lays
@@ -45,17 +45,17 @@ function WorkoutSkeleton({ limitationsPx }: { limitationsPx: number }) {
         </div>
       </div>
 
-      <div className="mx-auto w-full max-w-3xl flex-1 px-4 py-5">
+      <div className="mx-auto w-full max-w-3xl flex-1 px-4 pb-5 pt-4">
         <LimitationsBone serverPx={limitationsPx} />
-        {/* Exercise name: text-xl, leading-tight, two lines. */}
-        <div className="mb-3 flex flex-col gap-[5px] py-0.5">
+        {/* Exercise name: 22px, leading-tight — one line for a short name, two for most. */}
+        <div className="mb-3 flex flex-col gap-[7px] py-1">
           <Bone className="h-5 w-11/12" />
-          <Bone className="h-5 w-1/2" />
+          <Bone className="h-5 w-1/2 max-[419px]:hidden" />
         </div>
         {/* ‹ · photo · sets × reps / rest · › (three lines below 352px, four below 338px) */}
         <div className="flex items-center gap-3 max-[338px]:min-h-19 min-[338px]:max-[352px]:min-h-[58px]">
           <Bone className="size-11 shrink-0" />
-          <Bone className="size-14 shrink-0" />
+          <Bone className="size-12 shrink-0" />
           <div className="min-w-0 flex-1">
             <Bone className="h-4 w-4/5" />
             <Bone className="mt-2 h-3.5 w-1/2" />
@@ -64,16 +64,16 @@ function WorkoutSkeleton({ limitationsPx }: { limitationsPx: number }) {
           <Bone className="size-11 shrink-0" />
         </div>
         {/* Ver técnica · Trocar · Pular exercício · Nota */}
-        <div className="mt-3 flex h-11 items-center gap-4">
+        <div className="mt-2 flex h-11 items-center gap-4">
           <Bone className="h-3.5 w-20" />
           <Bone className="h-3.5 w-14" />
           <Bone className="h-3.5 w-24" />
           <Bone className="h-3.5 w-10" />
         </div>
         {/* The program's note (folded to two lines). */}
-        <Bone className="mt-3 h-12 w-full" />
-        {/* "Primeiro treino" coaching / "Último treino" box. */}
-        <Bone className="mt-3 h-17 w-full max-[367px]:h-21" />
+        <Bone className="mt-3 h-[49px] w-full rounded-[var(--radius-md)]" />
+        {/* "Primeiro treino" coaching / "Último treino" box (13px, three lines; four below 367px). */}
+        <Bone className="mt-3 h-[74px] w-full rounded-[var(--radius-md)] max-[367px]:h-[92px]" />
 
         <div className="mt-4">
           {/* Aquecimento · opcional, and its one-line ramp. */}
@@ -82,13 +82,19 @@ function WorkoutSkeleton({ limitationsPx }: { limitationsPx: number }) {
               <Bone className="h-3 w-44" />
               <Bone className="h-3.5 w-20" />
             </div>
-            <Bone className="mt-[3px] h-3.5 w-4/5" />
-            <Bone className="mt-0.5 hidden h-3.5 w-1/4 max-[382px]:block" />
+            <div className="flex h-5 items-center">
+              <Bone className="h-3 w-4/5" />
+            </div>
+            <div className="hidden h-5 items-center max-[382px]:flex">
+              <Bone className="h-3 w-1/4" />
+            </div>
           </div>
           {/* Séries do treino · N */}
-          <Bone className="mb-3 h-3 w-36" />
-          <div className={`${GRID} px-1 pb-1.5 font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted`}>
-            <span>Série</span>
+          <div className="mb-1.5 flex h-[21px] items-center">
+            <Bone className="h-3.5 w-36" />
+          </div>
+          <div className={`${GRID} px-1 pb-1 text-xs font-medium text-muted`}>
+            <span className="text-center">Série</span>
             <span className="text-center">kg</span>
             <span className="text-center">reps</span>
             <span className="text-center">RIR</span>
@@ -97,11 +103,11 @@ function WorkoutSkeleton({ limitationsPx }: { limitationsPx: number }) {
           <div className="flex flex-col gap-1.5">
             {[1, 2, 3, 4].map((n) => (
               <div key={n} data-bone-row className={`${GRID} px-1 py-1`}>
-                <span className="text-center font-mono text-sm font-bold tabular-nums text-foreground/30">{n}</span>
-                <Bone className="h-11" />
-                <Bone className="h-11" />
-                <Bone className="h-11" />
-                <Bone className="size-11" />
+                <span className="text-center text-[15px] font-semibold tabular-nums text-foreground/30">{n}</span>
+                <Bone className="h-12" />
+                <Bone className="h-12" />
+                <Bone className="h-12" />
+                <Bone className="size-12" />
               </div>
             ))}
           </div>

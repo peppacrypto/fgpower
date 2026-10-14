@@ -211,13 +211,21 @@ try {
   if (!login.ok()) throw new Error(`/api/test/login answered ${login.status()}: is this a dev server?`);
   await page.goto("/onboarding");
   await page.getByLabel("Nome de exibição").fill(DEMO_NAME);
+  await page.locator("#confirm-adult").check();
   await page.getByRole("button", { name: "Continuar" }).click();
   await page.getByRole("radio", { name: /^Hipertrofia/ }).check();
   await page.getByRole("button", { name: "Continuar" }).click();
   await page.getByRole("radio", { name: /^Intermediário/ }).check();
   await page.getByLabel("Dias por semana").selectOption("5");
   await page.getByRole("button", { name: "Continuar" }).click();
+  await page.locator('input[name="healthConsent"]').check();
   await Promise.all([page.waitForURL(/\/app\/today/), page.getByRole("button", { name: "Ver meu plano" }).click()]);
+  // Onboarding enrolls a starter plan (lib/programming/auto-enroll): drop it, so GD 1 is the one plan.
+  {
+    const { id } = await one(`SELECT id FROM "user" WHERE email = $1`, [email]);
+    await db.query(`DELETE FROM "ProgramEnrollment" WHERE "userId" = $1`, [id]);
+    await db.query(`DELETE FROM "UserProgram" WHERE "userId" = $1`, [id]);
+  }
   await page.goto("/app/programs/templates/gd-1");
   await Promise.all([page.waitForURL(/\/app\/today/), page.getByRole("button", { name: "Ativar programa" }).first().click()]);
 
@@ -378,7 +386,7 @@ try {
   } else {
     // Not Today's next workout (a Monday or a weekend: see the usage note): start it from its row on the program's page.
     await page.goto(`/app/programs/${enrollment.programId}`);
-    const row = page.locator(".reg-frame").filter({ has: page.getByRole("heading", { name: target.name, exact: true }) }).first();
+    const row = page.locator(".card").filter({ has: page.getByRole("heading", { name: target.name, exact: true }) }).first();
     await Promise.all([page.waitForURL(/\/app\/workout\/[^/]+$/), row.getByRole("button", { name: "Iniciar", exact: true }).click()]);
   }
   const sessionId = new URL(page.url()).pathname.split("/").pop();
@@ -474,8 +482,10 @@ async function shoot(page, file) {
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.evaluate(async () => {
     await document.fonts.ready;
-    const inView = [...document.images].filter((img) => img.getBoundingClientRect().top < innerHeight);
-    await Promise.all(inView.map((img) => img.decode().catch(() => undefined)));
+    // Only images actually drawn: a lazy one in a hidden panel (the desktop sidebar's) never loads.
+    const inView = [...document.images].filter((img) => img.checkVisibility() && img.getBoundingClientRect().top < innerHeight);
+    const decoded = Promise.all(inView.map((img) => img.decode().catch(() => undefined)));
+    await Promise.race([decoded, new Promise((resolve) => setTimeout(resolve, 10_000))]);
   });
   const png = await page.screenshot({ animations: "disabled", caret: "hide" });
   shots.set(file, await sharp(png).png({ palette: true, colors: 256, dither: 0.5, compressionLevel: 9, effort: 10 }).toBuffer());

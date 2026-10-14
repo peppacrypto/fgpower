@@ -8,6 +8,7 @@ import {
 } from "@/lib/data/exercises";
 import { listEquipment, listMovementPatterns } from "@/lib/data/taxonomy";
 import { requireUser } from "@/lib/auth/require-user";
+import { prisma } from "@/lib/db";
 import { MUSCLE_GROUPS, MUSCLE_GROUP_LABEL } from "@/lib/constants/muscle-groups";
 import { ExerciseFilterBar } from "@/components/exercises/exercise-filter-bar";
 import { ExerciseCard } from "@/components/exercises/exercise-card";
@@ -15,7 +16,7 @@ import { hasLibraryFilters, libraryHref, parseLibraryParams } from "@/components
 import { EmptyState } from "@/components/ui/misc";
 import { Button } from "@/components/ui/button";
 import { Masthead } from "@/components/ui/masthead";
-import { GLoad } from "@/components/ui/glyph";
+import { GArrow, GLoad } from "@/components/ui/glyph";
 
 export const metadata: Metadata = { title: "Exercícios" };
 
@@ -30,7 +31,7 @@ export default async function ExerciseLibraryPage({ searchParams }: PageProps<"/
   const programIds = listActiveProgramExerciseIds(user.id);
   const onlyIds =
     state.lista === "programa" ? programIds : state.lista === "favoritos" ? listFavoriteExerciseIds(user.id) : null;
-  const [{ items, total, page, totalPages }, equipment, movementPatterns, unclassified, inProgram] = await Promise.all([
+  const [{ items, total, page, totalPages }, equipment, movementPatterns, unclassified, inProgram, catalogTotal] = await Promise.all([
     (onlyIds ?? Promise.resolve(undefined)).then((ids) =>
       listExercises({
         q: state.q,
@@ -46,6 +47,8 @@ export default async function ExerciseLibraryPage({ searchParams }: PageProps<"/
     listMovementPatterns(),
     countUnclassifiedPatterns(),
     programIds,
+    // The whole catalog, counted as the home page counts it.
+    prisma.exercise.count({ where: { isPublished: true } }),
   ]);
 
   const muscleGroups = MUSCLE_GROUPS.map((group) => ({ group, namePt: MUSCLE_GROUP_LABEL[group].pt }));
@@ -61,9 +64,10 @@ export default async function ExerciseLibraryPage({ searchParams }: PageProps<"/
           // The principles behind every exercise's "por quê" (W-050).
           <Link
             href="/app/science"
-            className="inline-flex min-h-11 items-center gap-1 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
+            className="inline-flex min-h-11 items-center gap-1.5 text-sm font-medium text-accent hover:underline"
           >
-            Ciência <span aria-hidden>↗</span>
+            Ciência
+            <GArrow className="size-3.5" />
           </Link>
         }
       />
@@ -74,6 +78,7 @@ export default async function ExerciseLibraryPage({ searchParams }: PageProps<"/
           equipment={equipment}
           movementPatterns={movementPatterns}
           total={total}
+          catalogTotal={catalogTotal}
           lists={{ program: inProgram.length > 0 }}
           unclassifiedPatterns={unclassified}
         >
@@ -100,9 +105,10 @@ export default async function ExerciseLibraryPage({ searchParams }: PageProps<"/
               )}
             </div>
           ) : (
-            <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            // A list on a phone (thumbnail, name, muscle, equipment), a grid from sm up.
+            <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3 lg:grid-cols-3 xl:grid-cols-4">
               {items.map((ex) => (
-                <ExerciseCard key={ex.id} exercise={ex} href={`${BASE}/${ex.slug}`} />
+                <ExerciseCard key={ex.id} exercise={ex} href={`${BASE}/${ex.slug}`} compact />
               ))}
             </div>
           )}
@@ -114,7 +120,7 @@ export default async function ExerciseLibraryPage({ searchParams }: PageProps<"/
                   <Link href={libraryHref(BASE, state, page - 1) as never}>Anterior</Link>
                 </Button>
               ) : null}
-              <span className="px-2 font-mono text-[11px] tabular-nums text-muted">
+              <span className="px-2 text-[13px] tabular-nums text-muted">
                 Página {page} de {totalPages}
               </span>
               {page < totalPages ? (

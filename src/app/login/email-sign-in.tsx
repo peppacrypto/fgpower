@@ -171,8 +171,8 @@ export function EmailSignIn({ next, initialEmail }: { next: string | null; initi
   const wait = Math.max(0, Math.ceil((resendAt - now) / 1000));
   return (
     <div className="flex flex-col gap-3" data-email-sent>
-      <div className="border-l-2 border-l-accent bg-surface-2 px-3.5 py-3">
-        <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em]">Verifique seu e-mail</p>
+      <div className="rounded-[var(--radius-md)] bg-accent-soft px-4 py-3">
+        <p className="text-sm font-semibold">Verifique seu e-mail</p>
         <p className="mt-1 text-sm [overflow-wrap:anywhere]">
           Enviamos um link de acesso para <strong className="font-semibold">{sentTo}</strong>. Toque no link no
           celular, ou digite o código:
@@ -202,7 +202,7 @@ export function EmailSignIn({ next, initialEmail }: { next: string | null; initi
           onChange={(e) => onCodeChange(e.target.value)}
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? errorId : undefined}
-          className="h-13 text-center font-mono text-2xl font-bold tracking-[0.35em] placeholder:text-foreground/25"
+          className="h-13 text-center text-2xl font-semibold tabular-nums tracking-[0.3em] placeholder:text-foreground/25"
         />
         {errorLine}
         <Button type="submit" variant="strong" size="lg" className="w-full" disabled={pending !== null}>

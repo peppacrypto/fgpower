@@ -1,10 +1,10 @@
 import { cn } from "@/lib/utils/cn";
 import { dateOfDayNumber, type WeekColumn } from "@/lib/data/progress-core";
-import { monoDate } from "./scale";
+import { shortDate } from "./scale";
 
 const DAY_NAMES = ["seg", "ter", "qua", "qui", "sex", "sáb", "dom"];
 /** The day grid's row labels (every other day, as a calendar margin). */
-const ROW_LABELS: Record<number, string> = { 0: "SEG", 2: "QUA", 4: "SEX" };
+const ROW_LABELS: Record<number, string> = { 0: "Seg", 2: "Qua", 4: "Sex" };
 
 /** "4 de 5" — a week's count. */
 function countText(c: WeekColumn) {
@@ -51,11 +51,11 @@ export function WeeklyTrainingChart({
   return (
     <figure className={cn("min-w-0 overflow-x-clip", className)} data-weekly-chart data-columns={n}>
       <div role="img" aria-label={summary}>
-        <div className="grid grid-cols-[2rem_minmax(0,1fr)]">
+        <div className="grid grid-cols-[2.25rem_minmax(0,1fr)]">
           {/* Bars: workouts done, the week's target as a tick. */}
-          <div aria-hidden className="relative h-16 font-mono text-[10px] leading-none tabular-nums text-muted">
-            <span className="absolute right-1.5 top-0">{maxY}</span>
-            <span className="absolute bottom-0 right-1.5">0</span>
+          <div aria-hidden className="relative h-16 text-xs leading-none tabular-nums text-muted">
+            <span className="absolute right-2 top-0">{maxY}</span>
+            <span className="absolute bottom-0 right-2">0</span>
           </div>
           <div aria-hidden className="grid h-16 items-end border-b border-border-strong" style={grid}>
             {columns.map((c) => {
@@ -66,6 +66,7 @@ export function WeeklyTrainingChart({
                   <div
                     className={cn(
                       "absolute inset-x-0 bottom-0",
+                      fine && "rounded-t-[var(--radius-sm)]",
                       c.current
                         ? "bg-accent-soft shadow-[inset_0_0_0_1px_var(--accent)]"
                         : c.neutral && !c.met
@@ -80,7 +81,7 @@ export function WeeklyTrainingChart({
                   />
                   {!(c.neutral && !c.met) ? (
                     <div
-                      className="absolute inset-x-0 h-0.5 bg-foreground/70"
+                      className="absolute inset-x-0 h-0.5 rounded-full bg-foreground/70"
                       style={{ bottom: `calc(${(Math.min(c.target, maxY) / maxY) * 100}% - 1px)` }}
                     />
                   ) : null}
@@ -93,12 +94,15 @@ export function WeeklyTrainingChart({
               setting their height: a year of weeks makes 3–5px rows, and 9px labels in the
               grid would stretch them — the square cells would then widen past their columns
               and run together. */}
-          <div aria-hidden className="relative mt-1.5 font-mono text-[9px] leading-none text-muted">
-            {Object.entries(ROW_LABELS).map(([d, label]) => (
-              <span key={d} className="absolute right-1.5 -translate-y-1/2" style={{ top: `${((Number(d) + 0.5) / 7) * 100}%` }}>
-                {label}
-              </span>
-            ))}
+          <div aria-hidden className="relative mt-1.5 text-xs leading-none text-muted">
+            {/* A year of weeks draws 3–5px rows: Monday and Friday only, so the labels never touch. */}
+            {Object.entries(ROW_LABELS)
+              .filter(([d]) => fine || d !== "2")
+              .map(([d, label]) => (
+                <span key={d} className="absolute right-2 -translate-y-1/2" style={{ top: `${((Number(d) + 0.5) / 7) * 100}%` }}>
+                  {label}
+                </span>
+              ))}
           </div>
           <div aria-hidden className="mt-1.5 grid" style={grid} data-day-grid>
             {columns.map((c) => (
@@ -112,9 +116,11 @@ export function WeeklyTrainingChart({
                       key={d}
                       className={cn(
                         // Square, at most 14px: a few wide weeks keep a small calendar, not a wall of tiles.
-                        "mx-auto aspect-square w-full max-w-3.5 rounded-[1px]",
-                        trained ? "bg-accent" : future ? (fine ? "border border-dashed border-border-strong" : "") : "bg-surface-2",
-                        today && fine && "outline-1 -outline-offset-1 outline-foreground",
+                        "mx-auto aspect-square w-full max-w-3.5",
+                        fine ? "rounded-[3px]" : "rounded-[1px]",
+                        trained ? "bg-accent" : future ? (fine ? "border border-border-strong" : "") : "bg-surface-2",
+                        // Today: an ink outline — a shape, not only a colour.
+                        today && fine && "outline-[1.5px] outline-offset-1 outline-foreground",
                       )}
                     />
                   );
@@ -124,28 +130,28 @@ export function WeeklyTrainingChart({
           </div>
 
           <span aria-hidden />
-          <div aria-hidden className="mt-2 flex items-center justify-between gap-2 font-mono text-[10px] uppercase tracking-wider text-muted">
-            <span>{monoDate(dateOfDayNumber(columns[0].monday))}</span>
-            <span>esta semana</span>
+          <div aria-hidden className="mt-2 flex items-center justify-between gap-2 text-xs tabular-nums text-muted">
+            <span>{shortDate(dateOfDayNumber(columns[0].monday))}</span>
+            <span>Esta semana</span>
           </div>
         </div>
       </div>
 
-      <p aria-hidden className="mt-2 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[10px] text-muted">
-        <span className="inline-flex items-center gap-1">
-          <span className="size-2 bg-accent" />
+      <p aria-hidden className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
+        <span className="inline-flex items-center gap-1.5">
+          <span className="size-2.5 rounded-[2px] bg-accent" />
           na meta
         </span>
-        <span className="inline-flex items-center gap-1">
-          <span className="size-2 bg-foreground/25" />
+        <span className="inline-flex items-center gap-1.5">
+          <span className="size-2.5 rounded-[2px] bg-foreground/25" />
           abaixo
         </span>
-        <span className="inline-flex items-center gap-1">
-          <span className="h-0.5 w-2.5 bg-foreground/70" />
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-0.5 w-3 rounded-full bg-foreground/70" />
           meta
         </span>
-        <span className="inline-flex items-center gap-1">
-          <span className="size-2 bg-accent-soft shadow-[inset_0_0_0_1px_var(--accent)]" />
+        <span className="inline-flex items-center gap-1.5">
+          <span className="size-2.5 rounded-[2px] bg-accent-soft shadow-[inset_0_0_0_1px_var(--accent)]" />
           esta semana
         </span>
       </p>
@@ -165,7 +171,7 @@ export function WeeklyTrainingChart({
           <tbody>
             {columns.map((c) => (
               <tr key={c.monday}>
-                <th scope="row">{monoDate(dateOfDayNumber(c.monday))}</th>
+                <th scope="row">{shortDate(dateOfDayNumber(c.monday))}</th>
                 <td>{countText(c)}</td>
                 <td>{stateText(c)}</td>
                 <td>{c.days.length > 0 ? c.days.map((d) => DAY_NAMES[d]).join(", ") : "nenhum"}</td>

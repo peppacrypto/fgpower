@@ -2,19 +2,17 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import Link from "next/link";
-import { Lettermark } from "@/components/ui/glyph";
 import { getCurrentSession } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 import { canViewActivity } from "@/lib/social/authorization";
 import { getFgGivers, hasEverGivenFg } from "@/lib/data/social";
 import { Avatar } from "@/components/ui/misc";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import type { ActivityExerciseSummary, WorkoutActivitySummary } from "@/lib/social/activity-summary";
 import { describeRecord, groupRecordsByExercise } from "@/lib/training/personal-records-core";
 import { formatSet, isTimedHold } from "@/lib/training/set-plan";
 import { formatAppDate } from "@/lib/training/week";
-import { formatDuration, formatVolume, plural } from "@/lib/utils/format";
+import { plural } from "@/lib/utils/format";
 import { profileHref } from "@/lib/social/links";
 import { BackLink } from "@/components/nav/back-link";
 import { ReportButton } from "@/components/social/report-sheet";
@@ -24,6 +22,7 @@ import { FgGivers } from "./fg-givers";
 import { NOT_FOUND_TITLE } from "@/components/ui/not-found-panel";
 import { milestoneStampOf, type MilestoneStamp } from "@/components/social/milestone-stamp";
 import { MilestoneStampDetail } from "@/components/social/milestone-stamp-card";
+import { WorkoutStats } from "@/components/social/activity-card-view";
 
 /** An exercise row of a stored summary; newer ones carry the slug and whether its reps are seconds. */
 type ExerciseRow = ActivityExerciseSummary & { slug?: string | null; timed?: boolean };
@@ -70,10 +69,10 @@ export default async function ActivityDetailPage({ params }: PageProps<"/app/act
   // The name the user chose for the app, not the one from their Google account.
   const name = activity.user.profile?.displayName?.trim() || activity.user.name;
   const header = (
-    <div className="mt-2 flex items-center gap-3">
+    <div className="mt-3 flex items-center gap-3">
       <Avatar src={activity.user.image} name={name} size={44} />
       <div className="min-w-0">
-        <p className="font-semibold [overflow-wrap:anywhere]">
+        <p className="text-[15px] font-semibold [overflow-wrap:anywhere]">
           {activity.user.username ? (
             <Link href={profileHref(activity.user.username)} className="hover:underline">
               {name}
@@ -82,7 +81,10 @@ export default async function ActivityDetailPage({ params }: PageProps<"/app/act
             name
           )}
         </p>
-        <p className="text-xs text-muted">{formatAppDate(activity.createdAt, { dateStyle: "long" })}</p>
+        <p className="text-[13px] text-muted">
+          {activity.user.username ? `@${activity.user.username} · ` : ""}
+          {formatAppDate(activity.createdAt, { dateStyle: "long" })}
+        </p>
       </div>
     </div>
   );
@@ -121,54 +123,61 @@ export default async function ActivityDetailPage({ params }: PageProps<"/app/act
       <BackLink fallbackHref="/app/feed" />
       {header}
 
-      {activity.caption ? <p className="mt-4 text-foreground/90 [overflow-wrap:anywhere]">{activity.caption}</p> : null}
+      <div className="panel mt-4 p-5 sm:p-7">
+        <h1 className="text-display text-[1.75rem] font-semibold leading-tight [overflow-wrap:anywhere] sm:text-[2rem]">
+          {summary.workoutName}
+        </h1>
+        {activity.caption ? (
+          <p className="mt-2 text-[15px] leading-relaxed text-foreground/90 [overflow-wrap:anywhere]">{activity.caption}</p>
+        ) : null}
+        <WorkoutStats
+          className="mt-3"
+          durationSeconds={summary.durationSeconds ?? null}
+          workingSets={summary.totalWorkingSets}
+          volumeKg={summary.totalVolumeKg && activity.showDetailedLoads ? summary.totalVolumeKg : null}
+        />
 
-      <Card className="mt-4">
-        <CardContent className="pt-5">
-          <h1 className="text-xl font-bold [overflow-wrap:anywhere]">{summary.workoutName}</h1>
-          <p className="mt-1 text-sm text-muted">
-            {summary.durationSeconds ? `${formatDuration(summary.durationSeconds)} · ` : ""}
-            {plural(summary.totalWorkingSets, "série de trabalho", "séries de trabalho")}
-            {summary.totalVolumeKg && activity.showDetailedLoads ? ` · ${formatVolume(summary.totalVolumeKg)} de volume` : ""}
-          </p>
-
-          {prGroups.length > 0 ? (
-            <div className="mt-4 flex flex-col gap-2">
-              {prGroups.map((g) => (
-                <div key={g.key} className="flex items-start gap-2 bg-accent-soft px-3 py-2 text-sm">
-                  <Lettermark code="PR" className="mt-0.5 size-5 shrink-0 text-[9px]" />
-                  <div className="min-w-0">
-                    <p className="font-semibold text-accent">{g.key}</p>
-                    <p className="text-xs text-foreground/80">
-                      {g.records.map((r) => describeRecord(r, !activity.showDetailedLoads)).join(" · ")}
-                    </p>
-                  </div>
+        {prGroups.length > 0 ? (
+          <ul className="mt-5 flex flex-col gap-2" aria-label="Recordes">
+            {prGroups.map((g) => (
+              <li key={g.key} className="flex items-start gap-3 rounded-[var(--radius-md)] bg-accent-soft px-4 py-3">
+                <span className="tag tag--mark mt-px shrink-0 bg-surface" aria-hidden>
+                  PR
+                </span>
+                <div className="min-w-0">
+                  <p className="text-[15px] font-semibold text-accent [overflow-wrap:anywhere]">{g.key}</p>
+                  <p className="mt-0.5 text-[13px] tabular-nums text-foreground/80">
+                    {g.records.map((r) => describeRecord(r, !activity.showDetailedLoads)).join(" · ")}
+                  </p>
                 </div>
-              ))}
-            </div>
-          ) : null}
+              </li>
+            ))}
+          </ul>
+        ) : null}
 
-          {exercises.length > 0 ? (
-            <div className="mt-4 flex flex-col gap-1.5">
+        {exercises.length > 0 ? (
+          <div className="mt-5 border-t border-border pt-4">
+            <p className="eyebrow">Exercícios</p>
+            <ul className="mt-1 divide-y divide-border">
               {exercises.map((ex, i) => (
                 // A long line ("4 séries · 100 kg × 5" on a 320px phone) drops under the name
                 // instead of squeezing it to a few letters a line.
-                <div key={i} className="flex flex-wrap items-start justify-between gap-x-3 gap-y-0.5 text-sm">
+                <li key={i} className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 py-2.5 text-[15px]">
                   <span className="min-w-0 flex-1 basis-24 [overflow-wrap:anywhere]">{ex.name}</span>
-                  <span className="ml-auto shrink-0 whitespace-nowrap font-mono tabular-nums text-muted">
+                  <span className="ml-auto shrink-0 whitespace-nowrap text-sm tabular-nums text-muted">
                     {plural(ex.workingSets, "série", "séries")}
                     {ex.bestSet && activity.showDetailedLoads
                       ? ` · ${formatSet(ex.bestSet.weightKg, ex.bestSet.reps, { timed: ex.timed ?? isTimedHold({ slug: ex.slug }) })}`
                       : ""}
                   </span>
-                </div>
+                </li>
               ))}
-            </div>
-          ) : null}
-        </CardContent>
-      </Card>
+            </ul>
+          </div>
+        ) : null}
+      </div>
 
-      <div className="mt-4 flex flex-wrap items-start gap-3">
+      <div className="mt-5 flex flex-wrap items-start gap-3">
         {viewerId ? (
           <GiveFgButton
             activityId={activity.id}

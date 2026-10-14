@@ -24,7 +24,7 @@ export default function TermsPage() {
       <p className="mt-2 text-sm text-muted">Última atualização: {POLICY_LAST_UPDATED} · Versão {POLICY_DISPLAY_VERSION}</p>
 
       {underReview ? (
-        <div className="mt-6 border-l-2 border-l-warning bg-warning-soft px-3.5 py-2.5 text-sm text-foreground/90">
+        <div className="mt-6 rounded-[var(--radius-md)] bg-warning-soft px-4 py-3 text-sm text-foreground/90">
           <strong>Em revisão jurídica.</strong> A identificação do responsável, o contato e a idade mínima ainda
           estão sendo finalizados. Para falar sobre estes Termos ou seus dados, use{" "}
           <a href="/privacidade/solicitar" className="underline">Solicitar meus dados</a>.

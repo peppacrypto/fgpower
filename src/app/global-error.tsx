@@ -34,20 +34,17 @@ export default function GlobalError({
           justifyContent: "center",
           gap: "12px",
           fontFamily: "system-ui, sans-serif",
-          background: "#0b0c0e",
-          color: "#f2f3f5",
+          background: "#f7f8f6",
+          color: "#17201b",
           padding: "24px",
           textAlign: "center",
         }}
       >
         <span
           style={{
-            fontFamily: "ui-monospace, monospace",
-            fontSize: "11px",
-            fontWeight: 700,
-            letterSpacing: "0.2em",
-            textTransform: "uppercase",
-            color: offline ? "#f5c14d" : "#ff6b68",
+            fontSize: "13px",
+            fontWeight: 500,
+            color: offline ? "#8a6300" : "#b42318",
           }}
         >
           {offline ? "Sem conexão" : "Erro"}
@@ -55,7 +52,7 @@ export default function GlobalError({
         <strong style={{ fontSize: "20px" }}>
           {offline ? "Sem sinal agora." : "FGPOWER está fora do ar no momento."}
         </strong>
-        <span style={{ color: "#9aa0aa", fontSize: "14px", maxWidth: "22rem" }}>
+        <span style={{ color: "#5e6a63", fontSize: "14px", maxWidth: "22rem" }}>
           {offline
             ? "Seus dados salvos continuam salvos. Tente de novo quando o sinal voltar."
             : "Ocorreu um erro inesperado. Tente de novo em instantes."}
@@ -64,21 +61,20 @@ export default function GlobalError({
           onClick={() => retry()}
           style={{
             marginTop: "8px",
-            background: "#c3ff4d",
-            color: "#0e1408",
+            background: "#246b4a",
+            color: "#ffffff",
             border: "none",
-            borderRadius: 0,
-            boxShadow: "inset 0 -2px 0 rgba(0,0,0,0.25)",
+            borderRadius: "10px",
             padding: "12px 22px",
             fontSize: "14px",
-            fontWeight: 700,
+            fontWeight: 600,
             cursor: "pointer",
           }}
         >
           Tentar de novo
         </button>
         {error.digest ? (
-          <span style={{ color: "#6f7988", fontSize: "11px", fontFamily: "monospace" }}>ref: {error.digest}</span>
+          <span style={{ color: "#5e6a63", fontSize: "12px" }}>ref: {error.digest}</span>
         ) : null}
       </body>
     </html>

@@ -31,7 +31,7 @@ export function OwnerLinkBanner({ sessionId }: { sessionId: string }) {
   }
 
   return (
-    <div className="border-l-2 border-l-accent bg-surface-2 px-3.5 py-3 text-sm">
+    <div className="rounded-[var(--radius-lg)] bg-accent-soft px-4 py-3 text-sm">
       <p className="font-medium">Assim o seu treino aparece para quem abre o link.</p>
       {confirming ? (
         <div role="group" aria-label="Desativar o link" className="mt-2">
@@ -61,13 +61,13 @@ export function OwnerLinkBanner({ sessionId }: { sessionId: string }) {
             ref={trigger}
             type="button"
             onClick={() => setConfirming(true)}
-            className="min-h-11 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-danger hover:underline"
+            className="min-h-11 text-sm font-semibold text-danger hover:underline"
           >
             Desativar link
           </button>
           <Link
             href={workoutSummaryHref(sessionId)}
-            className="inline-flex min-h-11 items-center font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
+            className="inline-flex min-h-11 items-center text-sm font-semibold text-accent hover:underline"
           >
             Voltar ao resumo
           </Link>

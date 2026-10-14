@@ -15,7 +15,7 @@ export default function AdminReportsLoading() {
       </div>
       <div className="mt-6 flex flex-col gap-4">
         {[0, 1].map((i) => (
-          <div key={i} className="reg-frame p-4">
+          <div key={i} className="card p-4">
             <div className="flex items-center justify-between gap-2">
               <Bone className="h-5 w-28" />
               <Bone className="h-3 w-12" />

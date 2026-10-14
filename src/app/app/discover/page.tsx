@@ -15,8 +15,7 @@ import { plural } from "@/lib/utils/format";
 
 export const metadata: Metadata = { title: "Descobrir" };
 
-const LINK =
-  "mt-1 inline-flex min-h-11 items-center font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline";
+const LINK = "mt-1 inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-accent hover:underline";
 
 export default async function DiscoverPage({ searchParams }: PageProps<"/app/discover">) {
   const [sp, user] = await Promise.all([searchParams, requireUser()]);
@@ -81,7 +80,7 @@ async function Suggestions({ viewerId }: { viewerId: string }) {
 
   return (
     <>
-      <div className="mt-6 border-l-2 border-l-border-strong bg-surface-2 px-3.5 py-3 text-sm">
+      <div className="mt-4 rounded-[var(--radius-lg)] bg-surface-2 px-4 pt-3.5 pb-1.5 text-sm">
         <p className="font-medium">Encontre amigos pelo nome ou @usuário.</p>
         <p className="mt-0.5 text-muted">Só aparecem contas com a descoberta ligada.</p>
         <Link href="/app/settings#privacidade" className={LINK}>
@@ -93,15 +92,15 @@ async function Suggestions({ viewerId }: { viewerId: string }) {
 
       <section className="mt-8" aria-labelledby="convide">
         <SectionHead id="convide" label="Convide um amigo" />
-        <div className="mt-4 border-l-2 border-l-accent bg-surface-2 px-3.5 py-3.5">
-          <p className="font-semibold">Treinar junto rende mais.</p>
+        <div className="card mt-4 p-4 sm:p-5">
+          <p className="text-base font-semibold">Treinar junto rende mais.</p>
           <p className="mt-0.5 text-sm text-muted">
             Mande seu perfil para quem treina com você — quando a pessoa entrar, é só seguir.
           </p>
           {me?.username ? (
             <>
               <ShareProfileButton username={me.username} name={me.name} className="mt-3" />
-              <p className="mt-2 break-all font-mono text-[11px] text-muted">{publicProfileLabel(me.username, origin)}</p>
+              <p className="mt-2 break-all text-[13px] text-muted">{publicProfileLabel(me.username, origin)}</p>
             </>
           ) : (
             <Link href="/app/settings#usuario" className={LINK}>

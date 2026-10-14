@@ -61,7 +61,7 @@ export function RoutineForm({ initial, activeProgram }: Props) {
             <>
               <div
                 id="daysPerWeek"
-                className="mt-1.5 flex h-11 items-center rounded-[3px] border border-border bg-surface-2 px-3 text-sm text-muted"
+                className="mt-1.5 flex h-11 items-center rounded-[var(--radius-md)] border border-border bg-surface-2 px-3.5 text-sm text-muted"
                 data-days-per-week="locked"
               >
                 {activeProgram.daysPerWeek}x/semana

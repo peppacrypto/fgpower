@@ -168,13 +168,28 @@ export function FollowButton({
     );
   } else if (state === "REQUESTED") {
     button = (
-      <Button variant="outline" size={buttonSize} disabled={loading} aria-haspopup="dialog" onClick={() => setConfirming(true)}>
+      <Button
+        variant="secondary"
+        size={buttonSize}
+        disabled={loading}
+        aria-haspopup="dialog"
+        onClick={() => setConfirming(true)}
+        className="text-muted"
+      >
         Solicitação enviada
       </Button>
     );
   } else {
     button = (
-      <Button size={buttonSize} disabled={loading} onClick={follow}>
+      // In a list (sm) every row has one: a calm outline in the action's green, not
+      // a column of filled buttons; on a profile page it is the page's one primary.
+      <Button
+        variant={size === "sm" ? "outline" : "primary"}
+        size={buttonSize}
+        disabled={loading}
+        onClick={follow}
+        className={size === "sm" ? "text-accent" : undefined}
+      >
         {followLabel ?? (isPrivate ? "Solicitar seguir" : "Seguir")}
       </Button>
     );

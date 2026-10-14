@@ -38,7 +38,7 @@ export function DeletedNotice({ show }: { show: boolean }) {
       ref={notice}
       role="status"
       tabIndex={-1}
-      className="mt-6 border-l-2 border-l-accent bg-surface-2 px-3.5 py-2.5 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+      className="mt-6 rounded-[var(--radius-md)] bg-accent-soft px-4 py-3 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
     >
       Publicação excluída. O treino continua no histórico.
     </p>

@@ -4,10 +4,8 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils/cn";
 import { ActionErrorText } from "@/components/social/session-expired";
 
-const MONO = "font-mono text-[11px] font-bold uppercase tracking-[0.14em]";
-
 /**
- * Status line under an autosaving block (Settings, the check-in): "SALVANDO…" while pending, "SALVO ✓"
+ * Status line under an autosaving block (Settings, the check-in): "Salvando…" while pending, "Salvo ✓"
  * for a few seconds after each successful save (keyed on `savedAt`, so saving
  * twice flashes twice), or the error, which stays until the next attempt.
  */
@@ -29,14 +27,14 @@ export function SaveStatus({
   if (pending) content = <span className="text-muted">Salvando…</span>;
   else if (error)
     content = (
-      <span className="font-sans text-sm font-medium normal-case tracking-normal text-danger">
+      <span className="text-sm font-medium text-danger">
         <ActionErrorText error={error} />
       </span>
     );
   else if (savedAt) content = <SavedFlash key={savedAt} idleText={idleText} />;
 
   return (
-    <p role="status" aria-live="polite" className={cn("min-h-4", MONO, className)}>
+    <p role="status" aria-live="polite" className={cn("min-h-5 text-[13px] font-medium", className)}>
       {content}
     </p>
   );

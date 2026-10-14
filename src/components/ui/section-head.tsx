@@ -1,11 +1,10 @@
 import { cn } from "@/lib/utils/cn";
 
 /**
- * Editorial section header: a wide-tracked field label, a hairline rule that
- * runs to the edge, and an optional mono count on the right. The recurring
- * structural motif of the app. The label is a real heading (an `<h2>` unless
- * `as` says otherwise) styled as a field label, so heading navigation finds
- * every section; the rule and the count stay outside it.
+ * A section's header: the section title, then an optional count and action
+ * on the right. The label is a real heading (an `<h2>` unless `as` says
+ * otherwise), so heading navigation finds every section; the count stays
+ * outside it.
  */
 export function SectionHead({
   label,
@@ -25,15 +24,14 @@ export function SectionHead({
   id?: string;
 }) {
   return (
-    <div className={cn("flex items-center gap-4", className)}>
-      {/* min-w-0: on a narrow row a long label wraps (the rule gives way first)
-          instead of pushing the count or action off the screen. */}
-      <Heading id={id} className="min-w-0 text-[11px] font-bold uppercase tracking-[0.18em] text-muted">
+    <div className={cn("flex items-baseline gap-3", className)}>
+      {/* min-w-0 + flex-1: on a narrow row a long label wraps instead of
+          pushing the count or action off the screen. */}
+      <Heading id={id} className="min-w-0 flex-1 text-[17px] font-semibold leading-snug text-foreground">
         {label}
       </Heading>
-      <span aria-hidden className="h-px flex-1 bg-border" />
       {count !== undefined ? (
-        <span className="shrink-0 whitespace-nowrap font-mono text-[11px] tabular-nums text-muted">{count}</span>
+        <span className="shrink-0 whitespace-nowrap text-[13px] tabular-nums text-muted">{count}</span>
       ) : null}
       {action}
     </div>

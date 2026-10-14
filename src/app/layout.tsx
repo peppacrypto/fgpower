@@ -1,20 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import { InstallBanner } from "@/components/pwa/install-banner";
 import { ServiceWorkerRegistration } from "@/components/pwa/service-worker-registration";
 import { ThemeScript } from "@/components/theme/theme-script";
 import { ThemeSync } from "@/components/theme/theme-sync";
 import { appOrigin } from "@/lib/app-origin";
+import { THEME_COLORS } from "@/lib/theme";
 import "./globals.css";
 
 const inter = Inter({
   variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
   display: "swap",
 });
@@ -57,14 +52,14 @@ export const viewport: Viewport = {
   viewportFit: "cover",
   // Matches --background in globals.css for each scheme.
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#fafafb" },
-    { media: "(prefers-color-scheme: dark)", color: "#0b0c0e" },
+    { media: "(prefers-color-scheme: light)", color: THEME_COLORS.light },
+    { media: "(prefers-color-scheme: dark)", color: THEME_COLORS.dark },
   ],
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="pt-BR" className={`${inter.variable} ${jetbrainsMono.variable} h-full antialiased`} suppressHydrationWarning>
+    <html lang="pt-BR" className={`${inter.variable} h-full antialiased`} suppressHydrationWarning>
       <head>
         {/* The device's theme choice, applied before the first paint (never cookies() here: every page would turn dynamic). */}
         <ThemeScript />

@@ -97,14 +97,14 @@ export default async function AdminDashboard() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold tracking-tight">Painel admin</h1>
+      <h1 className="text-display text-[1.75rem] font-semibold leading-tight">Painel admin</h1>
       <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
         {stats.map((s) => {
           const content = (
-            <Card className={s.href ? "transition-colors hover:border-accent/50" : ""}>
+            <Card className={s.href ? "is-link h-full" : "h-full"}>
               <CardContent className="pt-5">
-                <p className="text-xs font-medium text-muted">{s.label}</p>
-                <p className="mt-1 font-mono text-2xl font-bold tabular-nums">{s.value}</p>
+                <p className="text-[13px] font-medium text-muted">{s.label}</p>
+                <p className="mt-1 text-2xl font-semibold tabular-nums">{s.value}</p>
               </CardContent>
             </Card>
           );
@@ -124,19 +124,19 @@ export default async function AdminDashboard() {
           {reminders.map((s) => (
             <Card key={s.label}>
               <CardContent className="pt-5">
-                <p className="text-xs font-medium text-muted">{s.label}</p>
-                <p className="mt-1 font-mono text-2xl font-bold tabular-nums">{s.value}</p>
+                <p className="text-[13px] font-medium text-muted">{s.label}</p>
+                <p className="mt-1 text-2xl font-semibold tabular-nums">{s.value}</p>
               </CardContent>
             </Card>
           ))}
         </div>
-        <ul className="mt-4 flex flex-col gap-1 font-mono text-xs" data-reminder-status>
+        <ul className="mt-4 flex flex-col gap-1 text-[13px] tabular-nums text-muted" data-reminder-status>
           {status.map((line) => (
             <li key={line}>{line}</li>
           ))}
         </ul>
         {stale || nearBudget ? (
-          <p role="status" className="mt-3 border-l-2 border-l-danger bg-danger-soft px-3 py-2 text-sm text-danger">
+          <p role="status" className="mt-3 rounded-[var(--radius-md)] bg-danger-soft px-4 py-3 text-sm text-danger">
             {stale ? "O ciclo de lembretes parou há mais de 20 minutos — confira o serviço. " : ""}
             {nearBudget ? "Os códigos de acesso estão perto do limite diário (LOGIN_CODES_DAILY_BUDGET)." : ""}
           </p>

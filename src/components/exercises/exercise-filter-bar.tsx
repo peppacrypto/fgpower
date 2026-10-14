@@ -3,11 +3,11 @@
 import type { Route } from "next";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useOptimistic, useRef, useState, useTransition } from "react";
-import { Search, X } from "lucide-react";
+import { Search, SlidersHorizontal, X } from "lucide-react";
 import { Input, Select } from "@/components/ui/input";
 import { SectionHead } from "@/components/ui/section-head";
 import { cn } from "@/lib/utils/cn";
-import { plural } from "@/lib/utils/format";
+import { formatNumber, plural } from "@/lib/utils/format";
 import {
   DIFFICULTY_OPTIONS,
   LIBRARY_KEYS,
@@ -24,7 +24,8 @@ interface FilterOption {
 /** Quiet time after the last keystroke before the list follows the box. */
 const SEARCH_DEBOUNCE_MS = 300;
 
-const MICRO = "font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted";
+/** A control's visible label (the select names and the chip rows). */
+const LABEL = "text-[13px] font-medium text-muted";
 
 function stateOf(params: URLSearchParams): LibraryState {
   const out = {} as LibraryState;
@@ -52,6 +53,7 @@ export function ExerciseFilterBar({
   equipment,
   movementPatterns,
   total,
+  catalogTotal,
   lists,
   unclassifiedPatterns = 0,
   children,
@@ -61,6 +63,13 @@ export function ExerciseFilterBar({
   movementPatterns: FilterOption[];
   /** How many exercises the current URL lists. */
   total: number;
+  /**
+   * Every published exercise (the number the home page quotes). Browsing
+   * without a search leaves the stretches out (lib/data/exercises
+   * listExercises), so the default view lists fewer: the head says "N de M"
+   * and, on that view, why.
+   */
+  catalogTotal?: number;
   /** Signed-in shortcuts; `program` is false when no program is running. */
   lists?: { program: boolean } | null;
   /** Exercises without a movement pattern (the Movimento filter can't list them). */
@@ -186,7 +195,7 @@ export function ExerciseFilterBar({
         <label htmlFor="exercise-search" className="sr-only">
           Buscar exercício
         </label>
-        <Search aria-hidden className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted" />
+        <Search aria-hidden className="pointer-events-none absolute left-4 top-1/2 size-[18px] -translate-y-1/2 text-muted" />
         <Input
           id="exercise-search"
           name="q"
@@ -195,8 +204,9 @@ export function ExerciseFilterBar({
           onChange={(e) => type(e.target.value)}
           placeholder="Buscar exercício (ex.: supino, agachamento, tríceps)"
           autoComplete="off"
-          // one clear button: ours (the browser's own sat next to it)
-          className="pl-10 pr-11 [&::-webkit-search-cancel-button]:appearance-none"
+          // The library's main path: a taller box, 16px text everywhere. One clear
+          // button: ours (the browser's own sat next to it).
+          className="h-12 pl-11 pr-12 text-base shadow-[var(--shadow-sm)] [&::-webkit-search-cancel-button]:appearance-none"
         />
         {onFacets.map((k) => (
           <input key={k} type="hidden" name={k} value={shown[k]} />
@@ -216,7 +226,7 @@ export function ExerciseFilterBar({
               }
               document.getElementById("exercise-search")?.focus();
             }}
-            className="absolute right-0.5 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center text-muted hover:text-foreground"
+            className="absolute right-0.5 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-[var(--radius-md)] text-muted hover:text-foreground"
             aria-label="Limpar busca"
           >
             <X className="size-4" />
@@ -224,8 +234,9 @@ export function ExerciseFilterBar({
         ) : null}
       </form>
 
-      {/* gap-3: each chip's tap area reaches 6 px past it, so the rows need 12 px
-          between them or the lower row takes taps meant for the one above. */}
+      {/* gap-3: each chip's tap area reaches 4 px past it (a 36 px chip, a 44 px
+          .hit), so with 12 px between the rows a tap just under one chip never
+          lands on the row below. */}
       <div className="mt-4 flex flex-col gap-3">
         <FacetRow label="Músculo">
           <Chip on={!shown.muscleGroup} onClick={() => choose("muscleGroup", "")}>
@@ -254,14 +265,14 @@ export function ExerciseFilterBar({
 
       <div className="mt-3 flex items-end gap-2">
         <div className="min-w-0 flex-1">
-          <label htmlFor="exercise-equipment" className={MICRO}>
+          <label htmlFor="exercise-equipment" className={LABEL}>
             Equipamento
           </label>
           <Select
             id="exercise-equipment"
             value={shown.equipmentId}
             onChange={(e) => choose("equipmentId", e.target.value)}
-            className="mt-1"
+            className="mt-1.5"
           >
             <option value="">Todos</option>
             {equipment.map((e) => (
@@ -277,27 +288,30 @@ export function ExerciseFilterBar({
           aria-controls="exercise-more-filters"
           onClick={() => setMoreOpen((o) => !o)}
           className={cn(
-            "h-11 shrink-0 border-b-2 px-3.5 font-mono text-[11px] font-bold uppercase tracking-[0.12em] transition-colors",
+            "inline-flex h-11 shrink-0 items-center gap-2 rounded-[var(--radius-md)] border px-3.5 text-sm font-medium transition-colors",
             moreOpen || hiddenOn > 0
-              ? "border-b-accent bg-[var(--ink-4)] text-foreground"
-              : "border-b-foreground/50 bg-[var(--ink-3)] text-foreground hover:border-b-accent",
+              ? "border-accent bg-accent-soft text-accent"
+              : "border-border-strong bg-surface text-foreground hover:border-field",
           )}
         >
-          Mais filtros{hiddenOn > 0 ? <span className="text-accent"> · {hiddenOn}</span> : null}
+          <SlidersHorizontal aria-hidden className="size-4" />
+          <span>
+            Mais filtros{hiddenOn > 0 ? <span className="font-semibold tabular-nums"> · {hiddenOn}</span> : null}
+          </span>
         </button>
       </div>
 
       <div id="exercise-more-filters" hidden={!moreOpen} className="mt-3">
         <div className="grid grid-cols-2 gap-2">
           <div className="min-w-0">
-            <label htmlFor="exercise-pattern" className={MICRO}>
+            <label htmlFor="exercise-pattern" className={LABEL}>
               Movimento
             </label>
             <Select
               id="exercise-pattern"
               value={shown.movementPatternId}
               onChange={(e) => choose("movementPatternId", e.target.value)}
-              className="mt-1"
+              className="mt-1.5"
             >
               <option value="">Todos</option>
               {movementPatterns.map((p) => (
@@ -308,14 +322,14 @@ export function ExerciseFilterBar({
             </Select>
           </div>
           <div className="min-w-0">
-            <label htmlFor="exercise-level" className={MICRO}>
+            <label htmlFor="exercise-level" className={LABEL}>
               Nível
             </label>
             <Select
               id="exercise-level"
               value={shown.difficulty}
               onChange={(e) => choose("difficulty", e.target.value)}
-              className="mt-1"
+              className="mt-1.5"
             >
               <option value="">Todos</option>
               {DIFFICULTY_OPTIONS.map((d) => (
@@ -327,7 +341,7 @@ export function ExerciseFilterBar({
           </div>
         </div>
         {unclassifiedPatterns > 0 ? (
-          <p className="mt-2 text-xs text-muted">
+          <p className="mt-2 text-[13px] text-muted">
             Movimento lista só os exercícios já classificados:{" "}
             {plural(unclassifiedPatterns, "exercício ainda não tem", "exercícios ainda não têm")} padrão e fica
             {unclassifiedPatterns === 1 ? "" : "m"} de fora com este filtro.
@@ -336,21 +350,30 @@ export function ExerciseFilterBar({
       </div>
 
       {filtersOn ? (
-        <p className="mt-3 flex min-h-6 flex-wrap items-center gap-x-2 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted">
-          <span>{[text.trim() ? "busca" : null, facetsOn > 0 ? plural(facetsOn, "filtro", "filtros") : null].filter(Boolean).join(" + ")}</span>
+        <p className="mt-3 flex min-h-6 flex-wrap items-center gap-x-2 text-[13px] text-muted">
+          <span>{activeText(text.trim() !== "", facetsOn)}</span>
           <span aria-hidden>·</span>
-          <button type="button" onClick={clearAll} className="hit uppercase text-accent hover:underline">
+          <button type="button" onClick={clearAll} className="hit font-medium text-accent hover:underline">
             Limpar filtros
           </button>
         </p>
       ) : null}
 
       <SectionHead
-        className="mt-6"
-        // Short enough to share one row with "753 exercícios" at 320px.
+        className="mt-7"
+        // Short enough to share one row with "780 de 943 exercícios" at 320px.
         label={searching || filtersOn ? "Resultados" : "Biblioteca"}
-        count={busy ? "Buscando…" : plural(total, "exercício", "exercícios")}
+        count={busy ? "Buscando…" : countText(total, catalogTotal)}
       />
+      {/* Why the default view lists fewer than the catalog (and the home page's count). */}
+      {!filtersOn && !busy && catalogTotal !== undefined && catalogTotal > total ? (
+        <p className="mt-1 text-[13px] text-muted">
+          {catalogTotal - total === 1
+            ? "1 alongamento ou postura de mobilidade aparece só quando você busca por ele"
+            : `${plural(catalogTotal - total, "alongamento", "alongamentos")} e posturas de mobilidade aparecem só quando você busca por eles`}{" "}
+          (ex.: “alongamento”, “mobilidade”).
+        </p>
+      ) : null}
       <p aria-live="polite" className="sr-only">
         {busy ? "" : plural(total, "exercício encontrado", "exercícios encontrados")}
       </p>
@@ -365,8 +388,20 @@ export function ExerciseFilterBar({
   );
 }
 
+/** "Busca + 2 filtros": what narrows the list now. */
+function activeText(search: boolean, facets: number): string {
+  const parts = [search ? "busca" : null, facets > 0 ? plural(facets, "filtro", "filtros") : null].filter(Boolean).join(" + ");
+  return parts.charAt(0).toUpperCase() + parts.slice(1);
+}
+
+/** "780 de 943 exercícios": what this view lists, out of the whole catalog. */
+function countText(total: number, catalogTotal: number | undefined): string {
+  if (catalogTotal === undefined || catalogTotal < total) return plural(total, "exercício", "exercícios");
+  return `${formatNumber(total, 0)} de ${plural(catalogTotal, "exercício", "exercícios")}`;
+}
+
 /**
- * One facet: a mono label, then its chips in a row that scrolls sideways
+ * One facet: its label, then its chips in a row that scrolls sideways
  * inside itself on a phone. A fade on the right edge says there is more
  * (until the end is reached), and a chip picked off-screen (from a link, after
  * Back) is scrolled into view.
@@ -388,8 +423,9 @@ function FacetRow({ label, children }: { label: string; children: React.ReactNod
   }, []);
 
   return (
-    <div role="group" aria-label={label} className="flex min-w-0 items-center gap-2">
-      <span aria-hidden className={cn(MICRO, "w-16 shrink-0")}>
+    <div role="group" aria-label={label} className="flex min-w-0 items-start gap-2">
+      {/* pt-2: in line with the first row of 36px chips when the row wraps (sm up). */}
+      <span aria-hidden className={cn(LABEL, "w-16 shrink-0 pt-2")}>
         {label}
       </span>
       <div className="relative min-w-0 flex-1">
@@ -415,7 +451,11 @@ function FacetRow({ label, children }: { label: string; children: React.ReactNod
   );
 }
 
-/** A square filter chip: inked when on. Its touch target is 44px tall (.hit). */
+/**
+ * A filter chip: a white chip with a hairline; picked, it takes the soft green
+ * plate, a green border and a heavier weight (not hue alone). Its touch target
+ * is 44px tall (.hit).
+ */
 function Chip({ on, onClick, children }: { on: boolean; onClick: () => void; children: React.ReactNode }) {
   return (
     <button
@@ -423,8 +463,10 @@ function Chip({ on, onClick, children }: { on: boolean; onClick: () => void; chi
       aria-pressed={on}
       onClick={onClick}
       className={cn(
-        "hit h-8 shrink-0 whitespace-nowrap px-2.5 font-mono text-[11px] font-semibold uppercase tracking-[0.06em] transition-colors",
-        on ? "bg-foreground text-background" : "bg-surface-2 text-foreground/75 hover:bg-[var(--border)] hover:text-foreground",
+        "hit h-9 shrink-0 whitespace-nowrap rounded-[var(--radius-sm)] border px-3 text-[13px] transition-colors",
+        on
+          ? "border-accent bg-accent-soft font-semibold text-accent"
+          : "border-border bg-surface font-medium text-foreground hover:border-border-strong hover:bg-surface-2",
       )}
     >
       {children}

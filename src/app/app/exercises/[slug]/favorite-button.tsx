@@ -71,11 +71,11 @@ export function FavoriteButton({
       {error ? (
         <div
           className={cn(
-            "absolute right-0 top-full z-10 mt-1.5 flex items-start bg-surface text-xs shadow-[var(--shadow-sm)]",
+            "absolute right-0 top-full z-10 mt-1.5 flex items-start rounded-[var(--radius-md)] border border-border bg-surface text-[13px] shadow-[var(--shadow-md)]",
             expired ? "w-60" : "w-56",
           )}
         >
-          <p id={`favorite-error-${exerciseId}`} role="alert" className="min-w-0 flex-1 px-2 py-1.5 text-right text-danger">
+          <p id={`favorite-error-${exerciseId}`} role="alert" className="min-w-0 flex-1 px-3 py-2 text-right text-danger">
             <ActionErrorText error={error} />
           </p>
           {expired ? (
@@ -86,7 +86,7 @@ export function FavoriteButton({
                 setError(null);
                 heartRef.current?.focus();
               }}
-              className="flex size-11 shrink-0 items-center justify-center text-muted hover:text-foreground"
+              className="flex size-11 shrink-0 items-center justify-center rounded-[var(--radius-md)] text-muted hover:text-foreground"
             >
               <X className="size-4" aria-hidden />
             </button>

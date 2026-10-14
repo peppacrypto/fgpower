@@ -29,6 +29,12 @@ import { cn } from "@/lib/utils/cn";
 
 type Category = ProgramGroupKey | "all";
 
+/** A choice chip (category tab, filter option): a 36px pill that takes a 44px tap (.hit). */
+const CHIP =
+  "hit inline-flex h-9 items-center gap-1.5 whitespace-nowrap rounded-[var(--radius-md)] border px-3 text-sm transition-colors";
+const CHIP_OFF = "border-border bg-surface font-medium text-foreground hover:border-border-strong hover:bg-surface-2";
+const CHIP_ON = "border-accent bg-accent-soft font-semibold text-accent";
+
 /**
  * The program library: a search bar, then `children` (the user's programs and
  * the "Para você" pick — hidden while a search is active, so results sit right
@@ -106,10 +112,11 @@ export function ProtocolLibrary({
   const gdShown = showGd ? shown.filter((t) => programGroup(t) === "gd") : [];
   const rest = shown.filter((t) => programGroup(t) !== "gd");
 
-  const cardsGrid = (list: ProtocolCardData[], first = 1, className = "mt-4") => (
-    <div className={cn("grid grid-cols-[minmax(0,1fr)] gap-3 sm:grid-cols-2", className)}>
-      {list.map((item, i) => (
-        <ProtocolCard key={item.href} data={{ ...item, index: first + i }} />
+  const cardsGrid = (list: ProtocolCardData[], className = "mt-4") => (
+    // Two across once the library itself is wide enough (beside the sidebar on a tablet it isn't).
+    <div className={cn("grid grid-cols-[minmax(0,1fr)] gap-3 @xl:grid-cols-2", className)}>
+      {list.map((item) => (
+        <ProtocolCard key={item.href} data={item} />
       ))}
     </div>
   );
@@ -118,7 +125,7 @@ export function ProtocolLibrary({
 
   return (
     <>
-      <div className="relative mt-8">
+      <div className="relative mt-6">
         <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted" />
         <Input
           id="program-search"
@@ -134,7 +141,7 @@ export function ProtocolLibrary({
           <button
             type="button"
             onClick={() => setQuery("")}
-            className="absolute right-0 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center text-muted hover:text-foreground"
+            className="absolute right-0 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-[var(--radius-md)] text-muted hover:text-foreground"
             aria-label="Limpar busca"
           >
             <X className="size-4" />
@@ -144,7 +151,7 @@ export function ProtocolLibrary({
 
       {searching ? null : children}
 
-      <section aria-label={label} className={searching ? "mt-6" : "mt-12"}>
+      <section aria-label={label} className={cn("@container", searching ? "mt-6" : "mt-10")}>
         {searching ? (
           <div>
             <SectionHead
@@ -154,8 +161,8 @@ export function ProtocolLibrary({
               }
             />
             {search?.fatLoss ? <HonestLine /> : null}
-            {search?.widenedNote ? <p className="mt-3 text-xs text-muted">{search.widenedNote}</p> : null}
-            {search?.note ? <p className="mt-3 text-xs text-muted">{search.note}</p> : null}
+            {search?.widenedNote ? <p className="mt-2 text-[13px] text-muted">{search.widenedNote}</p> : null}
+            {search?.note ? <p className="mt-2 text-[13px] text-muted">{search.note}</p> : null}
             {search && search.results.length > 0 ? (
               cardsGrid(search.results)
             ) : (
@@ -170,53 +177,57 @@ export function ProtocolLibrary({
           </div>
         ) : (
           <>
-            {/* Category tabs (left, scroll) + the Filtros toggle (right, pinned). */}
-            <div className="flex items-center gap-2">
-              <div
-                role="group"
-                aria-label="Categorias"
-                className="-my-1 flex min-w-0 flex-1 gap-1.5 overflow-x-auto py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-              >
-                {tabs.map((tab) => {
-                  const selected = category === tab.key;
-                  return (
-                    <button
-                      key={tab.key}
-                      type="button"
-                      aria-pressed={selected}
-                      onClick={() => setCategory(tab.key)}
-                      className={cn(
-                        "flex h-10 shrink-0 items-center gap-1.5 px-3 font-mono text-[11px] font-bold uppercase tracking-[0.08em] transition-colors",
-                        selected
-                          ? "bg-foreground text-background"
-                          : "bg-surface-2 text-foreground/75 hover:bg-[var(--border)] hover:text-foreground",
-                      )}
-                    >
-                      {tab.short}
-                      <span className={cn("tabular-nums", selected ? "text-background/60" : "text-muted")}>
-                        {tab.count}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
+            {/* Categories: one row of tabs, scrolling sideways (edge to edge) on a phone and
+                wrapping from sm up, so none is ever cut off. */}
+            <div
+              role="group"
+              aria-label="Categorias"
+              className="-mx-4 -my-1.5 flex gap-2 overflow-x-auto px-4 py-1.5 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 [&::-webkit-scrollbar]:hidden"
+            >
+              {tabs.map((tab) => {
+                const selected = category === tab.key;
+                return (
+                  <button
+                    key={tab.key}
+                    type="button"
+                    aria-pressed={selected}
+                    onClick={() => setCategory(tab.key)}
+                    className={cn(CHIP, "shrink-0", selected ? CHIP_ON : CHIP_OFF)}
+                  >
+                    {tab.short}
+                    <span className={cn("tabular-nums", selected ? "text-accent" : "text-muted")}>{tab.count}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* What's shown — the category and how many the filters left — and the Filtros toggle. */}
+            <div className="mt-5 flex items-center justify-between gap-3">
+              <p className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                <span className="text-[17px] font-semibold leading-snug">
+                  {activeGroup ? activeGroup.label : "Todos os programas"}
+                </span>
+                <span className="text-[13px] tabular-nums text-muted">
+                  {filtersOn ? `${shown.length} de ${inCategory.length}` : plural(shown.length, "programa", "programas")}
+                </span>
+              </p>
               <button
                 type="button"
                 aria-expanded={filtersOpen}
                 aria-controls="library-filters"
                 onClick={() => setFiltersOpen((v) => !v)}
-                className={cn(
-                  "flex h-10 shrink-0 items-center gap-1.5 px-3 font-mono text-[11px] font-bold uppercase tracking-[0.1em] transition-colors",
-                  filtersOn
-                    ? "bg-accent-soft text-accent"
-                    : "bg-surface-2 text-foreground/75 hover:bg-[var(--border)] hover:text-foreground",
-                )}
+                className={cn(CHIP, "shrink-0", filtersOn ? CHIP_ON : CHIP_OFF)}
               >
-                <SlidersHorizontal className="size-3.5" aria-hidden />
+                <SlidersHorizontal className="size-4" aria-hidden />
                 Filtros
-                {filtersOn ? <span className="tabular-nums">{filterCount}</span> : null}
+                {filtersOn ? (
+                  <span className="rounded-full bg-accent px-1.5 text-xs font-semibold tabular-nums text-accent-foreground">
+                    {filterCount}
+                  </span>
+                ) : null}
               </button>
             </div>
+            {activeGroup ? <p className="mt-1 text-sm text-muted">{activeGroup.blurb}</p> : null}
 
             <div id="library-filters" hidden={!filtersOpen}>
               <FilterChips
@@ -226,26 +237,15 @@ export function ProtocolLibrary({
                 onUsePreset={canRestorePreset ? () => setFilters(preset as LibraryFilters) : null}
               />
             </div>
-
-            {/* What's shown: the category heading, and how many of it the filters left. */}
-            <p className="mt-5 flex flex-wrap items-baseline gap-x-2 gap-y-1">
-              <span className="font-mono text-[11px] font-bold uppercase tracking-[0.16em]">
-                {activeGroup ? activeGroup.label : "Todos os programas"}
-              </span>
-              <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
-                {filtersOn ? `${shown.length} de ${inCategory.length}` : plural(shown.length, "programa", "programas")}
-              </span>
-            </p>
-            {activeGroup ? <p className="mt-1 text-xs text-muted">{activeGroup.blurb}</p> : null}
             {filters.goal === "fat-loss" ? <HonestLine /> : null}
 
             {shown.length === 0 ? (
-              <div className="mt-6 border-y border-border py-6 text-center">
-                <p className="text-sm font-semibold">Nenhum programa com esses filtros.</p>
+              <div className="card mt-4 px-4 py-8 text-center">
+                <p className="text-[15px] font-semibold">Nenhum programa com esses filtros.</p>
                 <button
                   type="button"
                   onClick={() => setFilters(NO_FILTERS)}
-                  className="mt-2 inline-flex min-h-11 items-center font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
+                  className="mt-1 inline-flex min-h-11 items-center text-sm font-semibold text-accent hover:underline"
                 >
                   Limpar filtros
                 </button>
@@ -266,7 +266,7 @@ export function ProtocolLibrary({
                     />
                   </div>
                 ) : null}
-                {rest.length > 0 ? cardsGrid(rest, 1, gdShown.length > 0 ? "mt-3" : "mt-4") : null}
+                {rest.length > 0 ? cardsGrid(rest, gdShown.length > 0 ? "mt-3" : "mt-4") : null}
               </>
             )}
           </>
@@ -279,25 +279,26 @@ export function ProtocolLibrary({
 /** "Musculação preserva músculo no déficit; quem emagrece é a dieta." */
 function HonestLine() {
   return (
-    <p className="mt-4 border-l-2 border-l-accent bg-surface-2 px-3 py-2 text-xs leading-snug text-foreground/85">
+    <p className="mt-4 rounded-[var(--radius-md)] bg-accent-soft px-4 py-3 text-sm leading-snug text-foreground">
       {FAT_LOSS_NOTE} Estes programas combinam bem com um déficit calórico.
     </p>
   );
 }
 
+// The practical choice first — goal, days available, where — then the level.
 const FACETS = [
+  { key: "goal", label: "Objetivo", options: GOAL_OPTIONS },
   {
     key: "days",
-    label: "Dias",
-    // "3×" is read aloud as "3 multiplication sign": name it in words.
-    options: DAY_OPTIONS.map((d) => ({ value: d, label: `${d}×`, ariaLabel: `${d} dias por semana` })),
+    label: "Dias por semana",
+    // Read aloud as "3 dias por semana".
+    options: DAY_OPTIONS.map((d) => ({ value: d, label: `${d} dias`, ariaLabel: `${d} dias por semana` })),
   },
-  { key: "level", label: "Nível", options: LEVEL_OPTIONS },
   { key: "place", label: "Onde", options: PLACE_OPTIONS },
-  { key: "goal", label: "Objetivo", options: GOAL_OPTIONS },
+  { key: "level", label: "Nível", options: LEVEL_OPTIONS },
 ] as const;
 
-/** Four single-select mono chip rows; tapping the selected chip clears that row. */
+/** Four single-select chip rows; tapping the selected chip clears that row. */
 function FilterChips({
   filters,
   onChange,
@@ -314,14 +315,11 @@ function FilterChips({
   const canRestore = onUsePreset !== null && !fromProfile;
 
   return (
-    <div role="group" aria-label="Filtros" className="mt-3 flex flex-col gap-1.5 border-l-2 border-l-border pl-3">
+    <div role="group" aria-label="Filtros" className="card mt-3 flex flex-col gap-4 p-4 sm:p-5">
       {FACETS.map((facet) => (
-        <div key={facet.key} className="flex min-w-0 items-center gap-2">
-          <span className="w-16 shrink-0 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
-            {facet.label}
-          </span>
-          {/* Scrolls sideways inside the row on narrow phones, never the page. */}
-          <div className="-my-1 flex min-w-0 flex-1 gap-1 overflow-x-auto py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div key={facet.key} className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-start sm:gap-4">
+          <span className="shrink-0 text-[13px] font-medium text-muted sm:w-32 sm:pt-2">{facet.label}</span>
+          <div className="flex min-w-0 flex-1 flex-wrap gap-2">
             {facet.options.map((opt) => {
               const selected = filters[facet.key] === opt.value;
               return (
@@ -331,12 +329,7 @@ function FilterChips({
                   aria-pressed={selected}
                   aria-label={"ariaLabel" in opt ? opt.ariaLabel : undefined}
                   onClick={() => onChange({ ...filters, [facet.key]: selected ? null : opt.value } as LibraryFilters)}
-                  className={cn(
-                    "h-11 shrink-0 px-2.5 font-mono text-[11px] font-semibold uppercase tracking-[0.06em] transition-colors",
-                    selected
-                      ? "bg-foreground text-background"
-                      : "bg-surface-2 text-foreground/75 hover:bg-[var(--border)] hover:text-foreground",
-                  )}
+                  className={cn(CHIP, selected ? CHIP_ON : CHIP_OFF)}
                 >
                   {opt.label}
                 </button>
@@ -345,27 +338,31 @@ function FilterChips({
           </div>
         </div>
       ))}
-      <p className="mt-1 flex min-h-6 flex-wrap items-center gap-x-2 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted">
+      <p className="flex min-h-6 flex-wrap items-center gap-x-3 border-t border-border pt-3 text-[13px] text-muted">
         {fromProfile ? (
           <span>Filtrado pelo seu perfil</span>
         ) : count > 0 ? (
-          <span>{plural(count, "filtro", "filtros")}</span>
-        ) : null}
+          <span className="tabular-nums">{plural(count, "filtro", "filtros")}</span>
+        ) : (
+          <span>Nenhum filtro: mostrando todos.</span>
+        )}
         {count > 0 ? (
-          <>
-            <span aria-hidden>·</span>
-            <button type="button" onClick={() => onChange(NO_FILTERS)} className="min-h-11 px-1 uppercase text-accent hover:underline">
-              Limpar
-            </button>
-          </>
+          <button
+            type="button"
+            onClick={() => onChange(NO_FILTERS)}
+            className="inline-flex min-h-11 items-center text-sm font-semibold text-accent hover:underline"
+          >
+            Limpar
+          </button>
         ) : null}
         {canRestore ? (
-          <>
-            {count > 0 ? <span aria-hidden>·</span> : null}
-            <button type="button" onClick={onUsePreset} className="min-h-11 px-1 uppercase text-accent hover:underline">
-              Usar meu perfil
-            </button>
-          </>
+          <button
+            type="button"
+            onClick={onUsePreset}
+            className="inline-flex min-h-11 items-center text-sm font-semibold text-accent hover:underline"
+          >
+            Usar meu perfil
+          </button>
         ) : null}
       </p>
     </div>
@@ -386,24 +383,19 @@ function EmptySearch({
   grid: (list: ProtocolCardData[]) => React.ReactNode;
 }) {
   return (
-    <div className="mt-4">
-      <p className="text-sm text-muted">
+    <div className="mt-3">
+      <p className="text-[15px] text-muted">
         Nenhum programa encontrado para “{query}”. Tente o objetivo, o nível, os dias ou onde você treina:
       </p>
-      <div className="mt-3 flex flex-wrap gap-1.5">
+      <div className="mt-3 flex flex-wrap gap-2">
         {SEARCH_SUGGESTIONS.map((s) => (
-          <button
-            key={s}
-            type="button"
-            onClick={() => onPick(s)}
-            className="h-11 bg-surface-2 px-2.5 font-mono text-[11px] font-semibold uppercase tracking-[0.06em] text-foreground/80 hover:bg-[var(--border)]"
-          >
+          <button key={s} type="button" onClick={() => onPick(s)} className={cn(CHIP, CHIP_OFF)}>
             {s}
           </button>
         ))}
       </div>
       {suggestions.length > 0 ? (
-        <div className="mt-8">
+        <div className="mt-10">
           <SectionHead label={suggestionsLabel} />
           {grid(suggestions)}
         </div>

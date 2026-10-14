@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { Markdown } from "./markdown";
+import { Markdown, splitTakeaway } from "./markdown";
 
 const render = (text: string) => renderToStaticMarkup(createElement(Markdown, { text }));
 
@@ -27,5 +27,30 @@ describe("Markdown", () => {
 
   it("does not treat a line opening with bold as a bullet", () => {
     expect(render("**Dor:** reduza a carga")).toContain("<p><strong>Dor:</strong> reduza a carga</p>");
+  });
+});
+
+describe("splitTakeaway", () => {
+  it("lifts the practical paragraph out whole and keeps the rest in order", () => {
+    const text = [
+      "O RIR estima quantas repetições ainda restariam.",
+      "Um estudo de validade encontrou\ncorrelação forte.",
+      '**A abordagem da FGPOWER:** alvo de RIR 1 a 3 (apoiado pela literatura "abaixo").',
+    ].join("\n\n");
+    const { takeaway, body } = splitTakeaway(text);
+    expect(takeaway).toBe('**A abordagem da FGPOWER:** alvo de RIR 1 a 3 (apoiado pela literatura "abaixo").');
+    expect(body).toBe("O RIR estima quantas repetições ainda restariam.\n\nUm estudo de validade encontrou\ncorrelação forte.");
+  });
+
+  it("knows the 'Conclusão prática' label, with or without words before the colon", () => {
+    expect(splitTakeaway("Texto.\n\n**Conclusão prática:** descanse.").takeaway).toBe("**Conclusão prática:** descanse.");
+    expect(splitTakeaway("Texto.\n\n**Conclusão prática para quem corre:** separe.").takeaway).toBe(
+      "**Conclusão prática para quem corre:** separe.",
+    );
+  });
+
+  it("leaves a text without one as it is (a bold lead elsewhere is not a takeaway)", () => {
+    const text = "Primeiro.\n\n**As estimativas ficam menos confiáveis.** Com mais reps.";
+    expect(splitTakeaway(text)).toEqual({ takeaway: null, body: text });
   });
 });

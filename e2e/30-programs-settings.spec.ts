@@ -284,16 +284,16 @@ test("Settings: the load step, vibration and the theme are kept; the theme appli
   expect((await page.context().cookies()).find((c) => c.name === "fg-theme")?.value).toBe("dark");
   // The status bar follows the forced theme.
   const metas = page.locator('meta[name="theme-color"]');
-  for (const meta of await metas.all()) await expect(meta).toHaveAttribute("content", "#0b0c0e");
+  for (const meta of await metas.all()) await expect(meta).toHaveAttribute("content", "#0f1412");
   // …and holds through a server re-render (R5).
   await forceServerRerender(page);
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await expect(theme.getByRole("radio", { name: "Escuro" })).toHaveAttribute("aria-checked", "true");
-  for (const meta of await metas.all()) await expect(meta).toHaveAttribute("content", "#0b0c0e");
+  for (const meta of await metas.all()) await expect(meta).toHaveAttribute("content", "#0f1412");
   // A client navigation makes Next write its theme-color metas again: the status bar stays dark.
   await page.getByRole("navigation", { name: "Navegação principal" }).getByRole("link", { name: "Programas" }).click();
   await page.waitForURL(/\/app\/programs$/);
-  await expect.poll(() => metas.evaluateAll((ms) => ms.map((m) => m.getAttribute("content")).join(","))).toMatch(/^(#0b0c0e,?)+$/);
+  await expect.poll(() => metas.evaluateAll((ms) => ms.map((m) => m.getAttribute("content")).join(","))).toMatch(/^(#0f1412,?)+$/);
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
 
   // Another page, loaded fresh: dark as the HTML is parsed, before React runs.

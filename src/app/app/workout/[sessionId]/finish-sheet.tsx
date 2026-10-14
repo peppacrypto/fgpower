@@ -5,6 +5,7 @@ import { GCheck } from "@/components/ui/glyph";
 import { Button } from "@/components/ui/button";
 import { useRestoreFocus } from "@/components/ui/use-restore-focus";
 import { WorkoutActionError } from "./action-error";
+import { SheetGrip } from "@/components/workout/sheet-grip";
 
 /** A load asked about at the finish, and where its kg box is. */
 export interface LoadQuestion {
@@ -142,37 +143,38 @@ export function FinishSheet({
         <div
           onClick={(e) => e.stopPropagation()}
           // Never taller than the space below the status bar (installed PWA draws under it).
-          className="panel-raised max-h-[calc(100dvh-env(safe-area-inset-top,0px))] w-full max-w-lg overflow-y-auto overscroll-contain bg-background px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5"
+          className="sheet max-h-[calc(100dvh-env(safe-area-inset-top,0px))] w-full max-w-lg overflow-y-auto overscroll-contain px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3 sm:pt-6"
         >
-          <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent">Fim do treino</span>
-          <h2 id="finish-title" className="text-display mt-1 text-2xl font-extrabold">
+          <SheetGrip />
+          <span className="eyebrow text-accent">Fim do treino</span>
+          <h2 id="finish-title" className="text-display mt-0.5 text-2xl font-semibold">
             {recorded > 0 ? "Finalizar e salvar?" : "Nenhuma série registrada"}
           </h2>
 
           {recorded > 0 ? (
-            <ul className="mt-4 flex flex-col divide-y divide-border border-y border-border font-mono text-sm tabular-nums">
-              <li className="flex items-center justify-between py-2.5">
-                <span className="font-sans text-foreground/90">Séries do treino</span>
-                <span className="font-bold">
+            <ul className="mt-4 flex flex-col divide-y divide-border rounded-[var(--radius-lg)] border border-border bg-surface px-4 text-sm tabular-nums">
+              <li className="flex items-center justify-between py-3">
+                <span className="text-foreground">Séries do treino</span>
+                <span className="text-base font-semibold">
                   {stats.prescribedDone}
                   <span className="text-muted"> / {stats.prescribedTotal}</span>
                 </span>
               </li>
               {stats.extrasDone > 0 ? (
-                <li className="flex items-center justify-between py-2.5">
-                  <span className="font-sans text-foreground/90">Séries extras</span>
-                  <span className="font-bold">+{stats.extrasDone}</span>
+                <li className="flex items-center justify-between py-3">
+                  <span className="text-foreground">Séries extras</span>
+                  <span className="text-base font-semibold">+{stats.extrasDone}</span>
                 </li>
               ) : null}
               {stats.unconfirmed > 0 ? (
-                <li className="py-2.5 font-sans text-xs text-muted">
+                <li className="py-2.5 text-[13px] text-muted">
                   {stats.unconfirmed === 1
                     ? "1 série preenchida sem ✓ também será salva."
                     : `${stats.unconfirmed} séries preenchidas sem ✓ também serão salvas.`}
                 </li>
               ) : null}
               {untouched.length > 0 ? (
-                <li className="py-2.5 font-sans text-xs text-muted">
+                <li className="py-2.5 text-[13px] text-muted">
                   Sem registro: {untouched.slice(0, 3).join(", ")}
                   {untouched.length > 3 ? ` e mais ${untouched.length - 3}` : ""}.
                 </li>
@@ -186,9 +188,9 @@ export function FinishSheet({
 
           {stats.implausible ? (
             // Before the save button: the number is checked before it becomes a record.
-            <div id="finish-load-check" className="mt-3 border-l-2 border-l-warning! bg-warning-soft px-3 py-2" data-finish-load-check>
+            <div id="finish-load-check" className="mt-3 rounded-[var(--radius-md)] bg-warning-soft px-3.5 py-3" data-finish-load-check>
               <p className="text-sm font-semibold text-foreground">{stats.implausible.text}</p>
-              <p className="mt-0.5 text-xs text-foreground/80 wrap-break-word">
+              <p className="mt-0.5 text-[13px] text-foreground wrap-break-word">
                 {stats.implausible.where} · sem ✓ — será salva assim e pode virar recorde.
               </p>
               <div className="mt-2 flex gap-2">
@@ -217,8 +219,8 @@ export function FinishSheet({
           ) : null}
 
           {stats.incomplete > 0 ? (
-            <div className="mt-3 flex items-center justify-between gap-3 border-l-2 border-l-warning! bg-warning-soft px-3 py-2">
-              <p className="text-xs text-foreground/90">
+            <div className="mt-3 flex items-center justify-between gap-3 rounded-[var(--radius-md)] bg-warning-soft px-3.5 py-2.5">
+              <p className="text-[13px] text-foreground">
                 {stats.incomplete === 1
                   ? "1 série está incompleta (falta kg ou reps) e não será salva."
                   : `${stats.incomplete} séries estão incompletas (falta kg ou reps) e não serão salvas.`}
@@ -237,7 +239,7 @@ export function FinishSheet({
           ) : null}
 
           {stale && recorded > 0 ? (
-            <p className="mt-3 border-l-2 border-l-warning bg-warning-soft px-3 py-2 text-xs text-foreground/90">
+            <p className="mt-3 rounded-[var(--radius-md)] bg-warning-soft px-3.5 py-2.5 text-[13px] text-foreground">
               {stale.preferred ? (
                 <>
                   <span className="font-semibold">Este treino ficou aberto desde {stale.since}.</span> Salve-o no dia em que
@@ -253,7 +255,7 @@ export function FinishSheet({
           ) : null}
 
           {error ? (
-            <p role="alert" className="mt-3 border-l-2 border-l-danger! bg-danger-soft px-3 py-2 text-xs font-medium text-danger">
+            <p role="alert" className="mt-3 rounded-[var(--radius-md)] bg-danger-soft px-3.5 py-2.5 text-[13px] font-medium text-danger">
               <WorkoutActionError error={error} loginHref={loginHref} />
             </p>
           ) : null}
@@ -292,7 +294,7 @@ export function FinishSheet({
           <div className="mt-4 border-t border-border pt-3 text-center">
             {confirmDiscard ? (
               <div className="flex flex-col items-center gap-2">
-                <p className="text-xs text-muted">O treino não será salvo nem contará no programa.</p>
+                <p className="text-[13px] text-muted">O treino não será salvo nem contará no programa.</p>
                 <div className="flex gap-2">
                   <Button variant="danger" disabled={busy} onClick={onDiscard}>
                     {discarding ? "Descartando…" : "Sim, descartar"}
@@ -307,7 +309,7 @@ export function FinishSheet({
                 type="button"
                 disabled={busy}
                 onClick={() => setConfirmDiscard(true)}
-                className="min-h-11 px-3 text-xs font-medium text-muted hover:text-danger disabled:opacity-40"
+                className="min-h-11 rounded-[var(--radius-md)] px-3 text-[13px] font-medium text-muted hover:text-danger disabled:opacity-40"
               >
                 Descartar treino
               </button>

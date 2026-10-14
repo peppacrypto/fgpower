@@ -4,14 +4,12 @@ import { ChevronDown } from "lucide-react";
 import { GArrow, GCheck } from "@/components/ui/glyph";
 import { weekdayName, type WeekStripCell } from "@/lib/training/day-rotation";
 import type { WeekGuidanceView } from "@/lib/training/week-guidance";
-import { WEEKDAYS_SHORT_UPPER as WEEKDAY_SHORT } from "@/lib/utils/date-names";
+import { WEEKDAYS_SHORT_CAP as WEEKDAY_SHORT } from "@/lib/utils/date-names";
 import { formatNumber, plural, pluralWord } from "@/lib/utils/format";
 import { cn } from "@/lib/utils/cn";
 import { nudgeFits } from "./streak-nudge";
 
-const label = "text-[10px] font-bold uppercase tracking-[0.18em] text-muted";
-
-/** The weekly streak line: "4 SEMANAS SEGUIDAS · RECORDE 6" (weekly only — lib/training/streak). */
+/** The weekly streak line: "4 semanas seguidas · recorde 6" (weekly only — lib/training/streak). */
 export function streakText(current: number, best: number): string | null {
   if (current < 1) return null;
   const run = current === 1 ? "1 semana na meta" : `${current} semanas seguidas`;
@@ -86,20 +84,20 @@ export function ThisWeekCard({
       : null;
   const counted = entry?.alreadyCounts === true;
   return (
-    <div className="min-w-0 reg-frame p-5" data-week-card>
+    <div className="card flex min-w-0 flex-col p-4 sm:p-5" data-week-card>
       <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1.5">
-        <span className={cn(label, "whitespace-nowrap")}>Esta semana</span>
+        <p className="whitespace-nowrap text-base font-semibold">Esta semana</p>
         {entry && !counted ? <span className="tag tag--mark shrink-0">Semana de entrada</span> : null}
       </div>
-      <p className="mt-1.5 font-mono text-2xl font-bold tabular-nums">
+      <p className="mt-1 text-2xl font-semibold tabular-nums">
         {done}
-        <span className="text-base text-muted"> / {target}</span>
-        <span className="ml-2 align-middle font-sans text-[10px] font-bold uppercase tracking-wider text-muted">
-          {pluralWord(target, "treino", "treinos")}
-        </span>
+        <span className="text-muted"> / {target}</span>
+        <span className="ml-1.5 text-sm font-normal text-muted">{pluralWord(target, "treino", "treinos")}</span>
       </p>
 
-      <ol className="mt-3 grid grid-cols-7 gap-1" aria-label="Dias desta semana">
+      {/* Done: filled with a check. Planned: an outline. Rest: a quiet plate. Today: its weekday
+          set in bold and a dot under the cell — never told by colour alone. */}
+      <ol className="mt-4 grid grid-cols-7 gap-1.5" aria-label="Dias desta semana">
         {strip.map((cell) => {
           const state = cell.done ? "treino feito" : cell.planned ? "dia de treino" : "descanso";
           return (
@@ -108,13 +106,10 @@ export function ThisWeekCard({
               aria-label={`${weekdayName(cell.weekday)}${cell.today ? " (hoje)" : ""}: ${state}`}
               aria-current={cell.today ? "date" : undefined}
               data-day-state={cell.done ? "done" : cell.planned ? "planned" : "rest"}
-              className="flex min-w-0 flex-col items-center gap-1"
+              className="flex min-w-0 flex-col items-center gap-1.5"
             >
               <span
-                className={cn(
-                  "font-mono text-[9px] font-bold tracking-[0.06em] min-[360px]:text-[10px]",
-                  cell.today ? "text-foreground" : "text-muted",
-                )}
+                className={cn("text-xs leading-none", cell.today ? "font-semibold text-foreground" : "text-muted")}
                 aria-hidden
               >
                 {WEEKDAY_SHORT[cell.weekday]}
@@ -122,37 +117,36 @@ export function ThisWeekCard({
               <span
                 aria-hidden
                 className={cn(
-                  "flex h-8 w-full items-center justify-center rounded-[3px]",
+                  "flex h-9 w-full items-center justify-center rounded-[var(--radius-sm)]",
                   cell.done
                     ? "bg-accent text-accent-foreground"
                     : cell.planned
-                      ? cn("border-2 bg-surface", cell.past ? "border-foreground/25!" : "border-foreground/50!")
+                      ? cn("border-[1.5px] bg-surface", cell.past ? "border-border-strong" : "border-field")
                       : "bg-surface-2",
-                  // Today: an inked keel under the cell.
-                  cell.today && "shadow-[inset_0_-3px_0_var(--foreground)]",
                 )}
               >
-                {cell.done ? <GCheck className="size-3.5" /> : null}
+                {cell.done ? <GCheck className="size-4" /> : null}
               </span>
+              <span aria-hidden className={cn("size-1 rounded-full", cell.today ? "bg-foreground" : "bg-transparent")} />
             </li>
           );
         })}
       </ol>
 
       {streakLine || nudge || entry ? (
-        <div className="mt-3 flex flex-col gap-0.5">
+        <div className="mt-2 flex flex-col gap-1">
           {streakLine ? (
-            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-accent" data-streak>
+            <p className="text-sm font-semibold text-accent" data-streak>
               {streakLine}
             </p>
           ) : null}
-          {nudge ? <p className="text-xs text-muted">{nudge}.</p> : null}
+          {nudge ? <p className="text-[13px] text-muted">{nudge}.</p> : null}
           {counted ? (
-            <p className="text-xs text-muted" data-week-counted>
+            <p className="text-[13px] text-muted" data-week-counted>
               {programName ?? "O programa"} começa na semana que vem.
             </p>
           ) : entry ? (
-            <p className="text-xs text-muted">
+            <p className="text-[13px] text-muted">
               {entry.daysLeft === 1 ? "Último dia" : `${entry.daysLeft} dias restantes`} · o que der nesta semana
               {durationWeeks ? ` fica fora das ${durationWeeks} semanas do programa` : " não conta na duração do programa"}.
             </p>
@@ -160,22 +154,19 @@ export function ThisWeekCard({
         </div>
       ) : null}
 
-      <div className="mt-1.5 flex items-center justify-between gap-3">
-        <span className="text-[10px] uppercase tracking-wider text-muted">treinos concluídos</span>
-        {/* Every past workout and the calendar live in the history. */}
-        <Link
-          href="/app/history"
-          className="-my-2.5 inline-flex items-center gap-1 py-2.5 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
-        >
-          Histórico
-          <GArrow className="size-3" />
-        </Link>
-      </div>
+      {/* Every past workout and the calendar live in the history. */}
+      <Link
+        href="/app/history"
+        className="-mb-2 mt-auto inline-flex min-h-11 items-center gap-1 self-start pt-1 text-sm font-medium text-accent hover:underline"
+      >
+        Histórico
+        <GArrow className="size-3" />
+      </Link>
     </div>
   );
 }
 
-/** "SEMANA 5 DE 13 · RIR ALVO 1", "SEMANA DE ENTRADA", "… · SEMANA DE TESTE", "… · DELOAD" — as its parts. */
+/** "Semana 5 de 13 · RIR alvo 1", "Semana de entrada", "… · Semana de teste", "… · Deload" — as its parts. */
 export function weekLine(p: {
   week: { kind: "entry" } | { kind: "week"; week: number };
   durationWeeks: number | null;
@@ -228,24 +219,24 @@ export function ProgramCard({
   const current = week.kind === "entry" ? 0 : Math.min(week.week, durationWeeks ?? week.week);
   const science = guidance?.deload || guidance?.test ? "/app/science/deloads" : "/app/science/rir";
   return (
-    <div className="min-w-0 reg-frame p-5" data-program-card>
+    <div className="card min-w-0 p-4 sm:p-5" data-program-card>
       <div className="flex items-baseline justify-between gap-3">
-        <span className={label}>Programa</span>
+        <span className="eyebrow">Programa</span>
         {series ? (
-          <span className="shrink-0 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted">
+          <span className="shrink-0 text-[13px] tabular-nums text-muted">
             Bloco {series.index} de {series.total}
           </span>
         ) : null}
       </div>
       <Link
         href={`/app/programs/${programId}`}
-        className="group mt-1.5 flex items-center gap-1.5 text-sm font-semibold hover:text-accent"
+        className="group mt-0.5 flex items-center gap-1.5 text-base font-semibold hover:text-accent"
       >
         <span className="line-clamp-2 min-w-0 wrap-break-word">{name}</span>
         <GArrow className="size-3 shrink-0 text-muted transition-transform group-hover:translate-x-0.5" />
       </Link>
       {/* Each part stays whole; the line breaks at the separator (320px: "Semana 13 de 13 ·" / "Semana de teste"). */}
-      <p className="mt-3 font-mono text-[11px] font-bold uppercase tracking-[0.12em]" data-week-line>
+      <p className="mt-3 text-sm font-medium tabular-nums" data-week-line>
         {weekLine({ week, durationWeeks, guidance }).map((part, i) => (
           <Fragment key={part}>
             {i > 0 ? " · " : null}
@@ -259,15 +250,15 @@ export function ProgramCard({
             <span
               key={i}
               className={cn(
-                "h-1 flex-1 rounded-full",
-                i < current - 1 ? "bg-accent" : i === current - 1 ? "bg-foreground" : "bg-surface-2",
+                "h-1.5 flex-1 rounded-full",
+                i < current - 1 ? "bg-accent" : i === current - 1 ? "bg-accent/45" : "bg-surface-2",
               )}
             />
           ))}
         </div>
       ) : null}
       {progress && week.kind !== "entry" ? (
-        <p className="mt-2 text-xs text-muted">
+        <p className="mt-2 text-[13px] tabular-nums text-muted">
           {progress.plannedSessions
             ? `${progress.sessionsDone} de ${progress.plannedSessions} treinos`
             : plural(progress.sessionsDone, "treino", "treinos")}
@@ -276,15 +267,15 @@ export function ProgramCard({
 
       {guidance && (guidance.notePt || guidance.setsNotePt) ? (
         <details className="group/week mt-3 border-t border-border pt-1" data-week-guidance>
-          <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-xs font-semibold text-accent [&::-webkit-details-marker]:hidden">
+          <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-sm font-semibold text-accent [&::-webkit-details-marker]:hidden">
             Instruções da semana
-            <ChevronDown className="size-3.5 shrink-0 transition-transform group-open/week:rotate-180" aria-hidden />
+            <ChevronDown className="size-4 shrink-0 text-muted transition-transform group-open/week:rotate-180" aria-hidden />
           </summary>
-          <div className="flex flex-col gap-2 pb-1 text-xs leading-relaxed text-foreground/90">
+          <div className="flex flex-col gap-2 pb-1 text-sm leading-relaxed text-foreground/90">
             {guidance.notePt ? <p>{guidance.notePt}</p> : null}
             {guidance.setsNotePt ? (
               <p>
-                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted">Séries · </span>
+                <span className="font-medium text-muted">Séries · </span>
                 {guidance.setsNotePt}
               </p>
             ) : null}
@@ -298,7 +289,7 @@ export function ProgramCard({
       {measureLink ? (
         <Link
           href="/app/progress/body#medidas"
-          className="-mb-2 inline-flex min-h-11 items-center gap-1 text-xs font-semibold text-accent hover:underline"
+          className="-mb-2 inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-accent hover:underline"
           data-measure-link
         >
           Registrar medidas

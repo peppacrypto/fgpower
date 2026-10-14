@@ -23,7 +23,7 @@ export interface EditableExercise {
 
 type Row = { weight: string; reps: string; rir: string; removed: boolean };
 
-const GRID = "grid grid-cols-[2.25rem_minmax(0,1fr)_minmax(0,1fr)_3rem_2.75rem] items-center gap-1.5";
+const GRID = "grid grid-cols-[2.25rem_minmax(0,1fr)_minmax(0,1fr)_3rem_3rem] items-center gap-1.5";
 
 /** A Next.js navigation thrown through an action (the save's redirect to the summary). */
 function isNavigation(err: unknown) {
@@ -129,16 +129,15 @@ export function EditSetsForm({
 
   return (
     <div className="mt-6 flex flex-col gap-6">
-      {exercises.map((ex, i) => (
+      {exercises.map((ex) => (
         <section key={ex.logId} aria-labelledby={`edit-${ex.logId}`}>
-          <div className="flex items-baseline gap-3 border-b border-border pb-1.5">
-            <span className="w-5 shrink-0 font-mono text-xs text-muted">{String(i + 1).padStart(2, "0")}</span>
-            <h2 id={`edit-${ex.logId}`} className="min-w-0 flex-1 text-sm font-semibold leading-snug wrap-break-word">
+          <div className="flex items-baseline gap-3">
+            <h2 id={`edit-${ex.logId}`} className="min-w-0 flex-1 text-base font-semibold leading-snug wrap-break-word">
               {ex.name}
             </h2>
           </div>
-          <div className={cn(GRID, "px-1 pb-1.5 pt-2 font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted")}>
-            <span>Série</span>
+          <div className={cn(GRID, "px-1 pb-1 pt-2 text-xs font-medium text-muted")}>
+            <span className="text-center">Série</span>
             <span className="text-center">kg</span>
             <span className="text-center">{ex.timed ? "seg" : "reps"}</span>
             <span className="text-center">RIR</span>
@@ -164,17 +163,18 @@ export function EditSetsForm({
                   placeholder={field === "rir" ? "–" : undefined}
                   onChange={(e) => change(s.id, { [field]: e.target.value })}
                   className={cn(
-                    "h-11 w-full min-w-0 rounded-[3px] border bg-surface px-1 text-center font-mono text-base font-semibold tabular-nums placeholder:font-normal placeholder:text-muted disabled:opacity-40",
-                    fieldBad(field) ? "border-2 border-warning!" : "border-foreground/50!",
+                    "h-12 w-full min-w-0 rounded-[var(--radius-md)] border bg-surface px-1 text-center text-lg font-semibold tabular-nums placeholder:font-normal placeholder:text-muted disabled:opacity-40",
+                    field === "rir" && "text-base",
+                    fieldBad(field) ? "border-2 border-warning" : "border-field",
                   )}
                 />
               );
               return (
                 <div key={s.id} data-edit-row={s.id}>
-                  <div className={cn(GRID, "px-1 py-1", row.removed && "bg-surface-2")}>
+                  <div className={cn(GRID, "rounded-[var(--radius-md)] px-1 py-1", row.removed && "bg-surface-2")}>
                     <span
                       className={cn(
-                        "text-center font-mono text-sm font-bold tabular-nums",
+                        "text-center text-[15px] font-semibold tabular-nums",
                         s.label.startsWith("E") ? "text-warning" : "text-foreground",
                         row.removed && "line-through opacity-50",
                       )}
@@ -191,7 +191,7 @@ export function EditSetsForm({
                       aria-pressed={row.removed}
                       aria-label={row.removed ? `Manter ${s.name.toLowerCase()}` : `Tirar ${s.name.toLowerCase()}`}
                       className={cn(
-                        "flex size-11 items-center justify-center rounded-[3px] border",
+                        "flex size-12 items-center justify-center rounded-[var(--radius-md)] border transition-colors",
                         row.removed ? "border-accent text-accent" : "border-border text-muted hover:border-danger hover:text-danger",
                       )}
                     >
@@ -199,11 +199,11 @@ export function EditSetsForm({
                     </button>
                   </div>
                   {row.removed ? (
-                    <p className="px-1 pt-0.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted">
+                    <p className="px-1 pt-0.5 text-[13px] font-medium text-muted">
                       Sai do treino ao salvar
                     </p>
                   ) : reason ? (
-                    <p id={msgId} className="px-1 pt-0.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-warning">
+                    <p id={msgId} className="px-1 pt-0.5 text-[13px] font-medium text-warning">
                       {reason === "rir" ? "RIR inválido" : "Falta kg ou reps"}
                     </p>
                   ) : null}
@@ -215,7 +215,7 @@ export function EditSetsForm({
       ))}
 
       {error ? (
-        <p role="alert" className="border-l-2 border-l-danger! bg-danger-soft px-3 py-2 text-xs font-medium text-danger">
+        <p role="alert" className="rounded-[var(--radius-md)] bg-danger-soft px-3 py-2.5 text-[13px] font-medium text-danger">
           <ActionErrorText error={error} />
         </p>
       ) : null}

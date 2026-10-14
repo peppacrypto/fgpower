@@ -14,7 +14,7 @@ const pct = (n: number) => `${(Math.min(n, SCALE) / SCALE) * 100}%`;
 /**
  * "Volume semanal": weekly sets per muscle, live while the program is built
  * (the program page's warnings only showed after leaving the editor). Folded
- * to one sticky line ("Volume semanal · 3 abaixo"); open, a mono bar per
+ * to one quiet sticky bar ("Volume semanal · 3 abaixo"); open, a bar per
  * muscle against the 10–20 guide band. A muscle below the band (or with no
  * sets) is a button: it opens the picker filtered to that muscle. Only the
  * folded line sticks: open, the panel stays in the page's flow (sticky, it
@@ -50,8 +50,9 @@ export function VolumeStrip({
       ref={ref}
       aria-label="Volume semanal"
       className={cn(
-        "z-20 -mx-4 mt-4 scroll-mt-[env(safe-area-inset-top,0px)] border-y border-border bg-background px-4 sm:-mx-6 sm:px-6",
-        !open && "sticky top-[env(safe-area-inset-top,0px)]",
+        "z-20 mt-4 scroll-mt-[calc(env(safe-area-inset-top,0px)+0.5rem)] rounded-[var(--radius-lg)] border border-border bg-surface px-4",
+        // Folded, it floats a little below the top edge while the page scrolls under it.
+        !open && "sticky top-[calc(env(safe-area-inset-top,0px)+0.5rem)] shadow-[var(--shadow-sm)]",
       )}
       data-testid="volume-strip"
     >
@@ -60,30 +61,25 @@ export function VolumeStrip({
         aria-expanded={open}
         aria-controls="volume-panel"
         onClick={() => setOpen((o) => !o)}
-        className="flex min-h-11 w-full items-center gap-3 text-left"
+        className="flex min-h-11 w-full items-center gap-2.5 text-left"
       >
-        <span className="shrink-0 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted">Volume semanal</span>
+        <span className="shrink-0 text-sm font-semibold">Volume semanal</span>
         <MiniBars rows={volume.rows} />
-        <span
-          className={cn(
-            "ml-auto truncate font-mono text-[10px] font-bold uppercase tracking-[0.1em]",
-            flagged ? "text-warning" : "text-muted",
-          )}
-        >
+        <span className={cn("ml-auto truncate text-[13px] font-medium tabular-nums", flagged ? "text-warning" : "text-muted")}>
           {summary}
         </span>
         <ChevronDown className={cn("size-4 shrink-0 text-muted transition-transform", open && "rotate-180")} aria-hidden />
       </button>
 
       {open ? (
-        <div id="volume-panel" className="max-h-[55dvh] overflow-y-auto overscroll-contain pb-3">
-          <p className="text-xs text-muted">
+        <div id="volume-panel" className="max-h-[55dvh] overflow-y-auto overscroll-contain border-t border-border pb-4 pt-3">
+          <p className="text-[13px] leading-snug text-muted">
             Séries por semana (as de apoio contam metade), contra a faixa de {VOLUME_GUIDE.min}–{VOLUME_GUIDE.max} para
             hipertrofia. É uma orientação, não uma regra.
             {volume.unknown > 0 ? " Calculando alguns exercícios…" : null}
           </p>
           {dayFull ? (
-            <p className="mt-2 border-l-2 border-l-warning pl-2 text-xs text-foreground/85">
+            <p className="mt-2 rounded-[var(--radius-md)] bg-warning-soft px-3 py-2 text-[13px] leading-snug text-foreground">
               “{dayFull}” está cheio. Abra outro dia para adicionar exercícios.
             </p>
           ) : null}
@@ -95,10 +91,11 @@ export function VolumeStrip({
             ))}
           </ul>
           {notes.length > 0 ? (
-            <ul className="mt-2 flex flex-col gap-1 border-t border-border pt-2 text-xs text-foreground/85">
+            <ul className="mt-3 flex flex-col gap-1.5 border-t border-border pt-3 text-[13px] leading-snug text-foreground">
               {notes.map((n) => (
-                <li key={n} className="border-l-2 border-l-border-strong pl-2">
-                  {n}
+                <li key={n} className="flex gap-2">
+                  <span aria-hidden className="mt-[0.45rem] size-1.5 shrink-0 rounded-full bg-border-strong" />
+                  <span className="min-w-0">{n}</span>
                 </li>
               ))}
             </ul>
@@ -116,7 +113,10 @@ function MiniBars({ rows }: { rows: VolumeRow[] }) {
       {rows.map((r) => (
         <span
           key={r.key}
-          className={cn("w-[3px]", r.status === "ok" ? "bg-accent" : r.status === "none" ? "bg-border" : "bg-warning")}
+          className={cn(
+            "w-[3px] rounded-full",
+            r.status === "ok" ? "bg-accent" : r.status === "none" ? "bg-border-strong" : "bg-warning",
+          )}
           style={{ height: `${Math.max(2, (Math.min(r.sets, SCALE) / SCALE) * 16)}px` }}
         />
       ))}
@@ -136,24 +136,24 @@ function MuscleRow({ row, onAdd }: { row: VolumeRow; onAdd: (() => void) | null 
   const spoken = muscleRowLabel(row);
   const body = (
     <>
-      <span className="w-24 shrink-0 truncate text-left text-sm">{row.label}</span>
-      <span className="relative h-2.5 min-w-0 flex-1 bg-surface-2" aria-hidden>
+      <span className="w-[5.5rem] shrink-0 truncate text-left text-sm">{row.label}</span>
+      <span className="relative h-2 min-w-0 flex-1 overflow-hidden rounded-full bg-surface-2" aria-hidden>
         {/* the 10–20 guide band */}
         <span
-          className="absolute inset-y-0 bg-accent-soft"
+          className="absolute inset-y-0 bg-[color-mix(in_oklab,var(--accent)_16%,transparent)]"
           style={{ left: pct(VOLUME_GUIDE.min), width: `calc(${pct(VOLUME_GUIDE.max)} - ${pct(VOLUME_GUIDE.min)})` }}
         />
         <span
-          className={cn("absolute inset-y-0.5 left-0", row.status === "ok" ? "bg-accent" : "bg-warning")}
+          className={cn("absolute inset-y-0 left-0 rounded-full", row.status === "ok" ? "bg-accent" : "bg-warning")}
           style={{ width: pct(row.sets) }}
         />
       </span>
-      <span className="w-9 shrink-0 text-right font-mono text-sm font-bold tabular-nums">{value}</span>
-      <span className="flex w-16 shrink-0 items-center justify-end gap-1 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-muted">
+      <span className="w-8 shrink-0 text-right text-sm font-semibold tabular-nums">{value}</span>
+      <span className="flex w-[5.25rem] shrink-0 items-center justify-end gap-1 text-[13px] font-medium text-muted">
         {low ? (
           <>
-            <Plus className="size-3 text-accent" aria-hidden />
-            <span className="text-accent">Adic.</span>
+            <Plus className="size-3.5 text-accent" aria-hidden />
+            <span className="text-accent">Adicionar</span>
           </>
         ) : (
           <span className={row.status === "high" || below ? "text-warning" : undefined}>{below ? "abaixo" : state}</span>
@@ -166,12 +166,12 @@ function MuscleRow({ row, onAdd }: { row: VolumeRow; onAdd: (() => void) | null 
       type="button"
       onClick={onAdd ?? undefined}
       aria-label={`${spoken}. Adicionar exercícios de ${row.label.toLowerCase()}`}
-      className="flex min-h-11 w-full items-center gap-2.5 hover:bg-[var(--ink-2)]"
+      className="-mx-2 flex min-h-11 w-[calc(100%+1rem)] items-center gap-2.5 rounded-[var(--radius-md)] px-2 hover:bg-[var(--ink-2)]"
     >
       {body}
     </button>
   ) : (
-    <div className="flex min-h-9 items-center gap-2.5" aria-label={spoken} role="group">
+    <div className="flex min-h-10 items-center gap-2.5" aria-label={spoken} role="group">
       {body}
     </div>
   );

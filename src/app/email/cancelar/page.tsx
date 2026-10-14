@@ -16,8 +16,6 @@ export async function generateMetadata({ searchParams }: PageProps<"/email/cance
   return { title, robots: { index: false, follow: false }, referrer: "no-referrer" };
 }
 
-const KICKER = "font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-muted";
-
 /**
  * The digest's "Parar de receber" link (W-017): a signed token, no sign-in.
  * Opening it changes nothing (mail scanners open links); the button does,
@@ -32,12 +30,12 @@ export default async function CancelDigestPage({ searchParams }: PageProps<"/ema
   return (
     <MarketingShell>
       <div className="mx-auto max-w-md px-4 py-12 sm:py-16">
-        <div className="reg-frame p-6 sm:p-8">
-          <p className={KICKER}>E-mail</p>
+        <div className="panel p-6 sm:p-8">
+          <p className="eyebrow">E-mail</p>
           {!state ? (
             <>
-              <h1 className="text-display mt-2 text-2xl font-extrabold">Link inválido ou expirado</h1>
-              <p className="mt-2 text-sm text-muted">Gerencie seus e-mails em Configurações → Lembretes.</p>
+              <h1 className="text-display mt-1 text-2xl font-semibold leading-tight">Link inválido ou expirado</h1>
+              <p className="mt-2 text-[15px] leading-relaxed text-muted">Gerencie seus e-mails em Configurações → Lembretes.</p>
               <Button asChild variant="strong" size="lg" className="mt-6 w-full">
                 <Link href="/login?next=%2Fapp%2Fsettings">Entrar</Link>
               </Button>
@@ -45,12 +43,12 @@ export default async function CancelDigestPage({ searchParams }: PageProps<"/ema
           ) : state.subscribed ? (
             <>
               {done === "reativado" ? (
-                <p role="status" className="mt-2 border-l-2 border-l-success bg-surface-2 px-3 py-2 text-sm">
+                <p role="status" className="mt-2 rounded-[var(--radius-md)] bg-success-soft px-4 py-3 text-sm">
                   Resumo reativado. Ele volta na sua próxima semana de treino.
                 </p>
               ) : null}
-              <h1 className="text-display mt-2 text-2xl font-extrabold">Parar de receber o resumo semanal?</h1>
-              <p className="mt-2 text-sm text-muted">
+              <h1 className="text-display mt-1 text-2xl font-semibold leading-tight">Parar de receber o resumo semanal?</h1>
+              <p className="mt-2 text-[15px] leading-relaxed text-muted">
                 Você não vai mais receber o resumo das suas semanas de treino por e-mail. Lembretes no celular não mudam.
               </p>
               <form action={unsubscribeDigest} className="mt-6">
@@ -62,7 +60,7 @@ export default async function CancelDigestPage({ searchParams }: PageProps<"/ema
             </>
           ) : (
             <>
-              <h1 className="text-display mt-2 text-2xl font-extrabold">
+              <h1 className="text-display mt-1 text-2xl font-semibold leading-tight">
                 Pronto. Você não vai mais receber o resumo semanal.
               </h1>
               {state.canResubscribe ? (
@@ -82,7 +80,7 @@ export default async function CancelDigestPage({ searchParams }: PageProps<"/ema
           ) : null}
           {state ? (
             <p className="mt-6 text-sm">
-              <Link href="/app/settings#lembretes" className="font-semibold text-accent underline decoration-2 underline-offset-[3px]">
+              <Link href="/app/settings#lembretes" className="font-semibold text-accent underline decoration-1 underline-offset-[3px]">
                 Gerenciar lembretes
               </Link>
             </p>

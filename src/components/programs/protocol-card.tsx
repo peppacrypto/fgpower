@@ -1,112 +1,66 @@
 import Link from "next/link";
 import { GArrow } from "@/components/ui/glyph";
-import { GOAL_LABEL, EXPERIENCE_LABEL, STYLE_LABEL, GOAL_HUE, EQUIPMENT_SHORT_LABEL } from "@/lib/constants/program-labels";
+import { GOAL_LABEL, EXPERIENCE_LABEL, GOAL_HUE, EQUIPMENT_SHORT_LABEL } from "@/lib/constants/program-labels";
 import type { CatalogItem } from "@/lib/programming/catalog";
-import { dayTokens } from "@/lib/programming/day-tokens";
 import { splitSeriesTagline } from "@/lib/programming/gd-series";
-import { pluralWord } from "@/lib/utils/format";
+import { plural, pluralWord } from "@/lib/utils/format";
 
 export interface ProtocolCardData extends CatalogItem {
-  /** The oversized numeral; null = none (a card shown ahead of a numbered list). */
-  index: number | null;
+  /** Kept for callers that still number their lists; the card no longer prints it. */
+  index?: number | null;
   href: string;
   /** Tag on the featured card: "Para você" (top recommendation) or "Destaque" (flagship, logged out). */
   mark?: string | null;
 }
 
-/** A program rendered as a "protocol sheet": a hue-coded heavy top-rule "channel"
- * cap (not a boxed border), an oversized mono index, a split-map of its days, and
- * mono spec stats. Flat — grouping reads from the rule + tonal hover, no border/shadow. */
+/**
+ * The weekly commitment, the line people compare programs by:
+ * "3 dias/semana · ~60 min · 8 semanas".
+ */
+export function commitmentLine(t: Pick<CatalogItem, "daysPerWeek" | "sessionMinutes" | "durationWeeks">): string {
+  return [
+    `${t.daysPerWeek} ${pluralWord(t.daysPerWeek, "dia", "dias")}/semana`,
+    `~${t.sessionMinutes} min`,
+    plural(t.durationWeeks, "semana", "semanas"),
+  ].join(" · ");
+}
+
+/**
+ * A program in the library, built for comparing at a glance: its name (and a
+ * "Destaque" / "Para você" mark), one line on what it builds, the weekly
+ * commitment, then — quieter — its goal (a small colored dot), level and
+ * where it's trained. The full session structure lives on the program's page.
+ */
 export function ProtocolCard({ data }: { data: ProtocolCardData }) {
   const hue = GOAL_HUE[data.goal] ?? GOAL_HUE.GENERAL_FITNESS;
-  // A GD block's tagline leads with what it builds; its place in the series goes to a mono line.
-  const tagline = splitSeriesTagline(data.taglinePt);
+  // A GD block's tagline leads with what it builds; its place in the series is on its page.
+  const { outcome } = splitSeriesTagline(data.taglinePt);
 
   return (
-    <Link
-      href={data.href}
-      className="group relative flex min-w-0 flex-col bg-surface p-5 pt-4 transition-colors hover:bg-[var(--ink-2)]"
-      style={{ borderTop: `2px solid ${hue.spine}` }}
-    >
-      {/* oversized index, top-right */}
-      {data.index !== null ? (
-        <span
-          className="pointer-events-none absolute right-4 top-3 font-mono text-5xl font-bold tabular-nums text-foreground/[0.06] transition-colors group-hover:text-foreground/10"
-          aria-hidden
-        >
-          {String(data.index).padStart(2, "0")}
-        </span>
-      ) : null}
-
-      {/* pr-14 keeps the tags clear of the index numeral */}
-      <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 pr-14">
-        <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted">
-          {STYLE_LABEL[data.trainingStyle] ?? "Programa"}
-        </span>
-        <span className="tag tag--field" style={{ color: hue.fg }}>
-          {GOAL_LABEL[data.goal] ?? data.goal}
-        </span>
-        {data.mark ? <span className="tag tag--mark">{data.mark}</span> : null}
+    <Link href={data.href} className="card is-link group flex w-full min-w-0 flex-col p-4 sm:p-5">
+      <div className="flex items-start justify-between gap-3">
+        <h3 className="min-w-0 text-[17px] font-semibold leading-snug wrap-break-word">{data.namePt}</h3>
+        {data.mark ? <span className="tag tag--mark mt-0.5 shrink-0">{data.mark}</span> : null}
       </div>
+      <p className="mt-1 line-clamp-2 text-sm leading-snug text-muted wrap-break-word">{outcome}</p>
 
-      <h3 className="mt-2 max-w-[85%] text-lg font-bold leading-tight tracking-tight">{data.namePt}</h3>
-      {tagline.meta ? (
-        <p className="mt-1 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted">{tagline.meta}</p>
-      ) : null}
-      <p className="mt-1 line-clamp-2 text-sm text-muted wrap-break-word">{tagline.outcome}</p>
-
-      {/* split map */}
-      {data.dayNames.length > 0 ? <DayChips names={data.dayNames} className="mt-4" /> : null}
-
-      {/* spec stats — hairline-divided, no box */}
-      <div className="mt-4 flex items-stretch divide-x divide-border border-y border-border py-3 text-center">
-        <Spec value={`${data.daysPerWeek}×`} label="/ semana" />
-        <Spec value={String(data.durationWeeks)} label={pluralWord(data.durationWeeks, "semana", "semanas")} />
-        <Spec value={`${data.sessionMinutes}′`} label="por sessão" />
-      </div>
-
-      <div className="mt-3 flex items-center justify-between gap-3">
-        {/* Level and where it's trained: 43 of 48 programs need a full gym, and a home user must see that here. */}
-        <span className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
-          <span className="font-mono text-[10px] uppercase tracking-wider text-muted">
-            {EXPERIENCE_LABEL[data.experienceLevel]}
+      {/* mt-auto: side by side in a grid row, the commitment lines align for comparing. */}
+      <p className="mt-auto pt-3 text-sm font-medium tabular-nums text-foreground" data-commitment>
+        {commitmentLine(data)}
+      </p>
+      {/* Level and where it's trained: 43 of 48 programs need a full gym, and a home user must see that here. */}
+      <div className="mt-1.5 flex items-center gap-3">
+        <p className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-muted">
+          <span className="tag tag--field text-[13px]" style={{ color: hue.fg }}>
+            {GOAL_LABEL[data.goal] ?? data.goal}
           </span>
-          <span className="tag tag--spec text-[10px] uppercase tracking-[0.06em]" data-testid="card-equipment">
-            {EQUIPMENT_SHORT_LABEL[data.equipmentAccess] ?? data.equipmentAccess}
-          </span>
-        </span>
-        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-foreground/70 group-hover:text-foreground">
-          Ver programa
-          <GArrow className="size-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-        </span>
+          <span aria-hidden>·</span>
+          <span>{EXPERIENCE_LABEL[data.experienceLevel] ?? data.experienceLevel}</span>
+          <span aria-hidden>·</span>
+          <span data-testid="card-equipment">{EQUIPMENT_SHORT_LABEL[data.equipmentAccess] ?? data.equipmentAccess}</span>
+        </p>
+        <GArrow className="size-4 shrink-0 text-muted transition-transform group-hover:translate-x-0.5 group-hover:text-accent" />
       </div>
     </Link>
-  );
-}
-
-/** A program's days as short mono chips ("SEG · SUP A", "A", "PUSH A"), full names on hover. */
-export function DayChips({ names, className }: { names: string[]; className?: string }) {
-  const tokens = dayTokens(names);
-  return (
-    <div className={`flex flex-wrap gap-1 ${className ?? ""}`}>
-      {tokens.map((token, i) => (
-        <span
-          key={i}
-          title={names[i]}
-          className="bg-surface-2 px-1.5 py-1 font-mono text-[10px] font-medium tracking-tight text-foreground/70"
-        >
-          {token}
-        </span>
-      ))}
-    </div>
-  );
-}
-
-function Spec({ value, label }: { value: string; label: string }) {
-  return (
-    <div className="flex min-w-0 flex-1 flex-col items-center px-2">
-      <span className="font-mono text-base font-bold tabular-nums leading-none">{value}</span>
-      <span className="mt-1 text-[9px] uppercase tracking-wider text-muted">{label}</span>
-    </div>
   );
 }

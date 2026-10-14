@@ -22,7 +22,7 @@ export function KeepSwapButton({ exerciseLogId, inProgram = false }: { exerciseL
   const done = inProgram || saved;
   return (
     <span className="inline-flex flex-wrap items-center gap-x-2">
-      <span role="status" className={done ? "font-mono font-bold uppercase tracking-[0.12em] text-success" : "sr-only"}>
+      <span role="status" className={done ? "font-semibold text-success" : "sr-only"}>
         {done ? "No programa ✓" : ""}
       </span>
       {done ? null : (

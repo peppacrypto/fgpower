@@ -43,20 +43,20 @@ export function MuscleVolumeBars({ rows, className }: { rows: VolumeRow[]; class
             <span aria-hidden className="w-24 shrink-0 truncate text-sm">
               {row.label}
             </span>
-            <span aria-hidden className="relative h-2.5 min-w-0 flex-1 bg-surface-2">
+            <span aria-hidden className="relative h-2.5 min-w-0 flex-1 overflow-hidden rounded-full bg-surface-2">
               <span
                 className="absolute inset-y-0 bg-accent-soft"
                 style={{ left: pct(VOLUME_GUIDE.min), width: `calc(${pct(VOLUME_GUIDE.max)} - ${pct(VOLUME_GUIDE.min)})` }}
               />
               <span
-                className={cn("absolute inset-y-0.5 left-0", inBand ? "bg-accent" : "bg-foreground/35")}
+                className={cn("absolute inset-y-0.5 left-0.5 rounded-full", inBand ? "bg-accent" : "bg-foreground/35")}
                 style={{ width: pct(row.sets) }}
               />
             </span>
-            <span aria-hidden className="w-9 shrink-0 text-right font-mono text-sm font-bold tabular-nums">
+            <span aria-hidden className="w-9 shrink-0 text-right text-sm font-semibold tabular-nums">
               {value}
             </span>
-            <span aria-hidden className="w-14 shrink-0 text-right font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-muted">
+            <span aria-hidden className="w-14 shrink-0 text-right text-xs text-muted">
               {row.status === "none" ? "" : stateWord(row)}
             </span>
           </div>

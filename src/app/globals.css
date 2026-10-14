@@ -17,70 +17,70 @@
 }
 
 /* ---------------------------------------------------------------------
-   FGPOWER design tokens.
-   Light-first, precision SaaS identity — an Attio-style disciplined type
-   scale and flat/bordered surfaces (tight letter-spacing, 1px borders,
-   near-invisible shadows, moderate 4–16px radius scale) carrying a single
-   confident accent, used the way Strava commits to its brand color: not
-   neon, not decorative — just present everywhere it means "go." Dark mode
-   is a careful tonal inversion, not a second identity.
+   FGPOWER design tokens — "clean light" (2026-10 redesign, docs/DESIGN.md).
+   A calm, light sports interface: warm off-white page, white surfaces,
+   graphite text and one sober green that means "act / selected". Strength
+   shows in the content (photos, numbers), not in the chrome: soft 1px
+   borders, 10–20px radii, shadow only where something floats. Dark mode is
+   a tonal inversion with the same hierarchy, not a second identity.
 --------------------------------------------------------------------- */
 
 :root {
-  --background: #fafafb;
+  --background: #f7f8f6;
   --surface: #ffffff;
-  --surface-2: #f3f4f6;
-  --border: #e4e7ec;
-  --border-strong: #d3d8df;
-  --foreground: #1c1d1f;
-  --muted: #5c6672;
-  --accent: #4d6a06;
-  --accent-hover: #3f5705;
+  --surface-2: #f0f2ef;
+  --border: #e1e6e1;
+  --border-strong: #cdd4ce;
+  /* A form field's boundary: ≥3:1 on the surface (WCAG 1.4.11), so a field
+     still reads as a field in gym light. */
+  --field: #848f88;
+  --foreground: #17201b;
+  --muted: #5e6a63;
+  --accent: #246b4a;
+  --accent-hover: #1c543a;
   --accent-foreground: #ffffff;
-  --accent-soft: #eef3d8;
-  --accent-strong: #b4e600;
-  --accent-strong-foreground: #14210a;
-  --danger: #c0282a; /* 5.1:1 on --danger-soft, 5.9:1 on white (AA for the small print that explains a deletion) */
+  --accent-soft: #ecf3ed;
+  /* The old neon lime is retired from the interface; "strong" is the same green. */
+  --accent-strong: var(--accent);
+  --accent-strong-foreground: var(--accent-foreground);
+  --danger: #b42318; /* 6.6:1 on white, ≥5:1 on --danger-soft */
   --danger-soft: #fdeceb;
   --danger-foreground: #ffffff;
-  --success: #077a48;
-  --success-soft: #e0fced;
+  --success: #1f7a4d;
+  --success-soft: #e6f3eb;
   --warning: #8a6300;
-  --warning-soft: #fff3cc;
-  --ring: #4d6a06;
+  --warning-soft: #fff4d6;
+  --ring: #246b4a;
 
-  --tag-purple-bg: #f5f0ff;
-  --tag-purple-fg: #6d3df0;
-  --tag-orange-bg: #fff1e6;
-  --tag-orange-fg: #a8490a;
-  --tag-pink-bg: #fdedf3;
-  --tag-pink-fg: #b32e63;
-  --tag-blue-bg: #e8f0ff;
-  --tag-blue-fg: #245bc2;
-  --tag-teal-bg: #e0f3ee;
-  --tag-teal-fg: #0f766e;
-  --tag-indigo-bg: #eef0ff;
+  --tag-purple-bg: #f3f0fb;
+  --tag-purple-fg: #5b3fc4;
+  --tag-orange-bg: #fdf0e6;
+  --tag-orange-fg: #a34a0f;
+  --tag-pink-bg: #fbeef3;
+  --tag-pink-fg: #a8325f;
+  --tag-blue-bg: #eaf1fb;
+  --tag-blue-fg: #2556a8;
+  --tag-teal-bg: #e4f2ee;
+  --tag-teal-fg: #0f6b63;
+  --tag-indigo-bg: #eef0fb;
   --tag-indigo-fg: #4338ca;
-  --tag-amber-bg: #fdf0d5;
-  --tag-amber-fg: #b45309;
+  --tag-amber-bg: #fbf1dc;
+  --tag-amber-fg: #9a4d0b;
 
-  --radius-sm: 0.25rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1.125rem;
+  /* One family of shapes: chips 6, controls 10, cards 14, heroes/sheets 20. */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.875rem;
+  --radius-xl: 1.25rem;
 
-  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.04);
-  --shadow-md: 0 1px 3px rgba(16, 24, 40, 0.04), 0 4px 12px rgba(16, 24, 40, 0.06);
+  --shadow-sm: 0 1px 2px rgba(23, 32, 27, 0.05);
+  --shadow-md: 0 2px 6px rgba(23, 32, 27, 0.05), 0 10px 28px rgba(23, 32, 27, 0.09);
 
-  /* --- Editorial-dossier system: rules, tints, marks (escape the generic
-     1px-border + radius + soft-shadow card). All derived from --foreground so
-     they invert automatically in dark mode. --- */
-  --rule-heavy: var(--foreground); /* the 2px "cap" rule that replaces a box outline */
-  --reg: var(--border-strong); /* corner registration marks at rest */
-  --ink-2: color-mix(in oklab, var(--foreground) 2%, transparent);
-  --ink-3: color-mix(in oklab, var(--foreground) 3.5%, transparent);
-  --ink-4: color-mix(in oklab, var(--foreground) 5%, transparent);
-  --keel: color-mix(in oklab, var(--foreground) 16%, transparent); /* button bottom bevel */
+  /* Ink plates for hover/pressed rows, derived from --foreground so they
+     invert with the theme. */
+  --ink-2: color-mix(in oklab, var(--foreground) 2.5%, transparent);
+  --ink-3: color-mix(in oklab, var(--foreground) 4%, transparent);
+  --ink-4: color-mix(in oklab, var(--foreground) 6%, transparent);
 
   /* Mobile bottom nav (components/nav/bottom-nav.tsx): the bar itself plus the
      home-indicator inset it pads for in the installed PWA. Sticky bottom bars
@@ -92,91 +92,86 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    /* a pure-white heavy rule glares on dark; use a confident light-grey */
-    --rule-heavy: color-mix(in oklab, var(--foreground) 70%, var(--background));
-    --background: #0b0c0e;
-    --surface: #151619;
-    --surface-2: #1c1e22;
-    --border: #2a2d33;
-    --border-strong: #383c44;
-    --foreground: #f2f3f5;
-    --muted: #9aa0aa;
-    --accent: #a3d92e;
-    --accent-hover: #b6ec3e;
-    --accent-foreground: #0e1408;
-    --accent-soft: #1e2a0a;
-    --accent-strong: #c3ff4d;
-    --accent-strong-foreground: #0e1408;
-    --danger: #ff6b68;
-    --danger-soft: #2a1615;
+    --background: #0f1412;
+    --surface: #161c19;
+    --surface-2: #1d2421;
+    --border: #29312d;
+    --border-strong: #3a443e;
+    --field: #68756d;
+    --foreground: #e8ede9;
+    --muted: #9ba69f;
+    --accent: #6cc79a;
+    --accent-hover: #86d4ad;
+    --accent-foreground: #0b1a12;
+    --accent-soft: #16271e;
+    --danger: #ff7a72;
+    --danger-soft: #2c1714;
     --danger-foreground: #2a0f0d;
-    --success: #3ddb96;
-    --success-soft: #0f261b;
-    --warning: #f5c14d;
-    --warning-soft: #241d0c;
-    --ring: #a3d92e;
+    --success: #5ccb94;
+    --success-soft: #11251b;
+    --warning: #e8b84a;
+    --warning-soft: #261f0d;
+    --ring: #6cc79a;
 
-    --tag-purple-bg: #211a33;
-    --tag-purple-fg: #b79dff;
-    --tag-orange-bg: #2b1c0e;
-    --tag-orange-fg: #f6a05c;
-    --tag-pink-bg: #2b1620;
-    --tag-pink-fg: #f291b8;
-    --tag-blue-bg: #101f33;
-    --tag-blue-fg: #7fb0ff;
-    --tag-teal-bg: #0c2420;
-    --tag-teal-fg: #5fd6c4;
-    --tag-indigo-bg: #1a1b33;
-    --tag-indigo-fg: #a5b4fc;
-    --tag-amber-bg: #2a2109;
-    --tag-amber-fg: #fbbf24;
+    --tag-purple-bg: #211b33;
+    --tag-purple-fg: #b9a3ff;
+    --tag-orange-bg: #2b1d10;
+    --tag-orange-fg: #f2a466;
+    --tag-pink-bg: #2b1720;
+    --tag-pink-fg: #f095b9;
+    --tag-blue-bg: #122033;
+    --tag-blue-fg: #86b4ff;
+    --tag-teal-bg: #0e2522;
+    --tag-teal-fg: #66d3c2;
+    --tag-indigo-bg: #1b1c33;
+    --tag-indigo-fg: #a9b6fc;
+    --tag-amber-bg: #2a220c;
+    --tag-amber-fg: #f5c04a;
 
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 1px 3px rgba(0, 0, 0, 0.3), 0 8px 20px rgba(0, 0, 0, 0.35);
+    --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.4);
   }
 }
 
 :root[data-theme="dark"] {
-  --rule-heavy: color-mix(in oklab, var(--foreground) 70%, var(--background));
-  --background: #0b0c0e;
-  --surface: #151619;
-  --surface-2: #1c1e22;
-  --border: #2a2d33;
-  --border-strong: #383c44;
-  --foreground: #f2f3f5;
-  --muted: #9aa0aa;
-  --accent: #a3d92e;
-  --accent-hover: #b6ec3e;
-  --accent-foreground: #0e1408;
-  --accent-soft: #1e2a0a;
-  --accent-strong: #c3ff4d;
-  --accent-strong-foreground: #0e1408;
-  --danger: #ff6b68;
-  --danger-soft: #2a1615;
+  --background: #0f1412;
+  --surface: #161c19;
+  --surface-2: #1d2421;
+  --border: #29312d;
+  --border-strong: #3a443e;
+  --field: #68756d;
+  --foreground: #e8ede9;
+  --muted: #9ba69f;
+  --accent: #6cc79a;
+  --accent-hover: #86d4ad;
+  --accent-foreground: #0b1a12;
+  --accent-soft: #16271e;
+  --danger: #ff7a72;
+  --danger-soft: #2c1714;
   --danger-foreground: #2a0f0d;
-  --success: #3ddb96;
-  --success-soft: #0f261b;
-  --warning: #f5c14d;
-  --warning-soft: #241d0c;
-  --ring: #a3d92e;
+  --success: #5ccb94;
+  --success-soft: #11251b;
+  --warning: #e8b84a;
+  --warning-soft: #261f0d;
+  --ring: #6cc79a;
 
-  --tag-purple-bg: #211a33;
-  --tag-purple-fg: #b79dff;
-  --tag-orange-bg: #2b1c0e;
-  --tag-orange-fg: #f6a05c;
-  --tag-pink-bg: #2b1620;
-  --tag-pink-fg: #f291b8;
-  --tag-blue-bg: #101f33;
-  --tag-blue-fg: #7fb0ff;
-  --tag-teal-bg: #0c2420;
-  --tag-teal-fg: #5fd6c4;
-  --tag-indigo-bg: #1a1b33;
-  --tag-indigo-fg: #a5b4fc;
-  --tag-amber-bg: #2a2109;
-  --tag-amber-fg: #fbbf24;
+  --tag-purple-bg: #211b33;
+  --tag-purple-fg: #b9a3ff;
+  --tag-orange-bg: #2b1d10;
+  --tag-orange-fg: #f2a466;
+  --tag-pink-bg: #2b1720;
+  --tag-pink-fg: #f095b9;
+  --tag-blue-bg: #122033;
+  --tag-blue-fg: #86b4ff;
+  --tag-teal-bg: #0e2522;
+  --tag-teal-fg: #66d3c2;
+  --tag-indigo-bg: #1b1c33;
+  --tag-indigo-fg: #a9b6fc;
+  --tag-amber-bg: #2a220c;
+  --tag-amber-fg: #f5c04a;
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 1px 3px rgba(0, 0, 0, 0.3), 0 8px 20px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.4);
 }
 
 @theme inline {
@@ -185,6 +180,7 @@
   --color-surface-2: var(--surface-2);
   --color-border: var(--border);
   --color-border-strong: var(--border-strong);
+  --color-field: var(--field);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
   --color-accent: var(--accent);
@@ -226,7 +222,8 @@
   --shadow-md: var(--shadow-md);
 
   --font-sans: var(--font-inter);
-  --font-mono: var(--font-jetbrains-mono);
+  /* No web mono font: the UI sets numbers in Inter with tabular figures (docs/DESIGN.md). */
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 html {
@@ -313,89 +310,88 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
-/* Tight, Attio-style negative tracking for large display headlines. */
+/* Tight negative tracking for large headlines. */
 .text-display {
   letter-spacing: -0.02em;
 }
 
-/* Focus ring, consistent across all interactive elements. Square, to match
-   the sharpened no-radius geometry of the editorial-dossier system. */
+/* Focus ring, consistent across all interactive elements; it follows the
+   element's own radius. */
 :focus-visible {
   outline: 2px solid var(--ring);
   outline-offset: 2px;
-  border-radius: 0;
 }
 
 /* ---------------------------------------------------------------------
-   Editorial-dossier utilities — grouping by rule weight, alignment and
-   tonal bands + corner registration marks, instead of the generic
-   1px-border + radius + soft-shadow card.
-   They live in the `components` layer so Tailwind utilities on the same
-   element (bg-accent-soft on a Card, a border-* override, a text size)
-   still win — unlayered CSS beats every layered rule, whatever its order.
+   Shared surfaces and labels (docs/DESIGN.md). They live in the
+   `components` layer so Tailwind utilities on the same element (a bg-*,
+   a padding, a border-* override) still win — unlayered CSS beats every
+   layered rule, whatever its order.
 --------------------------------------------------------------------- */
 
 @layer components {
-  /* REG-FRAME — a flat panel pinned by two diagonal corner registration marks
-     (top-left + bottom-right), no full border, no drop shadow. The marks
-     extend and turn accent on hover for interactive panels (.reg-frame.is-link). */
-  .reg-frame {
+  /* CARD — the one container: white surface, soft hairline, 14px radius, no
+     shadow at rest. `.is-link` for a card that is itself a link or button:
+     the border firms up and a soft shadow lifts it on hover; pressed, it takes
+     a faint ink plate. data-active="true" marks the selected/current one. */
+  .card {
     position: relative;
     background: var(--surface);
-    border-radius: 3px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
   }
-  .reg-frame::before,
-  .reg-frame::after {
-    content: "";
-    position: absolute;
-    width: 11px;
-    height: 11px;
-    border: 1.5px solid var(--reg);
-    pointer-events: none;
-    transition: width 0.18s ease, height 0.18s ease, border-color 0.18s ease;
+  .card.is-link {
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
   }
-  .reg-frame::before {
-    top: -1px;
-    left: -1px;
-    border-right: 0;
-    border-bottom: 0;
+  .card.is-link:hover {
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-sm);
   }
-  .reg-frame::after {
-    bottom: -1px;
-    right: -1px;
-    border-left: 0;
-    border-top: 0;
-  }
-  .reg-frame.is-link:hover::before,
-  .reg-frame.is-link:hover::after,
-  .reg-frame.is-link:active::before,
-  .reg-frame.is-link:active::after,
-  .reg-frame[data-active="true"]::before,
-  .reg-frame[data-active="true"]::after {
-    width: 16px;
-    height: 16px;
-    border-color: var(--accent);
-  }
-  /* Pressed: the marks extend as on hover, and the panel takes a faint ink
-     plate over its surface (an image layer, so a bg-* utility still sets the
-     base) — the touch equivalent of the hover state. */
-  .reg-frame.is-link:active {
+  .card.is-link:active {
     background-image: linear-gradient(var(--ink-3), var(--ink-3));
   }
+  .card[data-active="true"] {
+    border-color: var(--accent);
+    box-shadow: inset 0 0 0 1px var(--accent);
+  }
 
-  /* PANEL-RAISED — a level-2 hero band: a --surface-2 tonal step bracketed by
-     heavy rules top and bottom. No side border, no radius, no shadow. */
-  .panel-raised {
-    background: var(--surface-2);
-    border-top: 2px solid var(--rule-heavy);
-    border-bottom: 2px solid var(--rule-heavy);
+  /* PANEL — the screen's lead block (Today's next workout, a program's
+     masthead, the workout summary's verdict): a card one step up — larger
+     radius and a soft shadow, so it reads as the first thing on the page. */
+  .panel {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* SHEET — a bottom sheet / dialog body: rounded on top on phones (it rises
+     from the bottom edge), all round from sm up, floating shadow. */
+  .sheet {
+    background: var(--background);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    box-shadow: var(--shadow-md);
+  }
+  @media (min-width: 640px) {
+    .sheet {
+      border-radius: var(--radius-xl);
+    }
+  }
+
+  /* EYEBROW — the small line above a title or section ("Próximo treino",
+     "Biblioteca de programas"): normal case, medium weight, muted. */
+  .eyebrow {
+    font-size: 0.8125rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    color: var(--muted);
   }
 
   /* HIT — a touch target of at least 44×44 px around a control that looks
      smaller (a 36px sm button, a one-line text link): an invisible ::after
      centered on it takes the tap. Position is a component default, so an
-     `absolute` utility on the same element still wins. Not for .reg-frame,
-     which draws its corner marks with ::after. */
+     `absolute` utility on the same element still wins. */
   .hit {
     position: relative;
   }
@@ -409,55 +405,48 @@ body {
     transform: translate(-50%, -50%);
   }
 
-  /* TAGS — editorial, square, no pill. Meaning carried by shape + label. */
+  /* TAGS — small chips and labels. Meaning is carried by the words (and a
+     symbol for status), never by color alone. */
   .tag {
     display: inline-flex;
     align-items: center;
-    gap: 0.4em;
-    line-height: 1;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.02em;
+    gap: 0.375rem;
+    line-height: 1.2;
+    font-size: 0.75rem;
+    font-weight: 500;
   }
-  .tag--field {
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-  }
+  /* A category label (goal, split): a colored dot before the words. */
   .tag--field::before {
     content: "";
-    width: 0.5em;
-    height: 0.5em;
-    background: currentColor; /* the color carrier — a solid square tick, not a pill fill */
+    width: 0.4375rem;
+    height: 0.4375rem;
+    border-radius: 999px;
+    background: currentColor;
   }
+  /* A value chip ("3×/semana", "60 min", "A"). */
   .tag--spec {
-    font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
     background: var(--surface-2);
     color: var(--foreground);
-    padding: 0.15rem 0.4rem;
-    letter-spacing: 0;
+    padding: 0.1875rem 0.5rem;
+    border-radius: var(--radius-sm);
   }
+  /* A highlight ("Destaque", "PR"): the soft green chip. */
   .tag--mark {
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--foreground);
-    border-bottom: 2px solid var(--accent-strong);
-    padding-bottom: 1px;
-  }
-  .tag--status {
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 0.1875rem 0.5rem;
+    border-radius: var(--radius-sm);
   }
   .tag--status::before {
-    font-family: var(--font-mono);
     font-weight: 700;
-    margin-right: 0.15em;
   }
   .tag--ok {
     color: var(--success);
   }
   .tag--ok::before {
-    content: "+";
+    content: "\2713";
   }
   .tag--warn {
     color: var(--warning);

@@ -26,8 +26,10 @@ export function WeekdayChips({ value, onToggle }: { value: number[]; onToggle: (
             onClick={() => onToggle(i)}
             aria-pressed={on}
             className={cn(
-              "h-11 min-w-0 rounded-[3px] border text-[13px] font-semibold transition-colors",
-              on ? "border-accent bg-accent-soft text-accent" : "border-border text-muted hover:bg-surface-2",
+              "h-11 min-w-0 rounded-[var(--radius-md)] border text-[13px] transition-colors",
+              on
+                ? "border-accent bg-accent-soft font-semibold text-accent shadow-[inset_0_0_0_1px_var(--accent)]"
+                : "border-border bg-surface font-medium text-foreground hover:border-border-strong hover:bg-surface-2",
             )}
           >
             {WEEKDAYS[i]}
@@ -67,7 +69,7 @@ export function DaysMatchNote({
             <button
               type="button"
               onClick={onUseCount}
-              className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-accent underline decoration-2 underline-offset-[3px]"
+              className="hit text-[13px] font-semibold text-accent underline decoration-1 underline-offset-[3px]"
             >
               Usar {preferredCount}x por semana
             </button>

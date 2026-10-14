@@ -8,7 +8,7 @@ import type { SeriesContinuation } from "@/lib/data/program-lifecycle";
 import { cn } from "@/lib/utils/cn";
 
 /**
- * "DE ONDE VOCÊ PAROU": a program stopped mid-block (archived, or ended by a
+ * "De onde você parou": a program stopped mid-block (archived, or ended by a
  * switch) with nothing running since — "Retomar da semana N" puts it back
  * with its workouts, week and next day (resumeProgram). Leads Today's
  * no-program state and the program library while nothing runs, ahead of a
@@ -28,17 +28,14 @@ export function ResumeProgramPanel({
     <section
       aria-labelledby="resume-program-title"
       data-testid="resume-program"
-      className={cn("relative overflow-hidden panel-raised", className)}
+      className={cn("panel", className)}
     >
-      <span className="absolute left-0 top-0 h-full w-1.5 bg-accent" aria-hidden />
-      <div className="p-6 sm:p-8">
-        <span className="block font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-accent">
-          De onde você parou
-        </span>
-        <h2 id="resume-program-title" className="text-display mt-2 text-2xl font-extrabold leading-tight sm:text-3xl">
+      <div className="p-5 sm:p-8">
+        <span className="eyebrow block text-accent">De onde você parou</span>
+        <h2 id="resume-program-title" className="text-display mt-1 text-[1.5rem] font-semibold leading-tight sm:text-[1.75rem]">
           {resume.programName}
         </h2>
-        <p className="mt-1.5 text-sm text-muted">
+        <p className="mt-1.5 text-[15px] leading-snug text-muted">
           Seus treinos e a semana continuam de onde pararam —{" "}
           <span className="whitespace-nowrap">
             {resume.week === 0 ? "semana de entrada" : `semana ${resume.week}${resume.weeks ? ` de ${resume.weeks}` : ""}`}.
@@ -59,18 +56,18 @@ export function ResumeProgramPanel({
           <div className="flex flex-wrap gap-x-5">
             <Link
               href={`/app/programs/${resume.programId}`}
-              className="inline-flex min-h-11 items-center gap-1 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
+              className="inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-accent hover:underline"
             >
               Ver programa
-              <GArrow className="size-3" />
+              <GArrow className="size-3.5" />
             </Link>
             {showLibraryLink ? (
               <Link
                 href="/app/programs"
-                className="inline-flex min-h-11 items-center gap-1 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
+                className="inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-accent hover:underline"
               >
                 Outros programas
-                <GArrow className="size-3" />
+                <GArrow className="size-3.5" />
               </Link>
             ) : null}
           </div>

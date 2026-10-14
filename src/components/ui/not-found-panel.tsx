@@ -6,8 +6,8 @@ import { Button } from "./button";
 export const NOT_FOUND_TITLE = "Página não encontrada";
 
 /**
- * The 404 body shared by the root and /app not-found pages: a mono dossier
- * code, a plain-language headline and two ways back in (the installed PWA has
+ * The 404 body shared by the root and /app not-found pages: a short code
+ * line, a plain-language headline and two ways back in (the installed PWA has
  * no browser back button).
  */
 export function NotFoundPanel({ programsHref }: { programsHref: Route }) {
@@ -18,11 +18,9 @@ export function NotFoundPanel({ programsHref }: { programsHref: Route }) {
           React inserts this <title> ahead of the head's first one, so it is
           the document title either way (the default's tag stays behind it). */}
       <title>{`${NOT_FOUND_TITLE} · FGPOWER`}</title>
-      <div className="panel-raised px-5 py-7">
-        <span className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-muted">
-          404 · Fora do mapa
-        </span>
-        <h1 className="text-display mt-2 text-2xl font-extrabold">Esta página não existe (ou saiu do ar).</h1>
+      <div className="panel px-5 py-7">
+        <span className="eyebrow">404 · Fora do mapa</span>
+        <h1 className="text-display mt-1 text-2xl font-semibold">Esta página não existe (ou saiu do ar).</h1>
         <p className="mt-2 text-sm text-muted">
           O link pode estar velho, o treino ou programa pode ter sido excluído, ou o endereço veio com um erro de
           digitação.

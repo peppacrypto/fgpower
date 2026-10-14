@@ -218,7 +218,7 @@ test("Corpo: the empty state, a weigh-in, a typo caught, a delete, measurements 
   // Its last entry gone, the list goes with the server's redraw: Corpo's own live region says so
   // — "Registro" agrees with any kind — and holds the focus, through a re-render too.
   const announcer = page.locator("[data-body-announcer]");
-  await expect(announcer).toHaveText(/^Registro excluído: pesagem de \d{2} [A-Z]{3}\.$/);
+  await expect(announcer).toHaveText(/^Registro excluído: pesagem de \d{2} [a-z]{3}\.$/);
   await expect(announcer).toBeFocused();
   await rerender(page);
   await expect(announcer).toHaveText(/^Registro excluído: pesagem de /);
@@ -459,7 +459,7 @@ test("Progress draws workouts per week and sets per muscle, for the period chose
   await page.goto("/app/progress?period=4w");
   const chart = page.locator("[data-weekly-chart]");
   await expect(chart).toHaveAttribute("data-columns", "5");
-  await expect(page.locator("[data-weeks-headline]")).toHaveText("média 3,5 por semana · meta 5");
+  await expect(page.locator("[data-weeks-headline]")).toHaveText("Média 3,5 por semana · meta 5");
   await expect(chart.getByRole("img")).toHaveAttribute("aria-label", /^Treinos por semana desde .*: média 3,5 por semana, meta 5; 1 de 4 semanas completas na meta; esta semana 0 de 5\.$/);
   const lastWeek = chart.locator("table tbody tr").nth(3);
   await expect(lastWeek).toContainText("5 de 5");
@@ -467,7 +467,7 @@ test("Progress draws workouts per week and sets per muscle, for the period chose
   await expect(lastWeek).toContainText("seg, ter, qua, qui, sex");
 
   const muscles = page.locator("[data-muscle-volume]");
-  await expect(page.locator("[data-muscles-headline]")).toHaveText("média por semana treinada · 4 semanas");
+  await expect(page.locator("[data-muscles-headline]")).toHaveText("Média por semana treinada · 4 semanas");
   await expect(muscles.getByRole("group", { name: /^Peitoral: 3 séries por semana, abaixo$/ })).toBeVisible();
   // An untrained group is said once ("nenhuma série"), never "nenhuma série, sem séries".
   await expect(muscles.getByRole("group", { name: "Costas: nenhuma série", exact: true })).toBeVisible();

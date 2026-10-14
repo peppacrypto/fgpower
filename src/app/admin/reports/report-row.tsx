@@ -73,7 +73,7 @@ export function ReportActions({
 
   return (
     <div className="mt-4 border-t border-border pt-3">
-      <label htmlFor={noteId} className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-muted">
+      <label htmlFor={noteId} className="text-[13px] font-medium text-muted">
         Nota (opcional)
       </label>
       <Input id={noteId} value={note} maxLength={500} onChange={(e) => setNote(e.target.value)} className="mt-1.5" />
@@ -128,7 +128,7 @@ export function ReportActions({
                 &quot;Resolvidas&quot;.
               </span>
               <label className="flex flex-col gap-1 text-foreground">
-                <span className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-muted">Motivo (fica registrado)</span>
+                <span className="text-[13px] font-medium text-muted">Motivo (fica registrado)</span>
                 <Input value={note} maxLength={500} onChange={(e) => setNote(e.target.value)} />
               </label>
             </span>
@@ -199,7 +199,7 @@ export function ResultNotice({ text, stamp }: { text: string; stamp: string }) {
       ref={ref}
       tabIndex={-1}
       role="status"
-      className="mt-6 border-l-2 border-l-accent bg-surface-2 px-3 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] outline-none"
+      className="mt-6 rounded-[var(--radius-md)] bg-accent-soft px-4 py-2.5 text-sm font-medium outline-none"
     >
       {text}
     </p>

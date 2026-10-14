@@ -13,8 +13,8 @@ export function EmptyState({
   action?: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center gap-3 border-y-2 border-y-[var(--rule-heavy)] bg-surface-2 px-6 py-14 text-center">
-      {icon ? <div className="text-border-strong">{icon}</div> : null}
+    <div className="card flex flex-col items-center justify-center gap-3 px-6 py-12 text-center">
+      {icon ? <div className="text-muted">{icon}</div> : null}
       <p className="text-base font-semibold text-foreground">{title}</p>
       {description ? <p className="max-w-sm text-sm text-muted">{description}</p> : null}
       {action}

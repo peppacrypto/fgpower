@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils/cn";
 type Action = (formData: FormData) => void | Promise<void>;
 
 const ITEM =
-  "flex min-h-11 w-full items-center justify-start px-3.5 text-left text-sm font-medium text-foreground hover:bg-surface-2";
+  "flex min-h-11 w-full items-center justify-start rounded-[var(--radius-md)] px-3 text-left text-sm font-medium text-foreground hover:bg-surface-2";
 
 /**
  * The program page's "⋯": the actions that aren't the main one — Duplicar
@@ -56,11 +56,11 @@ export function ProgramMenu({
     <details ref={menuRef} className="group/menu relative" data-testid="program-menu">
       <summary
         aria-label="Mais ações"
-        className="flex size-11 cursor-pointer list-none items-center justify-center rounded-none text-muted hover:bg-surface-2 hover:text-foreground [&::-webkit-details-marker]:hidden"
+        className="flex size-11 cursor-pointer list-none items-center justify-center rounded-[var(--radius-md)] text-muted hover:bg-surface-2 hover:text-foreground group-open/menu:bg-surface-2 group-open/menu:text-foreground [&::-webkit-details-marker]:hidden"
       >
         <MoreHorizontal className="size-5" />
       </summary>
-      <div className="absolute right-0 z-30 mt-1 w-64 max-w-[calc(100vw-2rem)] border-y-2 border-[var(--rule-heavy)] bg-surface py-1 shadow-lg">
+      <div className="absolute right-0 z-30 mt-1.5 w-64 max-w-[calc(100vw-2rem)] rounded-[var(--radius-lg)] border border-border bg-surface p-1.5 shadow-[var(--shadow-md)]">
         <form action={duplicate}>
           <SubmitButton variant="ghost" className={ITEM} pendingLabel="Duplicando…">
             Duplicar
@@ -135,7 +135,7 @@ function Confirm({
       >
         {label}…
       </summary>
-      <InlineActionForm action={action} failText="Não foi possível concluir. Tente de novo." className="flex flex-col gap-2.5 px-3.5 py-3">
+      <InlineActionForm action={action} failText="Não foi possível concluir. Tente de novo." className="flex flex-col gap-2.5 px-3 py-3">
         <p role="alert" className="text-sm leading-snug">
           {text}
         </p>
@@ -145,7 +145,7 @@ function Confirm({
           </SubmitButton>
           <button
             type="button"
-            className="h-11 px-3.5 text-[13px] font-semibold hover:bg-surface-2"
+            className="h-11 rounded-[var(--radius-md)] px-3.5 text-[13px] font-semibold hover:bg-surface-2"
             onClick={(e) => {
               const details = e.currentTarget.closest("details");
               if (details) details.open = false;

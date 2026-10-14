@@ -90,7 +90,8 @@ test("filters: muscle chips, a labelled equipment select, 'Mais filtros', a coun
   const muscles = page.getByRole("group", { name: "Músculo" });
   await expect(muscles.getByRole("button", { name: "Todos" })).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByRole("heading", { level: 2, name: "Biblioteca" })).toBeVisible();
-  await expect(page.getByText(/^\d+ exercícios$/)).toBeVisible();
+  // What the view lists, out of the whole catalog ("780 de 943 exercícios").
+  await expect(page.getByText(/^[\d.]+ de [\d.]+ exercícios$/)).toBeVisible();
 
   await muscles.getByRole("button", { name: "Glúteos" }).click();
   await expect(page).toHaveURL(/muscleGroup=GLUTES/);
@@ -244,15 +245,19 @@ test("section labels are headings, sm buttons take 44px taps, the lit tab isn't 
   expect(hit.box).toBeLessThan(44);
   expect(hit.h).toBeGreaterThanOrEqual(44);
 
+  // The lit tab is more than a hue: a heavier label, and its icon sits on a filled pill.
   const nav = page.getByRole("navigation", { name: "Navegação principal" });
   const lit = nav.locator('a[aria-current="page"] [data-lit]');
-  const unlit = nav.locator('a:not([aria-current]) span.relative').first();
-  expect(Number(await lit.evaluate((el) => getComputedStyle(el).fontWeight))).toBeGreaterThanOrEqual(700);
-  expect(Number(await unlit.evaluate((el) => getComputedStyle(el).fontWeight))).toBeLessThan(700);
+  const unlit = nav.locator("a:not([aria-current]) > span").first();
+  const weight = (el: Element) => Number(getComputedStyle(el).fontWeight);
+  expect(await lit.evaluate(weight)).toBeGreaterThan(await unlit.evaluate(weight));
+  const pill = (el: Element) => getComputedStyle(el.querySelector(":scope > span")!).backgroundColor;
+  expect(await lit.evaluate(pill)).not.toBe("rgba(0, 0, 0, 0)");
+  expect(await unlit.evaluate(pill)).toBe("rgba(0, 0, 0, 0)");
 
-  // Light --danger reads at AA on --danger-soft (5.1:1).
+  // Light --danger reads at AA on --danger-soft (5.75:1).
   const danger = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--danger").trim());
-  expect(danger.toLowerCase()).toBe("#c0282a");
+  expect(danger.toLowerCase()).toBe("#b42318");
 });
 
 test("signing out: only in Configurações → Dados e conta, asks first, reports a failure (W-150)", async ({ page, context }) => {
@@ -307,7 +312,7 @@ test("settings switches are square 44px rows; the danger zone isn't a panel in a
   await row.click({ position: { x: 20, y: 20 } });
   await expect(sw).toBeChecked({ checked: was });
   const section = page.locator("section", { has: page.getByRole("heading", { name: "Dados e conta" }) });
-  await expect(section.locator(".reg-frame .reg-frame")).toHaveCount(0);
+  await expect(section.locator(".card .card")).toHaveCount(0);
 });
 
 test("history: dead month arrows aren't links, and a day says which workout it opens (W-162, W-165)", async ({ page }) => {

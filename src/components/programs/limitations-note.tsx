@@ -6,10 +6,10 @@
  */
 export function LimitationsNote({ text, fix }: { text: string; fix: React.ReactNode }) {
   return (
-    <aside aria-label="Suas limitações" className="mt-8 border-l-2 border-l-warning bg-warning-soft px-3.5 py-3">
-      <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-warning">Você informou</p>
-      <p className="mt-1 text-sm leading-snug wrap-break-word">“{text}”</p>
-      <p className="mt-1.5 text-xs leading-snug text-foreground/75">
+    <aside aria-label="Suas limitações" className="mt-6 rounded-[var(--radius-lg)] bg-warning-soft px-4 py-3.5">
+      <p className="tag tag--status tag--warn text-[13px] font-semibold">Você informou</p>
+      <p className="mt-1.5 text-[15px] leading-snug wrap-break-word">“{text}”</p>
+      <p className="mt-1.5 text-[13px] leading-snug text-foreground/80">
         {fix} A FGPOWER não é um serviço de diagnóstico médico. Para lesões, consulte um profissional de saúde.
       </p>
     </aside>

@@ -5,6 +5,7 @@ import { unstable_rethrow } from "next/navigation";
 import { cn } from "@/lib/utils/cn";
 import { formatDuration } from "@/lib/utils/format";
 import { Button } from "@/components/ui/button";
+import { GCheck } from "@/components/ui/glyph";
 import { Input, Label, Select, Textarea } from "@/components/ui/input";
 import { actionFailure, describeActionFailure, runAction } from "@/components/social/run-action";
 import { ActionErrorText } from "@/components/social/session-expired";
@@ -78,8 +79,6 @@ const initialState: OnboardingFormState = {};
 // Step headings are script focus targets, not controls: no focus ring (inline
 // so it beats the global :focus-visible rule).
 const FOCUS_TARGET = { outline: "none" } as const;
-
-const MONO = "font-mono text-[11px] font-bold uppercase tracking-[0.12em]";
 
 function stepFromLocation(): number {
   const passo = Number(new URLSearchParams(window.location.search).get("passo"));
@@ -378,9 +377,9 @@ export function OnboardingWizard({
       <ActionErrorText error={usernameMessage} />
     </span>
   ) : checked === "checking" ? (
-    <span className={cn(MONO, "text-[10px] text-muted")}>Verificando…</span>
+    <span className="font-medium text-muted">Verificando…</span>
   ) : checked === "ok" ? (
-    <span className={cn(MONO, "text-[10px] text-success")}>Disponível ✓</span>
+    <span className="font-medium text-success">Disponível ✓</span>
   ) : null;
 
   return (
@@ -407,19 +406,19 @@ export function OnboardingWizard({
         {Array.from({ length: TOTAL_STEPS }, (_, i) => (
           <span
             key={i}
-            className={cn("h-1.5 transition-colors duration-300", i <= step ? "bg-accent" : "bg-border")}
+            className={cn("h-1.5 rounded-full transition-colors duration-300", i <= step ? "bg-accent" : "bg-border")}
           />
         ))}
       </div>
-      <p className={cn(MONO, "mt-3 text-muted")}>
-        <span className="text-accent">
+      <p className="mt-3 text-[13px] font-medium text-muted">
+        <span className="font-semibold text-accent">
           Passo {step + 1}/{TOTAL_STEPS}
         </span>{" "}
         · {STEP_REASONS[step]}
       </p>
 
       {state.error ? (
-        <p role="alert" className="mt-5 border-l-2 border-l-danger bg-danger-soft px-3.5 py-2.5 text-sm text-danger">
+        <p role="alert" className="mt-5 rounded-[var(--radius-md)] bg-danger-soft px-4 py-3 text-sm text-danger">
           <ActionErrorText error={state.error} />
         </p>
       ) : null}
@@ -427,7 +426,7 @@ export function OnboardingWizard({
       {/* Step 1 — name + public handle */}
       <fieldset hidden={step !== 0} className="mt-6 flex flex-col gap-5">
         <legend className="contents">
-          <h1 id="onboarding-step-0" tabIndex={-1} style={FOCUS_TARGET} className="text-2xl font-bold tracking-tight">
+          <h1 id="onboarding-step-0" tabIndex={-1} style={FOCUS_TARGET} className="text-display text-[1.75rem] font-semibold leading-tight">
             Como podemos te chamar?
           </h1>
         </legend>
@@ -465,7 +464,7 @@ export function OnboardingWizard({
           <div className="mt-1.5 flex">
             <span
               aria-hidden
-              className="flex items-center rounded-l-[3px] border border-r-0 border-foreground/50 bg-surface-2 px-3 font-mono text-sm text-muted"
+              className="flex items-center rounded-l-[var(--radius-md)] border border-r-0 border-field bg-surface-2 px-3 text-sm text-muted"
             >
               @
             </span>
@@ -489,12 +488,12 @@ export function OnboardingWizard({
           <input type="hidden" name="usernameAuto" value={answers.usernameAuto ? "1" : "0"} />
           {/* Only the check result is live; the link preview beside it changes
               with every keystroke of the name and would be read out each time. */}
-          <p className="mt-1 min-h-4 text-xs">
+          <p className="mt-1 min-h-4 text-xs [overflow-wrap:anywhere]">
             <span id="username-status" aria-live="polite">
               {usernameStatus}
             </span>
             {usernameStatus ? null : (
-              <span id="username-preview" className="font-mono text-muted">
+              <span id="username-preview" className="text-muted">
                 {publicProfileLabel(shownHandle, publicOrigin)}
               </span>
             )}
@@ -576,14 +575,14 @@ export function OnboardingWizard({
       {/* Step 2 — goal */}
       <fieldset hidden={step !== 1} className="mt-6 flex flex-col gap-4">
         <legend className="contents">
-          <h1 id="onboarding-step-1" tabIndex={-1} style={FOCUS_TARGET} className="text-2xl font-bold tracking-tight">
+          <h1 id="onboarding-step-1" tabIndex={-1} style={FOCUS_TARGET} className="text-display text-[1.75rem] font-semibold leading-tight">
             Qual é o seu principal objetivo?
           </h1>
         </legend>
         <RadioCards name="goal" options={GOALS} value={answers.goal} onChange={(goal) => update({ goal })} />
         <div aria-live="polite">
           {answers.goal === "FAT_LOSS" ? (
-            <div className="border-l-2 border-l-accent bg-surface-2 px-3.5 py-3 text-sm">
+            <div className="rounded-[var(--radius-lg)] bg-accent-soft px-4 py-3.5 text-sm">
               <p className="font-semibold">{FAT_LOSS_NOTE}</p>
               <p className="mt-1 text-muted">
                 {/* What the recommender does (recommend.ts): a lifting plan at the level asked next, not cardio. */}
@@ -606,7 +605,7 @@ export function OnboardingWizard({
       <div hidden={step !== 2} className="mt-6 flex flex-col gap-6">
         <fieldset className="flex flex-col gap-4">
           <legend className="contents">
-            <h1 id="onboarding-step-2" tabIndex={-1} style={FOCUS_TARGET} className="text-2xl font-bold tracking-tight">
+            <h1 id="onboarding-step-2" tabIndex={-1} style={FOCUS_TARGET} className="text-display text-[1.75rem] font-semibold leading-tight">
               Qual sua experiência com treino?
             </h1>
           </legend>
@@ -619,7 +618,7 @@ export function OnboardingWizard({
         </fieldset>
 
         <fieldset className="flex flex-col gap-4">
-          <legend className={cn(MONO, "mb-3 text-muted")}>Rotina</legend>
+          <legend className="mb-3 text-[17px] font-semibold">Rotina</legend>
           {/* Side by side from 360px; stacked below, where "~1 h 15 min" would be cut. */}
           <div className="grid grid-cols-1 gap-4 min-[360px]:grid-cols-2">
             <div>
@@ -687,7 +686,7 @@ export function OnboardingWizard({
       <div hidden={step !== 3} className="mt-6 flex flex-col gap-6">
         <fieldset className="flex flex-col gap-4">
           <legend className="contents">
-            <h1 id="onboarding-step-3" tabIndex={-1} style={FOCUS_TARGET} className="text-2xl font-bold tracking-tight">
+            <h1 id="onboarding-step-3" tabIndex={-1} style={FOCUS_TARGET} className="text-display text-[1.75rem] font-semibold leading-tight">
               Onde você vai treinar?
             </h1>
           </legend>
@@ -744,8 +743,8 @@ export function OnboardingWizard({
         {/* A-008 — specific, separate health-data consent (LGPD art. 11), shown
             at the first health input. [OWNER/LEGAL: HEALTH_CONSENT_TEXT and the
             legal basis are placeholders pending counsel approval.] */}
-        <div className="border-l-2 border-l-accent bg-surface-2 px-3.5 py-3">
-          <label className="flex items-start gap-2.5 text-sm font-medium">
+        <div className="card p-4">
+          <label className="flex cursor-pointer items-start gap-3 text-sm font-medium">
             <input
               type="checkbox"
               name="healthConsent"
@@ -765,8 +764,8 @@ export function OnboardingWizard({
 
       {next ? <input type="hidden" name="next" value={next} /> : null}
 
-      <div className="mt-8 flex items-center justify-between">
-        <Button type="button" variant="ghost" onClick={goBack} className={step === 0 ? "invisible" : ""}>
+      <div className="mt-8 flex items-center justify-between gap-3 border-t border-border pt-5">
+        <Button type="button" variant="ghost" size="lg" onClick={goBack} className={cn("-ml-3", step === 0 && "invisible")}>
           Voltar
         </Button>
         {step < TOTAL_STEPS - 1 ? (
@@ -775,11 +774,11 @@ export function OnboardingWizard({
           // while patching type="button" -> type="submit" mid-click can make
           // the browser apply the new type's default action (form submit)
           // to the very click that triggered the swap.
-          <Button key="continue" type="button" onClick={goNext}>
+          <Button key="continue" type="button" size="lg" onClick={goNext} className="min-w-36">
             Continuar
           </Button>
         ) : (
-          <Button key="submit" type="submit" disabled={pending || !answers.healthConsent}>
+          <Button key="submit" type="submit" size="lg" disabled={pending || !answers.healthConsent} className="min-w-36">
             {pending ? "Salvando…" : "Ver meu plano"}
           </Button>
         )}
@@ -800,30 +799,42 @@ function RadioCards({
   onChange: (value: string) => void;
 }) {
   return (
-    <div className="grid gap-2">
-      {options.map((opt) => (
-        <label
-          key={opt.value}
-          className={cn(
-            "flex cursor-pointer items-center justify-between gap-3 rounded-[3px] border px-4 py-3.5 text-sm transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-accent",
-            // The picked card carries the accent keel on its left edge, not only a tint.
-            value === opt.value ? "border-accent bg-accent-soft shadow-[inset_3px_0_0_var(--accent)]" : "border-border hover:bg-surface-2",
-          )}
-        >
-          <span>
-            <span className="block font-semibold">{opt.label}</span>
-            <span className="block text-xs text-muted">{opt.desc}</span>
-          </span>
-          <input
-            type="radio"
-            name={name}
-            value={opt.value}
-            checked={value === opt.value}
-            onChange={() => onChange(opt.value)}
-            className="size-4 shrink-0 accent-accent"
-          />
-        </label>
-      ))}
+    <div className="grid gap-2.5">
+      {options.map((opt) => {
+        const on = value === opt.value;
+        return (
+          <label
+            key={opt.value}
+            className={cn(
+              "relative flex min-h-16 cursor-pointer items-center justify-between gap-4 rounded-[var(--radius-lg)] border bg-surface px-4 py-3.5 transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring has-[:focus-visible]:ring-offset-2",
+              // The picked card: the green plate, a firmer border and a check — not the tint alone.
+              on ? "border-accent bg-accent-soft shadow-[inset_0_0_0_1px_var(--accent)]" : "border-border hover:border-border-strong",
+            )}
+          >
+            <span className="min-w-0">
+              <span className="block text-[15px] font-semibold">{opt.label}</span>
+              <span className="mt-0.5 block text-[13px] text-muted">{opt.desc}</span>
+            </span>
+            {/* The native radio, drawn as the card's check circle: the tap on the card (its label) or on
+                the circle picks it, and keyboard and screen readers get the real control. */}
+            <span className="relative grid size-6 shrink-0 place-items-center">
+              <input
+                type="radio"
+                name={name}
+                value={opt.value}
+                checked={on}
+                onChange={() => onChange(opt.value)}
+                className="peer size-6 cursor-pointer appearance-none rounded-full border-2 border-field bg-surface transition-colors checked:border-accent checked:bg-accent focus-visible:outline-none"
+              />
+              <GCheck
+                aria-hidden
+                className="pointer-events-none absolute size-3.5 text-accent-foreground opacity-0 peer-checked:opacity-100"
+                strokeWidth={2.5}
+              />
+            </span>
+          </label>
+        );
+      })}
     </div>
   );
 }

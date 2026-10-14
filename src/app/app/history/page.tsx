@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CalendarClock, ChevronLeft, ChevronRight } from "lucide-react";
+import { CalendarClock, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { GArrow, GCheck } from "@/components/ui/glyph";
 import { requireUser } from "@/lib/auth/require-user";
 import { listSessionsInRange, listAllSessions } from "@/lib/data/history";
@@ -30,10 +30,10 @@ import { SessionRow } from "./session-row";
 export const metadata: Metadata = { title: "Histórico" };
 
 /** Monday-first, like every week in the app (lib/training/week). */
-const WEEKDAY_LABELS = ["SEG", "TER", "QUA", "QUI", "SEX", "SÁB", "DOM"];
+const WEEKDAY_LABELS = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
 /** Monday-first, spelled out for the day links' names. */
 const WEEKDAY_NAMES = ["segunda", "terça", "quarta", "quinta", "sexta", "sábado", "domingo"];
-const ARROW = "flex size-11 items-center justify-center rounded-[3px]";
+const ARROW = "flex size-11 items-center justify-center rounded-[var(--radius-md)]";
 
 export default async function HistoryPage({ searchParams }: PageProps<"/app/history">) {
   const sp = await searchParams;
@@ -105,11 +105,11 @@ export default async function HistoryPage({ searchParams }: PageProps<"/app/hist
   const dayList = selectedDay ? (sessionsByDay.get(selectedDay) ?? []) : null;
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
+    <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
       <Masthead kicker="Seus treinos" title="Histórico" />
 
       <Card className="mt-6">
-        <CardContent className="px-3 pt-3 pb-4 sm:px-5">
+        <CardContent className="px-3 pt-3 pb-4 sm:px-5 sm:pt-4">
           <div className="flex items-center justify-between">
             {/* A month you can't go to is no link at all (a dimmed mark), not a dead one. */}
             {isFirstMonth ? (
@@ -122,10 +122,10 @@ export default async function HistoryPage({ searchParams }: PageProps<"/app/hist
               </Link>
             )}
             <div className="text-center">
-              <h2 className="font-semibold">
+              <h2 className="text-[17px] font-semibold">
                 {MONTH_LABELS[month]} {year}
               </h2>
-              <p data-month-summary className="font-mono text-[11px] tabular-nums text-muted">
+              <p data-month-summary className="text-[13px] tabular-nums text-muted">
                 {sessions.length === 0
                   ? "nenhum treino neste mês"
                   : monthStats.map((t, i) => (
@@ -150,7 +150,7 @@ export default async function HistoryPage({ searchParams }: PageProps<"/app/hist
             )}
           </div>
 
-          <div className="mt-3 grid grid-cols-[repeat(7,minmax(0,1fr))_1rem] gap-1 text-center font-mono text-[10px] tracking-wider text-muted">
+          <div className="mt-3 grid grid-cols-[repeat(7,minmax(0,1fr))_1rem] gap-1 text-center text-xs text-muted">
             {WEEKDAY_LABELS.map((d) => (
               <div key={d}>{d}</div>
             ))}
@@ -193,12 +193,15 @@ export default async function HistoryPage({ searchParams }: PageProps<"/app/hist
                             data-today={isToday || undefined}
                             data-active={isToday || undefined}
                             className={cn(
-                              "relative flex size-full flex-col items-center justify-center gap-0.5 rounded-[var(--radius-sm)] bg-accent-soft text-sm leading-none font-semibold text-accent",
-                              hasRecord && "shadow-[inset_0_-3px_0_var(--accent)]",
-                              isToday && "reg-frame bg-accent-soft",
+                              "relative flex size-full flex-col items-center justify-center gap-0.5 rounded-[var(--radius-md)] bg-accent-soft text-sm leading-none font-semibold tabular-nums text-accent",
+                              isToday && "card bg-accent-soft",
                               day === selectedDay && "outline-2 outline-offset-1 outline-accent",
                             )}
                           >
+                            {/* A record that day: a small star in the corner (the label says it too). */}
+                            {hasRecord ? (
+                              <Star aria-hidden className="absolute right-1 top-1 size-2.5 fill-current" strokeWidth={0} />
+                            ) : null}
                             {day}
                             {daySessions.length > 1 ? (
                               <span aria-hidden className="flex gap-0.5">
@@ -214,8 +217,8 @@ export default async function HistoryPage({ searchParams }: PageProps<"/app/hist
                             data-today={isToday || undefined}
                             data-active={isToday || undefined}
                             className={cn(
-                              "flex size-full items-center justify-center text-sm text-muted",
-                              isToday && "reg-frame bg-transparent font-semibold text-foreground",
+                              "flex size-full items-center justify-center rounded-[var(--radius-md)] text-sm tabular-nums text-muted",
+                              isToday && "card bg-transparent font-semibold text-foreground",
                             )}
                           >
                             {day}
@@ -237,9 +240,9 @@ export default async function HistoryPage({ searchParams }: PageProps<"/app/hist
             })}
           </div>
           {/* What the marks mean. */}
-          <p aria-hidden className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 px-1 font-mono text-[10px] text-muted">
+          <p aria-hidden className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 px-1 text-xs text-muted">
             <span className="inline-flex items-center gap-1.5">
-              <span className="h-2.5 w-3 rounded-[1px] bg-accent-soft shadow-[inset_0_-2px_0_var(--accent)]" />
+              <Star className="size-3 fill-current text-accent" strokeWidth={0} />
               recorde
             </span>
             <span className="inline-flex items-center gap-1.5">
@@ -258,7 +261,7 @@ export default async function HistoryPage({ searchParams }: PageProps<"/app/hist
       </Card>
 
       {dayList ? (
-        <section className="mt-8" aria-labelledby="dia">
+        <section className="mt-10" aria-labelledby="dia">
           {/* The way back sits under the list: next to the date and count it pushed the row off a 320px screen. */}
           <SectionHead
             id="dia"
@@ -277,14 +280,14 @@ export default async function HistoryPage({ searchParams }: PageProps<"/app/hist
           )}
           <Link
             href={`/app/history?year=${year}&month=${month}`}
-            className="mt-2 inline-flex min-h-11 items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
+            className="mt-2 inline-flex min-h-11 items-center gap-1 text-sm font-medium text-accent hover:underline"
           >
-            <ChevronLeft aria-hidden className="size-3.5" />
+            <ChevronLeft aria-hidden className="size-4" />
             Ver recentes
           </Link>
         </section>
       ) : (
-        <section className="mt-8" aria-labelledby="recentes">
+        <section className="mt-10" aria-labelledby="recentes">
           <SectionHead id="recentes" className="mb-3" label="Treinos recentes" />
           {recent.items.length === 0 ? (
             <EmptyState

@@ -61,7 +61,7 @@ export function RemoveFollowerButton({
         role="status"
         tabIndex={-1}
         data-removed={removed ? "" : undefined}
-        className={removed ? "font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted outline-none" : "sr-only"}
+        className={removed ? "text-[13px] font-medium text-muted outline-none" : "sr-only"}
       >
         {removed ? (
           <>
@@ -70,7 +70,7 @@ export function RemoveFollowerButton({
         ) : null}
       </span>
       {error ? (
-        <p role="alert" className="basis-full text-right text-xs text-danger">
+        <p role="alert" className="basis-full text-right text-[13px] text-danger">
           <ActionErrorText error={error} />
         </p>
       ) : null}

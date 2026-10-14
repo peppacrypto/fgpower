@@ -127,7 +127,7 @@ export default async function AdminReportsPage({ searchParams }: PageProps<"/adm
       <Masthead kicker="Admin" title="Denúncias" lead="Cada denúncia chega aqui. Quem denunciou e quem foi denunciado não são avisados da decisão." />
       <nav aria-label="Denúncias" className="mt-6 flex gap-1 border-b border-border">
         <TabLink href="/admin/reports" current={tab === "open"}>
-          Abertas <span className="font-mono text-[11px] tabular-nums">{openCount}</span>
+          Abertas <span className="rounded-full bg-surface-2 px-2 py-0.5 text-xs font-semibold tabular-nums">{openCount}</span>
         </TabLink>
         <TabLink href="/admin/reports?status=resolvidas" current={tab === "resolved"}>
           Resolvidas
@@ -142,7 +142,7 @@ export default async function AdminReportsPage({ searchParams }: PageProps<"/adm
       ) : null}
 
       {reports.length === 0 ? (
-        <p className="mt-6 border-l-2 border-l-border-strong bg-surface-2 px-3.5 py-3 text-sm text-muted">
+        <p className="card mt-6 p-4 text-sm text-muted sm:p-5">
           {tab === "open" ? "Nenhuma denúncia aberta." : "Nenhuma denúncia resolvida ainda."}
         </p>
       ) : (
@@ -170,25 +170,25 @@ export default async function AdminReportsPage({ searchParams }: PageProps<"/adm
                 : 0;
             const targetHandle = target ? (target.username ? `@${target.username}` : target.name) : null;
             return (
-              <li key={r.id} className="reg-frame p-4" data-report={r.id}>
+              <li key={r.id} className="card p-4" data-report={r.id}>
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <span className="flex flex-wrap items-center gap-2">
                     <span className="tag tag--status tag--warn">{reason}</span>
-                    <span className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-muted">
+                    <span className="text-[13px] font-medium text-muted">
                       {aboutWorkout ? "Treino" : "Perfil"}
                     </span>
                   </span>
-                  <time dateTime={r.createdAt.toISOString()} title={formatFullDateTime(r.createdAt)} className="font-mono text-[11px] text-muted">
+                  <time dateTime={r.createdAt.toISOString()} title={formatFullDateTime(r.createdAt)} className="text-[13px] text-muted">
                     {formatRelativeTime(r.createdAt, now)}
                   </time>
                 </div>
 
                 <dl className="mt-3 grid grid-cols-[auto_1fr] items-baseline gap-x-3 gap-y-1.5 text-sm">
-                  <dt className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-muted">Denunciante</dt>
+                  <dt className="text-[13px] font-medium text-muted">Denunciante</dt>
                   <dd className="min-w-0 [overflow-wrap:anywhere]">
                     {reporter ? <PersonLink person={reporter} /> : <span className="text-muted">Conta excluída</span>}
                   </dd>
-                  <dt className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-muted">Denunciado</dt>
+                  <dt className="text-[13px] font-medium text-muted">Denunciado</dt>
                   <dd className="flex min-w-0 flex-wrap items-center gap-2 [overflow-wrap:anywhere]">
                     {/* Nobody: an old workout report (it named no person) whose post is gone since. */}
                     {target ? <PersonLink person={target} /> : <span className="text-muted">Não identificado</span>}
@@ -197,12 +197,12 @@ export default async function AdminReportsPage({ searchParams }: PageProps<"/adm
                 </dl>
 
                 {r.details ? (
-                  <p className="mt-3 border-l-2 border-l-border-strong pl-3 text-sm whitespace-pre-line [overflow-wrap:anywhere]">{r.details}</p>
+                  <p className="mt-3 rounded-[var(--radius-md)] bg-surface-2 px-3.5 py-2.5 text-sm whitespace-pre-line [overflow-wrap:anywhere]">{r.details}</p>
                 ) : null}
 
                 {aboutWorkout ? (
-                  <div className="mt-3 border border-border bg-surface-2 p-3 text-sm">
-                    <p className="flex flex-wrap items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-muted">
+                  <div className="mt-3 rounded-[var(--radius-md)] bg-surface-2 p-3.5 text-sm">
+                    <p className="flex flex-wrap items-center gap-2 text-[13px] font-medium text-muted">
                       {live ? "Treino denunciado" : "Publicação excluída — como foi denunciada"}
                       {(live?.visibility ?? snap.visibility) ? (
                         <span className="tag tag--spec">{VISIBILITY_LABEL[live?.visibility ?? snap.visibility ?? ""] ?? live?.visibility}</span>
@@ -216,7 +216,7 @@ export default async function AdminReportsPage({ searchParams }: PageProps<"/adm
                       <p className="mt-1 text-xs text-muted">Sem legenda.</p>
                     )}
                     {live ? (
-                      <p className="mt-1 font-mono text-[11px] text-muted">Publicado {formatRelativeTime(live.createdAt, now)}</p>
+                      <p className="mt-1 text-[13px] text-muted">Publicado {formatRelativeTime(live.createdAt, now)}</p>
                     ) : null}
                     {live && opensInApp.has(live.id) ? (
                       <Link href={`/app/activity/${live.id}`} className="mt-1 inline-flex min-h-11 items-center text-xs font-semibold text-accent underline underline-offset-2">
@@ -225,14 +225,14 @@ export default async function AdminReportsPage({ searchParams }: PageProps<"/adm
                     ) : null}
                   </div>
                 ) : snap.bio ? (
-                  <div className="mt-3 border border-border bg-surface-2 p-3 text-sm">
-                    <p className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-muted">Bio quando foi denunciado</p>
+                  <div className="mt-3 rounded-[var(--radius-md)] bg-surface-2 p-3.5 text-sm">
+                    <p className="text-[13px] font-medium text-muted">Bio quando foi denunciado</p>
                     <p className="mt-1 whitespace-pre-line [overflow-wrap:anywhere]">{snap.bio}</p>
                   </div>
                 ) : null}
 
                 {tab === "open" && openAboutTarget > 1 ? (
-                  <p className="mt-3 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-danger">
+                  <p className="mt-3 text-[13px] font-semibold text-danger">
                     {plural(openAboutTarget, "denúncia aberta", "denúncias abertas")} sobre {aboutWorkout ? "este treino" : "esta conta"}
                   </p>
                 ) : null}
@@ -250,7 +250,7 @@ export default async function AdminReportsPage({ searchParams }: PageProps<"/adm
                       <span className={cn("tag tag--status", r.status === "ACTIONED" ? "tag--ok" : "tag--info")}>
                         {STATUS_LABEL[r.status] ?? r.status}
                       </span>
-                      <span className="font-mono text-[11px] text-muted">
+                      <span className="text-[13px] text-muted">
                         {r.resolvedBy ? `por ${toPublicUser(r.resolvedBy).name}` : ""}
                         {r.resolvedAt ? ` · ${formatRelativeTime(r.resolvedAt, now)}` : ""}
                       </span>
@@ -326,7 +326,7 @@ function PersonLink({ person }: { person: Person }) {
   const label = (
     <>
       <span className="font-semibold">{person.name}</span>
-      {person.username ? <span className="font-mono text-xs text-muted"> @{person.username}</span> : null}
+      {person.username ? <span className="text-[13px] text-muted"> @{person.username}</span> : null}
     </>
   );
   return person.username ? (

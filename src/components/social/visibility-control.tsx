@@ -45,7 +45,7 @@ export function VisibilityControl({
   }
 
   return (
-    <div role="radiogroup" aria-labelledby={labelledBy} className={cn("flex min-w-0 border border-border", className)}>
+    <div role="radiogroup" aria-labelledby={labelledBy} className={cn("flex min-w-0 gap-1 rounded-[var(--radius-md)] bg-surface-2 p-1", className)}>
       {VISIBILITY_OPTIONS.map((opt, i) => {
         const on = value === opt.value;
         return (
@@ -62,8 +62,10 @@ export function VisibilityControl({
             onClick={() => onChange(opt.value)}
             onKeyDown={(e) => onOptionKeyDown(e, i)}
             className={cn(
-              "min-h-10 min-w-0 flex-1 border-l border-border px-1 text-[13px] transition-colors first:border-l-0",
-              on ? "bg-accent-soft font-semibold text-accent" : "text-muted hover:bg-surface-2",
+              "min-h-10 min-w-0 flex-1 rounded-[calc(var(--radius-md)-3px)] px-1 text-[13px] transition-colors",
+              on
+                ? "bg-surface font-semibold text-accent shadow-[var(--shadow-sm)] ring-1 ring-border"
+                : "font-medium text-muted hover:text-foreground",
             )}
           >
             {opt.label}

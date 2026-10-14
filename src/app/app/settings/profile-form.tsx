@@ -88,7 +88,7 @@ export function FieldError({ name, error }: { name: string; error?: string }) {
 export function FormError({ error }: { error?: string }) {
   if (!error) return null;
   return (
-    <p role="alert" className="border-l-2 border-l-danger bg-danger-soft px-3.5 py-2.5 text-sm text-danger">
+    <p role="alert" className="rounded-[var(--radius-md)] bg-danger-soft px-4 py-3 text-sm text-danger">
       <ActionErrorText error={error} />
     </p>
   );

@@ -68,12 +68,12 @@ export function todayDayRow(page: Page, dayName: string): Locator {
   const section = page
     .locator("section")
     .filter({ has: page.getByRole("heading", { name: "Treinos do programa" }) });
-  return section.locator(".reg-frame").filter({ has: page.getByText(label) }).first();
+  return section.locator(".card").filter({ has: page.getByText(label) }).first();
 }
 
 /** A day card on the user's program page. */
 export function programDayCard(page: Page, dayName: string): Locator {
-  return page.locator(".reg-frame").filter({ has: page.getByRole("heading", { name: dayName, exact: true }) }).first();
+  return page.locator(".card").filter({ has: page.getByRole("heading", { name: dayName, exact: true }) }).first();
 }
 
 export function sessionIdFromUrl(url: string) {

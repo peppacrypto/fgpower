@@ -13,7 +13,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/misc";
 import { SectionHead } from "@/components/ui/section-head";
 import { ProgressChart } from "@/components/charts/progress-chart";
-import { monoDate, type ChartInputPoint, type ChartUnit } from "@/components/charts/scale";
+import { shortDate, type ChartInputPoint, type ChartUnit } from "@/components/charts/scale";
 import { formatNumber, formatKg, formatVolume, plural } from "@/lib/utils/format";
 import { formatSet, isBodyweightEquipment, isTimedHold } from "@/lib/training/set-plan";
 import { NOT_FOUND_TITLE } from "@/components/ui/not-found-panel";
@@ -59,9 +59,9 @@ export default async function ExerciseHistoryPage({
   const backLink = backToWorkout ? (
     <Link
       href={backToWorkout}
-      className="-mt-2 -ml-1 mb-2 inline-flex min-h-11 items-center gap-0.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted hover:text-foreground"
+      className="-mt-2 -ml-1 mb-2 inline-flex min-h-11 items-center gap-1 text-sm font-medium text-muted hover:text-foreground"
     >
-      <ChevronLeft className="size-3.5" aria-hidden />
+      <ChevronLeft className="size-4" aria-hidden />
       Voltar ao treino
     </Link>
   ) : null;
@@ -70,7 +70,10 @@ export default async function ExerciseHistoryPage({
     return (
       <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
         {backLink}
-        <h1 className="text-2xl font-bold tracking-tight">{exercise.namePt}</h1>
+        <span className="eyebrow">Meu histórico</span>
+        <h1 className="text-display mt-0.5 text-[1.75rem] font-semibold leading-tight [overflow-wrap:anywhere] sm:text-[2rem]">
+          {exercise.namePt}
+        </h1>
         <div className="mt-8">
           <EmptyState
             icon={<Lettermark code="PR" className="size-8 text-[11px]" />}
@@ -79,10 +82,10 @@ export default async function ExerciseHistoryPage({
             action={
               <Link
                 href={`/app/exercises/${slug}`}
-                className="mt-1 inline-flex min-h-11 items-center gap-1 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
+                className="mt-1 inline-flex min-h-11 items-center gap-1.5 text-sm font-medium text-accent hover:underline"
               >
                 Ver o exercício
-                <GArrow className="size-3" />
+                <GArrow className="size-3.5" />
               </Link>
             }
           />
@@ -230,25 +233,28 @@ export default async function ExerciseHistoryPage({
   return (
     <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
       {backLink}
-      <h1 className="text-2xl font-bold tracking-tight">{exercise.namePt}</h1>
-      <p className="mt-1 text-sm text-muted">
+      <span className="eyebrow">Meu histórico</span>
+      <h1 className="text-display mt-0.5 text-[1.75rem] font-semibold leading-tight [overflow-wrap:anywhere] sm:text-[2rem]">
+        {exercise.namePt}
+      </h1>
+      <p className="mt-1.5 text-[15px] text-muted">
         {plural(history.length, "sessão", "sessões")} · última em{" "}
         {formatAppDate(last.date, { day: "2-digit", month: "long", year: "numeric" })}
       </p>
 
       {marks.length > 0 ? (
-        <section className="mt-6">
+        <section className="mt-8">
           <SectionHead label="Melhores marcas" />
-          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
             {marks.map((m) => (
               <Card key={m.label}>
-                <CardContent className="py-3.5">
-                  <p className="text-[11px] font-medium text-muted">{m.label}</p>
-                  <p className="mt-0.5 font-mono text-lg font-bold tabular-nums">
+                <CardContent className="p-4">
+                  <p className="text-[13px] leading-snug text-muted">{m.label}</p>
+                  <p className="mt-1 text-xl font-semibold leading-tight tabular-nums">
                     <MarkValue text={m.value} />
                   </p>
-                  <p className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-muted">em {monoDate(m.date)}</p>
-                  {m.note ? <p className="mt-1 text-[11px] leading-snug text-muted">{m.note}</p> : null}
+                  <p className="mt-1 text-xs tabular-nums text-muted">em {shortDate(m.date)}</p>
+                  {m.note ? <p className="mt-1.5 text-xs leading-snug text-muted">{m.note}</p> : null}
                 </CardContent>
               </Card>
             ))}
@@ -259,14 +265,14 @@ export default async function ExerciseHistoryPage({
       <PeriodChips period={period} basePath={`/app/exercises/${slug}/history`} className="mt-6" />
 
       {inPeriod.length === 0 ? (
-        <div className="mt-4 border-l-2 border-l-accent bg-surface-2 px-3.5 py-3 text-sm">
+        <div className="card mt-4 px-4 py-3.5 text-[15px]">
           <p>Nenhuma sessão deste exercício {periodSpan}.</p>
           <Link
             href={`/app/exercises/${slug}/history?period=all`}
-            className="mt-1 inline-flex min-h-11 items-center gap-1 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
+            className="-mb-2 mt-0.5 inline-flex min-h-11 items-center gap-1.5 text-sm font-medium text-accent hover:underline"
           >
             Ver todo o histórico
-            <GArrow className="size-3" />
+            <GArrow className="size-3.5" />
           </Link>
         </div>
       ) : (
@@ -275,7 +281,7 @@ export default async function ExerciseHistoryPage({
             <CardContent className="flex flex-col gap-8 pt-5">
               {charts.map((c) =>
                 "note" in c ? (
-                  <p key={c.note} className="border-l-2 border-l-border-strong pl-3 text-xs text-muted">
+                  <p key={c.note} className="rounded-[var(--radius-md)] bg-surface-2 px-3.5 py-2.5 text-[13px] text-muted">
                     {c.note}
                   </p>
                 ) : (
@@ -286,23 +292,23 @@ export default async function ExerciseHistoryPage({
           </Card>
 
           {ledger.length > 0 ? (
-            <details className="group mt-6 border-y border-border">
-              <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 text-[11px] font-bold uppercase tracking-[0.18em] text-muted [&::-webkit-details-marker]:hidden">
-                Linha do tempo de recordes
-                <span className="inline-flex items-center gap-2 font-mono tabular-nums">
+            <details className="group card mt-6 px-4 sm:px-5">
+              <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
+                <span className="text-[15px] font-semibold">Linha do tempo de recordes</span>
+                <span className="inline-flex items-center gap-2 text-[13px] tabular-nums text-muted">
                   {ledger.length}
-                  <ChevronDown className="size-3.5 transition-transform group-open:rotate-180" aria-hidden />
+                  <ChevronDown className="size-4 transition-transform group-open:rotate-180" aria-hidden />
                 </span>
               </summary>
-              <ol className="flex flex-col divide-y divide-border pb-2">
+              <ol className="flex flex-col divide-y divide-border border-t border-border pb-2">
                 {ledger.map((r) => (
-                  <li key={r.id} className="flex items-baseline gap-3 py-2 text-sm" data-record-row>
-                    <span className="w-14 shrink-0 font-mono text-[11px] tabular-nums text-muted">{monoDate(r.date)}</span>
+                  <li key={r.id} className="flex items-baseline gap-3 py-2.5 text-sm" data-record-row>
+                    <span className="w-16 shrink-0 text-[13px] tabular-nums text-muted">{shortDate(r.date)}</span>
                     {/* Label and value share a line while they fit; on a narrow phone the
                         value drops under the label (right-aligned) instead of running over it. */}
                     <span className="flex min-w-0 flex-1 flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
                       <span className="text-muted">{r.label}</span>
-                      <span className="ml-auto font-mono font-semibold tabular-nums">{r.value}</span>
+                      <span className="ml-auto font-semibold tabular-nums">{r.value}</span>
                     </span>
                   </li>
                 ))}
@@ -310,20 +316,20 @@ export default async function ExerciseHistoryPage({
             </details>
           ) : null}
 
-          <section className="mt-6">
+          <section className="mt-8">
             <SectionHead label="Sessões" count={inPeriod.length} />
             {mode === "reps" && listed.some((p) => p.bestRepsKg === 0) ? (
-              <p className="mt-1.5 font-mono text-[10px] uppercase tracking-wider text-muted">PC = peso corporal</p>
+              <p className="mt-1 text-[13px] text-muted">PC = peso corporal</p>
             ) : null}
-            <ol className="mt-3 flex flex-col gap-1.5">
+            <ol className="mt-3 flex flex-col gap-2">
               {listed.map((p) => (
                 <li key={p.sessionId}>
                   <Link
                     href={`/app/workout/${p.sessionId}/summary`}
-                    className="group flex min-h-11 items-center justify-between gap-3 rounded-[var(--radius-sm)] bg-surface-2 px-3.5 py-2 font-mono text-sm hover:bg-[var(--ink-4)]"
+                    className="card is-link group flex min-h-12 items-center justify-between gap-3 px-4 py-2.5 text-[15px]"
                   >
-                    <span className="flex items-center gap-2 text-muted">
-                      {monoDate(p.date)}
+                    <span className="flex items-center gap-2 tabular-nums text-muted">
+                      {shortDate(p.date)}
                       {anyRecord.has(p.sessionId) ? (
                         <>
                           <Lettermark code="PR" className="size-4 text-[8px]" />
@@ -331,9 +337,9 @@ export default async function ExerciseHistoryPage({
                         </>
                       ) : null}
                     </span>
-                    <span className="flex items-center gap-2 tabular-nums">
+                    <span className="flex items-center gap-2.5 font-semibold tabular-nums">
                       {bestSetText(p, mode)}
-                      <GArrow className="size-3 text-muted group-hover:text-accent" />
+                      <GArrow className="size-3.5 text-muted group-hover:text-accent" />
                     </span>
                   </Link>
                 </li>
@@ -343,10 +349,10 @@ export default async function ExerciseHistoryPage({
               <Link
                 href={listHref(!listAll)}
                 scroll={false}
-                className="mt-2 inline-flex min-h-11 items-center gap-1 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:underline"
+                className="mt-2 inline-flex min-h-11 items-center gap-1.5 text-sm font-medium text-accent hover:underline"
               >
                 {listAll ? `Mostrar só as ${LIST_SIZE} últimas` : `Ver todas as ${inPeriod.length} sessões`}
-                <GArrow className="size-3" />
+                <GArrow className="size-3.5" />
               </Link>
             ) : null}
           </section>

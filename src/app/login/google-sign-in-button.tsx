@@ -87,7 +87,7 @@ export function GoogleSignInButton({ googleConfigured, next }: { googleConfigure
 
   return (
     <div className="flex flex-col gap-2">
-      <Button variant="secondary" size="lg" className="w-full" disabled={loading} onClick={signIn}>
+      <Button variant="outline" size="lg" className="w-full" disabled={loading} onClick={signIn}>
         <GoogleIcon />
         {loading ? "Redirecionando…" : "Continuar com Google"}
       </Button>

@@ -6,7 +6,8 @@ import { notFound, redirect } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import { getCurrentSession } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
-import { Markdown } from "@/components/markdown";
+import { Markdown, splitTakeaway } from "@/components/markdown";
+import { SectionHead } from "@/components/ui/section-head";
 import { EvidenceReferences } from "@/components/ui/evidence-references";
 
 /** One principle with its references — shared by generateMetadata and the page (one query per request). */
@@ -29,25 +30,39 @@ export default async function PublicPrincipleDetailPage({ params }: PageProps<"/
   if (session) redirect(`/app/science/${slug}`);
   if (!principle) notFound();
 
+  // Editorial order: the summary, then the practical upshot, then the evidence in detail.
+  const { takeaway, body } = splitTakeaway(principle.bodyPt);
+
   return (
     <MarketingShell>
-      <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-16">
+      <article className="mx-auto max-w-3xl px-4 py-10 sm:px-6 sm:py-14">
         <Link
           href="/science"
-          className="-mt-2 -ml-1 inline-flex min-h-11 items-center gap-0.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted hover:text-foreground"
+          className="-mt-2 -ml-1 inline-flex min-h-11 items-center gap-1 text-sm font-medium text-muted hover:text-foreground"
         >
-          <ChevronLeft className="size-3.5" aria-hidden />
+          <ChevronLeft className="size-4" aria-hidden />
           Princípios científicos
         </Link>
-        <h1 className="text-display mt-1 text-3xl font-semibold sm:text-4xl">{principle.titlePt}</h1>
-        <p className="mt-3 text-lg text-muted">{principle.summaryPt}</p>
+        <h1 className="text-display mt-3 text-[1.75rem] font-semibold leading-tight sm:text-[2.25rem]">{principle.titlePt}</h1>
+        <p className="mt-3 text-[17px] leading-relaxed text-muted">{principle.summaryPt}</p>
 
-        <div className="mt-8">
-          <Markdown text={principle.bodyPt} />
-        </div>
+        {takeaway ? (
+          <div className="mt-6 rounded-[var(--radius-lg)] bg-accent-soft p-4 sm:p-5">
+            <p className="eyebrow text-accent">Para o seu treino</p>
+            <Markdown text={takeaway} className="mt-1.5 text-[15px] leading-relaxed text-foreground sm:text-base" />
+          </div>
+        ) : null}
 
-        <EvidenceReferences items={principle.evidence} className="mt-10 border-t border-border pt-6" />
-      </div>
+        <section aria-labelledby={takeaway ? "em-detalhe" : undefined} className={takeaway ? "mt-10" : "mt-8"}>
+          {takeaway ? <SectionHead id="em-detalhe" label="Em detalhe" /> : null}
+          <Markdown
+            text={body}
+            className={`max-w-prose text-[15px] leading-relaxed text-foreground sm:text-base ${takeaway ? "mt-3" : ""}`}
+          />
+        </section>
+
+        <EvidenceReferences items={principle.evidence} className="mt-12" />
+      </article>
     </MarketingShell>
   );
 }

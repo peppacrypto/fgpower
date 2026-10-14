@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useRestoreFocus } from "@/components/ui/use-restore-focus";
 import { cn } from "@/lib/utils/cn";
 import { formatRir } from "@/lib/utils/format";
+import { SheetGrip } from "@/components/workout/sheet-grip";
 
 const SCALE: { rir: number; meaning: string }[] = [
   { rir: 0, meaning: "Falha: não sairia mais nenhuma" },
@@ -89,25 +90,24 @@ export function RirSheet({
       <div className="flex h-full w-full items-end justify-center sm:items-center" onClick={onClose}>
         <div
           onClick={(e) => e.stopPropagation()}
-          className="panel-raised max-h-[calc(100dvh-env(safe-area-inset-top,0px))] w-full max-w-lg overflow-y-auto overscroll-contain bg-background px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5"
+          className="sheet max-h-[calc(100dvh-env(safe-area-inset-top,0px))] w-full max-w-lg overflow-y-auto overscroll-contain px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3 sm:pt-6"
         >
-        <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent">
-          RIR · repetições em reserva
-        </span>
-        <h2 id="rir-title" className="text-display mt-1 text-2xl font-extrabold">
+        <SheetGrip />
+        <span className="eyebrow text-accent">RIR · repetições em reserva</span>
+        <h2 id="rir-title" className="text-display mt-0.5 text-2xl font-semibold">
           Quantas reps ainda sobrariam?
         </h2>
-        <p className="mt-2 text-sm text-foreground/90">
+        <p className="mt-2 text-[15px] leading-relaxed text-foreground">
           Ao terminar a série, estime quantas repetições boas você ainda conseguiria fazer. Esse número é o RIR.
         </p>
 
-        <ul className="mt-4 flex flex-col divide-y divide-border border-y border-border">
+        <ul className="mt-4 flex flex-col divide-y divide-border overflow-hidden rounded-[var(--radius-lg)] border border-border bg-surface">
           {SCALE.map((level) => (
             <li
               key={level.rir}
-              className={cn("flex items-center gap-3 px-2 py-2", isTarget(level.rir) && "bg-accent-soft")}
+              className={cn("flex items-center gap-3 px-3.5 py-2.5", isTarget(level.rir) && "bg-accent-soft")}
             >
-              <span className="w-12 shrink-0 font-mono text-sm font-bold tabular-nums">RIR {level.rir}</span>
+              <span className="w-14 shrink-0 text-sm font-semibold tabular-nums">RIR {level.rir}</span>
               <span className="min-w-0 flex-1 text-sm">{level.meaning}</span>
               {isTarget(level.rir) ? <span className="tag tag--mark shrink-0">alvo</span> : null}
             </li>
@@ -120,7 +120,7 @@ export function RirSheet({
             {target < 0.5 ? "vá até a falha" : `pare ${rirSpareWords(target)}`}.
           </p>
         ) : null}
-        <p className="mt-2 text-xs text-muted">
+        <p className="mt-2 text-[13px] text-muted">
           {rirDrivesLoad
             ? "Neste exercício a carga da próxima vez é sugerida pelo RIR: anote-o em cada série."
             : "Anotar o RIR é opcional. Com ele, a sugestão de carga da próxima vez fica mais certeira."}

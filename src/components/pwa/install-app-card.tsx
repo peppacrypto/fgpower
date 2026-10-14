@@ -81,7 +81,7 @@ export function InstallAppCard({ finishedWorkouts, className }: { finishedWorkou
         data-install-status
         className={
           installed
-            ? "border-l-2 border-l-success bg-surface-2 px-3 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em]"
+            ? "rounded-[var(--radius-md)] bg-success-soft px-3.5 py-2.5 text-sm font-medium text-success"
             : "sr-only"
         }
       >
@@ -116,21 +116,21 @@ export function InstallCardView({
   const titleId = useId();
   const ios = mode !== "prompt";
   return (
-    <section aria-labelledby={titleId} data-install-card={mode} className={cn("reg-frame p-5", className)}>
+    <section aria-labelledby={titleId} data-install-card={mode} className={cn("card p-5 sm:p-6", className)}>
       <div className="flex items-center gap-2">
-        <span className="tag tag--field text-accent">App</span>
+        <span className="eyebrow text-accent">App</span>
         {ios ? <span className="tag tag--spec">2 passos</span> : null}
       </div>
-      <h2 id={titleId} className="text-display mt-2 text-xl font-extrabold leading-tight">
+      <h2 id={titleId} className="mt-1 text-[17px] font-semibold leading-snug">
         Tenha a FGPOWER na tela inicial
       </h2>
-      <p className="mt-1.5 text-sm text-muted">
+      <p className="mt-1 text-sm text-muted">
         Abre direto no treino de hoje, em tela cheia, sem procurar a aba do navegador.
       </p>
 
       {ios ? (
         <>
-          <ol className="mt-4 flex flex-col border-y border-border" aria-label="Como adicionar">
+          <ol className="mt-4 flex flex-col gap-2" aria-label="Como adicionar">
             <Step n={1} hint={SHARE_WHERE[mode]}>
               Toque em <strong className="font-semibold">Compartilhar</strong>
               <ShareGlyph />
@@ -165,19 +165,22 @@ export function InstallCardView({
 
 function Step({ n, hint, children }: { n: number; hint: string; children: React.ReactNode }) {
   return (
-    <li className="flex gap-3 border-t border-border py-2.5 first:border-t-0">
-      <span className="w-5 shrink-0 pt-px font-mono text-xs font-bold leading-5 text-foreground/40" aria-hidden>
-        {String(n).padStart(2, "0")}
+    <li className="flex gap-3 rounded-[var(--radius-md)] bg-surface-2 px-3.5 py-3">
+      <span
+        className="flex size-6 shrink-0 items-center justify-center rounded-full bg-surface text-xs font-semibold tabular-nums text-accent"
+        aria-hidden
+      >
+        {n}
       </span>
       <span className="min-w-0 flex-1">
         <span className="block text-sm leading-5">{children}</span>
-        <span className="mt-0.5 block text-xs text-muted">{hint}</span>
+        <span className="mt-0.5 block text-[13px] text-muted">{hint}</span>
       </span>
     </li>
   );
 }
 
-/** Square-cap keylines in the house glyph style (components/ui/glyph). */
+/** Keylines in the house glyph style (components/ui/glyph): round caps. */
 function GlyphBase({ className, children }: { className?: string; children: React.ReactNode }) {
   return (
     <svg
@@ -185,8 +188,8 @@ function GlyphBase({ className, children }: { className?: string; children: Reac
       fill="none"
       stroke="currentColor"
       strokeWidth={1.5}
-      strokeLinecap="square"
-      strokeLinejoin="miter"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       className={cn("ml-1.5 inline-block size-4 shrink-0 -translate-y-px align-middle text-accent", className)}
       aria-hidden
     >
@@ -210,7 +213,7 @@ export function ShareGlyph({ className }: { className?: string }) {
 export function AddGlyph({ className }: { className?: string }) {
   return (
     <GlyphBase className={className}>
-      <rect x="4" y="4" width="16" height="16" />
+      <rect x="4" y="4" width="16" height="16" rx="4" />
       <line x1="12" y1="8" x2="12" y2="16" />
       <line x1="8" y1="12" x2="16" y2="12" />
     </GlyphBase>

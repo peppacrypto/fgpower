@@ -24,7 +24,7 @@ export interface SeriesProgress {
 }
 
 /**
- * The GD plan as one card — "PLANO GD · 2 ANOS" — instead of nine look-alike
+ * The GD plan as one card — "Plano GD · 2 anos" — instead of nine look-alike
  * cards: one line on what it is, a 9-segment rail (Adaptação, 1…8; width by
  * weeks, height by level, years under it; finished blocks ✓), the block to go
  * on with for this user — the running one, one stopped mid-way ("Retomar"),
@@ -90,44 +90,56 @@ export function GdSeriesCard({
     .map((year) => ({ year, weeks: blocks.filter((b) => b.year === year).reduce((n, b) => n + b.durationWeeks, 0) }))
     .filter((y) => y.weeks > 0);
   const listed = matches ? blocks.filter((b) => matches.has(b.slug)) : blocks;
+  // The weekly commitment, as the program cards say it: "5 dias/semana · ~45–62 min · 9 blocos".
+  const blockItems = blocks.map((b) => bySlug.get(b.slug)).filter((t): t is ProtocolCardData => Boolean(t));
+  const range = (values: number[]) => {
+    const lo = Math.min(...values);
+    const hi = Math.max(...values);
+    return lo === hi ? `${lo}` : `${lo}–${hi}`;
+  };
+  const commitment =
+    blockItems.length > 0
+      ? `${range(blockItems.map((t) => t.daysPerWeek))} dias/semana · ~${range(blockItems.map((t) => t.sessionMinutes))} min · ${blocks.length} blocos`
+      : null;
+  const status = runningBlock
+    ? `Seu programa · ${runningBlock.name}`
+    : resumeBlock
+      ? `Seu programa · ${resumeBlock.name}`
+      : nextBlock
+        ? `Próximo · ${nextBlock.name}`
+        : repeatBlock
+          ? "Plano concluído"
+          : pick && blocks.some((b) => b.slug === pick)
+            ? "Para você"
+            : null;
 
   return (
-    <div
-      data-series="gd"
-      className="relative mt-4 flex min-w-0 flex-col bg-surface p-5 pt-4"
-      style={{ borderTop: `2px solid ${hue.spine}` }}
-    >
-      <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
-        <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted">
-          Série · {blocks.length} blocos
-        </span>
-        {runningBlock ? (
-          <span className="tag tag--mark">Seu programa · {runningBlock.name}</span>
-        ) : resumeBlock ? (
-          <span className="tag tag--mark">Seu programa · {resumeBlock.name}</span>
-        ) : nextBlock ? (
-          <span className="tag tag--mark">Próximo · {nextBlock.name}</span>
-        ) : repeatBlock ? (
-          <span className="tag tag--mark">Plano concluído</span>
-        ) : pick && blocks.some((b) => b.slug === pick) ? (
-          <span className="tag tag--mark">Para você</span>
-        ) : null}
+    <div data-series="gd" className="card flex min-w-0 flex-col p-4 sm:p-6">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <span className="tag tag--field text-[13px]" style={{ color: hue.fg }}>
+            Série · {blocks.length} blocos
+          </span>
+          <h3 className="mt-1 text-xl font-semibold leading-tight">
+            Plano GD <span className="font-normal text-muted">· {Math.round(totalWeeks / 52) || 1} anos</span>
+          </h3>
+        </div>
+        {status ? <span className="tag tag--mark mt-0.5 shrink-0">{status}</span> : null}
       </div>
-      <h3 className="mt-2 text-lg font-bold leading-tight tracking-tight">
-        Plano GD <span className="font-mono text-base text-muted">· {Math.round(totalWeeks / 52) || 1} anos</span>
-      </h3>
-      <p className="mt-1 text-sm text-muted">
+      <p className="mt-1.5 text-sm leading-snug text-muted">
         Um plano de 2 anos em blocos seguidos, 5×/semana: cada bloco prepara o próximo, com testes de força no caminho.
       </p>
+      {commitment ? <p className="mt-3 text-sm font-medium tabular-nums">{commitment}</p> : null}
 
       <SeriesRail
         blocks={railBlocks}
         current={(runningBlock ?? resumeBlock ?? nextBlock ?? repeatBlock)?.slug ?? null}
         highlight={matches ?? null}
         years={years}
+        className="mt-5"
       />
 
-      <div className="mt-4 flex flex-wrap items-center gap-2">
+      <div className="mt-5 flex flex-wrap items-center gap-2">
         <Button variant="strong" asChild className="h-auto min-h-11 max-w-full whitespace-normal py-2 text-left">
           <Link href={startHref}>
             {runningBlock
@@ -151,13 +163,13 @@ export function GdSeriesCard({
         aria-expanded={open}
         aria-controls={listId}
         onClick={() => setOpen((o) => !o)}
-        className="mt-4 flex min-h-11 w-full items-center justify-center gap-1.5 border border-border font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-accent hover:bg-surface-2"
+        className="mt-5 flex min-h-11 w-full items-center justify-between gap-3 border-t border-border pt-1 text-left text-sm font-semibold text-accent hover:underline"
       >
         {open ? "Esconder os blocos" : matches ? `Ver os blocos (${listed.length} de ${blocks.length})` : `Ver os ${blocks.length} blocos`}
-        <ChevronDown className={cn("size-3.5 transition-transform", open && "rotate-180")} aria-hidden />
+        <ChevronDown className={cn("size-4 shrink-0 transition-transform", open && "rotate-180")} aria-hidden />
       </button>
       {/* Hidden, not removed: every block stays a link for crawlers and page search. */}
-      <ol id={listId} hidden={!open} className="mt-2 flex flex-col divide-y divide-border">
+      <ol id={listId} hidden={!open} className="mt-3 flex flex-col divide-y divide-border sm:mt-4">
         {listed.map((b) => (
           <BlockRow
             key={b.slug}
@@ -188,20 +200,20 @@ function BlockRow({ block, tagline, mark }: { block: SeriesBlock; tagline: strin
   return (
     <li>
       <Link href={block.href} className="group flex items-start gap-3 py-3">
-        <span className="flex size-8 shrink-0 items-center justify-center border border-border font-mono text-xs font-bold tabular-nums">
+        <span className="flex size-9 shrink-0 items-center justify-center rounded-[var(--radius-md)] bg-surface-2 text-sm font-semibold tabular-nums">
           {block.short}
         </span>
         <span className="min-w-0 flex-1">
-          <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-            <span className="text-sm font-semibold group-hover:text-accent">{block.name}</span>
+          <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            <span className="text-[15px] font-semibold group-hover:text-accent">{block.name}</span>
             {mark ? <span className="tag tag--mark">{mark}</span> : null}
           </span>
-          <span className="mt-0.5 block font-mono text-[10px] uppercase tracking-wider text-muted">
-            Sem. {block.fromWeek}–{block.toWeek} · {block.durationWeeks} sem. · {block.levelLabel}
+          <span className="mt-0.5 block text-[13px] tabular-nums text-muted">
+            Semanas {block.fromWeek}–{block.toWeek} · {block.durationWeeks} semanas · {block.levelLabel}
           </span>
-          {outcome ? <span className="mt-1 line-clamp-2 block text-xs text-muted wrap-break-word">{outcome}</span> : null}
+          {outcome ? <span className="mt-1 line-clamp-2 block text-[13px] leading-snug text-muted wrap-break-word">{outcome}</span> : null}
         </span>
-        <GArrow className="mt-1 size-3.5 shrink-0 text-muted transition-transform group-hover:translate-x-0.5" />
+        <GArrow className="mt-2 size-4 shrink-0 text-muted transition-transform group-hover:translate-x-0.5" />
       </Link>
     </li>
   );
