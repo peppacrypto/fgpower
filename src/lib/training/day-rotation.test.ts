@@ -429,6 +429,10 @@ describe("weekday-named days trained off their weekday (A-076)", () => {
   it("dayNameWithoutWeekday strips a leading weekday, leaves other names alone", () => {
     expect(dayNameWithoutWeekday("Terça — Inferior A")).toBe("Inferior A");
     expect(dayNameWithoutWeekday("Corpo Inteiro A")).toBe("Corpo Inteiro A");
+    // The "-feira" form: its hyphen isn't the separator.
+    expect(dayNameWithoutWeekday("Segunda-feira — Peito")).toBe("Peito");
+    expect(dayNameWithoutWeekday("Terça-Feira - Pernas")).toBe("Pernas");
+    expect(dayNameWithoutWeekday("Segunda-feira")).toBe("Segunda-feira");
   });
   it("scheduleShifted is true only when a weekday-named day is suggested on a different weekday", () => {
     // weekdayOfDayNo(7) is a Thursday; weekdayOfDayNo(5) is a Tuesday (1970-01-06).

@@ -108,10 +108,12 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
         showLoadsPublicly: true,
       },
     }),
-    // "Treino nº 12": finished workouts up to and including this one.
-    prisma.workoutSession.count({ where: { userId, status: "COMPLETED", finishedAt: { lte: finishedAt } } }),
+    // "Treino nº 12": finished workouts up to and including this one (a legacy empty one doesn't count).
+    prisma.workoutSession.count({
+      where: { userId, status: "COMPLETED", totalWorkingSets: { gt: 0 }, finishedAt: { lte: finishedAt } },
+    }),
     prisma.workoutSession.findFirst({
-      where: { userId, status: "COMPLETED", finishedAt: { gt: finishedAt }, id: { not: session.id } },
+      where: { userId, status: "COMPLETED", totalWorkingSets: { gt: 0 }, finishedAt: { gt: finishedAt }, id: { not: session.id } },
       select: { id: true },
     }),
     previousPerformances(userId, session.id),

@@ -3,7 +3,7 @@ import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
 import { SHOWN_PR_KINDS } from "@/lib/training/personal-records-core";
 import { isBodyweightEquipment, isTimedHold } from "@/lib/training/set-plan";
-import { COUNTED_SET, SESSION_PERF_COLUMNS, toSessionPerf, type SessionPerfRow } from "./history";
+import { COUNTED_SET, RECENT_RECORDS_ORDER, SESSION_PERF_COLUMNS, toSessionPerf, type SessionPerfRow } from "./history";
 import { loadStreakInputs, streakWeeksFrom } from "./streak-data";
 import { spMondayNo } from "./sql";
 import { dayNumberOf, mondayOf } from "@/lib/training/day-rotation";
@@ -58,7 +58,7 @@ export async function getProgressSummary(userId: string, period: ProgressPeriod,
         kind: { in: [...SHOWN_PR_KINDS] },
         ...(start ? { achievedAt: { gte: start } } : {}),
       },
-      orderBy: { achievedAt: "desc" },
+      orderBy: RECENT_RECORDS_ORDER,
       take: 60,
       select: {
         id: true,

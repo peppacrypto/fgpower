@@ -137,9 +137,10 @@ someone to train while fatigued, reward junk volume, or nag. These are product r
   Rest days never "break" anything.
 - **Neutral progress copy.** Today shows "4 SEMANAS SEGUIDAS · RECORDE 6" and, from
   Thursday, "Faltam 2 treinos para manter a sequência" — only when the count fits the days
-  left at the plan's spacing and is 2 at most (`src/app/app/today/streak-nudge.ts`: a number
+  left at the plan's spacing and is 2 at most (`src/lib/training/streak-nudge.ts`: a number
   that takes back-to-back sessions to reach would push cramming), and "para esta semana
   contar" when a free week would cover a miss. Nothing is shown when there is no streak.
+  The training-day push's "Faltam N treinos para a semana contar" follows the same rule.
 - **Rest is part of the plan.** After a workout, or on a day that isn't one of the user's
   training days while the week is on track, Today says "Descanso hoje — próximo: Sessão B
   na segunda", with an outline "Treinar mesmo assim" (`upcomingWorkout` in

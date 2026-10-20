@@ -239,6 +239,18 @@ describe("the whole GD plan done", () => {
 
 describe("recordWorkoutMilestone", () => {
   it("stamps the 10th workout once, privately, and nothing in between", async () => {
+    // A legacy empty "finished" workout (no working set) isn't one: the 10th real workout is still the 10th.
+    const ghostAt = new Date(now.getTime() - 12 * DAY_MS);
+    await prisma.workoutSession.create({
+      data: {
+        userId: MILESTONE_USER,
+        name: "Sessão A",
+        status: "COMPLETED",
+        startedAt: new Date(ghostAt.getTime() - 3_600_000),
+        finishedAt: ghostAt,
+        totalWorkingSets: 0,
+      },
+    });
     const ids: string[] = [];
     for (let i = 0; i < 10; i++) {
       const s = await session({

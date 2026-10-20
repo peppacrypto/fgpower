@@ -17,8 +17,8 @@ import { goalFilterForTrack, trackOf } from "@/lib/programming/tracks";
 import { getWeekGuidance } from "@/lib/training/week-guidance";
 import { closeBlock, entryWeekWasTrained, recordWorkoutMilestone } from "@/lib/data/program-lifecycle";
 import { isStillEditable } from "@/lib/data/workout-session";
-import { buildWorkoutActivitySummary } from "@/lib/social/activity-summary";
 import { afterFinish, afterRescore } from "@/lib/workouts/finish-hooks";
+import { rescoreRecords } from "@/lib/workouts/rescore";
 import { SESSION_EXPIRED_ERROR } from "@/lib/auth/session-expired";
 import type { SettingsSaveResult } from "@/lib/actions/result";
 import { dayNumberOf, mondayOf } from "@/lib/training/day-rotation";
@@ -1200,37 +1200,6 @@ async function lockFinished(tx: Tx, userId: string, sessionId: string) {
   return { finishedAt: row.finishedAt, updatedAt: row.updatedAt };
 }
 
-/**
- * Re-judges the records of finished workouts — each against the workouts
- * finished before it (checkAndRecordPersonalRecords, idempotent) — dated on
- * their own finish, as the finish dates them. Run on a corrected workout and
- * on the later ones that share an exercise with it: a typo's "record" no
- * longer stands in their way, and a record measured against a deleted
- * workout is measured again. Each one's shared card is rebuilt after it (a
- * card lists the workout's records, and its totals after an edit), so the
- * feed never shows a record that no longer stands or misses one that does.
- */
-async function rescoreRecords(userId: string, sessionIds: string[]) {
-  for (const id of sessionIds) {
-    try {
-      await checkAndRecordPersonalRecords(userId, id);
-      const s = await prisma.workoutSession.findUnique({ where: { id }, select: { finishedAt: true } });
-      if (s?.finishedAt) {
-        await prisma.exercisePersonalRecord.updateMany({ where: { userId, sessionId: id }, data: { achievedAt: s.finishedAt } });
-      }
-    } catch (err) {
-      // The correction is saved; a record bookkeeping failure must not look like a failed save.
-      console.error("PR rescoring failed", id, err);
-    }
-    try {
-      // Outside the rescoring's try: an edited workout's card still gets its corrected totals.
-      await refreshSharedCard(id);
-    } catch (err) {
-      console.error("Shared card refresh failed", id, err);
-    }
-  }
-}
-
 /** Finished workouts after `finishedAt` that have one of `exerciseIds`, oldest first. */
 function laterWorkoutsWith(userId: string, exerciseIds: string[], finishedAt: Date) {
   if (exerciseIds.length === 0) return Promise.resolve([] as string[]);
@@ -1436,22 +1405,6 @@ export async function saveCheckIn(sessionId: string, input: CheckInInput): Promi
   revalidatePath("/app/progress");
   revalidatePath("/app/progress/body");
   return { ok: true, savedAt: new Date().toISOString() };
-}
-
-/** A shared workout's card is built from its sets and records (activities.ts): rebuilt after a correction. */
-async function refreshSharedCard(sessionId: string) {
-  // Most rescored workouts were never shared: those load nothing.
-  const session = await prisma.workoutSession.findFirst({
-    where: { id: sessionId, activity: { isNot: null } },
-    include: {
-      exerciseLogs: { include: { exercise: true, sets: true }, orderBy: { sortOrder: "asc" } },
-      records: { include: { exercise: true } },
-      activity: { select: { id: true, showDetailedLoads: true } },
-    },
-  });
-  if (!session?.activity) return;
-  const summary = buildWorkoutActivitySummary(session, session.activity.showDetailedLoads);
-  await prisma.activity.update({ where: { id: session.activity.id }, data: { summary: summary as never } });
 }
 
 function revalidateFinished(sessionId: string) {

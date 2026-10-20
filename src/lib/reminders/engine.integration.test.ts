@@ -27,6 +27,7 @@ const users = {
   pause: `${RUN}-pause`, // ignores reminders
   race: `${RUN}-race`, // two ticks at once
   open: `${RUN}-open`, // a workout left open
+  carry: `${RUN}-carry`, // SEG–SEX with digest, last week stopped after Quinta
   banned: `${RUN}-banned`,
 };
 
@@ -116,6 +117,27 @@ beforeAll(async () => {
   await makeUser(users.race, SQS);
   await makeUser(users.open, SQS);
   await makeUser(users.banned, SQS);
+  const carry = await makeUser(users.carry, { ...GD, digest: true });
+  const carryDays = await prisma.userProgramDay.findMany({ where: { programId: carry.programId }, orderBy: { dayIndex: "asc" } });
+  // Last week: Segunda to Quinta done, Sexta left over (finishing them moved the pointer to it).
+  await prisma.programEnrollment.update({ where: { id: carry.enrollmentId }, data: { nextDayIndex: 4 } });
+  for (const [i, day] of carryDays.slice(0, 4).entries()) {
+    const finishedAt = at(i - 7, 19);
+    await prisma.workoutSession.create({
+      data: {
+        userId: users.carry,
+        name: day.name,
+        status: "COMPLETED",
+        enrollmentId: carry.enrollmentId,
+        programId: carry.programId,
+        programDayId: day.id,
+        startedAt: new Date(finishedAt.getTime() - 3_600_000),
+        finishedAt,
+        totalWorkingSets: 3,
+        programWeek: 4,
+      },
+    });
+  }
   await prisma.user.update({ where: { id: users.banned }, data: { banned: true } });
 });
 
@@ -176,6 +198,23 @@ describe("runReminderTick", () => {
     expect(r.map((x) => x.status)).toEqual(["SENT", "SENT", "SENT", "SKIPPED"]);
     expect(r[3].skipReason).toBe("CAP_WEEK");
     expect(r.every((x) => x.kind === "TRAINING_DAY")).toBe(true);
+    // Segunda not done: Tuesday and Wednesday still offer it, and the title drops a weekday
+    // that would contradict the day, as Today does (A-076).
+    expect(pushes.filter((p) => p.userId === u).map((p) => p.payload.title)).toEqual([
+      "Hoje: Segunda — Superior",
+      "Hoje: Superior",
+      "Hoje: Superior",
+    ]);
+  });
+
+  it("a carried-over day keeps its weekday out of the digest on a Monday (A-076)", async () => {
+    const u = users.carry;
+    await tick(at(0, 7, 5), [u]);
+    expect((await rows(u)).map((x) => [x.kind, x.status])).toEqual([["WEEKLY_DIGEST", "SENT"]]);
+    const digest = emails.find((e) => e.to === `${u}@fgpower.test`)!;
+    expect(digest.subject).toMatch(/ — hoje: Pernas$/);
+    expect(digest.text).toContain("Hoje: Pernas");
+    expect(digest.text).not.toContain("Sexta — Pernas");
   });
 
   it("a deload week (applied): no digest, no push", async () => {

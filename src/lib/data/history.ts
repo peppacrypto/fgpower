@@ -12,6 +12,17 @@ import type { SessionPerf } from "./progress-core";
  */
 const DONE = { status: "COMPLETED" as const, totalWorkingSets: { gt: 0 } };
 
+/**
+ * Newest records first. A workout's records share one timestamp, so among
+ * them the order its lifts were done in — not whatever order the database
+ * returns, which decided at random which lifts a short list kept.
+ */
+export const RECENT_RECORDS_ORDER = [
+  { achievedAt: "desc" },
+  { setLog: { exerciseLog: { sortOrder: "asc" } } },
+  { id: "asc" },
+] satisfies Prisma.ExercisePersonalRecordOrderByWithRelationInput[];
+
 /** Completed sessions finished in [from, to) — pass `monthBounds()` from lib/training/week. */
 export async function listSessionsInRange(userId: string, from: Date, to: Date) {
   const sessions = await prisma.workoutSession.findMany({

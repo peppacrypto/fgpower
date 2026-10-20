@@ -1,3 +1,4 @@
+import { nudgeFits } from "@/lib/training/streak-nudge";
 import { formatNumber, plural, pluralWord } from "@/lib/utils/format";
 
 /**
@@ -24,6 +25,10 @@ export interface TrainingDayFacts {
   remaining: number;
   /** Planned training days left this week, today included. */
   plannedLeft: number;
+  /** Days a workout can still go in this week, today included (Today's nudgeDaysLeft). */
+  daysLeft: number;
+  /** Workouts a week the plan asks for (its spacing). */
+  perWeek: number;
   program: { name: string; week: number | null; weeks: number | null; entry: boolean; rir: number | null };
 }
 
@@ -35,7 +40,8 @@ export function trainingDayPush(f: TrainingDayFacts): { title: string; body: str
       body: `${f.daysSinceLast} dias desde o último treino. Volte com ~90% das cargas — a força volta rápido.`,
     };
   }
-  if (f.streakCurrent >= 2 && f.remaining > 0 && f.remaining >= f.plannedLeft) {
+  // Only a count Today would say too (W-131): 2 at most, and one the days left can hold.
+  if (f.streakCurrent >= 2 && f.remaining >= f.plannedLeft && nudgeFits(f.remaining, f.daysLeft, f.perWeek)) {
     return {
       title,
       body: `${pluralWord(f.remaining, "Falta", "Faltam")} ${plural(f.remaining, "treino", "treinos")} para a semana contar · ${f.streakCurrent} semanas seguidas no alvo.`,

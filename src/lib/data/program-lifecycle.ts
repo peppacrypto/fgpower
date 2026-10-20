@@ -615,7 +615,7 @@ export async function recordWorkoutMilestone(userId: string, sessionId: string):
   });
   if (!session || session.userId !== userId || session.status !== "COMPLETED" || !session.finishedAt) return null;
   const ordinal = await prisma.workoutSession.count({
-    where: { userId, status: "COMPLETED", finishedAt: { lte: session.finishedAt } },
+    where: { userId, ...FINISHED, finishedAt: { lte: session.finishedAt } },
   });
   if (!isWorkoutMilestone(ordinal)) return null;
   const already = await prisma.activity.findFirst({

@@ -7,7 +7,7 @@ import type { WeekGuidanceView } from "@/lib/training/week-guidance";
 import { WEEKDAYS_SHORT_CAP as WEEKDAY_SHORT } from "@/lib/utils/date-names";
 import { formatNumber, plural, pluralWord } from "@/lib/utils/format";
 import { cn } from "@/lib/utils/cn";
-import { nudgeFits } from "./streak-nudge";
+import { nudgeFits } from "@/lib/training/streak-nudge";
 
 /** The weekly streak line: "4 semanas seguidas · recorde 6" (weekly only — lib/training/streak). */
 export function streakText(current: number, best: number): string | null {

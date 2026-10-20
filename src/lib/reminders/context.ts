@@ -3,7 +3,8 @@ import { prisma } from "@/lib/db";
 import { getInProgressSessions, WELCOME_BACK_AFTER_DAYS } from "@/lib/data/dashboard";
 import { getUpcomingPlan, type UpcomingPlan } from "@/lib/data/upcoming";
 import { streakNudgeApplies } from "@/lib/data/streak-weeks";
-import { dayNumberOf, mondayOf, weekdayOfDayNo } from "@/lib/training/day-rotation";
+import { dayNameWithoutWeekday, dayNumberOf, mondayOf, scheduleShifted, weekdayOfDayNo } from "@/lib/training/day-rotation";
+import { nudgeDaysLeft } from "@/lib/training/streak-nudge";
 import { startOfWeek, wallClock, zonedMidnight } from "@/lib/training/week";
 import type { TrainingDayFacts } from "./copy";
 import { getReminderPreference } from "./preferences";
@@ -97,14 +98,18 @@ export async function loadReminderUser(
     // The "Faltam N" push speaks for the active program only — not a neutral entry
     // week another program judges (A-060): then 0, so no count is pushed.
     const nudgeApplies = streakNudgeApplies(plan.habit.streak.thisWeek.enrollmentId, plan.enrollment.id);
+    const next = plan.up.next;
     trainingDay = {
-      dayName: plan.up.next.day.name,
-      exerciseCount: plan.up.next.day.exercises.length,
+      // Today's title: a weekday-named day trained on another weekday drops the weekday (A-076).
+      dayName: scheduleShifted({ dayName: next.day.name, dayNo: next.dayNo }) ? dayNameWithoutWeekday(next.day.name) : next.day.name,
+      exerciseCount: next.day.exercises.length,
       daysSinceLast: lastDoneNo == null ? null : todayNo - lastDoneNo,
       welcomeBackAfterDays: WELCOME_BACK_AFTER_DAYS,
       streakCurrent: plan.habit.streak.current,
       remaining: nudgeApplies ? plan.habit.streak.remaining : 0,
       plannedLeft,
+      daysLeft: nudgeDaysLeft(now, ctx.trainedToday),
+      perWeek: plan.enrollment.program.daysPerWeek,
       program: {
         name: plan.enrollment.program.name,
         week: view.kind === "week" ? view.week : null,

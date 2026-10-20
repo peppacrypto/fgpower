@@ -372,8 +372,9 @@ test("the tick: digest on the first training day, a push on the next; a tap is t
   const monday = await tick(page, id, nextWeek(1, 7, 5));
   expect(monday.decisions).toEqual([expect.objectContaining({ kind: "WEEKLY_DIGEST", action: "send" })]);
   const digest = await readOutbox(page, email, { kind: "WEEKLY_DIGEST" });
-  // Today's next day (after this week's Segunda, the plan goes on from Terça).
-  expect(digest.subject).toMatch(/^Semana \d+ de 13 · GD 1 — hoje: \S+ — .+$/);
+  // Today's next day (after this week's Segunda, the plan goes on from Terça) — on a Monday,
+  // so named without its weekday, as Today names it (A-076).
+  expect(digest.subject).toMatch(/^Semana \d+ de 13 · GD 1 — hoje: Inferior \(quadríceps, pesado\)$/);
   expect(digest.devBody).toContain("SEMANA PASSADA");
   expect(digest.devBody).toContain("Abrir o treino de hoje:");
 

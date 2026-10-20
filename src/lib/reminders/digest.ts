@@ -5,7 +5,7 @@ import { getLastWeekReview } from "@/lib/data/dashboard";
 import { COMPLETED_BLOCK_WINDOW_MS, describeCompletedBlock } from "@/lib/data/program-lifecycle";
 import { getWeeklyStreak } from "@/lib/data/streak-data";
 import { signLink } from "@/lib/links/signed";
-import { weekdayOfDayNo } from "@/lib/training/day-rotation";
+import { dayNameWithoutWeekday, scheduleShifted, weekdayOfDayNo } from "@/lib/training/day-rotation";
 import { weeklyDigestEmail, type DigestData } from "@/lib/email/templates/weekly-digest";
 import type { LoadedReminderUser } from "./context";
 import { weekdaysLabel } from "./settings";
@@ -45,7 +45,13 @@ export async function buildDigest(user: LoadedReminderUser, userId: string, deli
       days: weekdaysLabel(plan.plannedDays),
       today:
         todayIsTraining && plan.up.next
-          ? { name: plan.up.next.day.name, exerciseCount: plan.up.next.day.exercises.length }
+          ? {
+              // Today's name for it: a weekday-named day trained on another weekday drops the weekday (A-076).
+              name: scheduleShifted({ dayName: plan.up.next.day.name, dayNo: plan.up.next.dayNo })
+                ? dayNameWithoutWeekday(plan.up.next.day.name)
+                : plan.up.next.day.name,
+              exerciseCount: plan.up.next.day.exercises.length,
+            }
           : null,
     };
   } else if (!plan.enrollment) {

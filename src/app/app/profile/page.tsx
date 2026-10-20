@@ -41,7 +41,7 @@ export default async function ProfilePage() {
     // Handle and name from the DB: the session cookie cache can be minutes stale.
     getOwnIdentity(user.id),
     listFavoriteExercises(user.id),
-    prisma.workoutSession.count({ where: { userId: user.id, status: "COMPLETED" } }),
+    prisma.workoutSession.count({ where: { userId: user.id, status: "COMPLETED", totalWorkingSets: { gt: 0 } } }),
     getGraphCounts(user.id),
     getPublicProfileOrigin(),
   ]);

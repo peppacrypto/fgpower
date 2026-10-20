@@ -74,7 +74,7 @@ import { ResumeWorkout } from "./resume-workout";
 import { ClearParams } from "./clear-params";
 import { BlockCompletedHero, InProgressBlock, NextWorkoutHero, RestDayHero, WeekCompleteHero } from "./heroes";
 import { ProgramCard, ThisWeekCard, streakText } from "./week-cards";
-import { nudgeDaysLeft } from "./streak-nudge";
+import { nudgeDaysLeft } from "@/lib/training/streak-nudge";
 import { WeekReviewFrame } from "./week-review";
 import { WEEK_REVIEW_COOKIE, WEEK_START_COOKIE, readWeekStart } from "./week-start";
 import { getEnrollmentProgress } from "@/lib/data/user-programs";

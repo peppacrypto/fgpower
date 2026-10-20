@@ -476,7 +476,8 @@ export function weekdayFromName(name: string): number | null {
  */
 export function dayNameWithoutWeekday(name: string): string {
   if (weekdayFromName(name) == null) return name;
-  const stripped = name.replace(/^\s*[A-Za-zÀ-ÿ]+\s*[—–-]\s*/u, "").trim();
+  // "Segunda-feira — Peito" too: the hyphen of "-feira" isn't the separator.
+  const stripped = name.replace(/^\s*[A-Za-zÀ-ÿ]+(?:-feira)?\s*[—–-](?!\s*feira)\s*/iu, "").trim();
   return stripped || name;
 }
 

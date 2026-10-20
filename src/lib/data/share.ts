@@ -49,9 +49,9 @@ export const getSharedWorkout = cache(async (token: string) => {
     return null;
   }
   const finishedAt = activity.session.finishedAt;
-  // "Treino nº 42": the author's finished workouts up to and including this one.
+  // "Treino nº 42": the author's finished workouts up to and including this one (the summary's count).
   const ordinal = await prisma.workoutSession.count({
-    where: { userId: activity.userId, status: "COMPLETED", finishedAt: { lte: finishedAt } },
+    where: { userId: activity.userId, status: "COMPLETED", totalWorkingSets: { gt: 0 }, finishedAt: { lte: finishedAt } },
   });
   return {
     activity: {

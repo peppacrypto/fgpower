@@ -9,6 +9,7 @@ import { isPartialEntryWeek } from "@/lib/training/program-calendar";
 import { layOutWeek } from "@/lib/programming/schedule";
 import { trackOf, type ProgramTrack } from "@/lib/programming/tracks";
 import { HIGH_WEEKLY_DIRECT_SETS, LOW_WEEKLY_SETS, SECONDARY_SET_CREDIT } from "@/lib/programming/rules";
+import { RECENT_RECORDS_ORDER } from "./history";
 import { loadStreakInputs } from "./streak-data";
 import { entryWeekTrained as entryWeekHadWorkout, streakWeeksFrom, summarizeStreak } from "./streak-weeks";
 
@@ -135,7 +136,7 @@ const PR_PRIORITY: Record<string, number> = { MAX_WEIGHT: 0, ESTIMATED_1RM: 1, M
 export async function getRecentPersonalRecords(userId: string, limit = 3) {
   const rows = await prisma.exercisePersonalRecord.findMany({
     where: { userId, kind: { not: "SESSION_VOLUME" } },
-    orderBy: { achievedAt: "desc" },
+    orderBy: RECENT_RECORDS_ORDER,
     // several records per exercise per workout: read enough to find `limit` exercises
     take: limit * 12,
     include: { exercise: { select: { namePt: true, slug: true } } },
@@ -451,7 +452,8 @@ export async function getLastWeekReview(userId: string, now: Date = new Date()) 
         kind: { not: "SESSION_VOLUME" },
         OR: [{ session: { finishedAt: lastWeek } }, { sessionId: null, achievedAt: lastWeek }],
       },
-      orderBy: { achievedAt: "asc" },
+      // A workout's records share one timestamp: then the order its lifts were done in.
+      orderBy: [{ achievedAt: "asc" }, { setLog: { exerciseLog: { sortOrder: "asc" } } }, { id: "asc" }],
       select: { exerciseId: true, exercise: { select: { namePt: true, slug: true } } },
     }),
     prisma.$queryRaw<{ muscle: string; direct: bigint | number; secondary: bigint | number }[]>`
