@@ -1,24 +1,21 @@
 import { z } from "zod";
 import type { WorkoutPreferences } from "./preferences-constants";
 
-// LOAD_INCREMENT_OPTIONS and the WorkoutPreferences type live zod-free in
-// `preferences-constants` so the Settings client form can import them without
-// zod (A-089). Re-export so server importers of this module are unaffected.
+// The WorkoutPreferences type lives zod-free in `preferences-constants` so the
+// Settings client form can import it without zod (A-089). Re-export so server
+// importers of this module are unaffected.
 export * from "./preferences-constants";
 
 /**
  * Settings → Durante o treino (lib/actions/preferences.ts). A plain module:
- * a 'use server' file may only export async functions.
+ * a 'use server' file may only export async functions. Strict: the retired
+ * load step (loadIncrementKg) — or anything else — never reaches the profile
+ * through it.
  */
-
-/** A quarter-kilo grid: every plate step there is, and values stored before these options existed (0,75). */
-const onQuarterKg = (v: number) => Math.abs(v * 4 - Math.round(v * 4)) < 1e-9;
-
 export const workoutPreferencesSchema = z
   .object({
     restTimerSound: z.boolean(),
     hapticsEnabled: z.boolean(),
-    loadIncrementKg: z.number().min(0.25).max(20).refine(onQuarterKg),
   })
   .strict();
 

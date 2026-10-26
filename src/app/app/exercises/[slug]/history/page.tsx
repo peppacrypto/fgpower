@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import { getExerciseLoadSteps } from "@/lib/data/load-steps";
+import { GYM_LOADS_SELECT, exerciseLoadGrid, gymLoadsOf } from "@/lib/training/exercise-load";
+import { stepAt } from "@/lib/training/load-grid";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronDown, ChevronLeft } from "lucide-react";
@@ -46,14 +49,15 @@ export default async function ExerciseHistoryPage({
   const user = await requireUser();
   const exercise = await prisma.exercise.findUnique({
     where: { slug },
-    select: { id: true, namePt: true, equipment: { select: { category: true } } },
+    select: { id: true, slug: true, namePt: true, category: true, equipmentId: true, equipment: { select: { category: true } } },
   });
   if (!exercise) notFound();
 
-  const [history, prs, profile] = await Promise.all([
+  const [history, prs, profile, ownSteps] = await Promise.all([
     getExerciseHistory(user.id, exercise.id),
     getExercisePersonalRecords(user.id, exercise.id),
-    prisma.profile.findUnique({ where: { userId: user.id }, select: { loadIncrementKg: true } }),
+    prisma.profile.findUnique({ where: { userId: user.id }, select: GYM_LOADS_SELECT }),
+    getExerciseLoadSteps(user.id, [exercise.id]),
   ]);
 
   const backLink = backToWorkout ? (
@@ -98,7 +102,11 @@ export default async function ExerciseHistoryPage({
   // followed by its reps (or seconds) instead of a flat 0 kg.
   const timed = isTimedHold({ slug });
   const mode = progressMode(history, { bodyweight: isBodyweightEquipment(exercise.equipment?.category), timed });
-  const loadStep = profile?.loadIncrementKg && profile.loadIncrementKg > 0 ? profile.loadIncrementKg : 2.5;
+  // The chart's tick grain: the exercise's real jump at its heaviest load (2 kg on a
+  // 12 kg dumbbell, 5 kg on a stack), not one step for every equipment.
+  const grid = exerciseLoadGrid(exercise, gymLoadsOf(profile), { exerciseStepKg: ownSteps.get(exercise.id) });
+  const heaviestKg = Math.max(0, ...history.map((p) => p.topKg));
+  const loadStep = stepAt(grid, heaviestKg) || 2.5;
   const count = (n: number) => (timed ? `${formatNumber(n, 0)} s` : plural(n, "rep", "reps"));
 
   // Which sessions set a record, per kind: their chart points get a dot.

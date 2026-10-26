@@ -57,6 +57,7 @@ export default function ProgramsLoading() {
       routes={[
         ["/app/programs/new", <NewProgramSkeleton key="new" />],
         ["/app/programs/templates/*/adapt", <AdaptSkeleton key="adapt" />],
+        ["/app/programs/*/academia", <AdaptSkeleton key="academia" />],
         ["/app/programs/templates/*", <TemplateSkeleton key="template" />],
         ["/app/programs/*/edit", <BuilderSkeleton key="edit" />],
         ["/app/programs/*", <ProgramSkeleton key="program" />],

@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { additiveGrid } from "@/lib/training/load-grid";
 import { adviceFromLastTime } from "@/lib/training/set-plan";
 import {
   compareWithLast,
@@ -70,7 +71,7 @@ describe("Na próxima (the workout screen's rule on this session's sets)", () =>
       strategy: "DOUBLE",
       prescribed,
       lastTime: { sets: sets.map(([weightKg, reps]) => ({ weightKg, reps, rir: 2.5, isExtra: false })), prescribedSets },
-      loadIncrementKg: 2.5,
+      grid: additiveGrid(2.5),
     });
 
   it("1 of 2 prescribed sets at the top of the range holds the load", () => {

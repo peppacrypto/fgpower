@@ -119,6 +119,41 @@ than *is this program's overall structure reasonable*. See the inline documentat
 that file and the `double-progression` / `rir` pages under `/app/science` for its
 reasoning; it is unit-tested in `progression.test.ts`.
 
+### Loads follow the equipment (P18)
+
+The engine never adds a fixed number of kilos. Each exercise moves along the loads its
+equipment actually has (`src/lib/training/load-grid.ts`):
+
+| How the load goes on (`LoadKind`, from `src/lib/exercises/gear.ts`) | Next load | Default |
+|---|---|---|
+| Dumbbells (`DUMBBELL`) | the next dumbbell on the rack | 1 kg apart up to 10 kg, then 2 kg |
+| Kettlebells / medicine balls | the next one there is | 4 kg apart / 1 kg to 10 kg, then 2 kg |
+| Pin-loaded machine (`STACK`), cable (`CABLE`) | one more plate of the stack | 5 kg |
+| Bar, Smith, trap bar, two-sided plate machine (`BARBELL`, `PLATE_MACHINE`) | a pair of the smallest plates | 2 × 2,5 kg |
+| T-bar / lying T-bar, belt, a plate in the hands (`PLATE_ONE_SIDE`, `BODYWEIGHT` extra load) | one smallest plate | 2,5 kg |
+| Bands, cardio, rollers, assisted machines (`NONE`) | never moved in kg | — |
+
+The defaults are the common Brazilian commercial gym; the user changes them in
+Settings → Minha academia (Profile `dumbbellScheme`, `stackStepKg`, `cableStepKg`,
+`smallestPlateKg`, `kettlebellStepKg`) and per exercise ("Este aparelho sobe de…",
+`ExerciseLoadStep`); a program row's own step (builder) sits in between
+(`src/lib/training/exercise-load.ts`). Warm-ups and the ease-back after a break snap to
+the same grid.
+
+Because a plate can be a large share of a light load, double progression checks the jump
+before suggesting it (P18 of the GD synthesis; ACSM 2009 describes increases as ~2–10%):
+with Epley at the same reps in reserve, if the next load would put the sets below the
+bottom of the range, it first asks for more reps at the current load — as many as make
+the new load land in the range, capped by `extendedRepCap` (25; 30 for calves and
+lateral raises; never past ~2× the range's top) — and suggests the jump once they are
+done (or once the cap is reached, with a "volte para …" fallback). If a jump leaves most
+sets below the range at one load, it suggests one step back (`kind: "decrease"`).
+
+Equipment availability uses the same map: `exerciseGear` lists the apparatus an exercise
+can be done on (anyOf), Profile `missingGear` holds what the user's gym lacks, and
+stand-ins (`getAlternatives`), the workout's "Não tenho este aparelho" and the program's
+"Ajustar à minha academia" never offer an exercise whose every option is missing.
+
 ## Motivation: what keeps people training, and what we never do
 
 FGPOWER's habit features follow the same brand as the programs: they must never push

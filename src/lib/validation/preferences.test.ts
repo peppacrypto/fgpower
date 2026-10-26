@@ -1,25 +1,24 @@
 import { describe, expect, it } from "vitest";
-import { LOAD_INCREMENT_OPTIONS, workoutPreferencesSchema } from "./preferences";
-
-const prefs = (loadIncrementKg: number, extra: Record<string, unknown> = {}) => ({
-  restTimerSound: true,
-  hapticsEnabled: false,
-  loadIncrementKg,
-  ...extra,
-});
+import { workoutPreferencesSchema } from "./preferences";
 
 describe("workoutPreferencesSchema", () => {
-  it("accepts every offered step and a legacy quarter-kilo one", () => {
-    for (const v of [...LOAD_INCREMENT_OPTIONS, 0.75]) {
-      expect(workoutPreferencesSchema.safeParse(prefs(v)).success).toBe(true);
+  it("accepts the two switches, on or off", () => {
+    for (const restTimerSound of [true, false]) {
+      for (const hapticsEnabled of [true, false]) {
+        expect(workoutPreferencesSchema.safeParse({ restTimerSound, hapticsEnabled }).success).toBe(true);
+      }
     }
   });
 
-  it("rejects steps off the grid or out of range, and unknown keys", () => {
-    for (const v of [0, 0.3, 25, Number.NaN, -1]) {
-      expect(workoutPreferencesSchema.safeParse(prefs(v)).success).toBe(false);
-    }
-    expect(workoutPreferencesSchema.safeParse(prefs(2.5, { unitSystem: "IMPERIAL" })).success).toBe(false);
+  it("refuses the retired load step and any other key", () => {
+    // "Salto de carga" moved to Minha academia: an old client's block never writes it back.
+    expect(workoutPreferencesSchema.safeParse({ restTimerSound: true, hapticsEnabled: false, loadIncrementKg: 2.5 }).success).toBe(false);
+    expect(workoutPreferencesSchema.safeParse({ restTimerSound: true, hapticsEnabled: false, unitSystem: "IMPERIAL" }).success).toBe(false);
+  });
+
+  it("refuses a missing or non-boolean switch", () => {
     expect(workoutPreferencesSchema.safeParse({ restTimerSound: true }).success).toBe(false);
+    expect(workoutPreferencesSchema.safeParse({ restTimerSound: "true", hapticsEnabled: false }).success).toBe(false);
+    expect(workoutPreferencesSchema.safeParse(null).success).toBe(false);
   });
 });

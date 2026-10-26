@@ -102,14 +102,26 @@ Um ensaio randomizado de 8 semanas comparando duas formas de aplicar sobrecarga 
 
 This gives a clear, low-ambiguity signal for when to add weight (rather than adding load on a fixed schedule regardless of actual performance), and keeps effort anchored to the same relative intensity (RIR target) across the whole cycle rather than letting a set rep target creep into near-failure territory as fatigue accumulates.
 
-FGPOWER's progressive overload engine (see your exercise history) automatically checks your last logged session against this rule and tells you — transparently, with the reasoning shown — when a load increase is available. It never changes a weight for you automatically; you always confirm.`,
+FGPOWER's progressive overload engine (see your exercise history) automatically checks your last logged session against this rule and tells you — transparently, with the reasoning shown — when a load increase is available. It never changes a weight for you automatically; you always confirm.
+
+**Real loads, not a fixed +2.5 kg.** The load it suggests is the next one your equipment actually has: the next dumbbell on the rack (in most gyms 1 kg apart up to 10 kg, then 2 kg), one more plate of a machine's or a cable's stack, a pair of the smallest plates on a bar or a leg press, one plate on a T-bar or a belt. You set how your gym is equipped in Settings → Minha academia, and any single machine that differs in the workout itself ("Este aparelho sobe de…"). Position stands describe load increases as a percentage — about 2-10% — rather than a fixed number of kilos, so the same plate is a small step on a heavy lift and a big one on a light isolation exercise.
+
+**When the next load is too big a jump.** Going from an 8 kg to a 9 kg dumbbell on a lateral raise is +12.5%, which can drop you well below the bottom of the range. In that case the engine first asks for more reps at the current load — enough that the new load still lands inside the range, up to about 25 reps (30 for calves and lateral raises) — and only then suggests the jump. And if a jump leaves most of your sets below the range, it suggests going one step back and adding reps before trying again.`,
     bodyPt: `A progressão dupla trabalha dentro de uma faixa de repetições prescrita — digamos, 8 a 12 — com uma carga fixa. Você vai adicionando repetições série a série, sessão a sessão. Quando todas as séries de trabalho atingem o topo da faixa (12 reps) no RIR-alvo, a carga aumenta e as repetições voltam para o início da faixa (8), reiniciando o ciclo.
 
 Isso dá um sinal claro e pouco ambíguo de quando aumentar o peso (em vez de aumentar a carga em um cronograma fixo, independente do desempenho real), e mantém o esforço ancorado na mesma intensidade relativa (RIR-alvo) ao longo de todo o ciclo, em vez de deixar uma meta fixa de repetições empurrar o treino para perto da falha conforme a fadiga se acumula.
 
-O motor de sobrecarga progressiva da FGPOWER (veja no seu histórico de exercício) verifica automaticamente sua última sessão registrada contra essa regra e avisa — de forma transparente, mostrando o raciocínio — quando um aumento de carga está disponível. Ele nunca muda um peso por conta própria; você sempre confirma.`,
+O motor de sobrecarga progressiva da FGPOWER (veja no seu histórico de exercício) verifica automaticamente sua última sessão registrada contra essa regra e avisa — de forma transparente, mostrando o raciocínio — quando um aumento de carga está disponível. Ele nunca muda um peso por conta própria; você sempre confirma.
+
+**Pesos reais, não +2,5 kg fixos.** A carga sugerida é a próxima que o seu equipamento realmente tem: o próximo halter do suporte (na maioria das academias, de 1 em 1 kg até 10 kg e depois de 2 em 2), uma placa a mais na pilha da máquina ou da polia, um par das menores anilhas na barra ou no leg press, uma anilha no cavalinho ou no cinto. Você diz como a sua academia é em Configurações → Minha academia, e qualquer aparelho diferente no próprio treino ("Este aparelho sobe de…"). As diretrizes descrevem o aumento de carga em porcentagem — algo como 2 a 10% — e não em quilos fixos: a mesma anilha é um passo pequeno num exercício pesado e um salto grande num isolado leve.
+
+**Quando o próximo peso é um salto grande demais.** Ir do halter de 8 kg para o de 9 kg na elevação lateral é +12,5%, o que pode derrubar você bem abaixo da faixa. Nesse caso o motor primeiro pede mais repetições com a carga atual — o suficiente para que o peso novo ainda caia dentro da faixa, até cerca de 25 reps (30 em panturrilha e elevação lateral) — e só depois sugere o salto. E se um salto deixar a maioria das séries abaixo da faixa, ele sugere voltar um degrau e somar repetições antes de tentar de novo.`,
     sortOrder: 40,
-    evidenceKeys: ["plotkin-2022-load-vs-rep-progression"],
+    evidenceKeys: [
+      "plotkin-2022-load-vs-rep-progression",
+      "acsm-2009-progression-models-position-stand",
+      "kassiano-2026-progressive-overload-hypertrophy",
+    ],
   },
   {
     slug: "training-volume",

@@ -3,6 +3,9 @@ import { prisma } from "@/lib/db";
 import { appUrl } from "@/lib/app-origin";
 import { sharePath } from "@/lib/social/share-token";
 import { deriveGroups } from "@/lib/programming/groups";
+import { gearName } from "@/lib/exercises/gear";
+import { gymLoadsOf } from "@/lib/training/exercise-load";
+import { describeGrid, loadGridFor } from "@/lib/training/load-grid";
 import { isTimedHold, setKind } from "@/lib/training/set-plan";
 import { formatSpTime, spDayKey } from "@/lib/training/stale";
 import { EQUIPMENT_LABEL, EXPERIENCE_LABEL, GOAL_LABEL, PROGRESSION_LABEL } from "@/lib/constants/program-labels";
@@ -35,6 +38,7 @@ export async function loadAccountExport(userId: string) {
     bodyMetrics,
     favorites,
     exerciseNotes,
+    exerciseLoadSteps,
     following,
     followers,
     followRequests,
@@ -181,6 +185,12 @@ export async function loadAccountExport(userId: string) {
       orderBy: { updatedAt: "asc" },
       select: { note: true, updatedAt: true, exercise: { select: { namePt: true } } },
     }),
+    // "Este aparelho sobe de…": the user's own load step per exercise (Minha academia).
+    prisma.exerciseLoadStep.findMany({
+      where: { userId },
+      orderBy: { updatedAt: "asc" },
+      select: { stepKg: true, updatedAt: true, exercise: EXERCISE_NAME },
+    }),
     prisma.follow.findMany({
       where: { followerId: userId },
       orderBy: { createdAt: "asc" },
@@ -297,6 +307,7 @@ export async function loadAccountExport(userId: string) {
     bodyMetrics,
     favorites,
     exerciseNotes,
+    exerciseLoadSteps,
     following,
     followers,
     followRequests: followRequests.map((r) => ({
@@ -498,10 +509,12 @@ export function toTreinosCsv(data: Pick<AccountExportData, "workouts">): string 
 
 export function toExportJson(data: AccountExportData, now: Date = new Date()) {
   const p = data.profile;
+  const gym = gymLoadsOf(p);
   const reminders = data.reminderPreference;
   return {
     format: "fgpower-export",
-    version: 3,
+    // 4: Minha academia — the gym's loads and missing gear (profile), each exercise's own step.
+    version: 4,
     exportedAt: now.toISOString(),
     account: data.user
       ? {
@@ -525,7 +538,18 @@ export function toExportJson(data: AccountExportData, now: Date = new Date()) {
           doesEndurance: p.doesEndurance,
           enduranceNotes: p.enduranceNotes,
           limitations: p.limitations,
+          // The retired single "Salto de carga": no longer read, still stored, so still the user's.
           loadIncrementKg: p.loadIncrementKg,
+          // Minha academia → Pesos: the rack in words ("halteres de 1 em 1 kg até 10 kg, depois de
+          // 2 em 2"), one plate of a machine's and of a cable's stack, the lightest plate, the
+          // kettlebell gap. A rack value the app doesn't know goes out as stored.
+          dumbbellScheme: gym.dumbbellScheme === p.dumbbellScheme ? describeGrid(loadGridFor("DUMBBELL", gym)) : p.dumbbellScheme,
+          stackStepKg: round2(p.stackStepKg),
+          cableStepKg: round2(p.cableStepKg),
+          smallestPlateKg: round2(p.smallestPlateKg),
+          kettlebellStepKg: round2(p.kettlebellStepKg),
+          // Minha academia → Aparelhos: what the gym doesn't have, by name.
+          missingGear: (p.missingGear ?? []).map(gearName),
           restTimerSound: p.restTimerSound,
           hapticsEnabled: p.hapticsEnabled,
           isPublicAccount: p.isPublicAccount,
@@ -658,6 +682,13 @@ export function toExportJson(data: AccountExportData, now: Date = new Date()) {
     })),
     favoriteExercises: data.favorites.map((f) => f.exercise.namePt),
     exerciseNotes: data.exerciseNotes.map((n) => ({ exercise: n.exercise.namePt, note: n.note, updatedAt: iso(n.updatedAt) })),
+    // "Este aparelho sobe de…" (v4): the exercise's own load step, over the gym's.
+    exerciseLoadSteps: data.exerciseLoadSteps.map((s) => ({
+      exercise: s.exercise.namePt,
+      slug: s.exercise.slug,
+      stepKg: round2(s.stepKg),
+      updatedAt: iso(s.updatedAt),
+    })),
     social: {
       following: data.following.map((f) => ({ username: f.following.username, name: f.following.name, since: iso(f.createdAt) })),
       followers: data.followers.map((f) => ({ username: f.follower.username, name: f.follower.name, since: iso(f.createdAt) })),

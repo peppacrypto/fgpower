@@ -1,5 +1,6 @@
 import "server-only";
 import { prisma } from "@/lib/db";
+import { GYM_LOADS_SELECT } from "@/lib/training/exercise-load";
 import { APP_TIME_ZONE } from "@/lib/training/week";
 import { isPartialEntryWeek } from "@/lib/training/program-calendar";
 import {
@@ -21,6 +22,8 @@ import { parseExerciseContent, parseInstructions } from "@/lib/exercises/content
 import { entryWeekWasTrained } from "./program-lifecycle";
 import { getAlternatives, mainGearFirst, type AlternativeExercise } from "./alternatives";
 import { listExercises } from "./exercises";
+import { isDoable, type GearSubject } from "@/lib/exercises/gear";
+import { gearLabelOf } from "@/lib/programming/equipment-needs";
 
 /**
  * The workout screen's data in a fixed number of queries, whatever the number
@@ -72,6 +75,10 @@ export async function getWorkoutSessionForExecution(sessionId: string) {
               equipment: { select: { category: true } },
               // A free-weight compound's RIR floor under the week's wave (rirExerciseOf).
               mechanics: true,
+              // Its load grid (lib/exercises/gear loadKindOf → lib/training/load-grid) and
+              // how far its range may stretch before a coarse jump (calves, lateral raises).
+              equipmentId: true,
+              movementPatternId: true,
             },
           },
           programExercise: { select: { progressionStrategy: true, loadIncrementKg: true } },
@@ -211,7 +218,7 @@ export async function getWorkoutUserContext(userId: string, firstWorkouts = 3) {
   const [profile, finished] = await Promise.all([
     prisma.profile.findUnique({
       where: { userId },
-      select: { restTimerSound: true, hapticsEnabled: true, loadIncrementKg: true, limitations: true },
+      select: { restTimerSound: true, hapticsEnabled: true, limitations: true, missingGear: true, ...GYM_LOADS_SELECT },
     }),
     prisma.workoutSession.findMany({
       where: { userId, status: "COMPLETED" },
@@ -442,6 +449,13 @@ export interface ExerciseOption {
   imageUrl: string | null;
   equipment: string | null;
   /**
+   * The apparatus it is done on, as Settings → Minha academia names it
+   * ("Hack", "Halteres", "Remada baixa" — equipment-needs gearLabelOf): null
+   * when it needs nothing a gym could lack, or only a catch-all that would say
+   * less than `equipment`.
+   */
+  gearPt?: string | null;
+  /**
    * Why it is offered: a curated relation or the same muscle (+ movement) —
    * alternatives.ts —, "ORIGINAL" for the program's own exercise after a
    * swap (to swap back), "SEARCH" for a search hit, "POPULAR" for the
@@ -463,9 +477,11 @@ type CardLike = {
   id: string;
   slug: string;
   namePt: string;
-  equipment: { namePt: string } | null;
+  equipment: { id: string; namePt: string } | null;
   media: { url: string }[];
 };
+/** A library card as the gym's gear judges it (lib/exercises/gear). */
+const gearSubjectOf = (e: CardLike): GearSubject => ({ slug: e.slug, equipmentId: e.equipment?.id ?? null });
 function optionOf(e: CardLike, reason: ExerciseOption["reason"]): ExerciseOption {
   return {
     id: e.id,
@@ -473,9 +489,13 @@ function optionOf(e: CardLike, reason: ExerciseOption["reason"]): ExerciseOption
     namePt: e.namePt,
     imageUrl: e.media[0]?.url ?? null,
     equipment: e.equipment?.namePt ?? null,
+    gearPt: gearLabelOf(gearSubjectOf(e)),
     reason,
   };
 }
+
+/** The search and the first picks list this many; with gear missing, twice as many are read so the gym's filter still leaves a full list. */
+const LIST_SIZE = 20;
 
 /**
  * What the sheet lists for one of the user's workouts in progress: with a
@@ -487,28 +507,38 @@ function optionOf(e: CardLike, reason: ExerciseOption["reason"]): ExerciseOption
  * picks. Exercises already in the workout are never listed, searched or not
  * (swapExercise / addExerciseToWorkout refuse them too) — the program's own,
  * to swap back, only while it isn't one of them (added elsewhere after the
- * swap). Null when the workout isn't the user's or is closed.
+ * swap). Nor is one the user's gym can't do (Settings → Minha academia, or
+ * "Não tenho este aparelho": every apparatus it works on is missing) — not
+ * even the program's own to swap back to. Null when the workout isn't the
+ * user's or is closed.
  */
 export async function getExerciseOptions(
   userId: string,
   p: { sessionId: string; exerciseLogId?: string | null; q?: string | null },
 ): Promise<ExerciseOptions | null> {
-  const session = await prisma.workoutSession.findFirst({
-    where: { id: p.sessionId, userId, status: "IN_PROGRESS" },
-    select: {
-      exerciseLogs: {
-        select: {
-          id: true,
-          exerciseId: true,
-          substitutedFromExerciseId: true,
-          // Which logs are program slots that prescribe their exercise (A-002):
-          // a slot may swap back to its own exercise while a sibling slot holds it.
-          programExercise: { select: { exerciseId: true } },
+  const [session, profile] = await Promise.all([
+    prisma.workoutSession.findFirst({
+      where: { id: p.sessionId, userId, status: "IN_PROGRESS" },
+      select: {
+        exerciseLogs: {
+          select: {
+            id: true,
+            exerciseId: true,
+            substitutedFromExerciseId: true,
+            // Which logs are program slots that prescribe their exercise (A-002):
+            // a slot may swap back to its own exercise while a sibling slot holds it.
+            programExercise: { select: { exerciseId: true } },
+          },
         },
       },
-    },
-  });
+    }),
+    prisma.profile.findUnique({ where: { userId }, select: { equipmentAccess: true, missingGear: true } }),
+  ]);
   if (!session) return null;
+  const missingGear = profile?.missingGear ?? [];
+  const doable = (e: GearSubject) => isDoable(e, missingGear);
+  // Read past the first LIST_SIZE when the gym's filter may drop some of them.
+  const readSize = missingGear.length > 0 ? LIST_SIZE * 2 : LIST_SIZE;
   const log = p.exerciseLogId ? session.exerciseLogs.find((l) => l.id === p.exerciseLogId) : undefined;
   if (p.exerciseLogId && !log) return null;
   const inWorkout = session.exerciseLogs.map((l) => l.exerciseId);
@@ -534,23 +564,29 @@ export async function getExerciseOptions(
 
   const q = (p.q ?? "").trim().slice(0, 80);
   if (q.length >= 2) {
-    const { items } = await listExercises({ q, pageSize: 20 });
+    const { items } = await listExercises({ q, pageSize: readSize });
     // Never one already in the workout (a second copy of it). The program's own, swapped away
     // from, isn't in it — unless it was added elsewhere since, and then swapping back is refused.
     return {
       options: items
-        .filter((e) => !inWorkout.includes(e.id) || (allowBack && e.id === swapBackId))
+        .filter((e) => (!inWorkout.includes(e.id) || (allowBack && e.id === swapBackId)) && doable(gearSubjectOf(e)))
+        .slice(0, LIST_SIZE)
         .map((e) => optionOf(e, e.id === log?.substitutedFromExerciseId ? "ORIGINAL" : "SEARCH")),
       hasData,
     };
   }
 
   if (!log) {
-    const { items } = await listExercises({ pageSize: 20 });
-    return { options: items.filter((e) => !inWorkout.includes(e.id)).map((e) => optionOf(e, "POPULAR")), hasData };
+    const { items } = await listExercises({ pageSize: readSize });
+    return {
+      options: items
+        .filter((e) => !inWorkout.includes(e.id) && doable(gearSubjectOf(e)))
+        .slice(0, LIST_SIZE)
+        .map((e) => optionOf(e, "POPULAR")),
+      hasData,
+    };
   }
 
-  const profile = await prisma.profile.findUnique({ where: { userId }, select: { equipmentAccess: true } });
   const base = log.substitutedFromExerciseId ?? log.exerciseId;
   const [original, alternatives] = await Promise.all([
     log.substitutedFromExerciseId && (!inWorkout.includes(log.substitutedFromExerciseId) || allowBack)
@@ -560,17 +596,21 @@ export async function getExerciseOptions(
             id: true,
             slug: true,
             namePt: true,
-            equipment: { select: { namePt: true } },
+            equipment: { select: { id: true, namePt: true } },
             media: { take: 1, orderBy: { sortOrder: "asc" }, select: { url: true } },
           },
         })
       : null,
     // At home the user's main gear leads (dumbbells for "Halteres em casa"), as in "Adaptar".
-    getAlternatives(base, { equipmentAccess: profile?.equipmentAccess ?? null, limit: 12, excludeIds: inWorkout }).then(
-      (options) => mainGearFirst(options, profile?.equipmentAccess ?? null),
-    ),
+    getAlternatives(base, {
+      equipmentAccess: profile?.equipmentAccess ?? null,
+      missingGear,
+      limit: 12,
+      excludeIds: inWorkout,
+    }).then((options) => mainGearFirst(options, profile?.equipmentAccess ?? null)),
   ]);
-  const options: ExerciseOption[] = original ? [optionOf(original, "ORIGINAL")] : [];
+  // The program's own, to swap back to — unless the gym lacks its apparatus (it was swapped away for that).
+  const options: ExerciseOption[] = original && doable(gearSubjectOf(original)) ? [optionOf(original, "ORIGINAL")] : [];
   for (const a of alternatives) {
     options.push({
       id: a.id,
@@ -578,6 +618,7 @@ export async function getExerciseOptions(
       namePt: a.namePt,
       imageUrl: a.imageUrl,
       equipment: a.equipmentNamePt,
+      gearPt: gearLabelOf(a),
       reason: a.reason,
     });
   }

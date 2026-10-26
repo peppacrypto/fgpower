@@ -12,6 +12,7 @@ import { useTopBarInset } from "@/components/ui/use-scroll-inset";
 import {
   addExerciseToWorkout,
   addExtraSet,
+  applySwapToPlan,
   discardWorkoutSession,
   finishStaleWorkoutSessionAndOpen,
   finishWorkoutSession,
@@ -24,6 +25,7 @@ import {
   type SetSyncResult,
 } from "@/lib/actions/workouts";
 import { saveExerciseNote } from "@/lib/actions/exercise-notes";
+import { setExerciseLoadStep } from "@/lib/actions/gym";
 import {
   firstTimeReps,
   formatDecimal,
@@ -63,6 +65,8 @@ import { useWakeLock } from "./use-wake-lock";
 import { rememberLimitationsEcho } from "./limitations-bone";
 import { recordRows } from "./pr-moment";
 import { ExerciseSwapSheet, type SwapSheetMode } from "./exercise-swap-sheet";
+import { LoadStepSheet } from "./load-step-sheet";
+import { hasLoadSteps } from "./gear-words";
 import { TechniqueSheet } from "./technique-sheet";
 import { markWorkoutVisited, readShownExercise, rememberShownExercise } from "./workout-visit";
 import { WorkoutActionError } from "./action-error";
@@ -348,7 +352,7 @@ function buildRows(
       ? typedFirst
       : first.suggestion.weightKg
     : null;
-  const ramp = warmupSuggestions(plan.warmups.length, workingLoad, ex.loadIncrementKg);
+  const ramp = warmupSuggestions(plan.warmups.length, workingLoad, ex.loadGrid);
   return {
     warmups: plan.warmups.map((r, i) => toModel(r, ramp[i])),
     prescribed,
@@ -508,6 +512,19 @@ function isNavigation(err: unknown) {
 }
 
 type NoteStatus = { state: "saving" | "saved" | "error"; text: string };
+
+/**
+ * "Trocar no plano" (a stand-in for a machine the gym doesn't have): the plan
+ * change on its way, done, or failed — the workout's own swap stands either
+ * way, so a failure offers the plan change again, nothing else.
+ */
+type PlanNote =
+  | { logId: string; state: "saving" }
+  | { logId: string; state: "done"; text: string }
+  | { logId: string; state: "failed"; error: string; toName: string; fromName: string };
+
+/** The plan change failed after today's swap went through: today keeps the stand-in. */
+const PLAN_ONLY_TODAY = "Trocado só neste treino — não foi possível mudar o plano.";
 
 /** Longer than this, the "Você informou" text is folded to two lines (tap to read it all). */
 const LONG_LIMITATIONS_CHARS = 70;
@@ -692,6 +709,12 @@ export function WorkoutExecutionClient({
   const [swapSheet, setSwapSheet] = useState<SwapSheetMode | null>(null);
   const [swapBusy, setSwapBusy] = useState<string | null>(null);
   const [swapError, setSwapError] = useState<string | null>(null);
+  /** What "Trocar no plano" did to the plan, shown under the stand-in it is about. */
+  const [planNote, setPlanNote] = useState<PlanNote | null>(null);
+  /** "Este aparelho sobe de…": the sheet, the step being saved ("default": back to the default) and its failure. */
+  const [loadStepOpen, setLoadStepOpen] = useState(false);
+  const [loadStepBusy, setLoadStepBusy] = useState<number | "default" | null>(null);
+  const [loadStepError, setLoadStepError] = useState<string | null>(null);
   /** The exercise to show once the page's fresh data has it (a pick added after the current one). */
   const pendingExercise = useRef<string | null>(null);
   /** The technique sheet (W-025) is open over the workout. */
@@ -1433,12 +1456,53 @@ export function WorkoutExecutionClient({
   }
 
   /**
+   * "Trocar no plano", after the workout's own swap went through: the stand-in
+   * (the log that now holds it) replaces the exercise in the plan's coming
+   * weeks (applySwapToPlan). Said under the stand-in; a failure — no signal,
+   * the server — leaves today's swap as it is and offers the plan change again.
+   */
+  function applyToPlan(logId: string, toName: string, fromName: string) {
+    setPlanNote({ logId, state: "saving" });
+    const failed = (error: string) => setPlanNote({ logId, state: "failed", error, toName, fromName });
+    startTransition(async () => {
+      try {
+        const r = await applySwapToPlan(logId);
+        if (!r.ok) {
+          if (isSessionExpiredError(r.error)) setLoggedOut(true);
+          failed(isSessionExpiredError(r.error) ? r.error : PLAN_ONLY_TODAY);
+          return;
+        }
+        if (r.changedDays === 0) {
+          // Nothing left to change: the plan already has it (or never asked for the missing one).
+          setPlanNote(null);
+          return;
+        }
+        const text = `Trocado no seu plano: ${toName} no lugar de ${fromName} em ${plural(r.changedDays, "dia", "dias")}`;
+        setPlanNote({ logId, state: "done", text });
+        announce(`${text}.`);
+      } catch (err) {
+        if (recoverFromStaleBuild(err)) return;
+        const why = await whyFailed();
+        failed(
+          why === "session"
+            ? SESSION_EXPIRED_ERROR
+            : why === "offline"
+              ? "Trocado só neste treino — sem conexão para mudar o plano."
+              : PLAN_ONLY_TODAY,
+        );
+      }
+    });
+  }
+
+  /**
    * The sheet's pick (W-006): swapped in place, added after the current
    * exercise (it already has sets) or at the end. The action refreshes the
    * page's data; the screen then shows the exercise it returned. Offline, the
-   * sheet stays open with the reason — nothing changed.
+   * sheet stays open with the reason — nothing changed. `plan`: the gym
+   * doesn't have the exercise's gear — once today's swap is saved, the plan
+   * takes the pick too (applyToPlan).
    */
-  function pickExercise(option: ExerciseOption, how: "swap" | "after" | "end") {
+  function pickExercise(option: ExerciseOption, how: "swap" | "after" | "end", plan = false) {
     const mode = swapSheet;
     if (!mode || swapBusy) return;
     const logId = mode.kind === "swap" ? mode.exerciseLogId : null;
@@ -1454,7 +1518,8 @@ export function WorkoutExecutionClient({
           pendingExercise.current = r.exerciseLogId;
           focusHeading.current = true;
           setSwapSheet(null);
-          announce(how === "swap" ? `Trocado por ${option.namePt}` : `${option.namePt} adicionado ao treino`);
+          announce(how === "end" || (how === "after" && !plan) ? `${option.namePt} adicionado ao treino` : `Trocado por ${option.namePt}`);
+          if (plan && mode.kind === "swap") applyToPlan(r.exerciseLogId, option.namePt, mode.exerciseName);
         } else if (r.reason === "HAS_DATA" && mode.kind === "swap") {
           // Sets were saved meanwhile (another device): the pick can only go after it.
           setSwapSheet({ ...mode, hasLocalData: true });
@@ -1490,7 +1555,64 @@ export function WorkoutExecutionClient({
       (r) => r.done || r.values.weight.trim() !== "" || r.values.reps.trim() !== "",
     );
     setSwapError(null);
-    setSwapSheet({ kind: "swap", exerciseLogId: exercise.id, exerciseName: exercise.exerciseName, hasLocalData: anyValue });
+    setSwapSheet({
+      kind: "swap",
+      exerciseLogId: exercise.id,
+      exerciseName: exercise.exerciseName,
+      hasLocalData: anyValue,
+      // Its apparatus and the gym's answer: "Não tenho este aparelho", and "Trocar no plano" once it has none.
+      gear: exercise.gear,
+      inPlan: exercise.inPlan,
+    });
+  }
+
+  /**
+   * "Este aparelho sobe de…": the exercise's own step, or `null` back to the
+   * program's / gym's. Saved, the workout is read again — the advice, the
+   * grey numbers and the warm-ups move along the new step; what was typed
+   * stays (the drafts are this screen's). Offline or refused, nothing changed
+   * and the sheet says so.
+   */
+  function saveLoadStep(stepKg: number | null) {
+    if (!exercise || loadStepBusy !== null) return;
+    const target = exercise;
+    setLoadStepBusy(stepKg ?? "default");
+    setLoadStepError(null);
+    startTransition(async () => {
+      try {
+        const r = await setExerciseLoadStep(target.exerciseId, stepKg);
+        if (!r.ok) {
+          if (isSessionExpiredError(r.error)) setLoggedOut(true);
+          setLoadStepError(r.error);
+          return;
+        }
+        setLoadStepOpen(false);
+        announce(
+          stepKg === null
+            ? `${target.exerciseName}: de volta ao padrão. Sugestões atualizadas.`
+            : `${target.exerciseName} sobe de ${formatKg(stepKg)}. Sugestões atualizadas.`,
+        );
+        refreshIfOnline();
+      } catch (err) {
+        if (recoverFromStaleBuild(err)) return;
+        const why = await whyFailed();
+        setLoadStepError(
+          why === "session"
+            ? SESSION_EXPIRED_ERROR
+            : why === "offline"
+              ? "Sem conexão — nada mudou. Tente de novo quando o sinal voltar."
+              : "Não foi possível salvar agora — nada mudou. Tente de novo.",
+        );
+      } finally {
+        setLoadStepBusy(null);
+      }
+    });
+  }
+
+  function openLoadStep() {
+    cancelAdvance();
+    setLoadStepError(null);
+    setLoadStepOpen(true);
   }
 
   function openAdd() {
@@ -1795,6 +1917,37 @@ export function WorkoutExecutionClient({
       {text}
     </button>
   );
+  /**
+   * "Pesos": how this exercise's load moves (Minha academia), and "Ajustar" —
+   * "Este aparelho sobe de…" when this machine differs. In the "Último treino"
+   * card, under the suggestion it governs; on a first time, under the sets — never
+   * above them: on the first workout the first set must stay in view on a phone.
+   */
+  const loadGridRow = (inCard: boolean) =>
+    hasLoadSteps(exercise) ? (
+      <div
+        className={cn("flex items-center gap-2 text-[13px]", inCard ? "border-t border-border pl-3.5 pr-2" : "mt-2 pl-1")}
+        data-load-grid
+      >
+        <p className={cn("min-w-0 flex-1 leading-snug text-muted", inCard && "py-2.5")}>
+          <span className="font-medium text-foreground">Pesos</span> · {exercise.loadGridText}
+          {exercise.loadGrid.source === "exercise"
+            ? " · ajustado por você"
+            : exercise.loadGrid.source === "program"
+              ? " · do programa"
+              : null}
+        </p>
+        <button
+          type="button"
+          onClick={openLoadStep}
+          aria-haspopup="dialog"
+          aria-label="Ajustar quanto este aparelho sobe"
+          className="inline-flex min-h-11 shrink-0 items-center px-1.5 font-semibold text-accent"
+        >
+          Ajustar
+        </button>
+      </div>
+    ) : null;
   // The rest bar's shortcut: a superset's next member, else the next exercise once this one is done.
   const timerNext = rest.timer?.nextIndex;
   const restNext =
@@ -2075,6 +2228,37 @@ export function WorkoutExecutionClient({
             <span>no lugar de {exercise.substitutedFromName}</span>
           </p>
         ) : null}
+        {planNote && planNote.logId === exercise.id ? (
+          // "Trocar no plano": the coming weeks take the stand-in too (or, failing, only today did).
+          planNote.state === "failed" ? (
+            <div
+              role="alert"
+              className="-mt-1.5 mb-3 flex flex-wrap items-center gap-x-3 text-[13px] font-medium text-danger"
+              data-plan-swap="failed"
+            >
+              <span className="min-w-0 flex-1">
+                <WorkoutActionError error={planNote.error} loginHref={loginHref} />
+              </span>
+              {isSessionExpiredError(planNote.error) ? null : (
+                <button
+                  type="button"
+                  onClick={() => applyToPlan(planNote.logId, planNote.toName, planNote.fromName)}
+                  className="-my-2 min-h-11 shrink-0 font-semibold text-accent underline underline-offset-2"
+                >
+                  Tentar de novo
+                </button>
+              )}
+            </div>
+          ) : (
+            <p className="-mt-1.5 mb-3 text-[13px] text-muted" data-plan-swap={planNote.state}>
+              {planNote.state === "saving" ? (
+                "Trocando no seu plano…"
+              ) : (
+                <span className="font-semibold text-success">{planNote.text} ✓</span>
+              )}
+            </p>
+          )
+        ) : null}
 
         <div className="flex items-center justify-between gap-2">
           <button
@@ -2215,6 +2399,28 @@ export function WorkoutExecutionClient({
             </button>
           ) : null}
         </div>
+
+        {exercise.blocked && !exercise.replaced ? (
+          // Minha academia: the gym has none of the gear it needs — the way out is a stand-in.
+          <div
+            className="mt-2 flex items-center justify-between gap-3 rounded-[var(--radius-md)] bg-warning-soft py-1 pl-3 pr-2 text-[13px]"
+            data-missing-gear
+          >
+            <span className="min-w-0 py-1.5 text-foreground">
+              <span className="font-semibold">Sua academia não tem:</span> {exercise.gear.map((g) => g.namePt).join(", ")}
+            </span>
+            <button
+              type="button"
+              onClick={openSwap}
+              aria-haspopup="dialog"
+              aria-label={`Trocar — sua academia não tem ${exercise.gear.map((g) => g.namePt).join(", ")}`}
+              className="inline-flex min-h-11 shrink-0 items-center gap-1 px-1 font-semibold text-accent"
+            >
+              <ArrowLeftRight className="size-3.5" />
+              Trocar
+            </button>
+          </div>
+        ) : null}
 
         {/* The user's own note for this exercise (machine settings…), kept across workouts. */}
         {editingNote ? (
@@ -2406,6 +2612,7 @@ export function WorkoutExecutionClient({
                 Anote o {rirButton("RIR")} de cada série: neste exercício a carga da próxima vez vem dele.
               </p>
             ) : null}
+            {loadGridRow(true)}
           </div>
         ) : !exercise.wasSkipped ? (
           <div className="mt-3 rounded-[var(--radius-md)] bg-accent-soft px-3 py-2.5 text-[13px] leading-snug text-foreground" data-first-time>
@@ -2496,6 +2703,7 @@ export function WorkoutExecutionClient({
             onFixLoad={fixLoad}
           />
         </div>
+        {hasHistory ? null : loadGridRow(false)}
 
         {exerciseError ? (
           <p role="alert" className="mt-2 text-[13px] font-medium text-danger">
@@ -2566,6 +2774,20 @@ export function WorkoutExecutionClient({
           loginHref={loginHref}
           onLoggedOut={() => setLoggedOut(true)}
           onClose={() => setTechniqueOpen(false)}
+        />
+      ) : null}
+
+      {loadStepOpen ? (
+        <LoadStepSheet
+          exercise={exercise}
+          busy={loadStepBusy}
+          error={loadStepError}
+          loginHref={loginHref}
+          onPick={saveLoadStep}
+          onClose={() => {
+            setLoadStepOpen(false);
+            setLoadStepError(null);
+          }}
         />
       ) : null}
 

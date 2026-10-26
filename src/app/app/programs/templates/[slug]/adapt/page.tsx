@@ -11,15 +11,16 @@ import {
   assignStandIns,
   getAlternatives,
   mainGearFirst,
+  needsStandIn,
   rankStandIns,
   type AlternativeExercise,
 } from "@/lib/data/alternatives";
+import { blockingGear } from "@/lib/exercises/gear";
+import { GYM_ADAPT_LABEL, missingGearFlag } from "@/lib/programming/equipment-needs";
 import { ADAPT_LABEL, EQUIPMENT_LABEL } from "@/lib/constants/program-labels";
 import { adaptTemplate } from "@/lib/actions/programs";
-import { SubmitButton } from "@/components/ui/submit-button";
-import { Button } from "@/components/ui/button";
 import { InlineActionForm } from "@/components/workout/inline-action-form";
-import { AdaptSaveLabel, AdaptSwapChoice, AdaptSwapCounts, DaySwapCount } from "@/components/programs/adapt-swap-choice";
+import { AdaptSaveBar, AdaptSwapChoice, AdaptSwapCounts, DaySwapCount } from "@/components/programs/adapt-swap-choice";
 import { plural } from "@/lib/utils/format";
 import { NOT_FOUND_TITLE } from "@/components/ui/not-found-panel";
 
@@ -33,16 +34,18 @@ export async function generateMetadata({ params }: PageProps<"/app/programs/temp
 const OPTIONS = 5;
 
 /**
- * "Adaptar para halteres": the review before a program that needs gear the
- * user doesn't have becomes theirs. Every exercise their equipment can't do
- * is paired with a stand-in (lib/data/alternatives: a curated alternative
- * first, else the same muscle and movement with their equipment; their main
- * gear — the dumbbells — before the rest), never the same one twice in a day;
- * each can be changed or kept, and the counts follow. Nothing is saved until
- * "Salvar" — then a copy with those swaps opens in the builder, and the
- * original template never changes. A row's field is named by its day, place
- * and exercise (adaptRowKey), which a reseed keeps; a save naming a row the
- * template no longer has comes back here (?mudou=1) and says why.
+ * "Adaptar para halteres" / "Adaptar à sua academia": the review before a
+ * program that needs gear the user doesn't have becomes theirs. Every exercise
+ * out of their reach — equipment their access level doesn't cover, or an
+ * apparatus their gym doesn't have (Settings → Minha academia; alternatives
+ * needsStandIn) — is paired with a stand-in (lib/data/alternatives: a curated
+ * alternative first, else the same muscle and movement with what they have;
+ * their main gear — the dumbbells — before the rest), never the same one twice
+ * in a day; each can be changed or kept, and the counts follow. Nothing is
+ * saved until "Salvar" — then a copy with those swaps opens in the builder,
+ * and the original template never changes. A row's field is named by its day,
+ * place and exercise (adaptRowKey), which a reseed keeps; a save naming a row
+ * the template no longer has comes back here (?mudou=1) and says why.
  */
 export default async function AdaptTemplatePage({ params, searchParams }: PageProps<"/app/programs/templates/[slug]/adapt">) {
   const { slug } = await params;
@@ -51,18 +54,25 @@ export default async function AdaptTemplatePage({ params, searchParams }: PagePr
   const [template, profile] = await Promise.all([getTemplateBySlug(slug), getProfile(user.id)]);
   if (!template) notFound();
   const access = profile?.equipmentAccess ?? "FULL_GYM";
-  const allowed = EQUIPMENT_FOR_ACCESS[access] ?? null;
+  const missingGear = profile?.missingGear ?? [];
   const templateHref = `/app/programs/templates/${template.slug}`;
-  if (allowed === null || !ADAPT_LABEL[access]) redirect(templateHref);
-  const usable = (equipmentId: string | null) => equipmentId !== null && allowed.includes(equipmentId);
+  // At home, by the access level ("Adaptar para halteres"); in a gym, by the
+  // apparatus it lacks. A full gym with everything has nothing to adapt.
+  const allowed = ADAPT_LABEL[access] ? (EQUIPMENT_FOR_ACCESS[access] ?? null) : null;
+  const byAccess = allowed !== null;
+  const gym = { allowed, missingGear };
+  const exercises = template.days.flatMap((d) => d.exercises);
+  if (!byAccess && !exercises.some((ex) => blockingGear(ex.exercise, missingGear).length > 0)) redirect(templateHref);
+  const label = byAccess ? ADAPT_LABEL[access] : GYM_ADAPT_LABEL;
+  const withWhatYouHave = byAccess ? "com o seu equipamento" : "com o que a sua academia tem";
 
   // Stand-ins per exercise (once each, however many days use it).
-  const needing = [
-    ...new Set(template.days.flatMap((d) => d.exercises.filter((ex) => !usable(ex.exercise.equipmentId)).map((ex) => ex.exerciseId))),
-  ];
+  const needing = [...new Set(exercises.filter((ex) => needsStandIn(ex.exercise, gym)).map((ex) => ex.exerciseId))];
   const alternatives = new Map<string, AlternativeExercise[]>(
     await Promise.all(
-      needing.map(async (id) => [id, await getAlternatives(id, { equipmentAccess: access, limit: OPTIONS + 3 })] as const),
+      needing.map(
+        async (id) => [id, await getAlternatives(id, { equipmentAccess: access, missingGear, limit: OPTIONS + 3 })] as const,
+      ),
     ),
   );
 
@@ -71,7 +81,7 @@ export default async function AdaptTemplatePage({ params, searchParams }: PagePr
       day.exercises.map((ex) => ({
         ex,
         exerciseId: ex.exerciseId,
-        usableNow: usable(ex.exercise.equipmentId),
+        usableNow: !needsStandIn(ex.exercise, gym),
         difficulty: ex.exercise.difficulty,
         candidates: rankStandIns(mainGearFirst(alternatives.get(ex.exerciseId) ?? [], access), ex.exercise.difficulty),
       })),
@@ -98,14 +108,14 @@ export default async function AdaptTemplatePage({ params, searchParams }: PagePr
         {template.namePt}
       </Link>
 
-      <p className="eyebrow mt-3">{EQUIPMENT_LABEL[access]} · revise antes de salvar</p>
+      <p className="eyebrow mt-3">{byAccess ? EQUIPMENT_LABEL[access] : "Sua academia"} · revise antes de salvar</p>
       <h1 className="text-display mt-0.5 text-[1.75rem] font-semibold leading-tight [overflow-wrap:anywhere] sm:text-[2rem]">
-        {ADAPT_LABEL[access]}: {template.namePt}
+        {label}: {template.namePt}
       </h1>
       <p className="mt-2 text-[15px] leading-relaxed text-muted">
         {swaps.length === 0
           ? "Todos os exercícios deste programa já cabem no seu equipamento."
-          : `${plural(swaps.length, "exercício pede", "exercícios pedem")} o que você não tem, em ${plural(daysTouched, "dia", "dias")}. Sugerimos uma troca para ${withStandIn.length < swaps.length ? "os que têm substituto" : "cada um"} — mesmo músculo e movimento, com o seu equipamento. Séries e descanso seguem o plano; ajustamos as repetições quando o substituto é mais difícil ou mais fácil.`}
+          : `${plural(swaps.length, "exercício pede", "exercícios pedem")} o que você não tem, em ${plural(daysTouched, "dia", "dias")}. Sugerimos uma troca para ${withStandIn.length < swaps.length ? "os que têm substituto" : "cada um"} — mesmo músculo e movimento, ${withWhatYouHave}. Séries e descanso seguem o plano; ajustamos as repetições quando o substituto é mais difícil ou mais fácil.`}
       </p>
       <p className="mt-1.5 text-[13px] text-muted">Salvar cria uma cópia sua; o original não muda.</p>
       {changed ? (
@@ -137,7 +147,9 @@ export default async function AdaptTemplatePage({ params, searchParams }: PagePr
                           <p className="flex flex-wrap items-baseline gap-x-2 text-sm">
                             <span className="text-muted line-through decoration-1">{r.ex.exercise.namePt}</span>
                             <span className="text-[13px] tabular-nums text-muted">
-                              {r.ex.exercise.equipment?.namePt} · {r.ex.sets}×{r.ex.repMin === r.ex.repMax ? r.ex.repMin : `${r.ex.repMin}-${r.ex.repMax}`}
+                              {/* What keeps it out of reach: the apparatus the gym lacks, else its equipment. */}
+                              {missingGearFlag(blockingGear(r.ex.exercise, missingGear)) ?? r.ex.exercise.equipment?.namePt} ·{" "}
+                              {r.ex.sets}×{r.ex.repMin === r.ex.repMax ? r.ex.repMin : `${r.ex.repMin}-${r.ex.repMax}`}
                             </span>
                           </p>
                           {r.kind === "swap" && r.reps?.shift ? (
@@ -156,7 +168,8 @@ export default async function AdaptTemplatePage({ params, searchParams }: PagePr
                             />
                           ) : (
                             <p className="mt-1.5 text-[13px] leading-snug text-warning">
-                              Sem substituto com o seu equipamento — fica o original. Dá para trocar depois, no editor.
+                              Sem substituto {byAccess ? "com o seu equipamento" : "que a sua academia tenha"} — fica o original. Dá para trocar
+                              depois, no editor.
                               <input type="hidden" name={r.field} value="keep" />
                             </p>
                           )}
@@ -177,17 +190,7 @@ export default async function AdaptTemplatePage({ params, searchParams }: PagePr
             })}
           </div>
 
-          <div
-            data-bottom-bar
-            className="sticky bottom-[calc(var(--nav-h)+0.5rem)] z-20 mt-6 flex items-center gap-2 rounded-[var(--radius-xl)] border border-border bg-surface p-2 shadow-[var(--shadow-md)] sm:bottom-4 sm:justify-end sm:p-2.5"
-          >
-            <Button asChild variant="ghost" className="px-3">
-              <Link href={templateHref}>Cancelar</Link>
-            </Button>
-            <SubmitButton variant="strong" className="flex-1 px-4 sm:flex-none" pendingLabel="Salvando…">
-              <AdaptSaveLabel />
-            </SubmitButton>
-          </div>
+          <AdaptSaveBar cancelHref={templateHref} />
         </AdaptSwapCounts>
       </InlineActionForm>
     </div>

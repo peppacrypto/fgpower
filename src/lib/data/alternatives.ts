@@ -1,13 +1,16 @@
 import "server-only";
 import { prisma } from "@/lib/db";
+import { blockingGear, type GearSubject } from "@/lib/exercises/gear";
+import { defaultRange, isTimedHold } from "@/lib/training/set-plan";
 
 /**
  * Exercises that can stand in for another one — for "Trocar" mid-workout
- * (machine taken, no such equipment) and "Adaptar para halteres" on a program.
- * Curated relations (ExerciseRelation ALTERNATIVE / REGRESSION) come first;
- * the rest are the closest matches by the same primary muscle and movement
- * pattern (a lift for a lift), filtered to equipment the user can use. Never
- * the exercise itself.
+ * (machine taken, no such equipment), "Adaptar para halteres" on a program and
+ * "Ajustar à minha academia" on the user's own. Curated relations
+ * (ExerciseRelation ALTERNATIVE / REGRESSION) come first; the rest are the
+ * closest matches by the same primary muscle and movement pattern (a lift for
+ * a lift), filtered to equipment the user can use — their access level, and
+ * the gear their gym has (Settings → Minha academia). Never the exercise itself.
  */
 
 /**
@@ -41,6 +44,22 @@ export function mainGearFirst<T extends { equipmentId: string | null }>(options:
 }
 
 /**
+ * Whether a plan's exercise is out of the user's reach and needs a stand-in:
+ * its equipment isn't one their access level covers (`allowed`, an
+ * EQUIPMENT_FOR_ACCESS list — null for a full gym), or every apparatus it can
+ * be done on is one their gym doesn't have (`missingGear`, Profile.missingGear —
+ * lib/exercises/gear blockingGear). What "Adaptar", the onboarding's auto-adapt,
+ * "Ajustar à minha academia" and every stand-in list judge an exercise by.
+ */
+export function needsStandIn(
+  ex: GearSubject,
+  ctx: { allowed: readonly string[] | null; missingGear: readonly string[] | ReadonlySet<string> },
+): boolean {
+  if (ctx.allowed !== null && (ex.equipmentId === null || !ctx.allowed.includes(ex.equipmentId))) return true;
+  return blockingGear(ex, ctx.missingGear).length > 0;
+}
+
+/**
  * A template row as the "Adaptar" review names it (`swap:<key>`): its day,
  * place and exercise. A reseed keeps all three, while it recreates the row
  * ids; a different exercise at that place means the template changed.
@@ -69,12 +88,28 @@ export interface AlternativeExercise {
   reason: "ALTERNATIVE" | "REGRESSION" | "PROGRESSION" | "SAME_MUSCLE_PATTERN" | "SAME_MUSCLE";
 }
 
+/**
+ * How many pages of a catalog query (`limit * 2` rows each) a stand-in list may
+ * read. One is the old behaviour, enough while only the access level filters
+ * (it is part of the query); with gear missing, the gym's filter runs on the
+ * rows read (the gear map is code — lib/exercises/gear), so a gym without the
+ * popular machines reads on until the list fills or the catalog runs out.
+ */
+const MAX_PAGES_WITH_GEAR_MISSING = 5;
+
 export async function getAlternatives(
   exerciseId: string,
-  opts: { equipmentAccess?: string | null; limit?: number; excludeIds?: string[] } = {},
+  opts: {
+    equipmentAccess?: string | null;
+    /** Profile.missingGear: never offer an exercise every apparatus of which the gym lacks. */
+    missingGear?: readonly string[];
+    limit?: number;
+    excludeIds?: string[];
+  } = {},
 ): Promise<AlternativeExercise[]> {
   const limit = opts.limit ?? 12;
   const allowed = EQUIPMENT_FOR_ACCESS[opts.equipmentAccess ?? "FULL_GYM"] ?? null;
+  const missingGear = new Set(opts.missingGear ?? []);
   const exclude = new Set([exerciseId, ...(opts.excludeIds ?? [])]);
 
   const base = await prisma.exercise.findUnique({
@@ -97,14 +132,25 @@ export async function getAlternatives(
     slug: true,
     namePt: true,
     equipmentId: true,
+    // What the gym's gear is judged on (lib/exercises/gear GearSubject).
+    category: true,
     difficulty: true,
     equipment: { select: { namePt: true } },
     media: { take: 1, orderBy: { sortOrder: "asc" as const }, select: { url: true } },
   };
-  const usable = (equipmentId: string | null) => allowed === null || (equipmentId !== null && allowed.includes(equipmentId));
+  type Row = {
+    id: string;
+    slug: string;
+    namePt: string;
+    equipmentId: string | null;
+    category: string;
+    difficulty: AlternativeExercise["difficulty"];
+    equipment: { namePt: string } | null;
+    media: { url: string }[];
+  };
   const out: AlternativeExercise[] = [];
-  const push = (e: { id: string; slug: string; namePt: string; equipmentId: string | null; difficulty: AlternativeExercise["difficulty"]; equipment: { namePt: string } | null; media: { url: string }[] }, reason: AlternativeExercise["reason"]) => {
-    if (exclude.has(e.id) || !usable(e.equipmentId) || out.length >= limit) return;
+  const push = (e: Row, reason: AlternativeExercise["reason"]) => {
+    if (exclude.has(e.id) || out.length >= limit || needsStandIn(e, { allowed, missingGear })) return;
     exclude.add(e.id);
     out.push({
       id: e.id,
@@ -143,24 +189,26 @@ export async function getAlternatives(
       muscles: { some: { role: "PRIMARY" as const, muscleId: { in: primary } } },
       ...(allowed ? { equipmentId: { in: allowed } } : {}),
     };
-    if (base.movementPatternId) {
-      const samePattern = await prisma.exercise.findMany({
-        where: { ...common, movementPatternId: base.movementPatternId },
-        orderBy: [{ popularity: "desc" }, { namePt: "asc" }],
-        take: limit * 2,
-        select,
-      });
-      for (const e of samePattern) push(e, "SAME_MUSCLE_PATTERN");
-    }
-    if (out.length < limit) {
-      const sameMuscle = await prisma.exercise.findMany({
-        where: common,
-        orderBy: [{ popularity: "desc" }, { namePt: "asc" }],
-        take: limit * 2,
-        select,
-      });
-      for (const e of sameMuscle) push(e, "SAME_MUSCLE");
-    }
+    // Page by page while the gym's gear filters out what was read (see
+    // MAX_PAGES_WITH_GEAR_MISSING); the id breaks popularity/name ties so no
+    // row is skipped or read twice across pages.
+    const pageSize = limit * 2;
+    const pages = missingGear.size > 0 ? MAX_PAGES_WITH_GEAR_MISSING : 1;
+    const fill = async (where: typeof common & { movementPatternId?: string }, reason: AlternativeExercise["reason"]) => {
+      for (let page = 0; page < pages && out.length < limit; page++) {
+        const rows = await prisma.exercise.findMany({
+          where,
+          orderBy: [{ popularity: "desc" }, { namePt: "asc" }, { id: "asc" }],
+          skip: page * pageSize,
+          take: pageSize,
+          select,
+        });
+        for (const e of rows) push(e, reason);
+        if (rows.length < pageSize) return;
+      }
+    };
+    if (base.movementPatternId) await fill({ ...common, movementPatternId: base.movementPatternId }, "SAME_MUSCLE_PATTERN");
+    if (out.length < limit) await fill(common, "SAME_MUSCLE");
   }
   return out;
 }
@@ -205,6 +253,39 @@ export function adaptRepRange(
   if (delta >= 1) return { repMin: range.repMin, repMax: range.repMin, shift: "harder" };
   if (delta <= -1) return { repMin: range.repMax, repMax: range.repMax, shift: "easier" };
   return { repMin: range.repMin, repMax: range.repMax, shift: null };
+}
+
+export interface StandInRange {
+  repMin: number;
+  repMax: number;
+  /**
+   * "harder" | "easier" as adaptRepRange; "seconds" / "reps" when the swap
+   * crosses between a timed hold and a counted exercise (the new one's default
+   * range); null when the row's range is kept as it is.
+   */
+  shift: AdaptedReps["shift"] | "seconds" | "reps";
+}
+
+/**
+ * The range a program row takes on when a stand-in replaces its exercise for
+ * good ("Ajustar à minha academia"), as keepSwapInProgram writes it: across a
+ * reps↔seconds change, the stand-in's default range (an 8–12 rep range must
+ * not become an 8–12 s plank, A-058 — the row's note goes with the swap, so
+ * the stand-in is judged by its slug alone); otherwise the row's own range,
+ * collapsed toward the end that fits a stand-in of another difficulty
+ * (adaptRepRange).
+ */
+export function standInRange(
+  row: { repMin: number; repMax: number; notes: string | null; exercise: { slug: string; difficulty: Difficulty } },
+  sub: { slug: string; difficulty: Difficulty },
+): StandInRange {
+  const wasTimed = isTimedHold({ slug: row.exercise.slug, notes: row.notes });
+  const timed = isTimedHold({ slug: sub.slug });
+  if (wasTimed !== timed) return { ...defaultRange(timed), shift: timed ? "seconds" : "reps" };
+  return adaptRepRange(
+    { repMin: row.repMin, repMax: row.repMax },
+    { originalDifficulty: row.exercise.difficulty, substituteDifficulty: sub.difficulty },
+  );
 }
 
 export interface AdaptSwapRow<Ex> {

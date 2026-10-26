@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, ArrowRight, ChevronDown, ExternalLink } from "lucide-react";
 import { GArrow, GLoad } from "@/components/ui/glyph";
+import { Badge } from "@/components/ui/badge";
 import { Markdown } from "@/components/markdown";
 import { SectionHead } from "@/components/ui/section-head";
 import {
@@ -103,6 +104,7 @@ export function TemplateDossier({
   stickyActions,
   note,
   adapt,
+  gearFlags,
   similar = [],
   scienceHref,
   exerciseHref = "/exercises",
@@ -114,6 +116,11 @@ export function TemplateDossier({
   note?: React.ReactNode;
   /** Under the masthead: this program needs gear the user lacks — "Adaptar para halteres". */
   adapt?: React.ReactNode;
+  /**
+   * In-app only: the plan rows the user's gym can't do, by row id, with what
+   * it lacks ("Sem aparelho: Hack" — equipment-needs missingGearFlag).
+   */
+  gearFlags?: Record<string, string>;
   /** "Parecidos": close alternatives, compared side by side. */
   similar?: SimilarProgram[];
   scienceHref: string;
@@ -290,6 +297,11 @@ export function TemplateDossier({
                             ) : null}
                             {ex.exercise.namePt}
                           </span>
+                          {gearFlags?.[ex.id] ? (
+                            <Badge variant="warning" className="mt-1.5" data-testid="gear-flag">
+                              {gearFlags[ex.id]}
+                            </Badge>
+                          ) : null}
                           {/* The prescription, apart from the name: sets × reps, effort, rest, warm-up. */}
                           <span className="mt-1.5 flex flex-wrap gap-1.5">
                             <span className="tag tag--spec font-semibold">

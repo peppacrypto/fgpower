@@ -9,6 +9,7 @@ import { Masthead } from "@/components/ui/masthead";
 import { Section } from "./section";
 import { ProfileForm } from "./profile-form";
 import { RoutineForm } from "./routine-form";
+import { GymSection } from "./gym-section";
 import { RemindersSection } from "./reminders-section";
 import { WorkoutPreferencesForm } from "./workout-preferences-form";
 import { ThemeForm } from "./theme-form";
@@ -31,10 +32,10 @@ function isFreshLogin(sessionCreatedAt: Date | string): boolean {
 }
 
 /**
- * Settings, in this order: Perfil · Rotina · Lembretes · Durante o treino ·
- * Aparência · Usuário público · Privacidade · Contas bloqueadas · Dados e
- * conta. Sections other areas own render their own <Section> (or nothing
- * while unavailable).
+ * Settings, in this order: Perfil · Rotina · Minha academia · Lembretes ·
+ * Durante o treino · Aparência · Usuário público · Privacidade · Contas
+ * bloqueadas · Dados e conta. Sections other areas own render their own
+ * <Section> (or nothing while unavailable).
  */
 export default async function SettingsPage({ searchParams }: PageProps<"/app/settings">) {
   const sp = await searchParams;
@@ -45,9 +46,11 @@ export default async function SettingsPage({ searchParams }: PageProps<"/app/set
     getPublicProfileOrigin(),
     getCurrentSession(),
     cookies(),
-    // Rotina's "Dias por semana" follows the active program's frequency (A-025).
+    // Rotina's "Dias por semana" follows the active program's frequency (A-025), and Minha
+    // academia checks its exercises against the gym's gear. The primary plan's: only it owns
+    // the week (a yoga or mobility track runs alongside, on demand — lib/programming/tracks).
     prisma.programEnrollment.findFirst({
-      where: { userId: user.id, status: "ACTIVE" },
+      where: { userId: user.id, status: "ACTIVE", track: "primary" },
       select: { program: { select: { id: true, name: true, daysPerWeek: true } } },
     }),
   ]);
@@ -94,6 +97,8 @@ export default async function SettingsPage({ searchParams }: PageProps<"/app/set
         />
       </Section>
 
+      <GymSection userId={user.id} profile={profile} programId={activeEnrollment?.program.id ?? null} />
+
       <RemindersSection userId={user.id} />
 
       <Section id="durante-o-treino" title="Durante o treino" description="Vale para todos os seus treinos.">
@@ -101,7 +106,6 @@ export default async function SettingsPage({ searchParams }: PageProps<"/app/set
           initial={{
             restTimerSound: profile.restTimerSound,
             hapticsEnabled: profile.hapticsEnabled,
-            loadIncrementKg: profile.loadIncrementKg,
           }}
         />
       </Section>

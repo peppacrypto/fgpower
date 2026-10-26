@@ -8,6 +8,7 @@
  */
 
 import { formatKg } from "@/lib/utils/format";
+import { additiveGrid, isLoadable, nextLoadDown, snapLoadNearest, type LoadGrid } from "./load-grid";
 import { adviseNextLoad, type NextLoadAdvice } from "./next-load";
 import type { ProgressionStrategy } from "./progression";
 
@@ -83,7 +84,7 @@ export interface SuggestContext {
    * lift and, when the advice is about reps, the reps to aim for; `hold`
    * keeps the load (each set then aims for at least what it did last time).
    */
-  target?: { kind: "increase" | "hold"; loadKg: number; targetReps: number | null } | null;
+  target?: { kind: "increase" | "hold" | "decrease"; loadKg: number; targetReps: number | null } | null;
   /** Reps to aim for when nothing else says (no history): see firstTimeReps. */
   prescribedReps?: number | null;
   /**
@@ -400,19 +401,22 @@ const WARMUP_RAMPS: Record<number, [number, number][]> = {
 
 /**
  * Warm-up loads ramping up to the first working set (~50% × 8, ~70% × 4 for
- * two warm-ups), rounded to the load step. Nothing without a known working
- * load, and no row that would round to nothing or to the working load itself.
+ * two warm-ups), each on the nearest load the equipment has (a real
+ * dumbbell, a whole number of plates — lib/training/load-grid). Nothing
+ * without a known working load, and no row that would round to nothing or to
+ * the working load itself.
  */
-export function warmupSuggestions(count: number, workingLoadKg: number | null, stepKg: number): SuggestedValues[] {
+export function warmupSuggestions(count: number, workingLoadKg: number | null, grid: LoadGrid): SuggestedValues[] {
   const n = Math.max(0, Math.floor(count));
-  const step = stepKg > 0 ? stepKg : 2.5;
+  // A kind never loaded in kg still gets round numbers if a load was typed.
+  const g = isLoadable(grid) ? grid : additiveGrid(2.5);
   const ramp =
     WARMUP_RAMPS[n] ??
     Array.from({ length: n }, (_, i): [number, number] => [0.4 + (0.4 * i) / Math.max(1, n - 1), Math.round(8 - (5 * i) / Math.max(1, n - 1))]);
   return ramp.map(([share, reps]) => {
     if (workingLoadKg === null || !(workingLoadKg > 0)) return { weightKg: null, reps: null };
-    const kg = Math.round(Math.round((workingLoadKg * share) / step) * step * 100) / 100;
-    return kg > 0 && kg < workingLoadKg ? { weightKg: kg, reps } : { weightKg: null, reps: null };
+    const kg = snapLoadNearest(g, workingLoadKg * share);
+    return kg !== null && kg > 0 && kg < workingLoadKg ? { weightKg: kg, reps } : { weightKg: null, reps: null };
   });
 }
 
@@ -434,7 +438,10 @@ export function adviceFromLastTime(input: {
   strategy: ProgressionStrategy | null;
   prescribed: { repMin: number; repMax: number; rirTarget: number | null };
   lastTime: LastTimeSets | null;
-  loadIncrementKg: number;
+  /** The loads this exercise can be done with (load-grid loadGridFor). */
+  grid: LoadGrid;
+  /** How far the rep range may stretch before a coarse jump (load-grid extendedRepCap). */
+  repCap?: number;
   /** A hold (isTimedHold): the advice speaks in seconds (adviceInSeconds). */
   timed?: boolean;
   /**
@@ -469,9 +476,11 @@ export function adviceFromLastTime(input: {
       };
       return input.timed ? adviceInSeconds(held) : held;
     }
-    const step = input.loadIncrementKg > 0 ? input.loadIncrementKg : 2.5;
-    const rounded = Math.round(Math.round((topLoad * 0.9) / step) * step * 100) / 100;
-    const eased = rounded > 0 && rounded < topLoad ? rounded : topLoad;
+    // ~90% on a load the equipment has (a 9 kg dumbbell after 10, 15 kg on a
+    // 5 kg stack after 20): the nearest one, else one step down.
+    const g = isLoadable(input.grid) ? input.grid : additiveGrid(2.5);
+    const near = snapLoadNearest(g, topLoad * 0.9);
+    const eased = near !== null && near > 0 && near < topLoad ? near : (nextLoadDown(g, topLoad) ?? topLoad);
     const back: NextLoadAdvice = {
       kind: "hold",
       loadKg: eased,
@@ -485,11 +494,15 @@ export function adviceFromLastTime(input: {
     strategy: input.strategy,
     prescribed: input.prescribed,
     sets,
-    loadIncrementKg: input.loadIncrementKg,
+    grid: input.grid,
+    repCap: input.repCap,
     timed: input.timed,
   });
   const asked = input.lastTime?.prescribedSets ?? 0;
-  if (advice?.kind === "increase" && sets.length < asked) {
+  // All the sets come first — before a load increase, and before the extra reps
+  // that would earn a coarse jump (next-load stretching the range past its top).
+  const earning = advice?.kind === "hold" && advice.targetReps != null && advice.targetReps > input.prescribed.repMax;
+  if ((advice?.kind === "increase" || earning) && sets.length < asked) {
     const top = Math.max(...sets.map((s) => s.weightKg ?? 0));
     return {
       kind: "hold",

@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { AlertTriangle, Info } from "lucide-react";
-import { GArrow, GLoad } from "@/components/ui/glyph";
+import { GArrow, GCheck, GLoad } from "@/components/ui/glyph";
 import { getCurrentSession, requireUser } from "@/lib/auth/require-user";
 import { getEnrollmentProgress, getUserProgram } from "@/lib/data/user-programs";
 import { getActiveEnrollment, getDaysDoneThisWeek, getInProgressSessions } from "@/lib/data/dashboard";
@@ -29,6 +29,8 @@ import { LimitationsNote } from "@/components/programs/limitations-note";
 import { getProfile } from "@/lib/data/profile";
 import { NOT_FOUND_TITLE } from "@/components/ui/not-found-panel";
 import { deriveGroups, groupRule } from "@/lib/programming/groups";
+import { blockingGear } from "@/lib/exercises/gear";
+import { GYM_ADJUST_LABEL, gearBlockingAny, gearListPt, missingGearFlag } from "@/lib/programming/equipment-needs";
 import { cn } from "@/lib/utils/cn";
 import { plural, pluralWord } from "@/lib/utils/format";
 
@@ -39,8 +41,17 @@ export async function generateMetadata({ params }: PageProps<"/app/programs/[id]
   return program && program.userId === session?.user.id ? { title: program.name } : { title: NOT_FOUND_TITLE };
 }
 
-export default async function UserProgramPage({ params }: PageProps<"/app/programs/[id]">) {
+/**
+ * Back from "Ajustar à minha academia" (actions/program-gear applyGymStandIns):
+ * how many exercises it swapped, from `?academia=N`; null on any other visit.
+ */
+function adjustedCount(value: string | string[] | undefined): number | null {
+  return typeof value === "string" && /^\d{1,3}$/.test(value) ? Number(value) : null;
+}
+
+export default async function UserProgramPage({ params, searchParams }: PageProps<"/app/programs/[id]">) {
   const { id } = await params;
+  const adjusted = adjustedCount((await searchParams).academia);
   const user = await requireUser();
   const program = await getUserProgram(id);
   if (!program || program.userId !== user.id) notFound();
@@ -93,9 +104,33 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
   // Where the running program stands, for the switch and archive warnings.
   const activeProgress = activeEnrollment ? await getEnrollmentProgress(activeEnrollment) : null;
   const switchingFrom = otherActive ? { name: otherActive.program.name, progress: activeProgress ?? "" } : null;
+  // The gym (Settings → Minha academia): each exercise whose every apparatus it
+  // lacks is flagged ("Sem aparelho: Hack") and the notice offers the review
+  // that swaps them in this program (/academia). Only read when gear is missing.
+  const missingGear = profile?.missingGear ?? [];
+  const gearOf =
+    missingGear.length > 0 && hasExercises
+      ? await prisma.exercise.findMany({
+          where: { id: { in: [...new Set(program.days.flatMap((d) => d.exercises.map((ex) => ex.exerciseId)))] } },
+          select: { id: true, slug: true, equipmentId: true },
+        })
+      : [];
+  const blocked = new Map(gearOf.map((ex) => [ex.id, blockingGear(ex, missingGear)] as const).filter(([, gear]) => gear.length > 0));
+  const lackedGear = gearBlockingAny(gearOf.filter((ex) => blocked.has(ex.id)), missingGear);
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-10">
+      {adjusted !== null ? (
+        <p
+          role="status"
+          className="mb-5 flex items-center gap-2 rounded-[var(--radius-md)] bg-success-soft px-4 py-3 text-sm font-medium text-success"
+        >
+          <GCheck className="size-4 shrink-0" />
+          {adjusted > 0
+            ? `Programa ajustado à sua academia: ${plural(adjusted, "exercício trocado", "exercícios trocados")}.`
+            : "Nenhuma troca salva — o programa segue como estava."}
+        </p>
+      ) : null}
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
@@ -226,6 +261,21 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
         </p>
       ) : null}
 
+      {blocked.size > 0 ? (
+        <div className="mt-6 rounded-[var(--radius-lg)] bg-warning-soft p-4 sm:p-5" data-testid="gym-adjust-panel">
+          <p className="tag tag--status tag--warn text-[13px] font-semibold">Sua academia não tem: {gearListPt(lackedGear)}</p>
+          <p className="mt-1.5 text-[15px] leading-snug text-foreground">
+            {plural(blocked.size, "exercício deste programa usa", "exercícios deste programa usam")}{" "}
+            {lackedGear.length === 1 ? "esse aparelho" : "esses aparelhos"}. Dá para{" "}
+            {blocked.size === 1 ? "trocá-lo por outro" : "trocá-los por outros"} do mesmo músculo e movimento, com o que a
+            sua academia tem — você confere cada troca antes de salvar.
+          </p>
+          <Button asChild variant="strong" className="mt-3">
+            <Link href={`/app/programs/${program.id}/academia`}>{GYM_ADJUST_LABEL}</Link>
+          </Button>
+        </div>
+      ) : null}
+
       {feedback.length > 0 ? (
         <div className="mt-6 flex flex-col gap-2">
           {feedback.map((f) => (
@@ -290,6 +340,7 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
               {day.exercises.map((ex, j, list) => {
                 // Supersets (W-104): an accent rule down the members, "A1" before each name.
                 const slot = deriveGroups(list)[j];
+                const gearFlag = missingGearFlag(blocked.get(ex.exerciseId) ?? []);
                 return (
                   <li key={ex.id} data-group={slot?.label} className={cn(
                       slot && "-mx-2 bg-accent-soft/40 px-2",
@@ -315,14 +366,21 @@ export default async function UserProgramPage({ params }: PageProps<"/app/progra
                       {/* Whole, however many lines: names differ at the end ("… Pegada Média" / "… Pegada
                           Aberta"), and at 320px even three lines cut GD's longer ones ("Extensão de Tríceps na
                           Corda Acima da Cabeça"). The catalog's longest name is 71 characters. */}
-                      <span className="min-w-0 flex-1 text-[15px] leading-snug wrap-break-word group-hover:text-accent">
-                        {slot ? (
-                          <span className="mr-1.5 font-semibold tabular-nums text-accent">
-                            <span aria-hidden>{slot.label}</span>
-                            <span className="sr-only">{`${slot.heading}, ${slot.position} de ${slot.size}:`}</span>
-                          </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-[15px] leading-snug wrap-break-word group-hover:text-accent">
+                          {slot ? (
+                            <span className="mr-1.5 font-semibold tabular-nums text-accent">
+                              <span aria-hidden>{slot.label}</span>
+                              <span className="sr-only">{`${slot.heading}, ${slot.position} de ${slot.size}:`}</span>
+                            </span>
+                          ) : null}
+                          {ex.exercise.namePt}
+                        </span>
+                        {gearFlag ? (
+                          <Badge variant="warning" className="mt-1" data-testid="gear-flag">
+                            {gearFlag}
+                          </Badge>
                         ) : null}
-                        {ex.exercise.namePt}
                       </span>
                       <span className="shrink-0 text-[13px] font-medium tabular-nums text-muted">
                         {ex.sets}×{ex.repMin === ex.repMax ? ex.repMin : `${ex.repMin}-${ex.repMax}`}

@@ -264,10 +264,10 @@ describe("toTreinosCsv", () => {
 });
 
 describe("toExportJson", () => {
-  it("is v3, readable (names, not ids) and only this account's", async () => {
+  it("is v4, readable (names, not ids) and only this account's", async () => {
     const data = toExportJson(await loadAccountExport(USER_ID), new Date("2026-09-12T12:00:00Z"));
     const text = JSON.stringify(data);
-    expect(data).toMatchObject({ format: "fgpower-export", version: 3, exportedAt: "2026-09-12T12:00:00.000Z" });
+    expect(data).toMatchObject({ format: "fgpower-export", version: 4, exportedAt: "2026-09-12T12:00:00.000Z" });
     expect(data.account).toMatchObject({ email: emailOf(1), name: "Pessoa 1" });
 
     // No raw ids anywhere: not as keys, not as values.
@@ -338,7 +338,7 @@ describe("GET /api/account/export", () => {
     const json = await get();
     expect(json.headers.get("content-type")).toBe("application/json; charset=utf-8");
     expect(json.headers.get("content-disposition")).toMatch(/filename="fgpower-dados-\d{4}-\d{2}-\d{2}\.json"$/);
-    expect((await json.json()).version).toBe(3);
+    expect((await json.json()).version).toBe(4);
   });
 
   it("holds back a burst of exports: the seventh in ten minutes waits, and says how long", async () => {
@@ -352,7 +352,7 @@ describe("GET /api/account/export", () => {
 });
 
 describe("signInSessions + reminder engagement (A-051)", () => {
-  it("includes the sign-in log (IP, device, dates) and the reminder tap/engagement marks, at version 3", async () => {
+  it("includes the sign-in log (IP, device, dates) and the reminder tap/engagement marks (since version 3)", async () => {
     // The 90-day sign-in log the account keeps — part of "tudo" (the token itself is never exported).
     await prisma.session.create({
       data: {
@@ -380,7 +380,7 @@ describe("signInSessions + reminder engagement (A-051)", () => {
     });
 
     const data = toExportJson(await loadAccountExport(USER_ID), new Date("2026-09-12T12:00:00Z"));
-    expect(data.version).toBe(3);
+    expect(data.version).toBe(4);
 
     // The sign-in session block: device + IP + the dates (never the token).
     expect(data.signInSessions).toContainEqual(
@@ -403,5 +403,69 @@ describe("signInSessions + reminder engagement (A-051)", () => {
       engagedAt: "2026-09-01T11:06:00.000Z",
       ignoredAt: null,
     });
+  });
+});
+
+describe("Minha academia (v4)", () => {
+  it("carries the gym's loads, the gear it lacks by name and each exercise's own step — this account's only", async () => {
+    const [ex] = await prisma.exercise.findMany({
+      where: { isPublished: true },
+      select: { id: true, slug: true, namePt: true },
+      orderBy: { slug: "asc" },
+      take: 1,
+    });
+    await prisma.profile.update({
+      where: { userId: USER_ID },
+      data: { dumbbellScheme: "2", stackStepKg: 10, cableStepKg: 2.5, smallestPlateKg: 1.25, kettlebellStepKg: 2, missingGear: ["assisted-pullup", "hack-squat"] },
+    });
+    await prisma.exerciseLoadStep.create({ data: { userId: USER_ID, exerciseId: ex.id, stepKg: 7.5 } });
+    // The other account's own step on the same exercise never shows up here.
+    await prisma.exerciseLoadStep.create({ data: { userId: OTHER_ID, exerciseId: ex.id, stepKg: 20 } });
+
+    const data = toExportJson(await loadAccountExport(USER_ID), new Date("2026-09-12T12:00:00Z"));
+    expect(data.version).toBe(4);
+    // The rack in words, the stacks and plates in kg, the missing gear by the names Settings shows.
+    expect(data.profile).toMatchObject({
+      dumbbellScheme: "halteres de 2 em 2 kg",
+      stackStepKg: 10,
+      cableStepKg: 2.5,
+      smallestPlateKg: 1.25,
+      kettlebellStepKg: 2,
+      missingGear: ["Graviton", "Hack"],
+    });
+    expect(data.exerciseLoadSteps).toEqual([{ exercise: ex.namePt, slug: ex.slug, stepKg: 7.5, updatedAt: expect.any(String) }]);
+    // Still names and slugs, never ids.
+    const text = JSON.stringify(data);
+    expect(text).not.toMatch(/"(id|userId|exerciseId)":/);
+    expect(text).not.toContain(ex.id);
+  });
+
+  it("says the default gym in words for an account that never touched it", async () => {
+    const data = toExportJson(await loadAccountExport(OTHER_ID), new Date("2026-09-12T12:00:00Z"));
+    expect(data.profile).toMatchObject({
+      // describeGrid keeps "10 kg" together with a non-breaking space.
+      dumbbellScheme: "halteres de 1 em 1 kg até 10 kg, depois de 2 em 2",
+      stackStepKg: 5,
+      cableStepKg: 5,
+      smallestPlateKg: 2.5,
+      kettlebellStepKg: 4,
+      missingGear: [],
+    });
+  });
+});
+
+describe("deleting the account (LGPD erasure)", () => {
+  it("takes Minha academia with it: the profile's gym and every ExerciseLoadStep cascade, the exercise stays", async () => {
+    const id = `${RUN_ID}-gone`;
+    await prisma.user.create({ data: { id, name: "Pessoa 3", email: emailOf(3), emailVerified: true } });
+    await prisma.profile.create({ data: { userId: id, displayName: "Pessoa 3", missingGear: ["smith"], stackStepKg: 10 } });
+    const [ex] = await prisma.exercise.findMany({ where: { isPublished: true }, select: { id: true }, orderBy: { slug: "asc" }, take: 1 });
+    await prisma.exerciseLoadStep.create({ data: { userId: id, exerciseId: ex.id, stepKg: 5 } });
+
+    // Where better-auth's delete-user ends (lib/auth/auth.ts deleteUser): the user row goes, the FKs cascade.
+    await prisma.user.delete({ where: { id } });
+    expect(await prisma.exerciseLoadStep.count({ where: { userId: id } })).toBe(0);
+    expect(await prisma.profile.count({ where: { userId: id } })).toBe(0);
+    expect(await prisma.exercise.count({ where: { id: ex.id } })).toBe(1);
   });
 });

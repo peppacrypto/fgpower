@@ -1,3 +1,5 @@
+import type { LoadGrid } from "@/lib/training/load-grid";
+
 export interface ExecutionSetLog {
   id: string;
   setNumber: number;
@@ -40,7 +42,7 @@ export interface ExecutionExerciseLog {
    * "Último treino". Null without history or a load to judge.
    */
   advice: {
-    kind: "increase" | "hold";
+    kind: "increase" | "hold" | "decrease";
     loadKg: number;
     targetReps: number | null;
     headline: string;
@@ -50,8 +52,40 @@ export interface ExecutionExerciseLog {
   } | null;
   /** Progression rule of the program exercise (program's default, then double progression). */
   strategy: "DOUBLE" | "LINEAR_LOAD" | "REPETITION" | "RIR_BASED" | "MANUAL";
-  /** The load step for this exercise (warm-up loads are rounded to it). */
-  loadIncrementKg: number;
+  /**
+   * The loads this exercise can be done with (lib/training/load-grid): the
+   * next dumbbell on the rack, one plate of the stack. Warm-ups snap to it.
+   * Its `source` says whose step it is: the user's own for this exercise
+   * ("Este aparelho sobe de…"), the program row's, or the gym's.
+   */
+  loadGrid: LoadGrid;
+  /** The grid in the user's words (load-grid describeGrid): "sobe de 5 kg em 5 kg". */
+  loadGridText: string;
+  /** The user's own step for this exercise ("Este aparelho sobe de…", ExerciseLoadStep), else null. */
+  loadStepKg: number | null;
+  /**
+   * What the exercise follows without that own step — the program row's step
+   * or Settings → Minha academia — in words: what "Usar o padrão" goes back to.
+   */
+  defaultLoad: { text: string; source: "program" | "gym" };
+  /**
+   * The apparatus it can be done on, any one of them (lib/exercises/gear
+   * exerciseGear), each with whether the user's gym lacks it
+   * (Profile.missingGear). Empty: it needs nothing a gym could lack, or only
+   * a catch-all no one can mark ("Outra máquina" — workout-gear gearOf).
+   */
+  gear: { id: string; namePt: string; missing: boolean }[];
+  /**
+   * The gym has none of that gear (gear blockingGear): the exercise says so
+   * and its "Trocar" picks a stand-in for the plan, not only for today.
+   */
+  blocked: boolean;
+  /**
+   * A slot of the user's program — or the stand-in added after one that
+   * already had sets: a stand-in picked for a missing machine can replace it
+   * in the plan (applySwapToPlan). False for an exercise added to this workout.
+   */
+  inPlan: boolean;
   /**
    * Done with the body's own weight (set-plan isBodyweightEquipment): kg is
    * extra load, 0 by default, so ✓ needs only the reps.

@@ -20,7 +20,8 @@ import { isStillEditable } from "@/lib/data/workout-session";
 import { afterFinish, afterRescore } from "@/lib/workouts/finish-hooks";
 import { rescoreRecords } from "@/lib/workouts/rescore";
 import { SESSION_EXPIRED_ERROR } from "@/lib/auth/session-expired";
-import type { SettingsSaveResult } from "@/lib/actions/result";
+import type { ActionResult, SettingsSaveResult } from "@/lib/actions/result";
+import { blockingGear } from "@/lib/exercises/gear";
 import { dayNumberOf, mondayOf } from "@/lib/training/day-rotation";
 import { isAppliedDeload } from "@/lib/training/deload";
 import { deloadSets } from "@/lib/training/fatigue";
@@ -696,6 +697,151 @@ export async function keepSwapInProgram(exerciseLogId: string): Promise<{ ok: bo
   }
   revalidatePath(`/app/workout/${log.sessionId}/summary`);
   return { ok: updated.count > 0 || pe.exerciseId === log.exerciseId };
+}
+
+/** What "Trocar no plano" changed: rows that now prescribe the stand-in, rows left as they were, days changed. */
+export type PlanSwapCounts = { changedRows: number; skippedRows: number; changedDays: number };
+
+const PLAN_SWAP_ERROR = "Não foi possível mudar o seu plano agora. Tente de novo.";
+const NOTHING_CHANGED: PlanSwapCounts = { changedRows: 0, skippedRows: 0, changedDays: 0 };
+/** A program row and whose program it is: what "Trocar no plano" checks and edits. */
+const PLAN_SLOT_SELECT = {
+  exerciseId: true,
+  day: { select: { programId: true, program: { select: { userId: true } } } },
+} as const;
+
+/**
+ * "Trocar no plano" (W-006 + Minha academia): the stand-in picked for a
+ * machine the gym doesn't have replaces the exercise in the user's plan for
+ * the weeks to come — not only today, as a plain "Trocar" (the machine is
+ * taken) does. Called right after the workout's own swap (swapExercise, or
+ * addExerciseToWorkout after an exercise that already had sets), with the
+ * log that now holds the stand-in: like keepSwapInProgram, but while the
+ * workout is still in progress and on every row of the program that
+ * prescribes the exercise, not only this day's.
+ *
+ * The exercise that leaves the plan is what the program's slot asks for now
+ * (a stand-in picked earlier may have taken it already) or the one the
+ * workout swapped out (log.substitutedFromExerciseId) — only when the user's
+ * gym lacks its gear (Profile.missingGear, lib/exercises/gear blockingGear):
+ * a machine that is only taken today never leaves the plan. A day that already
+ * has the stand-in keeps its rows (two copies of one exercise in a day would
+ * read as a mistake); every other row takes the stand-in and drops its note
+ * (it coached the old movement), and across reps↔seconds takes the new
+ * exercise's default range (A-058), as keepSwapInProgram does. The program
+ * counts as saved now (builder drafts are judged by its updatedAt).
+ * Idempotent: once applied, nothing is left to change. A stand-in added
+ * after an exercise that already had sets has no program slot of its own: it
+ * stands in for the slot of the exercise it replaced.
+ */
+export async function applySwapToPlan(exerciseLogId: string): Promise<ActionResult<PlanSwapCounts>> {
+  const user = await requireUserOrThrow().catch(() => null);
+  if (!user) return { ok: false, error: SESSION_EXPIRED_ERROR };
+  if (typeof exerciseLogId !== "string" || exerciseLogId.length === 0) return { ok: false, error: PLAN_SWAP_ERROR };
+  const log = await prisma.workoutExerciseLog.findFirst({
+    where: { id: exerciseLogId, userId: user.id, session: { status: "IN_PROGRESS" } },
+    select: {
+      sessionId: true,
+      sortOrder: true,
+      exerciseId: true,
+      substitutedFromExerciseId: true,
+      exercise: { select: { slug: true, isPublished: true } },
+      programExercise: { select: PLAN_SLOT_SELECT },
+    },
+  });
+  if (!log) return { ok: false, error: PLAN_SWAP_ERROR };
+  const original = log.substitutedFromExerciseId;
+  const slot =
+    log.programExercise ??
+    (original
+      ? ((
+          await prisma.workoutExerciseLog.findFirst({
+            where: {
+              sessionId: log.sessionId,
+              userId: user.id,
+              sortOrder: { lt: log.sortOrder },
+              programExerciseId: { not: null },
+              OR: [{ exerciseId: original }, { substitutedFromExerciseId: original }],
+            },
+            orderBy: { sortOrder: "desc" },
+            select: { programExercise: { select: PLAN_SLOT_SELECT } },
+          })
+        )?.programExercise ?? null)
+      : null);
+  if (!slot || slot.day.program.userId !== user.id) return { ok: false, error: PLAN_SWAP_ERROR };
+  const programId = slot.day.programId;
+  const to = log.exerciseId;
+  // A plan only ever gains an exercise the library still offers.
+  if (!log.exercise.isPublished) return { ok: true, ...NOTHING_CHANGED };
+
+  const candidates = [...new Set([slot.exerciseId, original])].filter((id): id is string => id != null && id !== to);
+  if (candidates.length === 0) return { ok: true, ...NOTHING_CHANGED };
+  const [profile, leaving] = await Promise.all([
+    prisma.profile.findUnique({ where: { userId: user.id }, select: { missingGear: true } }),
+    prisma.exercise.findMany({ where: { id: { in: candidates } }, select: { id: true, slug: true, equipmentId: true, category: true } }),
+  ]);
+  const missing = profile?.missingGear ?? [];
+  const from = leaving.filter((e) => blockingGear(e, missing).length > 0);
+  if (from.length === 0) return { ok: true, ...NOTHING_CHANGED };
+  const fromIds = from.map((e) => e.id);
+  const slugOf = new Map(from.map((e) => [e.id, e.slug]));
+  const newTimed = isTimedHold({ slug: log.exercise.slug });
+
+  let counts: PlanSwapCounts;
+  try {
+    counts = await prisma.$transaction(async (tx) => {
+      // Rows first, the program last — the builder's save (saveProgram) and
+      // keepSwapInProgram take their locks in that order too. Each write only
+      // lands on a row that still prescribes the exercise leaving: a second tap
+      // (or a builder save) that got there first leaves nothing to count twice.
+      const rows = await tx.userProgramExercise.findMany({
+        where: { day: { programId, program: { userId: user.id } }, exerciseId: { in: [...fromIds, to] } },
+        select: { id: true, dayId: true, exerciseId: true, notes: true },
+      });
+      const daysWithStandIn = new Set(rows.filter((r) => r.exerciseId === to).map((r) => r.dayId));
+      const prescribing = rows.filter((r) => r.exerciseId !== to);
+      const change = prescribing.filter((r) => !daysWithStandIn.has(r.dayId));
+      // The reps↔seconds rule is per row: a row's note can make its numbers seconds.
+      const sameUnit: string[] = [];
+      const crossUnit: string[] = [];
+      for (const r of change) {
+        (isTimedHold({ slug: slugOf.get(r.exerciseId), notes: r.notes }) === newTimed ? sameUnit : crossUnit).push(r.id);
+      }
+      let changedRows = 0;
+      if (sameUnit.length > 0) {
+        changedRows += (
+          await tx.userProgramExercise.updateMany({
+            where: { id: { in: sameUnit }, exerciseId: { in: fromIds } },
+            data: { exerciseId: to, notes: null },
+          })
+        ).count;
+      }
+      if (crossUnit.length > 0) {
+        changedRows += (
+          await tx.userProgramExercise.updateMany({
+            where: { id: { in: crossUnit }, exerciseId: { in: fromIds } },
+            data: { exerciseId: to, notes: null, ...defaultRange(newTimed) },
+          })
+        ).count;
+      }
+      // The builder's local draft is judged against the program's updatedAt (draftIsStale).
+      if (changedRows > 0) await tx.userProgram.update({ where: { id: programId }, data: { updatedAt: new Date() } });
+      return {
+        changedRows,
+        skippedRows: prescribing.length - change.length,
+        changedDays: changedRows > 0 ? new Set(change.map((r) => r.dayId)).size : 0,
+      };
+    });
+  } catch (err) {
+    console.error("applySwapToPlan failed", err);
+    return { ok: false, error: PLAN_SWAP_ERROR };
+  }
+  if (counts.changedRows > 0) {
+    // The program's screens (its days, the builder, "Ajustar à minha academia") and Today's next workout.
+    revalidatePath("/app/programs", "layout");
+    revalidatePath("/app/today");
+  }
+  return { ok: true, ...counts };
 }
 
 /** Skips (or un-skips) an exercise. Sets already ✓'d before skipping still count; the rest don't. */

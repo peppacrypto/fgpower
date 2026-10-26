@@ -1,4 +1,6 @@
 import "server-only";
+import { getExerciseLoadStepsForSession } from "@/lib/data/load-steps";
+import { GYM_LOADS_SELECT, exerciseLoadGrid, exerciseRepCap, gymLoadsOf } from "@/lib/training/exercise-load";
 import { prisma } from "@/lib/db";
 import { getWeeklyProgress, WELCOME_BACK_AFTER_DAYS } from "@/lib/data/dashboard";
 import { entryWeekWasTrained, getRecentlyCompletedBlock } from "@/lib/data/program-lifecycle";
@@ -14,6 +16,7 @@ import { NOT_BANNED } from "@/lib/social/authorization";
 import { startOfWeek } from "@/lib/training/week";
 import { spDaysBetween } from "@/lib/training/stale";
 import { compareWithLast, setsText, type LastTimeDelta, type LiteSet } from "./dossier";
+import { planSlotIndex, type SlotLog } from "../workout-gear";
 import {
   correctableUntil as correctionDeadline,
   getSessionRirTargets,
@@ -65,7 +68,7 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
           groupKey: true,
           substitutedFromExerciseId: true,
           substitutedFrom: { select: { namePt: true } },
-          exercise: { select: { namePt: true, slug: true } },
+          exercise: { select: { namePt: true, slug: true, equipmentId: true, category: true, movementPatternId: true } },
           programExercise: { select: { progressionStrategy: true, loadIncrementKg: true, exerciseId: true } },
           sets: {
             orderBy: { setNumber: "asc" },
@@ -97,11 +100,11 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
   const saved = { finishedAt, updatedAt: session.updatedAt };
   const correctableUntil = isStillEditable(saved, now) ? correctionDeadline(saved) : null;
 
-  const [profile, ordinal, newer, previous, completedBlock, entryWeekTrained, rirTargets, followerCount, answeredNotice] = await Promise.all([
+  const [profile, ordinal, newer, previous, completedBlock, entryWeekTrained, rirTargets, followerCount, answeredNotice, loadSteps] = await Promise.all([
     prisma.profile.findUnique({
       where: { userId },
       select: {
-        loadIncrementKg: true,
+        ...GYM_LOADS_SELECT,
         daysPerWeek: true,
         preferredDays: true,
         defaultWorkoutVisibility: true,
@@ -132,7 +135,10 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
       where: { userId_key: { userId, key: PRIVATE_DEFAULT_NOTICE } },
       select: { createdAt: true },
     }),
+    // "Este aparelho sobe de…" — the same grid "Na próxima" and the workout screen move along.
+    getExerciseLoadStepsForSession(userId, session.id),
   ]);
+  const gym = gymLoadsOf(profile);
   const fresh = !newer;
   const blockDone = fresh && completedBlock?.enrollmentId === session.enrollmentId ? completedBlock : null;
 
@@ -170,7 +176,12 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
                 sets: reference.map((s) => ({ weightKg: s.weightKg, reps: s.reps, rir: s.rir, isExtra: false })),
                 prescribedSets: log.prescribedSets,
               },
-              loadIncrementKg: log.programExercise?.loadIncrementKg ?? profile?.loadIncrementKg ?? 2.5,
+              grid: exerciseLoadGrid(
+                { slug: log.exercise.slug, equipmentId: log.exercise.equipmentId, category: log.exercise.category },
+                gym,
+                { exerciseStepKg: loadSteps.get(log.exerciseId), programStepKg: log.programExercise?.loadIncrementKg },
+              ),
+              repCap: exerciseRepCap(log.repMax, log.exercise),
             })
           : null;
       const delta: LastTimeDelta = compareWithLast(done, prev?.sets ?? null);
@@ -199,7 +210,7 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
           ? {
               fromName: log.substitutedFrom?.namePt ?? "",
               canUseInProgram: log.programExercise?.exerciseId === log.substitutedFromExerciseId,
-              inProgram: !!log.programExercise && log.programExercise.exerciseId === log.exerciseId,
+              inProgram: inProgramNow(session.exerciseLogs, index),
             }
           : null,
       };
@@ -250,6 +261,20 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
     }),
     next: fresh && !blockDone ? await nextUp(userId, finishedAt, now, profile) : null,
   };
+}
+
+/**
+ * The program asks for the exercise this log holds — in its own slot, or in
+ * the slot it stood in for (a pick added after an exercise that already had
+ * sets, workout-gear planSlotIndex): "Usar no programa" or "Trocar no plano"
+ * made the swap stick, and the summary says "No programa ✓".
+ */
+function inProgramNow(
+  logs: readonly (SlotLog & { programExercise: { exerciseId: string } | null })[],
+  index: number,
+): boolean {
+  const slot = planSlotIndex(logs, index);
+  return slot !== null && logs[slot].programExercise?.exerciseId === logs[index].exerciseId;
 }
 
 /** The dismissal key of the summary's one-time question to a PRIVATE default (D-A). */

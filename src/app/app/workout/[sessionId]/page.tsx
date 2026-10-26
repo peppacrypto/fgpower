@@ -34,8 +34,13 @@ import {
   progressionPrincipleSlug,
 } from "@/lib/training/set-plan";
 import { WORKOUT_PREFS_COOKIE, devicePrefsFrom, parseWorkoutPrefsCookie } from "@/components/workout/local-workout";
+import { getExerciseLoadStepsForSession } from "@/lib/data/load-steps";
+import { exerciseLoadGrid, exerciseRepCap, gymLoadsOf } from "@/lib/training/exercise-load";
+import { describeGrid } from "@/lib/training/load-grid";
+import { blockingGear } from "@/lib/exercises/gear";
 import { deriveGroups } from "@/lib/programming/groups";
 import { WorkoutExecutionClient } from "./workout-execution-client";
+import { gearOf, planSlotIndex } from "./workout-gear";
 import type { ExecutionGroup, ExecutionSession } from "./types";
 
 export async function generateMetadata({ params }: PageProps<"/app/workout/[sessionId]">): Promise<Metadata> {
@@ -100,13 +105,14 @@ const ECHO_LIMITATIONS_FOR = 3;
  */
 async function load(sessionId: string, userId: string) {
   const loadedAtMs = Date.now();
-  const [session, previous, notes, context, week, bars] = await Promise.all([
+  const [session, previous, notes, context, week, bars, loadSteps] = await Promise.all([
     getWorkoutSessionForExecution(sessionId),
     getPreviousPerformances(userId, sessionId),
     getExerciseNotesForSession(userId, sessionId),
     getWorkoutUserContext(userId, ECHO_LIMITATIONS_FOR),
     getWorkoutWeek(userId, sessionId),
     getRecordBars(userId, sessionId),
+    getExerciseLoadStepsForSession(userId, sessionId),
   ]);
   // Whole-program layoff for the welcome-back / ease-back signal, measured from
   // when this workout was STARTED (the same anchor the summary uses, so the
@@ -120,14 +126,15 @@ async function load(sessionId: string, userId: string) {
   const refRirBySession = new Map(
     await Promise.all(refSessionIds.map(async (sid) => [sid, await getSessionRirTargets(userId, sid)] as const)),
   );
-  return { loadedAtMs, session, previous, refRirBySession, notes, week, bars, lastWorkout, ...context };
+  return { loadedAtMs, session, previous, refRirBySession, notes, week, bars, lastWorkout, loadSteps, ...context };
 }
 
 export default async function WorkoutExecutionPage({ params, searchParams }: PageProps<"/app/workout/[sessionId]">) {
   const { sessionId } = await params;
   const sp = await searchParams;
   const user = await requireUser();
-  const { loadedAtMs, session, previous, refRirBySession, notes, week, bars, lastWorkout, profile, finishedWorkouts } = await load(sessionId, user.id);
+  const { loadedAtMs, session, previous, refRirBySession, notes, week, bars, lastWorkout, loadSteps, profile, finishedWorkouts } =
+    await load(sessionId, user.id);
 
   if (!session) notFound();
   if (session.userId !== user.id) notFound();
@@ -145,13 +152,23 @@ export default async function WorkoutExecutionPage({ params, searchParams }: Pag
   const deload = week?.guidance.deload === true;
   const easeBack =
     !deload && lastWorkout != null && spDaysBetween(lastWorkout.finishedAt, session.startedAt) >= WELCOME_BACK_AFTER_DAYS;
+  const gym = gymLoadsOf(profile);
+  // Settings → Minha academia → Aparelhos: what the user's gym doesn't have.
+  const missingGear = new Set(profile?.missingGear ?? []);
   const replaced = replacedLogIds(session.exerciseLogs);
   const groups = workoutGroups(session.exerciseLogs, replaced);
   const exercises = session.exerciseLogs.map((log, index) => {
     const last = previous.get(log.id) ?? null;
     // The program exercise's own rule, then the program's, then double progression.
     const strategy = log.programExercise?.progressionStrategy ?? session.program?.progressionStrategy ?? "DOUBLE";
-    const loadIncrementKg = log.programExercise?.loadIncrementKg ?? profile?.loadIncrementKg ?? 2.5;
+    const subject = { slug: log.exercise.slug, equipmentId: log.exercise.equipmentId, category: log.exercise.category };
+    // The loads this exercise can actually be done with: its own step, the
+    // program row's, else the gym's equipment (lib/training/exercise-load).
+    const ownStepKg = loadSteps.get(log.exerciseId) ?? null;
+    const programStepKg = log.programExercise?.loadIncrementKg;
+    const loadGrid = exerciseLoadGrid(subject, gym, { exerciseStepKg: ownStepKg, programStepKg });
+    // What "Usar o padrão" goes back to: the same exercise without its own step.
+    const fallbackGrid = ownStepKg === null ? loadGrid : exerciseLoadGrid(subject, gym, { programStepKg });
     const timed = isTimedHold({ slug: log.exercise.slug, notes: log.notes });
     // The program's week moves the exercise's own target by its wave, never
     // below the exercise's floor (week-guidance weekRirTarget — the summary's
@@ -171,7 +188,8 @@ export default async function WorkoutExecutionPage({ params, searchParams }: Pag
       strategy,
       prescribed: { repMin: log.repMin, repMax: log.repMax, rirTarget: lastRir },
       lastTime: last,
-      loadIncrementKg,
+      grid: loadGrid,
+      repCap: exerciseRepCap(log.repMax, log.exercise),
       timed,
       deload,
       easeBack,
@@ -209,7 +227,16 @@ export default async function WorkoutExecutionPage({ params, searchParams }: Pag
       lastTime: last ? { date: formatSpDate(last.doneAt), ago: formatSpDaysAgo(last.doneAt, now) } : null,
       advice: advice ? { ...advice, whyHref: why ? `/app/science/${why}` : null } : null,
       strategy,
-      loadIncrementKg,
+      loadGrid,
+      loadGridText: describeGrid(loadGrid),
+      loadStepKg: ownStepKg,
+      defaultLoad: {
+        text: describeGrid(fallbackGrid),
+        source: fallbackGrid.source === "program" ? ("program" as const) : ("gym" as const),
+      },
+      gear: gearOf(subject, missingGear),
+      blocked: blockingGear(subject, missingGear).length > 0,
+      inPlan: planSlotIndex(session.exerciseLogs, index) !== null,
       bodyweight: isBodyweightExercise(log.exercise),
       timed,
       recordBars: recordBars(bars.get(log.exerciseId) ?? []),

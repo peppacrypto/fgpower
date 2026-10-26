@@ -3,9 +3,12 @@
 import "dotenv/config";
 import { describe, expect, it } from "vitest";
 import {
+  EQUIPMENT_FOR_ACCESS,
   adaptRepRange,
   assignStandIns,
+  needsStandIn,
   rankStandIns,
+  standInRange,
   type AdaptSwapRow,
   type AlternativeExercise,
   type Difficulty,
@@ -88,5 +91,78 @@ describe("assignStandIns", () => {
   it("scales reps for a harder pick", () => {
     const out = assignStandIns([row({ tag: "r1", difficulty: "BEGINNER", candidates: [alt("hard", "INTERMEDIATE")] })], 5);
     expect(out[0].reps).toEqual({ repMin: 8, repMax: 8, shift: "harder" });
+  });
+});
+
+describe("needsStandIn", () => {
+  // Slugs the curated gear map never lists (it names catalog exercises only), so
+  // each is judged by its catalog tag: a barbell lift needs the barbell, a
+  // push-up nothing a gym could lack.
+  const barbell = { slug: "zz-test-barbell-lift", equipmentId: "barbell" };
+  const dumbbell = { slug: "zz-test-dumbbell-lift", equipmentId: "dumbbell" };
+  const bodyweight = { slug: "zz-test-bodyweight", equipmentId: "bodyweight" };
+  const fullGym = { allowed: null, missingGear: [] as string[] };
+
+  it("leaves everything to a full gym with all its gear", () => {
+    for (const ex of [barbell, dumbbell, bodyweight]) expect(needsStandIn(ex, fullGym)).toBe(false);
+  });
+
+  it("asks for one when every apparatus of it is missing from the gym", () => {
+    expect(needsStandIn(barbell, { allowed: null, missingGear: ["barbell"] })).toBe(true);
+    expect(needsStandIn(barbell, { allowed: null, missingGear: new Set(["barbell"]) })).toBe(true);
+    expect(needsStandIn(dumbbell, { allowed: null, missingGear: ["barbell"] })).toBe(false);
+    // Needing nothing, it is never blocked — whatever the gym lacks.
+    expect(needsStandIn(bodyweight, { allowed: null, missingGear: ["barbell", "dumbbells", "pull-up-bar"] })).toBe(false);
+  });
+
+  it("still asks for one when the access level doesn't cover the equipment (unknown equipment included)", () => {
+    const home = { allowed: EQUIPMENT_FOR_ACCESS.HOME_DUMBBELLS, missingGear: [] as string[] };
+    expect(needsStandIn(barbell, home)).toBe(true);
+    expect(needsStandIn(dumbbell, home)).toBe(false);
+    expect(needsStandIn({ slug: "zz-test-untagged", equipmentId: null }, home)).toBe(true);
+    // Both reasons at once: home dumbbells, but the dumbbells marked missing.
+    expect(needsStandIn(dumbbell, { ...home, missingGear: ["dumbbells"] })).toBe(true);
+  });
+});
+
+describe("standInRange", () => {
+  const row = (over: Partial<{ repMin: number; repMax: number; notes: string | null; slug: string; difficulty: Difficulty }> = {}) => ({
+    repMin: over.repMin ?? 8,
+    repMax: over.repMax ?? 12,
+    notes: over.notes ?? null,
+    exercise: { slug: over.slug ?? "zz-test-squat", difficulty: over.difficulty ?? ("BEGINNER" as Difficulty) },
+  });
+
+  it("keeps the row's range for a stand-in of the same difficulty and unit", () => {
+    expect(standInRange(row(), { slug: "zz-test-press", difficulty: "BEGINNER" })).toEqual({ repMin: 8, repMax: 12, shift: null });
+  });
+
+  it("collapses toward the end that fits a harder or easier stand-in", () => {
+    expect(standInRange(row(), { slug: "zz-test-hard", difficulty: "ADVANCED" })).toEqual({ repMin: 8, repMax: 8, shift: "harder" });
+    expect(standInRange(row({ difficulty: "INTERMEDIATE" }), { slug: "zz-test-easy", difficulty: "BEGINNER" })).toEqual({
+      repMin: 12,
+      repMax: 12,
+      shift: "easier",
+    });
+  });
+
+  it("takes the stand-in's default range across reps ↔ seconds, whatever the difficulty", () => {
+    // A squat's 8–12 reps never become an 8–12 s plank.
+    expect(standInRange(row(), { slug: "plank", difficulty: "ADVANCED" })).toEqual({ repMin: 20, repMax: 45, shift: "seconds" });
+    // A hold — by its slug or by its note — goes back to reps.
+    expect(standInRange(row({ slug: "plank", repMin: 30, repMax: 45 }), { slug: "zz-test-crunch", difficulty: "BEGINNER" })).toEqual({
+      repMin: 8,
+      repMax: 12,
+      shift: "reps",
+    });
+    expect(
+      standInRange(row({ notes: "Os números são o tempo em segundos.", repMin: 20, repMax: 30 }), { slug: "zz-test-crunch", difficulty: "BEGINNER" }),
+    ).toEqual({ repMin: 8, repMax: 12, shift: "reps" });
+    // Hold for hold: the row's own seconds stay.
+    expect(standInRange(row({ slug: "plank", repMin: 30, repMax: 60 }), { slug: "side-bridge", difficulty: "BEGINNER" })).toEqual({
+      repMin: 30,
+      repMax: 60,
+      shift: null,
+    });
   });
 });

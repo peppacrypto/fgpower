@@ -13,7 +13,7 @@ export interface ChipOption<T extends string | number> {
 }
 
 /**
- * One choice among a few chips (Settings: "Salto de carga", "Tema"): a real
+ * One choice among a few chips (Settings: Minha academia's "Pesos", "Tema"): a real
  * radio group — arrow keys move and pick, Tab enters on the selected chip —
  * drawn as 44px chips; the picked one wears the green plate and a firmer
  * border (and a heavier label), so it reads without color too.

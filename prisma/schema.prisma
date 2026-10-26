@@ -48,6 +48,7 @@ model User {
 
   favoriteExercises FavoriteExercise[]
   exerciseNotes     ExerciseUserNote[]
+  exerciseLoadSteps ExerciseLoadStep[]
   programs          UserProgram[]
   enrollments       ProgramEnrollment[]
   workoutSessions   WorkoutSession[]
@@ -181,61 +182,75 @@ enum Visibility {
 }
 
 model Profile {
-  id                       String          @id @default(cuid())
-  userId                   String          @unique
-  user                     User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  displayName              String
-  bio                      String?
-  goal                     TrainingGoal    @default(GENERAL_FITNESS)
-  experience               ExperienceLevel @default(BEGINNER)
-  daysPerWeek              Int             @default(3)
-  sessionMinutes           Int             @default(60)
-  equipmentAccess          EquipmentAccess @default(FULL_GYM)
-  preferredDays            Int[]           @default([]) // 0 = Sunday … 6 = Saturday
-  doesEndurance            Boolean         @default(false)
-  enduranceNotes           String?
-  limitations              String?
+  id                        String          @id @default(cuid())
+  userId                    String          @unique
+  user                      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  displayName               String
+  bio                       String?
+  goal                      TrainingGoal    @default(GENERAL_FITNESS)
+  experience                ExperienceLevel @default(BEGINNER)
+  daysPerWeek               Int             @default(3)
+  sessionMinutes            Int             @default(60)
+  equipmentAccess           EquipmentAccess @default(FULL_GYM)
+  preferredDays             Int[]           @default([]) // 0 = Sunday … 6 = Saturday
+  doesEndurance             Boolean         @default(false)
+  enduranceNotes            String?
+  limitations               String?
   /// Year of birth, derived from the age typed at onboarding, so the stored
   /// value never ages. Collected for the user's profile only — it does NOT
   /// influence which program the recommender picks (product decision, Oct 2026).
   /// Null = never provided (pre-feature rows, or the field left blank).
-  birthYear                Int?
-  locale                   String          @default("pt-BR")
-  unitSystem               UnitSystem      @default(METRIC)
-  loadIncrementKg          Float           @default(2.5)
-  restTimerSound           Boolean         @default(true)
+  birthYear                 Int?
+  locale                    String          @default("pt-BR")
+  unitSystem                UnitSystem      @default(METRIC)
+  /// Legacy single "Salto de carga" (W-149): no longer read since loads follow
+  /// the gym's equipment (the five settings below); kept so an image rollback still reads it.
+  loadIncrementKg           Float           @default(2.5)
+  /// Settings → Minha academia → Pesos (lib/training/load-grid GymLoadSettings): how
+  /// the dumbbell rack is spaced ("1-10-2" = 1 kg apart up to 10 kg, then 2 kg; "1"; "2"; "2.5"),
+  /// one plate of a pin-loaded machine's stack and of a cable stack, the lightest
+  /// plate (a bar takes a pair, a T-bar or a belt one) and the gap between kettlebells.
+  dumbbellScheme            String          @default("1-10-2")
+  stackStepKg               Float           @default(5)
+  cableStepKg               Float           @default(5)
+  smallestPlateKg           Float           @default(2.5)
+  kettlebellStepKg          Float           @default(4)
+  /// Settings → Minha academia → Aparelhos: the gear the user's gym doesn't have
+  /// (lib/exercises/gear GearId). Stand-ins and swaps never offer exercises that need only these.
+  missingGear               String[]        @default([])
+  restTimerSound            Boolean         @default(true)
   /// Vibration at the end of a rest and on a record (Settings → Durante o treino).
-  hapticsEnabled           Boolean         @default(true)
-  onboardingCompletedAt    DateTime?
+  hapticsEnabled            Boolean         @default(true)
+  onboardingCompletedAt     DateTime?
   // Age gate (A-049): an attested "18 anos ou mais" at onboarding step 1, before
   // any health question. Exact minimum age and minor/guardian handling are
   // owner/legal (policy-content spec); null = never asked (pre-feature rows).
-  confirmedAdultAt         DateTime?
+  confirmedAdultAt          DateTime?
   // Health-data consent (A-008, LGPD art. 11): the specific, separate consent
   // captured at the first health input (onboarding step 4). Version pins which
   // policy text was agreed to, so a bump re-asks (lib/legal/policy POLICY_VERSION).
-  healthDataConsentAt      DateTime?
-  healthDataConsentVersion String?
+  healthDataConsentAt       DateTime?
+  healthDataConsentVersion  String?
   // Policy re-acknowledge (A-054): the POLICY_VERSION the user last accepted.
   // When it trails POLICY_VERSION, Today shows the one-time re-acknowledge notice.
   acknowledgedPolicyVersion String?
   // Privacy
-  isPublicAccount          Boolean         @default(false)
+  isPublicAccount           Boolean         @default(false)
   /// What a finished workout is published as. New profiles: FOLLOWERS (decision 10);
   /// existing rows were not backfilled.
-  defaultWorkoutVisibility Visibility      @default(FOLLOWERS)
-  showLoadsPublicly        Boolean         @default(false)
+  defaultWorkoutVisibility  Visibility      @default(FOLLOWERS)
+  showLoadsPublicly         Boolean         @default(false)
   /// No public surface reads body data; kept for a possible future toggle.
-  showBodyMetricsPublicly  Boolean         @default(false)
-  showCurrentProgram       Boolean         @default(true)
+  showBodyMetricsPublicly   Boolean         @default(false)
+  showCurrentProgram        Boolean         @default(true)
   /// Column default stays true for existing rows (no backfill); new profiles are
   /// written discoverable=false by NEW_PROFILE_SHARING (A-049, private by default).
-  discoverable             Boolean         @default(true)
+  discoverable              Boolean         @default(true)
   /// Unused since Batch 5 (decision 9); kept so an image rollback still reads it.
-  autoShareAchievements    Boolean         @default(true)
-  location                 String?
-  createdAt                DateTime        @default(now())
-  updatedAt                DateTime        @updatedAt
+  autoShareAchievements     Boolean         @default(true)
+  location                  String?
+  createdAt                 DateTime        @default(now())
+  updatedAt                 DateTime        @updatedAt
 
   @@index([displayName(ops: raw("gin_trgm_ops"))], type: Gin, map: "Profile_displayName_trgm_idx")
 }
@@ -271,15 +286,15 @@ enum DataRequestStatus {
 /// a banned/anonymous requester can be answered. Fulfilment is owner/manual
 /// (no automated erasure is wired to this).
 model DataRequest {
-  id         String            @id @default(cuid())
-  userId     String?
-  user       User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
-  email      String
-  kind       DataRequestKind   @default(ACCESS)
-  message    String?
-  status     DataRequestStatus @default(OPEN)
-  createdAt  DateTime          @default(now())
-  resolvedAt DateTime?
+  id           String            @id @default(cuid())
+  userId       String?
+  user         User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
+  email        String
+  kind         DataRequestKind   @default(ACCESS)
+  message      String?
+  status       DataRequestStatus @default(OPEN)
+  createdAt    DateTime          @default(now())
+  resolvedAt   DateTime?
   resolvedById String?
 
   @@index([status, createdAt])
@@ -422,6 +437,7 @@ model Exercise {
   evidence        ExerciseEvidence[]
   favorites       FavoriteExercise[]
   userNotes       ExerciseUserNote[]
+  loadSteps       ExerciseLoadStep[]
   templateEntries WorkoutTemplateExercise[]
   programEntries  UserProgramExercise[]
   exerciseLogs    WorkoutExerciseLog[]
@@ -513,6 +529,21 @@ model FavoriteExercise {
   exerciseId String
   exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
   createdAt  DateTime @default(now())
+
+  @@id([userId, exerciseId])
+}
+
+/// "Este aparelho sobe de…": the user's own load step for one exercise — a
+/// machine whose stack isn't the gym's usual one, a rack with 2,5 kg dumbbells.
+/// Wins over a program row's own step and over Settings → Minha academia: it is
+/// what the user said about the physical machine (lib/training/exercise-load).
+model ExerciseLoadStep {
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exerciseId String
+  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  stepKg     Float
+  updatedAt  DateTime @updatedAt
 
   @@id([userId, exerciseId])
 }
@@ -846,38 +877,38 @@ enum EnrollmentStatus {
 /// Program lifecycle record: when a user started/finished a program, adherence,
 /// and an immutable snapshot of the program as it was when it started.
 model ProgramEnrollment {
-  id                String           @id @default(cuid())
-  userId            String
-  user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  programId         String
-  program           UserProgram      @relation(fields: [programId], references: [id], onDelete: Cascade)
-  status            EnrollmentStatus @default(ACTIVE)
-  startedAt         DateTime         @default(now())
-  endedAt           DateTime?
-  currentWeek       Int              @default(1)
-  nextDayIndex      Int              @default(0)
-  plannedSessions   Int?
-  completedSessions Int              @default(0)
-  programSnapshot   Json
+  id                  String           @id @default(cuid())
+  userId              String
+  user                User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  programId           String
+  program             UserProgram      @relation(fields: [programId], references: [id], onDelete: Cascade)
+  status              EnrollmentStatus @default(ACTIVE)
+  startedAt           DateTime         @default(now())
+  endedAt             DateTime?
+  currentWeek         Int              @default(1)
+  nextDayIndex        Int              @default(0)
+  plannedSessions     Int?
+  completedSessions   Int              @default(0)
+  programSnapshot     Json
   /// São Paulo Monday day numbers (mondayOf(dayNumberOf(…)), Today's weekKey) of
   /// weeks the user turned into a deload ("Aplicar deload"). Read through
   /// lib/training/deload.ts effectiveDeload, never on its own.
-  deloadMondays     Int[]            @default([])
+  deloadMondays       Int[]            @default([])
   /// A-024 · true when a builder "Duração" edit shortened the block at/under the
   /// weeks already trained and ended it as a STOPPED (ABANDONED) block — NOT a
   /// real completion, so no PROGRAM_COMPLETED achievement. Read by the re-entry
   /// surfaces (getProgramRestart) to say "você encurtou a duração; retome de
   /// onde parou". Only ever set alongside status ABANDONED.
-  endedByDurationEdit Boolean        @default(false)
+  endedByDurationEdit Boolean          @default(false)
   /// Which parallel program track this enrollment belongs to: "primary" (the
   /// scheduled strength plan that owns the user's week — e.g. the GD series),
   /// "mobility", or "yoga". Denormalized from the program's goal at activation
   /// (programming/tracks.ts trackOf) so the partial unique index can scope the
   /// "one active" rule per track. Complementary tracks ("mobility"/"yoga") run
   /// ON DEMAND alongside the primary one and never claim weekdays.
-  track             String           @default("primary")
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @updatedAt
+  track               String           @default("primary")
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
 
   sessions WorkoutSession[]
 

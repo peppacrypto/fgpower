@@ -2,8 +2,11 @@
 
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { ChevronDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { GLoad } from "@/components/ui/glyph";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { cn } from "@/lib/utils/cn";
 import { plural } from "@/lib/utils/format";
 
@@ -13,6 +16,12 @@ export interface SwapOption {
   equipmentNamePt: string | null;
   imageUrl: string | null;
   reason: "ALTERNATIVE" | "REGRESSION" | "PROGRESSION" | "SAME_MUSCLE_PATTERN" | "SAME_MUSCLE";
+  /**
+   * What picking this one does to the row's prescription ("Variação mais
+   * difícil: 3×6 reps…"), shown under it while it is the chosen one — so the
+   * line follows the pick instead of describing only the suggested default.
+   */
+  note?: string | null;
 }
 
 /** Why a stand-in was offered, in a few words. */
@@ -62,19 +71,46 @@ export function DaySwapCount({ names }: { names: string[] }) {
   return <>{n > 0 ? plural(n, "troca", "trocas") : "sem trocas"}</>;
 }
 
-/** The save button's label: "Salvar com 3 trocas", or "Salvar meu programa" once every row is kept. */
-export function AdaptSaveLabel() {
+/**
+ * The save button's label: "Salvar com 3 trocas", or — once every row is kept —
+ * `none` ("Salvar meu programa" for a template's copy).
+ */
+export function AdaptSaveLabel({ none = "Salvar meu programa" }: { none?: string }) {
   const n = useSwapCount();
-  return <>{n > 0 ? `Salvar com ${plural(n, "troca", "trocas")}` : "Salvar meu programa"}</>;
+  return <>{n > 0 ? `Salvar com ${plural(n, "troca", "trocas")}` : none}</>;
 }
 
 /**
- * One swap on the "Adaptar" review: the stand-in chosen, its whole name (a
+ * A review's floating bar, inside its form and AdaptSwapCounts: "Cancelar"
+ * back to where the review came from and "Salvar com N trocas". `alert`, when
+ * given, is the form's own failure line, shown above the buttons.
+ */
+export function AdaptSaveBar({ cancelHref, none, alert }: { cancelHref: string; none?: string; alert?: ReactNode }) {
+  return (
+    <div
+      data-bottom-bar
+      className="sticky bottom-[calc(var(--nav-h)+0.5rem)] z-20 mt-6 flex flex-wrap items-center gap-2 rounded-[var(--radius-xl)] border border-border bg-surface p-2 shadow-[var(--shadow-md)] sm:bottom-4 sm:justify-end sm:p-2.5"
+    >
+      {alert}
+      <Button asChild variant="ghost" className="px-3">
+        <Link href={cancelHref}>Cancelar</Link>
+      </Button>
+      <SubmitButton variant="strong" className="flex-1 px-4 sm:flex-none" pendingLabel="Salvando…">
+        <AdaptSaveLabel none={none} />
+      </SubmitButton>
+    </div>
+  );
+}
+
+/**
+ * One swap on an "Adaptar" review (a template's copy) or on "Ajustar à minha
+ * academia" (the user's own program): the stand-in chosen, its whole name (a
  * native select cut it at the variant on a 320px phone) with its equipment
- * and why it was picked, and "Trocar ▾" — the real <select>, laid over the
- * chip, so the phone's own picker opens and the form posts `swap:<row>` as
- * before. "Manter …" keeps the original (the user has that machine after all),
- * and the counts (AdaptSwapCounts) follow.
+ * and why it was picked — and, when picking it changes the prescription, how
+ * (SwapOption.note) — and "Trocar ▾" — the real <select>, laid over the chip,
+ * so the phone's own picker opens and the form posts the field as before.
+ * "Manter …" keeps the original (the user has that machine after all), and
+ * the counts (AdaptSwapCounts) follow.
  */
 export function AdaptSwapChoice({
   name,
@@ -82,7 +118,7 @@ export function AdaptSwapChoice({
   options,
   defaultId,
 }: {
-  /** The form field: `swap:<row>` (alternatives adaptRowKey). */
+  /** The form field: `swap:<row>` (alternatives adaptRowKey), or `swap:<exercise>:<rows>` (actions/program-gear). */
   name: string;
   original: { namePt: string; equipmentNamePt: string | null };
   options: SwapOption[];
@@ -113,6 +149,11 @@ export function AdaptSwapChoice({
             ? `${original.equipmentNamePt ?? ""} · mantido`
             : [chosen?.equipmentNamePt, chosen ? REASON[chosen.reason] : null].filter(Boolean).join(" · ")}
         </p>
+        {!keep && chosen?.note ? (
+          <p className="mt-1 text-[13px] leading-snug text-muted" data-swap-note>
+            {chosen.note}
+          </p>
+        ) : null}
       </div>
       <label
         className={cn(

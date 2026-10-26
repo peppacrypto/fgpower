@@ -255,24 +255,25 @@ test("fewer sets than prescribed: no load increase, no false decline; share radi
   test.setTimeout(150_000);
   await newUserOnGd1(page, "summary-partial");
   await startDayFromToday(page, QUINTA);
-  await recordSet(page, 1, "40", "10");
-  await recordSet(page, 2, "40", "10");
-  await recordSet(page, 3, "40", "10");
+  // 50 kg: the cable's next load, 55, is a step the range takes (+10%) — the engine would raise it.
+  await recordSet(page, 1, "50", "10");
+  await recordSet(page, 2, "50", "10");
+  await recordSet(page, 3, "50", "10");
   await finishAndSave(page);
 
   // Only 1 of the 3 prescribed sets, at the top of the range (8–12).
   await redoFromToday(page, QUINTA);
-  await recordSet(page, 1, "40", "12");
+  await recordSet(page, 1, "50", "12");
   await finishAndSave(page);
 
   const card = page.locator(".card").filter({ hasText: EXERCISE });
   // A rep record on that set — and vs. last time agrees with it, saying the missing sets as such.
-  await expect(page.getByRole("link").filter({ hasText: EXERCISE })).toContainText(/12 reps com 40\s?kg/);
+  await expect(page.getByRole("link").filter({ hasText: EXERCISE })).toContainText(/12 reps com 50\s?kg/);
   const vsLast = card.locator("dd").first();
   await expect(vsLast).toContainText(/↑ reps \+2 · 1 de 3 séries/);
   await expect(vsLast).not.toContainText("↓");
   // Same advice as the workout screen will give: all the sets before more load.
-  await expect(card.getByText(/^Mantenha 40\s?kg · faça as 3 séries$/)).toBeVisible();
+  await expect(card.getByText(/^Mantenha 50\s?kg · faça as 3 séries$/)).toBeVisible();
   await expect(card.getByText(/Suba para/)).toHaveCount(0);
   await expectNoSideScroll(page);
 

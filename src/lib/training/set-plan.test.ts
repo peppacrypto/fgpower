@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { DEFAULT_GYM_LOADS, additiveGrid, loadGridFor } from "@/lib/training/load-grid";
 import {
   adviceFromLastTime,
   adviceInSeconds,
@@ -270,16 +271,16 @@ describe("firstTimeReps", () => {
 
 describe("warmupSuggestions", () => {
   it("ramps ~50% × 8 and ~70% × 4 of the working load, on the load step", () => {
-    expect(warmupSuggestions(2, 100, 2.5)).toEqual([
+    expect(warmupSuggestions(2, 100, additiveGrid(2.5))).toEqual([
       { weightKg: 50, reps: 8 },
       { weightKg: 70, reps: 4 },
     ]);
-    expect(warmupSuggestions(2, 62.5, 2.5)).toEqual([
+    expect(warmupSuggestions(2, 62.5, additiveGrid(2.5))).toEqual([
       { weightKg: 32.5, reps: 8 },
       { weightKg: 45, reps: 4 },
     ]);
-    expect(warmupSuggestions(1, 80, 2.5)).toEqual([{ weightKg: 47.5, reps: 5 }]);
-    expect(warmupSuggestions(3, 100, 5)).toEqual([
+    expect(warmupSuggestions(1, 80, additiveGrid(2.5))).toEqual([{ weightKg: 47.5, reps: 5 }]);
+    expect(warmupSuggestions(3, 100, additiveGrid(5))).toEqual([
       { weightKg: 40, reps: 8 },
       { weightKg: 60, reps: 5 },
       { weightKg: 80, reps: 3 },
@@ -287,13 +288,13 @@ describe("warmupSuggestions", () => {
   });
 
   it("has one entry per warm-up, empty without a known load or when it rounds to nothing", () => {
-    expect(warmupSuggestions(2, null, 2.5)).toEqual([
+    expect(warmupSuggestions(2, null, additiveGrid(2.5))).toEqual([
       { weightKg: null, reps: null },
       { weightKg: null, reps: null },
     ]);
-    expect(warmupSuggestions(1, 2.5, 2.5)).toEqual([{ weightKg: null, reps: null }]);
-    expect(warmupSuggestions(4, 100, 2.5)).toHaveLength(4);
-    expect(warmupSuggestions(0, 100, 2.5)).toEqual([]);
+    expect(warmupSuggestions(1, 2.5, additiveGrid(2.5))).toEqual([{ weightKg: null, reps: null }]);
+    expect(warmupSuggestions(4, 100, additiveGrid(2.5))).toHaveLength(4);
+    expect(warmupSuggestions(0, 100, additiveGrid(2.5))).toEqual([]);
   });
 });
 
@@ -307,7 +308,7 @@ describe("adviceFromLastTime", () => {
       strategy: "DOUBLE",
       prescribed,
       lastTime: { sets: done(60, [8, 8, 8, 8]), prescribedSets: 4 },
-      loadIncrementKg: 2.5,
+      grid: additiveGrid(2.5),
     });
     expect(a).toMatchObject({ kind: "increase", loadKg: 62.5, targetReps: 5 });
   });
@@ -317,7 +318,7 @@ describe("adviceFromLastTime", () => {
       strategy: "DOUBLE",
       prescribed,
       lastTime: { sets: [...done(60, [8, 8, 8, 8]), ...done(40, [3], true)], prescribedSets: 4 },
-      loadIncrementKg: 2.5,
+      grid: additiveGrid(2.5),
     });
     expect(a?.kind).toBe("increase");
   });
@@ -327,10 +328,24 @@ describe("adviceFromLastTime", () => {
       strategy: "DOUBLE",
       prescribed,
       lastTime: { sets: done(60, [8]), prescribedSets: 4 },
-      loadIncrementKg: 2.5,
+      grid: additiveGrid(2.5),
     });
     expect(a).toMatchObject({ kind: "hold", loadKg: 60, targetReps: null });
     expect(a?.headline).toContain("faça as 4 séries");
+  });
+
+  it("asks for all the sets before the extra reps a coarse jump needs", () => {
+    // 2 of 3 sets at the top with 12 kg dumbbells: the next one (14 kg) would ask for 15 reps first —
+    // but the missing set comes before that.
+    const dumbbells = loadGridFor("DUMBBELL", DEFAULT_GYM_LOADS);
+    const a = adviceFromLastTime({
+      strategy: "DOUBLE",
+      prescribed: { repMin: 8, repMax: 12, rirTarget: 2 },
+      lastTime: { sets: done(12, [12, 12]), prescribedSets: 3 },
+      grid: dumbbells,
+    });
+    expect(a).toMatchObject({ kind: "hold", loadKg: 12, targetReps: null });
+    expect(a?.headline).toContain("faça as 3 séries");
   });
 
   it("uses the program's load step and says nothing without history", () => {
@@ -338,12 +353,12 @@ describe("adviceFromLastTime", () => {
       strategy: "LINEAR_LOAD",
       prescribed,
       lastTime: { sets: done(100, [5, 5, 5]), prescribedSets: 3 },
-      loadIncrementKg: 5,
+      grid: additiveGrid(5),
     });
     expect(a).toMatchObject({ kind: "increase", loadKg: 105 });
-    expect(adviceFromLastTime({ strategy: "DOUBLE", prescribed, lastTime: null, loadIncrementKg: 2.5 })).toBeNull();
+    expect(adviceFromLastTime({ strategy: "DOUBLE", prescribed, lastTime: null, grid: additiveGrid(2.5) })).toBeNull();
     expect(
-      adviceFromLastTime({ strategy: "DOUBLE", prescribed, lastTime: { sets: done(20, [8], true), prescribedSets: 0 }, loadIncrementKg: 2.5 }),
+      adviceFromLastTime({ strategy: "DOUBLE", prescribed, lastTime: { sets: done(20, [8], true), prescribedSets: 0 }, grid: additiveGrid(2.5) }),
     ).toBeNull();
   });
 
@@ -354,7 +369,7 @@ describe("adviceFromLastTime", () => {
       strategy: "DOUBLE",
       prescribed: pinch,
       lastTime: { sets: [30, 25, 22].map((r) => ({ weightKg: 10, reps: r, rir: 1, isExtra: false })), prescribedSets: 3 },
-      loadIncrementKg: 2.5,
+      grid: additiveGrid(2.5),
       timed: true,
     });
     expect(hold).toMatchObject({ kind: "hold", loadKg: 10, targetReps: 23 });
@@ -365,7 +380,7 @@ describe("adviceFromLastTime", () => {
       strategy: "DOUBLE",
       prescribed: pinch,
       lastTime: { sets: [30, 30, 30].map((r) => ({ weightKg: 10, reps: r, rir: 1, isExtra: false })), prescribedSets: 3 },
-      loadIncrementKg: 2.5,
+      grid: additiveGrid(2.5),
       timed: true,
     });
     expect(up).toMatchObject({ kind: "increase", loadKg: 12.5 });
@@ -376,7 +391,7 @@ describe("adviceFromLastTime", () => {
       strategy: "DOUBLE",
       prescribed: pinch,
       lastTime: { sets: [30, 25, 22].map((r) => ({ weightKg: 10, reps: r, rir: 1, isExtra: false })), prescribedSets: 3 },
-      loadIncrementKg: 2.5,
+      grid: additiveGrid(2.5),
     });
     expect(same?.headline).toContain("busque 23 reps");
   });
@@ -413,7 +428,7 @@ describe("adviceFromLastTime", () => {
       strategy: "DOUBLE",
       prescribed,
       lastTime: { sets: done(60, [8, 8, 8]), prescribedSets: 3 }, // would normally be an increase
-      loadIncrementKg: 2.5,
+      grid: additiveGrid(2.5),
       deload: true,
     });
     expect(a).toMatchObject({ kind: "hold", loadKg: 60 });
@@ -426,7 +441,7 @@ describe("adviceFromLastTime", () => {
       strategy: "DOUBLE",
       prescribed,
       lastTime: { sets: done(100, [8, 8, 8]), prescribedSets: 3 },
-      loadIncrementKg: 2.5,
+      grid: additiveGrid(2.5),
       easeBack: true,
     });
     expect(a).toMatchObject({ kind: "hold", loadKg: 90 }); // 100 * 0.9, snapped to the 2.5 step
@@ -439,7 +454,7 @@ describe("adviceFromLastTime", () => {
       strategy: "DOUBLE",
       prescribed,
       lastTime: { sets: done(80, [8, 8, 8]), prescribedSets: 3 },
-      loadIncrementKg: 2.5,
+      grid: additiveGrid(2.5),
       deload: true,
       easeBack: true,
     });
@@ -448,7 +463,7 @@ describe("adviceFromLastTime", () => {
       strategy: "DOUBLE",
       prescribed,
       lastTime: { sets: done(0, [12, 12, 12]), prescribedSets: 3 },
-      loadIncrementKg: 2.5,
+      grid: additiveGrid(2.5),
       easeBack: true,
     });
     expect(bw).toBeNull(); // top load 0 → falls through; no load-based advice

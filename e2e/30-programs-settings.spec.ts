@@ -243,38 +243,35 @@ test("workout: a superset alternates its members — the switch, the round's res
 // W-149 — training preferences and the theme
 // ---------------------------------------------------------------------------
 
-test("Settings: the load step, vibration and the theme are kept; the theme applies before the page draws", async ({ page }) => {
+test("Settings: vibration and the theme are kept; the theme applies before the page draws", async ({ page }) => {
   await newUserOnGd1(page, "c6-prefs");
   await page.goto("/app/settings");
 
-  // Durante o treino · Salto de carga.
-  const steps = page.getByRole("radiogroup", { name: /Salto de carga/ });
-  await expect(steps.getByRole("radio", { name: "2,5 quilos" })).toHaveAttribute("aria-checked", "true");
-  // Said the pt-BR way: singular below 2.
-  await expect(steps.getByRole("radio", { name: "0,5 quilo", exact: true })).toBeVisible();
-  await expect(steps.getByRole("radio", { name: "1,25 quilo", exact: true })).toBeVisible();
-  await steps.getByRole("radio", { name: "1 quilo" }).click();
-  await expect(page.getByText("Salvo ✓").first()).toBeVisible({ timeout: 15_000 });
+  // Durante o treino no longer has the single "Salto de carga": loads follow Minha academia (e2e/33).
+  const during = page.locator("section#durante-o-treino");
+  await expect(during.getByRole("switch")).toHaveCount(2);
+  await expect(page.getByRole("radiogroup", { name: /Salto de carga/ })).toHaveCount(0);
 
-  // Vibração off.
+  // Vibração off — the page's first tap now. Retried: a tap while the page is still hydrating flips
+  // the switch but never saves, so each try first puts it back.
   const vibration = page.getByRole("switch", { name: /Vibração/ });
   await expect(vibration).toBeChecked();
-  await vibration.uncheck({ force: true });
-  await expect(page.getByText("Salvo ✓").first()).toBeVisible({ timeout: 15_000 });
+  await expect(async () => {
+    await vibration.setChecked(true, { force: true });
+    await vibration.setChecked(false, { force: true });
+    await expect(page.getByText("Salvo ✓").first()).toBeVisible({ timeout: 2_000 });
+  }).toPass({ timeout: 15_000 });
+  const userId = await userIdOf(page);
+  await expect
+    .poll(() => sql(`SELECT "hapticsEnabled"::text FROM "Profile" WHERE "userId" = ${sqlText(userId)}`), { timeout: 15_000 })
+    .toBe("false");
 
   // A server re-render right after (R5) keeps what the screen confirmed.
   await forceServerRerender(page);
-  await expect(steps.getByRole("radio", { name: "1 quilo" })).toHaveAttribute("aria-checked", "true");
   await expect(vibration).not.toBeChecked();
 
   await page.reload();
-  await expect(page.getByRole("radiogroup", { name: /Salto de carga/ }).getByRole("radio", { name: "1 quilo" })).toHaveAttribute(
-    "aria-checked",
-    "true",
-  );
   await expect(page.getByRole("switch", { name: /Vibração/ })).not.toBeChecked();
-  const userId = await userIdOf(page);
-  expect(sql(`SELECT "loadIncrementKg" || ',' || "hapticsEnabled" FROM "Profile" WHERE "userId" = ${sqlText(userId)}`)).toBe("1,false");
 
   // Aparência: applied at once, no server call.
   const theme = page.getByRole("radiogroup", { name: "Tema" });
@@ -318,10 +315,11 @@ test("Settings: the load step, vibration and the theme are kept; the theme appli
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
 });
 
-test("the load step decides the next suggestion; vibration off stays silent at the end of a rest", async ({ page }) => {
+test("the gym's cable step decides the next suggestion; vibration off stays silent at the end of a rest", async ({ page }) => {
   await newUserOnGd1(page, "c6-step");
   const userId = await userIdOf(page);
-  sql(`UPDATE "Profile" SET "loadIncrementKg" = 1, "hapticsEnabled" = false WHERE "userId" = ${sqlText(userId)}`);
+  // Minha academia → Polias: 2,5 kg plates on the cable stack (the default gym's are 5 kg).
+  sql(`UPDATE "Profile" SET "cableStepKg" = 2.5, "hapticsEnabled" = false WHERE "userId" = ${sqlText(userId)}`);
   await page.addInitScript(() => {
     const w = window as unknown as { __vibrations: number };
     w.__vibrations = 0;
@@ -334,7 +332,8 @@ test("the load step decides the next suggestion; vibration off stays silent at t
     });
   });
 
-  // 3 × 40 kg × 12 on an 8–12 range: next time goes up by the user's step, 1 kg.
+  // 3 × 40 kg × 12 at RIR 3 on an 8–12 range, on the Thursday's cable pulldown: next time goes up
+  // one plate of the user's cable stack — 42,5 kg, +6,25%, a jump the range takes (lib/training/next-load).
   const first = await startDayFromToday(page, QUINTA);
   // A short rest, to see its end.
   sql(`UPDATE "WorkoutExerciseLog" SET "restSeconds" = 3 WHERE "sessionId" = ${sqlText(first)}`);
@@ -357,8 +356,8 @@ test("the load step decides the next suggestion; vibration off stays silent at t
     row.getByRole("button", { name: "Sim, treinar de novo" }).click(),
   ]);
   await waitForWorkoutScreen(page);
-  await expect(page.locator("[data-advice]")).toContainText("Suba para 41");
-  await expect(page.getByLabel("Série 1 — kg", { exact: true })).toHaveAttribute("placeholder", "41");
+  await expect(page.locator("[data-advice]")).toContainText("Suba para 42,5");
+  await expect(page.getByLabel("Série 1 — kg", { exact: true })).toHaveAttribute("placeholder", "42,5");
 
   // Vibration back on: the end of a rest buzzes.
   sql(`UPDATE "Profile" SET "hapticsEnabled" = true WHERE "userId" = ${sqlText(userId)}`);
@@ -398,8 +397,11 @@ test("export: a spreadsheet of the sets and everything in JSON, named by the day
   const [json] = await Promise.all([page.waitForEvent("download"), zone.getByRole("link", { name: "JSON" }).click()]);
   expect(json.suggestedFilename()).toMatch(/^fgpower-dados-\d{4}-\d{2}-\d{2}\.json$/);
   const data = JSON.parse((await (await json.createReadStream()).toArray()).join(""));
-  expect(data).toMatchObject({ format: "fgpower-export", version: 3 });
+  expect(data).toMatchObject({ format: "fgpower-export", version: 4 });
   expect(data.workouts[0]).toMatchObject({ name: "Quinta — Puxar (moderado)", status: "Concluído", program: "GD 1" });
+  // Minha academia (v4): the default gym, nothing missing, no exercise with its own step.
+  expect(data.profile).toMatchObject({ stackStepKg: 5, cableStepKg: 5, smallestPlateKg: 2.5, kettlebellStepKg: 4, missingGear: [] });
+  expect(data.exerciseLoadSteps).toEqual([]);
   // Only what was done or typed: the warm-ups and sets never touched stay out.
   expect(data.workouts[0].exercises[0].sets).toHaveLength(1);
   expect(data.workouts[0].exercises[0].sets[0]).toMatchObject({ number: 1, weightKg: 42.5, reps: 10, type: "Válida", completed: true });

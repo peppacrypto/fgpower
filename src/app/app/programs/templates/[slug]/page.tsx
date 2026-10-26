@@ -7,8 +7,18 @@ import { requireUser } from "@/lib/auth/require-user";
 import { prisma } from "@/lib/db";
 import { getTemplateBySlug, listSeriesTemplates, listTemplates, toCatalogItem } from "@/lib/data/templates";
 import { EQUIPMENT_FOR_ACCESS } from "@/lib/data/alternatives";
+import { blockingGear } from "@/lib/exercises/gear";
 import { GD_SERIES, seriesBlocks, seriesPosition } from "@/lib/programming/gd-series";
-import { missingEquipment, joinPt, needLabels } from "@/lib/programming/equipment-needs";
+import {
+  GYM_ADAPT_LABEL,
+  GYM_ADJUST_LABEL,
+  gearBlockingAny,
+  gearListPt,
+  joinPt,
+  missingEquipment,
+  missingGearFlag,
+  needLabels,
+} from "@/lib/programming/equipment-needs";
 import { similarPrograms } from "@/lib/programming/similar";
 import { ADAPT_LABEL, EQUIPMENT_LABEL } from "@/lib/constants/program-labels";
 import { getActiveEnrollment } from "@/lib/data/dashboard";
@@ -24,6 +34,7 @@ import { LimitationsNote } from "@/components/programs/limitations-note";
 import { InlineActionForm } from "@/components/workout/inline-action-form";
 import { shortDayName } from "@/lib/programming/day-tokens";
 import { NOT_FOUND_TITLE } from "@/components/ui/not-found-panel";
+import { plural } from "@/lib/utils/format";
 
 /** A big masthead button that wraps inside itself on a narrow phone instead of spilling out of the panel. */
 const WRAPPING_LG = "h-auto min-h-13 w-full whitespace-normal py-3 text-center text-balance max-sm:px-5 sm:w-auto";
@@ -88,6 +99,16 @@ export default async function TemplateDetailPage({ params, searchParams }: PageP
   const access = profile?.equipmentAccess ?? "FULL_GYM";
   const equipmentIds = template.days.flatMap((d) => d.exercises.map((ex) => ex.exercise.equipmentId));
   const missing = missingEquipment(equipmentIds, EQUIPMENT_FOR_ACCESS[access] ?? null);
+  // The gym: the rows whose every apparatus it lacks (Settings → Minha academia),
+  // flagged on the plan ("Sem aparelho: Hack") and offered the same review.
+  const missingGear = profile?.missingGear ?? [];
+  const gearFlags: Record<string, string> = {};
+  for (const ex of template.days.flatMap((d) => d.exercises)) {
+    const flag = missingGearFlag(blockingGear(ex.exercise, missingGear));
+    if (flag) gearFlags[ex.id] = flag;
+  }
+  const gearBlocked = template.days.flatMap((d) => d.exercises.filter((ex) => gearFlags[ex.id]));
+  const lackedGear = gearBlockingAny(gearBlocked.map((ex) => ex.exercise), missingGear);
 
   // "Parecidos": same goal family, nearby level.
   const catalogItems = catalog.map(toCatalogItem);
@@ -219,6 +240,9 @@ export default async function TemplateDetailPage({ params, searchParams }: PageP
     </>
   );
 
+  // The gym's own review: a copy of the template without the apparatus it lacks — or,
+  // when the user already runs this template, their running program adjusted in place.
+  const blockedCount = new Set(gearBlocked.map((ex) => ex.exerciseId)).size;
   const adapt =
     missing.length > 0 && ADAPT_LABEL[access] ? (
       <div className="mt-4 rounded-[var(--radius-lg)] bg-warning-soft p-4 sm:p-5" data-testid="adapt-panel">
@@ -229,6 +253,23 @@ export default async function TemplateDetailPage({ params, searchParams }: PageP
         </p>
         <Button asChild variant="strong" className="mt-3">
           <Link href={`/app/programs/templates/${template.slug}/adapt`}>{ADAPT_LABEL[access]}</Link>
+        </Button>
+      </div>
+    ) : blockedCount > 0 ? (
+      <div className="mt-4 rounded-[var(--radius-lg)] bg-warning-soft p-4 sm:p-5" data-testid="adapt-panel">
+        <p className="tag tag--status tag--warn text-[13px] font-semibold">Sua academia não tem: {gearListPt(lackedGear)}</p>
+        <p className="mt-1.5 text-[15px] leading-snug text-foreground">
+          {plural(blockedCount, "exercício deste programa usa", "exercícios deste programa usam")}{" "}
+          {lackedGear.length === 1 ? "esse aparelho" : "esses aparelhos"}.{" "}
+          {alreadyActive ? "No seu programa ativo, dá" : "Dá"} para {blockedCount === 1 ? "trocá-lo por outro" : "trocá-los por outros"}{" "}
+          do mesmo músculo e movimento — você confere cada troca antes de salvar.
+        </p>
+        <Button asChild variant="strong" className="mt-3">
+          {alreadyActive && trackActive ? (
+            <Link href={`/app/programs/${trackActive.programId}/academia`}>{GYM_ADJUST_LABEL}</Link>
+          ) : (
+            <Link href={`/app/programs/templates/${template.slug}/adapt`}>{GYM_ADAPT_LABEL}</Link>
+          )}
         </Button>
       </div>
     ) : null;
@@ -259,6 +300,7 @@ export default async function TemplateDetailPage({ params, searchParams }: PageP
           ) : null
         }
         adapt={adapt}
+        gearFlags={gearFlags}
         similar={similar}
         actions={actions}
         stickyActions={sticky}

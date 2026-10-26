@@ -41,7 +41,8 @@ async function userIdOf(sessionId: string) {
 /**
  * GD 1 Quinta's first exercise: 3 × 8–12 at RIR 2,5, two warm-ups, double progression. The
  * program's week moves that RIR with its wave (lib/training/week-guidance weekRirTarget, GD 1's
- * baseline 2): 3,5 in week 1 (a new user's), 2,5 in week 4.
+ * baseline 2,5 — its week 2): 3 in week 1 (a new user's), 2 in week 4. A cable: its stack moves
+ * 5 kg at a time (Minha academia's default, lib/training/load-grid), so loads and warm-ups do too.
  */
 const FIRST_EXERCISE = "Puxada Alta Unilateral no Pulley";
 
@@ -121,11 +122,12 @@ test("first time on an exercise: how to pick the load, reps from the program, �
   // the grey numbers: their explanation must still show when the progression's appear.
   expect(await page.evaluate(() => localStorage.getItem("fg:workout-pref:suggestions-used"))).toBeNull();
 
-  // Warm-ups are optional and folded; opened, they ramp up to the load just typed.
+  // Warm-ups are optional and folded; opened, they ramp up to the load just typed, on loads
+  // the cable stack has: ~50% of 35 kg is 17,5 — between two plates, it goes up to 20.
   const warmups = page.getByRole("region", { name: "Aquecimento" });
   await expect(warmups).toContainText("opcional");
   await openWarmups(page);
-  await expect(page.getByLabel("Aquecimento 1 — kg", { exact: true })).toHaveAttribute("placeholder", "17,5");
+  await expect(page.getByLabel("Aquecimento 1 — kg", { exact: true })).toHaveAttribute("placeholder", "20");
   await expect(page.getByLabel("Aquecimento 1 — repetições", { exact: true })).toHaveAttribute("placeholder", "8");
   await expect(page.getByLabel("Aquecimento 2 — kg", { exact: true })).toHaveAttribute("placeholder", "25");
   await expect(page.getByLabel("Aquecimento 2 — repetições", { exact: true })).toHaveAttribute("placeholder", "4");
@@ -176,7 +178,7 @@ test("the second time: 'Último treino' with date and RIR, and the progression's
 }) => {
   await newUserOnGd1(page, "teach-progress");
   await startDayFromToday(page, QUINTA);
-  // 3 × 40 kg × 12 at RIR 3: the top of 8–12 at week 1's target effort (RIR 3,5, half a rep of slack).
+  // 3 × 40 kg × 12 at RIR 3: the top of 8–12 at week 1's target effort (RIR 3).
   for (let n = 1; n <= 3; n++) {
     await page.getByLabel(`Série ${n} — kg`, { exact: true }).fill("40");
     await page.getByLabel(`Série ${n} — repetições`, { exact: true }).fill("12");
@@ -201,18 +203,21 @@ test("the second time: 'Último treino' with date and RIR, and the progression's
   await expect(lastTime).toContainText("RIR 3 · 3 · 3");
   await expect(lastTime.getByRole("link").first()).toHaveAttribute("href", /^\/app\/exercises\/[^/]+\/history(\?.*)?$/);
 
-  // The engine's verdict, not a copy of last week.
+  // The engine's verdict, not a copy of last week — on the loads the cable has: its next one,
+  // 45 kg, is a +12,5% jump (~7 reps there, below the range), so first more reps at 40 (P18).
   const advice = lastTime.locator("[data-advice]");
-  await expect(advice).toHaveAttribute("data-advice", "increase");
-  await expect(advice).toContainText("Suba para 42,5");
-  await expect(advice).toContainText("12 reps em todas as séries");
+  await expect(advice).toHaveAttribute("data-advice", "hold");
+  await expect(advice).toContainText(/Mantenha 40\skg · busque 14 reps/);
+  await expect(advice).toContainText(/O próximo peso, 45\skg, é um salto de \+12,5%: com 14 reps aqui você chega a 8\+ lá/);
   await expect(advice.getByRole("link", { name: "por quê?" })).toHaveAttribute("href", "/app/science/double-progression");
   for (let n = 1; n <= 3; n++) {
-    await expect(page.getByLabel(`Série ${n} — kg`, { exact: true })).toHaveAttribute("placeholder", "42,5");
-    await expect(page.getByLabel(`Série ${n} — repetições`, { exact: true })).toHaveAttribute("placeholder", "8");
+    await expect(page.getByLabel(`Série ${n} — kg`, { exact: true })).toHaveAttribute("placeholder", "40");
+    await expect(page.getByLabel(`Série ${n} — repetições`, { exact: true })).toHaveAttribute("placeholder", "14");
   }
-  // Warm-ups ramp to the suggested load (~50% × 8, ~70% × 4, on 2,5 kg steps).
-  await expect(page.getByRole("region", { name: "Aquecimento" })).toContainText(/~22,5\s?kg × 8 · ~30\s?kg × 4/);
+  // Warm-ups ramp to the suggested load (~50% × 8, ~70% × 4), each on a load the stack has (5 kg plates).
+  await expect(page.getByRole("region", { name: "Aquecimento" })).toContainText(/~20\s?kg × 8 · ~30\s?kg × 4/);
+  // How the load moves here, said where the suggestion is.
+  await expect(page.locator("[data-load-grid]")).toContainText("Pesos · sobe de 5 kg em 5 kg");
 
   // The grey numbers are explained until they have been used a few times…
   await expect(page.getByText(/Números em cinza/)).toBeVisible();
@@ -220,8 +225,8 @@ test("the second time: 'Último treino' with date and RIR, and the progression's
     await page.getByRole("button", { name: `Concluir série ${n}`, exact: true }).click();
     await expectSetSaved(page, `Série ${n}`);
   }
-  await expect(page.getByLabel("Série 1 — kg", { exact: true })).toHaveValue("42,5");
-  await expect(page.getByLabel("Série 1 — repetições", { exact: true })).toHaveValue("8");
+  await expect(page.getByLabel("Série 1 — kg", { exact: true })).toHaveValue("40");
+  await expect(page.getByLabel("Série 1 — repetições", { exact: true })).toHaveValue("14");
   // …then fold into an (i) — on the next screen, never under the finger.
   await expect(page.getByText(/Números em cinza/)).toBeVisible();
   await page.reload();

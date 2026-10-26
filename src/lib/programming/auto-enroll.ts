@@ -8,6 +8,7 @@ import {
   assignStandIns,
   getAlternatives,
   mainGearFirst,
+  needsStandIn,
   rankStandIns,
   type AlternativeExercise,
 } from "@/lib/data/alternatives";
@@ -24,8 +25,10 @@ import { trimToSessionMinutes, type FitExercise } from "@/lib/programming/sessio
  * "Misto", as decided: it starts from the best CURATED program (the same
  * deterministic recommender the library uses — the pick is never random) and
  * then adjusts the user's own copy — swapping exercises their equipment can't
- * do (the auto version of "Adaptar", with the review's defaults) and trimming
- * trailing accessory sets when a day runs past the time they said they have.
+ * do, or their gym lacks the apparatus for (the auto version of "Adaptar",
+ * with the review's defaults; a brand-new account has marked no gear missing,
+ * so only a re-run of the wizard meets that) and trimming trailing accessory
+ * sets when a day runs past the time they said they have.
  * The curated program, the recommender and everyone already past onboarding are
  * untouched. If nothing fits (very rare), it enrolls no one and Today falls back
  * to its recommendation panel — never a blank page.
@@ -67,10 +70,12 @@ export async function autoEnrollFromOnboarding(userId: string): Promise<AutoEnro
       equipmentAccess: true,
       doesEndurance: true,
       onboardingCompletedAt: true,
+      missingGear: true,
     },
   });
   const answers = recommendProfileOf(profile as AutoEnrollProfile | null);
   if (!answers) return { activated: false };
+  const missingGear = profile?.missingGear ?? [];
 
   // The pick: the same ranking the library's "Para você" uses. A brand-new
   // account has no training history, so no GD block is excluded.
@@ -84,7 +89,7 @@ export async function autoEnrollFromOnboarding(userId: string): Promise<AutoEnro
 
   // Auto "Adaptar" when the pick needs gear the user doesn't have: the review's
   // default stand-in for each exercise, no screen in between.
-  const swaps = pick.adapt ? await defaultSwaps(slug, answers.equipmentAccess) : new Map();
+  const swaps = pick.adapt || missingGear.length > 0 ? await defaultSwaps(slug, answers.equipmentAccess, missingGear) : new Map();
   const adapt: ForkAdapt = { swaps, name };
 
   const program = await forkTemplateToProgram(slug, userId, adapt);
@@ -106,29 +111,34 @@ function personalizedName(answers: RecommendProfile): string {
 }
 
 /**
- * The review's default swaps, computed headlessly: for every exercise the
- * user's equipment can't do, the same stand-in "Adaptar para …" would pre-select
- * (lib/data/alternatives), keyed the way `forkTemplateToProgram` reads them.
- * Mirrors the /adapt page and the adaptTemplate action, minus the UI.
+ * The review's default swaps, computed headlessly: for every exercise out of
+ * the user's reach — equipment their access level doesn't cover, or an
+ * apparatus their gym lacks (alternatives needsStandIn) — the same stand-in
+ * "Adaptar …" would pre-select (lib/data/alternatives), keyed the way
+ * `forkTemplateToProgram` reads them. Mirrors the /adapt page and the
+ * adaptTemplate action, minus the UI.
  */
-async function defaultSwaps(slug: string, equipmentAccess: string): Promise<ForkAdapt["swaps"]> {
+async function defaultSwaps(slug: string, equipmentAccess: string, missingGear: readonly string[]): Promise<ForkAdapt["swaps"]> {
   const swaps: ForkAdapt["swaps"] = new Map();
-  const allowed = EQUIPMENT_FOR_ACCESS[equipmentAccess] ?? null;
-  // FULL_GYM (allowed === null) or an access with no "Adaptar" label never swaps.
-  if (allowed === null || !ADAPT_LABEL[equipmentAccess]) return swaps;
+  // FULL_GYM (no list) or an access with no "Adaptar" label is judged by the gym's gear alone;
+  // with nothing missing there either, nothing swaps.
+  const allowed = ADAPT_LABEL[equipmentAccess] ? (EQUIPMENT_FOR_ACCESS[equipmentAccess] ?? null) : null;
+  if (allowed === null && missingGear.length === 0) return swaps;
 
   const template = await getTemplateBySlug(slug);
   if (!template) return swaps;
-  const usable = (equipmentId: string | null) => equipmentId !== null && allowed.includes(equipmentId);
+  const gym = { allowed, missingGear };
 
   const needing = [
     ...new Set(
-      template.days.flatMap((d) => d.exercises.filter((ex) => !usable(ex.exercise.equipmentId)).map((ex) => ex.exerciseId)),
+      template.days.flatMap((d) => d.exercises.filter((ex) => needsStandIn(ex.exercise, gym)).map((ex) => ex.exerciseId)),
     ),
   ];
   const alternatives = new Map<string, AlternativeExercise[]>(
     await Promise.all(
-      needing.map(async (id) => [id, await getAlternatives(id, { equipmentAccess, limit: ADAPT_OPTIONS + 3 })] as const),
+      needing.map(
+        async (id) => [id, await getAlternatives(id, { equipmentAccess, missingGear, limit: ADAPT_OPTIONS + 3 })] as const,
+      ),
     ),
   );
 
@@ -137,7 +147,7 @@ async function defaultSwaps(slug: string, equipmentAccess: string): Promise<Fork
       day.exercises.map((ex) => ({
         ex,
         exerciseId: ex.exerciseId,
-        usableNow: usable(ex.exercise.equipmentId),
+        usableNow: !needsStandIn(ex.exercise, gym),
         difficulty: ex.exercise.difficulty,
         candidates: rankStandIns(mainGearFirst(alternatives.get(ex.exerciseId) ?? [], equipmentAccess), ex.exercise.difficulty),
       })),

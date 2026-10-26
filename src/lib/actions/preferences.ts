@@ -10,10 +10,12 @@ import type { SettingsSaveResult } from "./result";
 const GENERIC_ERROR = "Não foi possível salvar agora. Tente de novo.";
 
 /**
- * Workout-screen preferences (autosaved in Settings → Durante o treino). The
- * whole block is sent on every change and validated by a strict schema: the
- * client object goes straight into the update, so unknown keys never reach
- * Prisma. The workout, summary and history read the profile per request.
+ * Workout-screen preferences (autosaved in Settings → Durante o treino): the
+ * end-of-rest beep and vibration. The whole block is sent on every change and
+ * validated by a strict schema: the client object goes straight into the
+ * update, so unknown keys — the retired "Salto de carga" (loadIncrementKg)
+ * among them; loads follow Minha academia now (lib/actions/gym) — never reach
+ * Prisma. The workout reads the profile per request.
  */
 export async function updateWorkoutPreferences(prefs: WorkoutPreferences): Promise<SettingsSaveResult> {
   const user = await requireUserOrThrow().catch(() => null);

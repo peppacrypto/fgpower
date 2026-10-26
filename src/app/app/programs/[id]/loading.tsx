@@ -1,5 +1,6 @@
 import { Bone, SkeletonScreen } from "@/components/ui/skeleton";
 import { NestedSkeleton } from "@/components/ui/skeleton-client";
+import { AdaptSkeleton } from "../templates/[slug]/adapt/loading";
 import { BuilderSkeleton } from "./edit/loading";
 
 /** One of the user's programs: its name and actions, then a card per day. */
@@ -33,5 +34,14 @@ export function ProgramSkeleton() {
 
 /** Also the fallback for the builder below it, until the builder's own arrives. */
 export default function ProgramLoading() {
-  return <NestedSkeleton own={<ProgramSkeleton />} routes={[["/app/programs/*/edit", <BuilderSkeleton key="edit" />]]} />;
+  return (
+    <NestedSkeleton
+      own={<ProgramSkeleton />}
+      routes={[
+        // "Ajustar à minha academia" is the template "Adaptar" review, for one of the user's programs.
+        ["/app/programs/*/academia", <AdaptSkeleton key="academia" />],
+        ["/app/programs/*/edit", <BuilderSkeleton key="edit" />],
+      ]}
+    />
+  );
 }
