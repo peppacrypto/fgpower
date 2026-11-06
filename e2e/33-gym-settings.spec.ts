@@ -89,12 +89,12 @@ test("Minha academia sits right after Rotina, and the gym's weights and gear are
   await expect(count).toHaveText("Tem todos");
   const stations = gearGroup(page, "stations");
   await openGroup(stations);
-  await setGear(page, stations.getByRole("checkbox", { name: "Graviton", exact: true }), false, "Falta 1");
+  await setGear(page, stations.getByRole("checkbox", { name: "GHD", exact: true }), false, "Falta 1");
   await expect(stations.locator("summary")).toContainText("falta 1");
   const legs = gearGroup(page, "legs");
   await openGroup(legs);
   await setGear(page, legs.getByRole("checkbox", { name: "Hack", exact: true }), false, "Faltam 2");
-  await expect.poll(() => profileRow(userId, `array_to_string("missingGear", ',')`), { timeout: 15_000 }).toBe("assisted-pullup,hack-squat");
+  await expect.poll(() => profileRow(userId, `array_to_string("missingGear", ',')`), { timeout: 15_000 }).toBe("ghd,hack-squat");
   // A phone's width with the groups open: nothing spills sideways.
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
 
@@ -112,7 +112,7 @@ test("Minha academia sits right after Rotina, and the gym's weights and gear are
   await expect(gearGroup(page, "legs")).toHaveAttribute("open", "");
   await expect(gearGroup(page, "legs").getByRole("checkbox", { name: "Hack", exact: true })).not.toBeChecked();
   await expect(gearGroup(page, "legs").getByRole("checkbox", { name: "Leg press", exact: true })).toBeChecked();
-  await expect(gearGroup(page, "stations").getByRole("checkbox", { name: "Graviton", exact: true })).not.toBeChecked();
+  await expect(gearGroup(page, "stations").getByRole("checkbox", { name: "GHD", exact: true })).not.toBeChecked();
   await expect(gearGroup(page, "cardio")).not.toHaveAttribute("open", "");
   // The rest of the gym is untouched.
   expect(profileRow(userId, `"stackStepKg" || ',' || "smallestPlateKg" || ',' || "kettlebellStepKg"`)).toBe("5,2.5,4");
