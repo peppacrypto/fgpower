@@ -283,6 +283,20 @@ describe("rankExercises", () => {
     expect(rankExercises("leg curl", list)[0].id).toBe("leg-curl");
   });
 
+  it("puts the exercise whose nickname the query is first, whatever the programs use most", () => {
+    const list = [
+      ex("pike", "Flexão Pike (em V)", { popularity: 16 }),
+      ex("push-up", "Flexão de Braço", { popularity: 15, aliases: ["flexão", "apoio"] }),
+      ex("wide", "Flexão de Braço com Pegada Aberta", { popularity: 40 }),
+    ];
+    expect(rankExercises("flexao", list).map((e) => e.id)).toEqual(["push-up", "wide", "pike"]);
+    // Only the whole nickname counts: part of it is the usual ranking.
+    expect(rankExercises("flexa", list).map((e) => e.id)).toEqual(["wide", "pike", "push-up"]);
+    // A name typed in full stays ranked by use: "cadeira" must not open on the yoga pose of that name.
+    const chairs = [ex("pose", "Cadeira", { popularity: 11 }), ex("extensor", "Cadeira Extensora", { popularity: 38 })];
+    expect(rankExercises("cadeira", chairs).map((e) => e.id)).toEqual(["extensor", "pose"]);
+  });
+
   it("finds a pt-BR nickname through an alias", () => {
     const ranked = rankExercises("remada baixa", [
       ex("x", "Remada Sentada na Polia Baixa", { aliases: ["Remada baixa"] }),

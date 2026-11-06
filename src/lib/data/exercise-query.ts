@@ -222,6 +222,12 @@ export function matchTier(q: string, names: string[], muscleHits: boolean[] = []
 
 const byName = new Intl.Collator("pt-BR", { sensitivity: "base", numeric: true });
 
+/** The query, whole, is one of the exercise's nicknames. */
+function isNicknameOf(q: string, c: RankCandidate): boolean {
+  const phrase = searchWords(q.slice(0, MAX_QUERY_LENGTH)).join(" ");
+  return phrase !== "" && c.aliases.some((a) => searchWords(a).join(" ") === phrase);
+}
+
 /**
  * Where a candidate sorts for `q`: its tier, and whether it got there only
  * through an alias. The exercise's own name wins a tie with a nickname — for
@@ -235,8 +241,7 @@ export function rankKey(
   /** Per word group, the muscles it names (matchingMuscleIds). */
   muscleGroups: string[][] = [],
 ): { tier: number; viaAlias: 0 | 1 } {
-  const phrase = searchWords(q.slice(0, MAX_QUERY_LENGTH)).join(" ");
-  if (phrase && c.aliases.some((a) => searchWords(a).join(" ") === phrase)) return { tier: MATCH_TIER.PHRASE_START, viaAlias: 0 };
+  if (isNicknameOf(q, c)) return { tier: MATCH_TIER.PHRASE_START, viaAlias: 0 };
   const muscleHits = muscleGroups.map((ids) => ids.some((id) => c.muscleIds?.includes(id) ?? false));
   const nameTier = matchTier(q, [c.namePt, c.nameEn], muscleHits);
   const aliasTier = c.aliases.length > 0 ? matchTier(q, c.aliases) : MATCH_TIER.OTHER;
@@ -244,19 +249,23 @@ export function rankKey(
 }
 
 /**
- * The matches for `q` in library order: tier (a name before a nickname at the
- * same tier), then popularity (template usage), curated content, pt name and
- * id — a total order, so a page never shuffles between requests.
+ * The matches for `q` in library order: tier, the exercise whose nickname the
+ * query is (rankKey's "the exercise asked for": "flexão" is the push-up, however
+ * much the programs use "Flexão Pike"), a name before a nickname at the same tier,
+ * then popularity (template usage), curated content, pt name and id — a total
+ * order, so a page never shuffles between requests.
  */
 export function rankExercises<T extends RankCandidate>(q: string, candidates: T[], muscles: MuscleForSearch[] = []): T[] {
   const muscleGroups = exerciseSearchTerms(q).map((alts) => matchingMuscleIds(alts, muscles));
   const keys = new Map(candidates.map((c) => [c.id, rankKey(q, c, muscleGroups)]));
+  const asked = new Set(candidates.filter((c) => isNicknameOf(q, c)).map((c) => c.id));
   const other = { tier: MATCH_TIER.OTHER, viaAlias: 1 };
   return [...candidates].sort((a, b) => {
     const ka = keys.get(a.id) ?? other;
     const kb = keys.get(b.id) ?? other;
     return (
       ka.tier - kb.tier ||
+      Number(asked.has(b.id)) - Number(asked.has(a.id)) ||
       ka.viaAlias - kb.viaAlias ||
       b.popularity - a.popularity ||
       Number(b.isCurated) - Number(a.isCurated) ||
