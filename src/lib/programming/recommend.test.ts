@@ -99,10 +99,25 @@ describe("recommendTemplates", () => {
     expect(bodyweight.filter((r) => !r.adapt).map((r) => r.template.slug).sort()).toEqual([
       "bodyweight-express",
       "calisthenics",
+      "casa-5x",
+      "casa-comecar",
+      "casa-corpo-inteiro-3x",
+      "casa-express-20",
+      "casa-peito-ombros-bracos",
+      "casa-pernas-gluteos",
+      "casa-queima",
+      "casa-silencioso",
+      "casa-superior-inferior-4x",
     ]);
     const band = bodyweight.find((r) => r.template.slug === "bands-bodyweight-full-body");
     expect(band?.adapt).toBe(true);
     expect(band?.reasons).toContainEqual({ label: "Com adaptação", match: false, kind: "adapt" });
+  });
+
+  it("gives someone with no equipment a no-equipment plan first, never one that needs a bar", () => {
+    const home = { equipmentAccess: "HOME_BODYWEIGHT" };
+    expect(top({ ...home, experience: "INTERMEDIATE", daysPerWeek: 5 }, 1)).toEqual(["casa-5x"]);
+    expect(top({ ...home, goal: "GENERAL_FITNESS" }, 2)).toEqual(["casa-comecar", "casa-silencioso"]);
   });
 
   it("gives home users three picks at 2, 3 and 4 days a week, the first one runnable (L-home-catalog-gap)", () => {
@@ -174,7 +189,7 @@ describe("recommendTemplates", () => {
     // pull-up bar, which "halteres e talvez um banco" doesn't include.
     expect(top({ ...home, daysPerWeek: 3 }, 1)).toEqual(["home-dumbbells"]);
     expect(top({ ...home, daysPerWeek: 3, sessionMinutes: 60 }, 1)).toEqual(["home-dumbbells"]);
-    expect(top({ ...home, goal: "GENERAL_FITNESS" }, 3)).toEqual(["full-body-express", "home-dumbbells", "bodyweight-express"]);
+    expect(top({ ...home, goal: "GENERAL_FITNESS" }, 3)).toEqual(["full-body-express", "home-dumbbells", "casa-comecar"]);
   });
 
   it("offers the 2-day dumbbell plan as it is only to those who may own dumbbells; to the rest, adapted", () => {

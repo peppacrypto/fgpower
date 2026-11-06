@@ -1,0 +1,205 @@
+{
+ "slug": "kneeling-towel-chest-slide",
+ "camera": {
+  "az": 30,
+  "el": 9
+ },
+ "muscles": [
+  "chest"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.319,
+     0.002
+    ],
+    "pitch": 53.604
+   },
+   "neck": {
+    "flex": -12
+   },
+   "armL": {
+    "pos": [
+     0.2,
+     0,
+     0.46
+    ],
+    "contact": true,
+    "fingers": [
+     0.1,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3
+   },
+   "armR": {
+    "pos": [
+     -0.27,
+     0.006,
+     0.49
+    ],
+    "contact": true,
+    "fingers": [
+     -0.15,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0.075,
+     -0.776
+    ],
+    "anchor": "ankle",
+    "pitch": 172,
+    "pole": [
+     0,
+     -1,
+     0.05
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.075,
+     -0.776
+    ],
+    "anchor": "ankle",
+    "pitch": 172,
+    "pole": [
+     0,
+     -1,
+     0.05
+    ]
+   },
+   "props": [
+    {
+     "type": "towel",
+     "pos": [
+      -0.27,
+      0,
+      0.49
+     ],
+     "width": 0.3,
+     "depth": 0.42
+    }
+   ]
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.2,
+     0.059
+    ],
+    "pitch": 72
+   },
+   "neck": {
+    "flex": -20
+   },
+   "armL": {
+    "pos": [
+     0.2,
+     0,
+     0.46
+    ],
+    "contact": true,
+    "fingers": [
+     0.1,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3,
+    "pole": [
+     0.75,
+     0.55,
+     -0.45
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.645,
+     0.006,
+     0.49
+    ],
+    "contact": true,
+    "fingers": [
+     -0.15,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3,
+    "pole": [
+     -0.2,
+     0.8,
+     -0.6
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0.075,
+     -0.776
+    ],
+    "anchor": "ankle",
+    "pitch": 172,
+    "pole": [
+     0,
+     -1,
+     0.05
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.075,
+     -0.776
+    ],
+    "anchor": "ankle",
+    "pitch": 172,
+    "pole": [
+     0,
+     -1,
+     0.05
+    ]
+   },
+   "props": [
+    {
+     "type": "towel",
+     "pos": [
+      -0.645,
+      0,
+      0.49
+     ],
+     "width": 0.3,
+     "depth": 0.42
+    }
+   ]
+  }
+ },
+ "muscleSide": "R"
+}

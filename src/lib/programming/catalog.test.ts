@@ -15,6 +15,20 @@ import {
 } from "./catalog";
 
 const slugs = (items: { slug: string }[]) => items.map((t) => t.slug);
+/** What "sem equipamento" finds: the two older plans and the home family. */
+const NO_EQUIPMENT = [
+  "calisthenics",
+  "bodyweight-express",
+  "casa-comecar",
+  "casa-corpo-inteiro-3x",
+  "casa-superior-inferior-4x",
+  "casa-5x",
+  "casa-express-20",
+  "casa-silencioso",
+  "casa-queima",
+  "casa-pernas-gluteos",
+  "casa-peito-ombros-bracos",
+];
 const search = (q: string) => searchCatalog(CATALOG_FIXTURE, q);
 
 describe("groupCatalog", () => {
@@ -23,6 +37,7 @@ describe("groupCatalog", () => {
     expect(groups.map((g) => g.label)).toEqual([
       "Plano GD",
       "Comece aqui",
+      "Em casa, sem equipamento",
       "Força & hipertrofia",
       "Especializações",
       "Esporte",
@@ -136,12 +151,12 @@ describe("presetFilters", () => {
     expect(applyFilters(CATALOG_FIXTURE, f).length).toBeGreaterThan(0);
   });
 
-  it("keeps equipment even when a single program fits it", () => {
+  it("keeps equipment even when only a few programs fit it", () => {
     const f = presetFilters(
       { goal: "GENERAL_FITNESS", experience: "BEGINNER", daysPerWeek: 3, equipmentAccess: "HOME_BODYWEIGHT" },
       CATALOG_FIXTURE,
     );
-    expect(slugs(applyFilters(CATALOG_FIXTURE, f))).toEqual(["calisthenics", "bodyweight-express"]);
+    expect(slugs(applyFilters(CATALOG_FIXTURE, f))).toEqual(["calisthenics", "casa-comecar", "casa-silencioso"]);
   });
 
   it("maps a fat-loss goal to the 'Emagrecer' chip", () => {
@@ -192,7 +207,7 @@ describe("searchCatalog", () => {
   });
 
   it("finds home and no-equipment programs", () => {
-    expect(slugs(search("sem equipamento").results)).toEqual(["calisthenics", "bodyweight-express"]);
+    expect(slugs(search("sem equipamento").results)).toEqual(NO_EQUIPMENT);
     expect(slugs(search("em casa").results)).toContain("home-dumbbells");
     for (const t of search("em casa").results) expect(t.equipmentAccess).not.toBe("FULL_GYM");
     expect(slugs(search("halteres em casa").results)).toEqual([
@@ -213,10 +228,11 @@ describe("searchCatalog", () => {
     const within = search("45 minutos");
     expect(within.note).toBeNull();
     for (const t of within.results) expect(t.sessionMinutes).toBeLessThanOrEqual(50);
-    const tight = search("20 min");
+    expect(slugs(search("20 min").results)).toEqual(["casa-express-20"]);
+    const tight = search("10 min");
     expect(tight.results.length).toBeGreaterThan(0);
-    expect(tight.note).toBe("Nenhum programa cabe em 20 min — estes são os mais curtos.");
-    expect(tight.results[0].sessionMinutes).toBe(30);
+    expect(tight.note).toBe("Nenhum programa cabe em 10 min — estes são os mais curtos.");
+    expect(tight.results[0].sessionMinutes).toBe(20);
   });
 
   it("offers the neighbouring frequencies when a day count has no match, naming the ones found", () => {
@@ -225,7 +241,7 @@ describe("searchCatalog", () => {
     for (const t of o.results) expect([3, 5]).toContain(t.daysPerWeek);
     expect(search("1 dia").note).toBe("Nenhum programa de 1 dia por semana com esses termos — estes têm 2 dias.");
     expect(search("7 dias").note).toBe("Nenhum programa de 7 dias por semana com esses termos — estes têm 6 dias.");
-    expect(search("casa 5 dias").note).toBe("Nenhum programa de 5 dias por semana com esses termos — estes têm 4 dias.");
+    expect(search("casa 6 dias").note).toBe("Nenhum programa de 6 dias por semana com esses termos — estes têm 5 dias.");
   });
 
   it("keeps the old behaviour: name first, whole numbers, plurals", () => {
@@ -257,7 +273,7 @@ describe("searchLibrary", () => {
     const o = run("sem equipamento");
     expect(o.widened).toBe(true);
     expect(o.widenedNote).toBe("Nada com os filtros escolhidos — buscando em todos os programas.");
-    expect(slugs(o.results)).toEqual(["calisthenics", "bodyweight-express"]);
+    expect(slugs(o.results)).toEqual(NO_EQUIPMENT);
   });
 
   it("finds a program asked for by name even when the chips hide it and others share a word", () => {
@@ -276,12 +292,12 @@ describe("searchLibrary", () => {
   });
 
   it("widens a time limit to the shortest programs of the catalog, not of the chips", () => {
-    const o = run("20 min");
+    const o = run("10 min");
     expect(o.widened).toBe(true);
-    expect(o.note).toBe("Nenhum programa cabe em 20 min — estes são os mais curtos.");
-    expect(o.results[0].sessionMinutes).toBe(30);
+    expect(o.note).toBe("Nenhum programa cabe em 10 min — estes são os mais curtos.");
+    expect(o.results[0].sessionMinutes).toBe(20);
     // Inside the chips the "shortest" were 58-60 min.
-    expect(Math.min(...searchCatalog(filtered, "20 min").results.map((t) => t.sessionMinutes))).toBeGreaterThan(50);
+    expect(Math.min(...searchCatalog(filtered, "10 min").results.map((t) => t.sessionMinutes))).toBeGreaterThan(50);
   });
 
   it("says the chips are why when the whole catalog does no better", () => {

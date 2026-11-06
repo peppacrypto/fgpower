@@ -19,6 +19,10 @@ export interface ExecutionExerciseLog {
   exerciseName: string;
   exerciseSlug: string;
   imageUrl: string | null;
+  /** The exercise's own figure (the home library): shown large on the screen, animated or still. */
+  demoUrl: string | null;
+  /** The frame shown in the animation's place to someone who asks for less motion. */
+  demoStillUrl: string | null;
   sortOrder: number;
   prescribedSets: number;
   warmupSets: number;

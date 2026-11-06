@@ -204,6 +204,9 @@ describe("isTimedHold", () => {
     // Loaded, timed by every program that uses it: the summary and the
     // exercise history (which know only the slug) must say seconds too.
     expect(isTimedHold({ slug: "plate-pinch" })).toBe(true);
+    expect(isTimedHold({ slug: "wall-lateral-press-hold" })).toBe(true);
+    expect(isTimedHold({ slug: "step-back-burpee" })).toBe(true);
+    expect(isTimedHold({ slug: "mountain-climbers" })).toBe(true);
     expect(isTimedHold({ slug: "pushups" })).toBe(false);
     expect(isTimedHold({ slug: "body-up", notes: null })).toBe(false);
   });
@@ -504,5 +507,53 @@ describe("isLoadedCarry (A-056)", () => {
     expect(isLoadedCarry({ slug: null, notes: "As 'reps' são passos: caminhe 30 a 40 passos por série." })).toBe(true);
     expect(isLoadedCarry({ slug: null, notes: "Os números são metros por série." })).toBe(true);
     expect(isLoadedCarry({ slug: null, notes: "Desça em 3 s, 10 reps controladas." })).toBe(false);
+  });
+});
+
+describe("adviceFromLastTime for a bodyweight exercise", () => {
+  const grid = { kind: "BODYWEIGHT" } as Parameters<typeof adviceFromLastTime>[0]["grid"];
+  const prescribed = { repMin: 8, repMax: 15, rirTarget: 2 };
+  const rungs = { harder: "Flexão Lenta", easier: null };
+  const last = (reps: number[], prescribedSets = reps.length) => ({
+    sets: reps.map((r) => ({ weightKg: 0, reps: r, rir: 2, isExtra: false })),
+    prescribedSets,
+  });
+
+  it("names the next variation", () => {
+    const a = adviceFromLastTime({ strategy: "DOUBLE", prescribed, lastTime: last([15, 15, 15]), grid, rungs });
+    expect(a?.headline).toBe("↑ Passe para Flexão Lenta");
+  });
+
+  it("never says 0 kg: asks for all the sets first", () => {
+    const a = adviceFromLastTime({ strategy: "DOUBLE", prescribed, lastTime: last([15, 15], 3), grid, rungs });
+    expect(a?.headline).toBe("Faça as 3 séries");
+    expect(`${a?.headline} ${a?.reason}`).not.toContain("kg");
+  });
+
+  it("keeps the variation in a deload and after a break", () => {
+    const deload = adviceFromLastTime({ strategy: "DOUBLE", prescribed, lastTime: last([15, 15, 15]), grid, rungs, deload: true });
+    expect(deload?.headline).toBe("Semana leve · mesma variação");
+    const back = adviceFromLastTime({ strategy: "DOUBLE", prescribed, lastTime: last([15, 15, 15]), grid, rungs, easeBack: true });
+    expect(back?.headline).toBe("Volta após pausa · mesma variação");
+  });
+
+  it("speaks in seconds for a hold, with no RIR", () => {
+    const held = {
+      sets: [
+        { weightKg: 0, reps: 30, rir: null, isExtra: false },
+        { weightKg: 0, reps: 25, rir: null, isExtra: false },
+      ],
+      prescribedSets: 2,
+    };
+    const a = adviceFromLastTime({
+      strategy: "DOUBLE",
+      prescribed: { repMin: 20, repMax: 45, rirTarget: null },
+      lastTime: held,
+      grid,
+      rungs: { harder: "Prancha Serrote", easier: null },
+      timed: true,
+    });
+    expect(a?.headline).toBe("Segure 26\u00a0s");
+    expect(a?.reason).toContain("quando segurar 45\u00a0s em todas");
   });
 });

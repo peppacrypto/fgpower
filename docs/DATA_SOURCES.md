@@ -66,6 +66,8 @@ Exercise cards/detail pages fall back to a `Dumbbell` icon only for the 3 source
 that have no image at all. `ExerciseMedia` is a first-class model, so swapping to a
 cleaner image source later is a data-population task, not a schema change.
 
+**Exercises with our own figure** (the home library, §6) no longer use these photos.
+
 **Cleaner alternatives if the photos are ever swapped out**, in order of preference:
 
 - **wger.de's public API** — the cleanest large-scale alternative found. Every
@@ -164,16 +166,50 @@ For completeness, these were investigated and explicitly **not** used, with the 
   simultaneously admit to scraping Bodybuilding.com or unspecified "internet sources"; a
   license badge on Kaggle does not clear content the uploader never held rights to, so
   these were not used regardless of the label.
-- **`everkinetic/data`** — genuinely CC BY-SA 4.0, but its image-hosting domains are
-  dead (404 / non-resolving), making the images practically unusable regardless of
-  license cleanliness.
+- **`everkinetic/data`** — CC BY-SA 4.0 in the repo (CC BY-SA 3.0 on Commons). Its
+  `dist/svg` and `dist/png` hold about 540 files each and are served from GitHub; only
+  the everkinetic.com URLs inside `exercises.json` are dead (corrected 2026-11-06). Not
+  used: about 12 of its 293 moves fit the home library, none of the towel, wall-sit or
+  door-frame moves, and any edit must be shared alike.
+
+---
+
+## 6. Home-training exercise figures (our own renders)
+
+Checked 2026-11-06. The figures of the home programs under
+`public/exercises/<slug>/fig-*.webp` are rendered by FGPOWER itself, with the tooling in
+`scripts/exercise-art/`.
+
+- **The body.** The mesh and morph targets are MakeHuman assets, whose `base.obj` header
+  says "explicitly released as CC0 in september 2020"
+  (https://static.makehumancommunity.org/about/license.html). The rig and skinning data
+  come from NAVER's Anny (https://github.com/naver/anny), whose MakeHuman-derived data files
+  are marked CC0 (`weights.default.json` carries `"license": "CC0"`; the target files and
+  `rig.default.json` have no licence line of their own, so theirs rests on Anny's
+  statement and `assets/LICENSE.md`). Anny's code (Apache-2.0) is neither executed nor
+  shipped: only CC0 data files were copied. Do not use Anny's optional `smplx` topology,
+  which is non-commercial. CC0 gives no warranty of non-infringement.
+- **The rendering.** three.js (MIT). The face is removed and replaced by a plain mannequin
+  head; the props are simple boxes and cylinders of our own.
+- **Credit.** Not legally required for CC0, but the figures are based on MakeHuman and Anny.
+- **Why not an existing set.** `everkinetic/data` covers too few of these moves (see §5).
+  wger (per-image CC BY-SA 3.0/4.0, 383 images on 2026-11-06) mixes photos and line art and has
+  only 12 no-equipment exercises with 2+ images. Commons and Openverse add nothing beyond
+  these. Paid sets need a written licence, limit editing or redistribution, and could not be
+  confirmed to cover the exact moves; Gym Visual is the realistic fallback if the renders are
+  ever abandoned. If it is bought, confirm in writing that a subscription web app is not a
+  "product destined for resale".
+- **Never.** Assets from commercial apps are not used, traced or copied. A pose comes from
+  the written description of the move, not from another party's image.
+- **Worth knowing.** These figures clear the caveat of §1 for every exercise that has one. The
+  same tooling could replace the rest of the free-exercise-db photos, one exercise at a time.
 
 ---
 
 ## Summary for future maintainers
 
-- **Safe to keep extending:** exercise text/metadata (`free-exercise-db`, Unlicense) and
-  the scientific evidence base (real papers, DOI-verified).
+- **Safe to keep extending:** exercise text/metadata (`free-exercise-db`, Unlicense), the
+  scientific evidence base (real papers, DOI-verified) and our own rendered figures (§6).
 - **Shipped by owner decision, licensing caveat on record:** exercise photography. The app
   serves the free-exercise-db photos (WebP under `public/exercises/<slug>/`, 873 folders,
   ~46 MB) — a deliberate owner decision made with full knowledge of the licensing caveat in

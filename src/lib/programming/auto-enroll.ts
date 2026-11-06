@@ -16,6 +16,7 @@ import { ADAPT_LABEL, GOAL_LABEL } from "@/lib/constants/program-labels";
 import { recommendTemplates, type RecommendProfile } from "@/lib/programming/recommend";
 import { forkTemplateToProgram, startProgramInternal, type ForkAdapt } from "@/lib/programming/enroll";
 import { trimToSessionMinutes, type FitExercise } from "@/lib/programming/session-fit";
+import { isTimedHold } from "@/lib/training/set-plan";
 
 /**
  * The end of the new-user onboarding: instead of landing on an empty Today with
@@ -187,7 +188,7 @@ async function fitProgramToSessions(programId: string, sessionMinutes: number): 
         select: {
           exercises: {
             orderBy: { sortOrder: "asc" },
-            select: { id: true, sets: true, repMax: true, restSeconds: true, warmupSets: true, exercise: { select: { mechanics: true } } },
+            select: { id: true, sets: true, repMax: true, restSeconds: true, warmupSets: true, notes: true, exercise: { select: { mechanics: true, slug: true } } },
           },
         },
       },
@@ -200,7 +201,8 @@ async function fitProgramToSessions(programId: string, sessionMinutes: number): 
     const fit: FitExercise[] = day.exercises.map((ex) => ({
       id: ex.id,
       sets: ex.sets,
-      repMax: ex.repMax,
+      // A timed row's "reps" are seconds, and the estimate costs a rep at 4 s.
+      repMax: isTimedHold({ slug: ex.exercise.slug, notes: ex.notes }) ? Math.ceil(ex.repMax / 4) : ex.repMax,
       restSeconds: ex.restSeconds,
       warmupSets: ex.warmupSets,
       isCompound: ex.exercise.mechanics === "COMPOUND",

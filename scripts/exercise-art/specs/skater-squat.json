@@ -1,0 +1,166 @@
+{
+ "slug": "skater-squat",
+ "camera": {
+  "az": 72,
+  "el": 8
+ },
+ "muscles": [
+  "quadriceps",
+  "glutes"
+ ],
+ "props": [
+  {
+   "type": "towel",
+   "pos": [
+    -0.11,
+    0,
+    -0.38
+   ]
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0.05,
+     0.915,
+     -0.01
+    ],
+    "pitch": 6
+   },
+   "armL": {
+    "fk": {
+     "flex": 92,
+     "abd": 5,
+     "elbow": 5
+    },
+    "curl": 0.32,
+    "fingers": [
+     0,
+     0.12,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0.12
+    ]
+   },
+   "armR": {
+    "fk": {
+     "flex": 92,
+     "abd": 5,
+     "elbow": 5
+    },
+    "curl": 0.32,
+    "fingers": [
+     0,
+     0.12,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0.12
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.08,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "pole": [
+     0,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.52,
+     -0.4
+    ],
+    "anchor": "ankle",
+    "pitch": 95
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0.03,
+     0.45,
+     -0.22
+    ],
+    "pitch": 46
+   },
+   "spine": {
+    "flex": -4
+   },
+   "neck": {
+    "flex": -20
+   },
+   "armL": {
+    "fk": {
+     "flex": 128,
+     "abd": 5,
+     "elbow": 5
+    },
+    "curl": 0.32,
+    "fingers": [
+     0,
+     0.12,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0.12
+    ]
+   },
+   "armR": {
+    "fk": {
+     "flex": 128,
+     "abd": 5,
+     "elbow": 5
+    },
+    "curl": 0.32,
+    "fingers": [
+     0,
+     0.12,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0.12
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.08,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "pole": [
+     0,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.32,
+     -0.72
+    ],
+    "anchor": "ankle",
+    "pitch": 125
+   }
+  }
+ },
+ "muscleSide": "L"
+}

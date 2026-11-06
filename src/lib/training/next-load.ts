@@ -52,6 +52,14 @@ export interface NextLoadInput {
   repCap?: number;
   /** A timed hold: its "reps" are seconds, so the advice is worded for seconds (set-plan's adviceInSeconds). */
   timed?: boolean;
+  /** With no load to raise, the next and previous steps of the exercise's ladder, by name (see adviseBodyweight). */
+  rungs?: ExerciseRungs | null;
+}
+
+/** The exercise's neighbours on its ladder (ExerciseRelation PROGRESSION / REGRESSION), by their pt-BR name. */
+export interface ExerciseRungs {
+  harder: string | null;
+  easier: string | null;
 }
 
 /** Reps in reserve the sets were done at: what the user logged, else the target, else 2. */
@@ -68,11 +76,108 @@ function jumpText(from: number, to: number): string {
   return `+${formatNumber(((to - from) / from) * 100, 1)}%`;
 }
 
+/**
+ * With the body as the only load, double progression runs over the exercise's
+ * ladder: more reps inside the range, then the next, harder variation by name
+ * once every set reaches the top of it (or sooner, when the sets stop far from
+ * failure: light sets far from failure grow little). Most sets below the range
+ * mean the variation is too hard: the easier one by name. The sets' reps stay
+ * the number to beat, so `targetReps` is null when the advice is to change variation.
+ */
+function adviseBodyweight(input: NextLoadInput): NextLoadAdvice | null {
+  if ((input.strategy ?? "DOUBLE") === "MANUAL") return null; // yoga, mobility: no progression to suggest
+  const reps = input.sets.map((x) => x.reps ?? 0);
+  if (!reps.some((r) => r > 0)) return null;
+  const { repMin, repMax, rirTarget } = input.prescribed;
+  const n = reps.length;
+  const minReps = Math.min(...reps);
+  const below = reps.filter((r) => r < repMin).length;
+  const harder = input.rungs?.harder ?? null;
+  const easier = input.rungs?.easier ?? null;
+  // A hold has no RIR to read (A-055).
+  const rirKnown = !input.timed && rirTarget != null && input.sets.every((x) => x.rir != null);
+  const avgRir = rirKnown ? input.sets.reduce((sum, x) => sum + (x.rir as number), 0) / n : null;
+  const rir = (v: number | null) => formatNumber(v ?? 0, 1);
+
+  if (below * 2 > n) {
+    if (easier) {
+      return {
+        kind: "decrease",
+        loadKg: 0,
+        targetReps: null,
+        headline: `↓ Passe para ${easier}`,
+        reason: `${below} de ${n} séries abaixo de ${repMin} reps: a variação mais fácil deixa você na faixa`,
+      };
+    }
+    return {
+      kind: "hold",
+      loadKg: 0,
+      targetReps: repMin,
+      headline: `Busque ${repMin} reps`,
+      reason: `${below} de ${n} séries abaixo de ${repMin} reps: vá devagar e complete a faixa`,
+    };
+  }
+  if (below > 0) {
+    return {
+      kind: "hold",
+      loadKg: 0,
+      targetReps: repMin,
+      headline: `Complete ${repMin} reps`,
+      reason: `Alguma série ficou abaixo de ${repMin} reps`,
+    };
+  }
+  if (minReps >= repMax) {
+    if (rirKnown && input.sets.some((x) => (x.rir as number) < (rirTarget as number) - 0.5)) {
+      return {
+        kind: "hold",
+        loadKg: 0,
+        targetReps: repMax,
+        headline: `Repita ${repMax} reps com RIR ${rir(rirTarget)}`,
+        reason: `Fez ${repMax} reps em todas, mas com RIR ${rir(avgRir)} (alvo ${rir(rirTarget)})`,
+      };
+    }
+    if (harder) {
+      return {
+        kind: "increase",
+        loadKg: 0,
+        targetReps: null,
+        headline: `↑ Passe para ${harder}`,
+        reason: `${repMax} reps em todas as séries`,
+      };
+    }
+    const more = minReps + 1;
+    return {
+      kind: "hold",
+      loadKg: 0,
+      targetReps: more,
+      headline: `Busque ${more} reps`,
+      reason: "No topo da faixa: progrida nas reps ou desça mais devagar",
+    };
+  }
+  if (harder && avgRir !== null && avgRir >= (rirTarget as number) + 3) {
+    return {
+      kind: "increase",
+      loadKg: 0,
+      targetReps: null,
+      headline: `↑ Passe para ${harder}`,
+      reason: `Sobrou RIR ${rir(avgRir)} (alvo ${rir(rirTarget)}): longe da falha, esta variação rende pouco`,
+    };
+  }
+  return {
+    kind: "hold",
+    loadKg: 0,
+    targetReps: Math.min(repMax, minReps + 1),
+    headline: `Busque ${Math.min(repMax, minReps + 1)} reps`,
+    reason: harder ? `Passe para ${harder} quando fizer ${repMax} reps em todas` : `Desça mais devagar quando fizer ${repMax} reps em todas`,
+  };
+}
+
 export function adviseNextLoad(input: NextLoadInput): NextLoadAdvice | null {
   const strategy = input.strategy ?? "DOUBLE";
   const loads = input.sets.map((x) => x.weightKg ?? 0);
   const top = Math.max(0, ...loads);
-  if (top <= 0) return null; // bodyweight or nothing usable: nothing to suggest about load
+  // No load logged: a bodyweight exercise moves along its ladder; anything else has nothing usable.
+  if (top <= 0) return input.grid.kind === "BODYWEIGHT" ? adviseBodyweight(input) : null;
   const grid = input.grid;
   const next = nextLoadUp(grid, top);
   const s = suggestProgression(strategy, input.prescribed, input.sets, next !== null ? next - top : 0);

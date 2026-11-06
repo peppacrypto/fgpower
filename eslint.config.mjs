@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // The exercise figure tooling: plain browser modules and a vendored three.js, run by hand.
+    "scripts/exercise-art/**",
   ]),
 ]);
 

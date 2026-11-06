@@ -27,6 +27,7 @@ const MOVEMENT_PATTERN_PT: Record<string, string> = {
   "elbow-flexion": "flexão de cotovelo",
   "elbow-extension": "extensão de cotovelo",
   "shoulder-abduction": "abdução de ombro",
+  "hip-abduction": "abdução de quadril",
   "shoulder-extension": "extensão de ombro",
   "plantar-flexion": "flexão plantar",
   "trunk-flexion": "flexão de tronco",

@@ -119,6 +119,36 @@ describe("seeded content", () => {
     }
   });
 
+  it("the home programs are a complete, no-equipment, illustrated, cited family", async () => {
+    const home = await prisma.workoutTemplate.findMany({
+      where: { slug: { startsWith: "casa-" } },
+      include: {
+        days: { include: { exercises: { include: { exercise: { include: { media: true } } } } } },
+        evidence: true,
+        principles: true,
+      },
+    });
+    expect(home.length).toBe(9);
+    for (const t of home) {
+      expect(t.isPublished).toBe(true);
+      expect(t.equipmentAccess).toBe("HOME_BODYWEIGHT");
+      // Muscle-building organized like gym training, not calisthenics under another name.
+      expect(t.trainingStyle).not.toBe("CALISTHENICS");
+      expect(t.days.length).toBe(t.daysPerWeek);
+      expect(Array.isArray(t.weeklyGuidance) ? (t.weeklyGuidance as unknown[]).length : 0).toBe(t.durationWeeks);
+      expect(t.evidence.length).toBeGreaterThan(0);
+      expect(t.principles.length).toBeGreaterThan(0);
+      for (const day of t.days) {
+        expect(day.exercises.length).toBeGreaterThanOrEqual(3);
+        for (const e of day.exercises) {
+          // Nothing to buy: body weight, and the figure that shows the exact movement.
+          expect(["bodyweight", "none"]).toContain(e.exercise.equipmentId);
+          expect(e.exercise.media.some((m) => m.kind === "ILLUSTRATION")).toBe(true);
+        }
+      }
+    }
+  });
+
   it("retags the mislabeled movement patterns (A-067)", async () => {
     const rows = await prisma.exercise.findMany({
       where: {

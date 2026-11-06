@@ -1270,7 +1270,8 @@
    "flexão fechada",
    "flexão para tríceps",
    "flexão com cotovelos colados",
-   "flexão de braço fechada"
+   "flexão de braço fechada",
+   "flexão diamante"
   ]
  },
  {
@@ -1278,7 +1279,8 @@
   "aliases": [
    "flexão com pés no banco",
    "flexão com pés elevados",
-   "flexão com pés na cadeira"
+   "flexão com pés na cadeira",
+   "flexão com pés no sofá"
   ]
  },
  {
@@ -1467,7 +1469,8 @@
    "elevação pélvica unilateral",
    "ponte unilateral",
    "ponte com uma perna",
-   "glute bridge unilateral"
+   "glute bridge unilateral",
+   "elevação pélvica unilateral no chão"
   ]
  },
  {
@@ -1814,6 +1817,534 @@
    "rolo de antebraço",
    "wrist roller",
    "enrolador de punho"
+  ]
+ },
+ {
+  "slug": "wall-push-up",
+  "aliases": [
+   "flexão em pé",
+   "flexão de parede",
+   "apoio na parede",
+   "push-up na parede"
+  ]
+ },
+ {
+  "slug": "incline-push-up",
+  "aliases": [
+   "flexão no sofá",
+   "flexão na cadeira"
+  ]
+ },
+ {
+  "slug": "knee-push-up",
+  "aliases": [
+   "flexão de joelhos",
+   "flexão ajoelhado",
+   "apoio de joelhos"
+  ]
+ },
+ {
+  "slug": "tempo-push-up",
+  "aliases": [
+   "flexão excêntrica",
+   "flexão cadenciada",
+   "flexão isométrica embaixo",
+   "flexão pausada"
+  ]
+ },
+ {
+  "slug": "archer-push-up",
+  "aliases": [
+   "flexão unilateral assistida"
+  ]
+ },
+ {
+  "slug": "kneeling-towel-chest-slide",
+  "aliases": [
+   "crucifixo no chão com toalha",
+   "crucifixo com toalha",
+   "peck deck em casa",
+   "fly deslizante"
+  ]
+ },
+ {
+  "slug": "incline-pike-push-up",
+  "aliases": [
+   "desenvolvimento no sofá",
+   "pike no sofá",
+   "pike inclinado"
+  ]
+ },
+ {
+  "slug": "pike-push-up",
+  "aliases": [
+   "desenvolvimento sem peso",
+   "desenvolvimento com peso do corpo"
+  ]
+ },
+ {
+  "slug": "feet-elevated-pike-push-up",
+  "aliases": [
+   "desenvolvimento pés elevados",
+   "pike elevado",
+   "pike com pés elevados"
+  ]
+ },
+ {
+  "slug": "wall-lateral-press-hold",
+  "aliases": [
+   "elevação lateral isométrica",
+   "isometria de ombro na parede",
+   "elevação lateral sem halter"
+  ]
+ },
+ {
+  "slug": "wall-lateral-lean-raise",
+  "aliases": [
+   "elevação lateral na parede",
+   "elevação lateral com peso do corpo",
+   "lateral sem halter",
+   "elevação lateral inclinado na parede"
+  ]
+ },
+ {
+  "slug": "towel-lateral-raise",
+  "aliases": [
+   "elevação lateral com toalha",
+   "lateral com toalha",
+   "elevação lateral autorresistida"
+  ]
+ },
+ {
+  "slug": "side-lying-elbow-press",
+  "aliases": [
+   "elevação lateral deitado",
+   "lateral no cotovelo",
+   "elevação lateral sem peso no chão"
+  ]
+ },
+ {
+  "slug": "sofa-triceps-extension",
+  "aliases": [
+   "tríceps testa sem peso",
+   "tríceps testa com peso do corpo",
+   "skull crusher no sofá"
+  ]
+ },
+ {
+  "slug": "kneeling-forearm-press",
+  "aliases": [
+   "tríceps no chão de joelhos",
+   "flexão esfinge de joelhos",
+   "tríceps de joelhos",
+   "tríceps testa de joelhos no chão"
+  ]
+ },
+ {
+  "slug": "body-up",
+  "aliases": [
+   "tiger bend",
+   "flexão esfinge",
+   "prancha com extensão de cotovelo"
+  ]
+ },
+ {
+  "slug": "towel-overhead-triceps",
+  "aliases": [
+   "tríceps com toalha",
+   "tríceps francês sem peso",
+   "francês com toalha"
+  ]
+ },
+ {
+  "slug": "supine-elbow-row",
+  "aliases": [
+   "remada sem equipamento",
+   "remada no chão",
+   "remada de cotovelos",
+   "remada deitado sem barra"
+  ]
+ },
+ {
+  "slug": "hips-up-elbow-row",
+  "aliases": [
+   "remada de cotovelos com ponte",
+   "remada em ponte",
+   "ponte de cotovelos"
+  ]
+ },
+ {
+  "slug": "seated-knee-grip-row",
+  "aliases": [
+   "remada segurando as pernas",
+   "remada sentado sem barra",
+   "remada no joelho"
+  ]
+ },
+ {
+  "slug": "seated-towel-row",
+  "aliases": [
+   "remada com toalha",
+   "remada baixa com toalha",
+   "remada baixa em casa"
+  ]
+ },
+ {
+  "slug": "door-frame-one-arm-row",
+  "aliases": [
+   "remada na porta",
+   "remada no batente",
+   "remada sem barra"
+  ]
+ },
+ {
+  "slug": "door-frame-deep-lean-row",
+  "aliases": [
+   "remada australiana na porta",
+   "remada na porta inclinada",
+   "remada unilateral sem barra"
+  ]
+ },
+ {
+  "slug": "prone-towel-pulldown",
+  "aliases": [
+   "puxada no chão",
+   "puxada alta com toalha",
+   "pulldown com toalha"
+  ]
+ },
+ {
+  "slug": "towel-one-arm-pulldown",
+  "aliases": [
+   "puxada com toalha",
+   "puxada alta unilateral sem aparelho",
+   "pulley em casa"
+  ]
+ },
+ {
+  "slug": "towel-floor-body-pull",
+  "aliases": [
+   "puxada no chão com toalha",
+   "puxada deslizante",
+   "pullover no chão"
+  ]
+ },
+ {
+  "slug": "prone-t-raise",
+  "aliases": [
+   "crucifixo inverso sem peso",
+   "elevação T",
+   "T no chão"
+  ]
+ },
+ {
+  "slug": "prone-y-raise",
+  "aliases": [
+   "elevação Y",
+   "Y no chão",
+   "Y raise"
+  ]
+ },
+ {
+  "slug": "wall-elbow-push-off",
+  "aliases": [
+   "posterior de ombro na parede",
+   "crucifixo inverso em pé",
+   "remada na parede"
+  ]
+ },
+ {
+  "slug": "seated-thigh-lift-curl",
+  "aliases": [
+   "rosca sem peso",
+   "rosca sentado em casa",
+   "bíceps com a perna"
+  ]
+ },
+ {
+  "slug": "seated-towel-foot-curl",
+  "aliases": [
+   "rosca direta com toalha",
+   "rosca com toalha",
+   "bíceps com toalha"
+  ]
+ },
+ {
+  "slug": "knee-grip-lean-back-curl",
+  "aliases": [
+   "rosca segurando o joelho",
+   "rosca no chão",
+   "rosca inversa com o peso do corpo",
+   "rosca inclinado segurando o joelho"
+  ]
+ },
+ {
+  "slug": "door-frame-one-arm-curl",
+  "aliases": [
+   "rosca na porta",
+   "rosca no batente da porta",
+   "bíceps na porta"
+  ]
+ },
+ {
+  "slug": "chair-sit-to-stand",
+  "aliases": [
+   "agachamento sentar e levantar",
+   "senta e levanta",
+   "levantar da cadeira sem as mãos"
+  ]
+ },
+ {
+  "slug": "tempo-squat",
+  "aliases": [
+   "agachamento cadenciado",
+   "agachamento excêntrico",
+   "agachamento pausado"
+  ]
+ },
+ {
+  "slug": "split-squat",
+  "aliases": [
+   "agachamento afundo",
+   "afundo parado",
+   "passada estática",
+   "split squat"
+  ]
+ },
+ {
+  "slug": "bulgarian-split-squat",
+  "aliases": [
+   "agachamento búlgaro sem peso",
+   "búlgaro no sofá"
+  ]
+ },
+ {
+  "slug": "box-pistol-squat",
+  "aliases": [
+   "agachamento unilateral na cadeira",
+   "sentar e levantar com uma perna",
+   "pistol na caixa",
+   "box pistol",
+   "agachamento unilateral até a cadeira"
+  ]
+ },
+ {
+  "slug": "skater-squat",
+  "aliases": [
+   "agachamento unilateral sem cadeira",
+   "skater squat",
+   "agachamento skater"
+  ]
+ },
+ {
+  "slug": "wall-sissy-squat",
+  "aliases": [
+   "sissy",
+   "agachamento sissy",
+   "extensora sem máquina",
+   "sissy squat com apoio na parede"
+  ]
+ },
+ {
+  "slug": "single-leg-rdl",
+  "aliases": [
+   "stiff sem peso",
+   "terra romeno unilateral sem peso",
+   "RDL com peso do corpo",
+   "stiff em uma perna"
+  ]
+ },
+ {
+  "slug": "heel-elevated-bridge",
+  "aliases": [
+   "ponte com pés elevados",
+   "elevação pélvica com pés na cadeira",
+   "ponte para posterior",
+   "ponte no sofá"
+  ]
+ },
+ {
+  "slug": "bridge-heel-walkout",
+  "aliases": [
+   "caminhada de calcanhares",
+   "walkout de ponte",
+   "ponte caminhando"
+  ]
+ },
+ {
+  "slug": "towel-leg-curl-eccentric",
+  "aliases": [
+   "mesa flexora excêntrica em casa",
+   "flexora negativa com toalha",
+   "flexora excêntrica no chão"
+  ]
+ },
+ {
+  "slug": "towel-leg-curl",
+  "aliases": [
+   "mesa flexora em casa",
+   "flexora no chão com toalha",
+   "slider leg curl",
+   "flexora sem aparelho"
+  ]
+ },
+ {
+  "slug": "single-leg-towel-leg-curl",
+  "aliases": [
+   "flexora unilateral em casa",
+   "flexora unilateral com toalha",
+   "slider unilateral"
+  ]
+ },
+ {
+  "slug": "assisted-nordic-curl",
+  "aliases": [
+   "nórdico",
+   "flexora nórdica no sofá",
+   "nordic curl em casa"
+  ]
+ },
+ {
+  "slug": "sofa-hip-thrust",
+  "aliases": [
+   "hip thrust sem peso",
+   "hip thrust no sofá",
+   "elevação pélvica sem barra"
+  ]
+ },
+ {
+  "slug": "single-leg-sofa-hip-thrust",
+  "aliases": [
+   "hip thrust unilateral sem peso",
+   "hip thrust unilateral no sofá"
+  ]
+ },
+ {
+  "slug": "side-lying-hip-abduction",
+  "aliases": [
+   "abdução de quadril no chão",
+   "glúteo médio deitado",
+   "abdutora sem máquina",
+   "abdução deitada"
+  ]
+ },
+ {
+  "slug": "side-plank-hip-abduction",
+  "aliases": [
+   "prancha lateral com elevação de perna",
+   "prancha lateral para glúteo",
+   "abdução em prancha lateral"
+  ]
+ },
+ {
+  "slug": "bodyweight-calf-raise",
+  "aliases": [
+   "panturrilha sem peso",
+   "elevação de panturrilha no chão",
+   "gêmeos sem peso"
+  ]
+ },
+ {
+  "slug": "single-leg-calf-raise",
+  "aliases": [
+   "panturrilha com uma perna",
+   "panturrilha unilateral em pé",
+   "gêmeos unilateral"
+  ]
+ },
+ {
+  "slug": "step-single-leg-calf-raise",
+  "aliases": [
+   "panturrilha unilateral na escada",
+   "panturrilha na escada",
+   "gêmeos no degrau"
+  ]
+ },
+ {
+  "slug": "lying-leg-raise",
+  "aliases": [
+   "infra no chão",
+   "elevação de pernas no solo",
+   "infra com pernas retas"
+  ]
+ },
+ {
+  "slug": "kneeling-towel-rollout",
+  "aliases": [
+   "roda abdominal com toalha",
+   "rollout com toalha",
+   "ab wheel em casa",
+   "roda abdominal sem aparelho"
+  ]
+ },
+ {
+  "slug": "towel-body-saw",
+  "aliases": [
+   "body saw",
+   "prancha serrote",
+   "prancha deslizante"
+  ]
+ },
+ {
+  "slug": "oblique-crunches-on-the-floor",
+  "aliases": [
+   "abdominal lateral no chão",
+   "oblíquo deitado de lado"
+  ]
+ },
+ {
+  "slug": "side-plank-hip-dip",
+  "aliases": [
+   "prancha lateral dinâmica",
+   "descida de quadril na prancha",
+   "oblíquo na prancha"
+  ]
+ },
+ {
+  "slug": "bird-dog",
+  "aliases": [
+   "bird dog",
+   "quatro apoios braço e perna",
+   "superman em quatro apoios"
+  ]
+ },
+ {
+  "slug": "lower-back-curl",
+  "aliases": [
+   "extensão lombar no chão",
+   "lombar no chão",
+   "hiperextensão no chão"
+  ]
+ },
+ {
+  "slug": "superman",
+  "aliases": [
+   "super-homem",
+   "superman no chão"
+  ]
+ },
+ {
+  "slug": "sofa-reverse-hyperextension",
+  "aliases": [
+   "hiper reversa em casa",
+   "hiperextensão reversa sem aparelho",
+   "reverse hyper no sofá"
+  ]
+ },
+ {
+  "slug": "freehand-jump-squat",
+  "aliases": [
+   "agachamento com salto",
+   "agachamento pliométrico"
+  ]
+ },
+ {
+  "slug": "step-back-burpee",
+  "aliases": [
+   "burpee em apartamento",
+   "burpee sem pulo",
+   "burpee de baixo impacto",
+   "meio burpee"
   ]
  }
 ]

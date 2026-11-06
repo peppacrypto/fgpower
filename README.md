@@ -9,7 +9,7 @@ automatically over months and years — plus a training-focused social layer to 
 with people who train too.
 
 FGPOWER is not a demo. It is a complete, deployed, database-backed application: real
-Google authentication, a real PostgreSQL schema, a real exercise catalog (876 exercises),
+Google authentication, a real PostgreSQL schema, a real exercise catalog (996 exercises),
 190 independently DOI-verified scientific citations, a fully functional custom workout
 builder, a mobile-first training screen with a rest timer and automatic progressive-
 overload suggestions, permanent training history with charts, and a follow/feed/FG social
@@ -38,14 +38,17 @@ layer — all covered by unit, integration, and end-to-end tests.
 - Sign-in with Google OAuth or — when e-mail is configured (off in production until Resend
   exists) — a passwordless e-mail code / magic link (better-auth), with a step-by-step
   onboarding flow
-- Full exercise library (876 exercises) — searchable, filterable by muscle/equipment/
+- Full exercise library (996 exercises) — searchable, filterable by muscle/equipment/
   movement pattern, accent-insensitive search (pt-BR + en)
+- Our own 3D figures for 77 home exercises: a looping demonstration with the working
+  muscles lit, rendered from `scripts/exercise-art` (see `docs/DATA_SOURCES.md` section 6)
 - Rich exercise detail pages: setup, breathing, coaching cues, common mistakes, range of
-  motion, scientific rationale with real citations and evidence levels (259 exercises
+  motion, scientific rationale with real citations and evidence levels (325 exercises
   fully curated; the rest carry base instructions/muscle/equipment data)
-- Program library of 59 evidence-informed programs — the flagship **FGPOWER Adaptation**
-  plus 58 curated templates across hypertrophy, strength, general fitness and sports
-  performance, the multi-block **GD** progression series, and a 9-program mobility track —
+- Program library of 96 evidence-informed programs — the flagship **FGPOWER Adaptation**
+  plus 95 curated templates across hypertrophy, strength, general fitness and sports
+  performance, the multi-block **GD** progression series, a 9-program mobility track, and
+  a 9-program **Em casa** track (body weight only: floor, wall, chair, towel, door frame) —
   each with a full scientific rationale, weekly progression guidance, and cited sources
 - Custom workout builder: drag-and-drop exercise reordering (`@dnd-kit`), per-exercise
   sets/reps/RIR/rest/warm-up configuration, multi-day programs, duplicate/fork/archive

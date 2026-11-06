@@ -1,0 +1,181 @@
+{
+ "slug": "archer-push-up",
+ "camera": {
+  "az": 36,
+  "el": 9
+ },
+ "muscles": [
+  "chest",
+  "triceps"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.4,
+     0.023
+    ],
+    "pitch": 72.873
+   },
+   "neck": {
+    "flex": -14
+   },
+   "armL": {
+    "pos": [
+     0.47,
+     0,
+     0.5
+    ],
+    "contact": true,
+    "fingers": [
+     0.6,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3,
+    "pole": [
+     0.8,
+     0.5,
+     -0.3
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.5,
+     0,
+     0.5
+    ],
+    "contact": true,
+    "fingers": [
+     -1,
+     0,
+     0.35
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3,
+    "pole": [
+     -0.8,
+     0.5,
+     -0.3
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.14,
+     0,
+     -0.81
+    ],
+    "anchor": "ball",
+    "pitch": 66,
+    "yaw": 0,
+    "toes": 0
+   },
+   "legR": {
+    "pos": [
+     -0.14,
+     0,
+     -0.81
+    ],
+    "anchor": "ball",
+    "pitch": 66,
+    "yaw": 0,
+    "toes": 0
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0.134,
+     0.236,
+     0.062
+    ],
+    "pitch": 83.792,
+    "yaw": 9
+   },
+   "neck": {
+    "flex": -22
+   },
+   "armL": {
+    "pos": [
+     0.47,
+     0,
+     0.5
+    ],
+    "contact": true,
+    "fingers": [
+     0.6,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3,
+    "pole": [
+     0.5,
+     0.6,
+     -0.6
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.505,
+     0,
+     0.5
+    ],
+    "contact": true,
+    "fingers": [
+     -1,
+     0,
+     0.35
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3,
+    "pole": [
+     -0.5,
+     0.7,
+     -0.3
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.14,
+     0,
+     -0.81
+    ],
+    "anchor": "ball",
+    "pitch": 64,
+    "yaw": 0,
+    "toes": 0
+   },
+   "legR": {
+    "pos": [
+     -0.14,
+     0,
+     -0.81
+    ],
+    "anchor": "ball",
+    "pitch": 80,
+    "yaw": 0,
+    "toes": 0
+   }
+  }
+ },
+ "muscleSide": "L"
+}

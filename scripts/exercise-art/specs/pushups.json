@@ -1,0 +1,165 @@
+{
+ "slug": "pushups",
+ "camera": {
+  "az": 52,
+  "el": 5
+ },
+ "muscles": [
+  "chest",
+  "triceps"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.441,
+     -0.001
+    ],
+    "pitch": 70.065
+   },
+   "neck": {
+    "flex": -8
+   },
+   "armL": {
+    "pos": [
+     0.27,
+     0,
+     0.5
+    ],
+    "contact": true,
+    "fingers": [
+     0.12,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3
+   },
+   "armR": {
+    "pos": [
+     -0.27,
+     0,
+     0.5
+    ],
+    "contact": true,
+    "fingers": [
+     -0.12,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0,
+     -0.81
+    ],
+    "anchor": "ball",
+    "pitch": 62,
+    "toes": 0
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0,
+     -0.81
+    ],
+    "anchor": "ball",
+    "pitch": 62,
+    "toes": 0
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.21,
+     0.084
+    ],
+    "pitch": 85.543
+   },
+   "neck": {
+    "flex": -18
+   },
+   "armL": {
+    "pos": [
+     0.27,
+     0,
+     0.5
+    ],
+    "contact": true,
+    "fingers": [
+     0.12,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3,
+    "pole": [
+     0.75,
+     0.55,
+     -0.45
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.27,
+     0,
+     0.5
+    ],
+    "contact": true,
+    "fingers": [
+     -0.12,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3,
+    "pole": [
+     -0.75,
+     0.55,
+     -0.45
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0,
+     -0.81
+    ],
+    "anchor": "ball",
+    "pitch": 76,
+    "toes": 0
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0,
+     -0.81
+    ],
+    "anchor": "ball",
+    "pitch": 76,
+    "toes": 0
+   }
+  }
+ }
+}

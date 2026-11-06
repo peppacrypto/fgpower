@@ -108,6 +108,7 @@ export const MOVEMENT_PATTERNS: MovementPatternSeed[] = [
   { id: "anti-extension", nameEn: "Anti-Extension", namePt: "Anti-extensão", sortOrder: 170 },
   { id: "anti-rotation", nameEn: "Anti-Rotation", namePt: "Anti-rotação", sortOrder: 180 },
   { id: "rotation", nameEn: "Rotation", namePt: "Rotação", sortOrder: 190 },
+  { id: "hip-abduction", nameEn: "Hip Abduction", namePt: "Abdução de quadril", sortOrder: 195 },
   { id: "carry", nameEn: "Loaded Carry", namePt: "Carregada", sortOrder: 200 },
   { id: "olympic", nameEn: "Olympic / Total Body", namePt: "Olímpico / Corpo total", sortOrder: 210 },
 ];

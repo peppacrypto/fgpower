@@ -1,3 +1,5 @@
+import { getExerciseRungs } from "@/lib/data/alternatives";
+import { exerciseMediaParts } from "@/lib/exercises/demo";
 import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
@@ -126,14 +128,16 @@ async function load(sessionId: string, userId: string) {
   const refRirBySession = new Map(
     await Promise.all(refSessionIds.map(async (sid) => [sid, await getSessionRirTargets(userId, sid)] as const)),
   );
-  return { loadedAtMs, session, previous, refRirBySession, notes, week, bars, lastWorkout, loadSteps, ...context };
+  // Where "Na próxima" points when there is no load to raise: the next step of the exercise's ladder.
+  const rungs = await getExerciseRungs(session?.exerciseLogs.map((log) => log.exerciseId) ?? []);
+  return { loadedAtMs, session, previous, refRirBySession, notes, week, bars, lastWorkout, loadSteps, rungs, ...context };
 }
 
 export default async function WorkoutExecutionPage({ params, searchParams }: PageProps<"/app/workout/[sessionId]">) {
   const { sessionId } = await params;
   const sp = await searchParams;
   const user = await requireUser();
-  const { loadedAtMs, session, previous, refRirBySession, notes, week, bars, lastWorkout, loadSteps, profile, finishedWorkouts } =
+  const { loadedAtMs, session, previous, refRirBySession, notes, week, bars, lastWorkout, loadSteps, rungs, profile, finishedWorkouts } =
     await load(sessionId, user.id);
 
   if (!session) notFound();
@@ -191,16 +195,20 @@ export default async function WorkoutExecutionPage({ params, searchParams }: Pag
       grid: loadGrid,
       repCap: exerciseRepCap(log.repMax, log.exercise),
       timed,
+      rungs: rungs.get(log.exerciseId),
       deload,
       easeBack,
     });
     const why = deload || easeBack ? "deloads" : progressionPrincipleSlug(strategy);
+    const figure = exerciseMediaParts(log.exercise.media);
     return {
       id: log.id,
       exerciseId: log.exerciseId,
       exerciseName: log.exercise.namePt,
       exerciseSlug: log.exercise.slug,
       imageUrl: log.exercise.media[0]?.url ?? null,
+      demoUrl: figure.demo?.url ?? null,
+      demoStillUrl: figure.still?.url ?? null,
       sortOrder: log.sortOrder,
       prescribedSets: log.prescribedSets,
       warmupSets: log.warmupSets,

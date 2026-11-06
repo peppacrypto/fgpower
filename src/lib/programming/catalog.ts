@@ -35,7 +35,7 @@ export interface CatalogItem {
 // Groups
 // ---------------------------------------------------------------------------
 
-export type ProgramGroupKey = "gd" | "start" | "core" | "focus" | "calistenia" | "mobility" | "yoga" | "sport" | "home";
+export type ProgramGroupKey = "gd" | "start" | "casa" | "core" | "focus" | "calistenia" | "mobility" | "yoga" | "sport" | "home";
 
 /**
  * Library shelves, in display order. Every template lands in exactly one.
@@ -45,6 +45,7 @@ export type ProgramGroupKey = "gd" | "start" | "core" | "focus" | "calistenia" |
 export const PROGRAM_GROUPS: { key: ProgramGroupKey; short: string; label: string; blurb: string }[] = [
   { key: "gd", short: "Plano GD", label: "Plano GD", blurb: "Blocos em sequência, 5×/semana. Comece pela Adaptação." },
   { key: "start", short: "Comece aqui", label: "Comece aqui", blurb: "Para quem está começando ou voltando a treinar." },
+  { key: "casa", short: "Em casa", label: "Em casa, sem equipamento", blurb: "Treino de verdade só com o peso do corpo: chão, parede, cadeira e toalha." },
   { key: "core", short: "Força", label: "Força & hipertrofia", blurb: "Divisões clássicas para quem já treina." },
   { key: "focus", short: "Especializações", label: "Especializações", blurb: "Foco em um músculo ou método por algumas semanas." },
   { key: "calistenia", short: "Calistenia", label: "Calistenia", blurb: "Força com o peso do corpo: programas completos e progressões de habilidade (barra, paralelas, parada de mão), do iniciante ao avançado." },
@@ -70,6 +71,8 @@ export const FOCUS_SLUGS = new Set([
   "lengthened-partials",
   "tempo-control",
   "metabolite-pump",
+  "casa-pernas-gluteos",
+  "casa-peito-ombros-bracos",
 ]);
 /** Sport-oriented templates whose goal field doesn't say so. */
 const SPORT_SLUGS = new Set(["hybrid-athlete"]);
@@ -78,7 +81,7 @@ export function isSportTemplate(t: Pick<CatalogItem, "slug" | "goal" | "training
   return t.goal === "SPORTS_PERFORMANCE" || t.trainingStyle === "ENDURANCE_SUPPORT" || SPORT_SLUGS.has(t.slug);
 }
 
-/** Which shelf a template sits on. Precedence: GD series, mobility, yoga, equipment, sport, focus, level. */
+/** Which shelf a template sits on. Precedence: GD series, mobility, yoga, home, calisthenics, equipment, sport, focus, level. */
 export function programGroup(
   t: Pick<CatalogItem, "slug" | "goal" | "trainingStyle" | "equipmentAccess" | "experienceLevel">,
 ): ProgramGroupKey {
@@ -87,6 +90,8 @@ export function programGroup(
   // equipment (they are bodyweight, so these must beat the "home" check below).
   if (t.goal === "MOBILITY") return "mobility";
   if (t.goal === "YOGA") return "yoga";
+  // The no-equipment home family has its own shelf: someone who can't reach a gym looks for it by name.
+  if (t.slug.startsWith("casa-")) return "casa";
   if (t.trainingStyle === "CALISTHENICS" || t.goal === "CALISTHENICS_SKILL") return "calistenia";
   if (t.equipmentAccess !== "FULL_GYM") return "home";
   if (isSportTemplate(t)) return "sport";

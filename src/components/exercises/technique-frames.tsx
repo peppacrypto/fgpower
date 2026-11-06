@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { GLoad } from "@/components/ui/glyph";
+import { ExerciseDemo, FIGURE_BACKGROUND } from "@/components/exercises/exercise-demo";
 import { YouTubeEmbed } from "@/components/exercises/youtube-embed";
+import { exerciseMediaParts } from "@/lib/exercises/demo";
 import { cn } from "@/lib/utils/cn";
 
 /** What each technique frame is: its visible tag, and how its alt text says it. */
@@ -17,6 +19,8 @@ type Frame = { id: string; url: string; kind: string; altPt: string | null; widt
  * technique photos, each tagged with the phase it shows (Início / Fim) — two
  * near-identical photos read as one otherwise — and described that way to
  * screen readers instead of repeating the name. With neither, a placeholder.
+ * An exercise with its own figure (the home library) leads with the figure's
+ * looped demonstration, its start and end frames small below it.
  *
  * The photos keep their own shape, so the body and the equipment stay in the
  * picture: a landscape photo (most of them, 3:2) sits in a 4:3 frame — a few
@@ -46,22 +50,49 @@ export function TechniqueFrames({
       </div>
     );
   }
+  const { demo, still, frames } = exerciseMediaParts(media);
+  const figure = demo ? (
+    <figure className={cn("overflow-hidden rounded-[var(--radius-lg)]", FIGURE_BACKGROUND)}>
+      <ExerciseDemo src={demo.url} still={still?.url} alt={`${name} — demonstração do movimento`} />
+    </figure>
+  ) : null;
+  // The figure leads: it plays at once, a video has to be tapped and loaded.
+  if (figure) {
+    return (
+      <div className="flex flex-col justify-start gap-2 sm:gap-3">
+        {figure}
+        {frames.length > 0 ? <TechniqueImages name={name} media={frames} stackWide={false} compact /> : null}
+        {videoUrl ? <YouTubeEmbed url={videoUrl} title={name} credit={videoCredit} /> : null}
+      </div>
+    );
+  }
   if (videoUrl) {
     return (
       <div className="flex flex-col justify-start gap-3">
         <YouTubeEmbed url={videoUrl} title={name} credit={videoCredit} />
-        {media.length > 0 ? <TechniqueImages name={name} media={media} stackWide={false} /> : null}
+        {frames.length > 0 ? <TechniqueImages name={name} media={frames} stackWide={false} /> : null}
       </div>
     );
   }
-  return <TechniqueImages name={name} media={media} stackWide={stackWide} />;
+  return <TechniqueImages name={name} media={frames} stackWide={stackWide} />;
 }
 
-function TechniqueImages({ name, media, stackWide }: { name: string; media: Frame[]; stackWide: boolean }) {
+function TechniqueImages({
+  name,
+  media,
+  stackWide,
+  compact = false,
+}: {
+  name: string;
+  media: Frame[];
+  stackWide: boolean;
+  /** Under the demonstration the pair is a small reference: side by side, never a swipe. */
+  compact?: boolean;
+}) {
   const portrait = media.every((m) => m.width && m.height && m.height > m.width);
   const pair = media.length > 1;
   // A phone swipes a landscape pair; everything else is a plain grid.
-  const swipe = pair && !portrait;
+  const swipe = pair && !portrait && !compact;
   return (
     <div
       // Scrollable on a phone: reachable and named for the keyboard (WCAG 2.1.1).

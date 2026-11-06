@@ -1,3 +1,4 @@
+import { getExerciseRungs } from "@/lib/data/alternatives";
 import "server-only";
 import { getExerciseLoadStepsForSession } from "@/lib/data/load-steps";
 import { GYM_LOADS_SELECT, exerciseLoadGrid, exerciseRepCap, gymLoadsOf } from "@/lib/training/exercise-load";
@@ -139,6 +140,8 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
     getExerciseLoadStepsForSession(userId, session.id),
   ]);
   const gym = gymLoadsOf(profile);
+  // Where "Na próxima" points when there is no load to raise: the same ladder the workout screen reads.
+  const rungs = await getExerciseRungs(session.exerciseLogs.map((log) => log.exerciseId));
   const fresh = !newer;
   const blockDone = fresh && completedBlock?.enrollmentId === session.enrollmentId ? completedBlock : null;
 
@@ -182,6 +185,7 @@ export async function loadWorkoutSummary(userId: string, sessionId: string, now:
                 { exerciseStepKg: loadSteps.get(log.exerciseId), programStepKg: log.programExercise?.loadIncrementKg },
               ),
               repCap: exerciseRepCap(log.repMax, log.exercise),
+              rungs: rungs.get(log.exerciseId),
             })
           : null;
       const delta: LastTimeDelta = compareWithLast(done, prev?.sets ?? null);

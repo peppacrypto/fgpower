@@ -8,6 +8,8 @@ import { GLoad } from "@/components/ui/glyph";
 import { Button } from "@/components/ui/button";
 import { Bone } from "@/components/ui/skeleton";
 import { useRestoreFocus } from "@/components/ui/use-restore-focus";
+import { ExerciseDemo, FIGURE_BACKGROUND } from "@/components/exercises/exercise-demo";
+import { cn } from "@/lib/utils/cn";
 import { YouTubeEmbed } from "@/components/exercises/youtube-embed";
 import { SESSION_EXPIRED_ERROR } from "@/lib/auth/session-expired";
 import type { TechniqueSheet as TechniqueData } from "@/lib/data/workout-session";
@@ -35,8 +37,8 @@ function loadTechnique(exerciseId: string): Promise<TechniqueData | null> {
 }
 
 /**
- * "Ver técnica" without leaving the workout (W-025): the start and end frames,
- * the three cues to keep in mind and the way to the full page — as a native
+ * "Ver técnica" without leaving the workout (W-025): the exercise's figure or its
+ * start and end frames, the three cues to keep in mind and the way to the full page — as a native
  * modal <dialog> over the workout, so the rest timer keeps running and what
  * was typed stays on screen. "Ver página completa" leaves; the workout screen
  * keeps its place (?ex=) to come back to.
@@ -159,7 +161,11 @@ export function TechniqueSheet({
             </button>
           </div>
 
-          {sheet?.videoUrl ? (
+          {sheet?.images.demo ? (
+            <div className={cn("mt-3 overflow-hidden rounded-[var(--radius-md)]", FIGURE_BACKGROUND)}>
+              <ExerciseDemo src={sheet.images.demo} still={sheet.images.still} alt={`${exercise.name} — demonstração do movimento`} />
+            </div>
+          ) : sheet?.videoUrl ? (
             <div className="mt-3">
               <YouTubeEmbed url={sheet.videoUrl} title={exercise.name} credit={sheet.videoCredit} />
             </div>

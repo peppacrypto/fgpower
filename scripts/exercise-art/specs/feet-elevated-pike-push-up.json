@@ -1,0 +1,26 @@
+{
+ "slug": "feet-elevated-pike-push-up",
+ "camera": {"az": 84, "el": 5},
+ "muscles": ["anterior-deltoid"],
+ "floats": true,
+ "props": [
+  {"type": "chair", "pos": [0, 0, -0.63]},
+  {"type": "wall", "pos": [0, 0, -0.90], "width": 0.9}
+ ],
+ "frames": {
+  "start": {
+   "root": {"pos": [0, 1.005, 0.235], "pitch": 150},
+   "armL": {"pos": [0.2, 0, 0.62], "contact": true, "fingers": [0.12, 0, 1], "palm": [0, -1, 0], "curl": -0.3, "pole": [0.55, 0.35, -0.75]},
+   "armR": {"pos": [-0.2, 0, 0.62], "contact": true, "fingers": [-0.12, 0, 1], "palm": [0, -1, 0], "curl": -0.3, "pole": [-0.55, 0.35, -0.75]},
+   "legL": {"pos": [0.09, 0.492, -0.48], "anchor": "ball", "pitch": 40, "toes": 0},
+   "legR": {"pos": [-0.09, 0.492, -0.48], "anchor": "ball", "pitch": 40, "toes": 0}
+  },
+  "end": {
+   "root": {"pos": [0, 0.76, 0.348], "pitch": 156},
+   "armL": {"pos": [0.2, 0, 0.62], "contact": true, "fingers": [0.12, 0, 1], "palm": [0, -1, 0], "curl": -0.3, "pole": [0.55, 0.35, -0.75]},
+   "armR": {"pos": [-0.2, 0, 0.62], "contact": true, "fingers": [-0.12, 0, 1], "palm": [0, -1, 0], "curl": -0.3, "pole": [-0.55, 0.35, -0.75]},
+   "legL": {"pos": [0.09, 0.492, -0.48], "anchor": "ball", "pitch": 54, "toes": 0},
+   "legR": {"pos": [-0.09, 0.492, -0.48], "anchor": "ball", "pitch": 54, "toes": 0}
+  }
+ }
+}

@@ -4410,17 +4410,24 @@
   "media": [
    {
     "kind": "IMAGE_START",
-    "url": "/exercises/body-up/0.webp",
-    "width": 640,
-    "height": 427,
+    "url": "/exercises/body-up/fig-start.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 0
    },
    {
     "kind": "IMAGE_END",
-    "url": "/exercises/body-up/1.webp",
-    "width": 640,
-    "height": 427,
+    "url": "/exercises/body-up/fig-end.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/body-up/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
    }
   ]
  },
@@ -4581,12 +4588,12 @@
   "laterality": "BILATERAL",
   "mechanics": "COMPOUND",
   "instructionsEn": [
-   "Stand with your feet shoulder width apart. You can place your hands behind your head. This will be your starting position.",
+   "Stand with your feet shoulder width apart. Bring your hands together in front of your chest. This will be your starting position.",
    "Begin the movement by flexing your knees and hips, sitting back with your hips.",
    "Continue down to full depth if you are able,and quickly reverse the motion until you return to the starting position. As you squat, keep your head and chest up and push your knees out."
   ],
   "instructionsPt": [
-   "Fique em pé com os pés afastados na largura dos ombros. Você pode colocar as mãos atrás da cabeça. Essa será sua posição inicial.",
+   "Fique em pé com os pés afastados na largura dos ombros. Junte as mãos à frente do peito. Essa será sua posição inicial.",
    "Inicie o movimento flexionando os joelhos e o quadril, sentando para trás com o quadril.",
    "Continue descendo até a amplitude máxima, se conseguir, e reverta o movimento rapidamente até retornar à posição inicial. Ao agachar, mantenha a cabeça e o peito erguidos e empurre os joelhos para fora."
   ],
@@ -4599,18 +4606,25 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/bodyweight-squat/0.webp",
-    "width": 640,
-    "height": 427,
+    "kind": "IMAGE_END",
+    "url": "/exercises/bodyweight-squat/fig-end.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/bodyweight-squat/1.webp",
-    "width": 640,
-    "height": 427,
+    "kind": "IMAGE_START",
+    "url": "/exercises/bodyweight-squat/fig-start.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/bodyweight-squat/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
    }
   ],
   "videoUrl": "https://www.youtube.com/watch?v=umv7w9BgZbo",
@@ -5239,18 +5253,25 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/butt-lift-bridge/0.webp",
-    "width": 640,
-    "height": 427,
+    "kind": "IMAGE_END",
+    "url": "/exercises/butt-lift-bridge/fig-end.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/butt-lift-bridge/1.webp",
-    "width": 640,
-    "height": 427,
+    "kind": "IMAGE_START",
+    "url": "/exercises/butt-lift-bridge/fig-start.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/butt-lift-bridge/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
    }
   ]
  },
@@ -9158,7 +9179,7 @@
    "Deite-se de costas com os pés apoiados no chão, ou apoiados em um banco, com os joelhos flexionados a 90 graus. Se estiver apoiando os pés em um banco, mantenha-os afastados de sete a dez centímetros e aponte os dedos dos pés para dentro, de forma que se toquem.",
    "Coloque as mãos levemente nas laterais da cabeça, mantendo os cotovelos próximos ao corpo. Dica: não entrelace os dedos atrás da cabeça.",
    "Pressionando a lombar contra o chão para isolar melhor os músculos abdominais, comece a levantar os ombros do chão.",
-   "Continue pressionando a lombar com força contra o chão enquanto contrai o abdômen e expira. Os ombros devem subir apenas cerca de dez centímetros do chão, e a lombar deve permanecer apoiada. No topo do movimento, contraia o abdômen com força e mantenha a contração por um segundo. Dica: foque em um movimento lento e controlado - não use embalo para se enganar.",
+   "Continue pressionando a lombar com força contra o chão enquanto contrai o abdômen e expira. Os ombros devem subir apenas cerca de dez centímetros do chão, e a lombar deve permanecer apoiada. No topo do movimento, contraia o abdômen com força e mantenha a contração por um segundo. Dica: foque em um movimento lento e controlado, sem usar embalo para roubar.",
    "Após o segundo de contração, comece a descer lentamente de volta à posição inicial enquanto inspira.",
    "Repita pelo número de repetições recomendado."
   ],
@@ -9168,18 +9189,25 @@
   "secondaryMuscles": [],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/crunches/0.webp",
-    "width": 640,
-    "height": 427,
+    "kind": "IMAGE_END",
+    "url": "/exercises/crunches/fig-end.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/crunches/1.webp",
-    "width": 640,
-    "height": 427,
+    "kind": "IMAGE_START",
+    "url": "/exercises/crunches/fig-start.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/crunches/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
    }
   ]
  },
@@ -9298,18 +9326,18 @@
    "Begin lying on your back with your hands extended above you toward the ceiling.",
    "Bring your feet, knees, and hips up to 90 degrees.",
    "Exhale hard to bring your ribcage down and flatten your back onto the floor, rotating your pelvis up and squeezing your glutes. Hold this position throughout the movement. This will be your starting position.",
-   "Initiate the exercise by extending one leg, straightening the knee and hip to bring the leg just above the ground.",
+   "Initiate the exercise by extending one leg, straightening the knee and hip to bring the leg just above the ground, while lowering the opposite arm overhead until it is just above the ground.",
    "Maintain the position of your lumbar and pelvis as you perform the movement, as your back is going to want to arch.",
-   "Stay tight and return the working leg to the starting position.",
+   "Stay tight and return the working leg and arm to the starting position.",
    "Repeat on the opposite side, alternating until the set is complete."
   ],
   "instructionsPt": [
    "Comece deitado de costas com os braços estendidos acima do corpo, em direção ao teto.",
    "Leve os pés, joelhos e quadril para uma posição de 90 graus.",
    "Expire com força para baixar a caixa torácica e achatar as costas contra o chão, rotacionando a pelve para cima e contraindo os glúteos. Mantenha essa posição durante todo o movimento. Essa é a posição inicial.",
-   "Inicie o exercício estendendo uma das pernas, esticando o joelho e o quadril até deixar a perna logo acima do chão.",
+   "Inicie o exercício estendendo uma das pernas, esticando o joelho e o quadril até deixar a perna logo acima do chão, enquanto leva o braço oposto para trás da cabeça até ficar logo acima do chão.",
    "Mantenha a posição da lombar e da pelve durante o movimento, já que a tendência será a coluna arquear.",
-   "Mantenha o corpo contraído e retorne a perna que está trabalhando à posição inicial.",
+   "Mantenha o corpo contraído e retorne a perna e o braço que estão trabalhando à posição inicial.",
    "Repita do lado oposto, alternando até completar a série."
   ],
   "primaryMuscles": [
@@ -9318,18 +9346,25 @@
   "secondaryMuscles": [],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/dead-bug/0.webp",
-    "width": 640,
-    "height": 360,
+    "kind": "IMAGE_END",
+    "url": "/exercises/dead-bug/fig-end.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/dead-bug/1.webp",
-    "width": 640,
-    "height": 360,
+    "kind": "IMAGE_START",
+    "url": "/exercises/dead-bug/fig-start.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/dead-bug/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
    }
   ]
  },
@@ -13662,18 +13697,25 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/freehand-jump-squat/0.webp",
-    "width": 640,
-    "height": 427,
+    "kind": "IMAGE_END",
+    "url": "/exercises/freehand-jump-squat/fig-end.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/freehand-jump-squat/1.webp",
-    "width": 640,
-    "height": 427,
+    "kind": "IMAGE_START",
+    "url": "/exercises/freehand-jump-squat/fig-start.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/freehand-jump-squat/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
    }
   ]
  },
@@ -16793,13 +16835,13 @@
   "laterality": "BILATERAL",
   "mechanics": "COMPOUND",
   "instructionsEn": [
-   "Stand facing bench or sturdy elevated platform. Place hands on edge of bench or platform, slightly wider than shoulder width.",
-   "Position forefoot back from bench or platform with arms and body straight. Arms should be perpendicular to body. Keeping body straight, lower chest to edge of box or platform by bending arms.",
-   "Push body up until arms are extended. Repeat."
+   "Stand facing a bench, a sofa or a stable chair pushed against the wall. Place your hands on the edge of the support, slightly wider than shoulder width.",
+   "Step back onto the balls of your feet with your arms and body straight. Your arms should be perpendicular to your body. Keeping your body straight, bend your elbows and lower your chest toward the edge of the support.",
+   "Push up until your arms are straight. Repeat."
   ],
   "instructionsPt": [
-   "Fique de pé de frente para um banco ou uma plataforma elevada firme. Coloque as mãos na borda do banco ou da plataforma, um pouco mais afastadas que a largura dos ombros.",
-   "Posicione a parte da frente dos pés afastada do banco ou da plataforma, com os braços e o corpo retos. Os braços devem ficar perpendiculares ao corpo. Mantendo o corpo reto, abaixe o peito em direção à borda do banco ou plataforma flexionando os braços.",
+   "Fique de frente para um banco, um sofá ou uma cadeira firme encostada na parede. Coloque as mãos na borda do apoio, um pouco mais abertas que os ombros.",
+   "Leve os pés para trás e fique na ponta dos pés, com os braços e o corpo retos. Os braços devem ficar perpendiculares ao corpo. Mantendo o corpo reto, dobre os cotovelos e desça o peito em direção à borda do apoio.",
    "Empurre o corpo para cima até que os braços fiquem estendidos. Repita."
   ],
   "primaryMuscles": [
@@ -16811,18 +16853,25 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/incline-push-up/0.webp",
-    "width": 640,
-    "height": 427,
+    "kind": "IMAGE_END",
+    "url": "/exercises/incline-push-up/fig-end.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/incline-push-up/1.webp",
-    "width": 640,
-    "height": 427,
+    "kind": "IMAGE_START",
+    "url": "/exercises/incline-push-up/fig-start.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/incline-push-up/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
    }
   ]
  },
@@ -20946,8 +20995,8 @@
   "slug": "lower-back-curl",
   "nameEn": "Lower Back Curl",
   "namePt": "Extensão Lombar Deitado no Solo",
-  "category": "STRETCHING",
-  "movementPattern": null,
+  "category": "STRENGTH",
+  "movementPattern": "hip-extension",
   "equipment": "bodyweight",
   "difficulty": "BEGINNER",
   "forceType": "STATIC",
@@ -20955,30 +21004,39 @@
   "mechanics": "ISOLATION",
   "instructionsEn": [
    "Lie on your stomach with your arms out to your sides. This will be your starting position.",
-   "Using your lower back muscles, extend your spine lifting your chest off of the ground. Do not use your arms to push yourself up. Keep your head up during the movement. Repeat for 10-20 repetitions."
+   "Using your lower back muscles, extend your spine lifting your chest off of the ground. Do not use your arms to push yourself up. Keep your head in line with your spine, eyes on the floor just ahead of you. Repeat for 10-20 repetitions."
   ],
   "instructionsPt": [
    "Deite-se de bruços com os braços estendidos para os lados. Essa será sua posição inicial.",
-   "Usando os músculos da lombar, estenda a coluna elevando o peito do chão. Não use os braços para se impulsionar. Mantenha a cabeça erguida durante o movimento. Repita por 10 a 20 repetições."
+   "Usando os músculos da lombar, estenda a coluna elevando o peito do chão. Não use os braços para se impulsionar. Mantenha a cabeça alinhada com a coluna, olhando para o chão logo à sua frente. Repita por 10 a 20 repetições."
   ],
   "primaryMuscles": [
-   "abdominals"
+   "spinal-erectors"
   ],
-  "secondaryMuscles": [],
+  "secondaryMuscles": [
+   "glutes"
+  ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/lower-back-curl/0.webp",
-    "width": 640,
-    "height": 427,
+    "kind": "IMAGE_END",
+    "url": "/exercises/lower-back-curl/fig-end.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/lower-back-curl/1.webp",
-    "width": 640,
-    "height": 427,
+    "kind": "IMAGE_START",
+    "url": "/exercises/lower-back-curl/fig-start.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/lower-back-curl/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
    }
   ]
  },
@@ -22645,7 +22703,7 @@
   "slug": "mountain-climbers",
   "nameEn": "Mountain Climbers",
   "namePt": "Escalador",
-  "category": "PLYOMETRICS",
+  "category": "CARDIO",
   "movementPattern": null,
   "equipment": "none",
   "difficulty": "BEGINNER",
@@ -22653,17 +22711,18 @@
   "laterality": "BILATERAL",
   "mechanics": "COMPOUND",
   "instructionsEn": [
-   "Begin in a pushup position, with your weight supported by your hands and toes. Flexing the knee and hip, bring one leg until the knee is approximately under the hip. This will be your starting position.",
+   "Begin in a pushup position, with your weight supported by your hands and toes. Flexing the knee and hip, bring one leg until the knee is approximately under your chest. This will be your starting position.",
    "Explosively reverse the positions of your legs, extending the bent leg until the leg is straight and supported by the toe, and bringing the other foot up with the hip and knee flexed. Repeat in an alternating fashion for 20-30 seconds."
   ],
   "instructionsPt": [
-   "Comece na posição de flexão de braço, com o peso apoiado nas mãos e nas pontas dos pés. Flexionando o joelho e o quadril, traga uma perna para frente até que o joelho fique aproximadamente sob o quadril. Essa será sua posição inicial.",
+   "Comece na posição de flexão de braço, com o peso apoiado nas mãos e nas pontas dos pés. Flexionando o joelho e o quadril, traga uma perna para frente até que o joelho fique aproximadamente sob o peito. Essa será sua posição inicial.",
    "Inverta explosivamente a posição das pernas, estendendo a perna flexionada até ficar reta e apoiada na ponta do pé, enquanto traz o outro pé para frente com o quadril e o joelho flexionados. Repita de forma alternada por 20 a 30 segundos."
   ],
   "primaryMuscles": [
-   "quadriceps"
+   "abdominals"
   ],
   "secondaryMuscles": [
+   "quadriceps",
    "chest",
    "hamstrings",
    "shoulders"
@@ -22671,17 +22730,24 @@
   "media": [
    {
     "kind": "IMAGE_START",
-    "url": "/exercises/mountain-climbers/0.webp",
-    "width": 640,
-    "height": 427,
+    "url": "/exercises/mountain-climbers/fig-start.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 0
    },
    {
     "kind": "IMAGE_END",
-    "url": "/exercises/mountain-climbers/1.webp",
-    "width": 640,
-    "height": 427,
+    "url": "/exercises/mountain-climbers/fig-end.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/mountain-climbers/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
    }
   ]
  },
@@ -23216,18 +23282,25 @@
   "secondaryMuscles": [],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/oblique-crunches-on-the-floor/0.webp",
-    "width": 640,
-    "height": 427,
+    "kind": "IMAGE_END",
+    "url": "/exercises/oblique-crunches-on-the-floor/fig-end.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/oblique-crunches-on-the-floor/1.webp",
-    "width": 640,
-    "height": 427,
+    "kind": "IMAGE_START",
+    "url": "/exercises/oblique-crunches-on-the-floor/fig-start.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/oblique-crunches-on-the-floor/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
    }
   ]
  },
@@ -26130,16 +26203,16 @@
   "media": [
    {
     "kind": "IMAGE_START",
-    "url": "/exercises/plank/0.webp",
-    "width": 640,
-    "height": 427,
+    "url": "/exercises/plank/fig-start.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/plank/1.webp",
-    "width": 640,
-    "height": 427,
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/plank/fig-start.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 1
    }
   ],
@@ -27300,18 +27373,25 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/push-ups-close-triceps-position/0.webp",
-    "width": 640,
-    "height": 427,
+    "kind": "IMAGE_END",
+    "url": "/exercises/push-ups-close-triceps-position/fig-end.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/push-ups-close-triceps-position/1.webp",
-    "width": 640,
-    "height": 427,
+    "kind": "IMAGE_START",
+    "url": "/exercises/push-ups-close-triceps-position/fig-start.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/push-ups-close-triceps-position/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
    }
   ]
  },
@@ -27323,23 +27403,21 @@
   "category": "STRENGTH",
   "movementPattern": "horizontal-push",
   "equipment": "bodyweight",
-  "difficulty": "BEGINNER",
+  "difficulty": "INTERMEDIATE",
   "forceType": "PUSH",
   "laterality": "BILATERAL",
   "mechanics": "COMPOUND",
   "instructionsEn": [
-   "Lie on the floor face down and place your hands about 36 inches apart from each other holding your torso up at arms length.",
-   "Place your toes on top of a flat bench. This will allow your body to be elevated. Note: The higher the elevation of the flat bench, the higher the resistance of the exercise is.",
-   "Lower yourself until your chest almost touches the floor as you inhale.",
-   "Using your pectoral muscles, press your upper body back up to the starting position and squeeze your chest. Breathe out as you perform this step.",
-   "After a second pause at the contracted position, repeat the movement for the prescribed amount of repetitions."
+   "Lie face down on the floor with your hands a little wider than your shoulders, holding your torso up with straight arms.",
+   "Put your toes on a bench or on the seat of a stable chair pushed against the wall. The higher the support, the heavier the exercise.",
+   "Lower yourself until your head is just above the floor as you inhale.",
+   "Using your chest muscles, press back up to the starting position and squeeze. Breathe out as you do this."
   ],
   "instructionsPt": [
-   "Deite-se de bruços no chão e coloque as mãos a cerca de 90 cm de distância uma da outra, sustentando o tronco com os braços estendidos.",
-   "Apoie as pontas dos pés em cima de um banco reto. Isso vai elevar o corpo. Observação: quanto maior a altura do banco, maior a resistência do exercício.",
-   "Abaixe o corpo até que o peito quase toque o chão enquanto inspira.",
-   "Usando os músculos peitorais, empurre o corpo de volta à posição inicial e contraia o peito. Expire ao realizar esse movimento.",
-   "Depois de uma pausa de um segundo na posição contraída, repita o movimento pelo número de repetições prescrito."
+   "Deite-se de bruços no chão e coloque as mãos um pouco mais abertas que os ombros, sustentando o tronco com os braços estendidos.",
+   "Apoie as pontas dos pés num banco ou no assento de uma cadeira firme encostada na parede. Quanto mais alto o apoio, mais pesado o exercício.",
+   "Abaixe o corpo até a cabeça ficar logo acima do chão enquanto inspira.",
+   "Usando os músculos peitorais, empurre o corpo de volta à posição inicial e contraia o peito. Expire ao realizar esse movimento."
   ],
   "primaryMuscles": [
    "chest"
@@ -27350,18 +27428,25 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/push-ups-with-feet-elevated/0.webp",
-    "width": 640,
-    "height": 427,
+    "kind": "IMAGE_END",
+    "url": "/exercises/push-ups-with-feet-elevated/fig-end.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/push-ups-with-feet-elevated/1.webp",
-    "width": 640,
-    "height": 427,
+    "kind": "IMAGE_START",
+    "url": "/exercises/push-ups-with-feet-elevated/fig-start.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/push-ups-with-feet-elevated/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
    }
   ]
  },
@@ -27564,13 +27649,13 @@
   "laterality": "BILATERAL",
   "mechanics": "COMPOUND",
   "instructionsEn": [
-   "Lie on the floor face down and place your hands about 36 inches apart while holding your torso up at arms length.",
+   "Lie on the floor face down and place your hands a little wider than your shoulders while holding your torso up at arms length.",
    "Next, lower yourself downward until your chest almost touches the floor as you inhale.",
    "Now breathe out and press your upper body back up to the starting position while squeezing your chest.",
    "After a brief pause at the top contracted position, you can begin to lower yourself downward again for as many repetitions as needed."
   ],
   "instructionsPt": [
-   "Deite-se de bruços no chão e coloque as mãos a cerca de 90 cm de distância uma da outra, sustentando o tronco com os braços estendidos.",
+   "Deite-se de bruços no chão e coloque as mãos um pouco mais abertas que os ombros, sustentando o tronco com os braços estendidos.",
    "Em seguida, abaixe o corpo até que o peito quase toque o chão enquanto inspira.",
    "Agora expire e empurre o corpo de volta à posição inicial, contraindo o peito.",
    "Depois de uma breve pausa na posição contraída no topo, abaixe o corpo novamente e repita pelo número de repetições necessário."
@@ -27584,18 +27669,25 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/pushups/0.webp",
-    "width": 640,
-    "height": 427,
+    "kind": "IMAGE_END",
+    "url": "/exercises/pushups/fig-end.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/pushups/1.webp",
-    "width": 640,
-    "height": 427,
+    "kind": "IMAGE_START",
+    "url": "/exercises/pushups/fig-start.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/pushups/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
    }
   ],
   "videoUrl": "https://www.youtube.com/watch?v=9ozLIq3Nmkw",
@@ -28529,16 +28621,16 @@
   "mechanics": "ISOLATION",
   "instructionsEn": [
    "Lie down on the floor with your legs fully extended and arms to the side of your torso with the palms on the floor. Your arms should be stationary for the entire exercise.",
-   "Move your legs up so that your thighs are perpendicular to the floor and feet are together and parallel to the floor. This is the starting position.",
-   "While inhaling, move your legs towards the torso as you roll your pelvis backwards and you raise your hips off the floor. At the end of this movement your knees will be touching your chest.",
-   "Hold the contraction for a second and move your legs back to the starting position while exhaling.",
+   "Move your legs up so that your thighs are perpendicular to the floor, with your feet together and your shins parallel to the floor. This is the starting position.",
+   "While exhaling, move your legs towards the torso as you roll your pelvis backwards and you raise your hips off the floor. At the end of this movement your knees are over your chest; they do not need to touch it.",
+   "Hold the contraction for a second and move your legs back to the starting position while inhaling.",
    "Repeat for the recommended amount of repetitions."
   ],
   "instructionsPt": [
    "Deite-se no chão com as pernas totalmente estendidas e os braços ao lado do tronco, com as palmas apoiadas no chão. Os braços devem permanecer imóveis durante todo o exercício.",
-   "Eleve as pernas até que as coxas fiquem perpendiculares ao chão, com os pés juntos e paralelos ao solo. Essa é a posição inicial.",
-   "Inspirando, leve as pernas em direção ao tronco enquanto gira a pelve para trás e eleva o quadril do chão. Ao final do movimento, os joelhos devem tocar o peito.",
-   "Segure a contração por um segundo e retorne as pernas à posição inicial enquanto expira.",
+   "Eleve as pernas até que as coxas fiquem perpendiculares ao chão, com os pés juntos e as canelas paralelas ao solo. Essa é a posição inicial.",
+   "Expirando, leve as pernas em direção ao tronco enquanto gira a pelve para trás e eleva o quadril do chão. Ao final do movimento, os joelhos devem ficar sobre o peito, sem precisar tocá-lo.",
+   "Segure a contração por um segundo e retorne as pernas à posição inicial enquanto inspira.",
    "Repita pelo número recomendado de repetições."
   ],
   "primaryMuscles": [
@@ -28547,18 +28639,25 @@
   "secondaryMuscles": [],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/reverse-crunch/0.webp",
-    "width": 640,
-    "height": 427,
+    "kind": "IMAGE_END",
+    "url": "/exercises/reverse-crunch/fig-end.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/reverse-crunch/1.webp",
-    "width": 640,
-    "height": 427,
+    "kind": "IMAGE_START",
+    "url": "/exercises/reverse-crunch/fig-start.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/reverse-crunch/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
    }
   ]
  },
@@ -32063,8 +32162,18 @@
   "forceType": "STATIC",
   "laterality": "BILATERAL",
   "mechanics": "ISOLATION",
-  "instructionsEn": [],
-  "instructionsPt": [],
+  "instructionsEn": [
+   "Lie on your side with your forearm on the floor, your elbow under your shoulder and your feet stacked.",
+   "Lift your hips until your body is straight from head to feet, and keep your abs and glutes tight.",
+   "Hold for the prescribed seconds without letting your hips sag, then switch sides.",
+   "For an easier version, keep your bottom knee on the floor."
+  ],
+  "instructionsPt": [
+   "Deite de lado, com o antebraço no chão, o cotovelo abaixo do ombro e os pés empilhados.",
+   "Suba o quadril até o corpo ficar reto da cabeça aos pés, com o abdômen e o glúteo firmes.",
+   "Segure pelos segundos indicados, sem deixar o quadril cair, e troque de lado.",
+   "Para facilitar, mantenha o joelho de baixo no chão."
+  ],
   "primaryMuscles": [
    "abdominals"
   ],
@@ -32074,16 +32183,16 @@
   "media": [
    {
     "kind": "IMAGE_START",
-    "url": "/exercises/side-bridge/0.webp",
-    "width": 640,
-    "height": 427,
+    "url": "/exercises/side-bridge/fig-start.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/side-bridge/1.webp",
-    "width": 640,
-    "height": 427,
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/side-bridge/fig-start.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 1
    }
   ]
@@ -33130,12 +33239,12 @@
   "category": "STRENGTH",
   "movementPattern": "hip-extension",
   "equipment": "bodyweight",
-  "difficulty": "BEGINNER",
+  "difficulty": "INTERMEDIATE",
   "forceType": "PUSH",
   "laterality": "UNILATERAL",
   "mechanics": "ISOLATION",
   "instructionsEn": [
-   "Lay on the floor with your feet flat and knees bent.",
+   "Lie on the floor with your feet flat and knees bent.",
    "Raise one leg off of the ground, pulling the knee to your chest. This will be your starting position.",
    "Execute the movement by driving through the heel, extending your hip upward and raising your glutes off of the ground.",
    "Extend as far as possible, pause and then return to the starting position."
@@ -33154,18 +33263,25 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/single-leg-glute-bridge/0.webp",
-    "width": 640,
-    "height": 427,
+    "kind": "IMAGE_END",
+    "url": "/exercises/single-leg-glute-bridge/fig-end.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/single-leg-glute-bridge/1.webp",
-    "width": 640,
-    "height": 427,
+    "kind": "IMAGE_START",
+    "url": "/exercises/single-leg-glute-bridge/fig-start.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/single-leg-glute-bridge/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
    }
   ]
  },
@@ -38868,8 +38984,8 @@
   "slug": "superman",
   "nameEn": "Superman",
   "namePt": "Superman",
-  "category": "STRETCHING",
-  "movementPattern": null,
+  "category": "STRENGTH",
+  "movementPattern": "hip-extension",
   "equipment": "bodyweight",
   "difficulty": "BEGINNER",
   "forceType": "STATIC",
@@ -38896,18 +39012,25 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/superman/0.webp",
-    "width": 640,
-    "height": 427,
+    "kind": "IMAGE_END",
+    "url": "/exercises/superman/fig-end.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/superman/1.webp",
-    "width": 640,
-    "height": 427,
+    "kind": "IMAGE_START",
+    "url": "/exercises/superman/fig-start.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/superman/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
    }
   ]
  },
@@ -44080,33 +44203,55 @@
    "triceps",
    "traps"
   ],
-  "media": [],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/pike-push-up/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/pike-push-up/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/pike-push-up/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ],
   "videoUrl": "https://www.youtube.com/watch?v=niJaOQvRHJg",
   "videoCredit": "Miqueias Alves Personal"
  },
  {
   "sourceId": "cal-box-pistol-squat",
   "slug": "box-pistol-squat",
-  "nameEn": "Box Pistol Squat",
-  "namePt": "Pistol na Caixa (Assistido)",
+  "nameEn": "One-Leg Squat to a Seat",
+  "namePt": "Agachamento Unilateral até o Assento",
   "category": "STRENGTH",
   "movementPattern": "squat",
   "equipment": "none",
-  "difficulty": "BEGINNER",
+  "difficulty": "INTERMEDIATE",
   "forceType": "PUSH",
   "laterality": "UNILATERAL",
   "mechanics": "COMPOUND",
   "instructionsEn": [
-   "Stand on one leg in front of a box, bench, or chair, with the other leg extended out in front, arms reaching forward for balance.",
-   "Sit back and down on the standing leg under control until your glutes lightly touch the box, keeping the heel flat.",
-   "Pause briefly, then drive through the whole foot to stand back up on the single leg without pushing off the box.",
-   "Lower the box height (or hold a support/counterweight) to progress toward the full pistol squat. Do all reps on one side, then switch."
+   "Push a stable chair against the wall, or use a stable bench or box, and stand on one leg in front of the seat, with the other leg extended out in front and your arms forward for balance.",
+   "Sit back and down on the standing leg under control until your glutes lightly touch the middle of the seat, keeping the heel flat.",
+   "Pause briefly, then drive through the whole foot to stand back up on the single leg without pushing off the seat.",
+   "Do all reps on one side, then switch. At home the chair height stays the same; in pistol progression programs, lower the box."
   ],
   "instructionsPt": [
-   "Fique em pé sobre uma perna à frente de uma caixa, banco ou cadeira, com a outra perna estendida à frente e os braços à frente para equilibrar.",
-   "Sente para trás e para baixo sobre a perna de apoio, com controle, até o glúteo tocar de leve a caixa, mantendo o calcanhar no chão.",
-   "Faça uma pausa curta e empurre por todo o pé para levantar de novo na perna única, sem se impulsionar na caixa.",
-   "Diminua a altura da caixa (ou segure um apoio/contrapeso) para evoluir rumo ao pistol completo. Faça todas as reps de um lado e depois troque."
+   "Encoste bem na parede uma cadeira firme, ou use um banco ou uma caixa estável, e fique em pé sobre uma perna à frente do assento, com a outra perna estendida à frente e os braços à frente para equilibrar.",
+   "Sente para trás e para baixo sobre a perna de apoio, com controle, até o glúteo tocar de leve o meio do assento, mantendo o calcanhar no chão.",
+   "Faça uma pausa curta e empurre por todo o pé para levantar de novo na perna única, sem se impulsionar no assento.",
+   "Faça todas as reps de um lado e troque. Em casa, a altura da cadeira não muda; nos programas de progressão para o pistol, baixe a caixa."
   ],
   "primaryMuscles": [
    "quadriceps"
@@ -44116,7 +44261,29 @@
    "adductors",
    "calves"
   ],
-  "media": [],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/box-pistol-squat/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/box-pistol-squat/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/box-pistol-squat/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ],
   "videoUrl": "https://www.youtube.com/watch?v=UXafQ2KkkCQ",
   "videoCredit": "Dio Calistenia"
  },
@@ -44383,13 +44550,13 @@
   "mechanics": "COMPOUND",
   "instructionsEn": [
    "Set up in a wide push-up position, hands well outside shoulder width, body in a straight line.",
-   "Bend one arm to lower your chest toward that hand while the other arm stays nearly straight, sliding out to the side like drawing a bow.",
+   "Bend one arm to lower your chest toward that hand while the other arm stays nearly straight, reaching out to the side like drawing a bow.",
    "Lower until the chest is near the bent-arm hand, then press back up and across to the center, keeping the straight arm as a light assist only.",
    "Do the prescribed reps on one side, then switch. Point the straight-arm fingers out to protect the elbow; it is a near one-arm push-up."
   ],
   "instructionsPt": [
    "Posicione-se numa flexão aberta, mãos bem além da largura dos ombros, corpo em linha reta.",
-   "Flexione um braço para baixar o peito em direção àquela mão enquanto o outro braço fica quase reto, deslizando para o lado como quem puxa um arco.",
+   "Flexione um braço para baixar o peito em direção àquela mão enquanto o outro braço fica quase reto, estendido para o lado como quem puxa um arco.",
    "Desça até o peito ficar perto da mão do braço flexionado, depois empurre de volta ao centro, usando o braço esticado só como leve apoio.",
    "Faça as reps prescritas de um lado e depois troque. Aponte os dedos do braço esticado para fora para proteger o cotovelo; é quase uma flexão com um braço só."
   ],
@@ -44400,7 +44567,29 @@
    "triceps",
    "shoulders"
   ],
-  "media": [],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/archer-push-up/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/archer-push-up/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/archer-push-up/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ],
   "videoUrl": "https://www.youtube.com/watch?v=5nWvLpg97eY",
   "videoCredit": "Vitor Deorian"
  },
@@ -44517,7 +44706,7 @@
   "category": "STRENGTH",
   "movementPattern": "hinge",
   "equipment": "none",
-  "difficulty": "INTERMEDIATE",
+  "difficulty": "ADVANCED",
   "forceType": "PULL",
   "laterality": "BILATERAL",
   "mechanics": "ISOLATION",
@@ -44540,8 +44729,3062 @@
    "glutes",
    "calves"
   ],
-  "media": [],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/assisted-nordic-curl/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/assisted-nordic-curl/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/assisted-nordic-curl/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ],
   "videoUrl": "https://www.youtube.com/watch?v=3-4pKUhkzoQ",
   "videoCredit": "Movement Project PT"
+ },
+ {
+  "sourceId": "fgpower-home:wall-push-up",
+  "slug": "wall-push-up",
+  "nameEn": "Wall Push-Up",
+  "namePt": "Flexão na Parede",
+  "category": "STRENGTH",
+  "movementPattern": "horizontal-push",
+  "equipment": "bodyweight",
+  "difficulty": "BEGINNER",
+  "forceType": "PUSH",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Stand facing a wall with your feet one long step back and your hands on the wall at chest height, a little wider than your shoulders.",
+   "Keep your body in one straight line from head to heels, abs tight and glutes squeezed.",
+   "Bend your elbows at about 45 degrees from your sides and lower your chest toward the wall over 2 to 3 seconds.",
+   "Press the wall away until your arms are straight. To make it harder, move your feet further from the wall."
+  ],
+  "instructionsPt": [
+   "Fique de frente para a parede, com os pés um passo longo para trás e as mãos na parede na altura do peito, um pouco mais abertas que os ombros.",
+   "Mantenha o corpo em linha reta da cabeça aos calcanhares, com o abdômen firme e o glúteo contraído.",
+   "Dobre os cotovelos a cerca de 45 graus do tronco e aproxime o peito da parede em 2 a 3 segundos.",
+   "Empurre a parede até estender os braços. Para dificultar, afaste os pés da parede."
+  ],
+  "primaryMuscles": [
+   "chest"
+  ],
+  "secondaryMuscles": [
+   "triceps",
+   "anterior-deltoid"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/wall-push-up/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/wall-push-up/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/wall-push-up/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:knee-push-up",
+  "slug": "knee-push-up",
+  "nameEn": "Knee Push-Up",
+  "namePt": "Flexão com Joelhos no Chão",
+  "category": "STRENGTH",
+  "movementPattern": "horizontal-push",
+  "equipment": "bodyweight",
+  "difficulty": "BEGINNER",
+  "forceType": "PUSH",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Kneel on the floor (a folded towel under the knees helps) with your hands a little wider than your shoulders.",
+   "Walk the hands forward until there is a straight line from head to knees. Do not leave your hips up in the air.",
+   "Lower your chest to a fist above the floor over 2 to 3 seconds, elbows about 45 degrees from your sides.",
+   "Press back up until your arms are straight, keeping the line from head to knees."
+  ],
+  "instructionsPt": [
+   "Ajoelhe no chão (uma toalha dobrada embaixo dos joelhos ajuda), com as mãos um pouco mais abertas que os ombros.",
+   "Leve as mãos à frente até formar uma linha reta da cabeça aos joelhos. Não deixe o quadril empinado.",
+   "Desça o peito até um punho do chão em 2 a 3 segundos, com os cotovelos a cerca de 45 graus do tronco.",
+   "Empurre até estender os braços, mantendo a linha da cabeça aos joelhos."
+  ],
+  "primaryMuscles": [
+   "chest"
+  ],
+  "secondaryMuscles": [
+   "triceps",
+   "anterior-deltoid",
+   "abdominals"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/knee-push-up/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/knee-push-up/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/knee-push-up/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:tempo-push-up",
+  "slug": "tempo-push-up",
+  "nameEn": "Slow Push-Up with Pause",
+  "namePt": "Flexão Lenta com Pausa",
+  "category": "STRENGTH",
+  "movementPattern": "horizontal-push",
+  "equipment": "bodyweight",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PUSH",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Set up in a normal push-up with your body in one straight line.",
+   "Take 4 full seconds to lower your chest to a fist above the floor.",
+   "Hold the bottom for 2 seconds without touching the floor or letting your hips sag.",
+   "Press up in about 1 second and go straight into the next slow lowering, with no rest at the top."
+  ],
+  "instructionsPt": [
+   "Monte a flexão normal, com o corpo em linha reta.",
+   "Leve 4 segundos inteiros para descer o peito até um punho do chão.",
+   "Segure 2 segundos embaixo, sem encostar no chão e sem deixar o quadril cair.",
+   "Suba em cerca de 1 segundo e já comece a próxima descida lenta, sem descansar em cima."
+  ],
+  "primaryMuscles": [
+   "chest"
+  ],
+  "secondaryMuscles": [
+   "triceps",
+   "anterior-deltoid",
+   "abdominals"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/tempo-push-up/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/tempo-push-up/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/tempo-push-up/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:kneeling-towel-chest-slide",
+  "slug": "kneeling-towel-chest-slide",
+  "nameEn": "Kneeling One-Arm Towel Chest Slide",
+  "namePt": "Crucifixo Deslizante de Joelhos com Toalha",
+  "category": "STRENGTH",
+  "movementPattern": "horizontal-push",
+  "equipment": "bodyweight",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PUSH",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "On a smooth floor, kneel in the knee push-up position with one hand flat on a folded towel and the other hand on the floor under your shoulder.",
+   "Slowly slide the towel hand out to the side with a nearly straight arm, letting your chest drop as far as you can control.",
+   "Stop when you feel a strong stretch in the chest, then press the towel into the floor and drag the hand back under the shoulder using your chest.",
+   "Finish all the reps on one side, then switch. This does not work on carpet; use the archer push-up instead."
+  ],
+  "instructionsPt": [
+   "Em piso liso, fique na posição de flexão de joelhos, com uma mão sobre a toalha dobrada e a outra no chão, embaixo do ombro.",
+   "Deslize devagar a mão da toalha para o lado, com o braço quase reto, deixando o peito descer até onde tiver controle.",
+   "Pare ao sentir o peitoral bem alongado, pressione a toalha contra o chão e traga a mão de volta para baixo do ombro usando o peito.",
+   "Faça todas as repetições de um lado e troque. Em carpete não funciona; nesse caso, use a flexão arqueiro."
+  ],
+  "primaryMuscles": [
+   "chest"
+  ],
+  "secondaryMuscles": [
+   "anterior-deltoid",
+   "abdominals"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/kneeling-towel-chest-slide/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/kneeling-towel-chest-slide/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/kneeling-towel-chest-slide/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:incline-pike-push-up",
+  "slug": "incline-pike-push-up",
+  "nameEn": "Hands-on-Sofa Pike Push-Up",
+  "namePt": "Flexão Pike com Mãos no Sofá",
+  "category": "STRENGTH",
+  "movementPattern": "vertical-push",
+  "equipment": "bodyweight",
+  "difficulty": "BEGINNER",
+  "forceType": "PUSH",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Put your hands on the front edge of a sofa or a chair pushed against a wall, shoulder width apart. On a sofa, use a fixed seat, never the retractable part, and take loose cushions off the edge.",
+   "Walk your feet in and lift your hips until your body makes an upside-down V, with your head between your arms.",
+   "Bend your elbows and bring the top of your head toward the seat edge over 2 to 3 seconds, keeping your hips high.",
+   "Press back up by pushing the seat away until your arms are straight."
+  ],
+  "instructionsPt": [
+   "Apoie as mãos na borda do sofá ou de uma cadeira encostada na parede, na largura dos ombros. No sofá, use um de assento fixo, nunca a parte retrátil, e tire almofadas soltas da borda.",
+   "Traga os pés para perto e suba o quadril até o corpo formar um V invertido, com a cabeça entre os braços.",
+   "Dobre os cotovelos e leve o topo da cabeça em direção à borda do assento em 2 a 3 segundos, mantendo o quadril alto.",
+   "Empurre o assento até estender os braços."
+  ],
+  "primaryMuscles": [
+   "anterior-deltoid"
+  ],
+  "secondaryMuscles": [
+   "triceps",
+   "lateral-deltoid",
+   "traps"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/incline-pike-push-up/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/incline-pike-push-up/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/incline-pike-push-up/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:feet-elevated-pike-push-up",
+  "slug": "feet-elevated-pike-push-up",
+  "nameEn": "Feet-on-Chair Pike Push-Up",
+  "namePt": "Flexão Pike com Pés na Cadeira",
+  "category": "STRENGTH",
+  "movementPattern": "vertical-push",
+  "equipment": "bodyweight",
+  "difficulty": "ADVANCED",
+  "forceType": "PUSH",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Push a stable chair against the wall. Put your toes on the seat and walk your hands back until your trunk is about 30 degrees from vertical, with your hips higher than your shoulders; knees almost straight.",
+   "Keep your arms straight, your head between them and your hands shoulder-width apart. Your feet stay on the seat; this is not a handstand.",
+   "Lower the top of your head toward the floor over 3 seconds, elbows pointing back toward the chair and slightly out.",
+   "Press until your arms are straight. If a wrist or shoulder complains, go back to the floor version."
+  ],
+  "instructionsPt": [
+   "Encoste uma cadeira firme na parede. Apoie as pontas dos pés no assento e leve as mãos para trás até o tronco ficar a uns 30 graus da vertical, com o quadril mais alto que os ombros; joelhos quase retos.",
+   "Mantenha os braços retos, a cabeça entre os braços e as mãos na largura dos ombros. Os pés ficam no assento; isso não é parada de mão.",
+   "Desça o topo da cabeça em direção ao chão em 3 segundos, com os cotovelos apontando para a cadeira e um pouco para fora.",
+   "Empurre até estender os braços. Se o punho ou o ombro reclamar, volte para a versão no chão."
+  ],
+  "primaryMuscles": [
+   "anterior-deltoid"
+  ],
+  "secondaryMuscles": [
+   "triceps",
+   "lateral-deltoid",
+   "traps"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/feet-elevated-pike-push-up/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/feet-elevated-pike-push-up/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/feet-elevated-pike-push-up/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:wall-lateral-press-hold",
+  "slug": "wall-lateral-press-hold",
+  "nameEn": "Wall Lateral Press Hold",
+  "namePt": "Isometria de Elevação Lateral na Parede",
+  "category": "STRENGTH",
+  "movementPattern": "shoulder-abduction",
+  "equipment": "bodyweight",
+  "difficulty": "BEGINNER",
+  "forceType": "STATIC",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Stand side-on to a wall, close enough that your upper arm, lifted about 60 degrees from your body with the elbow bent, touches the wall with the outside of the elbow.",
+   "Keep your trunk upright and your shoulder down, away from your ear.",
+   "Press the outside of the elbow into the wall as if doing a heavy lateral raise, building to about 80 percent of your maximum effort.",
+   "Hold for the prescribed seconds while breathing, then switch sides."
+  ],
+  "instructionsPt": [
+   "Fique de lado para a parede, perto o bastante para o braço, afastado cerca de 60 graus do corpo e com o cotovelo dobrado, tocar a parede com a parte de fora do cotovelo.",
+   "Mantenha o tronco ereto e o ombro baixo, longe da orelha.",
+   "Pressione a parte de fora do cotovelo contra a parede, como numa elevação lateral pesada, chegando a cerca de 80% da sua força máxima.",
+   "Segure pelos segundos indicados, respirando, e troque de lado."
+  ],
+  "primaryMuscles": [
+   "lateral-deltoid"
+  ],
+  "secondaryMuscles": [
+   "traps"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/wall-lateral-press-hold/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/wall-lateral-press-hold/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:wall-lateral-lean-raise",
+  "slug": "wall-lateral-lean-raise",
+  "nameEn": "Wall Lean Lateral Raise",
+  "namePt": "Elevação Lateral com Corpo Inclinado na Parede",
+  "category": "STRENGTH",
+  "movementPattern": "shoulder-abduction",
+  "equipment": "bodyweight",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PUSH",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Stand side-on to the wall with your feet about 55 cm from it. Lift the arm nearest the wall away from your body with the elbow bent, the forearm pointing forward, parallel to the floor, and the hand loose; never with the hand pointing up. Rest the outside of the elbow on the wall at rib height.",
+   "Keep your body straight like a plank and let it tilt toward the wall until your weight is on the elbow.",
+   "Press the elbow into the wall and push your body back toward vertical using only the shoulder. The elbow slides about 15 cm up the wall (wear long sleeves). Do not bend at the waist or push with your legs.",
+   "Return slowly, over 3 seconds. Moving your feet further from the wall makes it heavier. Finish your reps and switch sides."
+  ],
+  "instructionsPt": [
+   "Fique de lado para a parede, com os pés a uns 55 cm dela. Afaste do corpo o braço do lado da parede, com o cotovelo dobrado, o antebraço para a frente, paralelo ao chão, e a mão solta; nunca com a mão para cima. Apoie a parte de fora do cotovelo na parede, na altura das costelas.",
+   "Mantenha o corpo reto como uma prancha e deixe-o inclinar para a parede até o peso ficar no cotovelo.",
+   "Pressione o cotovelo na parede e empurre o corpo de volta em direção à vertical, usando só o ombro. O cotovelo sobe uns 15 cm deslizando na parede (use manga comprida). Não dobre a cintura nem empurre com as pernas.",
+   "Volte devagar, em 3 segundos. Afastar os pés da parede deixa mais pesado. Termine as repetições e troque de lado."
+  ],
+  "primaryMuscles": [
+   "lateral-deltoid"
+  ],
+  "secondaryMuscles": [
+   "traps",
+   "obliques"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/wall-lateral-lean-raise/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/wall-lateral-lean-raise/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/wall-lateral-lean-raise/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:towel-lateral-raise",
+  "slug": "towel-lateral-raise",
+  "nameEn": "Self-Resisted Towel Lateral Raise",
+  "namePt": "Elevação Lateral com Toalha (Autorresistência)",
+  "category": "STRENGTH",
+  "movementPattern": "shoulder-abduction",
+  "equipment": "bodyweight",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PULL",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Stand tall. Wrap a bath towel around your hands until about 70 cm is left between them; that distance does not change. The working hand starts by your side and the other at the opposite hip.",
+   "Raise the working arm out to the side, leading with the elbow, while the other hand pulls the towel down hard enough to make the way up slow and heavy.",
+   "The resisting hand travels too: it leaves the opposite hip and ends in front of the lower ribs on the working side. Stop when the working hand reaches shoulder height.",
+   "Keep the tension over the 3-second lowering: the working arm keeps pulling up while the other brings it down. Finish your reps and switch."
+  ],
+  "instructionsPt": [
+   "Fique em pé. Enrole uma toalha de banho nas mãos até sobrar uns 70 cm entre elas; essa distância não muda. A mão que trabalha fica ao lado do corpo e a outra, junto ao quadril oposto.",
+   "Eleve o braço que trabalha para o lado, puxando com o cotovelo, enquanto a outra mão puxa a toalha para baixo com força suficiente para a subida ficar lenta e pesada.",
+   "A mão que resiste acompanha: sai do quadril oposto e termina na frente das costelas do lado que trabalha. Pare quando a mão que trabalha chegar à altura do ombro.",
+   "Mantenha a tensão na descida de 3 segundos: o braço que trabalha continua puxando para cima enquanto o outro o traz para baixo. Termine as repetições e troque."
+  ],
+  "primaryMuscles": [
+   "lateral-deltoid"
+  ],
+  "secondaryMuscles": [
+   "traps"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/towel-lateral-raise/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/towel-lateral-raise/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/towel-lateral-raise/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:side-lying-elbow-press",
+  "slug": "side-lying-elbow-press",
+  "nameEn": "Side-Lying Elbow Press",
+  "namePt": "Elevação Lateral no Cotovelo Deitado de Lado",
+  "category": "STRENGTH",
+  "movementPattern": "shoulder-abduction",
+  "equipment": "bodyweight",
+  "difficulty": "ADVANCED",
+  "forceType": "PUSH",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Lie on your side with your legs stacked and your hip on the floor. Put the lower elbow on the floor near your ribs, a hand span (about 20 cm) below the shoulder line, toward the hip, forearm pointing forward. On a hard floor, fold the towel under the elbow.",
+   "The elbow stays a hand span (about 20 cm) below the shoulder line, toward the hip. Your ribs rise and your waist bends slightly to the side; the hip stays on the floor. If the elbow moves up directly under the shoulder or past it toward your head, the load leaves the deltoid.",
+   "Press the elbow into the floor and lift your ribs and shoulder away from it, until your trunk is about 20 to 25 degrees off the floor.",
+   "Lower over 3 seconds until your ribs almost touch. Finish your reps and switch sides."
+  ],
+  "instructionsPt": [
+   "Deite de lado, com as pernas uma sobre a outra e o quadril no chão. Apoie o cotovelo de baixo no chão, perto das costelas, um palmo (uns 20 cm) abaixo da linha do ombro, na direção do quadril, com o antebraço apontando para a frente. Em piso duro, dobre a toalha embaixo do cotovelo.",
+   "O cotovelo fica um palmo (uns 20 cm) abaixo da linha do ombro, na direção do quadril. As costelas sobem e a cintura dobra um pouco de lado; o quadril fica no chão. Se o cotovelo subir até ficar bem embaixo do ombro ou passar dele em direção à cabeça, a carga sai do deltoide.",
+   "Pressione o cotovelo no chão e suba as costelas e o ombro, afastando-os do chão, até o tronco ficar a uns 20 a 25 graus do chão.",
+   "Desça em 3 segundos até as costelas quase encostarem. Termine as repetições e troque de lado."
+  ],
+  "primaryMuscles": [
+   "lateral-deltoid"
+  ],
+  "secondaryMuscles": [
+   "obliques",
+   "traps"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/side-lying-elbow-press/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/side-lying-elbow-press/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/side-lying-elbow-press/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:sofa-triceps-extension",
+  "slug": "sofa-triceps-extension",
+  "nameEn": "Sofa Triceps Extension",
+  "namePt": "Tríceps Testa no Sofá",
+  "category": "STRENGTH",
+  "movementPattern": "elbow-extension",
+  "equipment": "bodyweight",
+  "difficulty": "BEGINNER",
+  "forceType": "PUSH",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Put your hands on the front edge of a sofa or of a chair pushed against a wall, shoulder width apart, and walk your feet back until your body is a straight line. On a sofa, use a fixed seat, never the retractable part, and take loose cushions off the edge.",
+   "Keep your body straight and bend your elbows, letting them drop and point forward, lowering your forehead toward your hands over 3 seconds.",
+   "Stop when your forehead is just past the edge, with your elbows pointing forward and not flaring out.",
+   "Straighten your elbows to press back up. Moving your feet further back makes it harder."
+  ],
+  "instructionsPt": [
+   "Apoie as mãos na borda do sofá ou de uma cadeira encostada na parede, na largura dos ombros, e leve os pés para trás até o corpo ficar em linha reta. No sofá, use um de assento fixo, nunca a parte retrátil, e tire almofadas soltas da borda.",
+   "Mantenha o corpo reto e dobre os cotovelos, deixando-os descer e apontar para a frente, levando a testa em direção às mãos em 3 segundos.",
+   "Pare quando a testa passar um pouco da borda, com os cotovelos apontando para a frente, sem abrir.",
+   "Estenda os cotovelos para voltar. Afastar os pés deixa mais difícil."
+  ],
+  "primaryMuscles": [
+   "triceps"
+  ],
+  "secondaryMuscles": [
+   "anterior-deltoid",
+   "abdominals"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/sofa-triceps-extension/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/sofa-triceps-extension/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/sofa-triceps-extension/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:kneeling-forearm-press",
+  "slug": "kneeling-forearm-press",
+  "nameEn": "Kneeling Forearm-to-Hand Press",
+  "namePt": "Prancha Sobe e Desce de Joelhos",
+  "category": "STRENGTH",
+  "movementPattern": "elbow-extension",
+  "equipment": "bodyweight",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PUSH",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Kneel on the floor and place your forearms on the floor under your shoulders, palms flat, hips extended into a straight line from head to knees.",
+   "Press your palms into the floor and straighten your elbows, lifting your forearms and chest away from the floor.",
+   "Finish with straight arms and your shoulders slightly behind your hands.",
+   "Lower over 3 seconds until your forearms touch down softly. Keep your hips from sagging or piking."
+  ],
+  "instructionsPt": [
+   "Ajoelhe no chão e apoie os antebraços abaixo dos ombros, com as palmas no chão e o quadril estendido, em linha reta da cabeça aos joelhos.",
+   "Pressione as palmas no chão e estenda os cotovelos, tirando os antebraços e o peito do chão.",
+   "Termine com os braços retos e os ombros um pouco atrás das mãos.",
+   "Desça em 3 segundos até os antebraços encostarem de leve. Não deixe o quadril cair nem empinar."
+  ],
+  "primaryMuscles": [
+   "triceps"
+  ],
+  "secondaryMuscles": [
+   "anterior-deltoid",
+   "abdominals"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/kneeling-forearm-press/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/kneeling-forearm-press/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/kneeling-forearm-press/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:towel-overhead-triceps",
+  "slug": "towel-overhead-triceps",
+  "nameEn": "Self-Resisted Overhead Towel Triceps",
+  "namePt": "Tríceps Francês com Toalha (Autorresistência)",
+  "category": "STRENGTH",
+  "movementPattern": "elbow-extension",
+  "equipment": "bodyweight",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PUSH",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Stand tall. Wrap a bath towel around your hands until about 75 cm is left between them; that distance does not change. Hold the towel vertically behind your back: the working hand behind your neck and the other at the base of your glutes.",
+   "Point the working elbow at the ceiling and extend it upward while the lower hand pulls hard enough to make the way up slow and heavy. The lower hand rises with it, up to mid-back.",
+   "Stop just short of locking the elbow.",
+   "Bend the elbow slowly, over 3 seconds, while you keep pushing against the lower hand. Finish your reps and switch."
+  ],
+  "instructionsPt": [
+   "Fique em pé. Enrole uma toalha de banho nas mãos até sobrar uns 75 cm entre elas; essa distância não muda. Segure a toalha na vertical, atrás das costas: a mão que trabalha fica atrás da nuca e a outra, na base dos glúteos.",
+   "Aponte o cotovelo que trabalha para o teto e estenda-o para cima enquanto a mão de baixo puxa com força suficiente para a subida ficar lenta e pesada. A mão de baixo sobe junto, até o meio das costas.",
+   "Pare pouco antes de travar o cotovelo.",
+   "Dobre o cotovelo devagar, em 3 segundos, continuando a empurrar contra a mão de baixo. Termine as repetições e troque."
+  ],
+  "primaryMuscles": [
+   "triceps"
+  ],
+  "secondaryMuscles": [
+   "lats"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/towel-overhead-triceps/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/towel-overhead-triceps/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/towel-overhead-triceps/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:supine-elbow-row",
+  "slug": "supine-elbow-row",
+  "nameEn": "Floor Elbow Row",
+  "namePt": "Remada no Chão com Cotovelos",
+  "category": "STRENGTH",
+  "movementPattern": "horizontal-pull",
+  "equipment": "bodyweight",
+  "difficulty": "BEGINNER",
+  "forceType": "PULL",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Lie on your back with your knees bent, feet flat on the floor, and your arms by your sides with the elbows bent 90 degrees and forearms pointing up. Fold the towel lengthwise and put it under both elbows.",
+   "Drive both elbows down into the floor and squeeze your shoulder blades together, so your upper back and shoulders lift off the floor. Your weight moves onto your elbows.",
+   "Pause for 1 to 2 seconds at the top with your chest up. Do not push with your hands or throw your head forward.",
+   "Lower yourself over 3 seconds until your shoulder blades touch the floor."
+  ],
+  "instructionsPt": [
+   "Deite de costas, com os joelhos dobrados, os pés apoiados e os braços ao lado do corpo, com os cotovelos a 90 graus e os antebraços apontando para cima. Toalha dobrada no sentido do comprimento embaixo dos dois cotovelos.",
+   "Pressione os dois cotovelos no chão e junte as escápulas, de modo que a parte de cima das costas e os ombros saiam do chão. O peso passa para os cotovelos.",
+   "Pare 1 a 2 segundos em cima, com o peito aberto. Não empurre com as mãos nem jogue a cabeça para a frente.",
+   "Desça em 3 segundos até as escápulas encostarem no chão."
+  ],
+  "primaryMuscles": [
+   "middle-back"
+  ],
+  "secondaryMuscles": [
+   "lats",
+   "posterior-deltoid",
+   "rhomboids"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/supine-elbow-row/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/supine-elbow-row/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/supine-elbow-row/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:hips-up-elbow-row",
+  "slug": "hips-up-elbow-row",
+  "nameEn": "Hips-Up Floor Elbow Row",
+  "namePt": "Remada no Chão com Quadril Elevado",
+  "category": "STRENGTH",
+  "movementPattern": "horizontal-pull",
+  "equipment": "bodyweight",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PULL",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Set up like the floor elbow row, then lift your hips into a glute bridge and keep them up for the whole set. Fold the towel lengthwise and put it under both elbows.",
+   "Drive both elbows into the floor and squeeze your shoulder blades so that your upper back lifts away. Now only your elbows and feet touch the floor.",
+   "Pause for 1 to 2 seconds with your body straight from shoulders to knees.",
+   "Lower your upper back slowly over 3 seconds without dropping your hips. Walking your feet further from your hips makes it heavier."
+  ],
+  "instructionsPt": [
+   "Monte a remada no chão com cotovelos, suba o quadril como numa ponte de glúteo e mantenha-o lá durante toda a série. Toalha dobrada no sentido do comprimento embaixo dos dois cotovelos.",
+   "Pressione os dois cotovelos no chão e junte as escápulas para tirar a parte de cima das costas do chão. Agora só os cotovelos e os pés tocam o chão.",
+   "Pare 1 a 2 segundos com o corpo reto dos ombros aos joelhos.",
+   "Desça a parte de cima das costas em 3 segundos, sem baixar o quadril. Afastar os pés do quadril deixa mais pesado."
+  ],
+  "primaryMuscles": [
+   "middle-back"
+  ],
+  "secondaryMuscles": [
+   "lats",
+   "posterior-deltoid",
+   "rhomboids",
+   "glutes"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/hips-up-elbow-row/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/hips-up-elbow-row/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/hips-up-elbow-row/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:seated-knee-grip-row",
+  "slug": "seated-knee-grip-row",
+  "nameEn": "Seated Knee-Grip Row",
+  "namePt": "Remada Sentado Segurando os Joelhos",
+  "category": "STRENGTH",
+  "movementPattern": "horizontal-pull",
+  "equipment": "bodyweight",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PULL",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Sit on the floor with your feet flat. Hook your hands behind your knees, palms facing your legs. On a hard floor, sit on the folded towel.",
+   "Keep your chest open. Lean back only until your feet start to feel light, about 20 degrees, with your knees at about 120 degrees. With your feet hooked under a heavy sofa you can go to 40 degrees, with your knees at 90 degrees. Never hook them under the chair. Your arms stay straight and your trunk hangs from your hands.",
+   "Drive your elbows back until they are beside your ribs, bringing your chest toward your knees without rounding your spine.",
+   "Lean back over 3 seconds until your arms are straight again. The load drops as your trunk nears vertical, and the hip flexors help, so this is an entry rung."
+  ],
+  "instructionsPt": [
+   "Sente no chão com os pés apoiados. Encaixe as mãos atrás dos joelhos, com as palmas voltadas para as pernas. Em piso duro, sente sobre a toalha dobrada.",
+   "Mantenha o peito aberto. Incline só até os pés começarem a ficar leves, uns 20 graus, com os joelhos a uns 120 graus. Com os pés presos embaixo de um sofá pesado, pode ir até 40 graus, com os joelhos a 90 graus. Nunca prenda os pés embaixo da cadeira. Os braços ficam retos e o tronco, pendurado pelas mãos.",
+   "Puxe os cotovelos para trás até ficarem ao lado das costelas, levando o peito em direção aos joelhos sem curvar a coluna.",
+   "Incline para trás em 3 segundos até estender os braços de novo. A carga cai quando o tronco chega perto da vertical, e o flexor do quadril ajuda, então este é um degrau de entrada."
+  ],
+  "primaryMuscles": [
+   "lats"
+  ],
+  "secondaryMuscles": [
+   "middle-back",
+   "rhomboids",
+   "biceps",
+   "posterior-deltoid"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/seated-knee-grip-row/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/seated-knee-grip-row/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/seated-knee-grip-row/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:seated-towel-row",
+  "slug": "seated-towel-row",
+  "nameEn": "Leg-Resisted Seated Towel Row",
+  "namePt": "Remada Sentado com Toalha nos Pés",
+  "category": "STRENGTH",
+  "movementPattern": "horizontal-pull",
+  "equipment": "bodyweight",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PULL",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Sit on the floor with your legs almost straight. Loop a towel twisted into a rope around the soles of both feet and hold one end in each hand.",
+   "Sit tall, with your chest up. Your legs are the weight: keep pushing your feet away the whole time.",
+   "Row your hands to your waist, elbows back, pulling hard enough that your knees bend slowly against your own leg push.",
+   "Let your legs press your feet away over 3 seconds while your back keeps resisting, until your arms are straight. Both phases should feel heavy."
+  ],
+  "instructionsPt": [
+   "Sente no chão com as pernas quase retas. Passe uma toalha torcida como corda pela sola dos dois pés e segure uma ponta em cada mão.",
+   "Sente-se bem ereto, com o peito aberto. Suas pernas são o peso: continue empurrando os pés para longe o tempo todo.",
+   "Puxe as mãos até a cintura, com os cotovelos para trás, puxando com força suficiente para os joelhos dobrarem devagar contra o empurrão das pernas.",
+   "Deixe as pernas empurrarem os pés em 3 segundos enquanto as costas continuam resistindo, até estender os braços. As duas fases devem ser pesadas."
+  ],
+  "primaryMuscles": [
+   "middle-back"
+  ],
+  "secondaryMuscles": [
+   "lats",
+   "rhomboids",
+   "biceps",
+   "posterior-deltoid"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/seated-towel-row/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/seated-towel-row/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/seated-towel-row/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:door-frame-one-arm-row",
+  "slug": "door-frame-one-arm-row",
+  "nameEn": "Door-Frame One-Arm Row",
+  "namePt": "Remada Unilateral no Batente da Porta",
+  "category": "STRENGTH",
+  "movementPattern": "horizontal-pull",
+  "equipment": "bodyweight",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PULL",
+  "laterality": "UNILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Use the corner of a masonry wall beside a doorway, never the door leaf. Stand facing the doorway with the wall on your right and the middle of your body about 25 cm from it, so your right shoulder just clears the wall. Turn your chest about 35 degrees toward the wall. Reach forward and slightly across your body with your LEFT arm, the one away from the wall, thumb up. Put your palm on the wall and curl your fingers around the corner, into the opening, at chest height.",
+   "First, pull hard for 10 s almost upright, then at 10 degrees. If anything creaks, gives way or your finger slips, use the Hips-Up Floor Elbow Row. Do not use it if the corner is only drywall or a folding door. Go barefoot, never in socks, with your whole feet on the floor, on a dry floor with clear space behind you.",
+   "With your feet on the doorway line, lean back along the wall, away from the opening, with your body and arm straight, to about 25 degrees. Pull your chest toward your hand until you are almost upright, bringing the elbow down and back toward your ribs, without turning your trunk any further. The heel of your hand may lift off the wall near the top, but your fingers stay hooked.",
+   "Straighten the arm over 3 seconds. Finish your reps and switch sides, using the other side of the doorway, with the wall on your left and your right arm working. If your grip starts to fail, end the set. The free hand will not stop a fall."
+  ],
+  "instructionsPt": [
+   "Use o canto de uma parede de alvenaria ao lado de um vão de porta, nunca a folha da porta. Fique de frente para o vão, com a parede à sua direita e o meio do corpo a uns 25 cm dela, de modo que o ombro direito passe rente à parede sem encostar. Vire o peito uns 35 graus para a parede. Leve o braço ESQUERDO, o que está longe da parede, à frente e um pouco cruzado na frente do corpo, com o polegar para cima. Apoie a palma na parede e curve os dedos em volta do canto, para dentro do vão, na altura do peito.",
+   "Antes, puxe forte por 10 s quase em pé e depois a 10 graus. Se algo estalar, ceder ou o dedo escapar, use a Remada no Chão com Quadril Elevado. Não use se o canto for só de drywall ou de porta sanfonada. Fique descalço, nunca de meia, com os pés inteiros no chão, em piso seco e com espaço livre atrás.",
+   "Com os pés na linha do vão, incline para trás ao longo da parede, afastando-se do vão, com o corpo e o braço retos, até uns 25 graus. Puxe o peito em direção à mão até ficar quase em pé, trazendo o cotovelo para baixo e para trás, em direção às costelas, sem girar mais o tronco. A base da mão pode sair da parede no fim da puxada, mas os dedos continuam presos no canto.",
+   "Estenda o braço em 3 segundos. Termine as repetições e troque de lado, usando o outro lado do vão, com a parede à esquerda e o braço direito trabalhando. Se a pegada começar a falhar, encerre a série. A mão livre não segura uma queda."
+  ],
+  "primaryMuscles": [
+   "lats"
+  ],
+  "secondaryMuscles": [
+   "middle-back",
+   "rhomboids",
+   "biceps",
+   "forearms"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/door-frame-one-arm-row/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/door-frame-one-arm-row/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/door-frame-one-arm-row/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:door-frame-deep-lean-row",
+  "slug": "door-frame-deep-lean-row",
+  "nameEn": "Door-Frame Deep-Lean Row",
+  "namePt": "Remada Unilateral no Batente com Corpo Bem Inclinado",
+  "category": "STRENGTH",
+  "movementPattern": "horizontal-pull",
+  "equipment": "bodyweight",
+  "difficulty": "ADVANCED",
+  "forceType": "PULL",
+  "laterality": "UNILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Only once the Door-Frame One-Arm Row is solid. Use the corner of a masonry wall, never the door leaf. Stand facing the doorway with the wall on your right and the middle of your body about 25 cm from it, so your right shoulder just clears the wall. Turn your chest about 40 degrees toward the wall. Reach forward and slightly across your body with your LEFT arm, the one away from the wall, thumb up. Put your palm on the wall and curl your fingers around the corner, into the opening, at upper-belly height.",
+   "First, pull hard for 10 s almost upright, then at 10 degrees. If anything creaks, gives way or your finger slips, use the Hips-Up Floor Elbow Row. Do not use it if the corner is only drywall or a folding door. Go barefoot, never in socks, with your whole feet on the floor, on a dry floor with clear space behind you.",
+   "With your feet about 10 cm past the doorway line, lean back along the wall, away from the opening, with your body straight, only as far as your grip holds: about 30 degrees, arm straight.",
+   "Pull your chest toward your hand, hips in line, bringing the elbow down and back toward your ribs, without turning your trunk any further. The heel of your hand may lift off the wall near the top, but your fingers stay hooked. Rise in 1 second, pause and lower in 3 seconds. Finish your reps and switch sides, using the other side of the doorway, with the wall on your left and your right arm working. If your grip starts to fail, end the set. The free hand will not stop a fall."
+  ],
+  "instructionsPt": [
+   "Só depois que a Remada Unilateral no Batente estiver segura. Use o canto de uma parede de alvenaria, nunca a folha da porta. Fique de frente para o vão, com a parede à sua direita e o meio do corpo a uns 25 cm dela, de modo que o ombro direito passe rente à parede sem encostar. Vire o peito uns 40 graus para a parede. Leve o braço ESQUERDO, o que está longe da parede, à frente e um pouco cruzado na frente do corpo, com o polegar para cima. Apoie a palma na parede e curve os dedos em volta do canto, para dentro do vão, na altura da parte de cima da barriga.",
+   "Antes, puxe forte por 10 s quase em pé e depois a 10 graus. Se algo estalar, ceder ou o dedo escapar, use a Remada no Chão com Quadril Elevado. Não use se o canto for só de drywall ou de porta sanfonada. Fique descalço, nunca de meia, com os pés inteiros no chão, em piso seco e com espaço livre atrás.",
+   "Com os pés uns 10 cm para dentro da linha do vão, incline para trás ao longo da parede, afastando-se do vão, com o corpo reto, só até onde a pegada segura: uns 30 graus, com o braço estendido.",
+   "Puxe o peito em direção à mão, com o quadril alinhado, trazendo o cotovelo para baixo e para trás, em direção às costelas, sem girar mais o tronco. A base da mão pode sair da parede no fim da puxada, mas os dedos continuam presos no canto. Suba em 1 segundo, pare e desça em 3 segundos. Termine as repetições e troque de lado, usando o outro lado do vão, com a parede à esquerda e o braço direito trabalhando. Se a pegada começar a falhar, encerre a série. A mão livre não segura uma queda."
+  ],
+  "primaryMuscles": [
+   "lats"
+  ],
+  "secondaryMuscles": [
+   "middle-back",
+   "rhomboids",
+   "biceps",
+   "forearms"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/door-frame-deep-lean-row/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/door-frame-deep-lean-row/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/door-frame-deep-lean-row/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:prone-towel-pulldown",
+  "slug": "prone-towel-pulldown",
+  "nameEn": "Prone Towel Pulldown",
+  "namePt": "Puxada Deitado de Bruços com Toalha",
+  "category": "STRENGTH",
+  "movementPattern": "vertical-pull",
+  "equipment": "bodyweight",
+  "difficulty": "BEGINNER",
+  "forceType": "PULL",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Lie face down and hold a towel in both hands, arms reaching overhead, hands wider than your shoulders. Lift your chest and arms a little off the floor.",
+   "Pull the towel apart as hard as you can and keep that tension for the whole set.",
+   "Keeping the towel taut, pull your elbows down to your ribs until the towel is near your upper chest.",
+   "Reach back overhead over 3 seconds, still pulling outward. Your arms stay off the floor. This is a contraction drill, not a heavy pull: effort comes from how hard you pull the towel apart."
+  ],
+  "instructionsPt": [
+   "Deite de bruços e segure uma toalha com as duas mãos, com os braços acima da cabeça e as mãos mais abertas que os ombros. Tire um pouco o peito e os braços do chão.",
+   "Puxe a toalha para os lados com toda a força e mantenha essa tensão durante toda a série.",
+   "Com a toalha esticada, puxe os cotovelos até as costelas, até a toalha chegar perto da parte de cima do peito.",
+   "Volte os braços acima da cabeça em 3 segundos, sem parar de puxar para os lados. Os braços não tocam o chão. Isto é um exercício de contração, não uma puxada pesada: o esforço vem da força com que você abre a toalha."
+  ],
+  "primaryMuscles": [
+   "middle-back"
+  ],
+  "secondaryMuscles": [
+   "traps",
+   "rhomboids",
+   "posterior-deltoid",
+   "spinal-erectors",
+   "lats"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/prone-towel-pulldown/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/prone-towel-pulldown/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/prone-towel-pulldown/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:towel-one-arm-pulldown",
+  "slug": "towel-one-arm-pulldown",
+  "nameEn": "Self-Resisted One-Arm Towel Pulldown",
+  "namePt": "Puxada Unilateral com Toalha (Autorresistência)",
+  "category": "STRENGTH",
+  "movementPattern": "vertical-pull",
+  "equipment": "bodyweight",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PULL",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Stand or kneel tall. Wrap a bath towel around your hands until about 30 cm is left between them; that distance does not change. Hold the towel vertically: the other hand high up and the working hand below it, level with the top of your head.",
+   "Pull the working elbow down to your ribs while the top hand pulls up, hard enough to make the way down slow and heavy. Both hands travel down together and the towel stays taut.",
+   "Stop with the elbow beside your ribs and squeeze the lat for a moment.",
+   "Let the top arm take the working arm back up over 3 seconds, while you keep pulling down. Finish your reps and switch sides."
+  ],
+  "instructionsPt": [
+   "Fique em pé ou ajoelhado, com o tronco alto. Enrole uma toalha de banho nas mãos até sobrar uns 30 cm entre elas; essa distância não muda. Segure a toalha na vertical: a outra mão fica bem no alto e a mão que trabalha fica embaixo dela, na altura do topo da cabeça.",
+   "Puxe o cotovelo que trabalha para baixo, até as costelas, enquanto a mão de cima puxa para cima, com força suficiente para a descida ficar lenta e pesada. As duas mãos descem juntas e a toalha fica sempre esticada.",
+   "Pare com o cotovelo ao lado das costelas e contraia o dorsal por um instante.",
+   "Deixe o braço de cima levar o braço que trabalha de volta para o alto em 3 segundos, sem parar de puxar para baixo. Termine as repetições e troque de lado."
+  ],
+  "primaryMuscles": [
+   "lats"
+  ],
+  "secondaryMuscles": [
+   "biceps",
+   "posterior-deltoid"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/towel-one-arm-pulldown/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/towel-one-arm-pulldown/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/towel-one-arm-pulldown/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:towel-floor-body-pull",
+  "slug": "towel-floor-body-pull",
+  "nameEn": "Towel Floor Body Pull",
+  "namePt": "Puxada Deslizando no Chão com Toalha",
+  "category": "STRENGTH",
+  "movementPattern": "vertical-pull",
+  "equipment": "bodyweight",
+  "difficulty": "ADVANCED",
+  "forceType": "PULL",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "On a smooth floor, lie face down with a folded towel under your hips and thighs. Reach your arms overhead with your palms flat on the floor.",
+   "Press your palms down and pull your body toward your hands with your elbows almost straight at the start; they end up bent at the end of the pull. Your hands stay in the same spot.",
+   "Stop when your hands reach your face or shoulders and your body has slid forward.",
+   "Push yourself back slowly over 3 seconds to the long position. Raising your feet off the floor adds friction load. This does not work on carpet or rubber floors."
+  ],
+  "instructionsPt": [
+   "Em piso liso, deite de bruços com uma toalha dobrada embaixo do quadril e das coxas. Leve os braços acima da cabeça, com as palmas no chão.",
+   "Pressione as palmas e puxe o corpo em direção às mãos, com os cotovelos quase retos no início; no fim da puxada eles terminam dobrados. As mãos ficam no mesmo lugar.",
+   "Pare quando as mãos chegarem à altura do rosto ou dos ombros, com o corpo já deslizado para a frente.",
+   "Empurre devagar em 3 segundos até voltar à posição alongada. Tirar os pés do chão aumenta a carga. Não funciona em carpete nem em piso emborrachado."
+  ],
+  "primaryMuscles": [
+   "lats"
+  ],
+  "secondaryMuscles": [
+   "middle-back",
+   "posterior-deltoid",
+   "biceps",
+   "triceps"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/towel-floor-body-pull/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/towel-floor-body-pull/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/towel-floor-body-pull/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:prone-t-raise",
+  "slug": "prone-t-raise",
+  "nameEn": "Prone T Raise",
+  "namePt": "Elevação em T Deitado de Bruços",
+  "category": "STRENGTH",
+  "movementPattern": "shoulder-extension",
+  "equipment": "bodyweight",
+  "difficulty": "BEGINNER",
+  "forceType": "PULL",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Lie face down with your arms straight out to the sides, like a T, thumbs pointing to the ceiling. Rest your forehead on the floor.",
+   "Squeeze your shoulder blades together and lift both arms as high as you can without shrugging.",
+   "Hold the top for 2 seconds.",
+   "Lower over 3 seconds until your arms almost touch the floor, then lift again without resting."
+  ],
+  "instructionsPt": [
+   "Deite de bruços com os braços abertos para os lados, em T, com os polegares apontando para o teto. Apoie a testa no chão.",
+   "Junte as escápulas e suba os dois braços o máximo que puder, sem encolher os ombros.",
+   "Segure 2 segundos em cima.",
+   "Desça em 3 segundos até os braços quase encostarem no chão e suba de novo, sem descansar."
+  ],
+  "primaryMuscles": [
+   "posterior-deltoid"
+  ],
+  "secondaryMuscles": [
+   "middle-back",
+   "rhomboids",
+   "traps"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/prone-t-raise/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/prone-t-raise/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/prone-t-raise/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:prone-y-raise",
+  "slug": "prone-y-raise",
+  "nameEn": "Prone Y Raise",
+  "namePt": "Elevação em Y Deitado de Bruços",
+  "category": "STRENGTH",
+  "movementPattern": "shoulder-extension",
+  "equipment": "bodyweight",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PULL",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Lie face down with your arms reaching overhead in a Y, about 45 degrees out from your head, thumbs pointing up.",
+   "Pull your shoulder blades down and back, then lift both arms and hold them as high as you can.",
+   "Hold the top for 2 seconds. Do not arch your lower back to gain height.",
+   "Lower over 3 seconds until your arms almost touch the floor. Long arms make even a small lift hard."
+  ],
+  "instructionsPt": [
+   "Deite de bruços com os braços acima da cabeça em Y, a cerca de 45 graus da cabeça, com os polegares para cima.",
+   "Leve as escápulas para baixo e para trás, suba os dois braços e segure o mais alto que puder.",
+   "Segure 2 segundos em cima. Não arqueie a lombar para ganhar altura.",
+   "Desça em 3 segundos até os braços quase encostarem no chão. Com os braços longos, mesmo uma subida pequena já é difícil."
+  ],
+  "primaryMuscles": [
+   "traps"
+  ],
+  "secondaryMuscles": [
+   "posterior-deltoid",
+   "middle-back",
+   "rhomboids"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/prone-y-raise/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/prone-y-raise/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/prone-y-raise/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:wall-elbow-push-off",
+  "slug": "wall-elbow-push-off",
+  "nameEn": "Wall Elbow Push-Off",
+  "namePt": "Crucifixo Inverso na Parede com Cotovelos",
+  "category": "STRENGTH",
+  "movementPattern": "shoulder-extension",
+  "equipment": "bodyweight",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PULL",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Stand with your back to the wall and your heels about 55 cm from it. Lift your arms out to the sides at shoulder height with the elbows bent and on the wall. Forearms forward, parallel to the floor, hands loose; never with the hands pointing up.",
+   "Keep your body straight and let your upper back touch the wall.",
+   "Press your elbows into the wall and squeeze your shoulder blades, pushing your whole body forward until your back leaves the wall.",
+   "Hold 1 second and return over 3 seconds. Moving your feet further from the wall makes it heavier. If the front of the shoulder bothers you, bring your feet closer or switch to the Prone T Raise."
+  ],
+  "instructionsPt": [
+   "Fique de costas para a parede, com os calcanhares a uns 55 cm dela. Afaste os braços para os lados, na altura dos ombros, com os cotovelos dobrados e apoiados na parede. Antebraços para a frente, paralelos ao chão, mãos soltas; nunca com as mãos para cima.",
+   "Mantenha o corpo reto e deixe a parte de cima das costas encostar na parede.",
+   "Pressione os cotovelos contra a parede e junte as escápulas, empurrando o corpo inteiro para a frente até as costas saírem da parede.",
+   "Segure 1 segundo e volte em 3 segundos. Afastar os pés da parede deixa mais pesado. Se a frente do ombro incomodar, aproxime os pés da parede ou troque por Elevação em T."
+  ],
+  "primaryMuscles": [
+   "posterior-deltoid"
+  ],
+  "secondaryMuscles": [
+   "middle-back",
+   "rhomboids",
+   "traps"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/wall-elbow-push-off/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/wall-elbow-push-off/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/wall-elbow-push-off/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:seated-thigh-lift-curl",
+  "slug": "seated-thigh-lift-curl",
+  "nameEn": "Seated Leg-Lift Biceps Curl",
+  "namePt": "Rosca Levantando a Própria Perna",
+  "category": "STRENGTH",
+  "movementPattern": "elbow-flexion",
+  "equipment": "bodyweight",
+  "difficulty": "BEGINNER",
+  "forceType": "PULL",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Sit tall near the front of a stable chair. Hook the working hand under the same-side thigh, about halfway along it, palm up, with your upper arm by your side.",
+   "Let that leg go completely limp. Your leg is the weight.",
+   "Curl your hand toward your shoulder, lifting the relaxed leg, with your elbow staying close to your ribs.",
+   "Lower over 3 seconds until your foot is almost on the floor. Finish all reps, then switch. To add load, press the leg down a little against the curl."
+  ],
+  "instructionsPt": [
+   "Sente-se ereto, na parte da frente do assento de uma cadeira firme. Encaixe a mão que trabalha embaixo da coxa do mesmo lado, mais ou menos no meio dela, com a palma para cima e o braço junto ao corpo.",
+   "Deixe essa perna totalmente solta. Sua perna é a carga.",
+   "Faça a rosca levando a mão em direção ao ombro e levantando a perna solta, com o cotovelo perto das costelas.",
+   "Desça em 3 segundos até o pé quase tocar o chão. Termine as repetições e troque. Para aumentar a carga, force a perna um pouco para baixo contra a rosca."
+  ],
+  "primaryMuscles": [
+   "biceps"
+  ],
+  "secondaryMuscles": [
+   "forearms"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/seated-thigh-lift-curl/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/seated-thigh-lift-curl/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/seated-thigh-lift-curl/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:seated-towel-foot-curl",
+  "slug": "seated-towel-foot-curl",
+  "nameEn": "Leg-Resisted Seated Towel Curl",
+  "namePt": "Rosca com Toalha no Pé",
+  "category": "STRENGTH",
+  "movementPattern": "elbow-flexion",
+  "equipment": "bodyweight",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PULL",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Sit on a stable chair and lift one knee slightly so a towel twisted into a rope fits under the arch of that foot. Hold both ends in your hands, with palms up and arms straight.",
+   "Keep your upper arms by your sides, then press your foot down against the towel. Your leg is the weight, and you choose how heavy it is.",
+   "Curl your hands up toward your shoulders, letting your foot and knee rise with them, while the leg keeps pushing, slowly enough that each rep lasts about 2 seconds up.",
+   "Push the leg down over 3 seconds while your arms resist. Make it harder by pressing harder with the leg, not by adding reps. Switch legs at the next set."
+  ],
+  "instructionsPt": [
+   "Sente em uma cadeira firme e levante um pouco o joelho para passar uma toalha torcida como corda embaixo do arco do pé. Segure as duas pontas, com as palmas para cima e os braços retos.",
+   "Deixe os braços junto ao corpo e pressione o pé contra a toalha. Sua perna é a carga, e você escolhe o peso.",
+   "Leve as mãos em direção aos ombros, deixando o pé e o joelho subirem junto, enquanto a perna continua empurrando, devagar o bastante para a subida durar cerca de 2 segundos.",
+   "Empurre a perna para baixo em 3 segundos enquanto os braços resistem. Para dificultar, aumente a força da perna, não as repetições. Troque de perna na série seguinte."
+  ],
+  "primaryMuscles": [
+   "biceps"
+  ],
+  "secondaryMuscles": [
+   "forearms"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/seated-towel-foot-curl/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/seated-towel-foot-curl/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/seated-towel-foot-curl/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:knee-grip-lean-back-curl",
+  "slug": "knee-grip-lean-back-curl",
+  "nameEn": "Knee-Grip Lean-Back Curl",
+  "namePt": "Rosca com Tronco Inclinado Segurando o Joelho",
+  "category": "STRENGTH",
+  "movementPattern": "elbow-flexion",
+  "equipment": "bodyweight",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PULL",
+  "laterality": "UNILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Sit on the floor with your feet flat. Hook your hands behind your knees, palms facing the back of your legs. On a hard floor, sit on the folded towel.",
+   "Lean back only until your feet start to feel light, about 20 degrees, with your knees at about 120 degrees. With your feet hooked under a heavy sofa you can go to 40 degrees, with your knees at 90 degrees. Never hook them under the chair. Your arms stay straight and your trunk hangs from your hands.",
+   "Bend your elbows and pull your trunk up, elbows pointing at your knees and not going past your ribs. The biceps does the work, not the back.",
+   "Lower over 3 seconds until your arms are straight. If you already train: one arm at a time, the other hand off the leg, with a 2-second pause at elbow 90."
+  ],
+  "instructionsPt": [
+   "Sente no chão com os pés apoiados. Encaixe as mãos atrás dos joelhos, com as palmas voltadas para a parte de trás das pernas. Em piso duro, sente sobre a toalha dobrada.",
+   "Incline só até os pés começarem a ficar leves, uns 20 graus, com os joelhos a uns 120 graus. Com os pés presos embaixo de um sofá pesado, pode ir até 40 graus, com os joelhos a 90 graus. Nunca prenda os pés embaixo da cadeira. Os braços ficam estendidos e o tronco, pendurado pelas mãos.",
+   "Dobre os cotovelos e puxe o tronco para cima, com os cotovelos apontando para os joelhos, sem passarem das costelas. Quem trabalha é o bíceps, não as costas.",
+   "Desça em 3 segundos até os braços estenderem. Quem já treina: um braço de cada vez, a outra mão fora da perna, com pausa de 2 segundos com o cotovelo a 90 graus."
+  ],
+  "primaryMuscles": [
+   "biceps"
+  ],
+  "secondaryMuscles": [
+   "lats",
+   "forearms"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/knee-grip-lean-back-curl/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/knee-grip-lean-back-curl/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/knee-grip-lean-back-curl/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:door-frame-one-arm-curl",
+  "slug": "door-frame-one-arm-curl",
+  "nameEn": "Door-Frame One-Arm Curl",
+  "namePt": "Rosca Unilateral no Batente",
+  "category": "STRENGTH",
+  "movementPattern": "elbow-flexion",
+  "equipment": "bodyweight",
+  "difficulty": "ADVANCED",
+  "forceType": "PULL",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Use the corner of a masonry wall, never the door leaf. Stand facing the doorway with the wall on your right and the middle of your body about 25 cm from it, so your right shoulder just clears the wall. Turn your chest about 35 degrees toward the wall. Reach forward and slightly across your body with your LEFT arm, the one away from the wall, and curl your fingers around the corner at shoulder height, thumb up and palm facing the wall.",
+   "First, pull hard for 10 s almost upright, then at 10 degrees. If anything creaks, gives way or your finger slips, use the Knee-Grip Lean-Back Curl. Do not use it if the corner is only drywall or a folding door. Go barefoot, never in socks, with your whole feet on the floor, on a dry floor with clear space behind you.",
+   "With your feet on the doorway line, lean back along the wall with your body straight until the arm is straight. Keep the elbow high, at shoulder height, pointing forward, and bend it, pulling your head toward your hand. The arm must not drop. The heel of your hand comes off the wall as the elbow bends, but your fingers stay hooked.",
+   "Straighten the arm over 3 seconds. Moving your feet further into the doorway makes it heavier. Finish your reps and switch sides, using the other side of the doorway, with the wall on your left and your right arm working. If your grip starts to fail, end the set. The free hand will not stop a fall."
+  ],
+  "instructionsPt": [
+   "Use o canto de uma parede de alvenaria, nunca a folha da porta. Fique de frente para o vão, com a parede à sua direita e o meio do corpo a uns 25 cm dela, de modo que o ombro direito passe rente à parede sem encostar. Vire o peito uns 35 graus para a parede. Leve o braço ESQUERDO, o que está longe da parede, à frente e um pouco cruzado na frente do corpo, e curve os dedos em volta do canto na altura do ombro, com o polegar para cima e a palma voltada para a parede.",
+   "Antes, puxe forte por 10 s quase em pé e depois a 10 graus. Se algo estalar, ceder ou o dedo escapar, use a Rosca com Tronco Inclinado Segurando o Joelho. Não use se o canto for só de drywall ou de porta sanfonada. Fique descalço, nunca de meia, com os pés inteiros no chão, em piso seco e com espaço livre atrás.",
+   "Com os pés na linha do vão, incline para trás ao longo da parede, com o corpo reto, até o braço estender. Mantenha o cotovelo alto, na altura do ombro, apontando para a frente, e dobre-o, puxando a cabeça em direção à mão. O braço não deve baixar. A base da mão sai da parede conforme o cotovelo dobra, mas os dedos continuam presos no canto.",
+   "Estenda o braço em 3 segundos. Levar os pés mais para dentro do vão deixa mais pesado. Termine as repetições e troque de lado, usando o outro lado do vão, com a parede à esquerda e o braço direito trabalhando. Se a pegada começar a falhar, encerre a série. A mão livre não segura uma queda."
+  ],
+  "primaryMuscles": [
+   "biceps"
+  ],
+  "secondaryMuscles": [
+   "forearms",
+   "posterior-deltoid"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/door-frame-one-arm-curl/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/door-frame-one-arm-curl/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/door-frame-one-arm-curl/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:chair-sit-to-stand",
+  "slug": "chair-sit-to-stand",
+  "nameEn": "Chair Sit-to-Stand",
+  "namePt": "Sentar e Levantar da Cadeira",
+  "category": "STRENGTH",
+  "movementPattern": "squat",
+  "equipment": "bodyweight",
+  "difficulty": "BEGINNER",
+  "forceType": "PUSH",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Stand in front of a stable chair pushed against a wall, with your feet shoulder width apart and your arms forward. A four-legged chair, no wheels, no hinge, with the front legs in line with the seat edge.",
+   "Bend your hips and knees and sit down over 3 seconds, lightly touching the middle of the seat lightly without dropping.",
+   "Lean slightly forward, push your whole foot into the floor and stand up without using your hands.",
+   "If you cannot stand up without your hands, add a firm cushion to raise the seat."
+  ],
+  "instructionsPt": [
+   "Fique em frente a uma cadeira firme encostada na parede, com os pés na largura dos ombros e os braços à frente. Cadeira de quatro pés, sem rodinhas, sem dobradiça e com os pés da frente alinhados à borda do assento.",
+   "Dobre o quadril e os joelhos e sente em 3 segundos, tocando o meio do assento de leve, sem despencar.",
+   "Incline um pouco o tronco, empurre o pé inteiro contra o chão e levante sem usar as mãos.",
+   "Se não conseguir levantar sem as mãos, coloque uma almofada firme para subir o assento."
+  ],
+  "primaryMuscles": [
+   "quadriceps"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "hamstrings"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/chair-sit-to-stand/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/chair-sit-to-stand/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/chair-sit-to-stand/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:tempo-squat",
+  "slug": "tempo-squat",
+  "nameEn": "Slow Squat with Pause",
+  "namePt": "Agachamento Lento com Pausa",
+  "category": "STRENGTH",
+  "movementPattern": "squat",
+  "equipment": "bodyweight",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PUSH",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Stand with your feet shoulder width apart and your arms forward.",
+   "Take 4 full seconds to lower yourself until your thighs are just below parallel.",
+   "Hold the bottom still for 2 seconds without bouncing.",
+   "Stand up in about 1 second, stopping just short of straight knees so your legs never rest, and start the next slow descent."
+  ],
+  "instructionsPt": [
+   "Fique com os pés na largura dos ombros e os braços à frente.",
+   "Leve 4 segundos inteiros para descer até as coxas passarem um pouco da linha paralela.",
+   "Segure 2 segundos parado embaixo, sem quicar.",
+   "Suba em cerca de 1 segundo, parando pouco antes de estender os joelhos para as pernas não descansarem, e comece a próxima descida lenta."
+  ],
+  "primaryMuscles": [
+   "quadriceps"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "hamstrings"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/tempo-squat/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/tempo-squat/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/tempo-squat/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:split-squat",
+  "slug": "split-squat",
+  "nameEn": "Stationary Split Squat",
+  "namePt": "Afundo Estático",
+  "category": "STRENGTH",
+  "movementPattern": "lunge",
+  "equipment": "bodyweight",
+  "difficulty": "BEGINNER",
+  "forceType": "PUSH",
+  "laterality": "UNILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Stand in a long split stance, with the front foot flat and the back heel lifted. Hold a wall lightly if you need balance.",
+   "Without moving your feet, lower your back knee to just above the floor, keeping your trunk nearly upright.",
+   "Push through the whole front foot to come up, stopping just short of a straight front knee.",
+   "Finish all reps on one leg, then switch."
+  ],
+  "instructionsPt": [
+   "Fique em passada longa, com o pé da frente inteiro no chão e o calcanhar de trás levantado. Apoie a mão de leve na parede se precisar de equilíbrio.",
+   "Sem mexer os pés, desça o joelho de trás até quase tocar o chão, com o tronco quase ereto.",
+   "Empurre o pé da frente inteiro para subir, parando pouco antes de estender o joelho da frente.",
+   "Termine as repetições com uma perna e troque."
+  ],
+  "primaryMuscles": [
+   "quadriceps"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "hamstrings"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/split-squat/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/split-squat/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/split-squat/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:bulgarian-split-squat",
+  "slug": "bulgarian-split-squat",
+  "nameEn": "Bulgarian Split Squat on a Chair",
+  "namePt": "Agachamento Búlgaro na Cadeira",
+  "category": "STRENGTH",
+  "movementPattern": "lunge",
+  "equipment": "bodyweight",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PUSH",
+  "laterality": "UNILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Push a stable chair against a wall or use the sofa. Stand about a long step in front of it and put the top of your back foot on the seat.",
+   "Lower your back knee toward the floor over 3 seconds with your front foot flat and your trunk nearly upright. Leaning forward a little moves more of the work to the glutes.",
+   "Stop when your front thigh is parallel or a little below, without bouncing.",
+   "Push through the whole front foot to come up, stopping just short of a straight knee. Finish all reps, then switch."
+  ],
+  "instructionsPt": [
+   "Encoste uma cadeira firme na parede ou use o sofá. Fique a um passo longo de distância e apoie o peito do pé de trás no assento.",
+   "Desça o joelho de trás em direção ao chão em 3 segundos, com o pé da frente inteiro no chão e o tronco quase ereto. Inclinar um pouco o tronco passa mais trabalho para o glúteo.",
+   "Pare quando a coxa da frente ficar paralela ou um pouco abaixo, sem quicar.",
+   "Empurre o pé da frente inteiro para subir, parando pouco antes de estender o joelho. Termine as repetições e troque."
+  ],
+  "primaryMuscles": [
+   "quadriceps"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "hamstrings",
+   "adductors"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/bulgarian-split-squat/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/bulgarian-split-squat/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/bulgarian-split-squat/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:skater-squat",
+  "slug": "skater-squat",
+  "nameEn": "Skater Squat",
+  "namePt": "Agachamento Patinador",
+  "category": "STRENGTH",
+  "movementPattern": "squat",
+  "equipment": "bodyweight",
+  "difficulty": "ADVANCED",
+  "forceType": "PUSH",
+  "laterality": "UNILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Stand on one leg with the other knee bent so that foot is behind you, off the floor. Put a folded towel under where the back knee will land and reach your arms forward.",
+   "Bend the standing leg over 3 seconds, leaning your trunk forward, until the back knee just touches the towel.",
+   "Do not drop onto the knee. Touch softly, without resting.",
+   "Push through the whole standing foot to come back up. Finish all reps, then switch."
+  ],
+  "instructionsPt": [
+   "Fique em uma perna, com o outro joelho dobrado e o pé para trás, fora do chão. Coloque uma toalha dobrada onde o joelho de trás vai encostar e estenda os braços à frente.",
+   "Dobre a perna de apoio em 3 segundos, inclinando o tronco para a frente, até o joelho de trás tocar a toalha.",
+   "Não caia sobre o joelho. Encoste de leve, sem descansar.",
+   "Empurre o pé de apoio inteiro para voltar. Termine as repetições e troque."
+  ],
+  "primaryMuscles": [
+   "quadriceps"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "hamstrings",
+   "adductors"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/skater-squat/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/skater-squat/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/skater-squat/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:wall-sissy-squat",
+  "slug": "wall-sissy-squat",
+  "nameEn": "Door-Frame Sissy Squat",
+  "namePt": "Sissy Squat com Apoio no Batente",
+  "category": "STRENGTH",
+  "movementPattern": "knee-extension",
+  "equipment": "bodyweight",
+  "difficulty": "ADVANCED",
+  "forceType": "PUSH",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Stand in the doorway, side-on to it, with the door frame just behind your right hip; with no frame, stay on the Slow Squat with Pause. Reach back with your right hand and rest your palm lightly on the edge of the frame at hip height, fingers relaxed and pointing down and out. Feet hip-width apart, heels lifted.",
+   "Keep your hips extended and lean your trunk back as your knees travel forward and down. Your body stays in one line from knees to shoulders.",
+   "Lower over 3 to 4 seconds, at most to about 100 degrees at the knees, and stop before any pain.",
+   "Push through the balls of your feet to bring your knees back and rise. Skip this if you have a knee complaint and use the Bulgarian split squat."
+  ],
+  "instructionsPt": [
+   "Fique dentro do vão, de lado para ele, com o batente logo atrás do quadril direito; sem batente, fique no Agachamento Lento com Pausa. Leve a mão direita para trás e apoie a palma de leve na quina do batente, na altura do quadril, com os dedos relaxados, apontando para baixo e para fora. Pés na largura do quadril e calcanhares levantados.",
+   "Mantenha o quadril estendido e incline o tronco para trás enquanto os joelhos vão para a frente e para baixo. O corpo fica em linha dos joelhos aos ombros.",
+   "Desça em 3 a 4 segundos, no máximo com os joelhos a uns 100 graus, e pare antes de qualquer dor.",
+   "Empurre com a frente dos pés para trazer os joelhos de volta e subir. Pule este exercício se tiver queixa no joelho, e use o agachamento búlgaro."
+  ],
+  "primaryMuscles": [
+   "quadriceps"
+  ],
+  "secondaryMuscles": [
+   "abdominals"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/wall-sissy-squat/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/wall-sissy-squat/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/wall-sissy-squat/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:single-leg-rdl",
+  "slug": "single-leg-rdl",
+  "nameEn": "Bodyweight Single-Leg Romanian Deadlift",
+  "namePt": "Stiff Unilateral com Peso do Corpo",
+  "category": "STRENGTH",
+  "movementPattern": "hinge",
+  "equipment": "bodyweight",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PULL",
+  "laterality": "UNILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Stand on one leg with the knee slightly bent. Touch a wall with a fingertip at first if you need balance.",
+   "Push your hips straight back and tip your trunk forward as a single line with your free leg, over 3 seconds.",
+   "Stop when your trunk and free leg are close to horizontal or when your back would start to round.",
+   "Drive your standing foot into the floor and squeeze your glute to come up. Finish all reps, then switch."
+  ],
+  "instructionsPt": [
+   "Fique em uma perna, com o joelho levemente dobrado. Encoste a ponta de um dedo na parede no início, se precisar de equilíbrio.",
+   "Leve o quadril para trás e incline o tronco, em linha com a perna livre, em 3 segundos.",
+   "Pare quando o tronco e a perna livre chegarem perto da horizontal ou quando as costas começarem a curvar.",
+   "Empurre o pé de apoio contra o chão e contraia o glúteo para subir. Termine as repetições e troque."
+  ],
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "spinal-erectors"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/single-leg-rdl/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/single-leg-rdl/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/single-leg-rdl/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:heel-elevated-bridge",
+  "slug": "heel-elevated-bridge",
+  "nameEn": "Heels-on-Chair Bridge",
+  "namePt": "Ponte com Calcanhares na Cadeira",
+  "category": "STRENGTH",
+  "movementPattern": "hip-extension",
+  "equipment": "bodyweight",
+  "difficulty": "BEGINNER",
+  "forceType": "PUSH",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Lie on your back with your heels on the seat of a stable chair or the sofa, knees only slightly bent, arms by your sides.",
+   "Pull your toes up and dig your heels into the seat.",
+   "Lift your hips until your body is straight from shoulders to knees, pause, and squeeze.",
+   "Lower over 3 seconds until your hips almost touch the floor. Straighter knees put more work on the hamstrings."
+  ],
+  "instructionsPt": [
+   "Deite de costas, com os calcanhares no assento de uma cadeira firme ou do sofá, os joelhos só um pouco dobrados e os braços ao lado do corpo.",
+   "Puxe as pontas dos pés para cima e crave os calcanhares no assento.",
+   "Suba o quadril até o corpo ficar reto dos ombros aos joelhos, pare e contraia.",
+   "Desça em 3 segundos até o quadril quase tocar o chão. Quanto mais retos os joelhos, mais trabalho para o posterior."
+  ],
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "spinal-erectors"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/heel-elevated-bridge/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/heel-elevated-bridge/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/heel-elevated-bridge/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:bridge-heel-walkout",
+  "slug": "bridge-heel-walkout",
+  "nameEn": "Bridge Heel Walkout",
+  "namePt": "Ponte com Caminhada dos Calcanhares",
+  "category": "STRENGTH",
+  "movementPattern": "knee-flexion",
+  "equipment": "bodyweight",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PULL",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Lie on your back in a glute bridge with your hips high and your knees bent about 90 degrees.",
+   "Keep your hips up and take small steps away with your heels, one foot at a time, until your legs are nearly straight.",
+   "Take small steps back in to the start, still with your hips up and without touching the floor.",
+   "Count one rep as out and back. This works on any floor, including carpet, so use it when the towel will not slide."
+  ],
+  "instructionsPt": [
+   "Deite de costas em posição de ponte, com o quadril alto e os joelhos a cerca de 90 graus.",
+   "Mantenha o quadril alto e dê passinhos com os calcanhares para longe, um pé de cada vez, até as pernas ficarem quase retas.",
+   "Volte com passinhos até o início, ainda com o quadril alto, sem encostar no chão.",
+   "Conte uma repetição na ida e volta. Funciona em qualquer piso, até carpete, então use quando a toalha não deslizar."
+  ],
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "spinal-erectors",
+   "calves"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/bridge-heel-walkout/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/bridge-heel-walkout/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/bridge-heel-walkout/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:towel-leg-curl-eccentric",
+  "slug": "towel-leg-curl-eccentric",
+  "nameEn": "Eccentric Towel Leg Curl",
+  "namePt": "Flexora Excêntrica Deslizando com Toalha",
+  "category": "STRENGTH",
+  "movementPattern": "knee-flexion",
+  "equipment": "bodyweight",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PULL",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "On a smooth floor, lie on your back with both heels on a folded towel, knees bent, and lift your hips into a bridge.",
+   "Keep your hips up and slide the towel away over 4 to 5 seconds until your legs are nearly straight.",
+   "Lower your hips to the floor once your legs are out.",
+   "With your hips down, pull the towel back in with your heels, lift your hips, and repeat. All the hard work is on the way out. This does not work on carpet; use the bridge heel walkout there."
+  ],
+  "instructionsPt": [
+   "Em piso liso, deite de costas com os dois calcanhares sobre a toalha dobrada, os joelhos dobrados, e suba o quadril em ponte.",
+   "Mantenha o quadril alto e deslize a toalha para longe em 4 a 5 segundos, até as pernas ficarem quase retas.",
+   "Com as pernas estendidas, abaixe o quadril até o chão.",
+   "Com o quadril no chão, puxe a toalha de volta com os calcanhares, suba o quadril e repita. O esforço pesado é todo na ida. Em carpete não funciona; nesse caso, use a ponte com caminhada dos calcanhares."
+  ],
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "calves"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/towel-leg-curl-eccentric/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/towel-leg-curl-eccentric/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/towel-leg-curl-eccentric/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:towel-leg-curl",
+  "slug": "towel-leg-curl",
+  "nameEn": "Towel Slide Leg Curl",
+  "namePt": "Flexora Deslizante com Toalha",
+  "category": "STRENGTH",
+  "movementPattern": "knee-flexion",
+  "equipment": "bodyweight",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PULL",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "On a smooth floor, lie on your back with both heels on a folded towel, legs nearly straight, and lift your hips just off the floor, keeping your body as straight as you can.",
+   "Pull your heels toward your hips, dragging the towel in, while lifting your hips higher.",
+   "Stop when your knees are bent about 90 degrees and squeeze for a moment.",
+   "Slide back out over 3 seconds without letting your hips touch the floor. This is the closest home move to a lying leg curl machine."
+  ],
+  "instructionsPt": [
+   "Em piso liso, deite de costas com os dois calcanhares sobre a toalha dobrada e as pernas quase retas, e tire o quadril do chão, mantendo o corpo o mais reto possível.",
+   "Puxe os calcanhares em direção ao quadril, trazendo a toalha, enquanto sobe mais o quadril.",
+   "Pare com os joelhos a cerca de 90 graus e contraia por um instante.",
+   "Deslize de volta em 3 segundos, sem o quadril encostar no chão. É o movimento caseiro mais parecido com a mesa flexora."
+  ],
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "calves"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/towel-leg-curl/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/towel-leg-curl/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/towel-leg-curl/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:single-leg-towel-leg-curl",
+  "slug": "single-leg-towel-leg-curl",
+  "nameEn": "Single-Leg Towel Slide Leg Curl",
+  "namePt": "Flexora Deslizante Unilateral com Toalha",
+  "category": "STRENGTH",
+  "movementPattern": "knee-flexion",
+  "equipment": "bodyweight",
+  "difficulty": "ADVANCED",
+  "forceType": "PULL",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "On a smooth floor, lie on your back with one heel on a folded towel and the other leg pointing up to the ceiling.",
+   "Lift your hips and keep them level.",
+   "Slide the towel away over 4 seconds until your working leg is nearly straight, then pull your heel back toward your hip as your hips rise.",
+   "Finish all reps, then switch. If you cannot pull back in, do only the slide-out and reset with both feet."
+  ],
+  "instructionsPt": [
+   "Em piso liso, deite de costas com um calcanhar sobre a toalha dobrada e a outra perna apontando para o teto.",
+   "Suba o quadril e mantenha-o nivelado.",
+   "Deslize a toalha para longe em 4 segundos até a perna que trabalha ficar quase reta, e puxe o calcanhar de volta em direção ao quadril enquanto o quadril sobe.",
+   "Termine as repetições e troque. Se não conseguir voltar puxando, faça só a ida e reinicie com os dois pés."
+  ],
+  "primaryMuscles": [
+   "hamstrings"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "calves"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/single-leg-towel-leg-curl/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/single-leg-towel-leg-curl/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/single-leg-towel-leg-curl/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:sofa-hip-thrust",
+  "slug": "sofa-hip-thrust",
+  "nameEn": "Sofa Hip Thrust",
+  "namePt": "Elevação Pélvica no Sofá",
+  "category": "STRENGTH",
+  "movementPattern": "hip-extension",
+  "equipment": "bodyweight",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PUSH",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Use a sofa with a fixed seat, never the retractable part, pushed against the wall, and take loose cushions off the edge. Sit on the floor with your upper back against the front edge of a sofa, feet flat and knees bent.",
+   "Drive through your heels and lift your hips until your thighs and trunk make a flat table, with your shins vertical.",
+   "Tuck your chin slightly and squeeze your glutes for 2 seconds at the top, without arching your lower back.",
+   "Lower over 3 seconds until your hips almost touch the floor."
+  ],
+  "instructionsPt": [
+   "Use um sofá de assento fixo, nunca a parte retrátil, encostado na parede, e tire almofadas soltas da borda. Sente no chão com a parte de cima das costas apoiada na borda do sofá, os pés no chão e os joelhos dobrados.",
+   "Empurre os calcanhares e suba o quadril até as coxas e o tronco formarem uma mesa, com as canelas na vertical.",
+   "Traga um pouco o queixo para o peito e contraia o glúteo por 2 segundos em cima, sem arquear a lombar.",
+   "Desça em 3 segundos até o quadril quase tocar o chão."
+  ],
+  "primaryMuscles": [
+   "glutes"
+  ],
+  "secondaryMuscles": [
+   "hamstrings",
+   "quadriceps"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/sofa-hip-thrust/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/sofa-hip-thrust/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/sofa-hip-thrust/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:single-leg-sofa-hip-thrust",
+  "slug": "single-leg-sofa-hip-thrust",
+  "nameEn": "Single-Leg Sofa Hip Thrust",
+  "namePt": "Elevação Pélvica Unilateral no Sofá",
+  "category": "STRENGTH",
+  "movementPattern": "hip-extension",
+  "equipment": "bodyweight",
+  "difficulty": "ADVANCED",
+  "forceType": "PUSH",
+  "laterality": "UNILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Use a sofa with a fixed seat, never the retractable part, pushed against the wall, and take loose cushions off the edge. Set up like the sofa hip thrust and lift one knee toward your chest.",
+   "Drive through the heel on the floor and lift your hips until your working thigh and trunk are flat. Keep your hips level.",
+   "Hold for 2 seconds at the top.",
+   "Lower over 3 seconds until your hips almost touch the floor. Finish all reps, then switch."
+  ],
+  "instructionsPt": [
+   "Use um sofá de assento fixo, nunca a parte retrátil, encostado na parede, e tire almofadas soltas da borda. Monte a elevação pélvica no sofá e leve um joelho em direção ao peito.",
+   "Empurre o calcanhar que está no chão e suba o quadril até a coxa que trabalha e o tronco ficarem retos. Mantenha o quadril nivelado.",
+   "Segure 2 segundos em cima.",
+   "Desça em 3 segundos até o quadril quase tocar o chão. Termine as repetições e troque."
+  ],
+  "primaryMuscles": [
+   "glutes"
+  ],
+  "secondaryMuscles": [
+   "hamstrings",
+   "quadriceps"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/single-leg-sofa-hip-thrust/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/single-leg-sofa-hip-thrust/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/single-leg-sofa-hip-thrust/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:side-lying-hip-abduction",
+  "slug": "side-lying-hip-abduction",
+  "nameEn": "Side-Lying Hip Abduction",
+  "namePt": "Abdução de Quadril Deitado de Lado",
+  "category": "STRENGTH",
+  "movementPattern": "hip-abduction",
+  "equipment": "bodyweight",
+  "difficulty": "BEGINNER",
+  "forceType": "PULL",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Lie on your side in a straight line, with the bottom knee bent for balance and your head on your bottom arm.",
+   "Rotate the top leg slightly inward so the heel leads and the toes point forward.",
+   "Lift the top leg straight up, slightly behind your body line, over 2 seconds. Do not roll your hips backward.",
+   "Hold for 1 second and lower over 3 seconds, not resting on the bottom leg. Finish all reps, then switch."
+  ],
+  "instructionsPt": [
+   "Deite de lado, em linha reta, com o joelho de baixo dobrado para dar equilíbrio e a cabeça sobre o braço de baixo.",
+   "Gire um pouco a perna de cima para dentro, com o calcanhar um pouco mais alto que os dedos, que apontam para a frente.",
+   "Suba a perna de cima, um pouco atrás da linha do corpo, em 2 segundos. Não role o quadril para trás.",
+   "Segure 1 segundo e desça em 3 segundos, sem descansar sobre a perna de baixo. Termine as repetições e troque."
+  ],
+  "primaryMuscles": [
+   "abductors"
+  ],
+  "secondaryMuscles": [
+   "glutes"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/side-lying-hip-abduction/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/side-lying-hip-abduction/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/side-lying-hip-abduction/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:side-plank-hip-abduction",
+  "slug": "side-plank-hip-abduction",
+  "nameEn": "Side Plank Hip Abduction",
+  "namePt": "Prancha Lateral com Abdução de Quadril",
+  "category": "STRENGTH",
+  "movementPattern": "hip-abduction",
+  "equipment": "bodyweight",
+  "difficulty": "ADVANCED",
+  "forceType": "PULL",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Set up a side plank on your forearm with your elbow under your shoulder and your feet stacked, in a straight line from head to feet.",
+   "Keep your hips up and lift your top leg straight up over 2 seconds, heel leading.",
+   "Hold for 1 second without letting your bottom hip drop.",
+   "Lower over 2 seconds until your feet almost touch. Finish all reps, then switch. To scale down, put your bottom knee on the floor."
+  ],
+  "instructionsPt": [
+   "Monte a prancha lateral no antebraço, com o cotovelo abaixo do ombro e os pés empilhados, em linha reta da cabeça aos pés.",
+   "Mantenha o quadril alto e suba a perna de cima em 2 segundos, com o calcanhar um pouco mais alto que os dedos.",
+   "Segure 1 segundo, sem deixar o quadril de baixo cair.",
+   "Desça em 2 segundos até os pés quase se tocarem. Termine as repetições e troque. Para facilitar, apoie o joelho de baixo no chão."
+  ],
+  "primaryMuscles": [
+   "abductors"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "obliques",
+   "abdominals"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/side-plank-hip-abduction/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/side-plank-hip-abduction/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/side-plank-hip-abduction/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:bodyweight-calf-raise",
+  "slug": "bodyweight-calf-raise",
+  "nameEn": "Standing Calf Raise, Both Legs",
+  "namePt": "Panturrilha em Pé com Peso do Corpo",
+  "category": "STRENGTH",
+  "movementPattern": "plantar-flexion",
+  "equipment": "bodyweight",
+  "difficulty": "BEGINNER",
+  "forceType": "PUSH",
+  "laterality": "BILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Stand on the floor with your feet hip width apart and your fingertips on a wall for balance.",
+   "Rise onto the balls of your feet as high as you can over 1 second, with your knees straight.",
+   "Hold the top for 2 seconds.",
+   "Lower your heels over 3 seconds until they touch the floor, and go again without bouncing."
+  ],
+  "instructionsPt": [
+   "Fique em pé no chão, com os pés na largura do quadril e as pontas dos dedos na parede para equilíbrio.",
+   "Suba na ponta dos pés o máximo que puder em 1 segundo, com os joelhos retos.",
+   "Segure 2 segundos em cima.",
+   "Desça os calcanhares em 3 segundos até tocarem o chão e repita, sem quicar."
+  ],
+  "primaryMuscles": [
+   "calves"
+  ],
+  "secondaryMuscles": [],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/bodyweight-calf-raise/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/bodyweight-calf-raise/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/bodyweight-calf-raise/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:single-leg-calf-raise",
+  "slug": "single-leg-calf-raise",
+  "nameEn": "Single-Leg Calf Raise",
+  "namePt": "Panturrilha Unilateral no Chão",
+  "category": "STRENGTH",
+  "movementPattern": "plantar-flexion",
+  "equipment": "bodyweight",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PUSH",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Stand on one foot on the floor with your fingertips on a wall for balance and the other foot lifted behind you.",
+   "Rise as high as you can over 1 second, with the knee straight.",
+   "Hold the top for 2 seconds.",
+   "Lower your heel over 3 seconds until it touches the floor. Finish all reps, then switch."
+  ],
+  "instructionsPt": [
+   "Fique em um pé só no chão, com as pontas dos dedos na parede para equilíbrio e o outro pé levantado atrás.",
+   "Suba o máximo que puder em 1 segundo, com o joelho reto.",
+   "Segure 2 segundos em cima.",
+   "Desça o calcanhar em 3 segundos até tocar o chão. Termine as repetições e troque."
+  ],
+  "primaryMuscles": [
+   "calves"
+  ],
+  "secondaryMuscles": [],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/single-leg-calf-raise/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/single-leg-calf-raise/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/single-leg-calf-raise/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:step-single-leg-calf-raise",
+  "slug": "step-single-leg-calf-raise",
+  "nameEn": "Single-Leg Step Calf Raise",
+  "namePt": "Panturrilha Unilateral no Degrau",
+  "category": "STRENGTH",
+  "movementPattern": "plantar-flexion",
+  "equipment": "bodyweight",
+  "difficulty": "ADVANCED",
+  "forceType": "PUSH",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Stand on one foot with the ball of the foot on a stair step or a thick stable book, with your heel hanging off and a hand on the wall or rail.",
+   "Lower your heel below the step over 3 seconds and pause for 2 seconds in the stretch.",
+   "Rise as high as you can, knee straight, and hold the top for 1 second.",
+   "Finish all reps, then switch. Without a step, stay on the floor version with a longer pause."
+  ],
+  "instructionsPt": [
+   "Fique em um pé só, com a frente do pé em um degrau ou em um livro grosso e firme, o calcanhar para fora e a mão na parede ou no corrimão.",
+   "Desça o calcanhar abaixo do degrau em 3 segundos e pare 2 segundos no alongamento.",
+   "Suba o máximo que puder, com o joelho reto, e segure 1 segundo em cima.",
+   "Termine as repetições e troque. Sem degrau, fique na versão no chão, com uma pausa mais longa."
+  ],
+  "primaryMuscles": [
+   "calves"
+  ],
+  "secondaryMuscles": [],
+  "media": [
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/step-single-leg-calf-raise/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/step-single-leg-calf-raise/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/step-single-leg-calf-raise/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:lying-leg-raise",
+  "slug": "lying-leg-raise",
+  "nameEn": "Lying Leg Raise",
+  "namePt": "Elevação de Pernas Deitado",
+  "category": "STRENGTH",
+  "movementPattern": "trunk-flexion",
+  "equipment": "bodyweight",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PULL",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Lie on your back on the floor with your legs straight and your hands by your hips, palms down.",
+   "Press your lower back into the floor and keep it there.",
+   "Raise your straight legs until they are vertical, then curl your hips a little off the floor at the top.",
+   "Lower your legs over 3 seconds and stop just before your lower back starts to lift. Stop higher up if your back arches. Bending your knees makes it easier."
+  ],
+  "instructionsPt": [
+   "Deite de costas no chão, com as pernas retas e as mãos ao lado do quadril, com as palmas para baixo.",
+   "Pressione a lombar no chão e mantenha-a assim.",
+   "Suba as pernas retas até a vertical e, em cima, tire um pouco o quadril do chão.",
+   "Desça as pernas em 3 segundos e pare antes de a lombar começar a descolar. Pare mais alto se as costas arquearem. Dobrar os joelhos facilita."
+  ],
+  "primaryMuscles": [
+   "abdominals"
+  ],
+  "secondaryMuscles": [
+   "quadriceps"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/lying-leg-raise/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/lying-leg-raise/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/lying-leg-raise/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:kneeling-towel-rollout",
+  "slug": "kneeling-towel-rollout",
+  "nameEn": "Kneeling Towel Rollout",
+  "namePt": "Rollout de Joelhos com Toalha",
+  "category": "STRENGTH",
+  "movementPattern": "anti-extension",
+  "equipment": "bodyweight",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PULL",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "On a smooth floor, kneel with both hands flat on a folded towel, arms straight, shoulders over your hands.",
+   "Tuck your pelvis so your lower back cannot sag and brace your abs.",
+   "Slide the towel forward over 3 seconds as your hips and chest move forward together, only as far as you can keep your lower back from arching.",
+   "Press the towel down and pull it back to the start with your abs and lats. On carpet, use the plank instead."
+  ],
+  "instructionsPt": [
+   "Em piso liso, ajoelhe com as duas mãos sobre a toalha dobrada, os braços retos e os ombros acima das mãos.",
+   "Encaixe o quadril para a lombar não ceder e firme o abdômen.",
+   "Deslize a toalha para a frente em 3 segundos, com o quadril e o peito avançando juntos, só até onde a lombar não arquear.",
+   "Pressione a toalha e traga-a de volta com o abdômen e o dorsal. Em carpete, use a prancha."
+  ],
+  "primaryMuscles": [
+   "abdominals"
+  ],
+  "secondaryMuscles": [
+   "lats",
+   "anterior-deltoid",
+   "triceps"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/kneeling-towel-rollout/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/kneeling-towel-rollout/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/kneeling-towel-rollout/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:towel-body-saw",
+  "slug": "towel-body-saw",
+  "nameEn": "Towel Body Saw",
+  "namePt": "Prancha Serrote com Toalha",
+  "category": "STRENGTH",
+  "movementPattern": "anti-extension",
+  "equipment": "bodyweight",
+  "difficulty": "ADVANCED",
+  "forceType": "PUSH",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "On a smooth floor, set up a forearm plank with your toes on a folded towel.",
+   "Tuck your pelvis so your lower back cannot sag.",
+   "Push your forearms into the floor and slide your whole body backward over 2 to 3 seconds, with your elbows staying in place and your arms reaching more overhead.",
+   "Pull your body forward until your shoulders are back over your elbows. On carpet, use a slow plank with a maximal squeeze instead."
+  ],
+  "instructionsPt": [
+   "Em piso liso, monte a prancha nos antebraços com as pontas dos pés sobre a toalha dobrada.",
+   "Encaixe o quadril para a lombar não ceder.",
+   "Pressione os antebraços no chão e deslize o corpo inteiro para trás em 2 a 3 segundos, com os cotovelos no mesmo lugar e os braços indo mais acima da cabeça.",
+   "Puxe o corpo para a frente até os ombros voltarem a ficar sobre os cotovelos. Em carpete, faça prancha lenta com contração máxima."
+  ],
+  "primaryMuscles": [
+   "abdominals"
+  ],
+  "secondaryMuscles": [
+   "anterior-deltoid",
+   "triceps",
+   "lats"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/towel-body-saw/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/towel-body-saw/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/towel-body-saw/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:side-plank-hip-dip",
+  "slug": "side-plank-hip-dip",
+  "nameEn": "Side Plank Hip Dip",
+  "namePt": "Prancha Lateral com Descida do Quadril",
+  "category": "STRENGTH",
+  "movementPattern": "anti-rotation",
+  "equipment": "bodyweight",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PULL",
+  "laterality": "UNILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Set up a side plank on your forearm with your elbow under your shoulder and your feet stacked.",
+   "Lower your bottom hip over 2 seconds until it almost touches the floor.",
+   "Lift your hip as high as you can, higher than a straight line, by squeezing your bottom obliques.",
+   "Finish all reps, then switch sides. To scale down, put your bottom knee on the floor."
+  ],
+  "instructionsPt": [
+   "Monte a prancha lateral no antebraço, com o cotovelo abaixo do ombro e os pés empilhados.",
+   "Desça o quadril de baixo em 2 segundos até quase tocar o chão.",
+   "Suba o quadril o mais alto que puder, acima da linha reta, contraindo o oblíquo de baixo.",
+   "Termine as repetições e troque de lado. Para facilitar, apoie o joelho de baixo no chão."
+  ],
+  "primaryMuscles": [
+   "obliques"
+  ],
+  "secondaryMuscles": [
+   "abdominals",
+   "abductors"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/side-plank-hip-dip/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/side-plank-hip-dip/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/side-plank-hip-dip/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:bird-dog",
+  "slug": "bird-dog",
+  "nameEn": "Bird Dog",
+  "namePt": "Perdigueiro",
+  "category": "STRENGTH",
+  "movementPattern": "hip-extension",
+  "equipment": "bodyweight",
+  "difficulty": "BEGINNER",
+  "forceType": "PULL",
+  "laterality": "ALTERNATING",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Get on your hands and knees, hands under your shoulders and knees under your hips, with a flat back.",
+   "Reach one arm forward and the opposite leg back until both are level with your trunk, without rotating your hips or arching your lower back.",
+   "Hold for 2 seconds, with your abs and glute tight.",
+   "Return with control without touching the knee down hard, then switch sides."
+  ],
+  "instructionsPt": [
+   "Fique em quatro apoios, com as mãos abaixo dos ombros, os joelhos abaixo do quadril e as costas retas.",
+   "Estenda um braço à frente e a perna oposta para trás, até ficarem na linha do tronco, sem girar o quadril nem arquear a lombar.",
+   "Segure 2 segundos, com o abdômen e o glúteo firmes.",
+   "Volte com controle, sem bater o joelho, e troque de lado."
+  ],
+  "primaryMuscles": [
+   "spinal-erectors"
+  ],
+  "secondaryMuscles": [
+   "glutes",
+   "posterior-deltoid",
+   "abdominals"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/bird-dog/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/bird-dog/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/bird-dog/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:sofa-reverse-hyperextension",
+  "slug": "sofa-reverse-hyperextension",
+  "nameEn": "Sofa Reverse Hyperextension",
+  "namePt": "Hiperextensão Reversa no Sofá",
+  "category": "STRENGTH",
+  "movementPattern": "hip-extension",
+  "equipment": "bodyweight",
+  "difficulty": "INTERMEDIATE",
+  "forceType": "PUSH",
+  "laterality": "BILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Use a sofa with a fixed seat, never the retractable part, pushed against the wall, and take loose cushions off the edge. Lie with your trunk face down on the seat of a stable sofa, slightly diagonal so your head clears the backrest, with your hip bones at the front edge, and hold the sofa with both hands. Your toes start just touching the floor.",
+   "Keep your legs almost straight and squeeze your glutes to lift them together until they are level with your trunk. Do not go higher.",
+   "Hold for 1 second.",
+   "Lower over 3 seconds until your toes just touch the floor. If your lower back complains, shorten the range or use the superman."
+  ],
+  "instructionsPt": [
+   "Use um sofá de assento fixo, nunca a parte retrátil, encostado na parede, e tire almofadas soltas da borda. Deite de bruços com o tronco sobre o assento de um sofá firme, um pouco na diagonal para a cabeça não bater no encosto, com os ossos do quadril na borda da frente, e segure no sofá com as duas mãos. As pontas dos pés começam encostadas no chão.",
+   "Mantenha as pernas quase retas e contraia o glúteo para subir as duas juntas até a linha do tronco. Não passe disso.",
+   "Segure 1 segundo.",
+   "Desça em 3 segundos até as pontas dos pés tocarem o chão. Se a lombar reclamar, encurte o movimento ou faça o superman."
+  ],
+  "primaryMuscles": [
+   "glutes"
+  ],
+  "secondaryMuscles": [
+   "hamstrings",
+   "spinal-erectors"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/sofa-reverse-hyperextension/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/sofa-reverse-hyperextension/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/sofa-reverse-hyperextension/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower-home:step-back-burpee",
+  "slug": "step-back-burpee",
+  "nameEn": "Step-Back Burpee",
+  "namePt": "Burpee sem Salto",
+  "category": "CARDIO",
+  "movementPattern": null,
+  "equipment": "bodyweight",
+  "difficulty": "BEGINNER",
+  "forceType": "PUSH",
+  "laterality": "ALTERNATING",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Stand tall. Bend down and put your hands on the floor in front of your feet.",
+   "Step one foot back and then the other until you are in a straight plank.",
+   "Step the feet back in one at a time, and stand up tall with your arms overhead.",
+   "Keep moving at a steady rhythm. It makes no jumping noise, so it works in an apartment."
+  ],
+  "instructionsPt": [
+   "Fique em pé. Agache e apoie as mãos no chão, na frente dos pés.",
+   "Leve um pé para trás e depois o outro, até formar uma prancha reta.",
+   "Volte os pés um de cada vez e levante, com os braços acima da cabeça.",
+   "Mantenha um ritmo constante. Não faz barulho de salto, então funciona em apartamento."
+  ],
+  "primaryMuscles": [
+   "full-body"
+  ],
+  "secondaryMuscles": [
+   "chest",
+   "quadriceps",
+   "abdominals"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/step-back-burpee/fig-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/step-back-burpee/fig-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/step-back-burpee/fig-loop.webp",
+    "width": 640,
+    "height": 480,
+    "sortOrder": 2
+   }
+  ]
  }
 ]

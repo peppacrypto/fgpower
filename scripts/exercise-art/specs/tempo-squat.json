@@ -1,0 +1,176 @@
+{
+ "slug": "tempo-squat",
+ "camera": {
+  "az": 62,
+  "el": 8
+ },
+ "muscles": [
+  "quadriceps",
+  "glutes"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.915,
+     -0.02
+    ],
+    "pitch": 5
+   },
+   "neck": {
+    "flex": -3
+   },
+   "armL": {
+    "fk": {
+     "flex": 90,
+     "abd": 5,
+     "elbow": 5
+    },
+    "curl": 0.32,
+    "fingers": [
+     0,
+     0.12,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0.12
+    ]
+   },
+   "armR": {
+    "fk": {
+     "flex": 90,
+     "abd": 5,
+     "elbow": 5
+    },
+    "curl": 0.32,
+    "fingers": [
+     0,
+     0.12,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0.12
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.2,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": 18,
+    "pole": [
+     0.38,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.2,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": -18,
+    "pole": [
+     -0.38,
+     0,
+     1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.44,
+     -0.22
+    ],
+    "pitch": 33
+   },
+   "spine": {
+    "flex": -6
+   },
+   "neck": {
+    "flex": -14
+   },
+   "armL": {
+    "fk": {
+     "flex": 118,
+     "abd": 5,
+     "elbow": 5
+    },
+    "curl": 0.32,
+    "fingers": [
+     0,
+     0.12,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0.12
+    ]
+   },
+   "armR": {
+    "fk": {
+     "flex": 118,
+     "abd": 5,
+     "elbow": 5
+    },
+    "curl": 0.32,
+    "fingers": [
+     0,
+     0.12,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0.12
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.2,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": 18,
+    "pole": [
+     0.38,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.2,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": -18,
+    "pole": [
+     -0.38,
+     0,
+     1
+    ]
+   }
+  }
+ },
+ "timing": {
+  "there": 4,
+  "holdEnd": 2,
+  "back": 1,
+  "holdStart": 0
+ }
+}

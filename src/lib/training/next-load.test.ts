@@ -231,3 +231,72 @@ describe("adviseNextLoad with extra load on the body's own weight", () => {
     expect(a).toMatchObject({ kind: "increase", loadKg: 12.5 });
   });
 });
+
+describe("adviseNextLoad with the body as the only load", () => {
+  const grid = { kind: "BODYWEIGHT" } as Parameters<typeof adviseNextLoad>[0]["grid"];
+  const range = { repMin: 8, repMax: 15, rirTarget: 2 };
+  const bw = (reps: number[], rir: number | null = 2) => reps.map((r) => ({ weightKg: 0, reps: r, rir }));
+  const rungs = { harder: "Flexão Lenta", easier: "Flexão com Joelhos no Chão" };
+
+  it("asks for one more rep inside the range and names the next variation", () => {
+    const a = adviseNextLoad({ strategy: "DOUBLE", prescribed: range, sets: bw([11, 10, 10]), grid, rungs });
+    expect(a).toMatchObject({ kind: "hold", targetReps: 11, headline: "Busque 11 reps" });
+    expect(a?.reason).toContain("Passe para Flexão Lenta quando fizer 15 reps em todas");
+  });
+
+  it("moves to the harder variation by name once every set reaches the top", () => {
+    const a = adviseNextLoad({ strategy: "DOUBLE", prescribed: range, sets: bw([15, 15, 16]), grid, rungs });
+    expect(a).toMatchObject({ kind: "increase", targetReps: null, headline: "↑ Passe para Flexão Lenta" });
+  });
+
+  it("holds at the top when the sets were past the RIR target", () => {
+    const a = adviseNextLoad({ strategy: "DOUBLE", prescribed: range, sets: bw([15, 15, 15], 0), grid, rungs });
+    expect(a).toMatchObject({ kind: "hold", targetReps: 15 });
+    expect(a?.headline).toContain("Repita 15 reps");
+  });
+
+  it("moves up early when the sets stop far from failure", () => {
+    const a = adviseNextLoad({ strategy: "DOUBLE", prescribed: range, sets: bw([10, 10, 10], 6), grid, rungs });
+    expect(a).toMatchObject({ kind: "increase", headline: "↑ Passe para Flexão Lenta" });
+    expect(a?.reason).toContain("longe da falha");
+  });
+
+  it("steps down by name when most sets fall below the range", () => {
+    const a = adviseNextLoad({ strategy: "DOUBLE", prescribed: range, sets: bw([6, 5, 8]), grid, rungs });
+    expect(a).toMatchObject({ kind: "decrease", targetReps: null, headline: "↓ Passe para Flexão com Joelhos no Chão" });
+  });
+
+  it("asks to complete the range when only one set fell short", () => {
+    const a = adviseNextLoad({ strategy: "DOUBLE", prescribed: range, sets: bw([9, 8, 7]), grid, rungs });
+    expect(a).toMatchObject({ kind: "hold", targetReps: 8, headline: "Complete 8 reps" });
+  });
+
+  it("still progresses with no ladder: more reps, never a variation it can't name", () => {
+    const top = adviseNextLoad({ strategy: "DOUBLE", prescribed: range, sets: bw([15, 15, 15]), grid });
+    expect(top).toMatchObject({ kind: "hold", targetReps: 16, headline: "Busque 16 reps" });
+    const low = adviseNextLoad({ strategy: "DOUBLE", prescribed: range, sets: bw([5, 5, 5]), grid });
+    expect(low).toMatchObject({ kind: "hold", targetReps: 8, headline: "Busque 8 reps" });
+  });
+
+  it("stays silent for a manual program (yoga, mobility) and with nothing done", () => {
+    expect(adviseNextLoad({ strategy: "MANUAL", prescribed: range, sets: bw([10, 10]), grid, rungs })).toBeNull();
+    expect(adviseNextLoad({ strategy: "DOUBLE", prescribed: range, sets: bw([0, 0]), grid, rungs })).toBeNull();
+  });
+
+  it("does not speak for a loaded exercise logged without a load", () => {
+    expect(
+      adviseNextLoad({ strategy: "DOUBLE", prescribed: range, sets: bw([10, 10]), grid: additiveGrid(2.5), rungs }),
+    ).toBeNull();
+  });
+
+  it("treats extra load on a bodyweight move as a load, not as a ladder", () => {
+    const a = adviseNextLoad({
+      strategy: "DOUBLE",
+      prescribed: range,
+      sets: [{ weightKg: 5, reps: 15, rir: 2 }],
+      grid,
+      rungs,
+    });
+    expect(a?.headline ?? "").not.toContain("Passe para");
+  });
+});

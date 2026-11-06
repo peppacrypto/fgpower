@@ -54,3 +54,7 @@ src/generated/
 # database backups (scripts/backup-prod.sh) — never commit a dump
 /backups
 *.dump
+
+# Exercise figure tooling: rebuilt from assets and specs
+/scripts/exercise-art/build/
+/scripts/exercise-art/out*/

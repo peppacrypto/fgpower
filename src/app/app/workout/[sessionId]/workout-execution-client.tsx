@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter, unstable_isUnrecognizedActionError, unstable_rethrow } from "next/navigation";
 import { ArrowLeftRight, ChevronDown, ChevronLeft, ChevronRight, Info, Pencil, Plus, SkipForward, Undo2, X } from "lucide-react";
 import { GLoad, GNotes, GCheck } from "@/components/ui/glyph";
+import { ExerciseDemo, FIGURE_BACKGROUND } from "@/components/exercises/exercise-demo";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils/cn";
 import { useTopBarInset } from "@/components/ui/use-scroll-inset";
@@ -2270,22 +2271,24 @@ export function WorkoutExecutionClient({
             <ChevronLeft className="size-5" />
           </button>
           <div className="flex min-w-0 flex-1 items-center gap-3 px-1">
-            {/* The photo opens the technique sheet too (W-025). */}
-            <button
-              type="button"
-              onClick={() => setTechniqueOpen(true)}
-              aria-haspopup="dialog"
-              aria-label={`Ver técnica de ${exercise.exerciseName}`}
-              className="relative size-12 shrink-0 overflow-hidden rounded-[var(--radius-md)] bg-surface-2"
-            >
-              {exercise.imageUrl ? (
-                <Image src={exercise.imageUrl} alt="" fill sizes="48px" className="object-cover" />
-              ) : (
-                <span className="flex h-full items-center justify-center text-muted">
-                  <GLoad className="size-5" />
-                </span>
-              )}
-            </button>
+            {/* The photo opens the technique sheet too (W-025). The figure, when there is one, is below. */}
+            {exercise.demoUrl ? null : (
+              <button
+                type="button"
+                onClick={() => setTechniqueOpen(true)}
+                aria-haspopup="dialog"
+                aria-label={`Ver técnica de ${exercise.exerciseName}`}
+                className="relative size-12 shrink-0 overflow-hidden rounded-[var(--radius-md)] bg-surface-2"
+              >
+                {exercise.imageUrl ? (
+                  <Image src={exercise.imageUrl} alt="" fill sizes="48px" className="object-cover" />
+                ) : (
+                  <span className="flex h-full items-center justify-center text-muted">
+                    <GLoad className="size-5" />
+                  </span>
+                )}
+              </button>
+            )}
             {/* The target: sets × reps, then the effort and the rest. */}
             <p className="flex min-w-0 flex-1 flex-wrap gap-x-2 gap-y-0.5 text-[13px] text-muted">
               <span className="text-base font-semibold leading-snug text-foreground">
@@ -2333,6 +2336,25 @@ export function WorkoutExecutionClient({
             <ChevronRight className="size-5" />
           </button>
         </div>
+
+        {/* A move learned at home has no one to copy: its figure shows the movement right here. */}
+        {exercise.demoUrl ? (
+          <button
+            type="button"
+            onClick={() => setTechniqueOpen(true)}
+            aria-haspopup="dialog"
+            aria-label={`Ver técnica de ${exercise.exerciseName}`}
+            className={cn("mt-2 block w-full overflow-hidden rounded-[var(--radius-md)]", FIGURE_BACKGROUND)}
+            data-workout-demo
+          >
+            <ExerciseDemo
+              src={exercise.demoUrl}
+              still={exercise.demoStillUrl}
+              alt={`${exercise.exerciseName} — demonstração do movimento`}
+              className="mx-auto h-[clamp(150px,24dvh,220px)] w-auto max-w-full object-contain [mask-image:linear-gradient(90deg,transparent,#000_14%,#000_86%,transparent)]"
+            />
+          </button>
+        ) : null}
 
         {/* The exercise's tools: technique, swap, skip, note — each opens in place or in a sheet. */}
         <div className="mt-2 flex flex-wrap items-center gap-x-3">

@@ -1,0 +1,207 @@
+{
+ "slug": "single-leg-towel-leg-curl",
+ "camera": {
+  "az": 70,
+  "el": 10
+ },
+ "muscles": [
+  "hamstrings"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.29,
+     -0.03
+    ],
+    "pitch": -116
+   },
+   "neck": {
+    "flex": 25
+   },
+   "armL": {
+    "pos": [
+     0.27,
+     0,
+     0.105
+    ],
+    "contact": true,
+    "fingers": [
+     0.08,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     1,
+     0.5,
+     -0.2
+    ],
+    "curl": -0.3
+   },
+   "armR": {
+    "pos": [
+     -0.27,
+     0,
+     0.105
+    ],
+    "contact": true,
+    "fingers": [
+     -0.08,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -1,
+     0.5,
+     -0.2
+    ],
+    "curl": -0.3
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0.012,
+     0.54
+    ],
+    "anchor": "heel",
+    "pitch": -15,
+    "pole": [
+     0,
+     1,
+     0.2
+    ]
+   },
+   "legR": {
+    "fk": {
+     "flex": 64,
+     "abd": 0,
+     "knee": 6
+    },
+    "foot": {
+     "pitch": -10
+    }
+   },
+   "props": [
+    {
+     "type": "towel",
+     "pos": [
+      0.11,
+      0,
+      0.59
+     ],
+     "width": 0.3,
+     "depth": 0.3
+    }
+   ]
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.165,
+     0
+    ],
+    "pitch": -100
+   },
+   "neck": {
+    "flex": 7
+   },
+   "armL": {
+    "pos": [
+     0.27,
+     0,
+     0.105
+    ],
+    "contact": true,
+    "fingers": [
+     0.08,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     1,
+     0.5,
+     -0.2
+    ],
+    "curl": -0.3
+   },
+   "armR": {
+    "pos": [
+     -0.27,
+     0,
+     0.105
+    ],
+    "contact": true,
+    "fingers": [
+     -0.08,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -1,
+     0.5,
+     -0.2
+    ],
+    "curl": -0.3
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0.017,
+     0.87
+    ],
+    "anchor": "heel",
+    "pitch": -60,
+    "pole": [
+     0,
+     1,
+     0.2
+    ]
+   },
+   "legR": {
+    "fk": {
+     "flex": 80,
+     "abd": 0,
+     "knee": 6
+    },
+    "foot": {
+     "pitch": -10
+    }
+   },
+   "props": [
+    {
+     "type": "towel",
+     "pos": [
+      0.11,
+      0,
+      0.92
+     ],
+     "width": 0.3,
+     "depth": 0.3
+    }
+   ]
+  }
+ },
+ "muscleSide": "L"
+}

@@ -99,6 +99,7 @@ export const ACCESS_EQUIPMENT: Record<string, readonly string[] | null> = {
  */
 const SURE_EQUIPMENT: Record<string, readonly string[]> = {
   MINIMAL: ["bodyweight", "none", "resistance-band"],
+  HOME_BODYWEIGHT: ["bodyweight", "none"],
 };
 
 /**
@@ -108,6 +109,7 @@ const SURE_EQUIPMENT: Record<string, readonly string[]> = {
  */
 const OWNED_GEAR: Record<string, readonly string[]> = {
   HOME_DUMBBELLS: ["dumbbell"],
+  MINIMAL: ["resistance-band", "kettlebell", "dumbbell"],
 };
 
 /**
@@ -239,7 +241,7 @@ export function scoreTemplate(profile: RecommendProfile, t: RecommendableTemplat
   score -= 20 * unsureGear(profile.equipmentAccess, t).length;
   // Gear they surely have, left unused (a dumbbell owner offered the floor-only express plan).
   const owned = OWNED_GEAR[profile.equipmentAccess];
-  if (owned && t.equipmentIds && !t.equipmentIds.some((id) => owned.includes(id))) score -= 4;
+  if (owned && t.equipmentIds && !t.equipmentIds.some((id) => owned.includes(id))) score -= 20;
   // Exercises to swap away from first ("Com adaptação").
   if (templateFit(profile.equipmentAccess, t) === "adaptable") score -= 20;
 

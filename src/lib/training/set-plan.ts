@@ -9,7 +9,7 @@
 
 import { formatKg } from "@/lib/utils/format";
 import { additiveGrid, isLoadable, nextLoadDown, snapLoadNearest, type LoadGrid } from "./load-grid";
-import { adviseNextLoad, type NextLoadAdvice } from "./next-load";
+import { adviseNextLoad, type ExerciseRungs, type NextLoadAdvice } from "./next-load";
 import type { ProgressionStrategy } from "./progression";
 
 export type SetKind = "WARMUP" | "PRESCRIBED" | "EXTRA";
@@ -178,6 +178,10 @@ const TIMED_HOLD_SLUGS = new Set([
   "plank",
   "side-bridge",
   "plate-pinch",
+  // Home programs: timed on every row that uses them.
+  "wall-lateral-press-hold",
+  "step-back-burpee",
+  "mountain-climbers",
   // Mobility / flexibility static holds (seconds, not reps) used by the mobility
   // programs. Listed here so slug-only surfaces (exercise history, progress, PR
   // list) also print "30 s" — the workout screen and dossier already know from
@@ -444,6 +448,8 @@ export function adviceFromLastTime(input: {
   repCap?: number;
   /** A hold (isTimedHold): the advice speaks in seconds (adviceInSeconds). */
   timed?: boolean;
+  /** A bodyweight exercise's neighbours on its ladder, by name. */
+  rungs?: ExerciseRungs | null;
   /**
    * Today's workout is a deload — planned or applied (W-128). Light on purpose:
    * hold the last (pre-deload) loads, never prescribe more (A-005). The raised
@@ -462,9 +468,26 @@ export function adviceFromLastTime(input: {
     .map(({ weightKg, reps, rir }) => ({ weightKg, reps, rir }));
   if (sets.length === 0) return null;
   // A deload or a return from a break never prescribes an increase — the one rule
-  // behind both (A-005, A-006). With no load to move (bodyweight) there is nothing
-  // to ease, so fall through to the normal advice.
+  // behind both (A-005, A-006). With no load to move (bodyweight) the same rule
+  // keeps the variation and stops earlier.
   const topLoad = Math.max(0, ...sets.map((s) => s.weightKg ?? 0));
+  if ((input.deload || input.easeBack) && topLoad <= 0 && input.grid.kind === "BODYWEIGHT" && input.strategy !== "MANUAL") {
+    return input.deload
+      ? {
+          kind: "hold",
+          loadKg: 0,
+          targetReps: null,
+          headline: "Semana leve · mesma variação",
+          reason: "Deload: pare com 3+ reps na reserva, nada de trocar para uma mais difícil esta semana.",
+        }
+      : {
+          kind: "hold",
+          loadKg: 0,
+          targetReps: null,
+          headline: "Volta após pausa · mesma variação",
+          reason: "Comece leve após a pausa: 1 rep a mais na reserva (RIR +1).",
+        };
+  }
   if ((input.deload || input.easeBack) && topLoad > 0) {
     if (input.deload) {
       const held: NextLoadAdvice = {
@@ -497,6 +520,7 @@ export function adviceFromLastTime(input: {
     grid: input.grid,
     repCap: input.repCap,
     timed: input.timed,
+    rungs: input.rungs,
   });
   const asked = input.lastTime?.prescribedSets ?? 0;
   // All the sets come first — before a load increase, and before the extra reps
@@ -504,6 +528,15 @@ export function adviceFromLastTime(input: {
   const earning = advice?.kind === "hold" && advice.targetReps != null && advice.targetReps > input.prescribed.repMax;
   if ((advice?.kind === "increase" || earning) && sets.length < asked) {
     const top = Math.max(...sets.map((s) => s.weightKg ?? 0));
+    if (top <= 0) {
+      return {
+        kind: "hold",
+        loadKg: 0,
+        targetReps: null,
+        headline: `Faça as ${asked} séries`,
+        reason: `Na última vez: ${sets.length} de ${asked} séries. Mude de variação quando fizer todas`,
+      };
+    }
     return {
       kind: "hold",
       loadKg: top,
@@ -519,14 +552,15 @@ export function adviceFromLastTime(input: {
  * A loaded hold's advice (plate-pinch with 10 kg) in seconds: next-load
  * words its targets as reps ("Mantenha 10 kg · busque 25 reps"), which on a
  * hold are the seconds held — "Mantenha 10 kg · segure 25 s", "Suba a carga
- * quando segurar 30 s em todas". A bodyweight hold gets no advice at all
- * (next-load has no load to move).
+ * quando segurar 30 s em todas". A bodyweight hold reads the same way
+ * ("Segure 35 s", "Passe para Prancha Lateral quando segurar 45 s em todas").
  */
 export function adviceInSeconds<A extends Pick<NextLoadAdvice, "headline" | "reason">>(advice: A): A {
   const toSeconds = (text: string) =>
     text
       .replace(/\b(\d+\+?) reps\b/g, `$1${NBSP}s`)
       .replace(/\b(?:busque|complete) (\d+\+?\u00a0s)/g, "segure $1")
+      .replace(/\b(?:Busque|Complete) (\d+\+?\u00a0s)/g, "Segure $1")
       .replace(/\bfizer (\d)/g, "segurar $1")
       .replace(/\bFez (\d)/g, "Segurou $1")
       .replace(/\bmais reps\b/g, "mais segundos");

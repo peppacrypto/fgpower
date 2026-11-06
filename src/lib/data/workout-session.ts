@@ -1,3 +1,4 @@
+import { exerciseMediaParts } from "@/lib/exercises/demo";
 import "server-only";
 import { prisma } from "@/lib/db";
 import { GYM_LOADS_SELECT } from "@/lib/training/exercise-load";
@@ -68,7 +69,8 @@ export async function getWorkoutSessionForExecution(sessionId: string) {
             select: {
               slug: true,
               namePt: true,
-              media: { take: 1, orderBy: { sortOrder: "asc" }, select: { url: true } },
+              // Its thumbnail comes first; the home library's figure is among the rest (a few rows per exercise).
+              media: { orderBy: { sortOrder: "asc" }, select: { url: true, kind: true } },
               // Bodyweight exercises log reps only: kg is extra load (set-plan isBodyweightExercise).
               // A stretch (category STRETCHING) is loadless too, so its category is read here.
               category: true,
@@ -629,7 +631,14 @@ export async function getExerciseOptions(
 export interface TechniqueSheet {
   slug: string;
   namePt: string;
-  images: { start: string | null; end: string | null };
+  images: {
+    start: string | null;
+    end: string | null;
+    /** The exercise's own figure (the home library): a looped animation, or a still for a hold. */
+    demo: string | null;
+    /** The frame shown in the animation's place to someone who asks for less motion. */
+    still: string | null;
+  };
   /** Optional YouTube tutorial (currently yoga poses) + its channel credit. */
   videoUrl: string | null;
   videoCredit: string | null;
@@ -661,12 +670,14 @@ export async function getTechniqueSheet(exerciseId: string): Promise<TechniqueSh
   const coaching = parseExerciseContent(e.contentPt)?.coachingCues.filter((c) => c.trim() !== "") ?? [];
   const steps = parseInstructions(e.instructionsPt).filter((c) => c.trim() !== "");
   const cues = coaching.length > 0 ? coaching : steps;
-  const start = e.media.find((m) => m.kind === "IMAGE_START") ?? e.media[0] ?? null;
-  const end = e.media.find((m) => m.kind === "IMAGE_END") ?? e.media.find((m) => m !== start) ?? null;
+  const { demo, still, frames } = exerciseMediaParts(e.media);
+  // A hold's only picture is its demo too: exerciseMediaParts leaves no frames, and it is still the start.
+  const start = frames.find((m) => m.kind === "IMAGE_START") ?? frames[0] ?? still ?? null;
+  const end = frames.find((m) => m.kind === "IMAGE_END") ?? frames.find((m) => m !== start) ?? null;
   return {
     slug: e.slug,
     namePt: e.namePt,
-    images: { start: start?.url ?? null, end: end?.url ?? null },
+    images: { start: start?.url ?? null, end: end?.url ?? null, demo: demo?.url ?? null, still: still?.url ?? null },
     videoUrl: e.videoUrl,
     videoCredit: e.videoCredit,
     cues: cues.slice(0, 3),

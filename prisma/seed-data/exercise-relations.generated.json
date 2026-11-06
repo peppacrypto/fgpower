@@ -711,31 +711,31 @@
   "slug": "bodyweight-squat",
   "relatedSlug": "leg-press",
   "kind": "ALTERNATIVE",
-  "sortOrder": 0
+  "sortOrder": 100
  },
  {
   "slug": "bodyweight-squat",
   "relatedSlug": "dumbbell-squat",
   "kind": "ALTERNATIVE",
-  "sortOrder": 1
+  "sortOrder": 101
  },
  {
   "slug": "bodyweight-squat",
   "relatedSlug": "sit-squats",
   "kind": "REGRESSION",
-  "sortOrder": 2
+  "sortOrder": 102
  },
  {
   "slug": "bodyweight-squat",
   "relatedSlug": "bodyweight-walking-lunge",
   "kind": "PROGRESSION",
-  "sortOrder": 3
+  "sortOrder": 103
  },
  {
   "slug": "bodyweight-squat",
   "relatedSlug": "goblet-squat",
   "kind": "PROGRESSION",
-  "sortOrder": 4
+  "sortOrder": 104
  },
  {
   "slug": "bodyweight-walking-lunge",
@@ -813,37 +813,37 @@
   "slug": "butt-lift-bridge",
   "relatedSlug": "physioball-hip-bridge",
   "kind": "ALTERNATIVE",
-  "sortOrder": 0
+  "sortOrder": 100
  },
  {
   "slug": "butt-lift-bridge",
   "relatedSlug": "one-legged-cable-kickback",
   "kind": "ALTERNATIVE",
-  "sortOrder": 1
+  "sortOrder": 101
  },
  {
   "slug": "butt-lift-bridge",
   "relatedSlug": "hip-lift-with-band",
   "kind": "ALTERNATIVE",
-  "sortOrder": 2
+  "sortOrder": 102
  },
  {
   "slug": "butt-lift-bridge",
   "relatedSlug": "pelvic-tilt-into-bridge",
   "kind": "REGRESSION",
-  "sortOrder": 3
+  "sortOrder": 103
  },
  {
   "slug": "butt-lift-bridge",
   "relatedSlug": "single-leg-glute-bridge",
   "kind": "PROGRESSION",
-  "sortOrder": 4
+  "sortOrder": 104
  },
  {
   "slug": "butt-lift-bridge",
   "relatedSlug": "barbell-hip-thrust",
   "kind": "PROGRESSION",
-  "sortOrder": 5
+  "sortOrder": 105
  },
  {
   "slug": "butterfly",
@@ -1269,73 +1269,67 @@
   "slug": "crunches",
   "relatedSlug": "exercise-ball-crunch",
   "kind": "ALTERNATIVE",
-  "sortOrder": 0
+  "sortOrder": 100
  },
  {
   "slug": "crunches",
   "relatedSlug": "reverse-crunch",
   "kind": "ALTERNATIVE",
-  "sortOrder": 1
+  "sortOrder": 101
  },
  {
   "slug": "crunches",
   "relatedSlug": "crunch-legs-on-exercise-ball",
   "kind": "ALTERNATIVE",
-  "sortOrder": 2
+  "sortOrder": 102
  },
  {
   "slug": "crunches",
   "relatedSlug": "dead-bug",
   "kind": "REGRESSION",
-  "sortOrder": 3
+  "sortOrder": 103
  },
  {
   "slug": "crunches",
   "relatedSlug": "cable-crunch",
   "kind": "PROGRESSION",
-  "sortOrder": 4
+  "sortOrder": 104
  },
  {
   "slug": "crunches",
   "relatedSlug": "weighted-crunches",
   "kind": "PROGRESSION",
-  "sortOrder": 5
+  "sortOrder": 105
  },
  {
   "slug": "dead-bug",
   "relatedSlug": "plank",
   "kind": "ALTERNATIVE",
-  "sortOrder": 0
+  "sortOrder": 100
  },
  {
   "slug": "dead-bug",
   "relatedSlug": "pallof-press",
   "kind": "ALTERNATIVE",
-  "sortOrder": 1
+  "sortOrder": 101
  },
  {
   "slug": "dead-bug",
   "relatedSlug": "side-bridge",
   "kind": "ALTERNATIVE",
-  "sortOrder": 2
- },
- {
-  "slug": "dead-bug",
-  "relatedSlug": "pelvic-tilt-into-bridge",
-  "kind": "REGRESSION",
-  "sortOrder": 3
+  "sortOrder": 102
  },
  {
   "slug": "dead-bug",
   "relatedSlug": "barbell-ab-rollout-on-knees",
   "kind": "PROGRESSION",
-  "sortOrder": 4
+  "sortOrder": 104
  },
  {
   "slug": "dead-bug",
   "relatedSlug": "ab-roller",
   "kind": "PROGRESSION",
-  "sortOrder": 5
+  "sortOrder": 105
  },
  {
   "slug": "dips-triceps-version",
@@ -3705,31 +3699,25 @@
   "slug": "plank",
   "relatedSlug": "side-bridge",
   "kind": "ALTERNATIVE",
-  "sortOrder": 0
+  "sortOrder": 100
  },
  {
   "slug": "plank",
   "relatedSlug": "pallof-press",
   "kind": "ALTERNATIVE",
-  "sortOrder": 1
- },
- {
-  "slug": "plank",
-  "relatedSlug": "dead-bug",
-  "kind": "REGRESSION",
-  "sortOrder": 2
+  "sortOrder": 101
  },
  {
   "slug": "plank",
   "relatedSlug": "barbell-ab-rollout-on-knees",
   "kind": "PROGRESSION",
-  "sortOrder": 3
+  "sortOrder": 103
  },
  {
   "slug": "plank",
   "relatedSlug": "suspended-fallout",
   "kind": "PROGRESSION",
-  "sortOrder": 4
+  "sortOrder": 104
  },
  {
   "slug": "plate-pinch",
@@ -3993,97 +3981,85 @@
   "slug": "push-ups-close-triceps-position",
   "relatedSlug": "close-grip-barbell-bench-press",
   "kind": "ALTERNATIVE",
-  "sortOrder": 0
+  "sortOrder": 100
  },
  {
   "slug": "push-ups-close-triceps-position",
   "relatedSlug": "bench-dips",
   "kind": "ALTERNATIVE",
-  "sortOrder": 1
+  "sortOrder": 101
  },
  {
   "slug": "push-ups-close-triceps-position",
   "relatedSlug": "close-grip-dumbbell-press",
   "kind": "ALTERNATIVE",
-  "sortOrder": 2
+  "sortOrder": 102
  },
  {
   "slug": "push-ups-close-triceps-position",
   "relatedSlug": "incline-push-up-close-grip",
   "kind": "REGRESSION",
-  "sortOrder": 3
+  "sortOrder": 103
  },
  {
   "slug": "push-ups-close-triceps-position",
   "relatedSlug": "dips-triceps-version",
   "kind": "PROGRESSION",
-  "sortOrder": 4
+  "sortOrder": 104
  },
  {
   "slug": "push-ups-with-feet-elevated",
   "relatedSlug": "incline-dumbbell-press",
   "kind": "ALTERNATIVE",
-  "sortOrder": 0
+  "sortOrder": 100
  },
  {
   "slug": "push-ups-with-feet-elevated",
   "relatedSlug": "barbell-incline-bench-press-medium-grip",
   "kind": "ALTERNATIVE",
-  "sortOrder": 1
+  "sortOrder": 101
  },
  {
   "slug": "push-ups-with-feet-elevated",
   "relatedSlug": "leverage-incline-chest-press",
   "kind": "ALTERNATIVE",
-  "sortOrder": 2
- },
- {
-  "slug": "push-ups-with-feet-elevated",
-  "relatedSlug": "pushups",
-  "kind": "REGRESSION",
-  "sortOrder": 3
+  "sortOrder": 102
  },
  {
   "slug": "push-ups-with-feet-elevated",
   "relatedSlug": "push-ups-with-feet-on-an-exercise-ball",
   "kind": "PROGRESSION",
-  "sortOrder": 4
+  "sortOrder": 104
  },
  {
   "slug": "pushups",
   "relatedSlug": "barbell-bench-press-medium-grip",
   "kind": "ALTERNATIVE",
-  "sortOrder": 0
+  "sortOrder": 100
  },
  {
   "slug": "pushups",
   "relatedSlug": "dumbbell-bench-press",
   "kind": "ALTERNATIVE",
-  "sortOrder": 1
+  "sortOrder": 101
  },
  {
   "slug": "pushups",
   "relatedSlug": "push-up-wide",
   "kind": "ALTERNATIVE",
-  "sortOrder": 2
+  "sortOrder": 102
  },
  {
   "slug": "pushups",
   "relatedSlug": "incline-push-up",
   "kind": "REGRESSION",
-  "sortOrder": 3
- },
- {
-  "slug": "pushups",
-  "relatedSlug": "push-ups-with-feet-elevated",
-  "kind": "PROGRESSION",
-  "sortOrder": 4
+  "sortOrder": 103
  },
  {
   "slug": "pushups",
   "relatedSlug": "plyo-push-up",
   "kind": "PROGRESSION",
-  "sortOrder": 5
+  "sortOrder": 105
  },
  {
   "slug": "reverse-barbell-curl",
@@ -4119,37 +4095,37 @@
   "slug": "reverse-crunch",
   "relatedSlug": "cable-reverse-crunch",
   "kind": "ALTERNATIVE",
-  "sortOrder": 0
+  "sortOrder": 100
  },
  {
   "slug": "reverse-crunch",
   "relatedSlug": "crunches",
   "kind": "ALTERNATIVE",
-  "sortOrder": 1
+  "sortOrder": 101
  },
  {
   "slug": "reverse-crunch",
   "relatedSlug": "ab-crunch-machine",
   "kind": "ALTERNATIVE",
-  "sortOrder": 2
+  "sortOrder": 102
  },
  {
   "slug": "reverse-crunch",
   "relatedSlug": "dead-bug",
   "kind": "REGRESSION",
-  "sortOrder": 3
+  "sortOrder": 103
  },
  {
   "slug": "reverse-crunch",
   "relatedSlug": "decline-reverse-crunch",
   "kind": "PROGRESSION",
-  "sortOrder": 4
+  "sortOrder": 104
  },
  {
   "slug": "reverse-crunch",
   "relatedSlug": "hanging-leg-raise",
   "kind": "PROGRESSION",
-  "sortOrder": 5
+  "sortOrder": 105
  },
  {
   "slug": "reverse-flyes",
@@ -4605,25 +4581,25 @@
   "slug": "side-bridge",
   "relatedSlug": "pallof-press",
   "kind": "ALTERNATIVE",
-  "sortOrder": 0
+  "sortOrder": 100
  },
  {
   "slug": "side-bridge",
   "relatedSlug": "dumbbell-side-bend",
   "kind": "ALTERNATIVE",
-  "sortOrder": 1
+  "sortOrder": 101
  },
  {
   "slug": "side-bridge",
   "relatedSlug": "plank",
   "kind": "REGRESSION",
-  "sortOrder": 2
+  "sortOrder": 102
  },
  {
   "slug": "side-bridge",
   "relatedSlug": "push-up-to-side-plank",
   "kind": "PROGRESSION",
-  "sortOrder": 3
+  "sortOrder": 103
  },
  {
   "slug": "side-lateral-raise",
@@ -4665,31 +4641,31 @@
   "slug": "single-leg-glute-bridge",
   "relatedSlug": "one-legged-cable-kickback",
   "kind": "ALTERNATIVE",
-  "sortOrder": 0
+  "sortOrder": 100
  },
  {
   "slug": "single-leg-glute-bridge",
   "relatedSlug": "barbell-glute-bridge",
   "kind": "ALTERNATIVE",
-  "sortOrder": 1
+  "sortOrder": 101
  },
  {
   "slug": "single-leg-glute-bridge",
   "relatedSlug": "hip-lift-with-band",
   "kind": "ALTERNATIVE",
-  "sortOrder": 2
+  "sortOrder": 102
  },
  {
   "slug": "single-leg-glute-bridge",
   "relatedSlug": "butt-lift-bridge",
   "kind": "REGRESSION",
-  "sortOrder": 3
+  "sortOrder": 103
  },
  {
   "slug": "single-leg-glute-bridge",
   "relatedSlug": "barbell-hip-thrust",
   "kind": "PROGRESSION",
-  "sortOrder": 4
+  "sortOrder": 104
  },
  {
   "slug": "sled-push",
@@ -5830,5 +5806,1049 @@
   "relatedSlug": "seated-dumbbell-palms-up-wrist-curl",
   "kind": "REGRESSION",
   "sortOrder": 4
+ },
+ {
+  "slug": "archer-push-up",
+  "relatedSlug": "push-ups-with-feet-elevated",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "archer-push-up",
+  "relatedSlug": "kneeling-towel-chest-slide",
+  "kind": "REGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "assisted-nordic-curl",
+  "relatedSlug": "single-leg-towel-leg-curl",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "assisted-nordic-curl",
+  "relatedSlug": "single-leg-towel-leg-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "assisted-nordic-curl",
+  "relatedSlug": "towel-leg-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "bird-dog",
+  "relatedSlug": "lower-back-curl",
+  "kind": "PROGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "body-up",
+  "relatedSlug": "push-ups-close-triceps-position",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "bodyweight-calf-raise",
+  "relatedSlug": "single-leg-calf-raise",
+  "kind": "PROGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "bodyweight-squat",
+  "relatedSlug": "chair-sit-to-stand",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "bodyweight-squat",
+  "relatedSlug": "tempo-squat",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "bodyweight-squat",
+  "relatedSlug": "split-squat",
+  "kind": "PROGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "box-pistol-squat",
+  "relatedSlug": "bulgarian-split-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "box-pistol-squat",
+  "relatedSlug": "skater-squat",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "bridge-heel-walkout",
+  "relatedSlug": "heel-elevated-bridge",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "bridge-heel-walkout",
+  "relatedSlug": "towel-leg-curl-eccentric",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "bridge-heel-walkout",
+  "relatedSlug": "towel-leg-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "bridge-heel-walkout",
+  "relatedSlug": "towel-leg-curl-eccentric",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 3
+ },
+ {
+  "slug": "bulgarian-split-squat",
+  "relatedSlug": "split-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "bulgarian-split-squat",
+  "relatedSlug": "box-pistol-squat",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "bulgarian-split-squat",
+  "relatedSlug": "wall-sissy-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "butt-lift-bridge",
+  "relatedSlug": "sofa-hip-thrust",
+  "kind": "PROGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "butt-lift-bridge",
+  "relatedSlug": "sofa-hip-thrust",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "chair-sit-to-stand",
+  "relatedSlug": "bodyweight-squat",
+  "kind": "PROGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "crunches",
+  "relatedSlug": "reverse-crunch",
+  "kind": "PROGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "dead-bug",
+  "relatedSlug": "plank",
+  "kind": "PROGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "door-frame-deep-lean-row",
+  "relatedSlug": "door-frame-one-arm-row",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "door-frame-deep-lean-row",
+  "relatedSlug": "seated-towel-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "door-frame-one-arm-curl",
+  "relatedSlug": "knee-grip-lean-back-curl",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "door-frame-one-arm-curl",
+  "relatedSlug": "seated-towel-foot-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "door-frame-one-arm-row",
+  "relatedSlug": "hips-up-elbow-row",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "door-frame-one-arm-row",
+  "relatedSlug": "door-frame-deep-lean-row",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "door-frame-one-arm-row",
+  "relatedSlug": "seated-towel-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "feet-elevated-pike-push-up",
+  "relatedSlug": "pike-push-up",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "freehand-jump-squat",
+  "relatedSlug": "bodyweight-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "heel-elevated-bridge",
+  "relatedSlug": "butt-lift-bridge",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "heel-elevated-bridge",
+  "relatedSlug": "bridge-heel-walkout",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "heel-elevated-bridge",
+  "relatedSlug": "single-leg-rdl",
+  "kind": "PROGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "heel-elevated-bridge",
+  "relatedSlug": "single-leg-rdl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 3
+ },
+ {
+  "slug": "hips-up-elbow-row",
+  "relatedSlug": "supine-elbow-row",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "hips-up-elbow-row",
+  "relatedSlug": "door-frame-one-arm-row",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "incline-pike-push-up",
+  "relatedSlug": "incline-push-up",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "incline-pike-push-up",
+  "relatedSlug": "pike-push-up",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "incline-push-up",
+  "relatedSlug": "wall-push-up",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "incline-push-up",
+  "relatedSlug": "knee-push-up",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "incline-push-up",
+  "relatedSlug": "incline-pike-push-up",
+  "kind": "PROGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "knee-grip-lean-back-curl",
+  "relatedSlug": "seated-towel-foot-curl",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "knee-grip-lean-back-curl",
+  "relatedSlug": "door-frame-one-arm-curl",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "knee-push-up",
+  "relatedSlug": "incline-push-up",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "knee-push-up",
+  "relatedSlug": "pushups",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "knee-push-up",
+  "relatedSlug": "push-ups-close-triceps-position",
+  "kind": "PROGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "knee-push-up",
+  "relatedSlug": "kneeling-towel-chest-slide",
+  "kind": "PROGRESSION",
+  "sortOrder": 3
+ },
+ {
+  "slug": "kneeling-forearm-press",
+  "relatedSlug": "sofa-triceps-extension",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "kneeling-forearm-press",
+  "relatedSlug": "towel-overhead-triceps",
+  "kind": "REGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "kneeling-forearm-press",
+  "relatedSlug": "push-ups-close-triceps-position",
+  "kind": "PROGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "kneeling-towel-chest-slide",
+  "relatedSlug": "knee-push-up",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "kneeling-towel-chest-slide",
+  "relatedSlug": "archer-push-up",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "kneeling-towel-chest-slide",
+  "relatedSlug": "pushups",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "kneeling-towel-rollout",
+  "relatedSlug": "plank",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "kneeling-towel-rollout",
+  "relatedSlug": "towel-body-saw",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "kneeling-towel-rollout",
+  "relatedSlug": "plank",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "kneeling-towel-rollout",
+  "relatedSlug": "towel-body-saw",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 3
+ },
+ {
+  "slug": "lower-back-curl",
+  "relatedSlug": "bird-dog",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "lower-back-curl",
+  "relatedSlug": "superman",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "lying-leg-raise",
+  "relatedSlug": "reverse-crunch",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "mountain-climbers",
+  "relatedSlug": "step-back-burpee",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "oblique-crunches-on-the-floor",
+  "relatedSlug": "side-bridge",
+  "kind": "PROGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "pike-push-up",
+  "relatedSlug": "incline-pike-push-up",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "pike-push-up",
+  "relatedSlug": "feet-elevated-pike-push-up",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "plank",
+  "relatedSlug": "dead-bug",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "plank",
+  "relatedSlug": "kneeling-towel-rollout",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "plank",
+  "relatedSlug": "kneeling-towel-rollout",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "prone-t-raise",
+  "relatedSlug": "wall-elbow-push-off",
+  "kind": "PROGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "prone-t-raise",
+  "relatedSlug": "prone-y-raise",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "prone-towel-pulldown",
+  "relatedSlug": "towel-one-arm-pulldown",
+  "kind": "PROGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "prone-y-raise",
+  "relatedSlug": "prone-t-raise",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "prone-y-raise",
+  "relatedSlug": "wall-elbow-push-off",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "push-ups-close-triceps-position",
+  "relatedSlug": "knee-push-up",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "push-ups-close-triceps-position",
+  "relatedSlug": "kneeling-forearm-press",
+  "kind": "REGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "push-ups-close-triceps-position",
+  "relatedSlug": "body-up",
+  "kind": "PROGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "push-ups-with-feet-elevated",
+  "relatedSlug": "pushups",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "push-ups-with-feet-elevated",
+  "relatedSlug": "tempo-push-up",
+  "kind": "REGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "push-ups-with-feet-elevated",
+  "relatedSlug": "archer-push-up",
+  "kind": "PROGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "pushups",
+  "relatedSlug": "knee-push-up",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "pushups",
+  "relatedSlug": "tempo-push-up",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "pushups",
+  "relatedSlug": "push-ups-with-feet-elevated",
+  "kind": "PROGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "pushups",
+  "relatedSlug": "kneeling-towel-chest-slide",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 3
+ },
+ {
+  "slug": "reverse-crunch",
+  "relatedSlug": "crunches",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "reverse-crunch",
+  "relatedSlug": "lying-leg-raise",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "seated-knee-grip-row",
+  "relatedSlug": "supine-elbow-row",
+  "kind": "PROGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "seated-knee-grip-row",
+  "relatedSlug": "seated-towel-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "seated-thigh-lift-curl",
+  "relatedSlug": "seated-towel-foot-curl",
+  "kind": "PROGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "seated-towel-foot-curl",
+  "relatedSlug": "seated-thigh-lift-curl",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "seated-towel-foot-curl",
+  "relatedSlug": "knee-grip-lean-back-curl",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "seated-towel-foot-curl",
+  "relatedSlug": "door-frame-one-arm-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "seated-towel-row",
+  "relatedSlug": "supine-elbow-row",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "seated-towel-row",
+  "relatedSlug": "door-frame-one-arm-row",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "seated-towel-row",
+  "relatedSlug": "door-frame-one-arm-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "seated-towel-row",
+  "relatedSlug": "door-frame-deep-lean-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 3
+ },
+ {
+  "slug": "seated-towel-row",
+  "relatedSlug": "seated-knee-grip-row",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 4
+ },
+ {
+  "slug": "side-bridge",
+  "relatedSlug": "oblique-crunches-on-the-floor",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "side-bridge",
+  "relatedSlug": "side-plank-hip-dip",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "side-lying-elbow-press",
+  "relatedSlug": "wall-lateral-lean-raise",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "side-lying-elbow-press",
+  "relatedSlug": "towel-lateral-raise",
+  "kind": "REGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "side-lying-hip-abduction",
+  "relatedSlug": "side-plank-hip-abduction",
+  "kind": "PROGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "side-plank-hip-abduction",
+  "relatedSlug": "side-lying-hip-abduction",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "side-plank-hip-dip",
+  "relatedSlug": "side-bridge",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "single-leg-calf-raise",
+  "relatedSlug": "bodyweight-calf-raise",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "single-leg-calf-raise",
+  "relatedSlug": "step-single-leg-calf-raise",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "single-leg-glute-bridge",
+  "relatedSlug": "sofa-hip-thrust",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "single-leg-glute-bridge",
+  "relatedSlug": "single-leg-sofa-hip-thrust",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "single-leg-glute-bridge",
+  "relatedSlug": "single-leg-sofa-hip-thrust",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "single-leg-rdl",
+  "relatedSlug": "heel-elevated-bridge",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "single-leg-rdl",
+  "relatedSlug": "heel-elevated-bridge",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "single-leg-sofa-hip-thrust",
+  "relatedSlug": "sofa-hip-thrust",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "single-leg-sofa-hip-thrust",
+  "relatedSlug": "single-leg-glute-bridge",
+  "kind": "REGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "single-leg-sofa-hip-thrust",
+  "relatedSlug": "single-leg-glute-bridge",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "single-leg-towel-leg-curl",
+  "relatedSlug": "towel-leg-curl",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "single-leg-towel-leg-curl",
+  "relatedSlug": "assisted-nordic-curl",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "single-leg-towel-leg-curl",
+  "relatedSlug": "assisted-nordic-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "skater-squat",
+  "relatedSlug": "box-pistol-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "sofa-hip-thrust",
+  "relatedSlug": "butt-lift-bridge",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "sofa-hip-thrust",
+  "relatedSlug": "single-leg-sofa-hip-thrust",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "sofa-hip-thrust",
+  "relatedSlug": "single-leg-glute-bridge",
+  "kind": "PROGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "sofa-hip-thrust",
+  "relatedSlug": "butt-lift-bridge",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 3
+ },
+ {
+  "slug": "sofa-reverse-hyperextension",
+  "relatedSlug": "superman",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "sofa-triceps-extension",
+  "relatedSlug": "kneeling-forearm-press",
+  "kind": "PROGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "sofa-triceps-extension",
+  "relatedSlug": "towel-overhead-triceps",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "sofa-triceps-extension",
+  "relatedSlug": "towel-overhead-triceps",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "split-squat",
+  "relatedSlug": "bodyweight-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "split-squat",
+  "relatedSlug": "tempo-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "split-squat",
+  "relatedSlug": "bulgarian-split-squat",
+  "kind": "PROGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "step-back-burpee",
+  "relatedSlug": "bodyweight-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "step-back-burpee",
+  "relatedSlug": "mountain-climbers",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "step-single-leg-calf-raise",
+  "relatedSlug": "single-leg-calf-raise",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "superman",
+  "relatedSlug": "lower-back-curl",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "superman",
+  "relatedSlug": "sofa-reverse-hyperextension",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "supine-elbow-row",
+  "relatedSlug": "hips-up-elbow-row",
+  "kind": "PROGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "supine-elbow-row",
+  "relatedSlug": "seated-towel-row",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "tempo-push-up",
+  "relatedSlug": "pushups",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "tempo-push-up",
+  "relatedSlug": "push-ups-with-feet-elevated",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "tempo-squat",
+  "relatedSlug": "bodyweight-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "tempo-squat",
+  "relatedSlug": "split-squat",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "tempo-squat",
+  "relatedSlug": "wall-sissy-squat",
+  "kind": "PROGRESSION",
+  "sortOrder": 2
+ },
+ {
+  "slug": "towel-body-saw",
+  "relatedSlug": "kneeling-towel-rollout",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "towel-body-saw",
+  "relatedSlug": "kneeling-towel-rollout",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "towel-floor-body-pull",
+  "relatedSlug": "towel-one-arm-pulldown",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "towel-floor-body-pull",
+  "relatedSlug": "towel-one-arm-pulldown",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 1
+ },
+ {
+  "slug": "towel-lateral-raise",
+  "relatedSlug": "wall-lateral-press-hold",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "towel-lateral-raise",
+  "relatedSlug": "side-lying-elbow-press",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "towel-lateral-raise",
+  "relatedSlug": "wall-lateral-lean-raise",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "towel-leg-curl",
+  "relatedSlug": "towel-leg-curl-eccentric",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "towel-leg-curl",
+  "relatedSlug": "single-leg-towel-leg-curl",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "towel-leg-curl",
+  "relatedSlug": "bridge-heel-walkout",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "towel-leg-curl",
+  "relatedSlug": "assisted-nordic-curl",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 3
+ },
+ {
+  "slug": "towel-leg-curl-eccentric",
+  "relatedSlug": "bridge-heel-walkout",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "towel-leg-curl-eccentric",
+  "relatedSlug": "towel-leg-curl",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "towel-leg-curl-eccentric",
+  "relatedSlug": "bridge-heel-walkout",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "towel-one-arm-pulldown",
+  "relatedSlug": "prone-towel-pulldown",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "towel-one-arm-pulldown",
+  "relatedSlug": "towel-floor-body-pull",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "towel-one-arm-pulldown",
+  "relatedSlug": "towel-floor-body-pull",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "towel-overhead-triceps",
+  "relatedSlug": "sofa-triceps-extension",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "towel-overhead-triceps",
+  "relatedSlug": "kneeling-forearm-press",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "towel-overhead-triceps",
+  "relatedSlug": "sofa-triceps-extension",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "wall-elbow-push-off",
+  "relatedSlug": "prone-t-raise",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "wall-elbow-push-off",
+  "relatedSlug": "prone-y-raise",
+  "kind": "REGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "wall-lateral-lean-raise",
+  "relatedSlug": "wall-lateral-press-hold",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "wall-lateral-lean-raise",
+  "relatedSlug": "side-lying-elbow-press",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "wall-lateral-lean-raise",
+  "relatedSlug": "towel-lateral-raise",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
+ },
+ {
+  "slug": "wall-lateral-press-hold",
+  "relatedSlug": "wall-lateral-lean-raise",
+  "kind": "PROGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "wall-lateral-press-hold",
+  "relatedSlug": "towel-lateral-raise",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "wall-push-up",
+  "relatedSlug": "incline-push-up",
+  "kind": "PROGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "wall-sissy-squat",
+  "relatedSlug": "tempo-squat",
+  "kind": "REGRESSION",
+  "sortOrder": 0
+ },
+ {
+  "slug": "wall-sissy-squat",
+  "relatedSlug": "bulgarian-split-squat",
+  "kind": "PROGRESSION",
+  "sortOrder": 1
+ },
+ {
+  "slug": "wall-sissy-squat",
+  "relatedSlug": "bulgarian-split-squat",
+  "kind": "ALTERNATIVE",
+  "sortOrder": 2
  }
 ]

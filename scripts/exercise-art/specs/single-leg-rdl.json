@@ -1,0 +1,114 @@
+{
+ "slug": "single-leg-rdl",
+ "camera": {
+  "az": 118,
+  "el": 12
+ },
+ "muscles": [
+  "hamstrings",
+  "glutes"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0.04,
+     0.925,
+     0
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 2,
+     "abd": 9,
+     "elbow": 8
+    },
+    "curl": 0.45
+   },
+   "armR": {
+    "fk": {
+     "flex": 2,
+     "abd": 9,
+     "elbow": 8
+    },
+    "curl": 0.45
+   },
+   "legL": {
+    "pos": [
+     0.07,
+     0,
+     0.04
+    ],
+    "anchor": "sole",
+    "pole": [
+     0,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "fk": {
+     "flex": -24,
+     "abd": 0,
+     "knee": 22
+    },
+    "foot": {
+     "pitch": 20
+    }
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0.03,
+     0.9,
+     -0.11
+    ],
+    "pitch": 80
+   },
+   "neck": {
+    "flex": -20
+   },
+   "armL": {
+    "fk": {
+     "flex": 80,
+     "abd": 4,
+     "elbow": 6
+    },
+    "curl": 0.45
+   },
+   "armR": {
+    "fk": {
+     "flex": 80,
+     "abd": 4,
+     "elbow": 6
+    },
+    "curl": 0.45
+   },
+   "legL": {
+    "pos": [
+     0.07,
+     0,
+     0.04
+    ],
+    "anchor": "sole",
+    "pole": [
+     0,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "fk": {
+     "flex": -2,
+     "abd": 0,
+     "knee": 4
+    },
+    "foot": {
+     "pitch": 20
+    }
+   }
+  }
+ },
+ "muscleSide": "L"
+}

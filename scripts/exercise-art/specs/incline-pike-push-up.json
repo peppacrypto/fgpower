@@ -1,0 +1,181 @@
+{
+ "slug": "incline-pike-push-up",
+ "camera": {
+  "az": 110,
+  "el": 14
+ },
+ "muscles": [
+  "anterior-deltoid",
+  "triceps"
+ ],
+ "props": [
+  {
+   "type": "sofa",
+   "pos": [
+    0.42,
+    0,
+    1.05
+   ],
+   "yaw": 180,
+   "width": 1.5
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.98,
+     -0.2
+    ],
+    "pitch": 110
+   },
+   "armL": {
+    "pos": [
+     0.2,
+     0.42,
+     0.74
+    ],
+    "contact": true,
+    "fingers": [
+     0.12,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3,
+    "pole": [
+     0.6,
+     -0.5,
+     -0.35
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.2,
+     0.42,
+     0.74
+    ],
+    "contact": true,
+    "fingers": [
+     -0.12,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3,
+    "pole": [
+     -0.6,
+     -0.5,
+     -0.35
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.09,
+     0.012,
+     -0.46
+    ],
+    "anchor": "ball",
+    "pitch": 55,
+    "toes": 0
+   },
+   "legR": {
+    "pos": [
+     -0.09,
+     0.012,
+     -0.46
+    ],
+    "anchor": "ball",
+    "pitch": 55,
+    "toes": 0
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.9,
+     0
+    ],
+    "pitch": 120
+   },
+   "armL": {
+    "pos": [
+     0.2,
+     0.42,
+     0.74
+    ],
+    "contact": true,
+    "fingers": [
+     0.12,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3,
+    "pole": [
+     0.6,
+     -0.5,
+     -0.35
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.2,
+     0.42,
+     0.74
+    ],
+    "contact": true,
+    "fingers": [
+     -0.12,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3,
+    "pole": [
+     -0.6,
+     -0.5,
+     -0.35
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.09,
+     0.012,
+     -0.46
+    ],
+    "anchor": "ball",
+    "pitch": 70,
+    "toes": 0
+   },
+   "legR": {
+    "pos": [
+     -0.09,
+     0.012,
+     -0.46
+    ],
+    "anchor": "ball",
+    "pitch": 70,
+    "toes": 0
+   }
+  }
+ }
+}

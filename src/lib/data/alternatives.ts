@@ -1,6 +1,7 @@
 import "server-only";
 import { prisma } from "@/lib/db";
 import { blockingGear, type GearSubject } from "@/lib/exercises/gear";
+import type { ExerciseRungs } from "@/lib/training/next-load";
 import { defaultRange, isTimedHold } from "@/lib/training/set-plan";
 
 /**
@@ -12,6 +13,32 @@ import { defaultRange, isTimedHold } from "@/lib/training/set-plan";
  * a lift), filtered to equipment the user can use — their access level, and
  * the gear their gym has (Settings → Minha academia). Never the exercise itself.
  */
+
+/**
+ * The bodyweight neighbours of each exercise on its ladder, by name: where the
+ * "Na próxima" of a move with no load to raise points (next-load adviseBodyweight).
+ * Only rungs that also need no equipment: a home plan never sends someone to a machine.
+ */
+export async function getExerciseRungs(exerciseIds: string[]): Promise<Map<string, ExerciseRungs>> {
+  const rungs = new Map<string, ExerciseRungs>();
+  if (exerciseIds.length === 0) return rungs;
+  const rows = await prisma.exerciseRelation.findMany({
+    where: {
+      exerciseId: { in: exerciseIds },
+      kind: { in: ["PROGRESSION", "REGRESSION"] },
+      related: { isPublished: true, equipmentId: { in: ["bodyweight", "none"] } },
+    },
+    orderBy: { sortOrder: "asc" },
+    select: { exerciseId: true, kind: true, related: { select: { namePt: true } } },
+  });
+  for (const r of rows) {
+    const own = rungs.get(r.exerciseId) ?? { harder: null, easier: null };
+    if (r.kind === "PROGRESSION") own.harder ??= r.related.namePt;
+    else own.easier ??= r.related.namePt;
+    rungs.set(r.exerciseId, own);
+  }
+  return rungs;
+}
 
 /**
  * Equipment a user with each access level can use (Equipment.id) — what they

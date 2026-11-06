@@ -1,0 +1,83 @@
+{
+ "slug": "wall-lateral-press-hold",
+ "camera": {
+  "az": 0,
+  "el": 12
+ },
+ "muscles": [
+  "lateral-deltoid"
+ ],
+ "loop": "hold",
+ "props": [
+  {
+   "type": "wall",
+   "pos": [
+    0.477,
+    0,
+    0
+   ],
+   "yaw": 90
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.932,
+     0
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.395,
+     1.44,
+     0.2
+    ],
+    "fingers": [
+     0,
+     0.7,
+     0.7
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "pole": [
+     1,
+     -0.9,
+     -0.3
+    ],
+    "curl": 0.35
+   },
+   "armR": {
+    "fk": {
+     "flex": 4,
+     "abd": 7,
+     "elbow": 14
+    },
+    "curl": 0.3
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0,
+     0.04
+    ],
+    "anchor": "sole",
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0,
+     0.04
+    ],
+    "anchor": "sole",
+    "yaw": -6
+   }
+  }
+ },
+ "muscleSide": "L"
+}

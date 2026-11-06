@@ -1,0 +1,154 @@
+{
+ "slug": "step-single-leg-calf-raise",
+ "camera": {
+  "az": 104,
+  "el": 6
+ },
+ "muscles": [
+  "calves"
+ ],
+ "floats": true,
+ "props": [
+  {
+   "type": "step",
+   "pos": [
+    0,
+    0,
+    0.19
+   ]
+  },
+  {
+   "type": "wall",
+   "pos": [
+    0,
+    0,
+    0.62
+   ]
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0.05,
+     1.04,
+     0.06
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.2,
+     1.45,
+     0.58
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     1,
+     0
+    ],
+    "palm": [
+     0,
+     0,
+     1
+    ],
+    "pole": [
+     0.3,
+     -1,
+     -0.3
+    ],
+    "curl": 0.05
+   },
+   "armR": {
+    "fk": {
+     "flex": 4,
+     "abd": 9,
+     "elbow": 12
+    },
+    "curl": 0.45
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0.17,
+     0.13
+    ],
+    "anchor": "ball",
+    "pitch": -20,
+    "toes": 0
+   },
+   "legR": {
+    "fk": {
+     "flex": -2,
+     "abd": 0,
+     "knee": 85
+    },
+    "foot": {
+     "pitch": 30
+    }
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0.05,
+     1.17,
+     0.07
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.2,
+     1.45,
+     0.58
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     1,
+     0
+    ],
+    "palm": [
+     0,
+     0,
+     1
+    ],
+    "pole": [
+     0.3,
+     -1,
+     -0.3
+    ],
+    "curl": 0.05
+   },
+   "armR": {
+    "fk": {
+     "flex": 4,
+     "abd": 9,
+     "elbow": 12
+    },
+    "curl": 0.45
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0.17,
+     0.13
+    ],
+    "anchor": "ball",
+    "pitch": 50,
+    "toes": 0
+   },
+   "legR": {
+    "fk": {
+     "flex": -2,
+     "abd": 0,
+     "knee": 85
+    },
+    "foot": {
+     "pitch": 30
+    }
+   }
+  }
+ },
+ "muscleSide": "L"
+}
