@@ -1,0 +1,105 @@
+{
+ "slug": "looking-at-ceiling",
+ "camera": {
+  "az": 90,
+  "el": 8
+ },
+ "muscles": [
+  "quadriceps"
+ ],
+ "props": [
+  {
+   "type": "floor-mat"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.5,
+     0.16
+    ],
+    "pitch": -38
+   },
+   "spine": {
+    "flex": -50
+   },
+   "neck": {
+    "flex": -25
+   },
+   "legL": {
+    "fk": {
+     "flex": 0,
+     "abd": 3,
+     "knee": 90
+    },
+    "rel": "world",
+    "foot": {
+     "pitch": 78
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 0,
+     "abd": 3,
+     "knee": 90
+    },
+    "rel": "world",
+    "foot": {
+     "pitch": 78
+    }
+   },
+   "armL": {
+    "pos": [
+     0.12,
+     0.22,
+     -0.4
+    ],
+    "hand": "grip",
+    "grip": 0.03,
+    "fingers": [
+     -1,
+     -1,
+     0
+    ],
+    "palm": [
+     -1,
+     1,
+     1
+    ],
+    "curl": 0.7,
+    "pole": [
+     1,
+     0,
+     -0.2
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.15,
+     0.19,
+     -0.43000000000000005
+    ],
+    "hand": "grip",
+    "grip": 0.03,
+    "fingers": [
+     1,
+     0,
+     -1
+    ],
+    "palm": [
+     1,
+     1,
+     1
+    ],
+    "curl": 0.7,
+    "pole": [
+     -1,
+     -1,
+     0
+    ]
+   }
+  }
+ }
+}

@@ -1,0 +1,178 @@
+{
+ "slug": "camel-pose",
+ "camera": {
+  "az": 90,
+  "el": 8
+ },
+ "muscles": [
+  "spinal-erectors"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.5,
+     0
+    ],
+    "pitch": 0
+   },
+   "armL": {
+    "pos": [
+     0.17,
+     0.66,
+     -0.15
+    ],
+    "rel": "world",
+    "hand": "flat",
+    "contact": false,
+    "fingers": [
+     0.15,
+     -1,
+     0
+    ],
+    "palm": [
+     -0.8,
+     0,
+     0.5
+    ],
+    "pole": [
+     1,
+     0,
+     -0.3
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.17,
+     0.66,
+     -0.15
+    ],
+    "rel": "world",
+    "hand": "flat",
+    "contact": false,
+    "fingers": [
+     -0.15,
+     -1,
+     0
+    ],
+    "palm": [
+     0.8,
+     0,
+     0.5
+    ],
+    "pole": [
+     -1,
+     0,
+     -0.3
+    ]
+   },
+   "legL": {
+    "fk": {
+     "flex": 0,
+     "abd": 3,
+     "knee": 90
+    },
+    "foot": {
+     "pitch": 78
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 0,
+     "abd": 3,
+     "knee": 90
+    },
+    "foot": {
+     "pitch": 78
+    }
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.54,
+     0.06
+    ],
+    "pitch": -8
+   },
+   "spine": {
+    "flex": -25
+   },
+   "neck": {
+    "flex": -15
+   },
+   "armL": {
+    "pos": [
+     0.17,
+     0.66,
+     -0.15
+    ],
+    "rel": "world",
+    "hand": "flat",
+    "contact": false,
+    "fingers": [
+     0.15,
+     -1,
+     0
+    ],
+    "palm": [
+     -0.8,
+     0,
+     0.5
+    ],
+    "pole": [
+     1,
+     0,
+     -0.3
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.17,
+     0.66,
+     -0.15
+    ],
+    "rel": "world",
+    "hand": "flat",
+    "contact": false,
+    "fingers": [
+     -0.15,
+     -1,
+     0
+    ],
+    "palm": [
+     0.8,
+     0,
+     0.5
+    ],
+    "pole": [
+     -1,
+     0,
+     -0.3
+    ]
+   },
+   "legL": {
+    "fk": {
+     "flex": 0,
+     "abd": 3,
+     "knee": 90
+    },
+    "foot": {
+     "pitch": 78
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 0,
+     "abd": 3,
+     "knee": 90
+    },
+    "foot": {
+     "pitch": 78
+    }
+   }
+  }
+ }
+}

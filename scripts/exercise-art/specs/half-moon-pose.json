@@ -1,0 +1,89 @@
+{
+ "slug": "half-moon-pose",
+ "camera": {
+  "az": 12,
+  "el": 8
+ },
+ "muscles": [
+  "hamstrings"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0.25,
+     0.78,
+     0
+    ],
+    "roll": -85,
+    "yaw": 0
+   },
+   "neck": {
+    "twist": -90,
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.25,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.1,
+     0.3,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.58,
+     0.72,
+     0
+    ],
+    "anchor": "ankle",
+    "pole": [
+     0,
+     1,
+     0
+    ],
+    "pitch": 0,
+    "roll": -30
+   },
+   "armL": {
+    "pos": [
+     0.6,
+     0.14,
+     -0.05
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     0.5,
+     -0.3,
+     -1
+    ],
+    "curl": 0.2
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 170,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest"
+   }
+  }
+ }
+}

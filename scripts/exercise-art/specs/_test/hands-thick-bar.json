@@ -1,0 +1,95 @@
+{
+ "slug": "test-hands-thick-bar",
+ "camera": {
+  "az": 25,
+  "el": 8
+ },
+ "muscles": [],
+ "props": [
+  {
+   "type": "bar-test",
+   "hands": true,
+   "radius": 0.025,
+   "length": 0.34
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.925,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.115,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.115,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -6
+   },
+   "armL": {
+    "pos": [
+     0.22,
+     0.8,
+     0.1
+    ],
+    "hand": "grip",
+    "grip": 0.025,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     0,
+     0,
+     -1
+    ],
+    "pole": [
+     0.3,
+     0,
+     -1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.22,
+     0.8,
+     0.1
+    ],
+    "hand": "grip",
+    "grip": 0.025,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     0,
+     0,
+     -1
+    ],
+    "pole": [
+     -0.3,
+     0,
+     -1
+    ]
+   }
+  }
+ }
+}

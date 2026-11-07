@@ -1,0 +1,182 @@
+{
+ "slug": "flat-bench-cable-flyes",
+ "camera": {
+  "az": 40,
+  "el": 14
+ },
+ "muscles": [
+  "chest"
+ ],
+ "props": [
+  {
+   "type": "flat-bench"
+  },
+  {
+   "type": "cable-crossover",
+   "pos": [
+    0,
+    0,
+    -0.38
+   ],
+   "hands": true,
+   "pulleyY": 0.2,
+   "attachment": "d-handle"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.532,
+     0.2
+    ],
+    "pitch": -90
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.2,
+     0,
+     0.72
+    ],
+    "anchor": "sole"
+   },
+   "legR": {
+    "pos": [
+     -0.2,
+     0,
+     0.72
+    ],
+    "anchor": "sole"
+   },
+   "armL": {
+    "pos": [
+     0.66,
+     0.58,
+     -0.26
+    ],
+    "contact": true,
+    "fingers": [
+     0.996,
+     -0.087,
+     0
+    ],
+    "palm": [
+     0.087,
+     0.996,
+     0
+    ],
+    "curl": 0.82,
+    "pole": [
+     1,
+     -0.4,
+     0.6
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.66,
+     0.58,
+     -0.26
+    ],
+    "contact": true,
+    "fingers": [
+     -0.996,
+     -0.087,
+     0
+    ],
+    "palm": [
+     0.087,
+     0.996,
+     0
+    ],
+    "curl": 0.82,
+    "pole": [
+     -1,
+     -0.4,
+     0.6
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.532,
+     0.2
+    ],
+    "pitch": -90
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.2,
+     0,
+     0.72
+    ],
+    "anchor": "sole"
+   },
+   "legR": {
+    "pos": [
+     -0.2,
+     0,
+     0.72
+    ],
+    "anchor": "sole"
+   },
+   "armL": {
+    "pos": [
+     0.07,
+     1.12,
+     -0.24
+    ],
+    "contact": true,
+    "fingers": [
+     -0.251,
+     0.967,
+     0.039
+    ],
+    "palm": [
+     -0.968,
+     -0.25,
+     -0.019
+    ],
+    "curl": 0.82,
+    "pole": [
+     1,
+     -0.7,
+     -0.2
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.07,
+     1.12,
+     -0.24
+    ],
+    "contact": true,
+    "fingers": [
+     0.251,
+     0.967,
+     0.039
+    ],
+    "palm": [
+     0.968,
+     0.251,
+     0.002
+    ],
+    "curl": 0.82,
+    "pole": [
+     -1,
+     -0.7,
+     -0.2
+    ]
+   }
+  }
+ }
+}

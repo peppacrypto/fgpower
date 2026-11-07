@@ -1,0 +1,97 @@
+{
+ "slug": "elbows-back",
+ "camera": {
+  "az": 140,
+  "el": 8
+ },
+ "muscles": [
+  "chest"
+ ],
+ "props": [],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ],
+    "pitch": 0
+   },
+   "spine": {
+    "flex": -4
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 4
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -4
+   },
+   "armL": {
+    "pos": [
+     0.08,
+     0.95,
+     -0.14
+    ],
+    "rel": "world",
+    "pole": [
+     1,
+     0,
+     -0.4
+    ],
+    "hand": "flat",
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     0,
+     0,
+     -1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.08,
+     0.95,
+     -0.14
+    ],
+    "rel": "world",
+    "pole": [
+     -1,
+     0,
+     -0.4
+    ],
+    "hand": "flat",
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     0,
+     0,
+     -1
+    ]
+   }
+  }
+ }
+}

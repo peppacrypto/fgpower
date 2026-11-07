@@ -1,0 +1,87 @@
+{
+ "slug": "side-wrist-pull",
+ "camera": {
+  "az": 25,
+  "el": 6
+ },
+ "muscles": [
+  "shoulders"
+ ],
+ "props": [],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ],
+    "pitch": 0
+   },
+   "spine": {
+    "flex": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 4
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -4
+   },
+   "armL": {
+    "pos": [
+     -0.12,
+     1.2,
+     0.38
+    ],
+    "rel": "world",
+    "pole": [
+     0.3,
+     -1,
+     0
+    ],
+    "hand": "relaxed"
+   },
+   "armR": {
+    "pos": [
+     -0.12,
+     0.97,
+     0.28
+    ],
+    "rel": "world",
+    "contact": true,
+    "hand": "grip",
+    "pole": [
+     -0.4,
+     -1,
+     -0.2
+    ],
+    "fingers": [
+     1,
+     0,
+     0
+    ],
+    "palm": [
+     0,
+     0,
+     -1
+    ]
+   }
+  }
+ },
+ "muscleSide": "L"
+}

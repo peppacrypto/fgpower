@@ -1,0 +1,173 @@
+{
+ "slug": "standing-lateral-stretch",
+ "camera": {
+  "az": 20,
+  "el": 8
+ },
+ "muscles": [
+  "abdominals"
+ ],
+ "props": [],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ],
+    "pitch": 0,
+    "roll": 0
+   },
+   "spine": {
+    "side": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "armL": {
+    "fk": {
+     "flex": 160,
+     "abd": 35,
+     "rot": 0,
+     "elbow": 130
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   },
+   "armR": {
+    "pos": [
+     -0.215,
+     0.97,
+     -0.02
+    ],
+    "rel": "world",
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     -0.6,
+     0.8
+    ],
+    "palm": [
+     0.7,
+     0.3,
+     0.3
+    ],
+    "pole": [
+     -0.5,
+     0,
+     -1
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.15,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 4,
+    "pole": [
+     0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.15,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -4,
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ],
+    "pitch": 0,
+    "roll": -3
+   },
+   "spine": {
+    "side": -30
+   },
+   "neck": {
+    "flex": 0
+   },
+   "armL": {
+    "fk": {
+     "flex": 160,
+     "abd": 35,
+     "rot": 0,
+     "elbow": 130
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   },
+   "armR": {
+    "pos": [
+     -0.215,
+     0.97,
+     -0.02
+    ],
+    "rel": "world",
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     -0.6,
+     0.8
+    ],
+    "palm": [
+     0.7,
+     0.3,
+     0.3
+    ],
+    "pole": [
+     -0.5,
+     0,
+     -1
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.15,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 4,
+    "pole": [
+     0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.15,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -4,
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   }
+  }
+ }
+}

@@ -1,0 +1,105 @@
+{
+ "slug": "runners-stretch",
+ "camera": {
+  "az": 70,
+  "el": 10
+ },
+ "muscles": [
+  "hamstrings"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.52,
+     0
+    ],
+    "pitch": 70
+   },
+   "spine": {
+    "flex": 12
+   },
+   "neck": {
+    "flex": -15
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0,
+     0.75
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.1,
+     0.5,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0.05,
+     -0.68
+    ],
+    "anchor": "ball",
+    "pole": [
+     -0.1,
+     -0.2,
+     1
+    ],
+    "pitch": 60
+   },
+   "armL": {
+    "pos": [
+     0.3,
+     0.02,
+     0.57
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     0.6,
+     -0.3,
+     -1
+    ],
+    "curl": 0.2
+   },
+   "armR": {
+    "pos": [
+     -0.08,
+     0.02,
+     0.57
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -0.16,
+     -0.3,
+     -1
+    ],
+    "curl": 0.2
+   }
+  }
+ }
+}

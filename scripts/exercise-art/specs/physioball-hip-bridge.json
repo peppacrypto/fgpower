@@ -1,0 +1,143 @@
+{
+ "slug": "physioball-hip-bridge",
+ "camera": {
+  "az": 68,
+  "el": 8
+ },
+ "muscles": [
+  "glutes",
+  "hamstrings"
+ ],
+ "props": [
+  {
+   "type": "stability-ball",
+   "pos": [
+    0,
+    0,
+    -0.5
+   ],
+   "radius": 0.325,
+   "load": 1
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.25,
+     -0.1
+    ],
+    "pitch": -60
+   },
+   "neck": {
+    "flex": 10
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 22,
+     "elbow": 4
+    },
+    "curl": 0.2
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 22,
+     "elbow": 4
+    },
+    "curl": 0.2
+   },
+   "legL": {
+    "pos": [
+     0.18,
+     0,
+     0.42
+    ],
+    "anchor": "sole",
+    "yaw": 0,
+    "pitch": 0,
+    "pole": [
+     0.1,
+     1,
+     0.2
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.18,
+     0,
+     0.42
+    ],
+    "anchor": "sole",
+    "yaw": 0,
+    "pitch": 0,
+    "pole": [
+     -0.1,
+     1,
+     0.2
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.52,
+     -0.05
+    ],
+    "pitch": -92
+   },
+   "neck": {
+    "flex": 14
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 22,
+     "elbow": 4
+    },
+    "curl": 0.2
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 22,
+     "elbow": 4
+    },
+    "curl": 0.2
+   },
+   "legL": {
+    "pos": [
+     0.18,
+     0,
+     0.42
+    ],
+    "anchor": "sole",
+    "yaw": 0,
+    "pitch": 0,
+    "pole": [
+     0.1,
+     1,
+     0.2
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.18,
+     0,
+     0.42
+    ],
+    "anchor": "sole",
+    "yaw": 0,
+    "pitch": 0,
+    "pole": [
+     -0.1,
+     1,
+     0.2
+    ]
+   }
+  }
+ }
+}

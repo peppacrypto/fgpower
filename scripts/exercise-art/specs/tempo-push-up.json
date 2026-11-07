@@ -1,13 +1,18 @@
 {
  "slug": "tempo-push-up",
  "camera": {
-  "az": 80,
-  "el": 3
+  "az": 52,
+  "el": 5
  },
  "muscles": [
   "chest",
   "triceps"
  ],
+ "timing": {
+  "there": 4,
+  "holdEnd": 2,
+  "back": 1
+ },
  "frames": {
   "start": {
    "root": {
@@ -16,6 +21,7 @@
      0.441,
      -0.001
     ],
+    "yaw": 0,
     "pitch": 70.065
    },
    "neck": {
@@ -27,6 +33,7 @@
      0,
      0.5
     ],
+    "hand": "flat",
     "contact": true,
     "fingers": [
      0.12,
@@ -38,7 +45,7 @@
      -1,
      0
     ],
-    "curl": -0.3
+    "spread": 1
    },
    "armR": {
     "pos": [
@@ -46,6 +53,7 @@
      0,
      0.5
     ],
+    "hand": "flat",
     "contact": true,
     "fingers": [
      -0.12,
@@ -57,7 +65,7 @@
      -1,
      0
     ],
-    "curl": -0.3
+    "spread": 1
    },
    "legL": {
     "pos": [
@@ -67,6 +75,7 @@
     ],
     "anchor": "ball",
     "pitch": 62,
+    "yaw": 0,
     "toes": 0
    },
    "legR": {
@@ -77,6 +86,7 @@
     ],
     "anchor": "ball",
     "pitch": 62,
+    "yaw": 0,
     "toes": 0
    }
   },
@@ -87,6 +97,7 @@
      0.21,
      0.084
     ],
+    "yaw": 0,
     "pitch": 85.543
    },
    "neck": {
@@ -98,6 +109,7 @@
      0,
      0.5
     ],
+    "hand": "flat",
     "contact": true,
     "fingers": [
      0.12,
@@ -109,7 +121,7 @@
      -1,
      0
     ],
-    "curl": -0.3,
+    "spread": 1,
     "pole": [
      0.75,
      0.55,
@@ -122,6 +134,7 @@
      0,
      0.5
     ],
+    "hand": "flat",
     "contact": true,
     "fingers": [
      -0.12,
@@ -133,7 +146,7 @@
      -1,
      0
     ],
-    "curl": -0.3,
+    "spread": 1,
     "pole": [
      -0.75,
      0.55,
@@ -148,6 +161,7 @@
     ],
     "anchor": "ball",
     "pitch": 76,
+    "yaw": 0,
     "toes": 0
    },
    "legR": {
@@ -158,14 +172,9 @@
     ],
     "anchor": "ball",
     "pitch": 76,
+    "yaw": 0,
     "toes": 0
    }
   }
- },
- "timing": {
-  "there": 4,
-  "holdEnd": 2,
-  "back": 1,
-  "holdStart": 0
  }
 }

@@ -1,0 +1,71 @@
+{
+ "slug": "warrior-2",
+ "camera": {
+  "az": 15,
+  "el": 6
+ },
+ "muscles": [
+  "quadriceps"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0.12,
+     0.66,
+     0
+    ],
+    "yaw": 0
+   },
+   "neck": {
+    "twist": 75
+   },
+   "legL": {
+    "pos": [
+     0.7,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 90,
+    "pole": [
+     1,
+     0.3,
+     0.1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.45,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -15,
+    "pole": [
+     -1,
+     0.3,
+     0
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 90,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest"
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 90,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest"
+   }
+  }
+ }
+}

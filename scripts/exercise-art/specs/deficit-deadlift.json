@@ -1,0 +1,334 @@
+{
+ "slug": "deficit-deadlift",
+ "camera": {
+  "az": 118,
+  "el": 12
+ },
+ "muscles": [
+  "spinal-erectors",
+  "glutes",
+  "hamstrings"
+ ],
+ "floats": true,
+ "props": [
+  {
+   "type": "deficit-platform",
+   "height": 0.075
+  },
+  {
+   "type": "barbell",
+   "hands": true,
+   "plates": [
+    20
+   ]
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.595,
+     -0.25
+    ],
+    "pitch": 62
+   },
+   "spine": {
+    "flex": 4
+   },
+   "neck": {
+    "flex": -30
+   },
+   "armL": {
+    "pos": [
+     0.27,
+     0.225,
+     0.12
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     0,
+     -0.05,
+     -1
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.8,
+     0,
+     -0.3
+    ],
+    "scap": {
+     "elev": 0,
+     "prot": 0
+    }
+   },
+   "armR": {
+    "pos": [
+     -0.27,
+     0.225,
+     0.12
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     0,
+     -0.05,
+     -1
+    ],
+    "curl": 0.85,
+    "pole": [
+     -0.8,
+     0,
+     -0.3
+    ],
+    "scap": {
+     "elev": 0,
+     "prot": 0
+    }
+   },
+   "legL": {
+    "pos": [
+     0.135,
+     0.075,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": 8,
+    "pitch": 0,
+    "pole": [
+     0.25,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.135,
+     0.075,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": -8,
+    "pitch": 0,
+    "pole": [
+     -0.25,
+     0,
+     1
+    ]
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.695,
+     -0.2
+    ],
+    "pitch": 46
+   },
+   "spine": {
+    "flex": 2
+   },
+   "neck": {
+    "flex": -12
+   },
+   "armL": {
+    "pos": [
+     0.27,
+     0.535,
+     0.25
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     0,
+     -0.05,
+     -1
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.8,
+     0,
+     -0.3
+    ],
+    "scap": {
+     "elev": 1,
+     "prot": 0
+    }
+   },
+   "armR": {
+    "pos": [
+     -0.27,
+     0.535,
+     0.25
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     0,
+     -0.05,
+     -1
+    ],
+    "curl": 0.85,
+    "pole": [
+     -0.8,
+     0,
+     -0.3
+    ],
+    "scap": {
+     "elev": 1,
+     "prot": 0
+    }
+   },
+   "legL": {
+    "pos": [
+     0.135,
+     0.075,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": 8,
+    "pitch": 0,
+    "pole": [
+     0.25,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.135,
+     0.075,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": -8,
+    "pitch": 0,
+    "pole": [
+     -0.25,
+     0,
+     1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.99,
+     -0.02
+    ],
+    "pitch": -2
+   },
+   "spine": {
+    "flex": -2
+   },
+   "neck": {
+    "flex": 2
+   },
+   "armL": {
+    "pos": [
+     0.27,
+     0.9349999999999999,
+     0.13
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     0,
+     -0.05,
+     -1
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.8,
+     0,
+     -0.3
+    ],
+    "scap": {
+     "elev": 0,
+     "prot": 0
+    }
+   },
+   "armR": {
+    "pos": [
+     -0.27,
+     0.9349999999999999,
+     0.13
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     0,
+     -0.05,
+     -1
+    ],
+    "curl": 0.85,
+    "pole": [
+     -0.8,
+     0,
+     -0.3
+    ],
+    "scap": {
+     "elev": 0,
+     "prot": 0
+    }
+   },
+   "legL": {
+    "pos": [
+     0.135,
+     0.075,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": 8,
+    "pitch": 0,
+    "pole": [
+     0.25,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.135,
+     0.075,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": -8,
+    "pitch": 0,
+    "pole": [
+     -0.25,
+     0,
+     1
+    ]
+   }
+  }
+ }
+}

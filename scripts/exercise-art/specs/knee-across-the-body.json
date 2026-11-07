@@ -1,0 +1,160 @@
+{
+ "slug": "knee-across-the-body",
+ "camera": {
+  "az": 40,
+  "el": 42
+ },
+ "muscles": [
+  "glutes"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.1,
+     0
+    ],
+    "pitch": -90,
+    "roll": -10
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "fk": {
+     "flex": 120,
+     "abd": -10,
+     "rot": 0,
+     "knee": 105
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 0,
+     "abd": 0,
+     "rot": 0,
+     "knee": 0
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 35,
+     "rot": 0,
+     "elbow": 4
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "pron": 0
+   },
+   "armR": {
+    "pos": [
+     0.21023280104446312,
+     0.49782470930497125,
+     -0.21271847465063684
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     1,
+     0,
+     0.3
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": 0.3,
+    "pole": [
+     -0.5,
+     -0.2,
+     -0.6
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.1,
+     0
+    ],
+    "pitch": -90,
+    "roll": -25
+   },
+   "neck": {
+    "twist": -35
+   },
+   "legL": {
+    "fk": {
+     "flex": 112,
+     "abd": -30,
+     "rot": 0,
+     "knee": 105
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 0,
+     "abd": 0,
+     "rot": 0,
+     "knee": 0
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 35,
+     "rot": 0,
+     "elbow": 4
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "pron": 0
+   },
+   "armR": {
+    "pos": [
+     0.34230473917288073,
+     0.43733144962226655,
+     -0.14014893297167783
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     1,
+     0,
+     0.3
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": 0.3,
+    "pole": [
+     -0.5,
+     -0.2,
+     -0.6
+    ]
+   }
+  }
+ }
+}

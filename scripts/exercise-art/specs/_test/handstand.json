@@ -1,0 +1,90 @@
+{
+ "slug": "test-handstand",
+ "camera": {
+  "az": 60,
+  "el": 3
+ },
+ "muscles": [
+  "shoulders"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     1.06,
+     0
+    ],
+    "pitch": 180
+   },
+   "legL": {
+    "fk": {
+     "flex": 0,
+     "abd": 0,
+     "knee": 0
+    },
+    "foot": {
+     "pitch": 30
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 0,
+     "abd": 0,
+     "knee": 0
+    },
+    "foot": {
+     "pitch": 30
+    }
+   },
+   "armL": {
+    "pos": [
+     0.24,
+     0,
+     -0.04
+    ],
+    "contact": true,
+    "pole": [
+     0.3,
+     0,
+     1
+    ],
+    "fingers": [
+     0,
+     0,
+     -1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3
+   },
+   "armR": {
+    "pos": [
+     -0.24,
+     0,
+     -0.04
+    ],
+    "contact": true,
+    "pole": [
+     -0.3,
+     0,
+     1
+    ],
+    "fingers": [
+     0,
+     0,
+     -1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3
+   }
+  }
+ }
+}

@@ -25,23 +25,33 @@ const flag = (k, d) => {
   return val
 }
 const outRoot = path.resolve(flag('--out', path.join(HERE, 'out')))
-const loopN = Number(flag('--loop', 0))
-const look = flag('--look', '')
+const finalMode = args.includes('--final')
+if (finalMode) args.splice(args.indexOf('--final'), 1)
+const FINAL_FPS = 20
+const loopN = finalMode ? 48 : Number(flag('--loop', 0))
+flag('--look', '') // older calls pass --look studio; it is the only look now
+const wantCloseups = args.includes('--closeups')
+if (wantCloseups) args.splice(args.indexOf('--closeups'), 1)
 const specs = args.filter((a) => !a.startsWith('--'))
 if (!specs.length) {
   console.error('usage: node render.mjs spec.json ... [--out dir] [--loop 16]')
   process.exit(2)
 }
 
-// Re-exec under flock so parallel agents queue up instead of starting several browsers.
+// Re-exec under one of a few locks, so parallel agents queue up instead of starting a browser each.
 if (!process.env.ART_LOCKED) {
-  const lock = path.join(HERE, 'build', '.render.lock')
-  fs.mkdirSync(path.dirname(lock), { recursive: true })
-  const r = spawnSync('flock', [lock, process.execPath, fileURLToPath(import.meta.url), ...process.argv.slice(2)], {
-    stdio: 'inherit',
-    env: { ...process.env, ART_LOCKED: '1' },
-  })
-  process.exit(r.status ?? 1)
+  const SLOTS = Number(process.env.ART_RENDER_SLOTS || 4)
+  const CONFLICT = 75
+  fs.mkdirSync(path.join(HERE, 'build'), { recursive: true })
+  for (let turn = 0; ; turn++) {
+    const lock = path.join(HERE, 'build', `.render.${turn % SLOTS}.lock`)
+    const r = spawnSync('flock', ['-n', '-E', String(CONFLICT), lock, process.execPath, fileURLToPath(import.meta.url), ...process.argv.slice(2)], {
+      stdio: 'inherit',
+      env: { ...process.env, ART_LOCKED: '1' },
+    })
+    if (r.status !== CONFLICT) process.exit(r.status ?? 1)
+    if (turn % SLOTS === SLOTS - 1) spawnSync('sleep', ['1'])
+  }
 }
 
 const require = createRequire(path.resolve(HERE, '..', '..', 'package.json'))
@@ -71,7 +81,7 @@ page.on('pageerror', (e) => errors.push(String(e)))
 page.on('console', (m) => {
   if (m.type() === 'error') errors.push(m.text())
 })
-await page.goto(`http://127.0.0.1:${port}/render.html${look ? `?look=${look}` : ''}`)
+await page.goto(`http://127.0.0.1:${port}/render.html`)
 await page.waitForFunction(() => window.ready || window.initError, null, { timeout: 120000 })
 const initError = await page.evaluate(() => window.initError)
 if (initError) {
@@ -80,6 +90,9 @@ if (initError) {
   server.close()
   process.exit(1)
 }
+
+const moduleErrors = await page.evaluate(() => (window.propErrors || []).filter((e) => !/not loaded/.test(e)))
+if (moduleErrors.length) console.error('prop module errors:', moduleErrors)
 
 const buf = (dataUrl) => Buffer.from(dataUrl.split(',')[1], 'base64')
 const OUT_W = 800
@@ -93,10 +106,27 @@ for (const file of specs) {
   fs.mkdirSync(dir, { recursive: true })
   let res
   try {
-    res = await page.evaluate(([s, o]) => window.renderSpec(s, o), [spec, { loopFrames: loopN, fps: Number(spec.loopFps || 6) }])
+    res = await page.evaluate(([s, o]) => window.renderSpec(s, o), [spec, { loopFrames: loopN, fps: finalMode ? FINAL_FPS : Number(spec.loopFps || 6), closeups: wantCloseups }])
   } catch (e) {
     failed++
     console.error(`${slug}: render failed: ${e.message}`)
+    continue
+  }
+  if (finalMode) {
+    // What the app ships: a still per end of the movement and a muted looping video. A hold has one still and no video.
+    for (const name of ['start', 'end']) {
+      if (res.images[name]) await sharp(buf(res.images[name])).resize(OUT_W, OUT_H, { kernel: 'lanczos3' }).webp({ quality: 78, effort: 6 }).toFile(path.join(dir, `${name}.webp`))
+    }
+    if (spec.frames.end && res.loop.length) {
+      const framesDir = path.join(dir, '.frames')
+      fs.mkdirSync(framesDir, { recursive: true })
+      await Promise.all(res.loop.map(async (d, i) => sharp(buf(d)).resize(OUT_W, OUT_H, { kernel: 'lanczos3' }).png({ compressionLevel: 1 }).toFile(path.join(framesDir, `${String(i).padStart(3, '0')}.png`))))
+      execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-framerate', String(FINAL_FPS), '-i', path.join(framesDir, '%03d.png'), '-c:v', 'libx264', '-preset', 'veryslow', '-crf', '27', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', '-an', path.join(dir, 'loop.mp4')])
+      fs.rmSync(framesDir, { recursive: true, force: true })
+    }
+    fs.writeFileSync(path.join(dir, 'report.json'), JSON.stringify(res.reports, null, 1))
+    const kb = (n) => (fs.existsSync(path.join(dir, n)) ? (fs.statSync(path.join(dir, n)).size / 1024).toFixed(0) : '-')
+    console.log(`${slug}: final start ${kb('start.webp')} KB, end ${kb('end.webp')} KB, loop ${kb('loop.mp4')} KB`)
     continue
   }
   const shots = []
@@ -107,6 +137,23 @@ for (const file of specs) {
   }
   const sheet = sharp({ create: { width: OUT_W * shots.length + 10 * (shots.length - 1), height: OUT_H, channels: 3, background: '#888' } }).composite(shots.map((s, i) => ({ input: s, left: i * (OUT_W + 10), top: 0 })))
   await sheet.png().toFile(path.join(dir, 'sheet.png'))
+  if (wantCloseups && Object.keys(res.closeups).length) {
+    // One row per frame: left hand, right hand, left foot, right foot, head.
+    const entries = Object.entries(res.closeups)
+    const frameNames = [...new Set(entries.map(([k]) => k.split('-')[0]))]
+    const spots = ['handL', 'handR', 'footL', 'footR', 'head']
+    const CW = 400
+    const CH = 300
+    const parts = []
+    for (const [row, f] of frameNames.entries()) {
+      for (const [col, spot] of spots.entries()) {
+        const data = res.closeups[`${f}-${spot}`]
+        if (!data) continue
+        parts.push({ input: await sharp(buf(data)).resize(CW, CH, { kernel: 'lanczos3' }).png().toBuffer(), left: col * (CW + 4), top: row * (CH + 4) })
+      }
+    }
+    await sharp({ create: { width: spots.length * (CW + 4) - 4, height: frameNames.length * (CH + 4) - 4, channels: 3, background: '#555' } }).composite(parts).png().toFile(path.join(dir, 'closeups.png'))
+  }
   if (loopN && res.loop.length) {
     const frames = await Promise.all(res.loop.map((d) => sharp(buf(d)).resize(640, 480, { kernel: 'lanczos3' }).png().toBuffer()))
     fs.writeFileSync(path.join(dir, 'loopmid.png'), frames[Math.floor(frames.length / 4)])

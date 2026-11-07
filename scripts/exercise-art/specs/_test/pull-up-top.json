@@ -1,0 +1,90 @@
+{
+ "slug": "test-pull-up-top",
+ "camera": {
+  "az": 150,
+  "el": 5
+ },
+ "muscles": [
+  "lats"
+ ],
+ "floats": true,
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     1.06,
+     0
+    ]
+   },
+   "legL": {
+    "fk": {
+     "flex": 10,
+     "abd": 2,
+     "knee": 40
+    },
+    "foot": {
+     "pitch": 30
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 10,
+     "abd": 2,
+     "knee": 40
+    },
+    "foot": {
+     "pitch": 30
+    }
+   },
+   "armL": {
+    "pos": [
+     0.32,
+     0.3,
+     0.14
+    ],
+    "rel": "chest",
+    "pole": [
+     1,
+     -0.8,
+     -0.5
+    ],
+    "fingers": [
+     0,
+     1,
+     0
+    ],
+    "palm": [
+     0,
+     0,
+     1
+    ],
+    "curl": 0.75
+   },
+   "armR": {
+    "pos": [
+     -0.32,
+     0.3,
+     0.14
+    ],
+    "rel": "chest",
+    "pole": [
+     -1,
+     -0.8,
+     -0.5
+    ],
+    "fingers": [
+     0,
+     1,
+     0
+    ],
+    "palm": [
+     0,
+     0,
+     1
+    ],
+    "curl": 0.75
+   }
+  }
+ }
+}

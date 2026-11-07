@@ -1,0 +1,303 @@
+{
+ "slug": "hyperextensions-with-no-hyperextension-bench",
+ "camera": {
+  "az": 90,
+  "el": 8
+ },
+ "muscles": [
+  "spinal-erectors"
+ ],
+ "floats": true,
+ "props": [
+  {
+   "type": "flat-bench",
+   "height": 0.7,
+   "pos": [
+    0,
+    0,
+    0
+   ]
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.82,
+     0.55
+    ],
+    "pitch": 90
+   },
+   "neck": {
+    "flex": 0
+   },
+   "spine": {
+    "flex": 0,
+    "weights": [
+     0,
+     0.1,
+     0.25,
+     0.3,
+     0.35
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.13,
+     0.1,
+     0.22
+    ],
+    "rel": "chest",
+    "fingers": [
+     -0.5,
+     0.8,
+     0
+    ],
+    "palm": [
+     0,
+     -0.1,
+     -1
+    ],
+    "pole": [
+     1,
+     -0.5,
+     -0.3
+    ],
+    "curl": 0.3
+   },
+   "armR": {
+    "pos": [
+     -0.13,
+     0.1,
+     0.22
+    ],
+    "rel": "chest",
+    "fingers": [
+     0.5,
+     0.8,
+     0
+    ],
+    "palm": [
+     0,
+     -0.1,
+     -1
+    ],
+    "pole": [
+     -1,
+     -0.5,
+     -0.3
+    ],
+    "curl": 0.3
+   },
+   "legL": {
+    "fk": {
+     "flex": 0,
+     "abd": 1,
+     "knee": 0
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 30
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 0,
+     "abd": 1,
+     "knee": 0
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 30
+    }
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.82,
+     0.55
+    ],
+    "pitch": 90
+   },
+   "neck": {
+    "flex": -15
+   },
+   "spine": {
+    "flex": 35,
+    "weights": [
+     0,
+     0.1,
+     0.25,
+     0.3,
+     0.35
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.13,
+     0.1,
+     0.22
+    ],
+    "rel": "chest",
+    "fingers": [
+     -0.5,
+     0.8,
+     0
+    ],
+    "palm": [
+     0,
+     -0.1,
+     -1
+    ],
+    "pole": [
+     1,
+     -0.5,
+     -0.3
+    ],
+    "curl": 0.3
+   },
+   "armR": {
+    "pos": [
+     -0.13,
+     0.1,
+     0.22
+    ],
+    "rel": "chest",
+    "fingers": [
+     0.5,
+     0.8,
+     0
+    ],
+    "palm": [
+     0,
+     -0.1,
+     -1
+    ],
+    "pole": [
+     -1,
+     -0.5,
+     -0.3
+    ],
+    "curl": 0.3
+   },
+   "legL": {
+    "fk": {
+     "flex": 0,
+     "abd": 1,
+     "knee": 0
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 30
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 0,
+     "abd": 1,
+     "knee": 0
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 30
+    }
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.82,
+     0.55
+    ],
+    "pitch": 90
+   },
+   "neck": {
+    "flex": -15
+   },
+   "spine": {
+    "flex": 70,
+    "weights": [
+     0,
+     0.1,
+     0.25,
+     0.3,
+     0.35
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.13,
+     0.1,
+     0.22
+    ],
+    "rel": "chest",
+    "fingers": [
+     -0.5,
+     0.8,
+     0
+    ],
+    "palm": [
+     0,
+     -0.1,
+     -1
+    ],
+    "pole": [
+     1,
+     -0.5,
+     -0.3
+    ],
+    "curl": 0.3
+   },
+   "armR": {
+    "pos": [
+     -0.13,
+     0.1,
+     0.22
+    ],
+    "rel": "chest",
+    "fingers": [
+     0.5,
+     0.8,
+     0
+    ],
+    "palm": [
+     0,
+     -0.1,
+     -1
+    ],
+    "pole": [
+     -1,
+     -0.5,
+     -0.3
+    ],
+    "curl": 0.3
+   },
+   "legL": {
+    "fk": {
+     "flex": 0,
+     "abd": 1,
+     "knee": 0
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 30
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 0,
+     "abd": 1,
+     "knee": 0
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 30
+    }
+   }
+  }
+ }
+}

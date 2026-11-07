@@ -1,0 +1,107 @@
+{
+ "slug": "tuck-l-sit",
+ "camera": {
+  "az": 58,
+  "el": 8
+ },
+ "muscles": [
+  "abdominals"
+ ],
+ "props": [
+  {
+   "type": "parallettes",
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "height": 0.2,
+   "spread": 0.52
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.325,
+     -0.05
+    ],
+    "pitch": -8
+   },
+   "spine": {
+    "flex": 14
+   },
+   "neck": {
+    "flex": 10
+   },
+   "armL": {
+    "pos": [
+     0.23800000000000002,
+     0.254,
+     0
+    ],
+    "fingers": [
+     0.8,
+     -0.6,
+     0
+    ],
+    "palm": [
+     -0.6,
+     -0.8,
+     0
+    ],
+    "curl": 0.8,
+    "pole": [
+     0.3,
+     0,
+     -1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.23800000000000002,
+     0.254,
+     0
+    ],
+    "fingers": [
+     -0.8,
+     -0.6,
+     0
+    ],
+    "palm": [
+     0.6,
+     -0.8,
+     0
+    ],
+    "curl": 0.8,
+    "pole": [
+     -0.3,
+     0,
+     -1
+    ]
+   },
+   "legL": {
+    "fk": {
+     "flex": 128,
+     "abd": -4,
+     "knee": 140
+    },
+    "foot": {
+     "pitch": 30
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 128,
+     "abd": -4,
+     "knee": 140
+    },
+    "foot": {
+     "pitch": 30
+    }
+   }
+  }
+ },
+ "floats": true
+}

@@ -1,0 +1,226 @@
+{
+ "slug": "dumbbell-seated-one-leg-calf-raise",
+ "camera": {
+  "az": 75,
+  "el": 8
+ },
+ "muscles": [
+  "calves"
+ ],
+ "floats": true,
+ "muscleSide": "L",
+ "props": [
+  {
+   "type": "flat-bench",
+   "pos": [
+    0,
+    0,
+    -0.5
+   ]
+  },
+  {
+   "type": "calf-block",
+   "pos": [
+    0.14,
+    0,
+    0.7
+   ],
+   "width": 0.22
+  },
+  {
+   "type": "dumbbell",
+   "kg": 20,
+   "hand": "L"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.54,
+     0
+    ],
+    "pitch": 0
+   },
+   "spine": {
+    "flex": 8
+   },
+   "neck": {
+    "flex": -6
+   },
+   "legL": {
+    "pos": [
+     0.14,
+     0.1,
+     0.64
+    ],
+    "anchor": "ball",
+    "pitch": -16,
+    "toes": 0,
+    "pole": [
+     0.1,
+     0.3,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.14,
+     0,
+     0.42
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "toes": 0,
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.18,
+     0.75,
+     0.31
+    ],
+    "contact": true,
+    "fingers": [
+     -0.3,
+     -0.1,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": 0.8,
+    "pole": [
+     0.4,
+     -0.6,
+     -0.5
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.17,
+     0.74,
+     0.2
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": 0.7,
+    "pole": [
+     -0.4,
+     -0.6,
+     -0.5
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.54,
+     0
+    ],
+    "pitch": 0
+   },
+   "spine": {
+    "flex": 8
+   },
+   "neck": {
+    "flex": -6
+   },
+   "legL": {
+    "pos": [
+     0.14,
+     0.088,
+     0.64
+    ],
+    "anchor": "ball",
+    "pitch": 29,
+    "toes": 0,
+    "pole": [
+     0.1,
+     0.3,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.14,
+     0,
+     0.42
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "toes": 0,
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.18,
+     0.75,
+     0.31
+    ],
+    "contact": true,
+    "fingers": [
+     -0.3,
+     -0.1,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": 0.8,
+    "pole": [
+     0.4,
+     -0.6,
+     -0.5
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.17,
+     0.74,
+     0.2
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": 0.7,
+    "pole": [
+     -0.4,
+     -0.6,
+     -0.5
+    ]
+   }
+  }
+ }
+}

@@ -1,0 +1,167 @@
+{
+ "slug": "test-overhead-press",
+ "camera": {
+  "az": 30,
+  "el": 5
+ },
+ "muscles": [
+  "shoulders",
+  "triceps"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.93,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.115,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.115,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -6
+   },
+   "armL": {
+    "pos": [
+     0.27,
+     0.16,
+     0.2
+    ],
+    "rel": "chest",
+    "pole": [
+     1,
+     -0.6,
+     0.1
+    ],
+    "fingers": [
+     0,
+     1,
+     0.1
+    ],
+    "palm": [
+     0,
+     0,
+     1
+    ],
+    "curl": 0.75
+   },
+   "armR": {
+    "pos": [
+     -0.27,
+     0.16,
+     0.2
+    ],
+    "rel": "chest",
+    "pole": [
+     -1,
+     -0.6,
+     0.1
+    ],
+    "fingers": [
+     0,
+     1,
+     0.1
+    ],
+    "palm": [
+     0,
+     0,
+     1
+    ],
+    "curl": 0.75
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.93,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.115,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.115,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -6
+   },
+   "armL": {
+    "pos": [
+     0.2,
+     0.7,
+     0.06
+    ],
+    "rel": "chest",
+    "pole": [
+     1,
+     0,
+     0
+    ],
+    "fingers": [
+     0,
+     1,
+     0
+    ],
+    "palm": [
+     0,
+     0,
+     1
+    ],
+    "curl": 0.75
+   },
+   "armR": {
+    "pos": [
+     -0.2,
+     0.7,
+     0.06
+    ],
+    "rel": "chest",
+    "pole": [
+     -1,
+     0,
+     0
+    ],
+    "fingers": [
+     0,
+     1,
+     0
+    ],
+    "palm": [
+     0,
+     0,
+     1
+    ],
+    "curl": 0.75
+   }
+  }
+ }
+}

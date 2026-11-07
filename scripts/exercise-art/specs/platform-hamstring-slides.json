@@ -1,0 +1,215 @@
+{
+ "slug": "platform-hamstring-slides",
+ "camera": {
+  "az": 70,
+  "el": 10
+ },
+ "muscles": [
+  "hamstrings"
+ ],
+ "muscleSide": "L",
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.115,
+     0
+    ],
+    "pitch": -90
+   },
+   "neck": {
+    "flex": 2
+   },
+   "armL": {
+    "pos": [
+     0.27,
+     0,
+     0.105
+    ],
+    "contact": true,
+    "fingers": [
+     0.08,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     1,
+     0.5,
+     -0.2
+    ],
+    "curl": -0.3
+   },
+   "armR": {
+    "pos": [
+     -0.27,
+     0,
+     0.105
+    ],
+    "contact": true,
+    "fingers": [
+     -0.08,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -1,
+     0.5,
+     -0.2
+    ],
+    "curl": -0.3
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0.017,
+     0.84
+    ],
+    "anchor": "heel",
+    "pitch": -60,
+    "pole": [
+     0,
+     1,
+     0.2
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.017,
+     0.84
+    ],
+    "anchor": "heel",
+    "pitch": -60,
+    "pole": [
+     0,
+     1,
+     0.2
+    ]
+   },
+   "props": [
+    {
+     "type": "towel",
+     "pos": [
+      0.11,
+      0,
+      0.88
+     ],
+     "width": 0.2,
+     "depth": 0.3
+    }
+   ]
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.115,
+     0
+    ],
+    "pitch": -90
+   },
+   "neck": {
+    "flex": 2
+   },
+   "armL": {
+    "pos": [
+     0.27,
+     0,
+     0.105
+    ],
+    "contact": true,
+    "fingers": [
+     0.08,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     1,
+     0.5,
+     -0.2
+    ],
+    "curl": -0.3
+   },
+   "armR": {
+    "pos": [
+     -0.27,
+     0,
+     0.105
+    ],
+    "contact": true,
+    "fingers": [
+     -0.08,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -1,
+     0.5,
+     -0.2
+    ],
+    "curl": -0.3
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0.017,
+     0.3
+    ],
+    "anchor": "heel",
+    "pitch": 10,
+    "pole": [
+     0,
+     1,
+     0.2
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.017,
+     0.84
+    ],
+    "anchor": "heel",
+    "pitch": -60,
+    "pole": [
+     0,
+     1,
+     0.2
+    ]
+   },
+   "props": [
+    {
+     "type": "towel",
+     "pos": [
+      0.11,
+      0,
+      0.34
+     ],
+     "width": 0.2,
+     "depth": 0.3
+    }
+   ]
+  }
+ }
+}

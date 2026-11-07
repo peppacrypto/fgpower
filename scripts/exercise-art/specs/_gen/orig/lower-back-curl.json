@@ -1,0 +1,173 @@
+{
+ "slug": "lower-back-curl",
+ "camera": {
+  "az": 135,
+  "el": 16
+ },
+ "muscles": [
+  "spinal-erectors"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.15,
+     0
+    ],
+    "pitch": 90
+   },
+   "neck": {
+    "flex": 4
+   },
+   "armL": {
+    "pos": [
+     0.716,
+     0.062,
+     0.47
+    ],
+    "fingers": [
+     1,
+     0,
+     0
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     0,
+     0,
+     -1
+    ],
+    "curl": 0.3
+   },
+   "armR": {
+    "pos": [
+     -0.716,
+     0.062,
+     0.47
+    ],
+    "fingers": [
+     -1,
+     0,
+     0
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     0,
+     0,
+     -1
+    ],
+    "curl": 0.3
+   },
+   "legL": {
+    "fk": {
+     "flex": 6,
+     "abd": 3,
+     "knee": 0
+    },
+    "foot": {
+     "pitch": 62
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 6,
+     "abd": 3,
+     "knee": 0
+    },
+    "foot": {
+     "pitch": 62
+    }
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.15,
+     0
+    ],
+    "pitch": 92
+   },
+   "spine": {
+    "flex": -34
+   },
+   "neck": {
+    "flex": -10
+   },
+   "armL": {
+    "pos": [
+     0.71,
+     0.36,
+     0.46
+    ],
+    "fingers": [
+     1,
+     0,
+     0
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     0,
+     0,
+     -1
+    ],
+    "curl": 0.3
+   },
+   "armR": {
+    "pos": [
+     -0.71,
+     0.36,
+     0.46
+    ],
+    "fingers": [
+     -1,
+     0,
+     0
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     0,
+     0,
+     -1
+    ],
+    "curl": 0.3
+   },
+   "legL": {
+    "fk": {
+     "flex": 8,
+     "abd": 3,
+     "knee": 0
+    },
+    "foot": {
+     "pitch": 60
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 8,
+     "abd": 3,
+     "knee": 0
+    },
+    "foot": {
+     "pitch": 60
+    }
+   }
+  }
+ }
+}

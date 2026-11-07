@@ -1,0 +1,203 @@
+{
+ "slug": "car-deadlift",
+ "camera": {
+  "az": 30,
+  "el": 11
+ },
+ "muscles": [
+  "quadriceps",
+  "glutes",
+  "spinal-erectors"
+ ],
+ "props": [
+  {
+   "type": "car-deadlift",
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "hands": true
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.66,
+     -0.2
+    ],
+    "pitch": 42
+   },
+   "spine": {
+    "flex": 6
+   },
+   "neck": {
+    "flex": -28
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0.03
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 8,
+    "pole": [
+     0.25,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0.03
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -8,
+    "pole": [
+     -0.25,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.32,
+     0.455,
+     0
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "curl": 0.8,
+    "pole": [
+     0.8,
+     0.1,
+     -0.4
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.32,
+     0.455,
+     0
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     1,
+     0,
+     0
+    ],
+    "curl": 0.8,
+    "pole": [
+     -0.8,
+     0.1,
+     -0.4
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.915,
+     0
+    ],
+    "pitch": -1
+   },
+   "spine": {
+    "flex": -3
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0.03
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 8
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0.03
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -8
+   },
+   "armL": {
+    "pos": [
+     0.32,
+     0.815,
+     0
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "curl": 0.8,
+    "pole": [
+     0.8,
+     0.1,
+     -0.4
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.32,
+     0.815,
+     0
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     1,
+     0,
+     0
+    ],
+    "curl": 0.8,
+    "pole": [
+     -0.8,
+     0.1,
+     -0.4
+    ]
+   }
+  }
+ }
+}

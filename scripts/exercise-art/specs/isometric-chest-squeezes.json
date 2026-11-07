@@ -1,0 +1,88 @@
+{
+ "slug": "isometric-chest-squeezes",
+ "camera": {
+  "az": 40,
+  "el": 10
+ },
+ "muscles": [
+  "chest"
+ ],
+ "props": [],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -6
+   },
+   "armL": {
+    "pos": [
+     0.02,
+     1.28,
+     0.32
+    ],
+    "hand": "flat",
+    "contact": true,
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "pole": [
+     0.8,
+     -0.5,
+     -0.3
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.02,
+     1.28,
+     0.32
+    ],
+    "hand": "flat",
+    "contact": true,
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     1,
+     0,
+     0
+    ],
+    "pole": [
+     -0.8,
+     -0.5,
+     -0.3
+    ]
+   }
+  }
+ }
+}

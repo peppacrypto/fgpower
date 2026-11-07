@@ -1,0 +1,73 @@
+{
+ "slug": "chair-pose",
+ "camera": {
+  "az": 60,
+  "el": 8
+ },
+ "muscles": [
+  "quadriceps",
+  "glutes"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.62,
+     -0.2
+    ],
+    "pitch": 30
+   },
+   "spine": {
+    "flex": -6
+   },
+   "neck": {
+    "flex": -12
+   },
+   "armL": {
+    "fk": {
+     "flex": 172,
+     "abd": 6,
+     "elbow": 4
+    },
+    "curl": 0.3
+   },
+   "armR": {
+    "fk": {
+     "flex": 172,
+     "abd": 6,
+     "elbow": 4
+    },
+    "curl": 0.3
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": 4,
+    "pole": [
+     0.4,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": -4,
+    "pole": [
+     -0.4,
+     0,
+     1
+    ]
+   }
+  }
+ }
+}

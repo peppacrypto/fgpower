@@ -1,0 +1,231 @@
+{
+ "slug": "front-squat-clean-grip",
+ "camera": {
+  "az": 45,
+  "el": 6
+ },
+ "muscles": [
+  "quadriceps",
+  "glutes"
+ ],
+ "props": [
+  {
+   "type": "barbell",
+   "hands": true,
+   "plates": [
+    20,
+    10
+   ]
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.915,
+     -0.03
+    ],
+    "pitch": 4
+   },
+   "spine": {
+    "flex": 0
+   },
+   "neck": {
+    "flex": -3
+   },
+   "legL": {
+    "pos": [
+     0.2,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": 18,
+    "pitch": 0,
+    "pole": [
+     0.38,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.2,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": -18,
+    "pitch": 0,
+    "pole": [
+     -0.38,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.2,
+     0.2,
+     0.13
+    ],
+    "rel": "chest",
+    "fingers": [
+     0,
+     0.1,
+     -1
+    ],
+    "palm": [
+     0,
+     1,
+     0.1
+    ],
+    "hand": "grip",
+    "grip": 0.014,
+    "pole": [
+     0.1,
+     -0.2,
+     1
+    ],
+    "scap": {
+     "elev": 0,
+     "prot": 0.5
+    }
+   },
+   "armR": {
+    "pos": [
+     -0.2,
+     0.2,
+     0.13
+    ],
+    "rel": "chest",
+    "fingers": [
+     0,
+     0.1,
+     -1
+    ],
+    "palm": [
+     0,
+     1,
+     0.1
+    ],
+    "hand": "grip",
+    "grip": 0.014,
+    "pole": [
+     -0.1,
+     -0.2,
+     1
+    ],
+    "scap": {
+     "elev": 0,
+     "prot": 0.5
+    }
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.5,
+     -0.2
+    ],
+    "pitch": 24
+   },
+   "spine": {
+    "flex": -2
+   },
+   "neck": {
+    "flex": -6
+   },
+   "legL": {
+    "pos": [
+     0.2,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": 18,
+    "pitch": 0,
+    "pole": [
+     0.38,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.2,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": -18,
+    "pitch": 0,
+    "pole": [
+     -0.38,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.2,
+     0.2,
+     0.13
+    ],
+    "rel": "chest",
+    "fingers": [
+     0,
+     0.1,
+     -1
+    ],
+    "palm": [
+     0,
+     1,
+     0.1
+    ],
+    "hand": "grip",
+    "grip": 0.014,
+    "pole": [
+     0.1,
+     -0.2,
+     1
+    ],
+    "scap": {
+     "elev": 0,
+     "prot": 0.5
+    }
+   },
+   "armR": {
+    "pos": [
+     -0.2,
+     0.2,
+     0.13
+    ],
+    "rel": "chest",
+    "fingers": [
+     0,
+     0.1,
+     -1
+    ],
+    "palm": [
+     0,
+     1,
+     0.1
+    ],
+    "hand": "grip",
+    "grip": 0.014,
+    "pole": [
+     -0.1,
+     -0.2,
+     1
+    ],
+    "scap": {
+     "elev": 0,
+     "prot": 0.5
+    }
+   }
+  }
+ }
+}

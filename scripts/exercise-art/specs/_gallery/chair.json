@@ -1,0 +1,136 @@
+{
+ "slug": "gallery-chair",
+ "camera": {
+  "az": 70,
+  "el": 8
+ },
+ "muscles": [
+  "quadriceps"
+ ],
+ "props": [
+  {
+   "type": "chair",
+   "pos": [
+    0,
+    0,
+    -0.12
+   ]
+  },
+  {
+   "type": "wall",
+   "pos": [
+    0,
+    0,
+    -0.37
+   ]
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.932,
+     0.2
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 85,
+     "abd": 4,
+     "elbow": 4
+    },
+    "curl": 0.22
+   },
+   "armR": {
+    "fk": {
+     "flex": 85,
+     "abd": 4,
+     "elbow": 4
+    },
+    "curl": 0.22
+   },
+   "legL": {
+    "pos": [
+     0.14,
+     0,
+     0.28
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.07,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.14,
+     0,
+     0.28
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.07,
+     0,
+     1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.585,
+     -0.1
+    ],
+    "pitch": 28
+   },
+   "neck": {
+    "flex": -16
+   },
+   "armL": {
+    "fk": {
+     "flex": 108,
+     "abd": 4,
+     "elbow": 4
+    },
+    "curl": 0.22
+   },
+   "armR": {
+    "fk": {
+     "flex": 108,
+     "abd": 4,
+     "elbow": 4
+    },
+    "curl": 0.22
+   },
+   "legL": {
+    "pos": [
+     0.14,
+     0,
+     0.28
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.07,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.14,
+     0,
+     0.28
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.07,
+     0,
+     1
+    ]
+   }
+  }
+ }
+}

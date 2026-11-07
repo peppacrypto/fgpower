@@ -1,0 +1,141 @@
+{
+ "slug": "suspended-split-squat",
+ "camera": {
+  "az": 70,
+  "el": 6
+ },
+ "muscles": [
+  "quadriceps",
+  "glutes"
+ ],
+ "props": [
+  {
+   "type": "suspension-trainer",
+   "anchor": [
+    0,
+    2.25,
+    -0.65
+   ],
+   "feet": "R",
+   "frameIgnore": true
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.84,
+     -0.02
+    ],
+    "pitch": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "armL": {
+    "fk": {
+     "flex": -35,
+     "abd": 30,
+     "rot": 0,
+     "elbow": 25
+    },
+    "rel": "chest"
+   },
+   "armR": {
+    "fk": {
+     "flex": -35,
+     "abd": 30,
+     "rot": 0,
+     "elbow": 25
+    },
+    "rel": "chest"
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0,
+     0.38
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.05,
+     0.3,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.12,
+     0.51,
+     -0.61
+    ],
+    "anchor": "ankle",
+    "pitch": 130,
+    "pole": [
+     -0.05,
+     -1,
+     0.3
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.52,
+     0
+    ],
+    "pitch": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "armL": {
+    "fk": {
+     "flex": -35,
+     "abd": 30,
+     "rot": 0,
+     "elbow": 25
+    },
+    "rel": "chest"
+   },
+   "armR": {
+    "fk": {
+     "flex": -35,
+     "abd": 30,
+     "rot": 0,
+     "elbow": 25
+    },
+    "rel": "chest"
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0,
+     0.38
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.05,
+     0.3,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.12,
+     0.51,
+     -0.61
+    ],
+    "anchor": "ankle",
+    "pitch": 130,
+    "pole": [
+     -0.05,
+     -1,
+     0.3
+    ]
+   }
+  }
+ }
+}

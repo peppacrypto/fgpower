@@ -1,0 +1,124 @@
+{
+ "slug": "toe-touchers",
+ "camera": {
+  "az": 90,
+  "el": 18
+ },
+ "muscles": [
+  "abdominals"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.105,
+     0
+    ],
+    "pitch": -90
+   },
+   "neck": {
+    "flex": 8
+   },
+   "armL": {
+    "fk": {
+     "flex": 90,
+     "abd": 10,
+     "elbow": 4
+    },
+    "rel": "chest",
+    "curl": 0.2
+   },
+   "armR": {
+    "fk": {
+     "flex": 90,
+     "abd": 10,
+     "elbow": 4
+    },
+    "rel": "chest",
+    "curl": 0.2
+   },
+   "legL": {
+    "fk": {
+     "flex": 88,
+     "abd": 1,
+     "knee": 8
+    },
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 88,
+     "abd": 1,
+     "knee": 8
+    },
+    "foot": {
+     "pitch": 0
+    }
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.1,
+     0
+    ],
+    "pitch": -92
+   },
+   "neck": {
+    "flex": 20
+   },
+   "spine": {
+    "flex": 40,
+    "weights": [
+     0,
+     0.1,
+     0.2,
+     0.3,
+     0.4
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 90,
+     "abd": 10,
+     "elbow": 4
+    },
+    "rel": "chest",
+    "curl": 0.2
+   },
+   "armR": {
+    "fk": {
+     "flex": 90,
+     "abd": 10,
+     "elbow": 4
+    },
+    "rel": "chest",
+    "curl": 0.2
+   },
+   "legL": {
+    "fk": {
+     "flex": 88,
+     "abd": 1,
+     "knee": 8
+    },
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 88,
+     "abd": 1,
+     "knee": 8
+    },
+    "foot": {
+     "pitch": 0
+    }
+   }
+  }
+ }
+}

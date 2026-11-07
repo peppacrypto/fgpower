@@ -1,0 +1,210 @@
+{
+ "slug": "groin-and-back-stretch",
+ "camera": {
+  "az": 70,
+  "el": 10
+ },
+ "muscles": [
+  "adductors"
+ ],
+ "props": [
+  {
+   "type": "floor-mat"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.125,
+     0
+    ],
+    "pitch": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.05,
+     0.09,
+     0.42
+    ],
+    "anchor": "ankle",
+    "pole": [
+     0.3,
+     0.5,
+     -0.3
+    ],
+    "pitch": 0,
+    "roll": 0,
+    "yaw": 0
+   },
+   "legR": {
+    "pos": [
+     -0.05,
+     0.09,
+     0.42
+    ],
+    "anchor": "ankle",
+    "pole": [
+     -0.3,
+     0.5,
+     -0.3
+    ],
+    "pitch": 0,
+    "roll": 0,
+    "yaw": 0
+   },
+   "armL": {
+    "pos": [
+     0.11,
+     0,
+     -0.06
+    ],
+    "rel": "head",
+    "hand": "relaxed",
+    "fingers": [
+     -0.3,
+     0.2,
+     -1
+    ],
+    "palm": [
+     0,
+     -0.3,
+     1
+    ],
+    "curl": 0.5,
+    "pole": [
+     1,
+     0.1,
+     -0.1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.11,
+     0,
+     -0.06
+    ],
+    "rel": "head",
+    "hand": "relaxed",
+    "fingers": [
+     0.3,
+     0.2,
+     -1
+    ],
+    "palm": [
+     0,
+     -0.3,
+     1
+    ],
+    "curl": 0.5,
+    "pole": [
+     -1,
+     0.1,
+     -0.1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.125,
+     0
+    ],
+    "pitch": 6
+   },
+   "spine": {
+    "flex": 50
+   },
+   "neck": {
+    "flex": 12
+   },
+   "legL": {
+    "pos": [
+     0.05,
+     0.09,
+     0.42
+    ],
+    "anchor": "ankle",
+    "pole": [
+     0.3,
+     0.5,
+     -0.3
+    ],
+    "pitch": 0,
+    "roll": 0,
+    "yaw": 0
+   },
+   "legR": {
+    "pos": [
+     -0.05,
+     0.09,
+     0.42
+    ],
+    "anchor": "ankle",
+    "pole": [
+     -0.3,
+     0.5,
+     -0.3
+    ],
+    "pitch": 0,
+    "roll": 0,
+    "yaw": 0
+   },
+   "armL": {
+    "pos": [
+     0.11,
+     0,
+     -0.06
+    ],
+    "rel": "head",
+    "hand": "relaxed",
+    "fingers": [
+     -0.3,
+     0.2,
+     -1
+    ],
+    "palm": [
+     0,
+     -0.3,
+     1
+    ],
+    "curl": 0.5,
+    "pole": [
+     1,
+     0.1,
+     -0.1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.11,
+     0,
+     -0.06
+    ],
+    "rel": "head",
+    "hand": "relaxed",
+    "fingers": [
+     0.3,
+     0.2,
+     -1
+    ],
+    "palm": [
+     0,
+     -0.3,
+     1
+    ],
+    "curl": 0.5,
+    "pole": [
+     -1,
+     0.1,
+     -0.1
+    ]
+   }
+  }
+ }
+}

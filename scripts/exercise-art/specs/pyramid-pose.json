@@ -1,0 +1,214 @@
+{
+ "slug": "pyramid-pose",
+ "camera": {
+  "az": 100,
+  "el": 8
+ },
+ "muscles": [
+  "hamstrings"
+ ],
+ "props": [],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.84,
+     0
+    ],
+    "pitch": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "armL": {
+    "pos": [
+     0.26,
+     0.88,
+     0
+    ],
+    "hand": "relaxed",
+    "pole": [
+     0.5,
+     0,
+     -1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.26,
+     0.88,
+     0
+    ],
+    "hand": "relaxed",
+    "pole": [
+     -0.5,
+     0,
+     -1
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0,
+     0.27
+    ],
+    "anchor": "sole",
+    "yaw": 0,
+    "pole": [
+     0,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0,
+     -0.27
+    ],
+    "anchor": "sole",
+    "yaw": 0,
+    "pole": [
+     0,
+     0,
+     1
+    ]
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.84,
+     0
+    ],
+    "pitch": 60
+   },
+   "neck": {
+    "flex": 20
+   },
+   "armL": {
+    "pos": [
+     0.27,
+     0.68,
+     0.15
+    ],
+    "hand": "relaxed",
+    "pole": [
+     0.3,
+     0,
+     -1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.27,
+     0.68,
+     0.15
+    ],
+    "hand": "relaxed",
+    "pole": [
+     -0.3,
+     0,
+     -1
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0,
+     0.27
+    ],
+    "anchor": "sole",
+    "yaw": 0,
+    "pole": [
+     0,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0,
+     -0.27
+    ],
+    "anchor": "sole",
+    "yaw": 0,
+    "pole": [
+     0,
+     0,
+     1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.84,
+     -0.04
+    ],
+    "pitch": 103
+   },
+   "neck": {
+    "flex": 40
+   },
+   "armL": {
+    "pos": [
+     0.27,
+     0.2,
+     0.44
+    ],
+    "hand": "relaxed",
+    "pole": [
+     0.3,
+     0,
+     -1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.27,
+     0.2,
+     0.44
+    ],
+    "hand": "relaxed",
+    "pole": [
+     -0.3,
+     0,
+     -1
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0,
+     0.27
+    ],
+    "anchor": "sole",
+    "yaw": 0,
+    "pole": [
+     0,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0,
+     -0.27
+    ],
+    "anchor": "sole",
+    "yaw": 0,
+    "pole": [
+     0,
+     0,
+     1
+    ]
+   }
+  }
+ }
+}

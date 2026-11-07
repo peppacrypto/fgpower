@@ -1,0 +1,160 @@
+{
+ "slug": "weighted-squat",
+ "floats": true,
+ "camera": {
+  "az": 30,
+  "el": 6
+ },
+ "muscles": [
+  "quadriceps"
+ ],
+ "props": [
+  {
+   "type": "flat-bench",
+   "pos": [
+    0.3,
+    0,
+    0
+   ]
+  },
+  {
+   "type": "flat-bench",
+   "pos": [
+    -0.3,
+    0,
+    0
+   ]
+  },
+  {
+   "type": "dip-belt",
+   "follow": true,
+   "kg": 20
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     1.35,
+     0
+    ],
+    "pitch": 0
+   },
+   "spine": {
+    "flex": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 32,
+     "elbow": 6
+    },
+    "rel": "chest"
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 32,
+     "elbow": 6
+    },
+    "rel": "chest"
+   },
+   "legL": {
+    "pos": [
+     0.3,
+     0.44,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": 28,
+    "pitch": 0,
+    "pole": [
+     0.8,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.3,
+     0.44,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": -28,
+    "pitch": 0,
+    "pole": [
+     -0.8,
+     0,
+     1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.94,
+     -0.18
+    ],
+    "pitch": 26
+   },
+   "spine": {
+    "flex": -4
+   },
+   "neck": {
+    "flex": -16
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 32,
+     "elbow": 6
+    },
+    "rel": "chest"
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 32,
+     "elbow": 6
+    },
+    "rel": "chest"
+   },
+   "legL": {
+    "pos": [
+     0.3,
+     0.44,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": 28,
+    "pitch": 0,
+    "pole": [
+     0.8,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.3,
+     0.44,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": -28,
+    "pitch": 0,
+    "pole": [
+     -0.8,
+     0,
+     1
+    ]
+   }
+  }
+ }
+}

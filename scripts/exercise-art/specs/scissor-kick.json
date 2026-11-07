@@ -1,0 +1,174 @@
+{
+ "slug": "scissor-kick",
+ "camera": {
+  "az": 88,
+  "el": 16
+ },
+ "muscles": [
+  "abdominals"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.105,
+     0
+    ],
+    "pitch": -90
+   },
+   "neck": {
+    "flex": 8
+   },
+   "armL": {
+    "pos": [
+     0.3,
+     0.012,
+     0
+    ],
+    "contact": true,
+    "fingers": [
+     0.08,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     1,
+     0.1,
+     0.2
+    ],
+    "curl": -0.3
+   },
+   "armR": {
+    "pos": [
+     -0.3,
+     0.012,
+     0
+    ],
+    "contact": true,
+    "fingers": [
+     -0.08,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -1,
+     0.1,
+     0.2
+    ],
+    "curl": -0.3
+   },
+   "legL": {
+    "fk": {
+     "flex": 48,
+     "abd": 1,
+     "knee": 3
+    },
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 16,
+     "abd": 1,
+     "knee": 3
+    },
+    "foot": {
+     "pitch": 0
+    }
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.105,
+     0
+    ],
+    "pitch": -90
+   },
+   "neck": {
+    "flex": 8
+   },
+   "armL": {
+    "pos": [
+     0.3,
+     0.012,
+     0
+    ],
+    "contact": true,
+    "fingers": [
+     0.08,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     1,
+     0.1,
+     0.2
+    ],
+    "curl": -0.3
+   },
+   "armR": {
+    "pos": [
+     -0.3,
+     0.012,
+     0
+    ],
+    "contact": true,
+    "fingers": [
+     -0.08,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -1,
+     0.1,
+     0.2
+    ],
+    "curl": -0.3
+   },
+   "legL": {
+    "fk": {
+     "flex": 16,
+     "abd": 1,
+     "knee": 3
+    },
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 48,
+     "abd": 1,
+     "knee": 3
+    },
+    "foot": {
+     "pitch": 0
+    }
+   }
+  }
+ }
+}

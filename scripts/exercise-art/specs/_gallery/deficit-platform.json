@@ -1,0 +1,295 @@
+{
+ "camera": {
+  "az": 118,
+  "el": 12
+ },
+ "muscles": [
+  "spinal-erectors",
+  "glutes",
+  "hamstrings"
+ ],
+ "floats": true,
+ "props": [
+  {
+   "type": "deficit-platform",
+   "height": 0.075
+  },
+  {
+   "type": "barbell",
+   "hands": true,
+   "plates": [
+    20
+   ]
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.625,
+     -0.27
+    ],
+    "pitch": 62
+   },
+   "neck": {
+    "flex": -42
+   },
+   "armL": {
+    "pos": [
+     0.235,
+     0.225,
+     0.085
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     0,
+     0,
+     -1
+    ],
+    "pole": [
+     0.4,
+     0,
+     -0.6
+    ],
+    "curl": 0.82
+   },
+   "armR": {
+    "pos": [
+     -0.235,
+     0.225,
+     0.085
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     0,
+     0,
+     -1
+    ],
+    "pole": [
+     -0.4,
+     0,
+     -0.6
+    ],
+    "curl": 0.82
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0.075,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 6,
+    "pole": [
+     0.2,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0.075,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -6,
+    "pole": [
+     -0.2,
+     0,
+     1
+    ]
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.85,
+     -0.33
+    ],
+    "pitch": 50
+   },
+   "neck": {
+    "flex": -30
+   },
+   "armL": {
+    "pos": [
+     0.235,
+     0.585,
+     0.08
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     0,
+     0,
+     -1
+    ],
+    "pole": [
+     0.4,
+     0,
+     -0.6
+    ],
+    "curl": 0.82
+   },
+   "armR": {
+    "pos": [
+     -0.235,
+     0.585,
+     0.08
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     0,
+     0,
+     -1
+    ],
+    "pole": [
+     -0.4,
+     0,
+     -0.6
+    ],
+    "curl": 0.82
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0.075,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 6,
+    "pole": [
+     0.2,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0.075,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -6,
+    "pole": [
+     -0.2,
+     0,
+     1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.985,
+     -0.02
+    ],
+    "pitch": -2
+   },
+   "neck": {
+    "flex": 0
+   },
+   "armL": {
+    "pos": [
+     0.235,
+     0.9,
+     0.135
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     0,
+     0,
+     -1
+    ],
+    "pole": [
+     0.4,
+     0,
+     -0.6
+    ],
+    "curl": 0.82
+   },
+   "armR": {
+    "pos": [
+     -0.235,
+     0.9,
+     0.135
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     0,
+     0,
+     -1
+    ],
+    "pole": [
+     -0.4,
+     0,
+     -0.6
+    ],
+    "curl": 0.82
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0.075,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 6,
+    "pole": [
+     0.2,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0.075,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -6,
+    "pole": [
+     -0.2,
+     0,
+     1
+    ]
+   }
+  }
+ },
+ "slug": "gallery-deficit-platform"
+}

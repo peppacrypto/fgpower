@@ -1,0 +1,90 @@
+{
+ "slug": "triceps-stretch",
+ "camera": {
+  "az": 30,
+  "el": 6
+ },
+ "muscles": [
+  "triceps"
+ ],
+ "props": [],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ],
+    "pitch": 0
+   },
+   "spine": {
+    "flex": 0,
+    "side": 0,
+    "twist": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 4
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -4
+   },
+   "armL": {
+    "pos": [
+     0.04,
+     1.54,
+     -0.1
+    ],
+    "rel": "world",
+    "pole": [
+     1,
+     0.1,
+     0.6
+    ],
+    "hand": "relaxed"
+   },
+   "armR": {
+    "pos": [
+     0.17,
+     1.64,
+     0.05
+    ],
+    "rel": "world",
+    "contact": true,
+    "hand": "grip",
+    "grip": 0.02,
+    "pole": [
+     -0.3,
+     -1,
+     0.2
+    ],
+    "fingers": [
+     -1,
+     0,
+     0
+    ],
+    "palm": [
+     0,
+     0,
+     1
+    ]
+   }
+  }
+ },
+ "muscleSide": "L"
+}

@@ -1,0 +1,89 @@
+{
+ "slug": "test-hands-behind-head",
+ "camera": {
+  "az": 140,
+  "el": 12
+ },
+ "muscles": [],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.925,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.115,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.115,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -6
+   },
+   "armL": {
+    "pos": [
+     0.04,
+     0.08,
+     -0.1
+    ],
+    "rel": "head",
+    "hand": "ball",
+    "ballRadius": 0.1,
+    "fingers": [
+     -0.85,
+     0.1,
+     -0.5
+    ],
+    "palm": [
+     -0.5,
+     0,
+     0.85
+    ],
+    "pole": [
+     1,
+     0.15,
+     0.1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.04,
+     0.08,
+     -0.1
+    ],
+    "rel": "head",
+    "hand": "ball",
+    "ballRadius": 0.1,
+    "fingers": [
+     0.85,
+     0.1,
+     -0.5
+    ],
+    "palm": [
+     0.5,
+     0,
+     0.85
+    ],
+    "pole": [
+     -1,
+     0.15,
+     0.1
+    ]
+   }
+  }
+ }
+}

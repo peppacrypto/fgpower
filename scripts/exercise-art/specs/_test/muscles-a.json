@@ -1,0 +1,2 @@
+{"slug":"muscles-a","camera":{"az":25,"el":6},"muscles":["chest","abdominals","anterior-deltoid","biceps","quadriceps","obliques"],
+ "frames":{"start":{"root":{"pos":[0,0.92,0]},"armL":{"fk":{"flex":10,"abd":28,"elbow":20}},"armR":{"fk":{"flex":10,"abd":28,"elbow":20}},"legL":{"pos":[0.13,0,0.02],"anchor":"sole"},"legR":{"pos":[-0.13,0,0.02],"anchor":"sole"}}}}

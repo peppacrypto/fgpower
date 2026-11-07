@@ -1,0 +1,53 @@
+{
+ "slug": "test-standing",
+ "camera": {
+  "az": 25,
+  "el": 5
+ },
+ "muscles": [],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.93,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.115,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.115,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 7,
+     "elbow": 12
+    }
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 7,
+     "elbow": 12
+    }
+   }
+  }
+ }
+}

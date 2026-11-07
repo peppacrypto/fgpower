@@ -1,0 +1,92 @@
+{
+ "slug": "one-arm-against-wall",
+ "camera": {
+  "az": 115,
+  "el": 6
+ },
+ "muscles": [
+  "lats"
+ ],
+ "props": [
+  {
+   "type": "wall",
+   "pos": [
+    0,
+    0,
+    0.79
+   ],
+   "width": 4
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0.2
+    ],
+    "pitch": 10
+   },
+   "spine": {
+    "flex": 6
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0.2
+    ],
+    "anchor": "sole",
+    "yaw": 4
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0.2
+    ],
+    "anchor": "sole",
+    "yaw": -4
+   },
+   "armL": {
+    "pos": [
+     0.26,
+     1.7,
+     0.76
+    ],
+    "rel": "world",
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     1,
+     0
+    ],
+    "palm": [
+     0,
+     0,
+     1
+    ],
+    "pole": [
+     1,
+     -0.2,
+     -0.5
+    ]
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 10,
+     "rot": 0,
+     "elbow": 10
+    },
+    "rel": "chest"
+   }
+  }
+ },
+ "muscleSide": "L"
+}

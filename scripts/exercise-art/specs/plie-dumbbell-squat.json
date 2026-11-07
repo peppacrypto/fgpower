@@ -1,0 +1,202 @@
+{
+ "slug": "plie-dumbbell-squat",
+ "camera": {
+  "az": 25,
+  "el": 6
+ },
+ "muscles": [
+  "quadriceps",
+  "adductors"
+ ],
+ "props": [
+  {
+   "type": "dumbbell",
+   "hands": true,
+   "hold": "goblet",
+   "kg": 20
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.89,
+     0
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.045,
+     1.2,
+     0.26
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0.3,
+     1
+    ],
+    "palm": [
+     -0.3,
+     0.9,
+     -0.3
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.8,
+     -1,
+     -0.4
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.045,
+     1.2,
+     0.26
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0.3,
+     1
+    ],
+    "palm": [
+     0.3,
+     0.9,
+     -0.3
+    ],
+    "curl": 0.85,
+    "pole": [
+     -0.8,
+     -1,
+     -0.4
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.32,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": 42,
+    "pitch": 0,
+    "pole": [
+     0.9,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.32,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": -42,
+    "pitch": 0,
+    "pole": [
+     -0.9,
+     0,
+     1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.52,
+     -0.1
+    ],
+    "pitch": 16
+   },
+   "spine": {
+    "flex": 2
+   },
+   "neck": {
+    "flex": -12
+   },
+   "armL": {
+    "pos": [
+     0.045,
+     0.87,
+     0.26
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -0.3,
+     1
+    ],
+    "palm": [
+     -0.3,
+     0.9,
+     -0.3
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.55,
+     -1,
+     -0.3
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.045,
+     0.87,
+     0.26
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -0.3,
+     1
+    ],
+    "palm": [
+     0.3,
+     0.9,
+     -0.3
+    ],
+    "curl": 0.85,
+    "pole": [
+     -0.55,
+     -1,
+     -0.3
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.32,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": 42,
+    "pitch": 0,
+    "pole": [
+     0.9,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.32,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": -42,
+    "pitch": 0,
+    "pole": [
+     -0.9,
+     0,
+     1
+    ]
+   }
+  }
+ }
+}

@@ -1,0 +1,115 @@
+{
+ "slug": "seated-calf-stretch",
+ "camera": {
+  "az": 80,
+  "el": 8
+ },
+ "muscles": [
+  "calves"
+ ],
+ "props": [
+  {
+   "type": "floor-mat"
+  },
+  {
+   "type": "stretch-strap",
+   "foot": "L",
+   "hand": "L"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.125,
+     -0.05
+    ],
+    "pitch": 8
+   },
+   "spine": {
+    "flex": 6
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0.08,
+     0.8
+    ],
+    "pitch": -82,
+    "pole": [
+     0.1,
+     1,
+     0.1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.38,
+     0,
+     0.62
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "pole": [
+     -0.3,
+     1,
+     0.1
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.12,
+     0.34,
+     0.42
+    ],
+    "hand": "grip",
+    "grip": 0.02,
+    "fingers": [
+     0,
+     0.1,
+     1
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "curl": 0.8,
+    "pole": [
+     1,
+     -0.6,
+     -0.1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.2,
+     0.15,
+     -0.24
+    ],
+    "hand": "relaxed",
+    "fingers": [
+     0,
+     -0.7,
+     0.7
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": 0.3,
+    "pole": [
+     -0.6,
+     -0.5,
+     -0.6
+    ]
+   }
+  }
+ },
+ "muscleSide": "L"
+}

@@ -1,0 +1,185 @@
+{
+ "slug": "windmills",
+ "camera": {
+  "az": 30,
+  "el": 40
+ },
+ "muscles": [
+  "abductors"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.1,
+     0
+    ],
+    "pitch": -90
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "fk": {
+     "flex": 0,
+     "abd": 0,
+     "rot": 0,
+     "knee": 0
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 0,
+     "abd": 0,
+     "rot": 0,
+     "knee": 0
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 88,
+     "rot": 0,
+     "elbow": 4
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "pron": 0
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 88,
+     "rot": 0,
+     "elbow": 4
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "pron": 0
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.1,
+     0
+    ],
+    "pitch": -90
+   },
+   "legL": {
+    "fk": {
+     "flex": 90,
+     "abd": 0,
+     "rot": 0,
+     "knee": 0
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 0,
+     "abd": 0,
+     "rot": 0,
+     "knee": 0
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 88,
+     "rot": 0,
+     "elbow": 4
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "pron": 0
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 88,
+     "rot": 0,
+     "elbow": 4
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "pron": 0
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.1,
+     0
+    ],
+    "pitch": -90,
+    "roll": -25
+   },
+   "legL": {
+    "fk": {
+     "flex": 85,
+     "abd": -30,
+     "rot": 0,
+     "knee": 0
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 0,
+     "abd": 0,
+     "rot": 0,
+     "knee": 0
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 88,
+     "rot": 0,
+     "elbow": 4
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "pron": 0
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 88,
+     "rot": 0,
+     "elbow": 4
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "pron": 0
+   }
+  }
+ },
+ "muscleSide": "L"
+}

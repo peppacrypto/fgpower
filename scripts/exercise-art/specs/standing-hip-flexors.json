@@ -1,0 +1,70 @@
+{
+ "slug": "standing-hip-flexors",
+ "camera": {
+  "az": 80,
+  "el": 8
+ },
+ "muscles": [
+  "quadriceps"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.82,
+     0.08
+    ],
+    "pitch": -3
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.12,
+     0,
+     0.32
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.1,
+     0.5,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.12,
+     0.03,
+     -0.3
+    ],
+    "anchor": "ball",
+    "pole": [
+     -0.1,
+     0.2,
+     1
+    ],
+    "pitch": 42
+   },
+   "armL": {
+    "fk": {
+     "flex": 10,
+     "abd": 35,
+     "rot": 0,
+     "elbow": 100
+    },
+    "rel": "chest"
+   },
+   "armR": {
+    "fk": {
+     "flex": 10,
+     "abd": 35,
+     "rot": 0,
+     "elbow": 100
+    },
+    "rel": "chest"
+   }
+  }
+ }
+}

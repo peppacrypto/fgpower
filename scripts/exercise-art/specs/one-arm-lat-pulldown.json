@@ -1,0 +1,163 @@
+{
+ "slug": "one-arm-lat-pulldown",
+ "camera": {
+  "az": 130,
+  "el": 12
+ },
+ "muscles": [
+  "lats"
+ ],
+ "props": [
+  {
+   "type": "lat-pulldown",
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "hand": "L",
+   "attachment": "d-handle"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.57,
+     -0.02
+    ],
+    "pitch": -4
+   },
+   "spine": {
+    "flex": -2
+   },
+   "neck": {
+    "flex": -10
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0.4
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0.4
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -6
+   },
+   "armL": {
+    "pos": [
+     0.12,
+     1.57,
+     0.17
+    ],
+    "contact": true,
+    "fingers": [
+     0.2,
+     0.97,
+     0.1
+    ],
+    "palm": [
+     -1,
+     0,
+     0.1
+    ],
+    "curl": 0.78,
+    "pole": [
+     1,
+     -0.45,
+     -0.15
+    ]
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 12,
+     "rot": 0,
+     "elbow": 25
+    },
+    "rel": "chest"
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.57,
+     -0.02
+    ],
+    "pitch": -12
+   },
+   "spine": {
+    "flex": -6
+   },
+   "neck": {
+    "flex": -4
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0.4
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0.4
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -6
+   },
+   "armL": {
+    "pos": [
+     0.28,
+     1.12,
+     0.1
+    ],
+    "contact": true,
+    "fingers": [
+     0.1,
+     0.9,
+     0.4
+    ],
+    "palm": [
+     -1,
+     0,
+     0.2
+    ],
+    "curl": 0.78,
+    "pole": [
+     0.4,
+     -0.3,
+     -1
+    ]
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 12,
+     "rot": 0,
+     "elbow": 25
+    },
+    "rel": "chest"
+   }
+  }
+ },
+ "muscleSide": "L"
+}

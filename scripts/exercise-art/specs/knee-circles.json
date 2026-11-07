@@ -1,0 +1,174 @@
+{
+ "slug": "knee-circles",
+ "camera": {
+  "az": 35,
+  "el": 8
+ },
+ "muscles": [
+  "calves"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.8,
+     0.05
+    ],
+    "pitch": 5
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.15,
+     0.3,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.15,
+     0.3,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 30,
+     "abd": 15,
+     "rot": 0,
+     "elbow": 90
+    },
+    "rel": "chest"
+   },
+   "armR": {
+    "fk": {
+     "flex": 30,
+     "abd": 15,
+     "rot": 0,
+     "elbow": 90
+    },
+    "rel": "chest"
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0.04,
+     0.8,
+     -0.04
+    ],
+    "pitch": 5
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.4,
+     0.3,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.1,
+     0.3,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 30,
+     "abd": 15,
+     "rot": 0,
+     "elbow": 90
+    },
+    "rel": "chest"
+   },
+   "armR": {
+    "fk": {
+     "flex": 30,
+     "abd": 15,
+     "rot": 0,
+     "elbow": 90
+    },
+    "rel": "chest"
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     -0.04,
+     0.8,
+     0.05
+    ],
+    "pitch": 5
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pole": [
+     0,
+     0.3,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.4,
+     0.3,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 30,
+     "abd": 15,
+     "rot": 0,
+     "elbow": 90
+    },
+    "rel": "chest"
+   },
+   "armR": {
+    "fk": {
+     "flex": 30,
+     "abd": 15,
+     "rot": 0,
+     "elbow": 90
+    },
+    "rel": "chest"
+   }
+  }
+ }
+}

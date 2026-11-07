@@ -1,0 +1,190 @@
+{
+ "slug": "gallery-parallettes",
+ "camera": {
+  "az": 58,
+  "el": 8
+ },
+ "muscles": [
+  "abdominals",
+  "triceps"
+ ],
+ "floats": true,
+ "props": [
+  {
+   "type": "parallettes",
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "height": 0.2,
+   "spread": 0.42
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.325,
+     -0.05
+    ],
+    "pitch": -8
+   },
+   "spine": {
+    "flex": 14
+   },
+   "neck": {
+    "flex": 10
+   },
+   "armL": {
+    "pos": [
+     0.188,
+     0.254,
+     0
+    ],
+    "fingers": [
+     0.8,
+     -0.6,
+     0
+    ],
+    "palm": [
+     -0.6,
+     -0.8,
+     0
+    ],
+    "curl": 0.8,
+    "pole": [
+     0.3,
+     0,
+     -1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.188,
+     0.254,
+     0
+    ],
+    "fingers": [
+     -0.8,
+     -0.6,
+     0
+    ],
+    "palm": [
+     0.6,
+     -0.8,
+     0
+    ],
+    "curl": 0.8,
+    "pole": [
+     -0.3,
+     0,
+     -1
+    ]
+   },
+   "legL": {
+    "fk": {
+     "flex": 128,
+     "abd": 3,
+     "knee": 140
+    },
+    "foot": {
+     "pitch": 30
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 128,
+     "abd": 3,
+     "knee": 140
+    },
+    "foot": {
+     "pitch": 30
+    }
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.325,
+     -0.09
+    ],
+    "pitch": -10
+   },
+   "spine": {
+    "flex": 14
+   },
+   "neck": {
+    "flex": 8
+   },
+   "armL": {
+    "pos": [
+     0.188,
+     0.254,
+     0
+    ],
+    "fingers": [
+     0.8,
+     -0.6,
+     0
+    ],
+    "palm": [
+     -0.6,
+     -0.8,
+     0
+    ],
+    "curl": 0.8,
+    "pole": [
+     0.3,
+     0,
+     -1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.188,
+     0.254,
+     0
+    ],
+    "fingers": [
+     -0.8,
+     -0.6,
+     0
+    ],
+    "palm": [
+     0.6,
+     -0.8,
+     0
+    ],
+    "curl": 0.8,
+    "pole": [
+     -0.3,
+     0,
+     -1
+    ]
+   },
+   "legL": {
+    "fk": {
+     "flex": 92,
+     "abd": 1.5,
+     "knee": 2
+    },
+    "foot": {
+     "pitch": 26
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 92,
+     "abd": 1.5,
+     "knee": 2
+    },
+    "foot": {
+     "pitch": 26
+    }
+   }
+  }
+ }
+}

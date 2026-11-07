@@ -1,0 +1,75 @@
+{
+ "slug": "overhead-stretch",
+ "camera": {
+  "az": 30,
+  "el": 6
+ },
+ "muscles": [
+  "abdominals"
+ ],
+ "props": [],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ],
+    "pitch": 0
+   },
+   "spine": {
+    "flex": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 4
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -4
+   },
+   "armL": {
+    "pos": [
+     0.045,
+     1.88,
+     0.02
+    ],
+    "rel": "world",
+    "pole": [
+     1,
+     0,
+     -0.3
+    ],
+    "hand": "ball"
+   },
+   "armR": {
+    "pos": [
+     -0.045,
+     1.88,
+     0.02
+    ],
+    "rel": "world",
+    "pole": [
+     -1,
+     0,
+     -0.3
+    ],
+    "hand": "ball"
+   }
+  }
+ }
+}

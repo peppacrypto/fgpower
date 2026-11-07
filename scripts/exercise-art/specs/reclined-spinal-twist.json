@@ -1,0 +1,141 @@
+{
+ "slug": "reclined-spinal-twist",
+ "camera": {
+  "az": 40,
+  "el": 42
+ },
+ "muscles": [
+  "spinal-erectors",
+  "obliques"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.1,
+     0
+    ],
+    "pitch": -90
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0.3,
+     0.28
+    ],
+    "anchor": "ankle",
+    "pole": [
+     0.1,
+     1,
+     -0.4
+    ],
+    "pitch": -60
+   },
+   "legR": {
+    "fk": {
+     "flex": 0,
+     "abd": 0,
+     "rot": 0,
+     "knee": 0
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 88,
+     "rot": 0,
+     "elbow": 4
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "pron": 0
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 88,
+     "rot": 0,
+     "elbow": 4
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "pron": 0
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.1,
+     0
+    ],
+    "pitch": -90,
+    "roll": -38
+   },
+   "spine": {
+    "twist": -5
+   },
+   "neck": {
+    "twist": -40,
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     -0.38,
+     0.09,
+     0.42
+    ],
+    "anchor": "ankle",
+    "pole": [
+     -0.6,
+     1,
+     0
+    ],
+    "pitch": -90,
+    "roll": -10
+   },
+   "legR": {
+    "fk": {
+     "flex": 0,
+     "abd": 0,
+     "rot": 0,
+     "knee": 0
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 88,
+     "rot": 0,
+     "elbow": 4
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "pron": 0
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 88,
+     "rot": 0,
+     "elbow": 4
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "pron": 0
+   }
+  }
+ }
+}

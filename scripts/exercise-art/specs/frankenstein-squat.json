@@ -1,0 +1,170 @@
+{
+ "slug": "frankenstein-squat",
+ "camera": {
+  "az": 50,
+  "el": 6
+ },
+ "muscles": [
+  "quadriceps",
+  "glutes"
+ ],
+ "props": [
+  {
+   "type": "barbell",
+   "follow": "chest",
+   "at": [
+    0,
+    0.2,
+    0.16
+   ],
+   "dir": [
+    1,
+    0,
+    0
+   ],
+   "up": [
+    0,
+    1,
+    0
+   ],
+   "plates": [
+    20,
+    10
+   ]
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.915,
+     -0.03
+    ],
+    "pitch": 4
+   },
+   "spine": {
+    "flex": 0
+   },
+   "neck": {
+    "flex": -3
+   },
+   "legL": {
+    "pos": [
+     0.2,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": 18,
+    "pitch": 0,
+    "pole": [
+     0.38,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.2,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": -18,
+    "pitch": 0,
+    "pole": [
+     -0.38,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 80,
+     "abd": 8,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   },
+   "armR": {
+    "fk": {
+     "flex": 80,
+     "abd": 8,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.5,
+     -0.2
+    ],
+    "pitch": 24
+   },
+   "spine": {
+    "flex": -2
+   },
+   "neck": {
+    "flex": -6
+   },
+   "legL": {
+    "pos": [
+     0.2,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": 18,
+    "pitch": 0,
+    "pole": [
+     0.38,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.2,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": -18,
+    "pitch": 0,
+    "pole": [
+     -0.38,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 80,
+     "abd": 8,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   },
+   "armR": {
+    "fk": {
+     "flex": 80,
+     "abd": 8,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   }
+  }
+ }
+}

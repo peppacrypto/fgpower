@@ -1,0 +1,199 @@
+{
+ "slug": "ball-leg-curl",
+ "camera": {
+  "az": 70,
+  "el": 10
+ },
+ "muscles": [
+  "hamstrings"
+ ],
+ "props": [
+  {
+   "type": "stability-ball",
+   "radius": 0.325,
+   "feet": true,
+   "anchor": "heel",
+   "load": 1
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.46,
+     -0.1
+    ],
+    "pitch": -125
+   },
+   "neck": {
+    "flex": 10
+   },
+   "armL": {
+    "pos": [
+     0.27,
+     0,
+     0
+    ],
+    "contact": true,
+    "fingers": [
+     0.08,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     1,
+     -0.3,
+     -0.2
+    ],
+    "curl": -0.3
+   },
+   "armR": {
+    "pos": [
+     -0.27,
+     0,
+     0
+    ],
+    "contact": true,
+    "fingers": [
+     -0.08,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -1,
+     -0.3,
+     -0.2
+    ],
+    "curl": -0.3
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0.6,
+     0.62
+    ],
+    "anchor": "heel",
+    "pitch": -25,
+    "pole": [
+     0,
+     1,
+     0.2
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.6,
+     0.62
+    ],
+    "anchor": "heel",
+    "pitch": -25,
+    "pole": [
+     0,
+     1,
+     0.2
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.46,
+     -0.1
+    ],
+    "pitch": -125
+   },
+   "neck": {
+    "flex": 18
+   },
+   "armL": {
+    "pos": [
+     0.27,
+     0,
+     0
+    ],
+    "contact": true,
+    "fingers": [
+     0.08,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     1,
+     -0.3,
+     -0.2
+    ],
+    "curl": -0.3
+   },
+   "armR": {
+    "pos": [
+     -0.27,
+     0,
+     0
+    ],
+    "contact": true,
+    "fingers": [
+     -0.08,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -1,
+     -0.3,
+     -0.2
+    ],
+    "curl": -0.3
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0.55,
+     0.2
+    ],
+    "anchor": "heel",
+    "pitch": 10,
+    "pole": [
+     0,
+     1,
+     0.2
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.55,
+     0.2
+    ],
+    "anchor": "heel",
+    "pitch": 10,
+    "pole": [
+     0,
+     1,
+     0.2
+    ]
+   }
+  }
+ }
+}

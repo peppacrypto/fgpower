@@ -1,0 +1,75 @@
+{
+ "slug": "standing-elevated-quad-stretch",
+ "camera": {
+  "az": 80,
+  "el": 10
+ },
+ "muscles": [
+  "quadriceps"
+ ],
+ "props": [
+  {
+   "type": "flat-bench",
+   "pos": [
+    0,
+    0,
+    -0.9
+   ]
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.93,
+     0
+    ],
+    "pitch": 2
+   },
+   "legR": {
+    "fk": {
+     "flex": 0,
+     "abd": 2,
+     "knee": 10
+    },
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0.52,
+     -0.5
+    ],
+    "anchor": "ankle",
+    "pitch": 30,
+    "pole": [
+     0,
+     0,
+     1
+    ],
+    "yaw": -180,
+    "roll": -150
+   },
+   "armL": {
+    "fk": {
+     "flex": 5,
+     "abd": 10,
+     "elbow": 15
+    },
+    "curl": 0.3
+   },
+   "armR": {
+    "fk": {
+     "flex": 5,
+     "abd": 10,
+     "elbow": 15
+    },
+    "curl": 0.3
+   }
+  }
+ },
+ "muscleSide": "L"
+}

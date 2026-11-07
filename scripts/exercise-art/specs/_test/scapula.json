@@ -1,0 +1,159 @@
+{
+ "slug": "test-scapula",
+ "camera": {
+  "az": 170,
+  "el": 6
+ },
+ "muscles": [
+  "traps"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.93,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.115,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.115,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 7,
+     "elbow": 8
+    },
+    "scap": {
+     "elev": 22
+    }
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 7,
+     "elbow": 8
+    },
+    "scap": {
+     "elev": 22
+    }
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.93,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.115,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.115,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 7,
+     "elbow": 8
+    },
+    "scap": {
+     "prot": -18
+    }
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 7,
+     "elbow": 8
+    },
+    "scap": {
+     "prot": -18
+    }
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.93,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.115,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.115,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 7,
+     "elbow": 8
+    },
+    "scap": {
+     "prot": 18
+    }
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 7,
+     "elbow": 8
+    },
+    "scap": {
+     "prot": 18
+    }
+   }
+  }
+ }
+}

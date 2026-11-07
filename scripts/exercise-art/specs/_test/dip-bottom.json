@@ -1,0 +1,93 @@
+{
+ "slug": "test-dip-bottom",
+ "camera": {
+  "az": 120,
+  "el": 8
+ },
+ "muscles": [
+  "triceps",
+  "chest"
+ ],
+ "floats": true,
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.9,
+     -0.02
+    ],
+    "pitch": 22
+   },
+   "neck": {
+    "flex": -15
+   },
+   "legL": {
+    "fk": {
+     "flex": 15,
+     "abd": 2,
+     "knee": 50
+    },
+    "foot": {
+     "pitch": 25
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 15,
+     "abd": 2,
+     "knee": 50
+    },
+    "foot": {
+     "pitch": 25
+    }
+   },
+   "armL": {
+    "pos": [
+     0.27,
+     1.02,
+     0
+    ],
+    "pole": [
+     0.25,
+     0.1,
+     -1
+    ],
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": 0.75
+   },
+   "armR": {
+    "pos": [
+     -0.27,
+     1.02,
+     0
+    ],
+    "pole": [
+     -0.25,
+     0.1,
+     -1
+    ],
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": 0.75
+   }
+  }
+ }
+}

@@ -1,0 +1,221 @@
+{
+ "slug": "kettlebell-one-legged-deadlift",
+ "camera": {
+  "az": 118,
+  "el": 12
+ },
+ "muscles": [
+  "hamstrings",
+  "glutes"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0.04,
+     0.925,
+     0
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.29,
+     0.86,
+     0.09
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     -0.3,
+     0,
+     1
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.15,
+     0,
+     -1
+    ]
+   },
+   "armR": {
+    "fk": {
+     "flex": 2,
+     "abd": 9,
+     "elbow": 8
+    },
+    "curl": 0.45
+   },
+   "legL": {
+    "pos": [
+     0.07,
+     0,
+     0.04
+    ],
+    "anchor": "sole",
+    "pole": [
+     0,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "fk": {
+     "flex": -24,
+     "abd": 0,
+     "knee": 22
+    },
+    "foot": {
+     "pitch": 20
+    }
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0.03,
+     0.9,
+     -0.11
+    ],
+    "pitch": 80
+   },
+   "neck": {
+    "flex": -20
+   },
+   "armL": {
+    "pos": [
+     0.29,
+     0.38,
+     0.38
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     -0.3,
+     0,
+     1
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.15,
+     0,
+     -1
+    ]
+   },
+   "armR": {
+    "fk": {
+     "flex": 80,
+     "abd": 4,
+     "elbow": 6
+    },
+    "curl": 0.45
+   },
+   "legL": {
+    "pos": [
+     0.07,
+     0,
+     0.04
+    ],
+    "anchor": "sole",
+    "pole": [
+     0,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "fk": {
+     "flex": -2,
+     "abd": 0,
+     "knee": 4
+    },
+    "foot": {
+     "pitch": 20
+    }
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0.035,
+     0.92,
+     -0.05
+    ],
+    "pitch": 40
+   },
+   "neck": {
+    "flex": -10
+   },
+   "armL": {
+    "pos": [
+     0.29,
+     0.76,
+     0.24
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     -0.3,
+     0,
+     1
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.15,
+     0,
+     -1
+    ]
+   },
+   "armR": {
+    "fk": {
+     "flex": 2,
+     "abd": 9,
+     "elbow": 8
+    },
+    "curl": 0.45
+   },
+   "legL": {
+    "pos": [
+     0.07,
+     0,
+     0.04
+    ],
+    "anchor": "sole",
+    "pole": [
+     0,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "fk": {
+     "flex": -13,
+     "abd": 0,
+     "knee": 13
+    },
+    "foot": {
+     "pitch": 20
+    }
+   }
+  }
+ },
+ "muscleSide": "L",
+ "props": [
+  {
+   "type": "kettlebell",
+   "hand": "L",
+   "kg": 12
+  }
+ ]
+}

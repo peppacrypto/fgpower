@@ -1,0 +1,110 @@
+{
+ "slug": "chin-to-chest-stretch",
+ "camera": {
+  "az": 70,
+  "el": 8
+ },
+ "muscles": [
+  "neck"
+ ],
+ "props": [
+  {
+   "type": "floor-mat"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.11,
+     0
+    ]
+   },
+   "neck": {
+    "flex": 46
+   },
+   "spine": {
+    "flex": 6
+   },
+   "armL": {
+    "pos": [
+     0.04,
+     0.07,
+     -0.115
+    ],
+    "rel": "head",
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     -0.5,
+     -0.85,
+     0.1
+    ],
+    "palm": [
+     0,
+     0,
+     1
+    ],
+    "pole": [
+     0.5,
+     -0.1,
+     1
+    ],
+    "curl": 0.6
+   },
+   "armR": {
+    "pos": [
+     -0.04,
+     0.07,
+     -0.15
+    ],
+    "rel": "head",
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0.5,
+     -0.85,
+     0.1
+    ],
+    "palm": [
+     0,
+     0,
+     1
+    ],
+    "pole": [
+     -0.5,
+     -0.1,
+     1
+    ],
+    "curl": 0.6
+   },
+   "legL": {
+    "pos": [
+     0.14,
+     0.07,
+     0.75
+    ],
+    "anchor": "ankle",
+    "pole": [
+     0.05,
+     1,
+     0
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.14,
+     0.07,
+     0.75
+    ],
+    "anchor": "ankle",
+    "pole": [
+     -0.05,
+     1,
+     0
+    ]
+   }
+  }
+ }
+}

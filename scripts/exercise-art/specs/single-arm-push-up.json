@@ -1,0 +1,171 @@
+{
+ "slug": "single-arm-push-up",
+ "camera": {
+  "az": 35,
+  "el": 8
+ },
+ "muscles": [
+  "chest",
+  "triceps"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0.07,
+     0.381,
+     0.032
+    ],
+    "pitch": 72.396,
+    "roll": -3
+   },
+   "neck": {
+    "flex": -18
+   },
+   "armL": {
+    "pos": [
+     0.2,
+     0,
+     0.5
+    ],
+    "contact": true,
+    "fingers": [
+     0.05,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3,
+    "pole": [
+     0.7,
+     0.4,
+     -0.5
+    ]
+   },
+   "armR": {
+    "fk": {
+     "flex": -35,
+     "abd": 15,
+     "rot": 0,
+     "elbow": 105
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   },
+   "legL": {
+    "pos": [
+     0.32,
+     0.012,
+     -0.72
+    ],
+    "anchor": "ball",
+    "pitch": 66,
+    "toes": 0,
+    "pole": [
+     0.05,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.32,
+     0.012,
+     -0.72
+    ],
+    "anchor": "ball",
+    "pitch": 66,
+    "toes": 0,
+    "pole": [
+     -0.05,
+     0,
+     1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0.07,
+     0.228,
+     0.014
+    ],
+    "pitch": 82.304,
+    "yaw": 6,
+    "roll": -5
+   },
+   "neck": {
+    "flex": -18
+   },
+   "armL": {
+    "pos": [
+     0.2,
+     0,
+     0.5
+    ],
+    "contact": true,
+    "fingers": [
+     0.05,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3,
+    "pole": [
+     0.5,
+     0.6,
+     -0.6
+    ]
+   },
+   "armR": {
+    "fk": {
+     "flex": -35,
+     "abd": 15,
+     "rot": 0,
+     "elbow": 105
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   },
+   "legL": {
+    "pos": [
+     0.32,
+     0.012,
+     -0.72
+    ],
+    "anchor": "ball",
+    "pitch": 66,
+    "toes": 0,
+    "pole": [
+     0.05,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.32,
+     0.012,
+     -0.72
+    ],
+    "anchor": "ball",
+    "pitch": 66,
+    "toes": 0,
+    "pole": [
+     -0.05,
+     0,
+     1
+    ]
+   }
+  }
+ },
+ "muscleSide": "L"
+}

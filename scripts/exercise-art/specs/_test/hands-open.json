@@ -1,0 +1,57 @@
+{
+ "slug": "test-hands-open",
+ "camera": {
+  "az": 20,
+  "el": 8
+ },
+ "muscles": [],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.925,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.115,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.115,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": 20,
+     "abd": 150,
+     "rot": 0,
+     "elbow": 5
+    },
+    "hand": "open"
+   },
+   "armR": {
+    "fk": {
+     "flex": 20,
+     "abd": 150,
+     "rot": 0,
+     "elbow": 5
+    },
+    "hand": "open"
+   }
+  }
+ }
+}

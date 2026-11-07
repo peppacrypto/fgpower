@@ -1,0 +1,207 @@
+{
+ "slug": "dumbbell-floor-press",
+ "camera": {
+  "az": 40,
+  "el": 10
+ },
+ "muscles": [
+  "triceps"
+ ],
+ "floats": true,
+ "props": [
+  {
+   "type": "dumbbell",
+   "kg": 15,
+   "hand": "L"
+  },
+  {
+   "type": "dumbbell",
+   "kg": 15,
+   "hand": "R"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.17,
+     0.2
+    ],
+    "pitch": -90
+   },
+   "neck": {
+    "flex": 6
+   },
+   "legL": {
+    "pos": [
+     0.15,
+     0,
+     0.62
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.2,
+     1,
+     0.5
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.15,
+     0,
+     0.62
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.2,
+     1,
+     0.5
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.34,
+     0.78,
+     -0.2
+    ],
+    "contact": true,
+    "hand": "grip",
+    "grip": 0.014,
+    "fingers": [
+     0.05,
+     1,
+     -0.12
+    ],
+    "palm": [
+     0,
+     0.12,
+     1
+    ],
+    "pole": [
+     0.6,
+     -0.4,
+     -0.1
+    ],
+    "curl": 0.82
+   },
+   "armR": {
+    "pos": [
+     -0.34,
+     0.78,
+     -0.2
+    ],
+    "contact": true,
+    "hand": "grip",
+    "grip": 0.014,
+    "fingers": [
+     -0.05,
+     1,
+     -0.12
+    ],
+    "palm": [
+     0,
+     0.12,
+     1
+    ],
+    "pole": [
+     -0.6,
+     -0.4,
+     -0.1
+    ],
+    "curl": 0.82
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.17,
+     0.2
+    ],
+    "pitch": -90
+   },
+   "neck": {
+    "flex": 6
+   },
+   "legL": {
+    "pos": [
+     0.15,
+     0,
+     0.62
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.2,
+     1,
+     0.5
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.15,
+     0,
+     0.62
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.2,
+     1,
+     0.5
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.34,
+     0.36,
+     -0.22
+    ],
+    "contact": true,
+    "hand": "grip",
+    "grip": 0.014,
+    "fingers": [
+     0.05,
+     1,
+     -0.12
+    ],
+    "palm": [
+     0,
+     0.12,
+     1
+    ],
+    "pole": [
+     0.7,
+     -0.4,
+     0.2
+    ],
+    "curl": 0.82
+   },
+   "armR": {
+    "pos": [
+     -0.34,
+     0.36,
+     -0.22
+    ],
+    "contact": true,
+    "hand": "grip",
+    "grip": 0.014,
+    "fingers": [
+     -0.05,
+     1,
+     -0.12
+    ],
+    "palm": [
+     0,
+     0.12,
+     1
+    ],
+    "pole": [
+     -0.7,
+     -0.4,
+     0.2
+    ],
+    "curl": 0.82
+   }
+  }
+ }
+}

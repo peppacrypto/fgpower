@@ -1,0 +1,53 @@
+{
+ "slug": "test-hands-relaxed",
+ "camera": {
+  "az": 30,
+  "el": 8
+ },
+ "muscles": [],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.925,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.115,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.115,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": 2,
+     "abd": 6,
+     "elbow": 10
+    }
+   },
+   "armR": {
+    "fk": {
+     "flex": 2,
+     "abd": 6,
+     "elbow": 10
+    }
+   }
+  }
+ }
+}

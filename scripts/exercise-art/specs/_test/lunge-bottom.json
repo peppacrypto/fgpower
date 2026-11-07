@@ -1,0 +1,62 @@
+{
+ "slug": "test-lunge-bottom",
+ "camera": {
+  "az": 70,
+  "el": 6
+ },
+ "muscles": [
+  "quadriceps",
+  "glutes"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.52,
+     -0.02
+    ],
+    "pitch": -3
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0,
+     0.46
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 4
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0,
+     -0.5
+    ],
+    "anchor": "ball",
+    "pitch": 60,
+    "toes": 0,
+    "pole": [
+     0,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 6,
+     "elbow": 6
+    }
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 6,
+     "elbow": 6
+    }
+   }
+  }
+ }
+}

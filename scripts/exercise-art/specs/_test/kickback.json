@@ -1,0 +1,59 @@
+{
+ "slug": "test-kickback",
+ "camera": {
+  "az": 110,
+  "el": 8
+ },
+ "muscles": [
+  "triceps"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.78,
+     -0.18
+    ],
+    "pitch": 55
+   },
+   "neck": {
+    "flex": -30
+   },
+   "legL": {
+    "pos": [
+     0.14,
+     0,
+     0.04
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.14,
+     0,
+     0.04
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": -55,
+     "abd": 6,
+     "elbow": 8
+    }
+   },
+   "armR": {
+    "fk": {
+     "flex": -55,
+     "abd": 6,
+     "elbow": 8
+    }
+   }
+  }
+ }
+}

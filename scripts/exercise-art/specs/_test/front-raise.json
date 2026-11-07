@@ -1,0 +1,106 @@
+{
+ "slug": "test-front-raise",
+ "camera": {
+  "az": 40,
+  "el": 5
+ },
+ "muscles": [
+  "anterior-deltoid"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.93,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.115,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.115,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": 90,
+     "abd": 0,
+     "rot": 0,
+     "elbow": 4
+    },
+    "curl": 0.5
+   },
+   "armR": {
+    "fk": {
+     "flex": 90,
+     "abd": 0,
+     "rot": 0,
+     "elbow": 4
+    },
+    "curl": 0.5
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.93,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.115,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.115,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 90,
+     "rot": 0,
+     "elbow": 6
+    },
+    "curl": 0.5
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 90,
+     "rot": 0,
+     "elbow": 6
+    },
+    "curl": 0.5
+   }
+  }
+ }
+}

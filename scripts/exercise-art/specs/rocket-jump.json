@@ -1,0 +1,137 @@
+{
+ "slug": "rocket-jump",
+ "camera": {
+  "az": 40,
+  "el": 8
+ },
+ "muscles": [
+  "quadriceps"
+ ],
+ "floats": true,
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.62,
+     -0.15
+    ],
+    "pitch": 25
+   },
+   "spine": {
+    "flex": -4
+   },
+   "neck": {
+    "flex": -14
+   },
+   "armL": {
+    "fk": {
+     "flex": -20,
+     "abd": 25,
+     "rot": 0,
+     "elbow": 10
+    },
+    "rel": "chest",
+    "curl": 0.3
+   },
+   "armR": {
+    "fk": {
+     "flex": -20,
+     "abd": 25,
+     "rot": 0,
+     "elbow": 10
+    },
+    "rel": "chest",
+    "curl": 0.3
+   },
+   "legL": {
+    "pos": [
+     0.2,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": 14,
+    "pole": [
+     0.45,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.2,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": -14,
+    "pole": [
+     -0.45,
+     0,
+     1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     1.225,
+     0
+    ],
+    "pitch": 0
+   },
+   "armL": {
+    "fk": {
+     "flex": 172,
+     "abd": 6,
+     "rot": 0,
+     "elbow": 4
+    },
+    "rel": "chest",
+    "curl": 0.3
+   },
+   "armR": {
+    "fk": {
+     "flex": 172,
+     "abd": 6,
+     "rot": 0,
+     "elbow": 4
+    },
+    "rel": "chest",
+    "curl": 0.3
+   },
+   "legL": {
+    "pos": [
+     0.18,
+     0.22,
+     0.14
+    ],
+    "anchor": "ball",
+    "pitch": 55,
+    "yaw": 10,
+    "pole": [
+     0.3,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.18,
+     0.22,
+     0.14
+    ],
+    "anchor": "ball",
+    "pitch": 55,
+    "yaw": -10,
+    "pole": [
+     -0.3,
+     0,
+     1
+    ]
+   }
+  }
+ }
+}

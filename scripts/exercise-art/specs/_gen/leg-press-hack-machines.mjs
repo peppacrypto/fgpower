@@ -1,0 +1,13 @@
+import fs from 'fs';
+const G=n=>JSON.parse(fs.readFileSync(new URL('../_gallery/'+n+'.json',import.meta.url)));
+const out=(slug,g,fn)=>{const s=structuredClone(g);s.slug=slug;if(fn)fn(s);
+ fs.writeFileSync(new URL('../'+slug+'.json',import.meta.url),JSON.stringify(s,null,1));};
+const deeper=s=>{for(const l of ['legL','legR']){s.frames.end[l].pos[1]+=0.012;s.frames.end[l].pos[2]+=0.012;}};
+const narrow=s=>{for(const f of Object.values(s.frames)){f.legL.pos[0]=0.06;f.legR.pos[0]=-0.06;f.legL.yaw=8;f.legR.yaw=-8;}};
+out('leg-press',G('leg-press'),deeper);
+out('narrow-stance-leg-press',G('leg-press'),s=>{narrow(s);deeper(s);deeper(s);});
+out('hack-squat',G('hack-squat'));
+out('narrow-stance-hack-squats',G('hack-squat'),narrow);
+out('calf-press-on-the-leg-press-machine',G('leg-press-calf'));
+out('calf-press',G('seated-calf'),s=>{s.frames.end.root.pos[1]=0.589;});
+out('lying-machine-squat',G('lying-squat'));

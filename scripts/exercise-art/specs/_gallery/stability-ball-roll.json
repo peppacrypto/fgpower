@@ -1,0 +1,206 @@
+{
+ "slug": "gallery-stability-ball-roll",
+ "camera": {
+  "az": 70,
+  "el": 8
+ },
+ "muscles": [
+  "abdominals",
+  "quadriceps"
+ ],
+ "floats": true,
+ "props": [
+  {
+   "type": "stability-ball",
+   "radius": 0.275,
+   "follow": {
+    "on": [
+     "lowerleg01",
+     "foot"
+    ],
+    "side": "both",
+    "clear": 0.042,
+    "at": 0.72
+   }
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.6,
+     0.12
+    ],
+    "pitch": 92
+   },
+   "neck": {
+    "flex": -24
+   },
+   "armL": {
+    "pos": [
+     0.21,
+     0,
+     0.62
+    ],
+    "contact": true,
+    "fingers": [
+     0.08,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3,
+    "pole": [
+     0.5,
+     0.3,
+     -0.8
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.21,
+     0,
+     0.62
+    ],
+    "contact": true,
+    "fingers": [
+     -0.08,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3,
+    "pole": [
+     -0.5,
+     0.3,
+     -0.8
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.09,
+     0.61,
+     -0.72
+    ],
+    "pitch": 112,
+    "pole": [
+     0.05,
+     -1,
+     0.02
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.09,
+     0.61,
+     -0.72
+    ],
+    "pitch": 112,
+    "pole": [
+     -0.05,
+     -1,
+     0.02
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.73,
+     0.22
+    ],
+    "pitch": 100
+   },
+   "spine": {
+    "flex": 20
+   },
+   "neck": {
+    "flex": -44
+   },
+   "armL": {
+    "pos": [
+     0.21,
+     0,
+     0.62
+    ],
+    "contact": true,
+    "fingers": [
+     0.08,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3,
+    "pole": [
+     0.5,
+     0.3,
+     -0.8
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.21,
+     0,
+     0.62
+    ],
+    "contact": true,
+    "fingers": [
+     -0.08,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3,
+    "pole": [
+     -0.5,
+     0.3,
+     -0.8
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.09,
+     0.56,
+     -0.23
+    ],
+    "pitch": 96,
+    "pole": [
+     0.05,
+     -1,
+     0.5
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.09,
+     0.56,
+     -0.23
+    ],
+    "pitch": 96,
+    "pole": [
+     -0.05,
+     -1,
+     0.5
+    ]
+   }
+  }
+ }
+}

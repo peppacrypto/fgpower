@@ -1,0 +1,155 @@
+{
+ "slug": "pallof-press",
+ "camera": {
+  "az": 50,
+  "el": 6
+ },
+ "muscles": [
+  "abdominals",
+  "obliques"
+ ],
+ "props": [
+  {
+   "type": "cable-tower",
+   "pos": [
+    0.8,
+    0,
+    0.4
+   ],
+   "yaw": -90,
+   "pulleyY": 1.35,
+   "attachment": "d-handle",
+   "hands": true
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.89,
+     0
+    ],
+    "pitch": 4,
+    "yaw": 0
+   },
+   "spine": {
+    "flex": 2,
+    "twist": 0,
+    "side": 0,
+    "weights": [
+     0.1,
+     0.2,
+     0.25,
+     0.25,
+     0.2
+    ]
+   },
+   "neck": {
+    "flex": 2
+   },
+   "legL": {
+    "pos": [
+     0.15,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 7
+   },
+   "legR": {
+    "pos": [
+     -0.15,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -7
+   },
+   "armL": {
+    "fk": {
+     "flex": 45,
+     "abd": -10,
+     "rot": 0,
+     "elbow": 115
+    },
+    "rel": "chest",
+    "hand": "grip"
+   },
+   "armR": {
+    "fk": {
+     "flex": 45,
+     "abd": -10,
+     "rot": 0,
+     "elbow": 115
+    },
+    "rel": "chest",
+    "hand": "grip"
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.89,
+     0
+    ],
+    "pitch": 4,
+    "yaw": 0
+   },
+   "spine": {
+    "flex": 2,
+    "twist": 0,
+    "side": 0,
+    "weights": [
+     0.1,
+     0.2,
+     0.25,
+     0.25,
+     0.2
+    ]
+   },
+   "neck": {
+    "flex": 2
+   },
+   "legL": {
+    "pos": [
+     0.15,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 7
+   },
+   "legR": {
+    "pos": [
+     -0.15,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -7
+   },
+   "armL": {
+    "fk": {
+     "flex": 88,
+     "abd": -10,
+     "rot": 0,
+     "elbow": 5
+    },
+    "rel": "chest",
+    "hand": "grip"
+   },
+   "armR": {
+    "fk": {
+     "flex": 88,
+     "abd": -10,
+     "rot": 0,
+     "elbow": 5
+    },
+    "rel": "chest",
+    "hand": "grip"
+   }
+  }
+ }
+}

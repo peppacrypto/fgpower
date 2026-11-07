@@ -1,0 +1,74 @@
+{
+ "slug": "warrior-3",
+ "camera": {
+  "az": 85,
+  "el": 6
+ },
+ "muscles": [
+  "hamstrings"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.83,
+     0
+    ],
+    "pitch": 88
+   },
+   "neck": {
+    "flex": -70
+   },
+   "spine": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pole": [
+     0,
+     0.3,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0.83,
+     -0.85
+    ],
+    "anchor": "ankle",
+    "pole": [
+     0,
+     1,
+     0
+    ],
+    "pitch": -90,
+    "roll": 180
+   },
+   "armL": {
+    "fk": {
+     "flex": 172,
+     "abd": 10,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest"
+   },
+   "armR": {
+    "fk": {
+     "flex": 172,
+     "abd": 10,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest"
+   }
+  }
+ }
+}

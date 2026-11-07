@@ -13,19 +13,19 @@
    "root": {
     "pos": [
      0,
-     0.095,
+     0.145,
      0
     ],
     "pitch": -90
    },
    "neck": {
-    "flex": -6
+    "flex": 14
    },
    "armL": {
     "pos": [
      0.27,
      0,
-     0.105
+     0.1
     ],
     "contact": true,
     "fingers": [
@@ -49,7 +49,7 @@
     "pos": [
      -0.27,
      0,
-     0.105
+     0.1
     ],
     "contact": true,
     "fingers": [
@@ -110,19 +110,19 @@
    "root": {
     "pos": [
      0,
-     0.29,
+     0.34,
      -0.03
     ],
     "pitch": -116
    },
    "neck": {
-    "flex": 24
+    "flex": 38
    },
    "armL": {
     "pos": [
      0.27,
      0,
-     0.105
+     0.1
     ],
     "contact": true,
     "fingers": [
@@ -146,7 +146,7 @@
     "pos": [
      -0.27,
      0,
-     0.105
+     0.1
     ],
     "contact": true,
     "fingers": [

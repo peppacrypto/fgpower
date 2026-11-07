@@ -1,0 +1,100 @@
+{
+ "slug": "test-hands-flat-bench-behind",
+ "camera": {
+  "az": 60,
+  "el": 8
+ },
+ "muscles": [],
+ "floats": false,
+ "props": [
+  {
+   "type": "step",
+   "pos": [
+    0,
+    0,
+    -0.32
+   ],
+   "height": 0.45,
+   "depth": 0.36,
+   "width": 0.9
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.55,
+     0.06
+    ],
+    "pitch": 0
+   },
+   "armL": {
+    "pos": [
+     0.2,
+     0.45,
+     -0.22
+    ],
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     0.1,
+     0.2,
+     -1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.2,
+     0.45,
+     -0.22
+    ],
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -0.1,
+     0.2,
+     -1
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0.62
+    ],
+    "anchor": "heel",
+    "pitch": -12,
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0.62
+    ],
+    "anchor": "heel",
+    "pitch": -12,
+    "yaw": -6
+   }
+  }
+ }
+}

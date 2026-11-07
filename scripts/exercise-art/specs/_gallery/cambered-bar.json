@@ -1,0 +1,193 @@
+{
+ "slug": "gallery-cambered-bar",
+ "camera": {
+  "az": 74,
+  "el": 10
+ },
+ "floats": true,
+ "muscles": [
+  "lats",
+  "middle-back"
+ ],
+ "props": [
+  {
+   "type": "flat-bench",
+   "pos": [
+    0,
+    0,
+    -0.1
+   ]
+  },
+  {
+   "type": "cambered-bar",
+   "hands": true,
+   "plates": [
+    20
+   ]
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.535,
+     0.02
+    ],
+    "pitch": 90
+   },
+   "neck": {
+    "flex": -14
+   },
+   "armL": {
+    "pos": [
+     0.4,
+     0.225,
+     0.42
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0.02
+    ],
+    "palm": [
+     0,
+     0,
+     -1
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.5,
+     0.2,
+     -0.3
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.4,
+     0.225,
+     0.42
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0.02
+    ],
+    "palm": [
+     0,
+     0,
+     -1
+    ],
+    "curl": 0.85,
+    "pole": [
+     -0.5,
+     0.2,
+     -0.3
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0.5,
+     -0.83
+    ],
+    "anchor": "ankle",
+    "yaw": 0,
+    "pitch": 90
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0.5,
+     -0.83
+    ],
+    "anchor": "ankle",
+    "yaw": 0,
+    "pitch": 90
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.535,
+     0.02
+    ],
+    "pitch": 90
+   },
+   "neck": {
+    "flex": -34
+   },
+   "armL": {
+    "pos": [
+     0.4,
+     0.47,
+     0.34
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -0.9,
+     0.3
+    ],
+    "palm": [
+     0,
+     0.3,
+     -0.9
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.6,
+     0.6,
+     -0.5
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.4,
+     0.47,
+     0.34
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -0.9,
+     0.3
+    ],
+    "palm": [
+     0,
+     0.3,
+     -0.9
+    ],
+    "curl": 0.85,
+    "pole": [
+     -0.6,
+     0.6,
+     -0.5
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0.5,
+     -0.83
+    ],
+    "anchor": "ankle",
+    "yaw": 0,
+    "pitch": 90
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0.5,
+     -0.83
+    ],
+    "anchor": "ankle",
+    "yaw": 0,
+    "pitch": 90
+   }
+  }
+ }
+}

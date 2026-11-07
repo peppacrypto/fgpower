@@ -1,0 +1,200 @@
+{
+ "camera": {
+  "az": 25,
+  "el": 6
+ },
+ "muscles": [
+  "biceps"
+ ],
+ "props": [
+  {
+   "type": "cable-tower",
+   "pos": [
+    1.3,
+    0,
+    0
+   ],
+   "yaw": -90,
+   "pulleyY": 2,
+   "hand": "L",
+   "attachment": "d-handle"
+  },
+  {
+   "type": "cable-tower",
+   "pos": [
+    -1.3,
+    0,
+    0
+   ],
+   "yaw": 90,
+   "pulleyY": 2,
+   "hand": "R",
+   "attachment": "d-handle"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.93,
+     0
+    ]
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 7
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -7
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 90,
+     "rot": 0,
+     "elbow": 25
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "grip": 0.015
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 90,
+     "rot": 0,
+     "elbow": 25
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "grip": 0.015
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.93,
+     0
+    ]
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 7
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -7
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 90,
+     "rot": 0,
+     "elbow": 80
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "grip": 0.015
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 90,
+     "rot": 0,
+     "elbow": 80
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "grip": 0.015
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.93,
+     0
+    ]
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 7
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -7
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 90,
+     "rot": 0,
+     "elbow": 140
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "grip": 0.015
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 90,
+     "rot": 0,
+     "elbow": 140
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "grip": 0.015
+   }
+  }
+ },
+ "slug": "overhead-cable-curl"
+}

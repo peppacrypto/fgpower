@@ -1,0 +1,106 @@
+{
+ "slug": "pigeon-pose",
+ "camera": {
+  "az": 50,
+  "el": 20
+ },
+ "muscles": [
+  "glutes"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.38,
+     0
+    ],
+    "pitch": 22
+   },
+   "spine": {
+    "flex": 60
+   },
+   "neck": {
+    "flex": -10
+   },
+   "legL": {
+    "pos": [
+     0.25,
+     0.12,
+     0.3
+    ],
+    "anchor": "ankle",
+    "pole": [
+     0.5,
+     1,
+     0.5
+    ],
+    "yaw": -60
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0.09,
+     -0.7
+    ],
+    "anchor": "ankle",
+    "pole": [
+     0,
+     -1,
+     0
+    ],
+    "pitch": 130
+   },
+   "armL": {
+    "pos": [
+     0.3,
+     0.02,
+     0.45
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     0.6,
+     -0.3,
+     -1
+    ],
+    "curl": 0.2
+   },
+   "armR": {
+    "pos": [
+     -0.12,
+     0.02,
+     0.45
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -0.24,
+     -0.3,
+     -1
+    ],
+    "curl": 0.2
+   }
+  }
+ }
+}

@@ -1,0 +1,155 @@
+{
+ "slug": "standing-cable-lift",
+ "camera": {
+  "az": -55,
+  "el": 8
+ },
+ "muscles": [
+  "abdominals",
+  "obliques"
+ ],
+ "props": [
+  {
+   "type": "cable-tower",
+   "pos": [
+    0.8,
+    0,
+    0.4
+   ],
+   "yaw": -90,
+   "pulleyY": 0.2,
+   "attachment": "d-handle",
+   "hands": true
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.82,
+     0
+    ],
+    "pitch": 4,
+    "yaw": 0
+   },
+   "spine": {
+    "flex": 28,
+    "twist": 25,
+    "side": 0,
+    "weights": [
+     0.1,
+     0.2,
+     0.25,
+     0.25,
+     0.2
+    ]
+   },
+   "neck": {
+    "flex": 2
+   },
+   "legL": {
+    "pos": [
+     0.22,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 15
+   },
+   "legR": {
+    "pos": [
+     -0.22,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -15
+   },
+   "armL": {
+    "fk": {
+     "flex": 55,
+     "abd": -10,
+     "rot": 0,
+     "elbow": 10
+    },
+    "rel": "chest",
+    "hand": "grip"
+   },
+   "armR": {
+    "fk": {
+     "flex": 55,
+     "abd": -10,
+     "rot": 0,
+     "elbow": 10
+    },
+    "rel": "chest",
+    "hand": "grip"
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.9,
+     0
+    ],
+    "pitch": 4,
+    "yaw": 0
+   },
+   "spine": {
+    "flex": -4,
+    "twist": -30,
+    "side": 0,
+    "weights": [
+     0.1,
+     0.2,
+     0.25,
+     0.25,
+     0.2
+    ]
+   },
+   "neck": {
+    "flex": 2
+   },
+   "legL": {
+    "pos": [
+     0.22,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 15
+   },
+   "legR": {
+    "pos": [
+     -0.22,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -15
+   },
+   "armL": {
+    "fk": {
+     "flex": 150,
+     "abd": -10,
+     "rot": 0,
+     "elbow": 10
+    },
+    "rel": "chest",
+    "hand": "grip"
+   },
+   "armR": {
+    "fk": {
+     "flex": 150,
+     "abd": -10,
+     "rot": 0,
+     "elbow": 10
+    },
+    "rel": "chest",
+    "hand": "grip"
+   }
+  }
+ }
+}

@@ -1,0 +1,113 @@
+{
+ "slug": "wall-handstand-hold",
+ "camera": {
+  "az": 72,
+  "el": 6
+ },
+ "muscles": [
+  "anterior-deltoid"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     1.075,
+     -0.03
+    ],
+    "pitch": 180
+   },
+   "neck": {
+    "flex": -10
+   },
+   "armL": {
+    "pos": [
+     0.2,
+     0,
+     0.03
+    ],
+    "contact": true,
+    "fingers": [
+     0.12,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3,
+    "pole": [
+     0.4,
+     0.1,
+     -0.9
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.2,
+     0,
+     0.03
+    ],
+    "contact": true,
+    "fingers": [
+     -0.12,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3,
+    "pole": [
+     -0.4,
+     0.1,
+     -0.9
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.09,
+     1.87,
+     -0.14
+    ],
+    "anchor": "ankle",
+    "pitch": 180,
+    "pole": [
+     0.1,
+     0,
+     -1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.09,
+     1.87,
+     -0.14
+    ],
+    "anchor": "ankle",
+    "pitch": 180,
+    "pole": [
+     -0.1,
+     0,
+     -1
+    ]
+   }
+  }
+ },
+ "props": [
+  {
+   "type": "wall",
+   "pos": [
+    0,
+    0,
+    -0.38
+   ],
+   "width": 1.4,
+   "height": 2.4
+  }
+ ]
+}

@@ -1,0 +1,204 @@
+{
+ "slug": "towel-floor-body-pull",
+ "camera": {
+  "az": 72,
+  "el": 18
+ },
+ "muscles": [
+  "lats"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.15,
+     0
+    ],
+    "pitch": 90
+   },
+   "spine": {
+    "flex": -6
+   },
+   "neck": {
+    "flex": -6
+   },
+   "armL": {
+    "pos": [
+     0.32,
+     0,
+     1.07
+    ],
+    "contact": true,
+    "fingers": [
+     0.1,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     1,
+     0.35,
+     -1
+    ],
+    "curl": -0.25
+   },
+   "armR": {
+    "pos": [
+     -0.32,
+     0,
+     1.07
+    ],
+    "contact": true,
+    "fingers": [
+     -0.1,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -1,
+     0.35,
+     -1
+    ],
+    "curl": -0.25
+   },
+   "legL": {
+    "fk": {
+     "flex": 6,
+     "abd": 3,
+     "knee": 0
+    },
+    "foot": {
+     "pitch": 62
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 6,
+     "abd": 3,
+     "knee": 0
+    },
+    "foot": {
+     "pitch": 62
+    }
+   },
+   "props": [
+    {
+     "type": "towel",
+     "pos": [
+      0,
+      0,
+      -0.16
+     ],
+     "width": 0.5,
+     "depth": 0.6
+    }
+   ]
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.15,
+     0.4
+    ],
+    "pitch": 90
+   },
+   "spine": {
+    "flex": -10
+   },
+   "neck": {
+    "flex": -6
+   },
+   "armL": {
+    "pos": [
+     0.32,
+     0,
+     1.07
+    ],
+    "contact": true,
+    "fingers": [
+     0.1,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     1,
+     0.35,
+     -1
+    ],
+    "curl": -0.25
+   },
+   "armR": {
+    "pos": [
+     -0.32,
+     0,
+     1.07
+    ],
+    "contact": true,
+    "fingers": [
+     -0.1,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -1,
+     0.35,
+     -1
+    ],
+    "curl": -0.25
+   },
+   "legL": {
+    "fk": {
+     "flex": 6,
+     "abd": 3,
+     "knee": 0
+    },
+    "foot": {
+     "pitch": 62
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 6,
+     "abd": 3,
+     "knee": 0
+    },
+    "foot": {
+     "pitch": 62
+    }
+   },
+   "props": [
+    {
+     "type": "towel",
+     "pos": [
+      0,
+      0,
+      0.24
+     ],
+     "width": 0.5,
+     "depth": 0.6
+    }
+   ]
+  }
+ }
+}

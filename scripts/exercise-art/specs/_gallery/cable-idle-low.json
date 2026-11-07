@@ -1,0 +1,113 @@
+{
+ "slug": "gallery-cable-idle-low",
+ "camera": {
+  "az": 12,
+  "el": 18
+ },
+ "props": [
+  {
+   "type": "cable-tower",
+   "pos": [
+    -3.2,
+    0,
+    -0.5
+   ],
+   "pulleyY": 0.24,
+   "attachment": "rope"
+  },
+  {
+   "type": "cable-tower",
+   "pos": [
+    -2.1,
+    0,
+    -0.5
+   ],
+   "pulleyY": 0.24,
+   "attachment": "straight-bar"
+  },
+  {
+   "type": "cable-tower",
+   "pos": [
+    -1,
+    0,
+    -0.5
+   ],
+   "pulleyY": 0.24,
+   "attachment": "lat-bar"
+  },
+  {
+   "type": "cable-tower",
+   "pos": [
+    1,
+    0,
+    -0.5
+   ],
+   "pulleyY": 0.24,
+   "attachment": "v-bar"
+  },
+  {
+   "type": "cable-tower",
+   "pos": [
+    2.1,
+    0,
+    -0.5
+   ],
+   "pulleyY": 0.24,
+   "attachment": "d-handle"
+  },
+  {
+   "type": "low-pulley",
+   "pos": [
+    3.2,
+    0,
+    0
+   ],
+   "attachment": "d-handle"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 7
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -7
+   },
+   "armL": {
+    "fk": {
+     "flex": 2,
+     "abd": 8,
+     "elbow": 12
+    }
+   },
+   "armR": {
+    "fk": {
+     "flex": 2,
+     "abd": 8,
+     "elbow": 12
+    }
+   }
+  }
+ }
+}

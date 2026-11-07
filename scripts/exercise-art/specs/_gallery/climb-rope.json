@@ -1,0 +1,216 @@
+{
+ "camera": {
+  "az": 118,
+  "el": 6,
+  "pad": 0.03
+ },
+ "muscles": [
+  "lats",
+  "biceps",
+  "forearms"
+ ],
+ "floats": true,
+ "props": [
+  {
+   "type": "climb-rope",
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "top": 5,
+   "hands": true,
+   "foot": "L",
+   "coilDir": [
+    1,
+    0
+   ],
+   "frameIgnore": true
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.96,
+     -0.17
+    ],
+    "pitch": -4
+   },
+   "neck": {
+    "flex": 2
+   },
+   "armL": {
+    "pos": [
+     0,
+     1.99,
+     0
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0.6,
+     0.8
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "pole": [
+     0.35,
+     -0.7,
+     0.45
+    ],
+    "curl": 0.82
+   },
+   "armR": {
+    "pos": [
+     0,
+     1.72,
+     0
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0.6,
+     0.8
+    ],
+    "palm": [
+     1,
+     0,
+     0
+    ],
+    "pole": [
+     -0.35,
+     -0.7,
+     0.45
+    ],
+    "curl": 0.82
+   },
+   "legL": {
+    "pos": [
+     0.05,
+     0.392,
+     -0.06
+    ],
+    "anchor": "ankle",
+    "pitch": 6,
+    "yaw": 6,
+    "pole": [
+     0.5,
+     0.3,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.075,
+     0.505,
+     -0.075
+    ],
+    "anchor": "ankle",
+    "pitch": 6,
+    "yaw": 12,
+    "pole": [
+     -0.5,
+     0.3,
+     1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     1.345,
+     -0.15
+    ],
+    "pitch": -4
+   },
+   "neck": {
+    "flex": -14
+   },
+   "armL": {
+    "pos": [
+     0,
+     2.33,
+     0
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0.6,
+     0.8
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "pole": [
+     0.35,
+     -0.7,
+     0.45
+    ],
+    "curl": 0.82
+   },
+   "armR": {
+    "pos": [
+     0,
+     2.04,
+     0
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0.6,
+     0.8
+    ],
+    "palm": [
+     1,
+     0,
+     0
+    ],
+    "pole": [
+     -0.35,
+     -0.7,
+     0.45
+    ],
+    "curl": 0.82
+   },
+   "legL": {
+    "pos": [
+     0.05,
+     0.492,
+     -0.06
+    ],
+    "anchor": "ankle",
+    "pitch": 6,
+    "yaw": 6,
+    "pole": [
+     0.5,
+     0.3,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.075,
+     0.605,
+     -0.075
+    ],
+    "anchor": "ankle",
+    "pitch": 6,
+    "yaw": 12,
+    "pole": [
+     -0.5,
+     0.3,
+     1
+    ]
+   }
+  }
+ },
+ "slug": "gallery-climb-rope"
+}

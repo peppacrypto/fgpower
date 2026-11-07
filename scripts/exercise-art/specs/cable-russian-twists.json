@@ -1,0 +1,167 @@
+{
+ "slug": "cable-russian-twists",
+ "camera": {
+  "az": 70,
+  "el": 10
+ },
+ "muscles": [
+  "abdominals",
+  "obliques"
+ ],
+ "props": [
+  {
+   "type": "stability-ball",
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "radius": 0.325,
+   "load": 0.6
+  },
+  {
+   "type": "cable-tower",
+   "pos": [
+    0.8,
+    0,
+    0.4
+   ],
+   "yaw": -90,
+   "pulleyY": 1,
+   "attachment": "d-handle",
+   "hands": true
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.46,
+     0.28
+    ],
+    "pitch": -70
+   },
+   "spine": {
+    "flex": 6,
+    "twist": 35
+   },
+   "neck": {
+    "flex": 10
+   },
+   "armL": {
+    "fk": {
+     "flex": 90,
+     "abd": 0,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest",
+    "hand": "grip"
+   },
+   "armR": {
+    "fk": {
+     "flex": 90,
+     "abd": 0,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest",
+    "hand": "grip"
+   },
+   "legL": {
+    "pos": [
+     0.15,
+     0,
+     0.85
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "pole": [
+     0.2,
+     0.2,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.15,
+     0,
+     0.85
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "pole": [
+     -0.2,
+     0.2,
+     1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.46,
+     0.28
+    ],
+    "pitch": -70
+   },
+   "spine": {
+    "flex": 6,
+    "twist": -35
+   },
+   "neck": {
+    "flex": 10
+   },
+   "armL": {
+    "fk": {
+     "flex": 90,
+     "abd": 0,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest",
+    "hand": "grip"
+   },
+   "armR": {
+    "fk": {
+     "flex": 90,
+     "abd": 0,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest",
+    "hand": "grip"
+   },
+   "legL": {
+    "pos": [
+     0.15,
+     0,
+     0.85
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "pole": [
+     0.2,
+     0.2,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.15,
+     0,
+     0.85
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "pole": [
+     -0.2,
+     0.2,
+     1
+    ]
+   }
+  }
+ }
+}

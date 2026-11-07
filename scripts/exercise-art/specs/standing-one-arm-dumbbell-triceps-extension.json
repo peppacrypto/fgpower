@@ -1,0 +1,140 @@
+{
+ "slug": "standing-one-arm-dumbbell-triceps-extension",
+ "camera": {
+  "az": 62,
+  "el": 8
+ },
+ "muscles": [
+  "triceps"
+ ],
+ "muscleSide": "L",
+ "props": [
+  {
+   "type": "dumbbell",
+   "hand": "L",
+   "kg": 10
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.925,
+     0
+    ]
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": 6,
+    "pole": [
+     0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": -6,
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 165,
+     "abd": 10,
+     "rot": 0,
+     "elbow": 8
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "pron": 0
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 10,
+     "elbow": 6
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.925,
+     0
+    ]
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": 6,
+    "pole": [
+     0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": -6,
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 165,
+     "abd": 10,
+     "rot": 0,
+     "elbow": 125
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "pron": 0
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 10,
+     "elbow": 6
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   }
+  }
+ }
+}

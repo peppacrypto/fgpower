@@ -1,0 +1,123 @@
+{
+ "slug": "gallery-balance-board",
+ "camera": {
+  "az": 30,
+  "el": 10
+ },
+ "muscles": [
+  "calves",
+  "abdominals",
+  "quadriceps"
+ ],
+ "floats": true,
+ "props": [
+  {
+   "type": "balance-board",
+   "feet": true
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0.012,
+     0.955,
+     0
+    ],
+    "roll": 2
+   },
+   "neck": {
+    "flex": 8
+   },
+   "armL": {
+    "fk": {
+     "flex": 8,
+     "abd": 34,
+     "elbow": 22
+    },
+    "curl": 0.3
+   },
+   "armR": {
+    "fk": {
+     "flex": 8,
+     "abd": 34,
+     "elbow": 22
+    },
+    "curl": 0.3
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0.072,
+     0.01
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "roll": -8,
+    "yaw": 8
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0.108,
+     0.01
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "roll": -8,
+    "yaw": -8
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     -0.012,
+     0.955,
+     0
+    ],
+    "roll": -2
+   },
+   "neck": {
+    "flex": 8
+   },
+   "armL": {
+    "fk": {
+     "flex": 8,
+     "abd": 34,
+     "elbow": 22
+    },
+    "curl": 0.3
+   },
+   "armR": {
+    "fk": {
+     "flex": 8,
+     "abd": 34,
+     "elbow": 22
+    },
+    "curl": 0.3
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0.108,
+     0.01
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "roll": 8,
+    "yaw": 8
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0.072,
+     0.01
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "roll": 8,
+    "yaw": -8
+   }
+  }
+ }
+}

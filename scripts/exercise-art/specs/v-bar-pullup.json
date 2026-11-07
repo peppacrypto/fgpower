@@ -1,0 +1,183 @@
+{
+ "slug": "v-bar-pullup",
+ "camera": {
+  "az": 130,
+  "el": 8
+ },
+ "muscles": [
+  "lats",
+  "biceps"
+ ],
+ "floats": true,
+ "props": [
+  {
+   "type": "pull-up-bar",
+   "height": 2.25,
+   "multi": true
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     1.2,
+     -0.03
+    ],
+    "pitch": -4
+   },
+   "neck": {
+    "flex": -6
+   },
+   "armL": {
+    "pos": [
+     0.2,
+     2.25,
+     0.13
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     1,
+     0
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "pole": [
+     0.3,
+     -1,
+     0.3
+    ],
+    "curl": 0.82
+   },
+   "armR": {
+    "pos": [
+     -0.2,
+     2.25,
+     0.13
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     1,
+     0
+    ],
+    "palm": [
+     1,
+     0,
+     0
+    ],
+    "pole": [
+     -0.3,
+     -1,
+     0.3
+    ],
+    "curl": 0.82
+   },
+   "legL": {
+    "fk": {
+     "flex": 5,
+     "abd": 2,
+     "knee": 22
+    },
+    "foot": {
+     "pitch": 28
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 5,
+     "abd": 2,
+     "knee": 22
+    },
+    "foot": {
+     "pitch": 28
+    }
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     1.5,
+     -0.1
+    ],
+    "pitch": -10
+   },
+   "neck": {
+    "flex": -12
+   },
+   "armL": {
+    "pos": [
+     0.2,
+     2.25,
+     0.13
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     1,
+     0
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "pole": [
+     0.3,
+     -1,
+     0.3
+    ],
+    "curl": 0.82
+   },
+   "armR": {
+    "pos": [
+     -0.2,
+     2.25,
+     0.13
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     1,
+     0
+    ],
+    "palm": [
+     1,
+     0,
+     0
+    ],
+    "pole": [
+     -0.3,
+     -1,
+     0.3
+    ],
+    "curl": 0.82
+   },
+   "legL": {
+    "fk": {
+     "flex": 5,
+     "abd": 2,
+     "knee": 22
+    },
+    "foot": {
+     "pitch": 28
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 5,
+     "abd": 2,
+     "knee": 22
+    },
+    "foot": {
+     "pitch": 28
+    }
+   }
+  }
+ }
+}

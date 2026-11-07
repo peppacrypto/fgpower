@@ -1,0 +1,201 @@
+{
+ "slug": "arm-circles",
+ "camera": {
+  "az": 30,
+  "el": 8
+ },
+ "muscles": [
+  "shoulders"
+ ],
+ "props": [],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": 22,
+     "abd": 90,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   },
+   "armR": {
+    "fk": {
+     "flex": 22,
+     "abd": 90,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": 1.3471114790620886e-15,
+     "abd": 112,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   },
+   "armR": {
+    "fk": {
+     "flex": 1.3471114790620886e-15,
+     "abd": 112,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   }
+  },
+  "mid2": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": -22,
+     "abd": 90,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   },
+   "armR": {
+    "fk": {
+     "flex": -22,
+     "abd": 90,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   }
+  },
+  "mid3": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": -4.0413344371862654e-15,
+     "abd": 68,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   },
+   "armR": {
+    "fk": {
+     "flex": -4.0413344371862654e-15,
+     "abd": 68,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   }
+  }
+ }
+}

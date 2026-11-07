@@ -1,0 +1,201 @@
+{
+ "slug": "elbow-circles",
+ "camera": {
+  "az": 20,
+  "el": 10
+ },
+ "muscles": [
+  "shoulders"
+ ],
+ "props": [],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": 25,
+     "abd": 90,
+     "rot": 0,
+     "elbow": 150
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   },
+   "armR": {
+    "fk": {
+     "flex": 25,
+     "abd": 90,
+     "rot": 0,
+     "elbow": 150
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": 1.5308084989341915e-15,
+     "abd": 115,
+     "rot": 0,
+     "elbow": 150
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   },
+   "armR": {
+    "fk": {
+     "flex": 1.5308084989341915e-15,
+     "abd": 115,
+     "rot": 0,
+     "elbow": 150
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   }
+  },
+  "mid2": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": -25,
+     "abd": 90,
+     "rot": 0,
+     "elbow": 150
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   },
+   "armR": {
+    "fk": {
+     "flex": -25,
+     "abd": 90,
+     "rot": 0,
+     "elbow": 150
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   }
+  },
+  "mid3": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": -4.592425496802574e-15,
+     "abd": 65,
+     "rot": 0,
+     "elbow": 150
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   },
+   "armR": {
+    "fk": {
+     "flex": -4.592425496802574e-15,
+     "abd": 65,
+     "rot": 0,
+     "elbow": 150
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   }
+  }
+ }
+}

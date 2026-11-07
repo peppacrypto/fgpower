@@ -1,0 +1,202 @@
+{
+ "slug": "step-up-with-knee-raise",
+ "camera": {
+  "az": 80,
+  "el": 8
+ },
+ "muscles": [
+  "quadriceps",
+  "glutes"
+ ],
+ "props": [
+  {
+   "type": "step-platform",
+   "height": 0.4,
+   "width": 0.9,
+   "depth": 0.5,
+   "pos": [
+    0,
+    0,
+    0.3
+   ]
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0.06,
+     0.82,
+     -0.02
+    ],
+    "pitch": 14
+   },
+   "spine": {
+    "flex": 2
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0.4,
+     0.3
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.05,
+     0.3,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0,
+     -0.24
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.05,
+     0.3,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": -10,
+     "abd": 4,
+     "elbow": 20
+    },
+    "rel": "chest"
+   },
+   "armR": {
+    "fk": {
+     "flex": 25,
+     "abd": 4,
+     "elbow": 20
+    },
+    "rel": "chest"
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0.09,
+     1.1,
+     0.2
+    ],
+    "pitch": 6
+   },
+   "spine": {
+    "flex": 1
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0.4,
+     0.3
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.05,
+     0.3,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0.9,
+     0.1
+    ],
+    "anchor": "ankle",
+    "pitch": 45,
+    "pole": [
+     -0.05,
+     0.3,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 10,
+     "abd": 12,
+     "elbow": 20
+    },
+    "rel": "chest"
+   },
+   "armR": {
+    "fk": {
+     "flex": -20,
+     "abd": 14,
+     "elbow": 20
+    },
+    "rel": "chest"
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0.1,
+     1.32,
+     0.3
+    ],
+    "pitch": 0
+   },
+   "spine": {
+    "flex": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0.4,
+     0.3
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.05,
+     0.3,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0.92,
+     0.7
+    ],
+    "anchor": "ankle",
+    "pitch": -5,
+    "pole": [
+     -0.05,
+     0.3,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 30,
+     "abd": 10,
+     "elbow": 60
+    },
+    "rel": "chest"
+   },
+   "armR": {
+    "fk": {
+     "flex": -15,
+     "abd": 10,
+     "elbow": 60
+    },
+    "rel": "chest"
+   }
+  }
+ }
+}

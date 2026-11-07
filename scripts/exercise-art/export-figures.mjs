@@ -38,7 +38,7 @@ const holds = art.filter(isHold)
 const run = (list, extra) => {
   for (let i = 0; i < list.length; i += BATCH) {
     const part = list.slice(i, i + BATCH).map(specPath)
-    execFileSync('node', [path.join(HERE, 'render.mjs'), ...part, '--out', RENDER_DIR, '--look', 'studio', ...extra], { stdio: 'inherit' })
+    execFileSync('node', [path.join(HERE, 'render.mjs'), ...part, '--out', RENDER_DIR, ...extra], { stdio: 'inherit' })
   }
 }
 run(moving, ['--loop', '20'])

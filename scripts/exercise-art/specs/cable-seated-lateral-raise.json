@@ -1,0 +1,162 @@
+{
+ "slug": "cable-seated-lateral-raise",
+ "camera": {
+  "az": 25,
+  "el": 6
+ },
+ "muscles": [
+  "lateral-deltoid"
+ ],
+ "props": [
+  {
+   "type": "flat-bench",
+   "yaw": 90,
+   "pos": [
+    0,
+    0,
+    -0.1
+   ]
+  },
+  {
+   "type": "cable-crossover",
+   "pos": [
+    0,
+    0,
+    0.3
+   ],
+   "hands": true,
+   "pulleyY": 0.2,
+   "attachment": "d-handle"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.55,
+     -0.05
+    ],
+    "pitch": 5
+   },
+   "spine": {
+    "flex": 2
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.15,
+     0,
+     0.3
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.1,
+     1,
+     0.4
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.15,
+     0,
+     0.3
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.1,
+     1,
+     0.4
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 5,
+     "abd": 12,
+     "rot": 0,
+     "elbow": 20
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "pron": 1
+   },
+   "armR": {
+    "fk": {
+     "flex": 5,
+     "abd": 12,
+     "rot": 0,
+     "elbow": 20
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "pron": 1
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.55,
+     -0.05
+    ],
+    "pitch": 5
+   },
+   "spine": {
+    "flex": 2
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.15,
+     0,
+     0.3
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.1,
+     1,
+     0.4
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.15,
+     0,
+     0.3
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.1,
+     1,
+     0.4
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 88,
+     "rot": 0,
+     "elbow": 20
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "pron": 1
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 88,
+     "rot": 0,
+     "elbow": 20
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "pron": 1
+   }
+  }
+ }
+}

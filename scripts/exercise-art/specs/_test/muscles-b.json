@@ -1,0 +1,2 @@
+{"slug":"muscles-b","camera":{"az":155,"el":6},"muscles":["lats","traps","glutes","hamstrings","triceps","calves","posterior-deltoid"],
+ "frames":{"start":{"root":{"pos":[0,0.92,0]},"armL":{"fk":{"flex":10,"abd":28,"elbow":20}},"armR":{"fk":{"flex":10,"abd":28,"elbow":20}},"legL":{"pos":[0.13,0,0.02],"anchor":"sole"},"legR":{"pos":[-0.13,0,0.02],"anchor":"sole"}}}}

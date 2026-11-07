@@ -1,0 +1,213 @@
+{
+ "slug": "gallery-massage-ball",
+ "camera": {
+  "az": 54,
+  "el": 14
+ },
+ "muscles": [
+  "calves"
+ ],
+ "floats": true,
+ "props": [
+  {
+   "type": "chair",
+   "pos": [
+    0,
+    0,
+    -0.16
+   ]
+  }
+ ],
+ "frames": {
+  "start": {
+   "props": [
+    {
+     "type": "massage-ball",
+     "foot": "L",
+     "at": 0.18
+    }
+   ],
+   "root": {
+    "pos": [
+     0,
+     0.585,
+     -0.17
+    ],
+    "pitch": 4
+   },
+   "neck": {
+    "flex": 16
+   },
+   "armL": {
+    "pos": [
+     0.15,
+     0.03,
+     0.2
+    ],
+    "rel": "pelvis",
+    "fingers": [
+     -0.15,
+     -0.5,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     -0.3
+    ],
+    "contact": false,
+    "curl": 0.25,
+    "pole": [
+     0.5,
+     -0.2,
+     -0.8
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.15,
+     0.03,
+     0.2
+    ],
+    "rel": "pelvis",
+    "fingers": [
+     0.15,
+     -0.5,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     -0.3
+    ],
+    "contact": false,
+    "curl": 0.25,
+    "pole": [
+     -0.5,
+     -0.2,
+     -0.8
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0.06,
+     0.32
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 4,
+    "pole": [
+     0.1,
+     0.3,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0.3
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -4
+   }
+  },
+  "end": {
+   "props": [
+    {
+     "type": "massage-ball",
+     "foot": "L",
+     "at": 0.86
+    }
+   ],
+   "root": {
+    "pos": [
+     0,
+     0.585,
+     -0.17
+    ],
+    "pitch": 4
+   },
+   "neck": {
+    "flex": 16
+   },
+   "armL": {
+    "pos": [
+     0.15,
+     0.03,
+     0.2
+    ],
+    "rel": "pelvis",
+    "fingers": [
+     -0.15,
+     -0.5,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     -0.3
+    ],
+    "contact": false,
+    "curl": 0.25,
+    "pole": [
+     0.5,
+     -0.2,
+     -0.8
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.15,
+     0.03,
+     0.2
+    ],
+    "rel": "pelvis",
+    "fingers": [
+     0.15,
+     -0.5,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     -0.3
+    ],
+    "contact": false,
+    "curl": 0.25,
+    "pole": [
+     -0.5,
+     -0.2,
+     -0.8
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0.06,
+     0.2
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 4,
+    "pole": [
+     0.1,
+     0.3,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0.3
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -4
+   }
+  }
+ }
+}

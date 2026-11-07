@@ -1,0 +1,113 @@
+{
+ "slug": "side-lying-floor-stretch",
+ "camera": {
+  "az": 70,
+  "el": 25
+ },
+ "muscles": [
+  "lats"
+ ],
+ "props": [
+  {
+   "type": "floor-mat"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.215,
+     0
+    ],
+    "yaw": 90,
+    "roll": 80
+   },
+   "neck": {
+    "side": -6
+   },
+   "spine": {
+    "side": 8
+   },
+   "legR": {
+    "pos": [
+     0.43,
+     0.08,
+     -0.38
+    ],
+    "anchor": "ankle",
+    "yaw": 90,
+    "roll": 90,
+    "pole": [
+     1,
+     0,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     -0.05,
+     0.09,
+     -0.78
+    ],
+    "anchor": "ankle",
+    "pole": [
+     0,
+     1,
+     0
+    ],
+    "yaw": -180,
+    "pitch": -90,
+    "roll": -30
+   },
+   "armL": {
+    "pos": [
+     -0.03,
+     0.57,
+     0.94
+    ],
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     1,
+     0,
+     0
+    ],
+    "pole": [
+     0,
+     1,
+     -1
+    ],
+    "curl": 0.2
+   },
+   "armR": {
+    "pos": [
+     0.3,
+     0.06,
+     0.6
+    ],
+    "hand": "relaxed",
+    "fingers": [
+     -1,
+     -1,
+     1
+    ],
+    "palm": [
+     -1,
+     1,
+     0
+    ],
+    "pole": [
+     1,
+     0,
+     0
+    ],
+    "curl": 0.2
+   }
+  }
+ },
+ "muscleSide": "L"
+}

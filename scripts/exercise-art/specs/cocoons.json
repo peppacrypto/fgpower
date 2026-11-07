@@ -1,0 +1,117 @@
+{
+ "slug": "cocoons",
+ "camera": {
+  "az": 76,
+  "el": 12
+ },
+ "muscles": [
+  "abdominals"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.1,
+     0
+    ],
+    "pitch": -90
+   },
+   "neck": {
+    "flex": 4
+   },
+   "armL": {
+    "fk": {
+     "flex": 168,
+     "abd": 6,
+     "rot": 0,
+     "elbow": 3
+    },
+    "curl": 0.2
+   },
+   "armR": {
+    "fk": {
+     "flex": 168,
+     "abd": 6,
+     "rot": 0,
+     "elbow": 3
+    },
+    "curl": 0.2
+   },
+   "legL": {
+    "fk": {
+     "flex": 5,
+     "abd": 3,
+     "knee": 3
+    },
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 5,
+     "abd": 3,
+     "knee": 3
+    },
+    "foot": {
+     "pitch": 0
+    }
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.12,
+     0
+    ],
+    "pitch": -110
+   },
+   "spine": {
+    "flex": 30
+   },
+   "neck": {
+    "flex": 20
+   },
+   "armL": {
+    "fk": {
+     "flex": 85,
+     "abd": 6,
+     "rot": 0,
+     "elbow": 10
+    },
+    "curl": 0.2
+   },
+   "armR": {
+    "fk": {
+     "flex": 85,
+     "abd": 6,
+     "rot": 0,
+     "elbow": 10
+    },
+    "curl": 0.2
+   },
+   "legL": {
+    "fk": {
+     "flex": 115,
+     "abd": 5,
+     "knee": 125
+    },
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 115,
+     "abd": 5,
+     "knee": 125
+    },
+    "foot": {
+     "pitch": 0
+    }
+   }
+  }
+ }
+}

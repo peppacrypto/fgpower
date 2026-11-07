@@ -1,0 +1,183 @@
+{
+ "camera": {
+  "az": 60,
+  "el": 10
+ },
+ "muscles": [
+  "chest",
+  "triceps"
+ ],
+ "floats": true,
+ "props": [
+  {
+   "type": "dip-station",
+   "height": 1.25,
+   "spacing": 0.56
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     1.34,
+     -0.02
+    ],
+    "pitch": 12
+   },
+   "neck": {
+    "flex": -10
+   },
+   "armL": {
+    "pos": [
+     0.28,
+     1.272,
+     0.06
+    ],
+    "contact": true,
+    "fingers": [
+     -0.25,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     0.5,
+     0,
+     -1
+    ],
+    "curl": 0.6
+   },
+   "armR": {
+    "pos": [
+     -0.28,
+     1.272,
+     0.06
+    ],
+    "contact": true,
+    "fingers": [
+     0.25,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -0.5,
+     0,
+     -1
+    ],
+    "curl": 0.6
+   },
+   "legL": {
+    "fk": {
+     "flex": -8,
+     "abd": 2,
+     "knee": 50
+    },
+    "foot": {
+     "pitch": 30
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": -8,
+     "abd": 2,
+     "knee": 50
+    },
+    "foot": {
+     "pitch": 30
+    }
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     1.12,
+     -0.13
+    ],
+    "pitch": 28
+   },
+   "neck": {
+    "flex": -24
+   },
+   "armL": {
+    "pos": [
+     0.28,
+     1.272,
+     0.06
+    ],
+    "contact": true,
+    "fingers": [
+     -0.25,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     0.5,
+     0,
+     -1
+    ],
+    "curl": 0.6
+   },
+   "armR": {
+    "pos": [
+     -0.28,
+     1.272,
+     0.06
+    ],
+    "contact": true,
+    "fingers": [
+     0.25,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -0.5,
+     0,
+     -1
+    ],
+    "curl": 0.6
+   },
+   "legL": {
+    "fk": {
+     "flex": -8,
+     "abd": 2,
+     "knee": 50
+    },
+    "foot": {
+     "pitch": 30
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": -8,
+     "abd": 2,
+     "knee": 50
+    },
+    "foot": {
+     "pitch": 30
+    }
+   }
+  }
+ },
+ "slug": "gallery-dip-station"
+}

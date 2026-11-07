@@ -1,0 +1,94 @@
+{
+ "slug": "test-push-up-bottom",
+ "camera": {
+  "az": 50,
+  "el": 8
+ },
+ "muscles": [
+  "chest",
+  "triceps"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.26,
+     0
+    ],
+    "pitch": 84
+   },
+   "neck": {
+    "flex": -8
+   },
+   "legL": {
+    "pos": [
+     0.09,
+     0,
+     -0.84
+    ],
+    "anchor": "ball",
+    "pitch": 62,
+    "toes": 0
+   },
+   "legR": {
+    "pos": [
+     -0.09,
+     0,
+     -0.84
+    ],
+    "anchor": "ball",
+    "pitch": 62,
+    "toes": 0
+   },
+   "armL": {
+    "pos": [
+     0.31,
+     0,
+     0.42
+    ],
+    "contact": true,
+    "fingers": [
+     0.12,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     1,
+     0.6,
+     -0.5
+    ],
+    "curl": -0.3
+   },
+   "armR": {
+    "pos": [
+     -0.31,
+     0,
+     0.42
+    ],
+    "contact": true,
+    "fingers": [
+     -0.12,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -1,
+     0.6,
+     -0.5
+    ],
+    "curl": -0.3
+   }
+  }
+ }
+}

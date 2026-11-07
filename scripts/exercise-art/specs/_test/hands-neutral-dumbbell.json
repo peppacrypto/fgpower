@@ -1,0 +1,95 @@
+{
+ "slug": "test-hands-neutral-dumbbell",
+ "camera": {
+  "az": 30,
+  "el": 8
+ },
+ "muscles": [],
+ "props": [
+  {
+   "type": "bar-test",
+   "hands": true,
+   "radius": 0.016,
+   "length": 0.22
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.925,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.115,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.115,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -6
+   },
+   "armL": {
+    "pos": [
+     0.24,
+     0.8,
+     0.06
+    ],
+    "hand": "grip",
+    "grip": 0.016,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "pole": [
+     0.4,
+     0,
+     -1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.24,
+     0.8,
+     0.06
+    ],
+    "hand": "grip",
+    "grip": 0.016,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     1,
+     0,
+     0
+    ],
+    "pole": [
+     -0.4,
+     0,
+     -1
+    ]
+   }
+  }
+ }
+}

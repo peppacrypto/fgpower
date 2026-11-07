@@ -1,0 +1,198 @@
+{
+ "camera": {
+  "az": 100,
+  "el": 8
+ },
+ "muscles": [
+  "hamstrings"
+ ],
+ "floats": true,
+ "props": [
+  {
+   "type": "standing-leg-curl",
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "follow": true
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     1.02,
+     0
+    ],
+    "pitch": 32
+   },
+   "neck": {
+    "flex": -26
+   },
+   "armL": {
+    "pos": [
+     0.19,
+     1.12,
+     0.72
+    ],
+    "contact": true,
+    "fingers": [
+     0.02,
+     -0.1,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     -0.1
+    ],
+    "curl": 0.75,
+    "pole": [
+     0.25,
+     -1,
+     -0.2
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.19,
+     1.12,
+     0.72
+    ],
+    "contact": true,
+    "fingers": [
+     -0.02,
+     -0.1,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     -0.1
+    ],
+    "curl": 0.75,
+    "pole": [
+     -0.25,
+     -1,
+     -0.2
+    ]
+   },
+   "legL": {
+    "fk": {
+     "flex": 18,
+     "abd": 2,
+     "knee": 8
+    },
+    "rel": "world",
+    "foot": {
+     "pitch": 18
+    }
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.12,
+     -0.05
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "toes": 0,
+    "pole": [
+     -0.05,
+     0,
+     1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     1.02,
+     0
+    ],
+    "pitch": 32
+   },
+   "neck": {
+    "flex": -26
+   },
+   "armL": {
+    "pos": [
+     0.19,
+     1.12,
+     0.72
+    ],
+    "contact": true,
+    "fingers": [
+     0.02,
+     -0.1,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     -0.1
+    ],
+    "curl": 0.75,
+    "pole": [
+     0.25,
+     -1,
+     -0.2
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.19,
+     1.12,
+     0.72
+    ],
+    "contact": true,
+    "fingers": [
+     -0.02,
+     -0.1,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     -0.1
+    ],
+    "curl": 0.75,
+    "pole": [
+     -0.25,
+     -1,
+     -0.2
+    ]
+   },
+   "legL": {
+    "fk": {
+     "flex": 18,
+     "abd": 2,
+     "knee": 112
+    },
+    "rel": "world",
+    "foot": {
+     "pitch": 6
+    }
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.12,
+     -0.05
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "toes": 0,
+    "pole": [
+     -0.05,
+     0,
+     1
+    ]
+   }
+  }
+ },
+ "muscleSide": "L"
+}

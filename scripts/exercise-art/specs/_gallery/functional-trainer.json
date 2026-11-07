@@ -1,0 +1,154 @@
+{
+ "slug": "gallery-functional-trainer",
+ "camera": {
+  "az": 30,
+  "el": 8
+ },
+ "muscles": [
+  "chest"
+ ],
+ "muscleSide": "L",
+ "props": [
+  {
+   "type": "functional-trainer",
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "hand": "L",
+   "pulleyY": [
+    1.3,
+    0.3
+   ]
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0.2
+    ]
+   },
+   "neck": {
+    "flex": 4
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0.3
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 8
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0.1
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -8
+   },
+   "armL": {
+    "pos": [
+     0.5,
+     1.2,
+     0.34
+    ],
+    "contact": true,
+    "fingers": [
+     0.8,
+     0,
+     0.6
+    ],
+    "palm": [
+     -0.6,
+     0,
+     0.8
+    ],
+    "curl": 0.78,
+    "pole": [
+     0.3,
+     -1,
+     -0.4
+    ]
+   },
+   "armR": {
+    "fk": {
+     "flex": 3,
+     "abd": 8,
+     "elbow": 12
+    }
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0.2
+    ]
+   },
+   "neck": {
+    "flex": 4
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0.3
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 8
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0.1
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -8
+   },
+   "armL": {
+    "pos": [
+     0.06,
+     1.2,
+     0.62
+    ],
+    "contact": true,
+    "fingers": [
+     -0.196,
+     0,
+     0.981
+    ],
+    "palm": [
+     -0.981,
+     0,
+     -0.196
+    ],
+    "curl": 0.78,
+    "pole": [
+     0.5,
+     -1,
+     -0.2
+    ]
+   },
+   "armR": {
+    "fk": {
+     "flex": 3,
+     "abd": 8,
+     "elbow": 12
+    }
+   }
+  }
+ }
+}

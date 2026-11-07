@@ -1,0 +1,236 @@
+{
+ "slug": "one-leg-barbell-squat",
+ "camera": {
+  "az": 80,
+  "el": 8
+ },
+ "muscles": [
+  "quadriceps",
+  "glutes"
+ ],
+ "props": [
+  {
+   "type": "flat-bench",
+   "yaw": 90,
+   "pos": [
+    0,
+    0,
+    -0.72
+   ]
+  },
+  {
+   "type": "barbell",
+   "hands": true,
+   "plates": [
+    20,
+    10
+   ]
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.86,
+     0
+    ],
+    "pitch": 0
+   },
+   "spine": {
+    "flex": 4
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.12,
+     0,
+     0.4
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.1,
+     0.5,
+     1
+    ],
+    "yaw": 2
+   },
+   "legR": {
+    "pos": [
+     -0.12,
+     0.52,
+     -0.68
+    ],
+    "anchor": "ball",
+    "pole": [
+     -0.1,
+     -0.2,
+     1
+    ],
+    "pitch": 85
+   },
+   "armL": {
+    "pos": [
+     0.33,
+     0.215,
+     -0.015
+    ],
+    "rel": "chest",
+    "contact": true,
+    "fingers": [
+     0.02,
+     0.97,
+     -0.2
+    ],
+    "palm": [
+     0,
+     0.2,
+     0.97
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.5,
+     -0.3,
+     -1
+    ],
+    "scap": {
+     "elev": 0,
+     "prot": 0
+    }
+   },
+   "armR": {
+    "pos": [
+     -0.33,
+     0.215,
+     -0.015
+    ],
+    "rel": "chest",
+    "contact": true,
+    "fingers": [
+     -0.02,
+     0.97,
+     -0.2
+    ],
+    "palm": [
+     0,
+     0.2,
+     0.97
+    ],
+    "curl": 0.85,
+    "pole": [
+     -0.5,
+     -0.3,
+     -1
+    ],
+    "scap": {
+     "elev": 0,
+     "prot": 0
+    }
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.64,
+     0.02
+    ],
+    "pitch": 0
+   },
+   "spine": {
+    "flex": 4
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.12,
+     0,
+     0.4
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.1,
+     0.5,
+     1
+    ],
+    "yaw": 2
+   },
+   "legR": {
+    "pos": [
+     -0.12,
+     0.52,
+     -0.68
+    ],
+    "anchor": "ball",
+    "pole": [
+     -0.1,
+     -0.2,
+     1
+    ],
+    "pitch": 85
+   },
+   "armL": {
+    "pos": [
+     0.33,
+     0.215,
+     -0.015
+    ],
+    "rel": "chest",
+    "contact": true,
+    "fingers": [
+     0.02,
+     0.97,
+     -0.2
+    ],
+    "palm": [
+     0,
+     0.2,
+     0.97
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.5,
+     -0.3,
+     -1
+    ],
+    "scap": {
+     "elev": 0,
+     "prot": 0
+    }
+   },
+   "armR": {
+    "pos": [
+     -0.33,
+     0.215,
+     -0.015
+    ],
+    "rel": "chest",
+    "contact": true,
+    "fingers": [
+     -0.02,
+     0.97,
+     -0.2
+    ],
+    "palm": [
+     0,
+     0.2,
+     0.97
+    ],
+    "curl": 0.85,
+    "pole": [
+     -0.5,
+     -0.3,
+     -1
+    ],
+    "scap": {
+     "elev": 0,
+     "prot": 0
+    }
+   }
+  }
+ }
+}

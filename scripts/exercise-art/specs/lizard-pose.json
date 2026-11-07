@@ -1,0 +1,106 @@
+{
+ "slug": "lizard-pose",
+ "camera": {
+  "az": 60,
+  "el": 14
+ },
+ "muscles": [
+  "adductors"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.38,
+     0
+    ],
+    "pitch": 30
+   },
+   "spine": {
+    "flex": 60
+   },
+   "neck": {
+    "flex": -20
+   },
+   "legL": {
+    "pos": [
+     0.45,
+     0,
+     0.72
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.3,
+     0.4,
+     1
+    ],
+    "yaw": 0
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0.02,
+     -0.66
+    ],
+    "anchor": "ball",
+    "pole": [
+     -0.1,
+     -0.2,
+     1
+    ],
+    "pitch": 55
+   },
+   "armL": {
+    "pos": [
+     0.12,
+     0.02,
+     0.6
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     0.24,
+     -0.3,
+     -1
+    ],
+    "curl": 0.2
+   },
+   "armR": {
+    "pos": [
+     -0.08,
+     0.02,
+     0.6
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -0.16,
+     -0.3,
+     -1
+    ],
+    "curl": 0.2
+   }
+  }
+ }
+}

@@ -1,0 +1,117 @@
+{
+ "slug": "seated-hamstring-and-calf-stretch",
+ "camera": {
+  "az": 80,
+  "el": 8
+ },
+ "muscles": [
+  "hamstrings",
+  "calves"
+ ],
+ "props": [
+  {
+   "type": "floor-mat"
+  },
+  {
+   "type": "stretch-strap",
+   "foot": "L",
+   "hands": true,
+   "at": 0.8
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.125,
+     -0.05
+    ],
+    "pitch": 20
+   },
+   "spine": {
+    "flex": 12
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0.08,
+     0.8
+    ],
+    "pitch": -82,
+    "pole": [
+     0.1,
+     1,
+     0.1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.08,
+     0.81
+    ],
+    "pitch": -70,
+    "pole": [
+     -0.1,
+     1,
+     0.1
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.14,
+     0.38,
+     0.5
+    ],
+    "hand": "grip",
+    "grip": 0.02,
+    "fingers": [
+     0,
+     0.1,
+     1
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "curl": 0.8,
+    "pole": [
+     1,
+     -0.6,
+     -0.1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.14,
+     0.38,
+     0.5
+    ],
+    "hand": "grip",
+    "grip": 0.02,
+    "fingers": [
+     0,
+     0.1,
+     1
+    ],
+    "palm": [
+     1,
+     0,
+     0
+    ],
+    "curl": 0.8,
+    "pole": [
+     -1,
+     -0.6,
+     -0.1
+    ]
+   }
+  }
+ },
+ "muscleSide": "L"
+}

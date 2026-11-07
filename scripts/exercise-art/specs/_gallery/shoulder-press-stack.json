@@ -1,0 +1,277 @@
+{
+ "camera": {
+  "az": 40,
+  "el": 6
+ },
+ "muscles": [
+  "anterior-deltoid",
+  "lateral-deltoid"
+ ],
+ "floats": true,
+ "props": [
+  {
+   "type": "shoulder-press",
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "follow": true,
+   "load": "stack"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.538,
+     0
+    ],
+    "pitch": -8
+   },
+   "spine": {},
+   "neck": {
+    "flex": 4
+   },
+   "armL": {
+    "pos": [
+     0.27,
+     1.1,
+     0.04
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0.75,
+     -0.66
+    ],
+    "palm": [
+     0,
+     0.66,
+     0.75
+    ],
+    "curl": 0.75,
+    "pole": [
+     1,
+     -0.5,
+     0
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.27,
+     1.1,
+     0.04
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0.75,
+     -0.66
+    ],
+    "palm": [
+     0,
+     0.66,
+     0.75
+    ],
+    "curl": 0.75,
+    "pole": [
+     -1,
+     -0.5,
+     0
+    ]
+   },
+   "legL": {
+    "fk": {
+     "flex": 88,
+     "abd": 6,
+     "knee": 84
+    },
+    "rel": "world",
+    "foot": {
+     "pitch": 8
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 88,
+     "abd": 6,
+     "knee": 84
+    },
+    "rel": "world",
+    "foot": {
+     "pitch": 8
+    }
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.538,
+     0
+    ],
+    "pitch": -8
+   },
+   "spine": {},
+   "neck": {
+    "flex": 4
+   },
+   "armL": {
+    "pos": [
+     0.2609,
+     1.3057,
+     0.0917
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0.75,
+     -0.66
+    ],
+    "palm": [
+     0,
+     0.66,
+     0.75
+    ],
+    "curl": 0.75,
+    "pole": [
+     1,
+     -0.3,
+     0.05
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.2609,
+     1.3057,
+     0.0917
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0.75,
+     -0.66
+    ],
+    "palm": [
+     0,
+     0.66,
+     0.75
+    ],
+    "curl": 0.75,
+    "pole": [
+     -1,
+     -0.3,
+     0.05
+    ]
+   },
+   "legL": {
+    "fk": {
+     "flex": 88,
+     "abd": 6,
+     "knee": 84
+    },
+    "rel": "world",
+    "foot": {
+     "pitch": 8
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 88,
+     "abd": 6,
+     "knee": 84
+    },
+    "rel": "world",
+    "foot": {
+     "pitch": 8
+    }
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.538,
+     0
+    ],
+    "pitch": -8
+   },
+   "spine": {},
+   "neck": {
+    "flex": 4
+   },
+   "armL": {
+    "pos": [
+     0.27,
+     1.5177,
+     0.0839
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0.75,
+     -0.66
+    ],
+    "palm": [
+     0,
+     0.66,
+     0.75
+    ],
+    "curl": 0.75,
+    "pole": [
+     1,
+     -0.09999999999999998,
+     0.1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.27,
+     1.5177,
+     0.0839
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0.75,
+     -0.66
+    ],
+    "palm": [
+     0,
+     0.66,
+     0.75
+    ],
+    "curl": 0.75,
+    "pole": [
+     -1,
+     -0.09999999999999998,
+     0.1
+    ]
+   },
+   "legL": {
+    "fk": {
+     "flex": 88,
+     "abd": 6,
+     "knee": 84
+    },
+    "rel": "world",
+    "foot": {
+     "pitch": 8
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 88,
+     "abd": 6,
+     "knee": 84
+    },
+    "rel": "world",
+    "foot": {
+     "pitch": 8
+    }
+   }
+  }
+ }
+}

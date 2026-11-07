@@ -1,0 +1,101 @@
+{
+ "slug": "test-hands-on-thigh",
+ "camera": {
+  "az": 50,
+  "el": 10
+ },
+ "muscles": [],
+ "props": [
+  {
+   "type": "step",
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "height": 0.48,
+   "depth": 0.4,
+   "width": 0.5
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.57,
+     0
+    ]
+   },
+   "spine": {
+    "flex": 2
+   },
+   "armL": {
+    "pos": [
+     0.13,
+     0.665,
+     0.27
+    ],
+    "hand": "ball",
+    "ballRadius": 0.09,
+    "fingers": [
+     -0.1,
+     -0.15,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     0.5,
+     -0.1,
+     -0.5
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.13,
+     0.665,
+     0.27
+    ],
+    "hand": "ball",
+    "ballRadius": 0.09,
+    "fingers": [
+     0.1,
+     -0.15,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -0.5,
+     -0.1,
+     -0.5
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.14,
+     0,
+     0.42
+    ],
+    "anchor": "sole",
+    "yaw": 8
+   },
+   "legR": {
+    "pos": [
+     -0.14,
+     0,
+     0.42
+    ],
+    "anchor": "sole",
+    "yaw": -8
+   }
+  }
+ }
+}

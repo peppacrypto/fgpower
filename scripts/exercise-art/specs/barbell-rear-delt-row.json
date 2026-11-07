@@ -1,0 +1,199 @@
+{
+ "slug": "barbell-rear-delt-row",
+ "camera": {
+  "az": 70,
+  "el": 14
+ },
+ "muscles": [
+  "shoulders"
+ ],
+ "props": [
+  {
+   "type": "barbell",
+   "hands": true,
+   "plates": [
+    20
+   ]
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.8,
+     -0.3
+    ],
+    "pitch": 65
+   },
+   "neck": {
+    "flex": -35
+   },
+   "armL": {
+    "pos": [
+     0.42,
+     0.46,
+     0.12
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     0,
+     0,
+     -1
+    ],
+    "pole": [
+     0.3,
+     0.2,
+     -1
+    ],
+    "curl": 0.85
+   },
+   "armR": {
+    "pos": [
+     -0.42,
+     0.46,
+     0.12
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     0,
+     0,
+     -1
+    ],
+    "pole": [
+     -0.3,
+     0.2,
+     -1
+    ],
+    "curl": 0.85
+   },
+   "legL": {
+    "pos": [
+     0.14,
+     0,
+     -0.05
+    ],
+    "anchor": "sole",
+    "yaw": 6,
+    "pole": [
+     0.2,
+     0.5,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.14,
+     0,
+     -0.05
+    ],
+    "anchor": "sole",
+    "yaw": -6,
+    "pole": [
+     -0.2,
+     0.5,
+     1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.8,
+     -0.3
+    ],
+    "pitch": 65
+   },
+   "neck": {
+    "flex": -35
+   },
+   "armL": {
+    "pos": [
+     0.42,
+     0.84,
+     0.16
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     0,
+     0,
+     -1
+    ],
+    "pole": [
+     1,
+     0.1,
+     0
+    ],
+    "curl": 0.85
+   },
+   "armR": {
+    "pos": [
+     -0.42,
+     0.84,
+     0.16
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     0,
+     0,
+     -1
+    ],
+    "pole": [
+     -1,
+     0.1,
+     0
+    ],
+    "curl": 0.85
+   },
+   "legL": {
+    "pos": [
+     0.14,
+     0,
+     -0.05
+    ],
+    "anchor": "sole",
+    "yaw": 6,
+    "pole": [
+     0.2,
+     0.5,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.14,
+     0,
+     -0.05
+    ],
+    "anchor": "sole",
+    "yaw": -6,
+    "pole": [
+     -0.2,
+     0.5,
+     1
+    ]
+   }
+  }
+ }
+}

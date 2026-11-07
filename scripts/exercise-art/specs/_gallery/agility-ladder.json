@@ -1,0 +1,147 @@
+{
+ "slug": "agility-ladder",
+ "camera": {
+  "az": 58,
+  "el": 20
+ },
+ "muscles": [
+  "quadriceps",
+  "calves"
+ ],
+ "floats": true,
+ "props": [
+  {
+   "type": "agility-ladder",
+   "pos": [
+    0,
+    0,
+    0.21
+   ],
+   "rungs": 7
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.86,
+     -0.04
+    ],
+    "pitch": 14
+   },
+   "spine": {
+    "flex": 6
+   },
+   "neck": {
+    "flex": -16
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0,
+     0.21
+    ],
+    "anchor": "ball",
+    "pitch": 26,
+    "toes": 0,
+    "pole": [
+     0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0.1,
+     -0.3
+    ],
+    "anchor": "ball",
+    "pitch": 62,
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": -34,
+     "abd": 8,
+     "elbow": 92
+    },
+    "curl": 0.62
+   },
+   "armR": {
+    "fk": {
+     "flex": 46,
+     "abd": 8,
+     "elbow": 92
+    },
+    "curl": 0.62
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.86,
+     -0.04
+    ],
+    "pitch": 14
+   },
+   "spine": {
+    "flex": 6
+   },
+   "neck": {
+    "flex": -16
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0.1,
+     -0.3
+    ],
+    "anchor": "ball",
+    "pitch": 62,
+    "pole": [
+     0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0,
+     0.21
+    ],
+    "anchor": "ball",
+    "pitch": 26,
+    "toes": 0,
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 46,
+     "abd": 8,
+     "elbow": 92
+    },
+    "curl": 0.62
+   },
+   "armR": {
+    "fk": {
+     "flex": -34,
+     "abd": 8,
+     "elbow": 92
+    },
+    "curl": 0.62
+   }
+  }
+ }
+}

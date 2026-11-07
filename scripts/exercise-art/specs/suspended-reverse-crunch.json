@@ -1,0 +1,193 @@
+{
+ "slug": "suspended-reverse-crunch",
+ "camera": {
+  "az": 66,
+  "el": 8
+ },
+ "muscles": [
+  "abdominals"
+ ],
+ "props": [
+  {
+   "type": "suspension-trainer",
+   "anchor": [
+    0,
+    2.25,
+    -0.72
+   ],
+   "feet": true,
+   "frameIgnore": true
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.585,
+     0.03
+    ],
+    "pitch": 88
+   },
+   "neck": {
+    "flex": -14
+   },
+   "armL": {
+    "pos": [
+     0.25,
+     0,
+     0.47
+    ],
+    "contact": true,
+    "fingers": [
+     0.12,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3
+   },
+   "armR": {
+    "pos": [
+     -0.25,
+     0,
+     0.47
+    ],
+    "contact": true,
+    "fingers": [
+     -0.12,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0.51,
+     -0.7749999999999999
+    ],
+    "anchor": "ankle",
+    "pitch": 122,
+    "pole": [
+     0.05,
+     -1,
+     0.5
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0.51,
+     -0.7749999999999999
+    ],
+    "anchor": "ankle",
+    "pitch": 122,
+    "pole": [
+     -0.05,
+     -1,
+     0.5
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.83,
+     0.02
+    ],
+    "pitch": 112
+   },
+   "spine": {
+    "flex": 14,
+    "weights": [
+     0.3,
+     0.3,
+     0.2,
+     0.1,
+     0.1
+    ]
+   },
+   "neck": {
+    "flex": -34
+   },
+   "armL": {
+    "pos": [
+     0.25,
+     0,
+     0.47
+    ],
+    "contact": true,
+    "fingers": [
+     0.12,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3
+   },
+   "armR": {
+    "pos": [
+     -0.25,
+     0,
+     0.47
+    ],
+    "contact": true,
+    "fingers": [
+     -0.12,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0.51,
+     -0.38
+    ],
+    "anchor": "ankle",
+    "pitch": 134,
+    "pole": [
+     0.05,
+     -1,
+     0.5
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0.51,
+     -0.38
+    ],
+    "anchor": "ankle",
+    "pitch": 134,
+    "pole": [
+     -0.05,
+     -1,
+     0.5
+    ]
+   }
+  }
+ },
+ "floats": true
+}

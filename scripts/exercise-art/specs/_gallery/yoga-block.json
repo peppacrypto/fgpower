@@ -1,0 +1,161 @@
+{
+ "slug": "gallery-yoga-block",
+ "camera": {
+  "az": 6,
+  "el": 8
+ },
+ "muscles": [
+  "obliques",
+  "hamstrings",
+  "adductors"
+ ],
+ "props": [
+  {
+   "type": "yoga-block",
+   "orient": "tall",
+   "pos": [
+    0.72,
+    0,
+    0.08
+   ]
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0.26,
+     0.8,
+     0
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 90,
+     "elbow": 2
+    },
+    "curl": 0.1
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 90,
+     "elbow": 2
+    },
+    "curl": 0.1
+   },
+   "legL": {
+    "pos": [
+     0.8,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 84,
+    "pole": [
+     1,
+     0.2,
+     0.1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.28,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -10,
+    "pole": [
+     -0.6,
+     0.2,
+     1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0.17,
+     0.79,
+     0
+    ],
+    "roll": -40,
+    "yaw": 4
+   },
+   "spine": {
+    "side": 46,
+    "twist": -14
+   },
+   "neck": {
+    "twist": -34,
+    "side": 4
+   },
+   "armL": {
+    "pos": [
+     0.72,
+     0.23,
+     0.08
+    ],
+    "contact": true,
+    "fingers": [
+     0.15,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.2,
+    "pole": [
+     1,
+     0,
+     0.3
+    ]
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 90,
+     "elbow": 2
+    },
+    "curl": 0.1
+   },
+   "legL": {
+    "pos": [
+     0.8,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 84,
+    "pole": [
+     1,
+     0.2,
+     0.1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.28,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -10,
+    "pole": [
+     -0.6,
+     0.2,
+     1
+    ]
+   }
+  }
+ }
+}

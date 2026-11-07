@@ -1,0 +1,183 @@
+{
+ "camera": {
+  "az": 60,
+  "el": 8
+ },
+ "muscles": [
+  "triceps",
+  "chest"
+ ],
+ "floats": true,
+ "props": [
+  {
+   "type": "parallel-bars",
+   "height": 1.3,
+   "spacing": 0.56
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     1.39,
+     -0.02
+    ],
+    "pitch": 3
+   },
+   "neck": {
+    "flex": -2
+   },
+   "armL": {
+    "pos": [
+     0.28,
+     1.322,
+     0
+    ],
+    "contact": true,
+    "fingers": [
+     -0.25,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     0.15,
+     0,
+     -1
+    ],
+    "curl": 0.6
+   },
+   "armR": {
+    "pos": [
+     -0.28,
+     1.322,
+     0
+    ],
+    "contact": true,
+    "fingers": [
+     0.25,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -0.15,
+     0,
+     -1
+    ],
+    "curl": 0.6
+   },
+   "legL": {
+    "fk": {
+     "flex": 12,
+     "abd": 2,
+     "knee": 58
+    },
+    "foot": {
+     "pitch": 28
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 12,
+     "abd": 2,
+     "knee": 58
+    },
+    "foot": {
+     "pitch": 28
+    }
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     1.14,
+     -0.06
+    ],
+    "pitch": 8
+   },
+   "neck": {
+    "flex": -6
+   },
+   "armL": {
+    "pos": [
+     0.28,
+     1.322,
+     0
+    ],
+    "contact": true,
+    "fingers": [
+     -0.25,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     0.15,
+     0,
+     -1
+    ],
+    "curl": 0.6
+   },
+   "armR": {
+    "pos": [
+     -0.28,
+     1.322,
+     0
+    ],
+    "contact": true,
+    "fingers": [
+     0.25,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -0.15,
+     0,
+     -1
+    ],
+    "curl": 0.6
+   },
+   "legL": {
+    "fk": {
+     "flex": 12,
+     "abd": 2,
+     "knee": 58
+    },
+    "foot": {
+     "pitch": 28
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 12,
+     "abd": 2,
+     "knee": 58
+    },
+    "foot": {
+     "pitch": 28
+    }
+   }
+  }
+ },
+ "slug": "gallery-parallel-bars"
+}

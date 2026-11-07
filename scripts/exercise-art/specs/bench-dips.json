@@ -1,0 +1,186 @@
+{
+ "slug": "bench-dips",
+ "camera": {
+  "az": 70,
+  "el": 8
+ },
+ "muscles": [
+  "triceps"
+ ],
+ "props": [
+  {
+   "type": "flat-bench",
+   "pos": [
+    0,
+    0,
+    -0.45
+   ],
+   "yaw": 90
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.54,
+     -0.17
+    ],
+    "pitch": -5
+   },
+   "neck": {
+    "flex": -4
+   },
+   "legL": {
+    "pos": [
+     0.12,
+     0,
+     0.6
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 4
+   },
+   "legR": {
+    "pos": [
+     -0.12,
+     0,
+     0.6
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -4
+   },
+   "armL": {
+    "pos": [
+     0.2,
+     0.46,
+     -0.3
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -0.3,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     0.4,
+     0.2,
+     -1
+    ],
+    "curl": 0.7
+   },
+   "armR": {
+    "pos": [
+     -0.2,
+     0.46,
+     -0.3
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -0.3,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -0.4,
+     0.2,
+     -1
+    ],
+    "curl": 0.7
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.42,
+     -0.14
+    ],
+    "pitch": -5
+   },
+   "neck": {
+    "flex": -4
+   },
+   "legL": {
+    "pos": [
+     0.12,
+     0,
+     0.6
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 4
+   },
+   "legR": {
+    "pos": [
+     -0.12,
+     0,
+     0.6
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -4
+   },
+   "armL": {
+    "pos": [
+     0.2,
+     0.46,
+     -0.3
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -0.3,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     0.4,
+     0.2,
+     -1
+    ],
+    "curl": 0.7
+   },
+   "armR": {
+    "pos": [
+     -0.2,
+     0.46,
+     -0.3
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -0.3,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -0.4,
+     0.2,
+     -1
+    ],
+    "curl": 0.7
+   }
+  }
+ },
+ "floats": false
+}

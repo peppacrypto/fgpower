@@ -1,0 +1,195 @@
+{
+ "camera": {
+  "az": 72,
+  "el": 10
+ },
+ "muscles": [
+  "quadriceps",
+  "glutes"
+ ],
+ "floats": true,
+ "props": [
+  {
+   "type": "step-platform",
+   "height": 0.3,
+   "yaw": 0,
+   "pos": [
+    0,
+    0,
+    0.1
+   ],
+   "depth": 0.42
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0.02,
+     0.86,
+     -0.28
+    ],
+    "pitch": 14
+   },
+   "neck": {
+    "flex": -10
+   },
+   "armL": {
+    "fk": {
+     "flex": -8,
+     "abd": 6,
+     "elbow": 18
+    },
+    "curl": 0.4
+   },
+   "armR": {
+    "fk": {
+     "flex": 12,
+     "abd": 6,
+     "elbow": 22
+    },
+    "curl": 0.4
+   },
+   "legL": {
+    "pos": [
+     0.12,
+     0.3,
+     0.1
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.12,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.072,
+     -0.325
+    ],
+    "anchor": "ankle",
+    "pitch": 0,
+    "pole": [
+     -0.05,
+     0,
+     1
+    ]
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0.025,
+     1.04,
+     -0.11
+    ],
+    "pitch": 8
+   },
+   "neck": {
+    "flex": -5
+   },
+   "armL": {
+    "fk": {
+     "flex": 3,
+     "abd": 6,
+     "elbow": 20
+    },
+    "curl": 0.4
+   },
+   "armR": {
+    "fk": {
+     "flex": 2,
+     "abd": 6,
+     "elbow": 21
+    },
+    "curl": 0.4
+   },
+   "legL": {
+    "pos": [
+     0.12,
+     0.3,
+     0.1
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.12,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.48,
+     -0.13
+    ],
+    "anchor": "ankle",
+    "pitch": 28,
+    "pole": [
+     -0.05,
+     0,
+     1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0.03,
+     1.21,
+     0.06
+    ],
+    "pitch": 2
+   },
+   "neck": {
+    "flex": 0
+   },
+   "armL": {
+    "fk": {
+     "flex": 14,
+     "abd": 6,
+     "elbow": 22
+    },
+    "curl": 0.4
+   },
+   "armR": {
+    "fk": {
+     "flex": -8,
+     "abd": 6,
+     "elbow": 20
+    },
+    "curl": 0.4
+   },
+   "legL": {
+    "pos": [
+     0.12,
+     0.3,
+     0.1
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.12,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.61,
+     0.21
+    ],
+    "anchor": "ankle",
+    "pitch": 16,
+    "pole": [
+     -0.05,
+     0,
+     1
+    ]
+   }
+  }
+ },
+ "slug": "gallery-step-platform"
+}

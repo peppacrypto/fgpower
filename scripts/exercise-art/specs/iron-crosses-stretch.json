@@ -1,0 +1,191 @@
+{
+ "slug": "iron-crosses-stretch",
+ "camera": {
+  "az": 30,
+  "el": 40
+ },
+ "muscles": [
+  "quadriceps"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.15,
+     0
+    ],
+    "pitch": 90
+   },
+   "neck": {
+    "twist": 70
+   },
+   "legL": {
+    "fk": {
+     "flex": 0,
+     "abd": 0,
+     "rot": 0,
+     "knee": 0
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 60
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 0,
+     "abd": 0,
+     "rot": 0,
+     "knee": 0
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 60
+    }
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 88,
+     "rot": 0,
+     "elbow": 4
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "pron": 0
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 88,
+     "rot": 0,
+     "elbow": 4
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "pron": 0
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.15,
+     0
+    ],
+    "pitch": 90
+   },
+   "neck": {
+    "twist": 70
+   },
+   "legL": {
+    "fk": {
+     "flex": 0,
+     "abd": 0,
+     "rot": 0,
+     "knee": 80
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 60
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 0,
+     "abd": 0,
+     "rot": 0,
+     "knee": 0
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 60
+    }
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 88,
+     "rot": 0,
+     "elbow": 4
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "pron": 0
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 88,
+     "rot": 0,
+     "elbow": 4
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "pron": 0
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.15,
+     0
+    ],
+    "pitch": 90,
+    "roll": 20
+   },
+   "neck": {
+    "twist": 70
+   },
+   "legL": {
+    "fk": {
+     "flex": -30,
+     "abd": -30,
+     "rot": 0,
+     "knee": 80
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 60
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 0,
+     "abd": 10,
+     "rot": 0,
+     "knee": 0
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 60
+    }
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 88,
+     "rot": 0,
+     "elbow": 4
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "pron": 0
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 88,
+     "rot": 0,
+     "elbow": 4
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "pron": 0
+   }
+  }
+ },
+ "muscleSide": "L"
+}

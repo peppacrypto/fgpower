@@ -1,0 +1,141 @@
+{
+ "slug": "standing-pelvic-tilt",
+ "camera": {
+  "az": 100,
+  "el": 8
+ },
+ "muscles": [
+  "spinal-erectors"
+ ],
+ "props": [],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.9,
+     0
+    ],
+    "pitch": -10
+   },
+   "armL": {
+    "pos": [
+     0.26,
+     0.88,
+     0
+    ],
+    "hand": "relaxed",
+    "pole": [
+     0.5,
+     0,
+     -1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.26,
+     0.88,
+     0
+    ],
+    "hand": "relaxed",
+    "pole": [
+     -0.5,
+     0,
+     -1
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 4,
+    "pole": [
+     0.2,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -4,
+    "pole": [
+     -0.2,
+     0,
+     1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.9,
+     0
+    ],
+    "pitch": 12
+   },
+   "armL": {
+    "pos": [
+     0.26,
+     0.88,
+     0
+    ],
+    "hand": "relaxed",
+    "pole": [
+     0.5,
+     0,
+     -1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.26,
+     0.88,
+     0
+    ],
+    "hand": "relaxed",
+    "pole": [
+     -0.5,
+     0,
+     -1
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 4,
+    "pole": [
+     0.2,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -4,
+    "pole": [
+     -0.2,
+     0,
+     1
+    ]
+   }
+  }
+ }
+}

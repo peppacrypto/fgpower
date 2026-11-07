@@ -1,0 +1,117 @@
+{
+ "slug": "intermediate-hip-flexor-and-quad-stretch",
+ "camera": {
+  "az": 105,
+  "el": 18
+ },
+ "muscles": [
+  "quadriceps"
+ ],
+ "props": [
+  {
+   "type": "floor-mat"
+  },
+  {
+   "type": "stretch-strap",
+   "foot": "L",
+   "hands": true,
+   "at": 0.45,
+   "over": true
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.15,
+     0
+    ],
+    "pitch": 92
+   },
+   "spine": {
+    "flex": -25
+   },
+   "neck": {
+    "flex": -8
+   },
+   "legR": {
+    "fk": {
+     "flex": 0,
+     "abd": 3,
+     "knee": 0
+    },
+    "foot": {
+     "pitch": 60
+    }
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0.5,
+     -0.2
+    ],
+    "anchor": "ankle",
+    "pole": [
+     0.2,
+     0,
+     -1
+    ],
+    "yaw": -180,
+    "pitch": -120,
+    "roll": 120
+   },
+   "armL": {
+    "pos": [
+     0.14,
+     0.3,
+     0.1
+    ],
+    "hand": "grip",
+    "grip": 0.02,
+    "fingers": [
+     -1,
+     -1,
+     -1
+    ],
+    "palm": [
+     1,
+     0,
+     -1
+    ],
+    "curl": 0.7,
+    "pole": [
+     1,
+     0,
+     -0.3
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.14,
+     0.3,
+     0.1
+    ],
+    "hand": "grip",
+    "grip": 0.02,
+    "fingers": [
+     -1,
+     0,
+     -1
+    ],
+    "palm": [
+     -1,
+     -1,
+     1
+    ],
+    "curl": 0.7,
+    "pole": [
+     -1,
+     0,
+     -0.3
+    ]
+   }
+  }
+ },
+ "muscleSide": "L"
+}

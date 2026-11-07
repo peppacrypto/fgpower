@@ -1,0 +1,96 @@
+{
+ "slug": "test-hands-chin-up",
+ "camera": {
+  "az": 25,
+  "el": 6
+ },
+ "muscles": [],
+ "floats": true,
+ "props": [
+  {
+   "type": "bar-test",
+   "hands": true,
+   "radius": 0.014,
+   "length": 0.34
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     1.2,
+     0
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.16,
+     2.14,
+     0.05
+    ],
+    "hand": "grip",
+    "grip": 0.014,
+    "fingers": [
+     0,
+     1,
+     0
+    ],
+    "palm": [
+     0,
+     0,
+     -1
+    ],
+    "pole": [
+     0.5,
+     0,
+     0.3
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.16,
+     2.14,
+     0.05
+    ],
+    "hand": "grip",
+    "grip": 0.014,
+    "fingers": [
+     0,
+     1,
+     0
+    ],
+    "palm": [
+     0,
+     0,
+     -1
+    ],
+    "pole": [
+     -0.5,
+     0,
+     0.3
+    ]
+   },
+   "legL": {
+    "fk": {
+     "flex": 8,
+     "abd": 2,
+     "knee": 12
+    },
+    "foot": {
+     "pitch": 30
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 8,
+     "abd": 2,
+     "knee": 12
+    },
+    "foot": {
+     "pitch": 30
+    }
+   }
+  }
+ }
+}

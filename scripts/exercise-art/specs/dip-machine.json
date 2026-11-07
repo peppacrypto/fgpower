@@ -1,0 +1,273 @@
+{
+ "camera": {
+  "az": 62,
+  "el": 8
+ },
+ "muscles": [
+  "triceps"
+ ],
+ "floats": true,
+ "props": [
+  {
+   "type": "dip-machine",
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "follow": true
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.558,
+     0
+    ],
+    "pitch": -8
+   },
+   "neck": {
+    "flex": 6
+   },
+   "armL": {
+    "pos": [
+     0.31,
+     0.72,
+     0.06
+    ],
+    "contact": true,
+    "fingers": [
+     0.45,
+     -0.3,
+     0.84
+    ],
+    "palm": [
+     -0.5,
+     -0.85,
+     0.1
+    ],
+    "curl": 0.75,
+    "pole": [
+     0.25,
+     -0.2,
+     -1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.31,
+     0.72,
+     0.06
+    ],
+    "contact": true,
+    "fingers": [
+     -0.45,
+     -0.3,
+     0.84
+    ],
+    "palm": [
+     0.5,
+     -0.85,
+     0.1
+    ],
+    "curl": 0.75,
+    "pole": [
+     -0.25,
+     -0.2,
+     -1
+    ]
+   },
+   "legL": {
+    "fk": {
+     "flex": 88,
+     "abd": 6,
+     "knee": 84
+    },
+    "rel": "world",
+    "foot": {
+     "pitch": 8
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 88,
+     "abd": 6,
+     "knee": 84
+    },
+    "rel": "world",
+    "foot": {
+     "pitch": 8
+    }
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.558,
+     0
+    ],
+    "pitch": -8
+   },
+   "neck": {
+    "flex": 6
+   },
+   "armL": {
+    "pos": [
+     0.31,
+     0.5918,
+     0.0282
+    ],
+    "contact": true,
+    "fingers": [
+     0.45,
+     -0.3,
+     0.84
+    ],
+    "palm": [
+     -0.5,
+     -0.85,
+     0.1
+    ],
+    "curl": 0.75,
+    "pole": [
+     0.25,
+     -0.15000000000000002,
+     -1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.31,
+     0.5918,
+     0.0282
+    ],
+    "contact": true,
+    "fingers": [
+     -0.45,
+     -0.3,
+     0.84
+    ],
+    "palm": [
+     0.5,
+     -0.85,
+     0.1
+    ],
+    "curl": 0.75,
+    "pole": [
+     -0.25,
+     -0.15000000000000002,
+     -1
+    ]
+   },
+   "legL": {
+    "fk": {
+     "flex": 88,
+     "abd": 6,
+     "knee": 84
+    },
+    "rel": "world",
+    "foot": {
+     "pitch": 8
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 88,
+     "abd": 6,
+     "knee": 84
+    },
+    "rel": "world",
+    "foot": {
+     "pitch": 8
+    }
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.558,
+     0
+    ],
+    "pitch": -8
+   },
+   "neck": {
+    "flex": 6
+   },
+   "armL": {
+    "pos": [
+     0.31,
+     0.46,
+     0.0201
+    ],
+    "contact": true,
+    "fingers": [
+     0.45,
+     -0.3,
+     0.84
+    ],
+    "palm": [
+     -0.5,
+     -0.85,
+     0.1
+    ],
+    "curl": 0.75,
+    "pole": [
+     0.25,
+     -0.1,
+     -1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.31,
+     0.46,
+     0.0201
+    ],
+    "contact": true,
+    "fingers": [
+     -0.45,
+     -0.3,
+     0.84
+    ],
+    "palm": [
+     0.5,
+     -0.85,
+     0.1
+    ],
+    "curl": 0.75,
+    "pole": [
+     -0.25,
+     -0.1,
+     -1
+    ]
+   },
+   "legL": {
+    "fk": {
+     "flex": 88,
+     "abd": 6,
+     "knee": 84
+    },
+    "rel": "world",
+    "foot": {
+     "pitch": 8
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 88,
+     "abd": 6,
+     "knee": 84
+    },
+    "rel": "world",
+    "foot": {
+     "pitch": 8
+    }
+   }
+  }
+ },
+ "slug": "dip-machine"
+}

@@ -1,0 +1,220 @@
+{
+ "slug": "hurdle",
+ "camera": {
+  "az": 62,
+  "el": 11
+ },
+ "muscles": [
+  "hamstrings",
+  "quadriceps"
+ ],
+ "floats": true,
+ "props": [
+  {
+   "type": "hurdle",
+   "pos": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "type": "hurdle",
+   "pos": [
+    0,
+    0,
+    0.9
+   ]
+  },
+  {
+   "type": "hurdle",
+   "pos": [
+    0,
+    0,
+    -0.9
+   ]
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.68,
+     -0.55
+    ],
+    "pitch": 30
+   },
+   "spine": {
+    "flex": 12
+   },
+   "neck": {
+    "flex": -30
+   },
+   "legL": {
+    "pos": [
+     0.12,
+     0,
+     -0.45
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "pole": [
+     0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.12,
+     0,
+     -0.45
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": -42,
+     "abd": 12,
+     "elbow": 16
+    },
+    "curl": 0.45
+   },
+   "armR": {
+    "fk": {
+     "flex": -42,
+     "abd": 12,
+     "elbow": 16
+    },
+    "curl": 0.45
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.96,
+     -0.03
+    ],
+    "pitch": 16
+   },
+   "spine": {
+    "flex": 8
+   },
+   "neck": {
+    "flex": -16
+   },
+   "legL": {
+    "pos": [
+     0.12,
+     0.37,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 12,
+    "pole": [
+     0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.12,
+     0.37,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 12,
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 62,
+     "abd": 12,
+     "elbow": 44
+    },
+    "curl": 0.45
+   },
+   "armR": {
+    "fk": {
+     "flex": 62,
+     "abd": 12,
+     "elbow": 44
+    },
+    "curl": 0.45
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.68,
+     0.35
+    ],
+    "pitch": 30
+   },
+   "spine": {
+    "flex": 12
+   },
+   "neck": {
+    "flex": -30
+   },
+   "legL": {
+    "pos": [
+     0.12,
+     0,
+     0.45
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "pole": [
+     0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.12,
+     0,
+     0.45
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": -42,
+     "abd": 12,
+     "elbow": 16
+    },
+    "curl": 0.45
+   },
+   "armR": {
+    "fk": {
+     "flex": -42,
+     "abd": 12,
+     "elbow": 16
+    },
+    "curl": 0.45
+   }
+  }
+ }
+}

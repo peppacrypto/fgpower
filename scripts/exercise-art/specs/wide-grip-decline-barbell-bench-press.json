@@ -1,0 +1,213 @@
+{
+ "slug": "wide-grip-decline-barbell-bench-press",
+ "camera": {
+  "az": 40,
+  "el": 14
+ },
+ "muscles": [
+  "chest"
+ ],
+ "floats": true,
+ "props": [
+  {
+   "type": "decline-bench",
+   "angle": 20,
+   "uprights": true
+  },
+  {
+   "type": "barbell",
+   "hands": true,
+   "plates": [
+    20
+   ]
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.6584,
+     0.0556
+    ],
+    "pitch": -110
+   },
+   "neck": {
+    "flex": 10
+   },
+   "legL": {
+    "pos": [
+     0.12,
+     0.405,
+     0.585
+    ],
+    "anchor": "ankle",
+    "pitch": 25,
+    "pole": [
+     0.15,
+     1,
+     0.4
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.12,
+     0.405,
+     0.585
+    ],
+    "anchor": "ankle",
+    "pitch": 25,
+    "pole": [
+     -0.15,
+     1,
+     0.4
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.46,
+     1.081,
+     -0.3767
+    ],
+    "contact": true,
+    "hand": "grip",
+    "grip": 0.014,
+    "fingers": [
+     0.05,
+     1,
+     -0.05
+    ],
+    "palm": [
+     0,
+     0.05,
+     1
+    ],
+    "pole": [
+     0.9,
+     -0.3,
+     -0.1
+    ],
+    "curl": 0.82
+   },
+   "armR": {
+    "pos": [
+     -0.46,
+     1.081,
+     -0.3767
+    ],
+    "contact": true,
+    "hand": "grip",
+    "grip": 0.014,
+    "fingers": [
+     -0.05,
+     1,
+     -0.05
+    ],
+    "palm": [
+     0,
+     0.05,
+     1
+    ],
+    "pole": [
+     -0.9,
+     -0.3,
+     -0.1
+    ],
+    "curl": 0.82
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.6584,
+     0.0556
+    ],
+    "pitch": -110
+   },
+   "neck": {
+    "flex": 10
+   },
+   "legL": {
+    "pos": [
+     0.12,
+     0.405,
+     0.585
+    ],
+    "anchor": "ankle",
+    "pitch": 25,
+    "pole": [
+     0.15,
+     1,
+     0.4
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.12,
+     0.405,
+     0.585
+    ],
+    "anchor": "ankle",
+    "pitch": 25,
+    "pole": [
+     -0.15,
+     1,
+     0.4
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.46,
+     0.691,
+     -0.2867
+    ],
+    "contact": true,
+    "hand": "grip",
+    "grip": 0.014,
+    "fingers": [
+     0.05,
+     1,
+     -0.05
+    ],
+    "palm": [
+     0,
+     0.05,
+     1
+    ],
+    "pole": [
+     0.9,
+     -0.3,
+     0.1
+    ],
+    "curl": 0.82
+   },
+   "armR": {
+    "pos": [
+     -0.46,
+     0.691,
+     -0.2867
+    ],
+    "contact": true,
+    "hand": "grip",
+    "grip": 0.014,
+    "fingers": [
+     -0.05,
+     1,
+     -0.05
+    ],
+    "palm": [
+     0,
+     0.05,
+     1
+    ],
+    "pole": [
+     -0.9,
+     -0.3,
+     0.1
+    ],
+    "curl": 0.82
+   }
+  }
+ }
+}

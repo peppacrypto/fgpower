@@ -1,0 +1,67 @@
+{
+ "slug": "hollow-body-hold",
+ "camera": {
+  "az": 70,
+  "el": 10
+ },
+ "muscles": [
+  "abdominals"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.1,
+     0
+    ],
+    "pitch": -90
+   },
+   "spine": {
+    "flex": 16
+   },
+   "neck": {
+    "flex": 18
+   },
+   "armL": {
+    "fk": {
+     "flex": 168,
+     "abd": 6,
+     "rot": 0,
+     "elbow": 3
+    },
+    "curl": 0.2,
+    "hand": "relaxed"
+   },
+   "armR": {
+    "fk": {
+     "flex": 168,
+     "abd": 6,
+     "rot": 0,
+     "elbow": 3
+    },
+    "curl": 0.2
+   },
+   "legL": {
+    "fk": {
+     "flex": 10,
+     "abd": 3,
+     "knee": 3
+    },
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 10,
+     "abd": 3,
+     "knee": 3
+    },
+    "foot": {
+     "pitch": 0
+    }
+   }
+  }
+ }
+}

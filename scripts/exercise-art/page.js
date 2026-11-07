@@ -2,48 +2,24 @@
 import * as THREE from './vendor/three.module.js'
 import { Body, mixFrames } from './rig.js'
 import { makePaint, MUSCLE_NAMES } from './paint.js'
+import { PROPS, propErrors } from './props/index.js'
 
 const W = 1600
 const H = 1200
-// ?look=studio is the dark look: grey body, glowing target muscles, black background, no outlines.
-const LOOK = new URLSearchParams(location.search).get('look') || ''
-const STUDIO = LOOK === 'studio'
+// The look: grey body, glowing target muscles, black background, no outlines.
 const STYLE = {
-  background: 0xf4f6f3,
-  skin: new THREE.Color(0xdcd8d0),
-  shorts: new THREE.Color(0x7a8681),
-  target: new THREE.Color(0x2f9e6a),
+  background: 0x0b0b0c,
+  skin: new THREE.Color(0xb9b9b9),
+  shorts: new THREE.Color(0x121213),
+  target: new THREE.Color(0xff5a1f),
+  muscleEdge: 0.45,
+  muscleGlow: 0.32,
+  muscleFiber: 0.16,
   waistY: 0.985,
-  hemY: 0.685,
-  ink: 0x17201b,
-  floorLine: 0xcfd5cf,
-  wood: 0xc9b597,
-  fabric: 0x8fa39a,
-  wall: 0xe8ebe7,
-  towel: 0xe2b04a,
-  step: 0xb8bfb9,
+  hemY: 0.77,
 }
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, alpha: false })
-if (STUDIO) {
-  Object.assign(STYLE, {
-    background: 0x0b0b0c,
-    skin: new THREE.Color(0xb9b9b9),
-    shorts: new THREE.Color(0x121213),
-    target: new THREE.Color(0xff5a1f),
-    muscleEdge: 0.45,
-    muscleGlow: 0.32,
-    hemY: 0.77,
-    ink: 0x000000,
-    floorLine: 0x222224,
-    wood: 0x3b3b3e,
-    fabric: 0x2c2c2f,
-    wall: 0x161618,
-    towel: 0xc9ccd0,
-    muscleFiber: 0.16,
-    step: 0x333336,
-  })
-}
 renderer.setPixelRatio(1)
 renderer.setSize(W, H)
 renderer.shadowMap.enabled = true
@@ -54,17 +30,28 @@ document.body.appendChild(renderer.domElement)
 const scene = new THREE.Scene()
 scene.background = new THREE.Color(STYLE.background)
 
-const gradient = (() => {
-  const data = new Uint8Array([120, 195, 255])
-  const t = new THREE.DataTexture(data, 3, 1, THREE.RedFormat)
-  t.minFilter = THREE.NearestFilter
-  t.magFilter = THREE.NearestFilter
-  t.needsUpdate = true
-  return t
-})()
+// A dim studio to reflect: without it, metal renders black. Soft boxes above and to the sides, nothing below.
+{
+  const env = new THREE.Scene()
+  env.background = new THREE.Color(0x050506)
+  const panel = (w, h, pos, intensity) => {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(intensity, intensity, intensity), side: THREE.DoubleSide }))
+    m.position.set(...pos)
+    m.lookAt(0, 0, 0)
+    env.add(m)
+  }
+  panel(8, 8, [0, 6, 0], 2.2)
+  panel(3, 6, [6, 2, 2], 3.2)
+  panel(3, 6, [-6, 2, 2], 1.6)
+  panel(6, 3, [0, 2, -6], 1.2)
+  panel(6, 3, [0, 2, 6], 0.9)
+  const pm = new THREE.PMREMGenerator(renderer)
+  scene.environment = pm.fromScene(env, 0.03).texture
+  scene.environmentIntensity = 0.55
+}
 
-scene.add(STUDIO ? new THREE.HemisphereLight(0xc8ccd2, 0x141416, 0.75) : new THREE.HemisphereLight(0xffffff, 0xd8dcd6, 1.9))
-const sun = new THREE.DirectionalLight(0xffffff, STUDIO ? 3.0 : 1.5)
+scene.add(new THREE.HemisphereLight(0xc8ccd2, 0x141416, 0.75))
+const sun = new THREE.DirectionalLight(0xffffff, 3.0)
 sun.castShadow = true
 sun.shadow.mapSize.set(2048, 2048)
 sun.shadow.radius = 7
@@ -74,12 +61,10 @@ scene.add(sun)
 scene.add(sun.target)
 
 const rim = new THREE.DirectionalLight(0xffffff, 1.6)
-if (STUDIO) {
-  scene.add(rim)
-  scene.add(rim.target)
-}
-const floor = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), new THREE.ShadowMaterial({ opacity: STUDIO ? 0.62 : 0.16 }))
-// The studio look's floor: a soft pool of light under the figure, fading into the black background.
+scene.add(rim)
+scene.add(rim.target)
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), new THREE.ShadowMaterial({ opacity: 0.62 }))
+// The floor: a soft pool of light under the figure, fading into the black background.
 const pool = (() => {
   const c = document.createElement('canvas')
   c.width = c.height = 512
@@ -96,188 +81,46 @@ const pool = (() => {
   m.renderOrder = -1
   return m
 })()
-if (STUDIO) scene.add(pool)
+scene.add(pool)
 floor.rotation.x = -Math.PI / 2
 floor.receiveShadow = true
 scene.add(floor)
 
-const outlineMaterial = (thickness) =>
-  new THREE.ShaderMaterial({
-    side: THREE.BackSide,
-    uniforms: { t: { value: thickness }, c: { value: new THREE.Color(STYLE.ink) } },
-    vertexShader: `uniform float t; attribute float aInk; void main(){ vec3 p = position + normal * t * aInk; gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0); }`,
-    fragmentShader: `uniform vec3 c;
-void main(){
-  gl_FragColor = vec4(c, 1.0);
-  #include <colorspace_fragment>
-}`,
-  })
-
 let body
 let geom
 let bodyMesh
-let outlineMesh
 let paint
 const propsGroup = new THREE.Group()
 scene.add(propsGroup)
 
-function toon(color) {
-  return new THREE.MeshToonMaterial({ color, gradientMap: gradient })
-}
-
-function addBox(group, size, pos, color, rotY = 0, outline = true, thickness = 0.006) {
-  const g = new THREE.BoxGeometry(size[0], size[1], size[2])
-  const m = new THREE.Mesh(g, toon(color))
-  m.position.set(pos[0], pos[1], pos[2])
-  m.rotation.y = rotY
-  m.castShadow = true
-  m.receiveShadow = true
-  group.add(m)
-  if (outline) {
-    const o = new THREE.Mesh(new THREE.BoxGeometry(size[0] + thickness * 2, size[1] + thickness * 2, size[2] + thickness * 2), new THREE.MeshBasicMaterial({ color: STYLE.ink, side: THREE.BackSide }))
-    o.position.copy(m.position)
-    o.rotation.copy(m.rotation)
-    group.add(o)
-  }
-  return m
-}
-
-// Props. `pos` is the point on the floor under the centre; `yaw` turns them. A chair at yaw 0 has its back at -Z and
-// its seat front at +Z, so someone sitting on it faces +Z.
-const PROPS = {
-  chair(p) {
-    const g = new THREE.Group()
-    const seatH = p.seatH ?? 0.46
-    addBox(g, [0.42, 0.035, 0.42], [0, seatH, 0], STYLE.wood)
-    for (const [x, z] of [[-0.18, -0.18], [0.18, -0.18], [-0.18, 0.18], [0.18, 0.18]]) addBox(g, [0.035, seatH, 0.035], [x, seatH / 2, z], STYLE.wood)
-    addBox(g, [0.035, 0.42, 0.03], [-0.18, seatH + 0.21, -0.19], STYLE.wood)
-    addBox(g, [0.035, 0.42, 0.03], [0.18, seatH + 0.21, -0.19], STYLE.wood)
-    addBox(g, [0.4, 0.09, 0.025], [0, seatH + 0.36, -0.19], STYLE.wood)
-    return g
-  },
-  sofa(p) {
-    const g = new THREE.Group()
-    const w = p.width ?? 1.5
-    addBox(g, [w, 0.3, 0.72], [0, 0.27, 0], STYLE.fabric)
-    addBox(g, [w, 0.46, 0.2], [0, 0.65, -0.3], STYLE.fabric)
-    addBox(g, [0.16, 0.34, 0.72], [-w / 2 + 0.08, 0.53, 0], STYLE.fabric)
-    addBox(g, [0.16, 0.34, 0.72], [w / 2 - 0.08, 0.53, 0], STYLE.fabric)
-    for (const [x, z] of [[-w / 2 + 0.05, -0.32], [w / 2 - 0.05, -0.32], [-w / 2 + 0.05, 0.32], [w / 2 - 0.05, 0.32]]) addBox(g, [0.05, 0.12, 0.05], [x, 0.06, z], STYLE.ink, 0, false)
-    return g
-  },
-  wall(p) {
-    const g = new THREE.Group()
-    const w = p.width ?? 30
-    const h = p.height ?? 3.4
-    const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.08), new THREE.MeshBasicMaterial({ color: STYLE.wall }))
-    m.position.set(0, h / 2, 0)
-    g.add(m)
-    // Only the skirting line: a wall that runs past the frame needs no outline.
-    const line = new THREE.Mesh(new THREE.BoxGeometry(w, 0.012, 0.09), new THREE.MeshBasicMaterial({ color: STYLE.floorLine }))
-    line.position.set(0, 0.006, 0)
-    g.add(line)
-    return g
-  },
-  step(p) {
-    const g = new THREE.Group()
-    addBox(g, [p.width ?? 0.7, p.height ?? 0.17, p.depth ?? 0.28], [0, (p.height ?? 0.17) / 2, 0], STYLE.step)
-    return g
-  },
-  towel(p) {
-    // A flat folded towel lying on the floor.
-    const g = new THREE.Group()
-    addBox(g, [p.width ?? 0.3, 0.012, p.depth ?? 0.42], [0, 0.006, 0], STYLE.towel, 0, true, 0.004)
-    return g
-  },
-  'towel-strip'(p) {
-    // A towel twisted into a rope, for pulling: a straight run from a to b, or through `points`.
-    const g = new THREE.Group()
-    const pts = (p.points || [p.a, p.b]).map((q) => new THREE.Vector3(...q))
-    const r = p.radius ?? 0.022
-    const ink = new THREE.MeshBasicMaterial({ color: STYLE.ink, side: THREE.BackSide })
-    const body = toon(STYLE.towel)
-    const up = new THREE.Vector3(0, 1, 0)
-    const addTube = (a, b) => {
-      const len = a.distanceTo(b)
-      const q = new THREE.Quaternion().setFromUnitVectors(up, b.clone().sub(a).normalize())
-      for (const [rad, mat, shadow] of [[r, body, true], [r + 0.0045, ink, false]]) {
-        const m = new THREE.Mesh(new THREE.CylinderGeometry(rad, rad, len, 14, 1, true), mat)
-        m.position.copy(a.clone().lerp(b, 0.5))
-        m.quaternion.copy(q)
-        m.castShadow = shadow
-        g.add(m)
-      }
-    }
-    const addBall = (c) => {
-      for (const [rad, mat, shadow] of [[r, body, true], [r + 0.0045, ink, false]]) {
-        const m = new THREE.Mesh(new THREE.SphereGeometry(rad, 14, 10), mat)
-        m.position.copy(c)
-        m.castShadow = shadow
-        g.add(m)
-      }
-    }
-    for (let i = 0; i + 1 < pts.length; i++) addTube(pts[i], pts[i + 1])
-    pts.forEach(addBall)
-    return g
-  },
-  'door-frame'(p) {
-    const g = new THREE.Group()
-    const w = p.width ?? 0.8
-    const h = p.height ?? 2.1
-    addBox(g, [0.09, h, 0.14], [-w / 2, h / 2, 0], STYLE.wood)
-    addBox(g, [0.09, h, 0.14], [w / 2, h / 2, 0], STYLE.wood)
-    addBox(g, [w + 0.09, 0.09, 0.14], [0, h, 0], STYLE.wood)
-    return g
-  },
-  'door-corner'(p) {
-    // A masonry wall with a doorway in it, seen from the side of a person who stands along the wall. `pos` is the floor
-    // point of the corner to hook. At yaw 0 the wall runs along Z: this segment goes from the corner toward -Z, the opening
-    // starts at the corner and continues toward +Z, then the wall carries on. Thickness 0.12, centred on pos.x.
-    const g = new THREE.Group()
-    const open = p.opening ?? 0.8
-    const len = p.length ?? 6
-    const h = p.height ?? 3
-    const headY = p.headY ?? 2.1
-    const flat = new THREE.MeshBasicMaterial({ color: STYLE.wall })
-    const ink = new THREE.MeshBasicMaterial({ color: STYLE.ink, side: THREE.BackSide })
-    const slab = (size, pos) => {
-      const m = new THREE.Mesh(new THREE.BoxGeometry(...size), flat)
-      m.position.set(...pos)
-      g.add(m)
-      const o = new THREE.Mesh(new THREE.BoxGeometry(size[0] + 0.012, size[1] + 0.012, size[2] + 0.012), ink)
-      o.position.set(...pos)
-      g.add(o)
-    }
-    slab([0.12, h, len], [0, h / 2, -len / 2])
-    slab([0.12, h, len], [0, h / 2, open + len / 2])
-    slab([0.12, h - headY, open], [0, (h + headY) / 2, open / 2])
-    return g
-  },
-  table(p) {
-    const g = new THREE.Group()
-    const hT = p.height ?? 0.75
-    addBox(g, [1.1, 0.04, 0.7], [0, hT, 0], STYLE.wood)
-    for (const [x, z] of [[-0.5, -0.3], [0.5, -0.3], [-0.5, 0.3], [0.5, 0.3]]) addBox(g, [0.05, hT, 0.05], [x, hT / 2, z], STYLE.wood)
-    return g
-  },
-}
-
 const framePropsGroup = new THREE.Group()
 scene.add(framePropsGroup)
 
-function fillProps(group, list) {
+// A prop that follows the body is rebuilt for every frame, from where the hands and feet ended up.
+// ctx = { hands: {L, R}, feet: {L, R}, frames: {pelvis, chest, head}, joints } (see Body.solve), null for a static prop.
+const FOLLOW_KEYS = ['hand', 'hands', 'foot', 'feet', 'follow']
+const isDynamic = (p) => FOLLOW_KEYS.some((k) => p[k] !== undefined)
+
+function fillProps(group, list, ctx = null) {
   while (group.children.length) group.remove(group.children[0])
   for (const p of list || []) {
     const make = PROPS[p.type]
-    if (!make) throw new Error('unknown prop ' + p.type)
-    const g = make(p)
-    g.position.set(...(p.pos || [0, 0, 0]))
-    g.rotation.y = ((p.yaw || 0) * Math.PI) / 180
+    if (!make) throw new Error(`unknown prop "${p.type}"${propErrors.length ? ` (module errors: ${propErrors.join(' | ')})` : ''}`)
+    const g = make(p, ctx)
+    // A builder that works in world coordinates (a cable between a pulley and a hand) says so with userData.world.
+    if (!g.userData.world) {
+      g.position.set(...(p.pos || [0, 0, 0]))
+      g.rotation.y = ((p.yaw || 0) * Math.PI) / 180
+    }
+    if (p.frameIgnore) g.userData.frameIgnore = true
     group.add(g)
   }
   group.updateMatrixWorld(true)
 }
 const buildProps = (list) => fillProps(propsGroup, list)
+
+/** All the props a frame draws besides the static ones: its own, and the spec's that follow the body. */
+const movingProps = (spec, frame) => [...(spec.props || []).filter(isDynamic), ...(frame.props || [])]
 
 function collectBounds(points, camRight, camUp, camDir) {
   const b = { minR: Infinity, maxR: -Infinity, minU: Infinity, maxU: -Infinity, minD: Infinity, maxD: -Infinity }
@@ -297,11 +140,16 @@ function collectBounds(points, camRight, camUp, camDir) {
   return b
 }
 
+function isFrameIgnored(o) {
+  for (let p = o; p; p = p.parent) if (p.userData && p.userData.frameIgnore) return true
+  return false
+}
+
 function propPoints(group = propsGroup) {
   const pts = []
   const v = new THREE.Vector3()
   group.traverse((o) => {
-    if (o.isMesh && o.geometry.attributes.position) {
+    if (o.isMesh && o.geometry.attributes.position && !isFrameIgnored(o)) {
       const a = o.geometry.attributes.position
       for (let i = 0; i < a.count; i++) {
         v.fromBufferAttribute(a, i).applyMatrix4(o.matrixWorld)
@@ -315,7 +163,8 @@ function propPoints(group = propsGroup) {
 function setBodyPose(positions) {
   geom.attributes.position.array.set(positions)
   geom.attributes.position.needsUpdate = true
-  geom.computeVertexNormals()
+  geom.attributes.normal.array.set(body.normals)
+  geom.attributes.normal.needsUpdate = true
   geom.computeBoundingSphere()
 }
 
@@ -333,7 +182,7 @@ window.renderSpec = async function renderSpec(spec, opts = {}) {
   const right = worldUp.clone().cross(dir).normalize()
   const up = dir.clone().cross(right).normalize()
 
-  buildProps(spec.props)
+  buildProps((spec.props || []).filter((p) => !isDynamic(p)))
   paint.setMuscles(spec.muscles || [], spec.muscleSide)
 
   const frameSpecs = spec.frames
@@ -373,8 +222,9 @@ window.renderSpec = async function renderSpec(spec, opts = {}) {
       minX = Math.min(minX, r.positions[k]); maxX = Math.max(maxX, r.positions[k])
       minZ = Math.min(minZ, r.positions[k + 2]); maxZ = Math.max(maxZ, r.positions[k + 2])
     }
-    if (f.props) {
-      fillProps(framePropsGroup, f.props)
+    const moving = movingProps(spec, f)
+    if (moving.length) {
+      fillProps(framePropsGroup, moving, r.report)
       const fp = propPoints(framePropsGroup)
       if (fp.length) merge(collectBounds(fp, right, up, dir))
     }
@@ -406,15 +256,17 @@ window.renderSpec = async function renderSpec(spec, opts = {}) {
   const padV = spec.camera?.pad ?? 0.07
   const viewH = Math.max(hU / (1 - 2 * padV), wR / (aspect * (1 - 2 * padH)))
   const viewW = viewH * aspect
-  const dist = 6
-  const target = right.clone().multiplyScalar(cR).add(up.clone().multiplyScalar(cU))
-  const camera = new THREE.OrthographicCamera(-viewW / 2, viewW / 2, viewH / 2, -viewH / 2, 0.1, 40)
-  camera.position.copy(target).addScaledVector(dir, dist + bounds.maxD)
+  // A long lens: depth reads naturally and the figure keeps its proportions. Fitted so the nearest face of the movement's
+  // bounds fills the frame.
+  const FOV = 22
+  const tanV = Math.tan((FOV * Math.PI) / 360)
+  const midD = (bounds.minD + bounds.maxD) / 2
+  const target = right.clone().multiplyScalar(cR).add(up.clone().multiplyScalar(cU)).addScaledVector(dir, midD)
+  const fit = Math.max(viewH / 2 / tanV, viewW / 2 / (tanV * aspect)) + (bounds.maxD - bounds.minD) / 2
+  const camera = new THREE.PerspectiveCamera(FOV, aspect, 0.1, 80)
+  camera.position.copy(target).addScaledVector(dir, fit)
   camera.up.copy(worldUp)
-  camera.lookAt(target.clone().addScaledVector(dir, bounds.maxD))
-
-  // Line weight follows the framing, so a lying figure and a standing one look alike at the same size.
-  outlineMesh.material = outlineMaterial(viewH * 0.0034)
+  camera.lookAt(target)
 
   // Light from up, camera side.
   const lightDir = new THREE.Vector3().copy(dir).multiplyScalar(0.55).add(new THREE.Vector3(0.25, 1, 0.2)).normalize()
@@ -438,9 +290,30 @@ window.renderSpec = async function renderSpec(spec, opts = {}) {
     const r = body.solve(frameSpecs[n])
     reports[n] = r.report
     setBodyPose(r.positions)
-    fillProps(framePropsGroup, frameSpecs[n].props || [])
+    fillProps(framePropsGroup, movingProps(spec, frameSpecs[n]), r.report)
     renderer.render(scene, camera)
     images[n] = snapshot()
+  }
+  // Close-ups for review: the hands and feet are small in the full frame, and they are where a figure goes wrong.
+  const closeups = {}
+  if (opts.closeups) {
+    const SPOTS = { handL: ['wrist.L', 0.34], handR: ['wrist.R', 0.34], footL: ['foot.L', 0.42], footR: ['foot.R', 0.42], head: ['head', 0.5] }
+    const near = new THREE.Vector3()
+    for (const n of names) {
+      const r = body.solve(frameSpecs[n])
+      setBodyPose(r.positions)
+      fillProps(framePropsGroup, movingProps(spec, frameSpecs[n]), r.report)
+      for (const [spot, [joint, size]] of Object.entries(SPOTS)) {
+        const j = r.report.joints[joint]
+        near.set(j[0], j[1], j[2])
+        const cam = new THREE.OrthographicCamera((-size * aspect) / 2, (size * aspect) / 2, size / 2, -size / 2, 0.1, 40)
+        cam.position.copy(near).addScaledVector(dir, 8)
+        cam.up.copy(worldUp)
+        cam.lookAt(near)
+        renderer.render(scene, cam)
+        closeups[`${n}-${spot}`] = snapshot()
+      }
+    }
   }
   const loop = []
   if (loopN) {
@@ -462,32 +335,32 @@ window.renderSpec = async function renderSpec(spec, opts = {}) {
       const mixed = at(t)
       const r = body.solve(mixed)
       setBodyPose(r.positions)
-      fillProps(framePropsGroup, mixed.props || [])
+      fillProps(framePropsGroup, movingProps(spec, mixed), r.report)
       renderer.render(scene, camera)
       loop.push(snapshot())
     }
   }
-  return { images, reports, loop, view: { viewW, viewH } }
+  return { images, reports, loop, closeups, view: { viewW, viewH } }
 }
 
 async function init() {
-  const data = await (await fetch(STUDIO ? './build/body-real.json' : './build/body.json')).json()
-  body = new Body(data)
+  const data = await (await fetch('./build/body-real.json')).json()
+  body = new Body(data, { render: true })
   geom = new THREE.BufferGeometry()
   geom.setAttribute('position', new THREE.BufferAttribute(new Float32Array(body.n * 3), 3))
+  geom.setAttribute('normal', new THREE.BufferAttribute(new Float32Array(body.n * 3), 3))
   geom.setAttribute('aRest', new THREE.BufferAttribute(body.rest, 3))
-  geom.setAttribute('aInk', new THREE.BufferAttribute(body.ink, 1))
-  geom.setIndex(body.index)
-  paint = makePaint(THREE, body, STYLE)
-  const mat = paint.patch(STUDIO ? new THREE.MeshStandardMaterial({ roughness: 0.48, metalness: 0.02 }) : new THREE.MeshToonMaterial({ gradientMap: gradient }))
-  bodyMesh = new THREE.Mesh(geom, mat)
+  geom.setIndex(new THREE.BufferAttribute(body.index, 1))
+  const muscleData = await (await fetch('./build/muscles.json')).json()
+  paint = makePaint(THREE, body, STYLE, muscleData, geom)
+  const skinMat = paint.patch(new THREE.MeshStandardMaterial({ roughness: 0.48, metalness: 0.02, envMapIntensity: 0.25 }))
+  bodyMesh = new THREE.Mesh(geom, skinMat)
   bodyMesh.castShadow = true
   bodyMesh.frustumCulled = false
   scene.add(bodyMesh)
-  outlineMesh = new THREE.Mesh(geom, outlineMaterial(0.005))
-  outlineMesh.frustumCulled = false
-  if (!STUDIO) scene.add(outlineMesh)
   window.MUSCLE_NAMES = MUSCLE_NAMES
+  window.propTypes = Object.keys(PROPS)
+  window.propErrors = propErrors
   window.ready = true
 }
 init().catch((e) => {

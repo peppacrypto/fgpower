@@ -1,0 +1,68 @@
+{
+ "slug": "boat-pose",
+ "camera": {
+  "az": 80,
+  "el": 8
+ },
+ "muscles": [
+  "abdominals"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.087,
+     0
+    ],
+    "pitch": -38
+   },
+   "spine": {
+    "flex": -4
+   },
+   "neck": {
+    "flex": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": 130,
+     "abd": 6,
+     "rot": 0,
+     "elbow": 3
+    },
+    "curl": 0.2,
+    "rel": "world"
+   },
+   "armR": {
+    "fk": {
+     "flex": 130,
+     "abd": 6,
+     "rot": 0,
+     "elbow": 3
+    },
+    "curl": 0.2,
+    "rel": "world"
+   },
+   "legL": {
+    "fk": {
+     "flex": 97,
+     "abd": 2,
+     "knee": 3
+    },
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 97,
+     "abd": 2,
+     "knee": 3
+    },
+    "foot": {
+     "pitch": 0
+    }
+   }
+  }
+ }
+}

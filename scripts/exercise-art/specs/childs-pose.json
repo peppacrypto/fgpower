@@ -1,0 +1,196 @@
+{
+ "slug": "childs-pose",
+ "camera": {
+  "az": 90,
+  "el": 10
+ },
+ "muscles": [
+  "spinal-erectors"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.34,
+     -0.82
+    ],
+    "pitch": 85
+   },
+   "neck": {
+    "flex": -5
+   },
+   "spine": {
+    "flex": 2
+   },
+   "armL": {
+    "pos": [
+     0.19,
+     0,
+     0
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     0.3,
+     1,
+     0
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.19,
+     0,
+     0
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -0.3,
+     1,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0.075,
+     -0.92
+    ],
+    "anchor": "ankle",
+    "pitch": 160,
+    "pole": [
+     0,
+     0.3,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.075,
+     -0.92
+    ],
+    "anchor": "ankle",
+    "pitch": 160,
+    "pole": [
+     0,
+     0.3,
+     1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.37,
+     -0.82
+    ],
+    "pitch": 85
+   },
+   "neck": {
+    "flex": -35
+   },
+   "spine": {
+    "flex": 4
+   },
+   "armL": {
+    "pos": [
+     0.19,
+     0,
+     0
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     0.3,
+     1,
+     0
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.19,
+     0,
+     0
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -0.3,
+     1,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0.075,
+     -0.92
+    ],
+    "anchor": "ankle",
+    "pitch": 160,
+    "pole": [
+     0,
+     0.3,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.075,
+     -0.92
+    ],
+    "anchor": "ankle",
+    "pitch": 160,
+    "pole": [
+     0,
+     0.3,
+     1
+    ]
+   }
+  }
+ }
+}

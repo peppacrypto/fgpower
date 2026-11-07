@@ -1,0 +1,202 @@
+{
+ "camera": {
+  "az": 62,
+  "el": 8
+ },
+ "muscles": [
+  "calves"
+ ],
+ "floats": true,
+ "props": [
+  {
+   "type": "calf-block",
+   "height": 0.1,
+   "rail": true
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.985,
+     -0.14
+    ],
+    "pitch": 2
+   },
+   "neck": {
+    "flex": 0
+   },
+   "armL": {
+    "pos": [
+     0.24,
+     1.21,
+     0.33
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     -0.1,
+     -1,
+     0
+    ],
+    "pole": [
+     0.5,
+     -0.7,
+     -0.5
+    ],
+    "curl": 0.82
+   },
+   "armR": {
+    "pos": [
+     -0.24,
+     1.21,
+     0.33
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0.1,
+     -1,
+     0
+    ],
+    "pole": [
+     -0.5,
+     -0.7,
+     -0.5
+    ],
+    "curl": 0.82
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0.1,
+     -0.07
+    ],
+    "anchor": "ball",
+    "pitch": -14,
+    "toes": 0,
+    "pole": [
+     0.05,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.1,
+     -0.07
+    ],
+    "anchor": "ball",
+    "pitch": -14,
+    "toes": 0,
+    "pole": [
+     -0.05,
+     0,
+     1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     1.095,
+     -0.14
+    ],
+    "pitch": 2
+   },
+   "neck": {
+    "flex": 0
+   },
+   "armL": {
+    "pos": [
+     0.24,
+     1.21,
+     0.33
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     -0.1,
+     -1,
+     0
+    ],
+    "pole": [
+     0.5,
+     -0.7,
+     -0.5
+    ],
+    "curl": 0.82
+   },
+   "armR": {
+    "pos": [
+     -0.24,
+     1.21,
+     0.33
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0.1,
+     -1,
+     0
+    ],
+    "pole": [
+     -0.5,
+     -0.7,
+     -0.5
+    ],
+    "curl": 0.82
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0.1,
+     -0.07
+    ],
+    "anchor": "ball",
+    "pitch": 34,
+    "toes": 0,
+    "pole": [
+     0.05,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.1,
+     -0.07
+    ],
+    "anchor": "ball",
+    "pitch": 34,
+    "toes": 0,
+    "pole": [
+     -0.05,
+     0,
+     1
+    ]
+   }
+  }
+ },
+ "slug": "gallery-calf-block"
+}

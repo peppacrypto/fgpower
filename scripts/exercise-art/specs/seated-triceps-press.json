@@ -1,0 +1,207 @@
+{
+ "slug": "seated-triceps-press",
+ "camera": {
+  "az": 62,
+  "el": 8
+ },
+ "muscles": [
+  "triceps"
+ ],
+ "floats": true,
+ "props": [
+  {
+   "type": "shoulder-press-bench"
+  },
+  {
+   "type": "dumbbell",
+   "hands": true,
+   "hold": "goblet",
+   "kg": 15
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.585,
+     0.154
+    ],
+    "pitch": -8
+   },
+   "neck": {
+    "flex": -2
+   },
+   "legL": {
+    "pos": [
+     0.21,
+     0,
+     0.62
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.2,
+     0.4,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.21,
+     0,
+     0.62
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.2,
+     0.4,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 168,
+     "abd": -11,
+     "rot": 0,
+     "elbow": 8
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "pron": 0
+   },
+   "armR": {
+    "fk": {
+     "flex": 168,
+     "abd": -11,
+     "rot": 0,
+     "elbow": 8
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "pron": 0
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.585,
+     0.154
+    ],
+    "pitch": -8
+   },
+   "neck": {
+    "flex": -2
+   },
+   "legL": {
+    "pos": [
+     0.21,
+     0,
+     0.62
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.2,
+     0.4,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.21,
+     0,
+     0.62
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.2,
+     0.4,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 176,
+     "abd": -11,
+     "rot": 0,
+     "elbow": 65
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "pron": 0
+   },
+   "armR": {
+    "fk": {
+     "flex": 176,
+     "abd": -11,
+     "rot": 0,
+     "elbow": 65
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "pron": 0
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.585,
+     0.154
+    ],
+    "pitch": -8
+   },
+   "neck": {
+    "flex": -2
+   },
+   "legL": {
+    "pos": [
+     0.21,
+     0,
+     0.62
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.2,
+     0.4,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.21,
+     0,
+     0.62
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.2,
+     0.4,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 168,
+     "abd": -9,
+     "rot": 0,
+     "elbow": 125
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "pron": 0
+   },
+   "armR": {
+    "fk": {
+     "flex": 168,
+     "abd": -9,
+     "rot": 0,
+     "elbow": 125
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "pron": 0
+   }
+  }
+ }
+}

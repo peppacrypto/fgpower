@@ -1,0 +1,155 @@
+{
+ "slug": "speed-band-overhead-triceps",
+ "camera": {
+  "az": 70,
+  "el": 6
+ },
+ "muscles": [
+  "triceps"
+ ],
+ "props": [
+  {
+   "type": "band-tube",
+   "hands": true,
+   "via": [
+    {
+     "foot": "L",
+     "edge": "out"
+    },
+    {
+     "foot": "L",
+     "edge": "in"
+    },
+    {
+     "foot": "R",
+     "edge": "in"
+    },
+    {
+     "foot": "R",
+     "edge": "out"
+    }
+   ],
+   "rest": 1.9
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.925,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0,
+     0.03
+    ],
+    "anchor": "sole",
+    "yaw": 8,
+    "pitch": 0,
+    "pole": [
+     0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0,
+     0.03
+    ],
+    "anchor": "sole",
+    "yaw": -8,
+    "pitch": 0,
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 125,
+     "abd": 15,
+     "rot": 0,
+     "elbow": 140
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   },
+   "armR": {
+    "fk": {
+     "flex": 125,
+     "abd": 15,
+     "rot": 0,
+     "elbow": 140
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.925,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0,
+     0.03
+    ],
+    "anchor": "sole",
+    "yaw": 8,
+    "pitch": 0,
+    "pole": [
+     0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0,
+     0.03
+    ],
+    "anchor": "sole",
+    "yaw": -8,
+    "pitch": 0,
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 160,
+     "abd": 10,
+     "rot": 0,
+     "elbow": 8
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   },
+   "armR": {
+    "fk": {
+     "flex": 160,
+     "abd": 10,
+     "rot": 0,
+     "elbow": 8
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   }
+  }
+ }
+}

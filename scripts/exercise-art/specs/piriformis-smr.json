@@ -1,0 +1,202 @@
+{
+ "slug": "piriformis-smr",
+ "camera": {
+  "az": 60,
+  "el": 10
+ },
+ "muscles": [
+  "glutes"
+ ],
+ "muscleSide": "L",
+ "props": [
+  {
+   "type": "foam-roller",
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "length": 0.9
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.24,
+     0
+    ],
+    "pitch": -45,
+    "roll": 0
+   },
+   "neck": {
+    "flex": 4
+   },
+   "armL": {
+    "pos": [
+     0.2,
+     0,
+     -0.36
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3,
+    "pole": [
+     0.5,
+     0.3,
+     -0.8
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.2,
+     0,
+     -0.36
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3,
+    "pole": [
+     -0.5,
+     0.3,
+     -0.8
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.15,
+     0,
+     0.5
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "pole": [
+     0,
+     1,
+     0.3
+    ]
+   },
+   "legL": {
+    "fk": {
+     "flex": 100,
+     "abd": 40,
+     "rot": 0,
+     "knee": 120
+    },
+    "foot": {
+     "pitch": 20
+    }
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.24,
+     -0.03
+    ],
+    "pitch": -45,
+    "roll": 0
+   },
+   "neck": {
+    "flex": 4
+   },
+   "armL": {
+    "pos": [
+     0.2,
+     0,
+     -0.36
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3,
+    "pole": [
+     0.5,
+     0.3,
+     -0.8
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.2,
+     0,
+     -0.36
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3,
+    "pole": [
+     -0.5,
+     0.3,
+     -0.8
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.15,
+     0,
+     0.5
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "pole": [
+     0,
+     1,
+     0.3
+    ]
+   },
+   "legL": {
+    "fk": {
+     "flex": 100,
+     "abd": 40,
+     "rot": 0,
+     "knee": 120
+    },
+    "foot": {
+     "pitch": 20
+    }
+   }
+  }
+ }
+}

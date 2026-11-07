@@ -1,0 +1,218 @@
+{
+ "slug": "split-squat-with-dumbbells",
+ "camera": {
+  "az": 80,
+  "el": 8
+ },
+ "muscles": [
+  "quadriceps",
+  "glutes"
+ ],
+ "props": [
+  {
+   "type": "flat-bench",
+   "yaw": 90,
+   "pos": [
+    0,
+    0,
+    -0.72
+   ]
+  },
+  {
+   "type": "dumbbell",
+   "hand": "L",
+   "kg": 15
+  },
+  {
+   "type": "dumbbell",
+   "hand": "R",
+   "kg": 15
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.86,
+     0
+    ],
+    "pitch": 0
+   },
+   "spine": {
+    "flex": 4
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.12,
+     0,
+     0.4
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.1,
+     0.5,
+     1
+    ],
+    "yaw": 2
+   },
+   "legR": {
+    "pos": [
+     -0.12,
+     0.52,
+     -0.68
+    ],
+    "anchor": "ball",
+    "pole": [
+     -0.1,
+     -0.2,
+     1
+    ],
+    "pitch": 85
+   },
+   "armL": {
+    "pos": [
+     0.38,
+     0.782,
+     0.06
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     -0.25,
+     0,
+     1
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.15,
+     0,
+     -1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.38,
+     0.782,
+     0.06
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     0.25,
+     0,
+     1
+    ],
+    "curl": 0.85,
+    "pole": [
+     -0.15,
+     0,
+     -1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.64,
+     0.02
+    ],
+    "pitch": 0
+   },
+   "spine": {
+    "flex": 4
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.12,
+     0,
+     0.4
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.1,
+     0.5,
+     1
+    ],
+    "yaw": 2
+   },
+   "legR": {
+    "pos": [
+     -0.12,
+     0.52,
+     -0.68
+    ],
+    "anchor": "ball",
+    "pole": [
+     -0.1,
+     -0.2,
+     1
+    ],
+    "pitch": 85
+   },
+   "armL": {
+    "pos": [
+     0.38,
+     0.562,
+     0.08
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     -0.25,
+     0,
+     1
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.15,
+     0,
+     -1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.38,
+     0.562,
+     0.08
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     0.25,
+     0,
+     1
+    ],
+    "curl": 0.85,
+    "pole": [
+     -0.15,
+     0,
+     -1
+    ]
+   }
+  }
+ }
+}

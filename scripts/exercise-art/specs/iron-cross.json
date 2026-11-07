@@ -1,0 +1,140 @@
+{
+ "slug": "iron-cross",
+ "camera": {
+  "az": 50,
+  "el": 8
+ },
+ "muscles": [
+  "shoulders"
+ ],
+ "props": [
+  {
+   "type": "dumbbell",
+   "hand": "L",
+   "kg": 8
+  },
+  {
+   "type": "dumbbell",
+   "hand": "R",
+   "kg": 8
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.6,
+     -0.08
+    ],
+    "pitch": 25
+   },
+   "spine": {
+    "flex": 8
+   },
+   "neck": {
+    "flex": -12
+   },
+   "legL": {
+    "pos": [
+     0.2,
+     0,
+     0.1
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 15
+   },
+   "legR": {
+    "pos": [
+     -0.2,
+     0,
+     0.1
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -15
+   },
+   "armL": {
+    "fk": {
+     "flex": 90,
+     "abd": 4,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "pron": 0
+   },
+   "armR": {
+    "fk": {
+     "flex": 90,
+     "abd": 4,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "pron": 0
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ],
+    "pitch": 4
+   },
+   "spine": {
+    "flex": 2
+   },
+   "neck": {
+    "flex": -4
+   },
+   "legL": {
+    "pos": [
+     0.2,
+     0,
+     0.1
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 15
+   },
+   "legR": {
+    "pos": [
+     -0.2,
+     0,
+     0.1
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -15
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 90,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "pron": 0
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 90,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "pron": 0
+   }
+  }
+ }
+}

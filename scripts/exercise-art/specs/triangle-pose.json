@@ -1,0 +1,92 @@
+{
+ "slug": "triangle-pose",
+ "camera": {
+  "az": 15,
+  "el": 6
+ },
+ "muscles": [
+  "hamstrings"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0.15,
+     0.76,
+     0
+    ],
+    "yaw": 0,
+    "roll": -30
+   },
+   "spine": {
+    "side": 45
+   },
+   "neck": {
+    "twist": -10,
+    "flex": -20
+   },
+   "legL": {
+    "pos": [
+     0.6,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 90,
+    "pole": [
+     1,
+     0.1,
+     0.3
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.22,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -15,
+    "pole": [
+     -1,
+     0.1,
+     0
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.7,
+     0.3,
+     0.05
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     0.5,
+     -0.3,
+     -1
+    ],
+    "curl": 0.2
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 165,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "world"
+   }
+  }
+ }
+}

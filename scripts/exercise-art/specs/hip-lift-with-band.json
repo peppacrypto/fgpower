@@ -1,0 +1,200 @@
+{
+ "camera": {
+  "az": 68,
+  "el": 12
+ },
+ "muscles": [
+  "glutes"
+ ],
+ "props": [
+  {
+   "type": "dumbbell",
+   "kg": 40,
+   "pos": [
+    0.63,
+    0,
+    0
+   ],
+   "yaw": 90
+  },
+  {
+   "type": "dumbbell",
+   "kg": 40,
+   "pos": [
+    -0.63,
+    0,
+    0
+   ],
+   "yaw": 90
+  },
+  {
+   "type": "band",
+   "follow": "pelvis",
+   "flat": [
+    0,
+    1,
+    0.1
+   ],
+   "width": 0.05,
+   "thick": 0.0045,
+   "double": false,
+   "rest": 0.72,
+   "points": [
+    [
+     0.63,
+     0.11,
+     0
+    ],
+    {
+     "follow": "pelvis",
+     "at": [
+      0.17,
+      0.02,
+      0.12
+     ]
+    },
+    {
+     "follow": "pelvis",
+     "at": [
+      0,
+      0.03,
+      0.135
+     ]
+    },
+    {
+     "follow": "pelvis",
+     "at": [
+      -0.17,
+      0.02,
+      0.12
+     ]
+    },
+    [
+     -0.63,
+     0.11,
+     0
+    ]
+   ]
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.105,
+     0
+    ],
+    "pitch": -90
+   },
+   "neck": {
+    "flex": 8
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 30,
+     "elbow": 4
+    },
+    "curl": 0.2
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 30,
+     "elbow": 4
+    },
+    "curl": 0.2
+   },
+   "legL": {
+    "pos": [
+     0.14,
+     0,
+     0.5
+    ],
+    "anchor": "sole",
+    "yaw": 0,
+    "pitch": 0,
+    "pole": [
+     0.1,
+     1,
+     0.3
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.14,
+     0,
+     0.5
+    ],
+    "anchor": "sole",
+    "yaw": 0,
+    "pitch": 0,
+    "pole": [
+     -0.1,
+     1,
+     0.3
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.34,
+     0.03
+    ],
+    "pitch": -112
+   },
+   "neck": {
+    "flex": 8
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 30,
+     "elbow": 4
+    },
+    "curl": 0.2
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 30,
+     "elbow": 4
+    },
+    "curl": 0.2
+   },
+   "legL": {
+    "pos": [
+     0.14,
+     0,
+     0.5
+    ],
+    "anchor": "sole",
+    "yaw": 0,
+    "pitch": 0,
+    "pole": [
+     0.1,
+     1,
+     0.3
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.14,
+     0,
+     0.5
+    ],
+    "anchor": "sole",
+    "yaw": 0,
+    "pitch": 0,
+    "pole": [
+     -0.1,
+     1,
+     0.3
+    ]
+   }
+  }
+ }
+}

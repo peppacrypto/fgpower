@@ -1,0 +1,211 @@
+{
+ "slug": "standing-toe-touches",
+ "camera": {
+  "az": 100,
+  "el": 8
+ },
+ "muscles": [
+  "hamstrings"
+ ],
+ "props": [],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.925,
+     0
+    ],
+    "pitch": 0
+   },
+   "armL": {
+    "pos": [
+     0.26,
+     0.88,
+     0
+    ],
+    "hand": "relaxed",
+    "pole": [
+     0.5,
+     0,
+     -1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.26,
+     0.88,
+     0
+    ],
+    "hand": "relaxed",
+    "pole": [
+     -0.5,
+     0,
+     -1
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 4,
+    "pole": [
+     0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -4,
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     -0.1
+    ],
+    "pitch": 60
+   },
+   "neck": {
+    "flex": 20
+   },
+   "armL": {
+    "pos": [
+     0.22,
+     0.76,
+     0.12
+    ],
+    "hand": "relaxed",
+    "pole": [
+     0.3,
+     0,
+     -1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.22,
+     0.76,
+     0.12
+    ],
+    "hand": "relaxed",
+    "pole": [
+     -0.3,
+     0,
+     -1
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 4,
+    "pole": [
+     0,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -4,
+    "pole": [
+     0,
+     0,
+     1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.89,
+     -0.14
+    ],
+    "pitch": 112
+   },
+   "neck": {
+    "flex": 40
+   },
+   "armL": {
+    "pos": [
+     0.15,
+     0.2,
+     0.2
+    ],
+    "hand": "relaxed",
+    "pole": [
+     0.3,
+     0,
+     -1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.15,
+     0.2,
+     0.2
+    ],
+    "hand": "relaxed",
+    "pole": [
+     -0.3,
+     0,
+     -1
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 4,
+    "pole": [
+     0,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -4,
+    "pole": [
+     0,
+     0,
+     1
+    ]
+   }
+  }
+ }
+}

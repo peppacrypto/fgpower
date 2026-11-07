@@ -1,0 +1,156 @@
+{
+ "slug": "shrimp-squat",
+ "camera": {
+  "az": 60,
+  "el": 8
+ },
+ "muscles": [
+  "quadriceps",
+  "glutes"
+ ],
+ "props": [],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     -0.05,
+     0.92,
+     0.02
+    ],
+    "pitch": 14
+   },
+   "legR": {
+    "pos": [
+     -0.08,
+     0,
+     0.04
+    ],
+    "anchor": "sole",
+    "pole": [
+     0,
+     0,
+     1
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.16,
+     0.9,
+     -0.12
+    ],
+    "anchor": "ankle",
+    "pitch": 95,
+    "pole": [
+     0.1,
+     -0.3,
+     1
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.21,
+     0.91,
+     -0.16
+    ],
+    "contact": true,
+    "hand": "hook",
+    "fingers": [
+     0,
+     -0.4,
+     -1
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "pole": [
+     0.9,
+     -0.2,
+     -0.3
+    ]
+   },
+   "armR": {
+    "fk": {
+     "flex": 85,
+     "abd": 4,
+     "elbow": 10
+    },
+    "rel": "chest"
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     -0.05,
+     0.55,
+     -0.1
+    ],
+    "pitch": 46
+   },
+   "neck": {
+    "flex": -15
+   },
+   "legR": {
+    "pos": [
+     -0.08,
+     0,
+     0.04
+    ],
+    "anchor": "sole",
+    "pole": [
+     0,
+     0,
+     1
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.16,
+     0.5,
+     -0.2
+    ],
+    "anchor": "ankle",
+    "pitch": 110,
+    "pole": [
+     0.1,
+     -0.5,
+     1
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.21,
+     0.52,
+     -0.24
+    ],
+    "contact": true,
+    "hand": "hook",
+    "fingers": [
+     0,
+     -0.4,
+     -1
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "pole": [
+     0.9,
+     -0.2,
+     -0.3
+    ]
+   },
+   "armR": {
+    "fk": {
+     "flex": 100,
+     "abd": 4,
+     "elbow": 10
+    },
+    "rel": "chest"
+   }
+  }
+ },
+ "muscleSide": "R"
+}

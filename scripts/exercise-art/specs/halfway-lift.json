@@ -1,0 +1,169 @@
+{
+ "slug": "halfway-lift",
+ "camera": {
+  "az": 100,
+  "el": 8
+ },
+ "muscles": [
+  "spinal-erectors"
+ ],
+ "props": [],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.87,
+     -0.18
+    ],
+    "pitch": 110
+   },
+   "neck": {
+    "flex": 40
+   },
+   "armL": {
+    "pos": [
+     0.17,
+     0.2,
+     0.2
+    ],
+    "hand": "relaxed",
+    "pole": [
+     0.3,
+     0,
+     -1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.17,
+     0.2,
+     0.2
+    ],
+    "hand": "relaxed",
+    "pole": [
+     -0.3,
+     0,
+     -1
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 4,
+    "pole": [
+     0.15,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -4,
+    "pole": [
+     -0.15,
+     0,
+     1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.87,
+     -0.22
+    ],
+    "pitch": 92
+   },
+   "neck": {
+    "flex": -10
+   },
+   "armL": {
+    "pos": [
+     0.14,
+     0.5,
+     0.12
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "pole": [
+     0.3,
+     0,
+     -1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.14,
+     0.5,
+     0.12
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     1,
+     0,
+     0
+    ],
+    "pole": [
+     -0.3,
+     0,
+     -1
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 4,
+    "pole": [
+     0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -4,
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   }
+  }
+ }
+}

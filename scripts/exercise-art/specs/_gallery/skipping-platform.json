@@ -1,0 +1,182 @@
+{
+ "slug": "gallery-skipping-platform",
+ "camera": {
+  "az": 58,
+  "el": 10
+ },
+ "muscles": [
+  "calves",
+  "quadriceps"
+ ],
+ "floats": true,
+ "props": [
+  {
+   "type": "skipping-platform",
+   "pos": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "type": "jump-rope",
+   "hands": true
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.97,
+     0
+    ],
+    "pitch": 3
+   },
+   "armL": {
+    "pos": [
+     0.31,
+     0.92,
+     0.1
+    ],
+    "fingers": [
+     0.1,
+     0.1,
+     1
+    ],
+    "palm": [
+     -0.3,
+     -0.95,
+     0
+    ],
+    "curl": 0.8,
+    "pole": [
+     0.6,
+     -0.1,
+     -1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.31,
+     0.92,
+     0.1
+    ],
+    "fingers": [
+     -0.1,
+     0.1,
+     1
+    ],
+    "palm": [
+     0.3,
+     -0.95,
+     0
+    ],
+    "curl": 0.8,
+    "pole": [
+     -0.6,
+     -0.1,
+     -1
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.08,
+     0.03,
+     0.04
+    ],
+    "anchor": "ball",
+    "pitch": 20,
+    "toes": 0,
+    "yaw": 3
+   },
+   "legR": {
+    "pos": [
+     -0.08,
+     0.03,
+     0.04
+    ],
+    "anchor": "ball",
+    "pitch": 20,
+    "toes": 0,
+    "yaw": -3
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     1.1,
+     0
+    ],
+    "pitch": 2
+   },
+   "armL": {
+    "pos": [
+     0.31,
+     1.05,
+     0.1
+    ],
+    "fingers": [
+     0.1,
+     0.1,
+     1
+    ],
+    "palm": [
+     -0.3,
+     -0.95,
+     0
+    ],
+    "curl": 0.8,
+    "pole": [
+     0.6,
+     -0.1,
+     -1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.31,
+     1.05,
+     0.1
+    ],
+    "fingers": [
+     -0.1,
+     0.1,
+     1
+    ],
+    "palm": [
+     0.3,
+     -0.95,
+     0
+    ],
+    "curl": 0.8,
+    "pole": [
+     -0.6,
+     -0.1,
+     -1
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.08,
+     0.15,
+     0.04
+    ],
+    "anchor": "ball",
+    "pitch": 36,
+    "yaw": 3
+   },
+   "legR": {
+    "pos": [
+     -0.08,
+     0.15,
+     0.04
+    ],
+    "anchor": "ball",
+    "pitch": 36,
+    "yaw": -3
+   }
+  }
+ }
+}

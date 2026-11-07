@@ -1,0 +1,150 @@
+{
+ "slug": "seated-bent-over-two-arm-dumbbell-triceps-extension",
+ "camera": {
+  "az": 95,
+  "el": 8
+ },
+ "muscles": [
+  "triceps"
+ ],
+ "floats": false,
+ "props": [
+  {
+   "type": "flat-bench"
+  },
+  {
+   "type": "dumbbell",
+   "hand": "L",
+   "kg": 8
+  },
+  {
+   "type": "dumbbell",
+   "hand": "R",
+   "kg": 8
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.54,
+     0.33
+    ],
+    "pitch": 63
+   },
+   "neck": {
+    "flex": -32
+   },
+   "legL": {
+    "pos": [
+     0.21,
+     0,
+     0.97
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.5,
+     0.5,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.21,
+     0,
+     0.97
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.5,
+     0.5,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": -25,
+     "abd": 27,
+     "rot": 0,
+     "elbow": 90
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "pron": 0
+   },
+   "armR": {
+    "fk": {
+     "flex": -25,
+     "abd": 27,
+     "rot": 0,
+     "elbow": 90
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "pron": 0
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.54,
+     0.33
+    ],
+    "pitch": 63
+   },
+   "neck": {
+    "flex": -32
+   },
+   "legL": {
+    "pos": [
+     0.21,
+     0,
+     0.97
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.5,
+     0.5,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.21,
+     0,
+     0.97
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.5,
+     0.5,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": -25,
+     "abd": 27,
+     "rot": 0,
+     "elbow": 6
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "pron": 0
+   },
+   "armR": {
+    "fk": {
+     "flex": -25,
+     "abd": 27,
+     "rot": 0,
+     "elbow": 6
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "pron": 0
+   }
+  }
+ }
+}

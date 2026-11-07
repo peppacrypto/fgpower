@@ -1,0 +1,82 @@
+{
+ "slug": "upper-back-stretch",
+ "camera": {
+  "az": 60,
+  "el": 6
+ },
+ "muscles": [
+  "middle-back"
+ ],
+ "props": [],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     -0.03
+    ],
+    "pitch": -3
+   },
+   "spine": {
+    "flex": 7,
+    "weights": [
+     0,
+     0,
+     1,
+     2,
+     3
+    ]
+   },
+   "neck": {
+    "flex": 20
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 4
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -4
+   },
+   "armL": {
+    "pos": [
+     0.045,
+     1.3,
+     0.55
+    ],
+    "rel": "world",
+    "pole": [
+     1,
+     -0.3,
+     0
+    ],
+    "hand": "ball"
+   },
+   "armR": {
+    "pos": [
+     -0.045,
+     1.3,
+     0.55
+    ],
+    "rel": "world",
+    "pole": [
+     -1,
+     -0.3,
+     0
+    ],
+    "hand": "ball"
+   }
+  }
+ }
+}

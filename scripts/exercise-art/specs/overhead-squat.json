@@ -1,0 +1,216 @@
+{
+ "slug": "overhead-squat",
+ "camera": {
+  "az": 40,
+  "el": 8
+ },
+ "muscles": [
+  "quadriceps",
+  "shoulders",
+  "glutes"
+ ],
+ "props": [
+  {
+   "type": "barbell",
+   "hands": true,
+   "plates": [
+    20,
+    10
+   ]
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.915,
+     -0.03
+    ],
+    "pitch": 4
+   },
+   "spine": {
+    "flex": 0
+   },
+   "neck": {
+    "flex": -3
+   },
+   "legL": {
+    "pos": [
+     0.3,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": 28,
+    "pitch": 0,
+    "pole": [
+     0.55,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.3,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": -28,
+    "pitch": 0,
+    "pole": [
+     -0.55,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.46,
+     1.78,
+     -0.02
+    ],
+    "rel": "world",
+    "fingers": [
+     0,
+     0.55,
+     -0.83
+    ],
+    "palm": [
+     0,
+     0.83,
+     0.55
+    ],
+    "hand": "grip",
+    "grip": 0.014,
+    "pole": [
+     1,
+     0.2,
+     0
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.46,
+     1.78,
+     -0.02
+    ],
+    "rel": "world",
+    "fingers": [
+     0,
+     0.55,
+     -0.83
+    ],
+    "palm": [
+     0,
+     0.83,
+     0.55
+    ],
+    "hand": "grip",
+    "grip": 0.014,
+    "pole": [
+     -1,
+     0.2,
+     0
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.46,
+     -0.2
+    ],
+    "pitch": 28
+   },
+   "spine": {
+    "flex": -2
+   },
+   "neck": {
+    "flex": -6
+   },
+   "legL": {
+    "pos": [
+     0.3,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": 28,
+    "pitch": 0,
+    "pole": [
+     0.55,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.3,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": -28,
+    "pitch": 0,
+    "pole": [
+     -0.55,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.46,
+     1.27,
+     -0.02
+    ],
+    "rel": "world",
+    "fingers": [
+     0,
+     0.55,
+     -0.83
+    ],
+    "palm": [
+     0,
+     0.83,
+     0.55
+    ],
+    "hand": "grip",
+    "grip": 0.014,
+    "pole": [
+     1,
+     0.2,
+     0
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.46,
+     1.27,
+     -0.02
+    ],
+    "rel": "world",
+    "fingers": [
+     0,
+     0.55,
+     -0.83
+    ],
+    "palm": [
+     0,
+     0.83,
+     0.55
+    ],
+    "hand": "grip",
+    "grip": 0.014,
+    "pole": [
+     -1,
+     0.2,
+     0
+    ]
+   }
+  }
+ }
+}

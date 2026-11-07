@@ -1,0 +1,111 @@
+{
+ "slug": "brachialis-smr",
+ "camera": {
+  "az": 10,
+  "el": 22
+ },
+ "muscles": [
+  "biceps"
+ ],
+ "muscleSide": "L",
+ "props": [
+  {
+   "type": "foam-roller",
+   "pos": [
+    0.1,
+    0,
+    0
+   ],
+   "length": 0.45,
+   "yaw": 90
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     -0.2,
+     0.39,
+     0
+    ],
+    "pitch": 0,
+    "roll": -90
+   },
+   "neck": {
+    "flex": 0
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 10,
+     "elbow": 15
+    }
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 0,
+     "elbow": 50
+    }
+   },
+   "legL": {
+    "fk": {
+     "flex": 0,
+     "abd": 14,
+     "knee": 0
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 5,
+     "abd": 12,
+     "knee": 0
+    }
+   },
+   "y": 0.39
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.39,
+     0
+    ],
+    "pitch": 0,
+    "roll": -90
+   },
+   "neck": {
+    "flex": 0
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 10,
+     "elbow": 15
+    }
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 0,
+     "elbow": 50
+    }
+   },
+   "legL": {
+    "fk": {
+     "flex": 0,
+     "abd": 14,
+     "knee": 0
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 5,
+     "abd": 12,
+     "knee": 0
+    }
+   },
+   "y": 0.39
+  }
+ }
+}

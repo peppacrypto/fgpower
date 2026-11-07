@@ -1,0 +1,139 @@
+{
+ "slug": "crossover-reverse-lunge",
+ "camera": {
+  "az": 45,
+  "el": 10
+ },
+ "muscles": [
+  "obliques",
+  "glutes",
+  "quadriceps"
+ ],
+ "props": [],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0.3
+    ],
+    "pitch": 0
+   },
+   "spine": {
+    "flex": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.12,
+     0,
+     0.3
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.1,
+     0.5,
+     1
+    ],
+    "yaw": 2
+   },
+   "legR": {
+    "pos": [
+     -0.12,
+     0,
+     0.27
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.1,
+     0.5,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 30,
+     "abd": -25,
+     "rot": 0,
+     "elbow": 120
+    },
+    "rel": "chest"
+   },
+   "armR": {
+    "fk": {
+     "flex": 30,
+     "abd": -25,
+     "rot": 0,
+     "elbow": 120
+    },
+    "rel": "chest"
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.62,
+     -0.13
+    ],
+    "pitch": 0
+   },
+   "spine": {
+    "flex": 8,
+    "twist": 35
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.12,
+     0,
+     0.3
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.1,
+     0.5,
+     1
+    ],
+    "yaw": 2
+   },
+   "legR": {
+    "pos": [
+     0.02,
+     0.03,
+     -0.8
+    ],
+    "anchor": "ball",
+    "pole": [
+     0.3,
+     -0.2,
+     1
+    ],
+    "pitch": 60
+   },
+   "armL": {
+    "fk": {
+     "flex": 30,
+     "abd": -25,
+     "rot": 0,
+     "elbow": 120
+    },
+    "rel": "chest"
+   },
+   "armR": {
+    "fk": {
+     "flex": 30,
+     "abd": -25,
+     "rot": 0,
+     "elbow": 120
+    },
+    "rel": "chest"
+   }
+  }
+ }
+}

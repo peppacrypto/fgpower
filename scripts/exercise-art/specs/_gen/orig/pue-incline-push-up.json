@@ -1,0 +1,177 @@
+{
+ "slug": "incline-push-up",
+ "camera": {
+  "az": 110,
+  "el": 12
+ },
+ "muscles": [
+  "chest",
+  "triceps"
+ ],
+ "props": [
+  {
+   "type": "sofa",
+   "pos": [
+    0,
+    0,
+    1.09
+   ],
+   "yaw": 180,
+   "width": 1.5
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.648,
+     0.027
+    ],
+    "pitch": 54.2
+   },
+   "neck": {
+    "flex": -8
+   },
+   "armL": {
+    "pos": [
+     0.27,
+     0.42,
+     0.78
+    ],
+    "contact": true,
+    "fingers": [
+     0.1,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3
+   },
+   "armR": {
+    "pos": [
+     -0.27,
+     0.42,
+     0.78
+    ],
+    "contact": true,
+    "fingers": [
+     -0.1,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0,
+     -0.64
+    ],
+    "anchor": "ball",
+    "pitch": 49,
+    "toes": 0
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0,
+     -0.64
+    ],
+    "anchor": "ball",
+    "pitch": 49,
+    "toes": 0
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.484,
+     0.157
+    ],
+    "pitch": 67
+   },
+   "neck": {
+    "flex": -14
+   },
+   "armL": {
+    "pos": [
+     0.27,
+     0.42,
+     0.78
+    ],
+    "contact": true,
+    "fingers": [
+     0.1,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3,
+    "pole": [
+     0.6,
+     0.3,
+     -0.75
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.27,
+     0.42,
+     0.78
+    ],
+    "contact": true,
+    "fingers": [
+     -0.1,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3,
+    "pole": [
+     -0.6,
+     0.3,
+     -0.75
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0,
+     -0.64
+    ],
+    "anchor": "ball",
+    "pitch": 63,
+    "toes": 0
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0,
+     -0.64
+    ],
+    "anchor": "ball",
+    "pitch": 63,
+    "toes": 0
+   }
+  }
+ }
+}

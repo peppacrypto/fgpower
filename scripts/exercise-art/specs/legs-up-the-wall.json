@@ -1,0 +1,112 @@
+{
+ "slug": "legs-up-the-wall",
+ "camera": {
+  "az": 115,
+  "el": 14
+ },
+ "muscles": [
+  "hamstrings"
+ ],
+ "props": [
+  {
+   "type": "wall",
+   "pos": [
+    0,
+    0,
+    0.22
+   ],
+   "width": 2
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.1,
+     -0.04
+    ],
+    "pitch": -90
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0.94,
+     0.06
+    ],
+    "anchor": "ankle",
+    "pole": [
+     0,
+     0,
+     -1
+    ],
+    "pitch": -180
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.94,
+     0.06
+    ],
+    "anchor": "ankle",
+    "pole": [
+     0,
+     0,
+     -1
+    ],
+    "pitch": -180
+   },
+   "armL": {
+    "pos": [
+     0.3,
+     0.055,
+     -0.1
+    ],
+    "hand": "relaxed",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     -1.7,
+     1,
+     0
+    ],
+    "pole": [
+     1,
+     -0.3,
+     0
+    ],
+    "curl": 0.3
+   },
+   "armR": {
+    "pos": [
+     -0.3,
+     0.055,
+     -0.1
+    ],
+    "hand": "relaxed",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     1.7,
+     1,
+     0
+    ],
+    "pole": [
+     -1,
+     -0.3,
+     0
+    ],
+    "curl": 0.3
+   }
+  }
+ }
+}

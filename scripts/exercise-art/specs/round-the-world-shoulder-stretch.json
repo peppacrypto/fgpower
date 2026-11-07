@@ -1,0 +1,172 @@
+{
+ "slug": "round-the-world-shoulder-stretch",
+ "camera": {
+  "az": 70,
+  "el": 8
+ },
+ "muscles": [
+  "shoulders"
+ ],
+ "props": [
+  {
+   "type": "stick",
+   "hands": true,
+   "length": 1.5
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": -35,
+     "abd": 16,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "curl": 0.8,
+    "pron": 90
+   },
+   "armR": {
+    "fk": {
+     "flex": -35,
+     "abd": 16,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "curl": 0.8,
+    "pron": 90
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": 70,
+     "abd": 16,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "curl": 0.8,
+    "pron": 90
+   },
+   "armR": {
+    "fk": {
+     "flex": 70,
+     "abd": 16,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "curl": 0.8,
+    "pron": 90
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": 170,
+     "abd": 16,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "curl": 0.8,
+    "pron": 90
+   },
+   "armR": {
+    "fk": {
+     "flex": 170,
+     "abd": 16,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "curl": 0.8,
+    "pron": 90
+   }
+  }
+ }
+}

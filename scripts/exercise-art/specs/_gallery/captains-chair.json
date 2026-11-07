@@ -1,0 +1,186 @@
+{
+ "camera": {
+  "az": 64,
+  "el": 10
+ },
+ "muscles": [
+  "abdominals"
+ ],
+ "floats": true,
+ "props": [
+  {
+   "type": "captains-chair"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     1.144,
+     -0.075
+    ],
+    "pitch": 0
+   },
+   "neck": {
+    "flex": 2
+   },
+   "spine": {
+    "flex": 0
+   },
+   "armL": {
+    "pos": [
+     0.225,
+     1.4,
+     0.29
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "pole": [
+     0.15,
+     -1,
+     -0.15
+    ],
+    "curl": 0.82
+   },
+   "armR": {
+    "pos": [
+     -0.225,
+     1.4,
+     0.29
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     1,
+     0,
+     0
+    ],
+    "pole": [
+     -0.15,
+     -1,
+     -0.15
+    ],
+    "curl": 0.82
+   },
+   "legL": {
+    "fk": {
+     "flex": 6,
+     "abd": 2,
+     "knee": 8
+    },
+    "foot": {
+     "pitch": 26
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 6,
+     "abd": 2,
+     "knee": 8
+    },
+    "foot": {
+     "pitch": 26
+    }
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     1.144,
+     -0.075
+    ],
+    "pitch": -8
+   },
+   "neck": {
+    "flex": 12
+   },
+   "spine": {
+    "flex": 6
+   },
+   "armL": {
+    "pos": [
+     0.225,
+     1.4,
+     0.29
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "pole": [
+     0.15,
+     -1,
+     -0.15
+    ],
+    "curl": 0.82
+   },
+   "armR": {
+    "pos": [
+     -0.225,
+     1.4,
+     0.29
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     1,
+     0,
+     0
+    ],
+    "pole": [
+     -0.15,
+     -1,
+     -0.15
+    ],
+    "curl": 0.82
+   },
+   "legL": {
+    "fk": {
+     "flex": 112,
+     "abd": 2,
+     "knee": 96
+    },
+    "foot": {
+     "pitch": 26
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 112,
+     "abd": 2,
+     "knee": 96
+    },
+    "foot": {
+     "pitch": 26
+    }
+   }
+  }
+ },
+ "slug": "gallery-captains-chair"
+}

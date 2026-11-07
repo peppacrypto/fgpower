@@ -1,0 +1,73 @@
+{
+ "slug": "test-deep-squat",
+ "camera": {
+  "az": 60,
+  "el": 6
+ },
+ "muscles": [
+  "quadriceps",
+  "glutes"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.36,
+     -0.18
+    ],
+    "pitch": 38
+   },
+   "spine": {
+    "flex": 8
+   },
+   "neck": {
+    "flex": -30
+   },
+   "legL": {
+    "pos": [
+     0.2,
+     0,
+     0.04
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 18,
+    "pole": [
+     0.35,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.2,
+     0,
+     0.04
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -18,
+    "pole": [
+     -0.35,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 80,
+     "abd": 8,
+     "elbow": 10
+    }
+   },
+   "armR": {
+    "fk": {
+     "flex": 80,
+     "abd": 8,
+     "elbow": 10
+    }
+   }
+  }
+ }
+}

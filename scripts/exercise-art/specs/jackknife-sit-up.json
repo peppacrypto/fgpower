@@ -1,0 +1,117 @@
+{
+ "slug": "jackknife-sit-up",
+ "camera": {
+  "az": 80,
+  "el": 10
+ },
+ "muscles": [
+  "abdominals"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.1,
+     0
+    ],
+    "pitch": -90
+   },
+   "neck": {
+    "flex": 8
+   },
+   "armL": {
+    "fk": {
+     "flex": 168,
+     "abd": 6,
+     "rot": 0,
+     "elbow": 3
+    },
+    "curl": 0.2
+   },
+   "armR": {
+    "fk": {
+     "flex": 168,
+     "abd": 6,
+     "rot": 0,
+     "elbow": 3
+    },
+    "curl": 0.2
+   },
+   "legL": {
+    "fk": {
+     "flex": 5,
+     "abd": 3,
+     "knee": 3
+    },
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 5,
+     "abd": 3,
+     "knee": 3
+    },
+    "foot": {
+     "pitch": 0
+    }
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.086,
+     0
+    ],
+    "pitch": -45
+   },
+   "spine": {
+    "flex": 12
+   },
+   "neck": {
+    "flex": 12
+   },
+   "armL": {
+    "fk": {
+     "flex": 125,
+     "abd": 4,
+     "rot": 0,
+     "elbow": 3
+    },
+    "curl": 0.2
+   },
+   "armR": {
+    "fk": {
+     "flex": 125,
+     "abd": 4,
+     "rot": 0,
+     "elbow": 3
+    },
+    "curl": 0.2
+   },
+   "legL": {
+    "fk": {
+     "flex": 80,
+     "abd": 2,
+     "knee": 3
+    },
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 80,
+     "abd": 2,
+     "knee": 3
+    },
+    "foot": {
+     "pitch": 0
+    }
+   }
+  }
+ }
+}

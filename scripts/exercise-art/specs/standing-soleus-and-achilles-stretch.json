@@ -1,0 +1,101 @@
+{
+ "slug": "standing-soleus-and-achilles-stretch",
+ "camera": {
+  "az": 90,
+  "el": 4
+ },
+ "muscles": [
+  "calves"
+ ],
+ "props": null,
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.76,
+     0.08
+    ],
+    "pitch": 8
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0,
+     0.38
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "pole": [
+     0,
+     0.1,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0,
+     -0.1
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "pole": [
+     0,
+     0.1,
+     1
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.2,
+     1,
+     0
+    ],
+    "hand": "relaxed",
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "pole": [
+     1,
+     -0.3,
+     -1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.2,
+     1,
+     0
+    ],
+    "hand": "relaxed",
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     1,
+     0,
+     0
+    ],
+    "pole": [
+     -1,
+     -0.3,
+     -1
+    ]
+   }
+  }
+ },
+ "muscleSide": "R"
+}
