@@ -24,6 +24,10 @@
 //   drift:<limb>             E  a hand or foot resting on the floor or on a still prop moves 1.5 to 12 cm between two key frames, or
 //                               strays over 2.5 cm in between while it has no reason to move. Past 12 cm it is taken as a real step.
 //   still                    E  the spec has an end frame, yet the loop moves nothing by 1.5 cm. Give a static hold no end frame instead.
+//   twitch:hand.<s>, twitch:forearm.<s>, twitch:wrist.<s>.flex|dev
+//                            E  over 24 samples of the loop, a hand turns more than 30 deg against its forearm, or the forearm's
+//                               twist changes more than 30, or a wrist angle crosses from one extreme to the other, between two
+//                               neighbouring samples: a twitch. Frames are given as tA-tB.
 //   mode:<limb>, rel:<limb>  E  a limb changes between pos and fk, or changes its `rel`, between frames: the loop jumps there.
 //   props:<...>              E  a frame's `props` don't have the same items in every frame: they can't interpolate.
 //   towel:length             E  a plain towel rope changes length between frames (over 2 cm).
@@ -66,7 +70,9 @@ if (!globalThis.document) {
 }
 
 const THREE = await import('./vendor/three.module.js')
-const { Body, mixFrames } = await import('./rig.js')
+// The shoulder's range tables live in rig.js, which uses them to keep its automatic elbow swivel inside them.
+const { Body, mixFrames, SHOULDER_FORBIDDEN, SHOULDER_ROT, interpRange: interp, armRotRange, unwrapInto } = await import('./rig.js')
+void SHOULDER_ROT
 const { PROPS, propErrors } = await import('./props/index.js')
 const { MUSCLE_NAMES } = await import('./paint.js')
 
@@ -85,15 +91,19 @@ const DRIFT_MAX = 0.12
 const DRIFT_BETWEEN = 0.025
 const STILL = 0.015
 const CONTACT_GAP = 0.03
+const TWITCH = 30 // degrees a hand (in its forearm's frame) or a forearm's twist may change between two of 24 samples of the loop
 
 /** Degrees. Measured the way a physiotherapist does, with some room: this catches what no body can do, not what is merely hard. */
 export const LIMITS = {
   elbow: 152, // 0 is straight. The rig can't bend one backward.
   knee: 165, // 0 is straight. Heel to buttock.
-  wristExt: 100, // A flat hand under a straight arm is 90.
-  wristFlex: 95,
-  wristUlnar: 50,
-  wristRadial: 35,
+  // The wrist, as a physiotherapist measures it: about 70-80 extension, 70 flexion, 35 ulnar, 20-25 radial. Under load a
+  // power grip sits near neutral (under 20). A flat hand on a surface (contact:true, hand "flat": a push-up) may bend back 90.
+  wristExt: 80,
+  wristExtFlat: 90,
+  wristFlex: 70,
+  wristUlnar: 35,
+  wristRadial: 25,
   forearmTwist: 110,
   neck: { flex: 65, ext: 70, side: 50, twist: 90 },
   spine: { flex: 115, ext: 65, side: 55, twist: 75, segment: 38 }, // whole spine, and the most one of its 5 joints may take
@@ -108,19 +118,6 @@ export const LIMITS = {
  * Where an upper arm or a thigh can point, seen from the chest or the pelvis. plane: 0 out to the side, 90 forward, 180 across to the
  * other side, -90 straight back. An elevation (0 hanging, 180 overhead) between lo and hi is out of reach in that plane. Linear in between.
  */
-const SHOULDER_FORBIDDEN = [
-  // plane, lo, hi
-  [-180, 62, 140],
-  [-135, 70, 158],
-  [-90, 88, 165],
-  [-60, 112, 160],
-  [-35, 150, 165],
-  [0, 400, 400],
-  [90, 400, 400],
-  [125, 400, 400],
-  [150, 112, 135],
-  [180, 62, 140],
-]
 const HIP_FORBIDDEN = [
   [-180, 50, 400],
   [-135, 58, 400],
@@ -138,15 +135,6 @@ const HIP_FORBIDDEN = [
  * toward the ceiling when the arm is out to the side. Below 25 degrees of elbow the forearm says nothing, so nothing is measured.
  *   [lateral, up, forward] of the arm's direction, lowest and highest. In between: weighted by closeness.
  */
-const SHOULDER_ROT = [
-  [[0, -1, 0], -140, 110], // hanging. 0 is forearm forward, -90 across the belly, past that behind the back; 90 pointing out.
-  [[1, 0, 0], -110, 140], // out to the side. 90 forearm up, -90 forearm down.
-  [[0, 0, 1], -120, 160], // forward. 0 forearm across the chest, 90 forearm up, -90 forearm down.
-  [[0, 1, 0], 25, 250], // overhead. 90 forearm over the head, 180 behind it.
-  [[0, -0.6, -0.8], -150, 60], // behind the trunk, as at the top of a row. -90 points the forearm down.
-  [[0.7, 0.7, 0], -40, 190],
-  [[0, 0.7, 0.7], -60, 215],
-]
 /** A hip's rotation, by the shin's direction against the one it has with the knee straight ahead; + is external, knee out and foot in. */
 const HIP_ROT = { ext: 100, int: 70 }
 
@@ -855,20 +843,6 @@ const overlap = (a, b, ao = 0, bo = 0, m = 0) => a[ao] <= b[bo + 3] + m && a[ao 
 
 // ------------------------------------------------------------------------------------------------------------------- joints
 
-const interp = (table, x) => {
-  // table: rows [x, a, b], x ascending.
-  if (x <= table[0][0]) return [table[0][1], table[0][2]]
-  for (let i = 0; i + 1 < table.length; i++) {
-    const r = table[i]
-    const s = table[i + 1]
-    if (x <= s[0]) {
-      const t = (x - r[0]) / (s[0] - r[0])
-      return [r[1] + (s[1] - r[1]) * t, r[2] + (s[2] - r[2]) * t]
-    }
-  }
-  const l = table[table.length - 1]
-  return [l[1], l[2]]
-}
 
 const twistOf = (q, axis) => {
   const d = q.x * axis.x + q.y * axis.y + q.z * axis.z
@@ -975,7 +949,15 @@ export function measureJoints(body, frame, report) {
   return out
 }
 
-function checkJoints(m, spec, say) {
+/** A hand lying flat on a surface: contact with hand "flat" (the default with contact), or such a hand resolved for the in-betweens. */
+export function isFlatHand(arm) {
+  if (!arm || arm.fk) return false
+  const placed = arm.contact || arm.resolved
+  const mode = arm.hand || (arm.curl === undefined ? (arm.contact ? 'flat' : 'relaxed') : arm.curl < 0 ? 'flat' : 'legacy')
+  return !!placed && mode === 'flat'
+}
+
+function checkJoints(m, spec, say, frame) {
   const a = m.angles
   const L = LIMITS
   const over = (key, value, limit, text) => {
@@ -995,7 +977,7 @@ function checkJoints(m, spec, say) {
     over(`knee.${s}`, a[`knee${s}`], L.knee, `knee.${s} bent`)
     if (a[`wristFlex${s}`] !== undefined) {
       over(`wrist.${s}.flex`, a[`wristFlex${s}`], L.wristFlex, `wrist.${s} flexed (fingers toward the palm side)`)
-      over(`wrist.${s}.ext`, -a[`wristFlex${s}`], L.wristExt, `wrist.${s} bent back`)
+      over(`wrist.${s}.ext`, -a[`wristFlex${s}`], isFlatHand(frame && frame[`arm${s}`]) ? L.wristExtFlat : L.wristExt, `wrist.${s} bent back`)
       over(`wrist.${s}.ulnar`, a[`wristDev${s}`], L.wristUlnar, `wrist.${s} leaning toward the little finger`)
       over(`wrist.${s}.radial`, -a[`wristDev${s}`], L.wristRadial, `wrist.${s} leaning toward the thumb`)
     }
@@ -1034,35 +1016,7 @@ const planeName = (p) => {
   return a < 60 ? 'back and out' : a < 120 ? 'back' : 'back and across'
 }
 
-function armRotRange(dir) {
-  let lo = 0
-  let hi = 0
-  let total = 0
-  for (const [d, a, b] of SHOULDER_ROT) {
-    const l = Math.hypot(d[0], d[1], d[2])
-    const c = (d[0] * dir[0] + d[1] * dir[1] + d[2] * dir[2]) / l
-    // Close anchors dominate.
-    const w = Math.pow(Math.max(0, (c + 1) / 2), 12)
-    lo += a * w
-    hi += b * w
-    total += w
-  }
-  return [lo / (total || 1), hi / (total || 1)]
-}
 
-/** An angle may be read 360 degrees around: take the reading that lies in the range, or nearest to it. */
-function unwrapInto(r, lo, hi) {
-  let best = r
-  let bestOut = Infinity
-  for (const c of [r - 360, r, r + 360]) {
-    const out = c < lo ? lo - c : c > hi ? c - hi : 0
-    if (out < bestOut) {
-      bestOut = out
-      best = c
-    }
-  }
-  return best
-}
 
 // ------------------------------------------------------------------------------------------------------------------- bars
 
@@ -1205,7 +1159,7 @@ class Checker {
       body.preparePose()
       const m = measureJoints(body, sample.frame, r)
       if (measure) measure(sample.name, m, r, sample)
-      checkJoints(m, spec, say)
+      checkJoints(m, spec, say, sample.frame)
       this.checkReach(r, say)
       this.checkMotion(r, track, sample)
 
@@ -1239,6 +1193,7 @@ class Checker {
       }
     }
     this.currentFrame = null
+    if (hasMotion) this.checkTwitch(at, say)
     this.finishMotion(spec, track, hasMotion, say)
     this.finishContacts(spec, track, keyNames, say)
     this.checkTowelRope(spec, keyNames, say)
@@ -1500,6 +1455,50 @@ class Checker {
       if (off > 40) say('E', `grip:arm${s}`, off, `the ${s} hand closes across ${best.part.type} ${best.part.label()}: ${deg(off)} deg between its grip axis and the bar. Thumb along the bar: turn fingers and palm`)
     }
     void r
+  }
+
+  /**
+   * A hand or forearm that twitches inside the loop: 24 samples over the whole loop, and between two neighbours the hand may
+   * not turn more than TWITCH degrees in the forearm's frame, the forearm may not twist more than TWITCH, and a wrist angle
+   * may not cross from one extreme to the other (past half its limit on both sides).
+   */
+  checkTwitch(at, say) {
+    const body = this.body
+    const { by } = body
+    const N = 24
+    let prev = null
+    for (let i = 0; i < N; i++) {
+      const t = i / (N - 1)
+      const name = `t${String(+t.toFixed(2)).replace(/^0(?=\.)/, '')}`
+      const frame = at(t)
+      const { report: r } = body.solve(frame)
+      const m = measureJoints(body, frame, r)
+      const cur = {}
+      for (const s of ['L', 'R']) {
+        const rel = body.Q[by[`lowerarm01.${s}`].i].clone().invert().multiply(body.Q[by[`wrist.${s}`].i])
+        cur[s] = { rel, twist: r.twist[`forearm${s}`] ?? 0, flex: m.angles[`wristFlex${s}`], dev: m.angles[`wristDev${s}`] }
+      }
+      if (prev) {
+        for (const s of ['L', 'R']) {
+          const a = prev.v[s]
+          const b = cur[s]
+          const turn = (2 * Math.acos(clamp(Math.abs(a.rel.dot(b.rel)), -1, 1))) / (Math.PI / 180)
+          const where = `${prev.name}-${name}`
+          if (turn > TWITCH) say('E', `twitch:hand.${s}`, turn, `hand ${s} jerks ${deg(turn)} deg against its forearm between two neighbouring moments of the loop (max ${TWITCH}): blend fingers/palm smoothly between key frames, or give roll/swivel in every key frame`, where)
+          const dt = Math.abs(b.twist - a.twist)
+          if (dt > TWITCH) say('E', `twitch:forearm.${s}`, dt, `forearm ${s} twists ${deg(dt)} deg between two neighbouring moments of the loop (${a.twist} to ${b.twist}, max ${TWITCH}): the palm or the pole flips between key frames`, where)
+          if (a.flex !== undefined && b.flex !== undefined) {
+            const hf = 0.5 * LIMITS.wristFlex
+            const he = 0.5 * LIMITS.wristExt
+            if ((a.flex > hf && b.flex < -he) || (a.flex < -he && b.flex > hf)) say('E', `twitch:wrist.${s}.flex`, Math.abs(b.flex - a.flex), `wrist ${s} snaps from ${deg(a.flex)} to ${deg(b.flex)} deg of flexion between two neighbouring moments of the loop`, where)
+            const hu = 0.5 * LIMITS.wristUlnar
+            const hr = 0.5 * LIMITS.wristRadial
+            if ((a.dev > hu && b.dev < -hr) || (a.dev < -hr && b.dev > hu)) say('E', `twitch:wrist.${s}.dev`, Math.abs(b.dev - a.dev), `wrist ${s} snaps from ${deg(a.dev)} to ${deg(b.dev)} deg sideways (+ ulnar) between two neighbouring moments of the loop`, where)
+          }
+        }
+      }
+      prev = { name, v: cur }
+    }
   }
 
   checkMotion(r, track, sample) {

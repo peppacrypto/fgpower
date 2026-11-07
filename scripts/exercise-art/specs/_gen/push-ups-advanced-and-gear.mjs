@@ -6,7 +6,7 @@ const r=(x)=>Math.round(x*1000)/1000, D=Math.PI/180;
 // body from shoulder-centre (z,y) and foot ball (z,y): straight line, hip 0.46 behind shoulder along torso
 const body=(shz,shy,fz,fy,extra={})=>{const p=Math.atan2(shz-fz,shy-fy)/D+6;
  return {pos:[extra.x||0,r(shy-0.46*Math.cos(p*D)),r(shz-0.46*Math.sin(p*D))],pitch:r(p),...(extra.yaw?{yaw:extra.yaw}:{}),...(extra.roll?{roll:extra.roll}:{})};};
-const Hf=(s,x,y,z,pole,fx=0.12)=>({pos:[s*x,y,z],contact:true,fingers:[s*fx,0,1],palm:[0,-1,0],curl:-0.3,pole:[s*pole[0],pole[1],pole[2]]});
+const Hf=(s,x,y,z,pole,fx=0.12,pa=0)=>({pos:[s*x,y,z],contact:true,fingers:[s*fx,0,1],palm:[s*pa,-1,0],curl:-0.3,pole:[s*pole[0],pole[1],pole[2]]});
 const Hg=(s,x,y,z,pole)=>({pos:[s*x,y,z],grip:0.0165,fingers:[0,0,1],palm:[0,-1,0],pole:[s*pole[0],pole[1],pole[2]]});
 const Fe=(x,z,y=0,pitch=66,pl=[0,0,1])=>({legL:{pos:[x,r(y+0.012),z],anchor:'ball',pitch,toes:0,pole:[0.05,pl[1],pl[2]]},legR:{pos:[-x,r(y+0.012),z],anchor:'ball',pitch,toes:0,pole:[-0.05,pl[1],pl[2]]}});
 const UP=[0.7,0.4,-0.5], DN=[0.5,0.6,-0.6], DNin=[0.35,0.6,-0.7];
@@ -24,20 +24,20 @@ out['archer-push-up']=JSON.parse(fs.readFileSync(W+'archer-push-up.json'));
 // 3 single-arm push-up
 {const z=0.5,hx=0.2;
  const fr=(low)=>({root:body(z-0.03,low?0.29:0.52,-0.72,0,{x:0.07,yaw:low?6:0,roll:low?-5:-3}),neck:{flex:-18},
-  armL:Hf(1,hx,0,z,low?DN:UP,0.05),
+  armL:Hf(1,hx,0,z,low?[0.0,0.6,-0.8]:[0.2,0.4,-0.6],0.05,-0.25),
   armR:{fk:{flex:-35,abd:15,rot:0,elbow:105},rel:'chest',hand:'relaxed'},...Fe(0.32,-0.72)});
  save('single-arm-push-up',{az:35,el:8},['chest','triceps'],{start:fr(0),end:fr(1)},{muscleSide:'L'});}
 // 4 close-grip push-up off a dumbbell (upright 20 kg, hands on top head)
 {const z=0.5,top=0.3;
  const fr=(low)=>{const b=body(z-0.03,top+(low?0.38:0.5),-0.66,0);
-  const A=(s)=>({pos:[s*0.06,top,z],contact:true,fingers:[s*0.35,0,1],palm:[0,-1,0],curl:-0.3,pole:[s*(low?0.3:0.35),0.4,-0.9]});
+  const A=(s)=>({pos:[s*0.06,top,z],contact:true,fingers:[s*0.2,0,1],palm:[0,-1,0],curl:-0.3,pole:[s*(low?0.3:0.35),0.4,-0.9]});
   return {root:b,neck:{flex:-18},armL:A(1),armR:A(-1),...Fe(0.1,-0.66)};};
  save('close-grip-push-up-off-of-a-dumbbell',{az:40,el:8},['triceps','chest'],{start:fr(0),end:fr(1)},
   {props:[{type:'dumbbell',kg:10,at:[0,0.15,z],dir:[0,1,0]}]});}
 // 5 alternating renegade row: two kettlebells, left rows
 {const z=0.5,bx=0.2,yG=0.237;
  const fr=(row)=>{const b=body(z-0.03,0.237+0.5,-0.68,0,{x:0,yaw:row?-6:0,roll:row?4:0});
-  const L=row?{pos:[0.17,0.43,0.18],grip:0.0165,fingers:[0,-1,0.3],palm:[-1,0,0],pole:[0.4,0.3,-1],scap:{prot:-0.5}}:Hg(1,bx,yG,z,UP);
+  const L=row?{pos:[0.17,0.43,0.18],grip:0.0165,fingers:[0,-1,-0.3],palm:[-1,0,0],pole:[0.7,0.3,-1],scap:{prot:-0.5}}:Hg(1,bx,yG,z,UP);
   return {root:b,neck:{flex:-18},armL:L,armR:Hg(-1,bx,yG,z,UP),...Fe(0.25,-0.68)};};
  save('alternating-renegade-row',{az:50,el:8},['middle-back','lats'],{start:fr(0),end:fr(1)},
   {props:[{type:'kettlebell',kg:16,at:[-bx,0,z]},{type:'kettlebell',kg:16,hand:'L',mode:'hang',roll:90}],muscleSide:'L'});}

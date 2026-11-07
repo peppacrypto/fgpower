@@ -33,7 +33,7 @@ build('decline-dumbbell-bench-press',{a:-20,prop:'decline-bench',hipY:0.73,legZ:
    frames:{start:fr(0.78,-0.2,0.6,-0.1),end:fr(0.36,-0.22,0.7,0.2)}}); }
 // close-grip: dumbbell upright, both palms under top plate, shoulders across bench, hips below
 { const slug='close-grip-dumbbell-press';
-  const arm=(s)=>(y)=>({pos:[0,y,-0.045*s],contact:true,fingers:[-1,-0.35,0],palm:[0,0.9,0.3*s],curl:0.85,pole:[0.2,-1,-1.3*s]});
+  const arm=(s)=>(y)=>({pos:[0,y,-0.045*s],contact:true,fingers:[-1,0,0],palm:[0,1,0.6*s],curl:0.5,pole:[0.2,-1,-1.3*s]});
   const fr=y=>({root:{pos:[0.58,0.485,0],yaw:90,pitch:-85},neck:{flex:6},legL:{pos:[0.95,0,-0.15],anchor:'sole',pole:[0,1,-0.2]},legR:{pos:[0.95,0,0.15],anchor:'sole',pole:[0,1,0.2]},armL:arm(1)(y),armR:arm(-1)(y)});
   out(slug,{slug,camera:{az:40,el:10},muscles:['triceps'],floats:true,props:[{type:'flat-bench'},{type:'dumbbell',kg:20,hold:'goblet',hands:true,dir:[0,1,0]}],
-   frames:{start:fr(1.05),end:fr(0.95)}}); }
+   frames:{start:fr(1.02),end:fr(0.95)}}); }

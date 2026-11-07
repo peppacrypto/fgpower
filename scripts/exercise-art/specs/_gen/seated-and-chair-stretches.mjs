@@ -2,36 +2,39 @@ import fs from 'fs';
 const W = (slug, s) => fs.writeFileSync(new URL(`../${slug}.json`, import.meta.url), JSON.stringify({slug, ...s}, null, 1));
 const mat = {type:'floor-mat'};
 // butterfly legs: soles together, knees open
-const KP=JSON.parse(process.env.KP||'[0.3,0.5,-0.3]');
-const fly = (open=0.40) => ({
-  legL:{pos:[0.05,0.09,0.42],anchor:'ankle',pole:KP,pitch:0,roll:0,yaw:0},
-  legR:{pos:[-0.05,0.09,0.42],anchor:'ankle',pole:[-KP[0],KP[1],KP[2]],pitch:0,roll:0,yaw:0} });
+const FR=+(process.env.FR||-40);
+const KP=JSON.parse(process.env.KP||'[0.6,0.8,0]');
+const fly = (kp=KP,fz=0.42) => ({
+  legL:{pos:[0.05,0.09,fz],anchor:'ankle',pole:kp,pitch:+(process.env.FP||0),roll:FR,yaw:+(process.env.FY||0)},
+  legR:{pos:[-0.05,0.09,fz],anchor:'ankle',pole:[-kp[0],kp[1],kp[2]],pitch:+(process.env.FP||0),roll:-FR,yaw:-(process.env.FY||0)} });
 const sit = (pitch=0, y=0.125, z=0) => ({pos:[0,y,z],pitch});
-const POLE=JSON.parse(process.env.POLE||'[0.2,0.6,-0.5]');
-const onFeet = s => ({pos:[0.08*s,+(process.env.HY||0.14),0.42],hand:'relaxed',fingers:[0,0,1],palm:[0,-1,0],curl:0.4,pole:[POLE[0]*s,POLE[1],POLE[2]]});
+const BP=JSON.parse(process.env.BP||"[0.7,0.75,-0.1]");
+const POLE=JSON.parse(process.env.POLE||'[0.6,0.9,-0.3]');
+const onFeet = s => ({pos:[0.08*s,+(process.env.HY||0.22),0.47],hand:'relaxed',fingers:JSON.parse(process.env.OF||'[0,-0.8,1]'),palm:[0,-1,0],curl:0.4,pole:[POLE[0]*s,POLE[1],POLE[2]]});
 const behindHead = s => ({pos:[0.11*s,0.0,-0.06],rel:'head',hand:'relaxed',fingers:[-s*0.3,0.2,-1],palm:[0,-0.3,1],curl:0.5,pole:[s,0.1,-0.1]});
 W('bound-angle-pose',{camera:{az:70,el:10},muscles:['adductors'],props:[mat],frames:{
-  start:{root:sit(0),spine:{flex:22},neck:{flex:0},...fly(),armL:onFeet(1),armR:onFeet(-1)},
-  end:{root:sit(6,0.125,0.0),spine:{flex:45},neck:{flex:10},...fly(),armL:onFeet(1),armR:onFeet(-1)}}});
+  start:{root:sit(0),spine:{flex:22},neck:{flex:0},...fly(BP,0.5),armL:onFeet(1),armR:onFeet(-1)},
+  end:{root:sit(6,0.125,0.0),spine:{flex:40},neck:{flex:10},...fly(BP,0.5),armL:onFeet(1),armR:onFeet(-1)}}});
 W('groin-and-back-stretch',{camera:{az:70,el:10},muscles:['adductors'],props:[mat],frames:{
   start:{root:sit(0),neck:{flex:0},...fly(),armL:behindHead(1),armR:behindHead(-1)},
   end:{root:sit(6,0.125,0.0),spine:{flex:50},neck:{flex:12},...fly(),armL:behindHead(1),armR:behindHead(-1)}}});
 // overhead: right hand behind head, elbow up, left hand on floor, bend left
+const OHL=JSON.parse(process.env.OHL||'{"pos":[0.34,0.0,-0.1],"contact":true,"hand":"flat","fingers":[1,0,0.2],"palm":[0,-1,0],"pole":[0.5,0.2,-1]}');
 W('seated-overhead-stretch',{camera:{az:20,el:8},muscles:['abdominals','obliques'],props:[mat],frames:{
-  start:{root:{pos:[0,0.125,0],pitch:0,roll:-9},spine:{side:-4},...fly(),armL:{pos:[0.26,0.0,-0.06],contact:true,hand:'flat',fingers:[1,0,0.2],palm:[0,-1,0],pole:[0.5,0.2,-1]},
+  start:{root:{pos:[0,0.125,0],pitch:0,roll:8},spine:{side:26},...fly(),armL:OHL,
     armR:{...behindHead(-1),pole:[-1,0.6,-0.1]}},
-  end:{root:{pos:[0,0.125,0],pitch:0,roll:-9},spine:{side:-4},...fly(),armL:{pos:[0.26,0.0,-0.06],contact:true,hand:'flat',fingers:[1,0,0.2],palm:[0,-1,0],pole:[0.5,0.2,-1]},
+  end:{root:{pos:[0,0.125,0],pitch:0,roll:8},spine:{side:32},...fly(),armL:OHL,
     armR:{...behindHead(-1),pole:[-1,0.8,-0.1]}}}});
 // twist family: left leg long, right foot outside left thigh
-const twistLegs = {legL:{pos:[0.14,0.08,0.86],anchor:'ankle',pole:[0,1,0],pitch:-80},
-  legR:{pos:[0.30,0,0.46],anchor:'sole',pole:[-0.2,1,0.2]}};
-const twist = (tw, fl, lean=0) => ({root:{pos:[0,0.125,0],pitch:lean},spine:{twist:tw,flex:fl},neck:{twist:tw*0.3},...twistLegs,
-  armR:{pos:[-0.30,0.0,-0.10],contact:true,hand:'flat',fingers:[-0.3,0,-1],palm:[0,-1,0],pole:[-1,0.1,-0.5]},
-  armL:{pos:[-0.05,0.5,0.42],hand:'relaxed',fingers:[-1,-0.3,0],palm:[0,-0.3,-1],curl:0.4,pole:[1,-0.3,-0.2]} });
+const twistLegs = {legL:{pos:[+(process.env.LX||0.14),0.08,0.86],anchor:'ankle',pole:[0,1,0],pitch:-80},
+  legR:{pos:[+(process.env.RX||0.33),0,+(process.env.RZ||0.5)],anchor:'sole',pole:JSON.parse(process.env.RP||'[-0.1,1,0.4]')}};
+const twist = (tw, fl, lean=0) => ({root:{pos:[0,0.125,+(process.env.RTZ||0)],pitch:lean+(+process.env.LN||-19)},spine:{twist:tw,flex:fl},neck:{twist:tw*0.3},...twistLegs,
+  armR:{pos:[-(process.env.AX||0.22),0.0,-0.10],contact:true,hand:'flat',fingers:JSON.parse(process.env.AF||'[-0.95,0,-0.3]'),palm:[0,-1,0],pole:JSON.parse(process.env.AP||'[-1,0.1,-0.5]')},
+  armL:{pos:[-0.05,0.46,0.36],hand:'relaxed',fingers:[-1,-0.3,0],palm:[0,-0.3,-1],curl:0.4,pole:[1,-0.3,-0.2]} });
 W('seated-spinal-twist',{camera:{az:145,el:20},muscles:['spinal-erectors','obliques'],props:[mat],frames:{
   start:twist(-5,0),end:twist(-75,0)}});
 W('dancers-stretch',{camera:{az:145,el:20},muscles:['spinal-erectors','obliques'],props:[mat],frames:{
-  start:twist(-10,0),end:twist(-75,12,14)}});
+  start:twist(-10,0),end:twist(-75,12,+(process.env.DL||4))}});
 // chair
 const chair = {type:'chair',pos:[0,0,-0.12]};
 const feet = {legL:{pos:[0.14,0,0.28],anchor:'sole',pole:[0.07,0,1]},legR:{pos:[-0.14,0,0.28],anchor:'sole',pole:[-0.07,0,1]}};

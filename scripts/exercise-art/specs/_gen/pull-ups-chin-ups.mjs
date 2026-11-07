@@ -18,7 +18,7 @@ save('weighted-pull-ups',{az:135,el:8},[...bar,{type:'dip-belt',follow:true,kg:2
 const VB=(()=>{const h=s=>({pos:[s*0.2,Y,0.13],contact:true,fingers:[0,1,0],palm:[-s,0,0],pole:[s*0.3,-1,0.3],curl:0.82});return {armL:h(1),armR:h(-1)};})();
 save('v-bar-pullup',{az:130,el:8},[{type:'pull-up-bar',height:Y,multi:true}],{start:fr(1.2,-0.03,-4,-6,VB),end:fr(1.5,-0.1,-10,-12,VB)});
 // wide grip rear
-const R=arms(0.5,'over',[1,-0.3,0.5]);
+const R=arms(0.5,'over',[1,-1,0.5]);
 save('wide-grip-rear-pull-up',{az:60,el:8},wbar,{start:fr(1.345,0.12,6,10,R),end:fr(1.5,0.14,8,18,R)});
 // mixed grip
 const M={armL:hand(1,0.2,'over',[0.3,-1,0.3]),armR:hand(-1,0.2,'under',UP)};
@@ -27,14 +27,14 @@ save('mixed-grip-chin',cam,bar,{start:fr(1.185,-0.03,-4,-6,M),end:fr(1.6,-0.1,-1
 const G=arms(0.2,'under',UP);
 save('gironda-sternum-chins',{az:80,el:8},bar,{start:fr(1.3,-0.1,-20,-18,G,{spine:{flex:-8}}),end:fr(1.52,-0.2,-30,-24,G,{spine:{flex:-10}})},['lats','biceps']);
 // side to side
-const S=arms(0.5,'over',[0.6,-1,-0.1]);
+const S=arms(0.46,'over',[1.2,-1,-0.1]);
 save('side-to-side-chins',{az:170,el:6},wbar,{start:fr(1.37,-0.03,-4,-6,S),mid:fr(1.62,-0.08,-8,-10,S,{x:0.05,roll:-5}),end:fr(1.62,-0.08,-8,-10,S,{x:-0.05,roll:5})},['lats','biceps'],{});
 // archer: L working, R straight
-const Ar=arms(0.5,'over',[0.9,-1,-0.1]);
+const Ar=arms(0.46,'over',[1.4,-1,-0.1]);
 save('archer-pull-up',{az:170,el:6},wbar,{start:fr(1.4,-0.03,-4,-6,Ar),end:fr(1.7,-0.08,-8,-10,Ar,{x:0.04,roll:-4})},['lats','biceps'],{muscleSide:'L'});
 // rocky: front then behind
-const Rk=arms(0.5,'over',[1,-0.5,-0.2]);
-save('rocky-pull-ups-pulldowns',{az:60,el:8},wbar,{start:fr(1.32,-0.1,-14,-8,Rk),mid:fr(1.55,-0.2,-22,-16,Rk,{spine:{flex:-6}}),end:fr(1.5,0.14,8,18,arms(0.5,'over',[1,-0.3,0.5]))});
+const Rk=arms(0.46,'over',[1.5,-0.5,-0.2]);
+save('rocky-pull-ups-pulldowns',{az:60,el:8},wbar,{start:fr(1.32,-0.1,-14,-8,Rk),mid:fr(1.55,-0.2,-22,-16,Rk,{spine:{flex:-6}}),end:fr(1.5,0.14,8,18,arms(0.46,'over',[1,-1,0.5]))});
 // scapular
 save('scapular-pull-up',cam,bar,{start:fr(1.185,-0.03,-4,-6,A3),end:fr(1.27,-0.03,-4,-6,A3)},['traps','lats']);
 // one-arm

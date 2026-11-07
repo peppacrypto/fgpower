@@ -50,6 +50,6 @@ for(const k of ['lower-back-curl','superman']){const o=JSON.parse(fs.readFileSyn
  for(const f of Object.values(o.frames))if(f.root)f.root.pos[1]+=(f===o.frames.start?(k==="superman"?0.02:0.03):(k==='superman'?-0.017:(k==='lower-back-curl'?0.015:0)));
  if(k==='lower-back-curl')for(const f of Object.values(o.frames))for(const a of ['armL','armR'])if(f[a]){f[a].pos[0]*=0.92;f[a].pos[2]*=0.92;}
  out[k]=o;}
-for(const k of ['arch-body-hold','locust-pose','bow-pose']){const m=JSON.parse(JSON.stringify(out[k].frames.end));m.root.pos[1]=0.14;m.root.pitch=91;if(m.spine)m.spine.flex*=0.5;if(m.neck)m.neck.flex*=0.5;if(k==='bow-pose'){m.armL.pos=[0.15,0.42,0.12];m.armR.pos=[-0.15,0.42,0.12];}out[k].frames.mid=m;}
+for(const k of ['arch-body-hold','locust-pose','bow-pose']){const m=JSON.parse(JSON.stringify(out[k].frames.end));m.root.pos[1]=0.14;m.root.pitch=91;if(m.spine)m.spine.flex*=0.5;if(m.neck)m.neck.flex*=0.5;if(k==='bow-pose'){const [MX,MY,MZ]=(process.env.MP||'0.16,0.42,0.12').split(',').map(Number);m.armL.pos=[MX,MY,MZ];m.armR.pos=[-MX,MY,MZ];}out[k].frames.mid=m;}
 for(const [k,v] of Object.entries(out))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
 console.log(Object.keys(out).join(' '));

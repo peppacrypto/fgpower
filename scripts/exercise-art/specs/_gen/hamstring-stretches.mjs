@@ -22,12 +22,13 @@ const janu=(armsEnd,p=55,sf=18,nf=8)=>({
  legL:JL}); 
 const jFrames=()=>({
  start:{...sroot(8,2,-4),...janu(),armL:rel(1,[0.22,0.2,0.3],[0,-0.2,1]),armR:rel(-1,[0.22,0.2,0.3],[0,-0.2,1])},
- end:{...sroot(32,26,10),...janu(),armL:rel(1,[-0.04,0.27,0.6],[-0.4,-0.2,1]),armR:rel(-1,[0.14,0.25,0.74],[0,-0.2,1])}});
+ end:{...sroot(32,26,10),...janu(),armL:rel(1,[0.03,0.27,0.6],[0.2,-0.2,1],[-0.8,0.3,0]),armR:rel(-1,[0.14,0.25,0.74],[0,-0.2,1])}});
 const jan={az:40,el:22};
 save('seated-floor-hamstring-stretch',jan,['hamstrings'],mat,jFrames(),{muscleSide:'R'});
 save('head-to-knee-pose',{az:40,el:22},['hamstrings'],mat,{
  start:{...sroot(10,3,-2),...janu(),armL:rel(1,[0.22,0.2,0.3],[0,-0.2,1]),armR:rel(-1,[0.22,0.2,0.3],[0,-0.2,1])},
- end:{...sroot(33,26,8),...janu(),armL:rel(1,[-0.04,0.27,0.6],[-0.4,-0.2,1]),armR:rel(-1,[0.14,0.25,0.74],[0,-0.2,1])}},{muscleSide:'R'});
+ mid:{...sroot(21,14,3),...janu(),armL:rel(1,[0.09,0.26,0.56],[0.15,-0.2,1],[-0.8,0.3,0]),armR:rel(-1,[0.18,0.22,0.55],[0,-0.2,1])},
+ end:{...sroot(32,26,10),...janu(),armL:rel(1,[0.03,0.27,0.6],[0.2,-0.2,1],[-0.8,0.3,0]),armR:rel(-1,[0.14,0.25,0.74],[0,-0.2,1])}},{muscleSide:'R'});
 // straddle
 const vleg=(s)=>({pos:[s*0.55,0.08,0.62],pitch:-70,yaw:s*-15,pole:[s*0.1,1,0.1]});
 save('the-straddle',{az:30,el:28},['hamstrings','adductors'],mat,{
@@ -73,13 +74,13 @@ save('it-band-and-glute-stretch',{az:25,el:38},['abductors','glutes'],[{type:'st
  end:{...lroot(),legL:leg(1,[-0.45,0.55,0.4],[-0.2,1,0],{sa:20,yaw:20,roll:-40}),legR:straight(-1),armL:grip(1,[-0.08,0.5,-0.1],[-0.6,0.3,1],[1,0,-0.1],0.02),armR:grip(-1,[0.12,0.5,-0.25],[0,0.3,1],[1,0,-0.1],0.02)}},{muscleSide:'L'});
 // chair
 const CH={type:'chair',pos:[0,0,0]};
-const croot=(p=14)=>({root:{pos:[0,0.58,-0.03],pitch:p},neck:{flex:0}});
+const croot=(p=8)=>({root:{pos:[0,0.57,0.0],pitch:p},neck:{flex:0}});
 const cfeet=(extraL)=>({legL:extraL||{pos:[0.13,0,0.4],anchor:'sole',pitch:0,yaw:6},legR:{pos:[-0.13,0,0.4],anchor:'sole',pitch:0,yaw:-6}});
-const seatHand=(s)=>({pos:[s*0.25,0.48,0.12],contact:true,hand:"flat",fingers:[0,0,1],palm:[0,-1,0],pole:[s*0.9,-0.3,-0.5],curl:0.2});
+const seatHand=(s)=>({pos:[s*0.3,0.48,0.04],contact:true,hand:"flat",fingers:[0,0,1],palm:[0,-1,0],pole:[s*0.6,-0.5,-0.9],curl:0.2});
 const cl=(x,y,z)=>({pos:[x,y,z],anchor:'ankle',pitch:-35,pole:[0.1,1,0.1]});
 save('chair-leg-extended-stretch',{az:35,el:16},['hamstrings'],[CH],{
  start:{...croot(),...cfeet(),armL:seatHand(1),armR:seatHand(-1)},
- mid:{...croot(),...cfeet(cl(0.11,0.6,0.82)),armL:seatHand(1),armR:seatHand(-1)},
- end:{...croot(),...cfeet(cl(0.68,0.6,0.55)),armL:seatHand(1),armR:seatHand(-1)}},{muscleSide:'L'});
+ mid:{...croot(),...cfeet(cl(0.11,0.6,0.78)),armL:seatHand(1),armR:seatHand(-1)},
+ end:{...croot(),...cfeet(cl(0.42,0.66,0.7)),armL:seatHand(1),armR:seatHand(-1)}},{muscleSide:'L'});
 for(const [k,v] of Object.entries(out))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
 console.log(Object.keys(out).join(' '));

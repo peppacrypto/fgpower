@@ -67,7 +67,7 @@
     },
     "rel": "chest",
     "hand": "grip",
-    "pron": 0
+    "pron": 60
    },
    "armR": {
     "fk": {
@@ -126,7 +126,7 @@
     },
     "rel": "chest",
     "hand": "grip",
-    "pron": 0
+    "pron": 60
    },
    "armR": {
     "fk": {

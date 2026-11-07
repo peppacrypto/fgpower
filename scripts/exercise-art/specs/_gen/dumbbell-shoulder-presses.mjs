@@ -8,15 +8,18 @@ const STAND={root:{pos:[0,0.92,0]},sy:1.38,sz:0,
   legs:{legL:{pos:[0.12,0,0],anchor:'sole',pole:[0.1,0.3,1]},legR:{pos:[-0.12,0,0],anchor:'sole',pole:[-0.1,0.3,1]}}};
 // hand poses (left hand; right mirrored). dy,dz relative to shoulder.
 const P={
-  ear:  {x:0.34,dy:0.10,dz:0.10,f:[0,0.55,-0.83],p:[0,0.83,0.55],pole:[0.8,-0.6,-0.1]},
-  up:   {x:0.17,dy:0.48,dz:0.0, f:[0,0.55,-0.83],p:[0,0.83,0.55],pole:[0.9,-0.3,-0.3]},
-  midp: {x:0.30,dy:0.30,dz:0.05,f:[0,0.55,-0.83],p:[0,0.83,0.55],pole:[0.9,-0.4,-0.2]},
-  chest:{x:0.14,dy:-0.02,dz:0.26,f:[0,0.5,0.85],p:[0,0.85,-0.5],pole:[0.5,-1,0.2]},
+  // Rule (2026-11-07): the hand directly above the elbow, forearm vertical under the dumbbell seen from the front, elbows a
+  // little in front of the trunk (scapular plane), palms forward, handle level side to side, wrist only slightly back.
+  // The old poses had the palm facing up (wrist bent back ~90) and the hands inside the elbows: crooked wrists.
+  ear:  {x:0.44,dy:0.25,dz:0.13,f:[0,1,-0.15],p:[0,0.15,1],pole:[0.4,-0.9,0.1]},
+  up:   {x:0.26,dy:0.62,dz:0.10,f:[0,1,-0.1],p:[0,0.1,1],pole:[1,-0.2,0]}, // near lockout: the arm itself is the line
+  midp: {x:0.45,dy:0.36,dz:0.10,f:[0,1,-0.15],p:[0,0.15,1],pole:[0.55,-0.83,0.05]},
+  chest:{x:0.16,dy:0.0,dz:0.30,f:[0,0.5,0.85],p:[0,0.85,-0.5],pole:[0.5,-1,0.2]},
   half: {x:0.27,dy:0.18,dz:0.2,f:[0,0.8,0.1],p:[-0.6,0.1,0.0],pole:[0.9,-0.6,0.1]},
   nin:  {x:0.30,dy:0.10,dz:0.04,f:[0,1,0],p:[-1,0,0],pole:[0.5,-0.7,-0.3]},
   nup:  {x:0.17,dy:0.48,dz:0.0, f:[0,1,0],p:[-1,0,0],pole:[0.9,-0.3,-0.3]},
 };
-const TH=+(process.env.TH||20);
+const TH=+(process.env.TH||0);
 const rot=(f,p,t)=>{const c=Math.cos(R(t)),s=Math.sin(R(t));const k=[p[1]*f[2]-p[2]*f[1],p[2]*f[0]-p[0]*f[2],p[0]*f[1]-p[1]*f[0]];return f.map((a,i)=>a*c+k[i]*s)};
 for(const k of ['ear','up','midp']){P[k].f=rot(P[k].f,P[k].p,TH);}
 P.chest.f=rot(P.chest.f,P.chest.p,+(process.env.TC||-10));

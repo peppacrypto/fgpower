@@ -5,7 +5,7 @@ const wr=o=>fs.writeFileSync(W+o.slug+'.json',JSON.stringify(o,null,1));
 // body-frame hand offset from root (a along body, b perpendicular), calibrated on the floor push-up
 const AB={up:[0.475,0.61],dn:[0.55,0.26]};
 const rootFor=(P,hz,hy,[a,b])=>{const s=Math.sin(P*R),c=Math.cos(P*R);return [hz-a*s-b*c,hy-a*c+b*s];};
-const LEG=0.855;
+const LEG=0.855;const k0=a=>a==='armL'?1:-1;
 const feet=(P,r)=>{const f=(P-8.3)*R;return [r[0]-LEG*Math.sin(f),r[1]-LEG*Math.cos(f)];};
 function solveStart(hz,hy,fy,ab){let best=[9,0];for(let P=8;P<100;P+=0.05){const F=feet(P,rootFor(P,hz,hy,ab));const e=Math.abs(F[1]-fy);if(e<best[0])best=[e,P];}return best[1];}
 function solveEnd(hz,hy,F0,ab){let best=[9,0];for(let P=8;P<125;P+=0.05){const F=feet(P,rootFor(P,hz,hy,ab));const e=Math.hypot(F[0]-F0[0],F[1]-F0[1]);if(e<best[0])best=[e,P];}return best[1];}
@@ -28,8 +28,8 @@ function smith(slug,hx,[f,p],muscles,pe=[0.3,0.2,-0.9],bEnd=0.32,ps=null,barY=0.
  const b=build({hx,H:[0,barY],fy:0,fpOff:5,hand:bar(barY,f,p),poleEnd:pe,abEnd:[0.5,bEnd],poleStart:ps});
  wr({slug,camera:{az:75,el:6},muscles,props:[{type:'smith',barY,plates:[]}],...extra,frames:{start:b.start,end:b.end}});
 }
-smith('incline-push-up-close-grip',0.06,OVER,['triceps','chest'],[0.55,0.4,-0.7],0.56);
-smith('incline-push-up-medium',0.20,OVER,['chest','triceps']);
+smith('incline-push-up-close-grip',0.06,OVER,['triceps','chest'],[0.36,0.5,-0.8],0.56);
+smith('incline-push-up-medium',0.20,OVER,['chest','triceps'],[0.1,0.1,-1]);
 smith('incline-push-up-reverse-grip',0.20,UNDER,['chest','triceps'],[0.2,-0.3,-0.9],0.32,[-0.5,0,-0.85]);
 smith('incline-push-up-wide',0.40,OVER,['chest','triceps']);
 // body tricep press: bar at chest height, elbows go forward
@@ -44,6 +44,7 @@ smith('incline-push-up-wide',0.40,OVER,['chest','triceps']);
  b=build({hx,H:[0,0],fy:0.60,fpOff:17,hand,poleEnd:[0.65,0.4,-0.65],abEnd:[0.52,0.36],abStart:0.08});
  wr({slug:'push-ups-with-feet-on-an-exercise-ball',camera:{az:58,el:6},muscles:['chest','anterior-deltoid','triceps'],floats:true,props:[{type:'stability-ball',pos:[0,0,+(b.F0[0]-0.12).toFixed(3)],radius:0.325,load:0.5}],frames:{start:b.start,end:b.end}});}
 // reused, already clean
-for(const s of ['push-ups-with-feet-elevated','wall-push-up']){wr(rd(s));}
+{let o=rd('push-ups-with-feet-elevated');for(const f of Object.values(o.frames))for(const a of ['armL','armR'])f[a].pos[2]+=0.05;wr(o);
+ o=rd('wall-push-up');for(const f of Object.values(o.frames))for(const a of ['armL','armR']){f[a].fingers[0]=k0(a)*0.3;f[a].pos[1]+=0.2;}wr(o);}
 // hands were 2 cm into the cushion crown: rest them on it
 for(const s of ['incline-push-up','sofa-triceps-extension']){const o=rd(s);for(const f of Object.values(o.frames))for(const a of ['armL','armR']){f[a].pos[1]=0.434;f[a].curl=-0.3;}wr(o);}

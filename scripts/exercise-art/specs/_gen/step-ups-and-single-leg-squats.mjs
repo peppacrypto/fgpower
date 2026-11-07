@@ -34,7 +34,7 @@ save('pistol-squat',{az:68,el:8},['quadriceps'],[],{
 const holdHand=(x,y,z)=>({pos:[x,y,z],contact:true,hand:'hook',fingers:[0,-0.4,-1],palm:[-1,0,0],pole:[0.9,-0.2,-0.3]});
 save('shrimp-squat',{az:60,el:8},['quadriceps','glutes'],[],{
  start:{root:{pos:[-0.05,0.92,0.02],pitch:14},legR:{pos:[-0.08,0,0.04],anchor:'sole',pole:[0,0,1]},
-  legL:{pos:[0.16,0.9,-0.12],anchor:'ankle',pitch:95,pole:[0.1,-0.3,1]},armL:holdHand(0.21,0.91,-0.16),armR:fk(85,10)},
+  legL:{pos:[0.16,0.9,-0.12],anchor:'ankle',pitch:95,pole:[0.1,-0.3,1]},armL:holdHand(0.218,0.91,-0.16),armR:fk(85,10)},
  end:{root:{pos:[-0.05,0.55,-0.1],pitch:46},neck:{flex:-15},legR:{pos:[-0.08,0,0.04],anchor:'sole',pole:[0,0,1]},
   legL:{pos:[0.16,0.5,-0.2],anchor:'ankle',pitch:110,pole:[0.1,-0.5,1]},armL:holdHand(0.21,0.52,-0.24),armR:fk(100,10)}},{muscleSide:'R'});
 // single-leg high box squat: standing on a 0.6 box, free leg hanging, hand on band

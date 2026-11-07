@@ -69,3 +69,8 @@ az 0 in front, 90 at the figure's left, 180 behind; el is height. Chest and fron
 1. It is the exercise in the instructions: same joints, same contacts, same direction, true range of motion.
 2. Hands hold the bar, feet on the floor or plate, seat on the seat, back on the pad. Nothing floats, nothing passes through anything.
 3. Joints bend the right way. Knees over toes. A neutral spine stays straight. Legs in a plank are straight.
+
+## Wrists (2026-11-07)
+
+check.mjs uses a real wrist's range: ulnar 35, radial 25, extension 80 (90 for a flat hand on a surface, contact:true), flexion 70. Under load a power grip sits near neutral (under 20). rig.js searches the hand's roll about the bar and the elbow's swivel (+-35 around the shoulder-to-wrist axis) for the straightest wrist, keeping the declared look as far as it can; `roll`/`swivel` (degrees) force them, `autoRoll:false`/`autoPole:false` opt out, `report.angles.handRoll*`/`elbowSwivel*` show what was used. Write the pose so the search has little to do: forearm roughly perpendicular to the bar or handle, the hand directly above the elbow in presses (forearm vertical under the weight), hands under the shoulders in pushes. check.mjs also samples the loop 24 times and flags `twitch:*` when a hand or forearm turns over 30 degrees between neighbouring samples: blend fingers/palm smoothly between key frames (no vector that flips sign).
+

@@ -1,3 +1,6 @@
+const SPF=2;
+const PT=-8;
+const ATZ=0, ATF=0;
 import fs from 'fs';
 const W = (slug, s) => fs.writeFileSync(new URL(`../${slug}.json`, import.meta.url), JSON.stringify({slug, ...s}, null, 1));
 const ld = n => JSON.parse(fs.readFileSync(new URL(`../_gallery/${n}.json`, import.meta.url)));
@@ -9,7 +12,8 @@ const roller = (x, z, extra={}) => ({ type:'foam-roller', pos:[x,0,z], length:0.
   W('quadriceps-smr', { camera:g.camera, muscles:['quadriceps'], floats:true, props:g.props, frames:g.frames }); }
 // anterior tibialis: gallery stick roller on the shin
 { const g = ld('muscle-roller');
-  for (const f of Object.values(g.frames)) { f.legL.pos[2]=0.78; f.legR={pos:[-0.15,0,0.78],anchor:'sole',pitch:0,pole:[0,1,0.2]}; for (const a of ['armL','armR']) f[a].pos[2]+=0.3; }
+  for (const f of Object.values(g.frames)) { f.root.pos[2]-=ATZ; f.legL.pos[2]=0.78-ATZ+ATF; f.legL.pitch=PT; f.legR={pos:[-0.15,0,0.78-ATZ+ATF],anchor:'sole',pitch:PT,pole:[0,1,0.2]}; for (const a of ['armL','armR']) f[a].pos[2]+=0.3; f.armL.pos[0]=0.2; f.armR.pos[0]=-0.2; }
+  for (const f of Object.values(g.frames)) f.spine.flex-=SPF;
   W('anterior-tibialis-smr', { camera:g.camera, muscles:['calves'], muscleSide:'L', props:g.props, frames:g.frames }); }
 // foot: gallery PVC roller
 { const g = ld('foot-roller');
@@ -17,7 +21,7 @@ const roller = (x, z, extra={}) => ({ type:'foam-roller', pos:[x,0,z], length:0.
   W('foot-smr', { camera:g.camera, muscles:['calves'], muscleSide:'L', floats:true, props:g.props, frames:g.frames }); }
 
 // seated, hips raised, hands behind, legs forward: hamstring / calves
-const seat = (rz, hy, pitch, legs, hz=-0.4) => ({ root:{pos:[0,hy,rz],pitch}, spine:{flex:-4}, neck:{flex:4},
+const seat = (rz, hy, pitch, legs, hz=-0.32) => ({ root:{pos:[0,hy,rz],pitch}, spine:{flex:-4}, neck:{flex:4},
   armL:flat(0.2,0,rz+hz,1,[0,0,1]), armR:flat(-0.2,0,rz+hz,-1,[0,0,1]), ...legs });
 W('hamstring-smr', { camera:{az:62,el:10}, muscles:['hamstrings'], muscleSide:'L', props:[roller(0,0.3)], floats:false,
   frames:{ start:seat(-0.05,0.28,-60,{legL:{pos:[0.11,0.1,0.78],anchor:'ankle',pitch:-10,pole:[0,1,0]},legR:{pos:[-0.11,0.1,0.78],anchor:'ankle',pitch:-10,pole:[0,1,0]}}),
@@ -42,7 +46,7 @@ W('lower-back-smr', { camera:{az:70,el:10}, muscles:['spinal-erectors'], props:[
 
 // sitting on the roller, ankle on knee: piriformis
 const pir = (rz, roll) => ({ root:{pos:[0,0.24,rz],pitch:-45,roll}, neck:{flex:4},
-  armL:flat(0.2,0,-0.36,1,[0,0,1]), armR:flat(-0.2,0,-0.36,-1,[0,0,1]),
+  armL:flat(0.2,0,-0.3,1,[0.5,0,1]), armR:flat(-0.2,0,-0.3,-1,[0.5,0,1]),
   legR:{pos:[-0.15,0,0.5],anchor:'sole',pitch:0,pole:[0,1,0.3]},
   legL:{fk:{flex:100,abd:40,rot:0,knee:120},foot:{pitch:20}} });
 W('piriformis-smr', { camera:{az:60,el:10}, muscles:['glutes'], muscleSide:'L', props:[roller(0,-0.0)],

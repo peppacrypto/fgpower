@@ -64,7 +64,7 @@
     },
     "rel": "chest",
     "hand": "grip",
-    "pron": 0
+    "pron": 60
    },
    "armR": {
     "fk": {
@@ -75,8 +75,21 @@
     },
     "rel": "chest",
     "hand": "grip",
-    "pron": 0
-   }
+    "pron": 60
+   },
+   "props": [
+    {
+     "type": "dumbbell",
+     "hands": true,
+     "hold": "goblet",
+     "kg": 15,
+     "dir": [
+      0,
+      1,
+      0
+     ]
+    }
+   ]
   },
   "mid": {
    "root": {
@@ -121,24 +134,37 @@
     "fk": {
      "flex": 176,
      "abd": -11,
-     "rot": 0,
+     "rot": -15,
      "elbow": 65
     },
     "rel": "chest",
     "hand": "grip",
-    "pron": 0
+    "pron": 60
    },
    "armR": {
     "fk": {
      "flex": 176,
      "abd": -11,
-     "rot": 0,
+     "rot": -15,
      "elbow": 65
     },
     "rel": "chest",
     "hand": "grip",
-    "pron": 0
-   }
+    "pron": 60
+   },
+   "props": [
+    {
+     "type": "dumbbell",
+     "hands": true,
+     "hold": "goblet",
+     "kg": 15,
+     "dir": [
+      0,
+      1,
+      -0.3
+     ]
+    }
+   ]
   },
   "end": {
    "root": {
@@ -188,7 +214,7 @@
     },
     "rel": "chest",
     "hand": "grip",
-    "pron": 0
+    "pron": 60
    },
    "armR": {
     "fk": {
@@ -199,8 +225,21 @@
     },
     "rel": "chest",
     "hand": "grip",
-    "pron": 0
-   }
+    "pron": 60
+   },
+   "props": [
+    {
+     "type": "dumbbell",
+     "hands": true,
+     "hold": "goblet",
+     "kg": 15,
+     "dir": [
+      0,
+      1,
+      -0.5
+     ]
+    }
+   ]
   }
  }
 }

@@ -23,8 +23,9 @@ save('lateral-raise-with-bands',{az:25,el:6},['lateral-deltoid'],feetTube(1.9),{
  end:{...stand(),...fk(0,88,0,20)}});
 // shoulder press
 save('shoulder-press-with-bands',{az:30,el:6},['shoulders','triceps'],feetTube(1.9),{
- start:{...stand(),...both([0.34,1.5,0.1],[0,1,0.1],[0,-0.05,1],[1,-0.8,-0.2])},
- end:{...stand(),...both([0.24,2,0.04],[0,1,0.05],[0,0,1],[1,-0.1,-0.3])}});
+ start:{...stand(),...both([0.34,1.57,0.08],[0,1,0.1],[0,-0.05,1],[1,-0.6,0.1])},
+ mid:{...stand(),...both([0.27,1.8,0.06],[0,1,0.08],[0,-0.02,1],[0.5,-0.8,0.2])},
+ end:{...stand(),...both([0.22,2,0.04],[0,1,0.05],[0,0,1],[1,-0.3,0.1])}});
 // post work
 const postBands=(pz)=>[{type:'anchor-post',pos:[0,0,pz-0.06],yaw:0,bandY:1.38},
  {type:'band',follow:'pelvis',a:[0,1.38,pz],b:{hand:'L'},rest:0.5,width:0.022},

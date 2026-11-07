@@ -8,12 +8,12 @@ const SPF=+(process.env.SPF||-10);
 const sc=G('standing-calf'), se=G('seated-calf'), dk=G('donkey-calf');
 const TW=(f,fn)=>{for(const k of Object.keys(f))fn(f[k],k);return f;};
 put('standing-calf-raises',{camera:{az:58,el:8},muscles:['calves'],props:sc.props,frames:TW(sc.frames,(f,k)=>{
- for(const [a,x] of [['armL',1],['armR',-1]]){f[a].pos[2]+=0.0;f[a].pole=[x*0.9,-0.4,-0.2];f[a].fingers=[0,0.7,0.7];f[a].palm=[0,-0.7,0.7];}
+ for(const [a,x] of [['armL',1],['armR',-1]]){f[a].pos[2]+=0.0;f[a].pos[0]=x*0.33;f[a].pos[1]-=0.03;f[a].pos[2]+=0.04;f[a].pole=[x*0.9,-0.4,-0.2];f[a].fingers=[0,0.7,0.7];f[a].palm=[0,-0.7,0.7];}
  f.spine={flex:SPF};})});
-put('seated-calf-raise',{camera:{az:72,el:8},muscles:['calves'],props:se.props,frames:TW(se.frames,(f,k)=>{if(k==='end'){for(const l of ['legL','legR']){f[l].pitch=24;f[l].pos[1]-=0.03;f[l].pos[2]+=0.02;}}})});
+put('seated-calf-raise',{camera:{az:72,el:8},muscles:['calves'],props:se.props,frames:TW(se.frames,(f,k)=>{for(const a of ['armL','armR'])f[a].pos[1]+=0.04;if(k==='end'){for(const l of ['legL','legR']){f[l].pitch=24;f[l].pos[1]-=0.03;f[l].pos[2]+=0.02;}}})});
 put('donkey-calf-raises',{camera:{az:102,el:12},muscles:['calves'],floats:true,props:dk.props,frames:dk.frames});
 // shrug: feet flat, shoulders rise
-const shr=(y,hy,hz,el)=>({root:{pos:[0,1.065,0.05],pitch:0},spine:{flex:-19},neck:{flex:2},
+const shr=(y,hy,hz,el)=>({root:{pos:[0,1.065,0.0],pitch:0},spine:{flex:-19},neck:{flex:2},
  legL:{pos:[0.11,0.14,0.06],anchor:'ball',pitch:0,toes:0},legR:{pos:[-0.11,0.14,0.06],anchor:'ball',pitch:0,toes:0},
  ...Object.fromEntries([['armL',1],['armR',-1]].map(([k,s])=>[k,{pos:[s*0.3013,hy,hz],contact:true,fingers:[0,0.95,0.3],palm:[0,-0.3,0.95],curl:0.75,pole:[s*0.9,-0.4,-0.2],scap:{elev:el,prot:0}}]))});
 put('calf-machine-shoulder-shrug',{camera:{az:58,el:8},floats:true,muscles:['traps'],props:sc.props,frames:{start:shr(0,1.51,0.15,0),end:shr(0,1.58,0.14,22)}});

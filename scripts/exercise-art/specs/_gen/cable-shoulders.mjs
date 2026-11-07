@@ -10,7 +10,7 @@ const front=(att,y)=>[{type:'cable-tower',pos:[0,0,0.66],yaw:180,pulleyY:y,hands
 const neu=[[0,0.2,0.98],[-1,0,0]];
 // face pull
 save('face-pull',{az:55,el:6},['posterior-deltoid','rhomboids'],front('rope',1.75),{
- start:{...st(-2),...both([0.06,1.62,0.5],[0,0.5,0.87],[-0.7,-0.7,0.2],[0.2,-1,0])},
+ start:{...st(-2),...both([0.06,1.62,0.5],[0,0.5,0.87],[-0.7,-0.7,0.2],[0.5,-0.6,-0.2])},
  mid:{...st(-2),...both([0.1,1.6,0.45],[0.1,0.7,0.7],[-0.7,-0.7,0.2],[0.5,-0.4,-0.25])},
  end:{...st(-2),...both([0.15,1.55,0.3],[0.2,0.5,0.87],[-0.7,-0.7,0.2],[0.8,0.1,-0.2])}},{});
 // shrugs
@@ -49,7 +49,7 @@ save('bent-over-low-pulley-side-lateral',{az:50,el:8},['posterior-deltoid','late
  end:bo([0.68,0.98,0.34],[0.816,0,0.587],[0,-1,0])},{muscleSide:'L'});
 // presses
 const cp=(l,r)=>{const a=(s,y)=>{const t=Math.min(1,Math.max(0,(y-1.4)/0.52));const L=(u,v)=>{const w=u.map((x,i)=>x+(v[i]-x)*t);const n=Math.hypot(...w);return w.map(x=>+(x/n).toFixed(3));};
- return G(s,[0.3-0.05*t,y,0.12-0.07*t],L([0,1,-0.2],[0,0.55,-0.83]),L([0,0.2,1],[0,0.83,0.55]),[0.2,-1,-0.3]);};
+ return G(s,[+(process.env.HX||0.36)-0.05*t,y,0.12-0.07*t],L([0,1,-0.2],[0,0.55,-0.83]),L([0,0.2,1],[0,0.83,0.55]),[+(process.env.PX||0.3),-1,-0.3]);};
  return {...st(0,0.0),armL:a(1,l),armR:a(-1,r)};};
 const pr=[{type:'cable-crossover',pos:[0,0,0.6],hands:true,pulleyY:0.2,attachment:'d-handle'}];
 const top=1.92,sho=1.4;

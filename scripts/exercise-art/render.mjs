@@ -30,8 +30,9 @@ if (finalMode) args.splice(args.indexOf('--final'), 1)
 const FINAL_FPS = 20
 const loopN = finalMode ? 48 : Number(flag('--loop', 0))
 flag('--look', '') // older calls pass --look studio; it is the only look now
-const wantCloseups = args.includes('--closeups')
-if (wantCloseups) args.splice(args.indexOf('--closeups'), 1)
+const closeupsAt = flag('--closeups-at', '').split(',').filter(Boolean).map(Number)
+const wantCloseups = args.includes('--closeups') || closeupsAt.length > 0
+if (args.includes('--closeups')) args.splice(args.indexOf('--closeups'), 1)
 const specs = args.filter((a) => !a.startsWith('--'))
 if (!specs.length) {
   console.error('usage: node render.mjs spec.json ... [--out dir] [--loop 16]')
@@ -106,7 +107,7 @@ for (const file of specs) {
   fs.mkdirSync(dir, { recursive: true })
   let res
   try {
-    res = await page.evaluate(([s, o]) => window.renderSpec(s, o), [spec, { loopFrames: loopN, fps: finalMode ? FINAL_FPS : Number(spec.loopFps || 6), closeups: wantCloseups }])
+    res = await page.evaluate(([s, o]) => window.renderSpec(s, o), [spec, { loopFrames: loopN, fps: finalMode ? FINAL_FPS : Number(spec.loopFps || 6), closeups: wantCloseups, closeupsAt }])
   } catch (e) {
     failed++
     console.error(`${slug}: render failed: ${e.message}`)

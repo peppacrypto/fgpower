@@ -7,7 +7,7 @@ const hands = (x,y,z,o={}) => { const a = s => ({pos:[x*s,y,z],contact:true,fing
 const hinge = (rootY, rootZ, pitch, hy, hz, lo={}, ho={}) => ({ root:{pos:[0,rootY,rootZ],pitch}, neck:{flex: pitch>30?-40:0}, ...hands(ho.x??0.235,hy,hz,ho), ...legs(lo) });
 const stand = (hy=0.80, lo={}, ho={}) => hinge(lo.ry??0.925,0,0,hy,0.135,lo,ho);
 // back-loaded: bar on rear shoulders (rel chest)
-const back = (rootY, rootZ, pitch, lo={}) => { const a=s=>({pos:[0.33*s,0.215,-0.015],rel:'chest',contact:true,fingers:[0.02*s,0.97,-0.2],palm:[0,0.2,0.97],curl:0.85,pole:[0.5*s,-0.9,0.3]});
+const back = (rootY, rootZ, pitch, lo={}) => { const a=s=>({pos:[0.33*s,0.215,-0.015],rel:'chest',contact:true,fingers:[0.02*s,0.97,-0.2],palm:[0,0.2,0.97],curl:0.85,pole:[0.1*s,-0.9,-1]});
   return { root:{pos:[0,rootY,rootZ],pitch}, neck:{flex: pitch>30?-30:0}, armL:a(1), armR:a(-1), ...legs(lo) }; };
 const bb = {type:'barbell',hands:true,plates:[20]};
 const barBack = {type:'barbell',follow:'chest',at:[0,0.215,-0.015],plates:[20]};

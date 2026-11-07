@@ -2,23 +2,28 @@ import fs from 'fs';
 const W = (slug, s) => fs.writeFileSync(new URL(`../${slug}.json`, import.meta.url), JSON.stringify({slug, ...s}, null, 1));
 const M = ['triceps'];
 // ---------- overhead, both hands cupped under one dumbbell (goblet hold, upright) ----------
+const [MF,MA]=(process.env.MID||'176,65').split(',').map(Number);
+const [M1F,M1A]=(process.env.MID1||'172,30').split(',').map(Number);
+const MH=process.env.MH||'grip'; const ROT=Number(process.env.ROT??-15);
 const stdLegs = { legL:{pos:[0.13,0,0.02],anchor:'sole',yaw:6,pole:[0.1,0,1]}, legR:{pos:[-0.13,0,0.02],anchor:'sole',yaw:-6,pole:[-0.1,0,1]} };
 const seatLegs = { legL:{pos:[0.21,0,0.62],anchor:'sole',pole:[0.2,0.4,1]}, legR:{pos:[-0.21,0,0.62],anchor:'sole',pole:[-0.2,0.4,1]} };
-const fkA = (flex, el, abd=14, rot=0, hand='relaxed') => ({ fk:{flex,abd,rot,elbow:el}, rel:'chest', hand, pron:0 });
-const ov = (rootF, flex, el, abd, rot, hd) => ({ ...rootF, armL:fkA(flex,el,abd,rot,hd), armR:fkA(flex,el,abd,rot,hd) });
+const dbGoblet = { type:'dumbbell', hands:true, hold:'goblet', kg:15 };
+const fkA = (flex, el, abd=14, rot=0, hand='relaxed') => ({ fk:{flex,abd,rot,elbow:el}, rel:'chest', hand, pron:Number(process.env.PR??60) });
+const ov = (rootF, flex, el, abd, rot, hd, tilt) => ({ ...rootF, armL:fkA(flex,el,abd,rot,hd), armR:fkA(flex,el,abd,rot,hd), ...(tilt!==undefined?{props:[{ ...dbGoblet, dir:[0,1,tilt] }]}:{}) });
+const TM=Number(process.env.TM??-0.3), TE=Number(process.env.TE??-0.5), TS=Number(process.env.TS??0);
 const seatRoot = { root:{pos:[0,0.585,0.154],pitch:-8}, neck:{flex:-2} };
 const standRoot = { root:{pos:[0,0.925,0]}, neck:{flex:0}, ...stdLegs };
-const dbGoblet = { type:'dumbbell', hands:true, hold:'goblet', kg:15 };
 W('seated-triceps-press', { camera:{az:62,el:8}, muscles:M, floats:true,
   props:[{type:'shoulder-press-bench'}, dbGoblet],
-  frames:{ start:ov({...seatRoot,...seatLegs},168,8,-11,0,'grip'), mid:ov({...seatRoot,...seatLegs},176,65,-11,0,'grip'), end:ov({...seatRoot,...seatLegs},168,125,-9,0,'grip') } });
+  frames:{ start:ov({...seatRoot,...seatLegs},168,8,-11,0,'grip',TS), mid:ov({...seatRoot,...seatLegs},MF,MA,-11,ROT,MH,TM), end:ov({...seatRoot,...seatLegs},168,125,-9,0,'grip',TE) } });
 W('standing-dumbbell-triceps-extension', { camera:{az:62,el:8}, muscles:M, props:[dbGoblet],
-  frames:{ start:ov(standRoot,168,8,-11,0,'grip'), mid:ov(standRoot,176,65,-11,0,'grip'), end:ov(standRoot,168,125,-9,0,'grip') } });
+  frames:{ start:ov(standRoot,168,8,-11,0,'grip',TS), mid:ov(standRoot,MF,MA,-11,ROT,MH,TM), end:ov(standRoot,168,125,-9,0,'grip',TE) } });
 // ---------- kettlebell overhead ----------
-const kb = (el) => ov(standRoot,168,el,-8,0,'grip');
+const kpr = f => ({ ...f, armL:{...f.armL,pron:30}, armR:{...f.armR,pron:30} });
+const kb = (el) => kpr(ov(standRoot,168,el,-8,0,'grip'));
 W('kettlebell-overhead-triceps-extension', { camera:{az:62,el:8}, muscles:M,
   props:[{type:'kettlebell', kg:16, mode:'horns', hands:true, up:[0,1,0]}],
-  frames:{ start:kb(8), mid:ov(standRoot,176,65,-9,0,'grip'), end:kb(125) } });
+  frames:{ start:kb(8), mid:kpr(ov(standRoot,MF,MA,-9,0,MH)), end:kb(125) } });
 // ---------- one-arm overhead: neutral grip, upper arm beside the head ----------
 const one = (el) => fkA(165,el,10,0,'grip');
 const freeArm = { fk:{flex:0,abd:10,elbow:6}, rel:'chest', hand:'relaxed' };

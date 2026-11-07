@@ -18,7 +18,7 @@ save('seated-one-arm-cable-pulley-rows',{az:125,el:12},['middle-back'],[{type:'s
  end:{...sit(0.42,-6,-4,4),armL:hand(1,[0.12,0.84,0.30],[-1,0,0],[0.5,-0.1,-1]),armR:{fk:{flex:0,abd:12,rot:0,elbow:25},rel:'chest'}}},{muscleSide:'L'});
 const rope=(slug,mus,endY,endZ,cam)=>save(slug,cam,mus,seat(0.42,'rope'),{
  start:{...sit(0.42,6,20,-12),...two([0.07,0.74,0.66],[-1,0,0],[1,0.1,-0.3])},
- end:{...sit(0.42,-4,-2,2),...two([0.2,endY,endZ],[-0.6,-0.8,0],[1,0.3,-0.6])}});
+ end:{...sit(0.42,-4,-2,2),...two([0.2,endY,endZ],[-0.85,-0.5,0],[1,0.3,-0.6])}});
 rope('cable-rope-rear-delt-rows',['shoulders'],1.0,0.3,{az:50,el:14});
 rope('low-pulley-row-to-neck',['shoulders'],1.12,0.2,{az:60,el:12});
 // kneeling at a high pulley

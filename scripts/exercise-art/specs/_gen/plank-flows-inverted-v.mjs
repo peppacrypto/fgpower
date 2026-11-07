@@ -22,20 +22,29 @@ save('inchworm',{az:72,el:8},['hamstrings'],{
  end:{root:{pos:[0,0.43,0],pitch:68},neck:{flex:-10},...hands(0.47),...F(-0.81,60)}.constructor===Object?{root:{pos:[0,0.43,0],pitch:68},neck:{flex:-10},...hands(0.49),legL:{pos:[0.09,0,-0.81],anchor:'ball',pitch:60,toes:0},legR:{pos:[-0.09,0,-0.81],anchor:'ball',pitch:60,toes:0}}:0});
 const sp=(k)=>({root:{pos:[0,0.3,0],pitch:78},neck:{flex:-10},...hands(0.5,[0.9,0.2,-0.5],0.3),legL:k?{pos:[0.3,0.2,0.2],anchor:'ball',pitch:80,toes:0,pole:[0.3,0.5,1]}:{pos:[0.09,0,-0.84],anchor:'ball',pitch:70,toes:0},legR:{pos:[-0.09,0,-0.84],anchor:'ball',pitch:70,toes:0}});
 save('spider-crawl',{az:50,el:20},['abdominals'],{start:sp(0),end:sp(1)},{muscleSide:'L'});
-const gr=(i)=>i?{root:{pos:[0,0.55,0.0],pitch:95},neck:{flex:-5},...hands(0.47,[0.6,0.2,-0.6],0.2),legL:{pos:[0.36,0,0.2],anchor:'sole',pitch:0,pole:[0.5,0.3,1]},legR:{pos:[-0.36,0,0.2],anchor:'sole',pitch:0,pole:[-0.5,0.3,1]}}:{root:{pos:[0,0.43,0],pitch:68},neck:{flex:-20},...hands(0.47,[0.6,0.2,-0.6],0.2),...F(-0.81,60)};
+const gr=(i)=>i?{root:{pos:[0,+(process.env.RY2||0.66),+(process.env.RZ2||0)],pitch:+(process.env.RP2||85)},neck:{flex:-5},...hands(+(process.env.HZ||0.5),[0.55,0.35,-0.75],0.2),legL:{pos:[+(process.env.FX||0.36),0,+(process.env.FZ||0.3)],anchor:'ball',toes:0,pitch:+(process.env.EP||15),pole:[+(process.env.QX||0.3),+(process.env.QY||0.3),+(process.env.QZ||1)]},legR:{pos:[-(process.env.FX||0.36),0,+(process.env.FZ||0.3)],anchor:'ball',toes:0,pitch:+(process.env.EP||15),pole:[-(process.env.QX||0.3),+(process.env.QY||0.3),+(process.env.QZ||1)]}}:{root:{pos:[0,0.43,0],pitch:68},neck:{flex:-20},...hands(+(process.env.HZ||0.5),[0.55,0.35,-0.75],0.2),...F(-0.81,60)};
+const E=process.env;
+const gmid={root:{pos:[0,+(E.MY||0.62),+(E.MZ||-0.1)],pitch:+(E.MP||85)},neck:{flex:-10},...hands(+(process.env.HZ||0.5),[0.55,0.35,-0.75],0.2),
+ legL:{pos:[0.3,+(E.MFY||0.18),+(E.MFZ||-0.25)],anchor:'ball',pitch:+(E.MFP||35),toes:0,pole:[0.5,0.3,1]},legR:{pos:[-0.3,+(E.MFY||0.18),+(E.MFZ||-0.25)],anchor:'ball',pitch:+(E.MFP||35),toes:0,pole:[-0.5,0.3,1]}};
 save('groiners',{az:60,el:10},['adductors'],{start:gr(0),end:gr(1)});
-for(const s of ['mountain-climbers','step-back-burpee']){const j=JSON.parse(fs.readFileSync(W+s+'.json'));out[s]=j;}
-for(const f of Object.values(out.__p||{}));
-{const sb=out['step-back-burpee'].frames;
-for(const a of ['armL','armR'])sb.start[a].pos[1]=2.0;
-{const m=sb.mid2;m.root.pos=[0,0.59,-0.06];m.root.pitch=88;delete sb.mid2b;
- for(const [l,sg] of [['legL',1],['legR',-1]]){m[l].pos=[sg*0.1,0,0.15];m[l].pitch=0;m[l].pole=[sg*0.25,0,1];}
- sb.mid3.legL.pole=[0.1,0,1];sb.mid3.legL.pitch=64;}
-delete sb.mid2b;
-for(const [l,sg] of [['legL',1],['legR',-1]]){sb.mid2[l].pole=[sg*0.45,0,1];}
-sb.mid2.root.pos=[0,0.59,-0.06];
-const mc=out['mountain-climbers'];
-for(const [fk,f] of Object.entries(mc.frames)){for(const a of ['armL','armR'])f[a].pos[2]=0.5;
- if(fk==='mid'||fk==='mid2'){for(const l of ['legL','legR']){const q=f[l];q.pitch=Math.max(q.pitch,75);q.pos[1]=Math.max(q.pos[1],0.1);q.pole[1]=-0.15;if(q.pos[2]>-0.5){q.pos[1]=0.3;q.pitch=90;q.pole[1]=-0.1;q.pos[0]*=1.9;}else q.pos[1]=0.17;}}}}
+const PZ=+(process.env.PZ||0.5);
+const pl=(po)=>{const a=H(1,PZ,[0,0,0],0.2),b=H(-1,PZ,[0,0,0],0.2);if(po){a.pole=[0.55,0.35,-0.75];b.pole=[-0.55,0.35,-0.75];}else{delete a.pole;delete b.pole;}return {armL:a,armR:b};};
+const fw=(sg,y,z)=>({pos:[sg*0.22,y,z],fingers:[sg*0.06,-0.3,0.95],palm:[0,-0.95,-0.3],curl:0.1,pole:[sg*0.7,0,-0.2],contact:true});
+const bl=(z,y,pt,sg,x=0.09)=>({pos:[sg*x,y,z],anchor:'ball',pitch:pt,toes:0,pole:[z>-0.7?sg*+(process.env.PX||0.5):sg*0.1,z>-0.7?+(process.env.PY||0):-0.15,1]});
+const mcF=(r,lz,ly,lp,rz,ry,rp)=>({root:r,neck:{flex:-10},...pl(),legL:bl(lz,ly,lp,1),legR:bl(rz,ry,rp,-1)});
+save('mountain-climbers',{az:66,el:7},['quadriceps','abdominals'],{
+ start:mcF({pos:[0,0.43,0],pitch:68},-0.1,0,62,-0.81,0,60),
+ mid:mcF({pos:[0,+(process.env.RY||0.43),0],pitch:68},(+process.env.LZ||-0.55),+(process.env.LY||0.12),(+process.env.LP||90),-0.81,0,60),
+ mid2:mcF({pos:[0,+(process.env.RY||0.43),0],pitch:68},-0.81,0,60,(+process.env.LZ||-0.55),+(process.env.LY||0.12),(+process.env.LP||90)),
+ end:mcF({pos:[0,0.43,0],pitch:68},-0.81,0,60,-0.1,0,62)},{});
+const hd=(z)=>pl();
+const fold=()=>({root:{pos:[0,0.8,0.1],pitch:125},neck:{flex:-10},...pl(1),legL:{pos:[0.1,0,-0.2],anchor:'sole',pitch:0,pole:[0,0,1]},legR:{pos:[-0.1,0,-0.2],anchor:'sole',pitch:0,pole:[0,0,1]}});
+save('step-back-burpee',{az:66,el:6},['quadriceps','chest','abdominals'],{
+ start:{root:{pos:[0,0.925,-0.2]},armL:{pos:[0.22,2,-0.15],fingers:[0,1,0],palm:[0,0,1],curl:0.15,pole:[0.7,0,-0.2],contact:true},armR:{pos:[-0.22,2,-0.15],fingers:[0,1,0],palm:[0,0,1],curl:0.15,pole:[-0.7,0,-0.2],contact:true},legL:{pos:[0.1,0,-0.2],anchor:'sole',pitch:0,pole:[0,0,1]},legR:{pos:[-0.1,0,-0.2],anchor:'sole',pitch:0,pole:[0,0,1]}},
+ mid0:{root:{pos:[0,0.93,-0.15],pitch:20},neck:{flex:-4},armL:{pos:[0.22,1.5,0.1],fingers:[0.03,0.6,0.8],palm:[0,-0.8,0.6],curl:0.12,pole:[0.7,0,-0.2],contact:true},armR:{pos:[-0.22,1.5,0.1],fingers:[-0.03,0.6,0.8],palm:[0,-0.8,0.6],curl:0.12,pole:[-0.7,0,-0.2],contact:true},legL:{pos:[0.1,0,-0.2],anchor:'sole',pitch:0,pole:[0,0,1]},legR:{pos:[-0.1,0,-0.2],anchor:'sole',pitch:0,pole:[0,0,1]}},
+ mid:{root:{pos:[0,0.9,-0.1],pitch:40},neck:{flex:-8},armL:{...fw(1,1.0,0.5),pole:[0.55,0.35,-0.75]},armR:{...fw(-1,1.0,0.5),pole:[-0.55,0.35,-0.75]},legL:{pos:[0.1,0,-0.2],anchor:'sole',pitch:0,pole:[0,0,1]},legR:{pos:[-0.1,0,-0.2],anchor:'sole',pitch:0,pole:[0,0,1]}},
+ mid2:fold(),
+ mid3:{root:{pos:[0,0.43,0],pitch:68},neck:{flex:-10},...pl(1),legL:bl(-0.6,0.09,64,1),legR:bl(-0.81,0,60,-1)},
+ end:mcF({pos:[0,0.43,0],pitch:68},-0.81,0,60,-0.81,0,60)},{});
 for(const [k,v] of Object.entries(out))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
 console.log(Object.keys(out).join(' '));

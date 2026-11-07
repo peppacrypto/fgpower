@@ -35,7 +35,7 @@
     "flex": 0
    },
    "neck": {
-    "flex": 10
+    "flex": 0
    },
    "legL": {
     "pos": [
@@ -76,10 +76,10 @@
    },
    "armR": {
     "fk": {
-     "flex": 150,
-     "abd": 60,
+     "flex": 120,
+     "abd": 40,
      "rot": 0,
-     "elbow": 130
+     "elbow": 140
     },
     "rel": "chest"
    }
@@ -97,7 +97,7 @@
     "flex": 14
    },
    "neck": {
-    "flex": 10
+    "flex": 0
    },
    "legL": {
     "pos": [
@@ -138,10 +138,10 @@
    },
    "armR": {
     "fk": {
-     "flex": 150,
-     "abd": 60,
+     "flex": 120,
+     "abd": 40,
      "rot": 0,
-     "elbow": 130
+     "elbow": 140
     },
     "rel": "chest"
    }

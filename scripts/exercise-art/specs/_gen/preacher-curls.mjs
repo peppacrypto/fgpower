@@ -1,11 +1,12 @@
 import fs from 'fs';
 const P = { bot:[0.7738,0.3795], mid:[0.963,0.424], top:[1.2052,0.2495] };
 const FP = { bot:[-0.6157,0.788], mid:[0,1], top:[0.866,0.5] }; // finger dir (y,z) along forearm
+const SH = +(process.env.SH||0.045);
 const n = v => { const l=Math.hypot(...v); return v.map(x=>x/l); };
 const legs = () => ({ legL:{pos:[0.17,0,0.12],anchor:'sole',pole:[0.25,0.9,1]}, legR:{pos:[-0.17,0,0.12],anchor:'sole',pole:[-0.25,0.9,1]} });
 // grip: 'under' | 'over' | 'hammer'; x hand x; tx finger x tilt
 const arm = (s, ph, o) => {
-  const [y,z] = P[ph], [fy,fz] = FP[ph];
+  const [y0,z0] = P[ph], [fy,fz] = FP[ph]; const y=y0+SH, z=z0+SH;
   const fx = (o.tx||0)*s;
   let f = n([fx, fy, fz]), p;
   const up = n([0, fz, -fy]);            // palm-up normal (perp to forearm dir)
@@ -19,7 +20,7 @@ const arm = (s, ph, o) => {
   if (o.mode?.(ph)) Object.assign(a, o.mode(ph));
   return a;
 };
-const body = () => ({ root:{pos:[0,0.72,-0.27],pitch:20}, neck:{flex:-4}, ...legs() });
+const body = () => ({ root:{pos:[0,0.72+SH,-0.27+SH],pitch:20}, neck:{flex:-4}, ...legs() });
 const frameOf = (o, ph, extra={}) => {
   const f = body();
   f.armL = arm(1,ph,o); f.armR = arm(-1,ph,o);
@@ -47,12 +48,12 @@ std('one-arm-dumbbell-preacher-curl', {grip:'under',x:0.12,r:0.016,one:true}, [b
     const a = arm(s,ph,o);
     const [fy,fz]=FP[ph]; const up=n([0,fz,-fy]); const side=[-s,0,0];
     const f=a.fingers; const sd=[-1,0,0];
-    const pal = n([ (k===0?-1:0)*s*1, k*up[1], k*up[2] ]);
+    const w=0.5; const pal = n([ -s*w, k*up[1], k*up[2] ]);
     a.palm=[pal[0],pal[1],pal[2]]; return a;
   };
   const fr = (ph,k) => { const f=body(); f.armL=hand(1,ph,k); f.armR=hand(-1,ph,k); return f; };
   write('zottman-preacher-curl', { props:[bench,...dbs()],
-    frames:{ start:fr('bot',1), mid:fr('mid',1), mid2:fr('top',0.4), mid3:fr('mid',-1), end:fr('bot',-1) } });
+    frames:{ start:fr('bot',0.8), mid:fr('top',1), mid2:fr('top',0), mid3:fr('top',-1), end:fr('bot',-0.8) } });
 }
 
 // machine: copy gallery

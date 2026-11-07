@@ -21,7 +21,8 @@
    "yaw": 0,
    "pulleyY": 0.2,
    "hands": true,
-   "attachment": "rope"
+   "attachment": "rope",
+   "ropeLeg": 0.5
   }
  ],
  "frames": {
@@ -68,7 +69,7 @@
    },
    "armL": {
     "pos": [
-     0.07,
+     0.1,
      1.02,
      -0.26
     ],
@@ -92,7 +93,7 @@
    },
    "armR": {
     "pos": [
-     -0.07,
+     -0.1,
      1.02,
      -0.26
     ],

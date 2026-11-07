@@ -23,15 +23,21 @@
 //         would point if the hand opened, palm is the way the palm faces. Both are perpendicular to the bar, whose axis is
 //         their cross product. The wrist follows from that. report.hands[s].centre and .thumb then give the bar's centre
 //         and direction in every frame, for the props that follow the hands.
-//       Auto-roll: a "grip"/"hook" hand (or an older closed hand, curl over 0.55 with contact) turns about the bar's axis, and a
-//         flat hand with contact turns on its surface about the palm's normal, to keep the wrist inside qa-lib's limits
-//         (flexion/extension, ulnar/radial, forearm twist), without bending the elbow more or losing reach. The bar (or the
-//         palm's contact point) and the bar's axis stay put; only the wrist moves around them. Range +-70 (grip), +-60 (flat);
-//         a wrist already inside its comfortable band keeps the declared hand. It cannot cure ulnar/radial deviation of a
-//         grip: that is the forearm's angle to the bar, fix the bar's axis or the pole. roll:<deg> forces a value (+ turns a
-//         grip's fingers toward its palm, a flat hand's fingers toward its thumb), autoRoll:false keeps the declared hand.
-//         report.angles.handRollL/R give the roll used. Key frames choose it; resolveFrame writes it as rollFrom (internal),
-//         which the in-betweens blend, so a loop never flips. Give roll in every key frame or in none.
+//       Auto-roll and auto-swivel: a "grip"/"hook" hand (or an older closed hand, curl over 0.55 with contact) turns about the
+//         bar's axis, a flat hand with contact turns on its surface about the palm's normal (the roll, +-70 grip, +-60 flat),
+//         and the elbow moves on its circle around the shoulder-to-wrist axis (the swivel, up to +-35 from the pole; any arm
+//         with pos, fingers and palm), searched together for the wrist nearest neutral as qa-lib measures it (a loaded grip
+//         sits under about 20 degrees; qa-lib's limits: ulnar 35, radial 25, extension 80 or 90 flat, flexion 70), with a
+//         small pull back to the declared roll and pole so the look is kept. Never worse reach, forearm twist, elbow bend
+//         or shoulder range than the declared pose; the elbow does not move further in toward the trunk once inside the
+//         shoulder's line, nor down into the floor; the shoulder girdle follows the declared elbow. A planted flat hand
+//         keeps a wide band and a stiff roll (it would spin on the floor), so its elbow does most of the work.
+//         roll:<deg> forces the roll (+ turns a grip's fingers toward its palm, a flat hand's fingers toward its thumb),
+//         swivel:<deg> forces the swivel (+ swings the elbow of an arm hanging at the side from out to the front, mirrored
+//         on the two arms); autoRoll:false keeps the declared hand, autoPole:false the declared pole.
+//         report.angles.handRollL/R and elbowSwivelL/R give what was used. Key frames choose; resolveFrame writes rollFrom
+//         and swivelFrom (internal), which the in-betweens blend, so a loop never flips. Give roll/swivel in every key
+//         frame or in none.
 //     { fk:{ flex, abd, rot, elbow }, rel:"chest", pron, curl, hand, scap }
 //       flex 90 is a forward raise, abd 90 is a side raise, elbow 0 is straight, pron turns the forearm.
 //     scap: the shoulder girdle, normally left out: it follows the upper arm by itself. elev rises with the arm from 70
@@ -101,6 +107,16 @@ const SPREAD = { 2: 1, 3: 0, 4: -0.8, 5: -1.7 }
 const CUP = { 2: 0, 3: 2, 4: 7, 5: 12 }
 
 const isGripSpec = (spec) => spec.hand === 'grip' || spec.hand === 'hook'
+
+/**
+ * A closed hand written the old way (a position, fingers and palm directions and a curl over 0.55) holds a bar or a handle:
+ * it is a grip. Left as it was, its fingers curl in the air around a bar that sits at the middle of the palm, which is what
+ * the owner saw as crooked, pinching hands. `pos` keeps its meaning, now the bar's axis, as the props' notes already say.
+ */
+function upgradeHand(spec) {
+  if (!spec || spec.hand || spec.fk || spec.pos === undefined || spec.curl === undefined || spec.curl <= 0.55 || !spec.fingers || !spec.palm) return spec
+  return { ...spec, hand: 'grip', grip: spec.grip ?? 0.016 }
+}
 
 /** The mode a spec asks for. Specs written before modes used a single 'curl'. */
 function handMode(spec) {
@@ -358,8 +374,8 @@ export class Body {
 
     // Arms. Two passes: the direction decides how much the shoulder girdle moves, which moves the shoulder joint.
     const armSpecs = {
-      L: frame.armL || { fk: { flex: 0, abd: 7, elbow: 12 } },
-      R: frame.armR || { fk: { flex: 0, abd: 7, elbow: 12 } },
+      L: upgradeHand(frame.armL) || { fk: { flex: 0, abd: 7, elbow: 12 } },
+      R: upgradeHand(frame.armR) || { fk: { flex: 0, abd: 7, elbow: 12 } },
     }
     const qChest = () => Q[by.spine01.i]
     const fkArm = (s, spec, S) => {
@@ -376,16 +392,24 @@ export class Body {
       const pole = n.clone().cross(h)
       return { T: S.clone().add(wrist.clone().applyQuaternion(f)), pole: pole.applyQuaternion(f) }
     }
+    // The elbow's swivel: the circle it can move on around the shoulder-to-wrist axis. + swings the elbow of an arm hanging
+    // at the side from out to the side toward the front, the same way on both arms.
+    const swivelPole = (s, pole, S, T, deg) => {
+      if (!deg) return pole
+      const n = T.clone().sub(S).normalize().multiplyScalar(this.side[s].sign)
+      return pole.clone().applyQuaternion(rot(n, deg))
+    }
     const armTarget = (s, spec, S, qHand, plan) => {
       const si = this.side[s]
       if (spec.fk) return fkArm(s, spec, S)
       let T = toWorld(spec.rel || 'world', spec.pos)
-      if (plan) T = plan.T.clone()
+      if (plan && plan.T) T = plan.T.clone()
       else if (qHand && isGripSpec(spec) && !spec.resolved) T = T.sub(this._gripCentre(s, spec.grip ?? 0.016).sub(si.W).applyQuaternion(qHand))
       else if (spec.contact && qHand) T = T.sub(si.palmCentre.clone().sub(si.W).applyQuaternion(qHand))
-      const pole = spec.pole
+      let pole = spec.pole
         ? dirWorld(spec.rel || 'world', spec.pole)
         : new V3(si.sign * 0.5, -0.5, -0.7).normalize().applyQuaternion(qChest())
+      if (plan && plan.swivel) pole = swivelPole(s, pole, S, T, plan.swivel)
       return { T, pole }
     }
     const handQ = (s, spec) => {
@@ -399,11 +423,16 @@ export class Body {
       return want.multiply(fRest.clone().invert())
     }
 
-    // Auto-roll. A hand around a bar turns about the bar's axis, a flat hand turns on its surface about the palm's normal,
-    // to the angle that keeps the wrist nearest its forearm: the bar (or the palm's contact point) and the bar's axis stay
-    // exactly where the spec puts them, only the wrist moves around them. Measured as qa-lib's measureJoints does.
-    const rollPlan = (s, spec, S) => {
-      if (spec.fk || !spec.pos || spec.autoRoll === false) return null
+    // Auto-roll and auto-swivel. A hand around a bar turns about the bar's axis, a flat hand turns on its surface about the
+    // palm's normal (the roll), and the elbow moves on its circle around the shoulder-to-wrist axis (the swivel, up to 35
+    // degrees from the spec's pole): together they bring the forearm in line with the hand, the way a lifter's wrist sits
+    // near neutral under load. The bar (or the palm's contact point) and the bar's axis stay exactly where the spec puts them.
+    // Measured as qa-lib's measureJoints does. Never worse reach, forearm twist or elbow bend than the declared pose, and the
+    // elbow never moves further in toward the trunk than declared once it is inside the shoulder's line.
+    // seed: the plan of the first pass (before the shoulder girdle moved), refined from there.
+    const SWIVEL = 35
+    const armPlan = (s, spec, S, seed) => {
+      if (spec.fk || !spec.pos) return null
       const qh0 = handQ(s, spec)
       if (!qh0) return null
       const si = this.side[s]
@@ -412,99 +441,177 @@ export class Body {
       const placed = spec.contact || spec.resolved
       const grip = isGripSpec(spec) || (mode === 'legacy' && placed)
       const flat = !grip && mode === 'flat' && placed
-      if (!grip && !flat) return null
-      const forced = typeof spec.roll === 'number'
-      const off = (isGripSpec(spec) ? this._gripCentre(s, spec.grip ?? 0.016) : si.palmCentre.clone()).sub(si.W)
-      const P0 = toWorld(spec.rel || 'world', spec.pos)
-      const B = spec.resolved ? P0.clone().add(off.clone().applyQuaternion(qh0)) : P0
-      // Both axes give + roll the same meaning on both sides: a grip's fingers turn toward the palm, a flat hand's toward the thumb.
-      const axis = grip ? si.fingerDir.clone().cross(si.palmNormal) : si.palmNormal.clone().multiplyScalar(s === 'L' ? 1 : -1)
-      axis.applyQuaternion(qh0).normalize()
-      const at = (deg) => {
-        const q = rot(axis, deg).multiply(qh0)
-        return { q, T: B.clone().sub(off.clone().applyQuaternion(q)), roll: deg }
+      const rollForced = typeof spec.roll === 'number'
+      const swivelForced = typeof spec.swivel === 'number'
+      const canRoll = (grip || flat) && (spec.autoRoll !== false || rollForced)
+      const canSwivel = spec.autoPole !== false || swivelForced
+      if (!canRoll && !canSwivel) return null
+      const R = grip ? 70 : 60
+      let at
+      if (canRoll) {
+        const off = (isGripSpec(spec) ? this._gripCentre(s, spec.grip ?? 0.016) : si.palmCentre.clone()).sub(si.W)
+        const P0 = toWorld(spec.rel || 'world', spec.pos)
+        const B = spec.resolved ? P0.clone().add(off.clone().applyQuaternion(qh0)) : P0
+        // Both axes give + roll the same meaning on both sides: a grip's fingers turn toward the palm, a flat hand's toward the thumb.
+        const axis = grip ? si.fingerDir.clone().cross(si.palmNormal) : si.palmNormal.clone().multiplyScalar(s === 'L' ? 1 : -1)
+        axis.applyQuaternion(qh0).normalize()
+        at = (deg) => {
+          const q = rot(axis, deg).multiply(qh0)
+          return { q, T: B.clone().sub(off.clone().applyQuaternion(q)), roll: deg }
+        }
+      } else {
+        const T0 = armTarget(s, spec, S, qh0, null).T
+        at = () => ({ q: qh0, T: T0.clone(), roll: undefined })
       }
-      if (forced) return at(spec.roll)
-      // An in-between takes its key frames' blended roll as it is (rollFrom, written by resolveFrame): searching again there
-      // can jump between two equally good rolls from one in-between to the next.
-      if (typeof spec.rollFrom === 'number') return at(spec.rollFrom)
+      const plan = (roll, swivel, searched) => {
+        const p = at(canRoll ? roll : 0)
+        if (!canRoll) p.roll = undefined
+        p.swivel = canSwivel ? swivel : 0
+        p.swivel0 = canSwivel ? swivel0 : 0
+        p.reportSwivel = canSwivel
+        p.searched = searched
+        return p
+      }
+      // An in-between takes its key frames' blended values as they are (rollFrom, swivelFrom, written by resolveFrame):
+      // searching again there can jump between two equally good answers from one in-between to the next.
+      const blended = typeof spec.rollFrom === 'number' || typeof spec.swivelFrom === 'number'
+      const roll0 = rollForced ? spec.roll : blended ? spec.rollFrom ?? 0 : 0
+      const swivel0 = swivelForced ? spec.swivel : blended ? spec.swivelFrom ?? 0 : 0
+      const freeRoll = canRoll && !rollForced && spec.autoRoll !== false && !blended
+      const freeSwivel = canSwivel && !swivelForced && spec.autoPole !== false && !blended
+      if (!freeRoll && !freeSwivel) return plan(roll0, swivel0, false)
+
       const pole = spec.pole ? dirWorld(spec.rel || 'world', spec.pole) : new V3(si.sign * 0.5, -0.5, -0.7).normalize().applyQuaternion(qChest())
       const loAxis = si.lo.clone().normalize()
       const restLo = basisQ(si.armHinge, si.lo).invert()
-      const R = grip ? 70 : 60
+      const qChi = qChest().clone().invert()
+      const O = P[by.spine01.i]
+      const lateral = (p) => si.sign * p.clone().sub(O).applyQuaternion(qChi).x
+      const latS = lateral(S)
       // Bands the declared hand may use freely (a back squat's bent-back wrist is meant), then a cost up to qa-lib's LIMITS
-      // with a steep wall from 90 % of each. Inside the bands every roll ties and the declared one (0) wins. Bending at the
-      // wrist (flex, ext) is left to the spec almost up to the limit; leaning sideways (ulnar, radial) looks wrong much sooner.
-      const band = { flex: 82, ext: 90, ulnar: 32, radial: 22 }
-      // Reach: never worse than the declared hand. A target out of reach anyway only counts a little, or its miss would
-      // outweigh the wrist.
-      const miss0 = this._twoBone(S, at(0).T, si.a, si.b, pole).miss
-      const missCost = (m) => (miss0 > 0.01 ? 10 * Math.max(0, m - miss0) : (Math.max(0, m - 0.002) / 0.005) ** 2)
-      // The elbow was placed by the spec (its pole), and the shoulder's rotation follows from the forearm: swing the forearm
-      // as little as the wrist allows.
-      const sol0 = this._twoBone(S, at(0).T, si.a, si.b, pole)
-      const fw0 = sol0.T.clone().sub(sol0.E).normalize()
-      // The elbow: over 148 degrees of bend it is pushed back toward qa-lib's 152, otherwise it may not bend more than declared.
-      const interior0 = sol0.interior
-      // The forearm's twist may not grow past 100 degrees, or past the declared hand's.
-      const tw0 = Math.abs(twistAngle(basisQ(sol0.hinge, fw0).multiply(basisQ(si.armHinge, si.lo).invert()).invert().multiply(qh0), si.lo.clone().normalize()))
-      const cost = (deg) => {
-        const { q, T } = at(deg)
-        const sol = this._twoBone(S, T, si.a, si.b, pole)
+      // with a steep wall from 90 % of each. Bending at the wrist (flex, ext) is left to the spec well into its range;
+      // leaning sideways (ulnar, radial) looks wrong much sooner, and a loaded grip sits near neutral.
+      const lim = { flex: 70, ext: flat ? 90 : 80, ulnar: 35, radial: 25 }
+      // A flat hand is planted: turning it on its surface from one key frame to the next would spin it on the floor, so it
+      // keeps a wide band and a stiff pull back to the declared hand, and the elbow (the swivel) does most of the work.
+      const band = flat ? { flex: 45, ext: 78, ulnar: 24, radial: 17 } : { flex: 35, ext: 50, ulnar: 8, radial: 6 }
+      const rollStiff = flat ? 0.4 : 0.05
+      const part = (v, dzP, limP, dzN, limN) => {
+        const e = v > 0 ? Math.max(0, v - dzP) / limP : Math.max(0, -v - dzN) / limN
+        const w = v > 0 ? Math.max(0, v / limP - 0.9) : Math.max(0, -v / limN - 0.9)
+        return e * e + 30 * w * w
+      }
+      const wristOf = (q, sol) => {
         const fw = sol.T.clone().sub(sol.E).normalize()
         const f = si.fingerDir.clone().applyQuaternion(q)
         const n = si.palmNormal.clone().applyQuaternion(q)
         const t = (s === 'L' ? n.clone().cross(f) : f.clone().cross(n)).normalize()
-        const flex = Math.atan2(-fw.dot(n), fw.dot(f)) / D
-        const dev = Math.asin(clamp(fw.dot(t), -1, 1)) / D
-        const tw = twistAngle(basisQ(sol.hinge, fw).multiply(restLo).invert().multiply(q), loAxis)
-        const part = (v, dzP, limP, dzN, limN) => {
-          const e = v > 0 ? Math.max(0, v - dzP) / limP : Math.max(0, -v - dzN) / limN
-          const w = v > 0 ? Math.max(0, v / limP - 0.9) : Math.max(0, -v / limN - 0.9)
-          return e * e + 30 * w * w
+        return {
+          fw,
+          flex: Math.atan2(-fw.dot(n), fw.dot(f)) / D,
+          dev: Math.asin(clamp(fw.dot(t), -1, 1)) / D,
+          tw: twistAngle(basisQ(sol.hinge, fw).multiply(restLo).invert().multiply(q), loAxis),
         }
-        return (
-          part(flex, band.flex, 95, band.ext, 100) +
-          part(dev, band.ulnar, 50, band.radial, 35) +
-          part(tw, 85, 110, 85, 110) +
-          (Math.max(0, Math.abs(tw) - Math.max(100, tw0)) / 5) ** 2 +
-          missCost(sol.miss) +
-          (Math.max(0, 32 - sol.interior) / 6) ** 2 +
-          (Math.max(0, Math.min(40, interior0) - sol.interior) / 12) ** 2 +
-          (Math.max(0, Math.acos(clamp(fw.dot(fw0), -1, 1)) / D - 5) / 15) ** 2 +
-          0.03 * (deg / R) ** 2
-        )
       }
-      // Downhill from the declared roll to the nearest minimum, in 2.5 degree steps, then a golden-section refinement. Not
-      // a global search: from one in-between to the next the nearest minimum moves smoothly, the global one can jump.
-      const start = 0
-      let best = start
-      let bestC = cost(start)
-      const cm = start > -R ? cost(start - 2.5) : Infinity
-      const cp = start < R ? cost(start + 2.5) : Infinity
-      const dir = cm < cp ? -1 : 1
-      if (Math.min(cm, cp) < bestC - 1e-9) {
-        best = start + dir * 2.5
-        bestC = Math.min(cm, cp)
-        while (Math.abs(best + dir * 2.5) <= R + 1e-9) {
-          const c = cost(best + dir * 2.5)
-          if (c >= bestC - 1e-9) break
-          best += dir * 2.5
-          bestC = c
+      // The declared pose: reach, elbow and forearm twist may not get worse than this.
+      const p0 = at(canRoll ? roll0 : 0)
+      const sol0 = this._twoBone(S, p0.T, si.a, si.b, swivelPole(s, pole, S, p0.T, swivel0))
+      const w0 = wristOf(p0.q, sol0)
+      const miss0 = sol0.miss
+      const tw0 = Math.abs(w0.tw)
+      const interior0 = sol0.interior
+      // How far the upper arm is out of the shoulder's range (where it points, how far it turns around itself), as qa-lib
+      // measures it, with the range narrowed by 2 degrees (the bones land a little off the plan's): the plan may not make it worse.
+      const shoulderOut = (sol) => {
+        const h = sol.E.clone().sub(S).applyQuaternion(qChi)
+        h.x *= si.sign
+        h.normalize()
+        const f = sol.T.clone().sub(sol.E).applyQuaternion(qChi)
+        f.x *= si.sign
+        f.normalize()
+        const [lo, hi] = interpRange(SHOULDER_FORBIDDEN, Math.atan2(h.z, h.x) / D)
+        const e = Math.acos(clamp(-h.y, -1, 1)) / D
+        let out = e > lo - 2 && e < hi + 2 ? Math.min(e - lo + 2, hi + 2 - e) : 0
+        const g = f.clone().addScaledVector(h, -f.dot(h))
+        if (g.length() > 0.2 && 180 - sol.interior >= 25) {
+          g.normalize()
+          const N = Z.clone().applyQuaternion(new Q4().setFromUnitVectors(X, h))
+          const [rlo, rhi] = armRotRange([h.x, h.y, h.z])
+          const r = unwrapInto(-Math.atan2(h.dot(N.clone().cross(g)), N.dot(g)) / D, rlo, rhi)
+          out += r < rlo + 2 ? rlo + 2 - r : r > rhi - 2 ? r - rhi + 2 : 0
         }
-        let lo = Math.max(-R, best - 2.5)
-        let hi = Math.min(R, best + 2.5)
-        const g = (Math.sqrt(5) - 1) / 2
-        for (let it = 0; it < 14; it++) {
-          const m1 = hi - g * (hi - lo)
-          const m2 = lo + g * (hi - lo)
-          if (cost(m1) <= cost(m2)) hi = m2
-          else lo = m1
-        }
-        const refined = (lo + hi) / 2
-        if (cost(refined) < bestC) best = refined
+        return out
       }
-      return at(best)
+      const out0 = shoulderOut(sol0)
+      const missCost = (m) => (miss0 > 0.01 ? 10 * Math.max(0, m - miss0) : (Math.max(0, m - 0.002) / 0.005) ** 2)
+      const memo = new Map()
+      const cost = (roll, swivel) => {
+        const key = roll.toFixed(4) + ',' + swivel.toFixed(4)
+        if (memo.has(key)) return memo.get(key)
+        const { q, T } = at(canRoll ? roll : 0)
+        // solR: the roll alone, at the declared swivel; sol: with the swivel tried.
+        const solR = this._twoBone(S, T, si.a, si.b, swivelPole(s, pole, S, T, swivel0))
+        const sol = swivel !== swivel0 ? this._twoBone(S, T, si.a, si.b, swivelPole(s, pole, S, T, swivel)) : solR
+        const w = wristOf(q, sol)
+        let c
+        if (Math.abs(w.tw) > Math.max(100, tw0) + 1e-6) c = Infinity
+        else if (sol.miss > Math.max(miss0, 0.003) + 1e-4) c = Infinity
+        // Inside the shoulder's line the elbow may not move further in than declared: it would go through the trunk.
+        else if (swivel !== swivel0 && lateral(sol.E) < Math.min(lateral(solR.E), latS) - 0.002) c = Infinity
+        // Nor down into the floor.
+        else if (swivel !== swivel0 && sol.E.y < Math.min(solR.E.y, 0.07)) c = Infinity
+        else if (shoulderOut(sol) > out0 + 1e-6) c = Infinity
+        else {
+          const fwR = solR.T.clone().sub(solR.E).normalize()
+          c =
+            part(w.flex, band.flex, lim.flex, band.ext, lim.ext) +
+            part(w.dev, band.ulnar, lim.ulnar, band.radial, lim.radial) +
+            part(w.tw, 85, 110, 85, 110) +
+            missCost(sol.miss) +
+            (Math.max(0, 32 - sol.interior) / 6) ** 2 +
+            (Math.max(0, Math.min(40, interior0) - sol.interior) / 12) ** 2 +
+            // The roll swings the forearm (the wrist moves around the bar): as little as the wrist allows.
+            (Math.max(0, Math.acos(clamp(fwR.dot(w0.fw), -1, 1)) / D - 5) / 15) ** 2 +
+            // The look the spec asked for: a small pull back to the declared roll and pole.
+            rollStiff * ((roll - roll0) / R) ** 2 +
+            0.2 * ((swivel - swivel0) / SWIVEL) ** 2
+        }
+        memo.set(key, c)
+        return c
+      }
+      // Pattern search: downhill from the declared pose (or the first pass's answer) to the nearest minimum, in 2.5 degree
+      // steps, then finer. Not a global search: the nearest minimum moves smoothly with the pose, the global one can jump.
+      let r = seed && seed.roll !== undefined && freeRoll ? seed.roll : roll0
+      let w = seed && freeSwivel ? seed.swivel || 0 : swivel0
+      let c = cost(r, w)
+      if (c === Infinity) {
+        r = roll0
+        w = swivel0
+        c = cost(r, w)
+      }
+      const dirs = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]]
+      for (const step of [2.5, 1.25, 0.6, 0.3]) {
+        for (let it = 0; it < 60; it++) {
+          let br = r, bw = w, bc = c
+          for (const [dr, dw] of dirs) {
+            if ((dr && !freeRoll) || (dw && !freeSwivel)) continue
+            const nr = r + dr * step
+            const nw = w + dw * step
+            if (Math.abs(nr) > R + 1e-9 || Math.abs(nw) > SWIVEL + 1e-9) continue
+            const nc = cost(nr, nw)
+            if (nc < bc - 1e-9) {
+              br = nr
+              bw = nw
+              bc = nc
+            }
+          }
+          if (br === r && bw === w) break
+          r = br
+          w = bw
+          c = bc
+        }
+      }
+      return plan(r, w, true)
     }
     const plans = {}
 
@@ -514,9 +621,11 @@ export class Body {
       const spec = armSpecs[s]
       const si = this.side[s]
       const S0 = P[by[`upperarm01.${s}`].i]
-      plans[s] = rollPlan(s, spec, S0)
+      plans[s] = armPlan(s, spec, S0)
       const qh = plans[s] ? plans[s].q : handQ(s, spec)
-      const { T, pole } = armTarget(s, spec, S0, qh, plans[s])
+      // The girdle follows the declared elbow: the swivel moves the elbow, not the shoulder (raised, it would meet the head).
+      const p1 = plans[s] ? { ...plans[s], swivel: plans[s].swivel0 } : null
+      const { T, pole } = armTarget(s, spec, S0, qh, p1)
       const trial = this._twoBone(S0, T, si.a, si.b, pole)
       const h = trial.E.clone().sub(S0).normalize().applyQuaternion(qChest().clone().invert())
       // Lift: 0 is the arm hanging, 180 straight up. The girdle starts moving at about 70 and rises 24 degrees at the top.
@@ -568,12 +677,15 @@ export class Body {
     for (const s of ['L', 'R']) {
       const spec = armSpecs[s]
       const si = this.side[s]
-      const qh = plans[s] ? plans[s].q : handQ(s, spec)
       const S = P[by[`upperarm01.${s}`].i].clone()
+      // The shoulder girdle has moved the shoulder: refine the plan from there, starting at the first pass's answer.
+      if (plans[s] && plans[s].searched) plans[s] = armPlan(s, spec, S, plans[s])
+      const qh = plans[s] ? plans[s].q : handQ(s, spec)
       const { T, pole } = armTarget(s, spec, S, qh, plans[s])
       const solved = this._twoBone(S, T, si.a, si.b, pole)
       report.reach[`arm${s}`] = +solved.miss.toFixed(3)
-      if (plans[s]) report.angles[`handRoll${s}`] = +plans[s].roll.toFixed(1)
+      if (plans[s] && plans[s].roll !== undefined) report.angles[`handRoll${s}`] = +plans[s].roll.toFixed(1)
+      if (plans[s] && plans[s].reportSwivel) report.angles[`elbowSwivel${s}`] = +plans[s].swivel.toFixed(1)
       const qParent = Q[by[`shoulder01.${s}`].i]
       const up = this._limbQ(solved, si.up, si.lo, si.armHinge, qParent)
       set(`upperarm01.${s}`, up.q01)
@@ -725,15 +837,24 @@ export class Body {
    */
   resolveFrame(frame) {
     const out = JSON.parse(JSON.stringify(frame))
+    if (out.armL) out.armL = upgradeHand(out.armL)
+    if (out.armR) out.armR = upgradeHand(out.armR)
     // Auto-roll is chosen on the key frames and written down as rollFrom, which the in-betweens blend like any other number:
     // no flip from one in-between to the next.
+    // The elbow's swivel the same way, as swivelFrom.
     const autoArms = ['L', 'R'].filter((s) => {
       const a = out[`arm${s}`]
-      return a && a.pos && !a.fk && a.autoRoll !== false && typeof a.roll !== 'number'
+      return a && a.pos && !a.fk && ((a.autoRoll !== false && typeof a.roll !== 'number') || (a.autoPole !== false && typeof a.swivel !== 'number'))
     })
     if (autoArms.length) {
       const { report } = this.solve(frame)
-      for (const s of autoArms) if (report.angles[`handRoll${s}`] !== undefined) out[`arm${s}`].rollFrom = report.angles[`handRoll${s}`]
+      for (const s of autoArms) {
+        const a = out[`arm${s}`]
+        if (a.autoRoll !== false && typeof a.roll !== 'number' && report.angles[`handRoll${s}`] !== undefined) a.rollFrom = report.angles[`handRoll${s}`]
+        // The swivel as an angle about each frame's own shoulder-to-wrist axis. (Blending the pole it produced instead was
+        // tried: it gave more wrist errors and more twitches in the in-betweens.)
+        if (a.autoPole !== false && typeof a.swivel !== 'number' && report.angles[`elbowSwivel${s}`] !== undefined) a.swivelFrom = report.angles[`elbowSwivel${s}`]
+      }
     }
     for (const s of ['L', 'R']) {
       const si = this.side[s]
@@ -995,3 +1116,74 @@ export function mixFrames(a, b, t) {
   }
   return t < 0.5 ? a : b
 }
+
+// ------------------------------------------------------------------------------------------------- the shoulder's range
+// Shared with qa-lib.mjs (which documents them): rig.js keeps its automatic elbow swivel inside them.
+export const SHOULDER_FORBIDDEN = [
+  // plane, lo, hi
+  [-180, 62, 140],
+  [-135, 70, 158],
+  [-90, 88, 165],
+  [-60, 112, 160],
+  [-35, 150, 165],
+  [0, 400, 400],
+  [90, 400, 400],
+  [125, 400, 400],
+  [150, 112, 135],
+  [180, 62, 140],
+]
+export const SHOULDER_ROT = [
+  [[0, -1, 0], -140, 110], // hanging. 0 is forearm forward, -90 across the belly, past that behind the back; 90 pointing out.
+  [[1, 0, 0], -110, 140], // out to the side. 90 forearm up, -90 forearm down.
+  [[0, 0, 1], -120, 160], // forward. 0 forearm across the chest, 90 forearm up, -90 forearm down.
+  [[0, 1, 0], 25, 250], // overhead. 90 forearm over the head, 180 behind it.
+  [[0, -0.6, -0.8], -150, 60], // behind the trunk, as at the top of a row. -90 points the forearm down.
+  [[0.7, 0.7, 0], -40, 190],
+  [[0, 0.7, 0.7], -60, 215],
+]
+export const interpRange = (table, x) => {
+  // table: rows [x, a, b], x ascending.
+  if (x <= table[0][0]) return [table[0][1], table[0][2]]
+  for (let i = 0; i + 1 < table.length; i++) {
+    const r = table[i]
+    const s = table[i + 1]
+    if (x <= s[0]) {
+      const t = (x - r[0]) / (s[0] - r[0])
+      return [r[1] + (s[1] - r[1]) * t, r[2] + (s[2] - r[2]) * t]
+    }
+  }
+  const l = table[table.length - 1]
+  return [l[1], l[2]]
+}
+
+/** The range of the upper arm's rotation (degrees) for a direction in the chest's frame (x mirrored to the left side). */
+export function armRotRange(dir) {
+  let lo = 0
+  let hi = 0
+  let total = 0
+  for (const [d, a, b] of SHOULDER_ROT) {
+    const l = Math.hypot(d[0], d[1], d[2])
+    const c = (d[0] * dir[0] + d[1] * dir[1] + d[2] * dir[2]) / l
+    // Close anchors dominate.
+    const w = Math.pow(Math.max(0, (c + 1) / 2), 12)
+    lo += a * w
+    hi += b * w
+    total += w
+  }
+  return [lo / (total || 1), hi / (total || 1)]
+}
+
+/** An angle may be read 360 degrees around: take the reading that lies in the range, or nearest to it. */
+export function unwrapInto(r, lo, hi) {
+  let best = r
+  let bestOut = Infinity
+  for (const c of [r - 360, r, r + 360]) {
+    const out = c < lo ? lo - c : c > hi ? c - hi : 0
+    if (out < bestOut) {
+      bestOut = out
+      best = c
+    }
+  }
+  return best
+}
+

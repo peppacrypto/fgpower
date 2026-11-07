@@ -48,12 +48,12 @@ one('one-arm-long-bar-row',55,0.78,-0.22,0,-0.1);
 {const R=2.1,P=[0,0.11,2.1];
  const hp=d=>{const u=nz(d);return {c:[P[0]+R*u[0],P[1]+R*u[1],P[2]+R*u[2]],u};};
  const frame=(d,yaw,twist)=>{const {c,u}=hp(d);
-  const mk=(s,off)=>{const pos=[c[0]+off*u[0],c[1]+off*u[1],c[2]+off*u[2]];const ad=[pos[0]-s*0.19,pos[1]-1.3,pos[2]-0.05];const g=gripFrame(u,ad,s);
+  const mk=(s,off)=>{const pos=[c[0]+off*u[0],c[1]+off*u[1],c[2]+off*u[2]];const ad=[pos[0]-s*0.5,pos[1]-1.3,pos[2]-0.05];const g=gripFrame(u,ad,s);
    return {pos,contact:true,...g,curl:0.85,pole:[s*0.9,-0.5,-0.3]};};
   return {root:{pos:[0,0.8,0],yaw,pitch:6},spine:{flex:2,twist},neck:{flex:-4},armL:mk(1,0.07),armR:mk(-1,-0.07),
    legL:{pos:[0.3,0,0],anchor:'sole',yaw:20,pitch:0,pole:[0.5,0,1]},legR:{pos:[-0.3,0,0],anchor:'sole',yaw:-20,pitch:0,pole:[-0.5,0,1]}};};
  save('landmine-180s',{camera:{az:20,el:10},muscles:['abdominals','obliques'],props:[{type:'landmine',pos:[P[0],0,P[2]],yaw:0,hands:true,plates:[5]}],
-  frames:{start:frame([-0.26,1.15,-1.75],-14,-22),mid:frame([-0.15,1.2,-1.72],-9,-14),mid2:frame([0,1.3,-1.65],0,0),mid3:frame([0.15,1.2,-1.72],9,14),end:frame([0.26,1.15,-1.75],14,22)}});}
+  frames:Object.fromEntries([-1,-.75,-.5,-.25,0,.25,.5,.75,1].map((t,i)=>[i==0?'start':i==8?'end':'k'+i,frame([0.26*t,1.4-0.15*t*t,-1.65-0.1*t*t],(t<-0.9?13*t:14*t),(t<-0.9?15*t:22*t))]))});}
 // ---- bench mid rows
 {const bar=(y,z)=>({pos:[0,y,z]});
  const fr=(y,z,p,sf)=>{const a=s=>({pos:[s*0.25,y,z],contact:true,fingers:[0,-1,0],palm:[0,0,-1],curl:0.85,pole:[s*0.6,0.2,-0.6]});

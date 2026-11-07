@@ -26,30 +26,30 @@ const mk = (slug, seated, muscles, frames, cam={az:40,el:6}, extra={}) => {
 const D = ['anterior-deltoid','lateral-deltoid','triceps'];
 // standing: shoulders y1.38 z0
 mk('standing-military-press', false, D, {
-  start:{x:0.31,y:1.46,z:0.11,px:0.9,py:-0.35,pz:-0.3},
-  mid:{x:0.31,y:1.66,z:0.2,px:0.7,py:-0.3,pz:-0.5},
-  end:{x:0.31,y:1.86,z:0.03,px:0.3,py:0.3,pz:0.3} });
+  start:{x:0.36,y:1.46,z:0.11,px:0.9,py:-0.35,pz:-0.3},
+  mid:{x:0.36,y:1.66,z:0.2,px:0.7,py:-0.3,pz:-0.5},
+  end:{x:0.36,y:1.86,z:0.03,px:0.3,py:0.3,pz:0.3} });
 mk('seated-barbell-military-press', true, D, {
-  start:{x:0.34,y:1.5575,z:0.1505,pz:-0.15},
-  end:{x:0.34,y:1.0875,z:0.2905,pz:-0.35} });
+  start:{x:0.36,y:1.5575,z:0.1505,pz:-0.15},
+  end:{x:0.36,y:1.0875,z:0.2905,pz:-0.35} });
 mk('barbell-shoulder-press', true, D, {
-  start:{x:0.34,y:1.5575,z:0.1505,pz:-0.15},
-  end:{x:0.34,y:1.0875,z:0.2905,pz:-0.35} }, {az:44,el:8});
+  start:{x:0.36,y:1.5575,z:0.1505,pz:-0.15},
+  end:{x:0.36,y:1.0875,z:0.2905,pz:-0.35} }, {az:44,el:8});
 mk('bradford-rocky-presses', true, D, {
-  start:{x:0.30,y:1.0875,z:0.2905,pz:-0.35},
-  mid:{x:0.30,y:1.5,z:0.2,pz:-0.2},
-  mid2:{x:0.30,y:1.54,z:0.08,py:0.2,pz:0.2},
-  mid3:{x:0.30,y:1.38,z:-0.05,py:-0.3,pz:0.3},
-  end:{x:0.30,y:1.15,z:0.0,py:-0.6,pz:0.1} }, {az:60,el:8});
+  start:{x:0.36,y:1.0875,z:0.2905,pz:-0.35},
+  mid:{x:0.36,y:1.5,z:0.2,pz:-0.2},
+  mid2:{x:0.36,y:1.54,z:0.08,py:0.2,pz:0.2},
+  mid3:{x:0.36,y:1.38,z:-0.05,py:-0.3,pz:0.3},
+  end:{x:0.36,y:1.15,z:0.0,py:-0.6,pz:0.1} }, {az:60,el:8});
 mk('standing-barbell-press-behind-neck', false, D, {
   start:{x:0.40,y:1.52,z:-0.13,px:0.3,py:-0.8,pz:-0.5,f:[0.55,-0.83],pm:[0,0.83,0.55],flex:3},
   end:{x:0.40,y:1.84,z:-0.05,px:0.5,py:0.2,pz:0.2,flex:3} }, {az:55,el:6});
 mk('standing-bradford-press', false, D, {
-  start:{x:0.30,y:1.46,z:0.11,pz:-0.3},
-  mid:{x:0.30,y:1.68,z:0.2,pz:-0.3},
-  mid2:{x:0.30,y:1.86,z:0.03,py:0.2,pz:0.3},
-  mid3:{x:0.30,y:1.66,z:-0.12,py:-0.2,pz:0.3},
-  end:{x:0.30,y:1.56,z:-0.11,px:0.3,py:-0.8,pz:-0.5,f:[0.55,-0.83],pm:[0,0.83,0.55]} }, {az:60,el:6});
+  start:{x:0.36,y:1.46,z:0.11,pz:-0.3},
+  mid:{x:0.36,y:1.68,z:0.2,pz:-0.3},
+  mid2:{x:0.36,y:1.86,z:0.03,py:0.2,pz:0.3},
+  mid3:{x:0.36,y:1.66,z:-0.12,py:-0.2,pz:0.3},
+  end:{x:0.36,y:1.56,z:-0.11,px:0.3,py:-0.8,pz:-0.5,f:[0.55,-0.83],pm:[0,0.83,0.55]} }, {az:60,el:6});
 // straight-arm raise: fk arms
 const fkArm = (s,flex,pron=0) => ({fk:{flex,abd:8,rot:0,elbow:8},rel:'chest',hand:'grip',grip:0.014});
 {

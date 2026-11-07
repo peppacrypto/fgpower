@@ -18,9 +18,9 @@ save('pushups',{az:52,el:5},['chest','triceps'],{start:frame(UP),end:frame(DN)})
 save('tempo-push-up',{az:52,el:5},['chest','triceps'],{start:frame(UP),end:frame(DN)},{timing:{there:4,holdEnd:2,back:1}});
 save('push-up-wide',{az:45,el:6},['chest'],{start:frame(UP,{hx:0.27,hz:0.5}),end:frame(DN,{hx:0.27,hz:0.5})});
 save('pushups-close-and-wide-hand-positions',{az:45,el:6},['chest'],{start:frame(UP,{hx:0.27,hz:0.5}),end:frame(DN,{hx:0.27,hz:0.5})});
-save('push-ups-close-triceps-position',{az:60,el:6},['triceps','chest'],{start:frame(UP,{hx:0.12,hz:0.46}),end:frame(DN,{hx:0.12,hz:0.46,pole:false})});
+save('push-ups-close-triceps-position',{az:60,el:6},['triceps','chest'],{start:frame(UP,{hx:0.15,hz:0.46}),end:frame(DN,{hx:0.15,hz:0.46,pole:false})});
 // close: elbows tucked
-out['push-ups-close-triceps-position'].frames.end.armL.pole=[0.55,0.5,-0.9];out['push-ups-close-triceps-position'].frames.end.armR.pole=[-0.55,0.5,-0.9];
+out['push-ups-close-triceps-position'].frames.end.armL.pole=[0.75,0.5,-0.7];out['push-ups-close-triceps-position'].frames.end.armR.pole=[-0.75,0.5,-0.7];
 // knee: reuse existing numbers, hands flat
 const kf=f=>{const r=JSON.parse(JSON.stringify(f));r.root.pitch+=0.8;for(const a of ['armL','armR'])r[a].pos[2]+=0.0;for(const a of ['armL','armR']){r[a].hand='flat';r[a].spread=1;delete r[a].curl;}for(const l of ['legL','legR']){r[l].pos[1]+=0.04;r[l].pitch=160;}return r;};
 save('knee-push-up',{az:55,el:6},['chest','triceps'],{start:kf(knee.frames.start),end:kf(knee.frames.end)});
@@ -29,7 +29,7 @@ save('plyo-push-up',{az:52,el:5},['chest','triceps'],{start:frame(DN),end:frame(
 // clock: bottom, airborne mid, bottom shifted 0.38 and turned 30
 save('clock-push-up',{az:60,el:8},['chest','triceps'],{
  start:frame(DN),
- mid:frame(UP,{dx:0.19,yaw:15,dy:0.3,hl:0.3}),
+ mid:frame(UP,{dx:0.19,yaw:15,dy:0.3,hl:0.3,hx:0.3}),
  end:frame(DN,{dx:0.34,yaw:7})},{floats:true});
 for(const[k,v]of Object.entries(out))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
 console.log(Object.keys(out).join(' '));

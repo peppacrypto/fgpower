@@ -19,14 +19,16 @@ export default function(o){
  // one-arm pulldown: towel and hands further in front of the face
  { const fr=o['towel-one-arm-pulldown'].frames;
    for(const k of ['end']){ for(const a of ['armL','armR']) fr[k][a].pos[2]+=0.1; }
+   for(const a of ['armL','armR']) {fr.start[a].pos[2]+=0.08; fr.start[a].pos[1]-=0.03;} fr.start.armL.pos[0]+=0.04; fr.start.armR.pos[0]+=0.04;
    fr.end.armR.pole=[-1,0.1,-0.2]; fr.end.armR.pos[1]=1.70; fr.end.armR.pos[0]-=0.06; fr.end.neck.flex=0;
    for(const f of Object.values(fr)) f.props=[{type:'towel-strip',hands:true,length:0.4}];
  }
  // overhead triceps: hand behind the neck, not inside the head; head up
  { const fr=o['towel-overhead-triceps'].frames;
    for(const f of Object.values(fr)){ f.neck.flex=-4; }
-   fr.mid.armR.fingers=[0.25,-0.6,-0.1]; fr.end.armR.fingers=[0.25,-0.3,-0.1];
+   fr.mid.armR.fingers=[0.25,-0.6,-0.1]; fr.end.armR.fingers=[0.25,-0.3,-0.1]; fr.end.armR.pos[0]-=0.05; fr.end.armR.pos[2]-=0.03;
    fr.start.armL.pos=[0.06,1.56,-0.12];
+   fr.start.armR.pos[2]-=0.04; fr.start.armR.pos[0]-=0.03;
    for(const f of Object.values(fr)) f.props=[{type:'towel-strip',hands:true,length:0.8}];
  }
  for(const [k,deg] of Object.entries(SPIN)){const [s,f,a]=k.split(':');spin(o[s].frames[f][a],deg);}

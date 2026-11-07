@@ -296,13 +296,17 @@ window.renderSpec = async function renderSpec(spec, opts = {}) {
   }
   // Close-ups for review: the hands and feet are small in the full frame, and they are where a figure goes wrong.
   const closeups = {}
-  if (opts.closeups) {
+  if (opts.closeups || opts.closeupsAt) {
     const SPOTS = { handL: ['wrist.L', 0.34], handR: ['wrist.R', 0.34], footL: ['foot.L', 0.42], footR: ['foot.R', 0.42], head: ['head', 0.5] }
     const near = new THREE.Vector3()
-    for (const n of names) {
-      const r = body.solve(frameSpecs[n])
+    // The key frames, then the moments of the loop asked for (closeupsAt: [0.25, 0.5]): the in-betweens are where a hand
+    // can twist in a way no key frame shows.
+    const items = names.map((n) => [n, frameSpecs[n]])
+    for (const t of opts.closeupsAt || []) items.push([`t${Math.round(t * 100)}`, at(t)])
+    for (const [n, fr] of items) {
+      const r = body.solve(fr)
       setBodyPose(r.positions)
-      fillProps(framePropsGroup, movingProps(spec, frameSpecs[n]), r.report)
+      fillProps(framePropsGroup, movingProps(spec, fr), r.report)
       for (const [spot, [joint, size]] of Object.entries(SPOTS)) {
         const j = r.report.joints[joint]
         near.set(j[0], j[1], j[2])

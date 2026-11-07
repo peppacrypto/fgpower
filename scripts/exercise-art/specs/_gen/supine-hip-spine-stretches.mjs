@@ -40,17 +40,19 @@ const wallz=0.12;
 save('legs-up-the-wall',{az:115,el:14},['hamstrings'],{
  start:{...root({pos:[0,0.1,-0.04]}),neck:{flex:0},legL:leg(1,[0.11,0.94,0.06],[0,0,-1],{sa:90}),legR:leg(-1,[0.11,0.94,0.06],[0,0,-1],{sa:90}),
   armL:up(1,[0.3,0.055,-0.1]),armR:up(-1,[0.3,0.055,-0.1])}},{},[{type:'wall',pos:[0,0,wallz+0.1],width:2}]);
-const HA=JSON.parse(process.env.HA||'[0.3,0.5,-0.3]'),HPO=JSON.parse(process.env.HPO||'[1,0.3,-0.6]'),HFP=+(process.env.HFP||0),HHO=+(process.env.HHO||0.06);
+const HA=JSON.parse(process.env.HA||'[0.3,0.5,-0.3]'),HPO=JSON.parse(process.env.HPO||'[1,0.3,-0.6]'),HFP=+(process.env.HFP||0),HHO=+(process.env.HHO||0.078);
 const HFL=+(process.env.HFL||110),HAB=+(process.env.HAB||45),HRO=+(process.env.HRO||0),HKN=+(process.env.HKN||110);
 const HPI=+(process.env.HPI||-90),HV=+(process.env.HV||2),HYY=+(process.env.HYY||0.1);
 const ank=(s)=>{const f=(HFL+(-90-HPI))*D,a=HAB*D,g=(HFL+(-90-HPI)-HKN)*D;
  const V=(ff)=>HV==2?[s*Math.sin(a),Math.cos(a)*Math.sin(ff),Math.cos(a)*Math.cos(ff)]:[s*Math.sin(a)*Math.cos(ff),Math.sin(ff),Math.cos(ff)*Math.cos(a)];
  const t=V(f),h=V(g);return [s*0.11+0.432*t[0]+0.428*h[0],HYY+0.432*t[1]+0.428*h[1],0.432*t[2]+0.428*h[2]];};
-const hb=(roll)=>({root:{pos:[0,HYY,0],pitch:HPI,...(roll?{roll}:{})},neck:{flex:6},
- legL:FK(HFL,HAB,HRO,HKN,HFP),legR:FK(HFL,HAB,-HRO,HKN,HFP),
- armL:{pos:(q=>[q[0]+HHO,q[1],q[2]])(ank(1)),hand:'grip',grip:0.02,fingers:[0,0,1],palm:[-1,0,0],curl:0.8,pole:[0.6,-0.4,-0.2]},
- armR:{pos:(q=>[q[0]-HHO,q[1],q[2]])(ank(-1)),hand:'grip',grip:0.02,fingers:[0,0,1],palm:[1,0,0],curl:0.8,pole:[-0.6,-0.4,-0.2]}});
-save('happy-baby',{az:30,el:30},['adductors'],{start:hb(0),end:hb(6)});
+const AX=+(process.env.AX||0.422),AY=+(process.env.AY||0.511),AZ=+(process.env.AZ||0.139),SA=+(process.env.SA||70),KP=JSON.parse(process.env.KP||'[0.435,1.347,-0.595]');
+const APv=JSON.parse(process.env.APV||'[0.176,-1.055,-1.424]');const APO=(s)=>[s*APv[0],APv[1],APv[2]];const HFGv=JSON.parse(process.env.HFGV||'[1.049,0.575,0.55]');const HFG=(s)=>[s*HFGv[0],HFGv[1],HFGv[2]];
+const hb=(roll)=>({root:{pos:[0,HYY,+(process.env.RZ||0.096)],pitch:HPI,...(roll?{roll}:{})},neck:{flex:6},spine:{flex:+(process.env.SPF||22.515)},
+ legL:leg(1,[AX,AY,AZ],KP,{sa:SA}),legR:leg(-1,[AX,AY,AZ],KP,{sa:SA}),
+ armL:{pos:[AX+HHO,AY,AZ],hand:'grip',grip:0.02,fingers:HFG(1),palm:[-1,0,0],curl:0.8,pole:APO(1)},
+ armR:{pos:[-AX-HHO,AY,AZ],hand:'grip',grip:0.02,fingers:HFG(-1),palm:[1,0,0],curl:0.8,pole:APO(-1)}});
+save('happy-baby',{az:30,el:30},['adductors'],{start:hb(0),end:hb(+(process.env.HR||2.74))});
 const HX=+(process.env.HX||0.11),SD=+(process.env.SD||0.12),AL=+(process.env.AL||0.07);
 // leg bent at hip flex f and knee k (supine, pelvis frame); returns shin-axis hold point for the hand
 const shinPt=(s,f,k,abd=0)=>{const x=s*(HX+0.0);const kn=[x,0.1+0.432*Math.sin(f*D),0.432*Math.cos(f*D)];const a=(f-k)*D;
@@ -64,11 +66,10 @@ save('hug-knees-to-chest',{az:62,el:14},['spinal-erectors','glutes'],{
 save('one-knee-to-chest',{az:62,el:14},['glutes'],{
  start:{...root(),neck:{flex:4},legL:FK(HF,0,0,HK,0),legR:FK(0),armL:hug(1,HF,HK),armR:hug(-1,HF,HK)},
  end:{...root(),neck:{flex:6},legL:FK(HF2,0,0,HK,0),legR:FK(0),armL:hug(1,HF2,HK),armR:hug(-1,HF2,HK)}});
-save('ankle-on-the-knee',{az:50,el:20},['glutes'],{
- start:{...root(),neck:{flex:8},legR:leg(-1,[0.11,0.34,0.3],[0,1,-0.4]),legL:leg(1,[-0.08,0.52,-0.08],[1,0.2,0]),
-  armR:hold(-1,[0.11,0.45,-0.05],[1,0,0],[0,1,0.3]),armL:hold(1,[-0.1,0.4,0.1],[1,0,0],[0,1,0.3])},
- end:{...root(),neck:{flex:12},legR:leg(-1,[0.11,0.3,0.2],[0,1,-0.4]),legL:leg(1,[-0.08,0.5,-0.12],[1,0.2,0]),
-  armR:hold(-1,[0.11,0.42,-0.1],[1,0,0],[0,1,0.3]),armL:hold(1,[-0.1,0.38,0.05],[1,0,0],[0,1,0.3])}});
+const AOK=JSON.parse(process.env.AOK||'[-0.13,0.262,0.333,-0.124,1.284,-0.764,0.123,0.828,0.176,0.486,0.275,-0.529,0.149,0.468,-0.257,0.391,0.543,-0.351,0.514,-0.843,-0.053,0.51,-0.574,0.118,0.043,-0.002,-0.177,-0.058,-0.133,0.139]');
+const aok=(d)=>({...root(),neck:{flex:+(process.env.NF||2)+4*d},legR:leg(-1,[AOK[0],AOK[1]+AOK[24]*d,AOK[2]+AOK[25]*d],AOK.slice(3,6),{sa:AOK[28]||0,roll:AOK[29]||0}),legL:leg(1,[AOK[6],AOK[7]+AOK[24]*d,AOK[8]+AOK[25]*d],AOK.slice(9,12),{sa:AOK[26]||0,roll:AOK[27]||0}),
+  armR:hold(-1,[AOK[12],AOK[13]+AOK[24]*d,AOK[14]+AOK[25]*d],[1,0,0],[0,1,0.3],0.035,AOK.slice(18,21)),armL:hold(1,[AOK[15],AOK[16]+AOK[24]*d,AOK[17]+AOK[25]*d],[1,0,0],[0,1,0.3],0.035,AOK.slice(21,24))});
+save('ankle-on-the-knee',{az:50,el:20},['glutes'],{start:aok(0),end:aok(1)});
 const WA=+(process.env.WA||-30),WF=+(process.env.WF||85),WR=+(process.env.WR||-25);
 save('windmills',{az:30,el:40},['abductors'],{
  start:{...root(),neck:{flex:0},legL:FK(0),legR:FK(0),armL:T(1),armR:T(-1)},

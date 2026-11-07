@@ -5,7 +5,7 @@ const rad = d => d*Math.PI/180;
 // grip hand; s=+1 left. o: fingers/palm overrides
 const hand = (s, p, o={}) => ({ pos:[p[0]*s,p[1],p[2]], contact:true, hand:'grip', grip:o.grip??0.014,
   fingers:[(o.fx??0.05)*s, o.fy??1, o.fz??-0.05], palm:[0,o.py??0.05,o.pz??1],
-  pole:[(o.px??0.7)*s, o.pey??-0.5, o.pz2??-0.1], curl:0.82, ...(o.scap?{scap:o.scap}:{}) });
+  pole:[(o.px??0.7)*s, o.pey??-0.5, o.pz2??-0.1], curl:0.82, ...(o.scap?{scap:o.scap}:{}), ...(o.swivel!==undefined?{swivel:o.swivel}:{}), ...(o.roll!==undefined?{roll:o.roll}:{}) });
 const inclineBase = a => {
   const b = BODY['incline-bench']({angle:a}); const g = BODY['incline-bench']({angle:40});
   return { root:{pos:[0,b.root[1],b.root[2]],pitch:-(90-a)}, sh:b.shoulder };
@@ -63,16 +63,17 @@ W('wide-grip-decline-barbell-bench-press',{camera:{az:40,el:14},muscles:['chest'
   props:[{type:'decline-bench',angle:20,uprights:true},{type:'barbell',hands:true,plates:[20]}],
   frames:{start:dfr(0.46,dtop[0],dtop[1],{px:0.9,pey:-0.3,pz2:-0.1}),end:dfr(0.46,dbot[0],dbot[1],{px:0.9,pey:-0.3,pz2:0.1})}});
 // forehead arc (bar over the face)
-const fore=[dsh[1]+0.0, dsh[2]-0.33];
-const cg={px:0.15,pey:-0.7};
+const fore=[dsh[1]+0.04, dsh[2]-0.27];
+const cg={px:0.035,pey:-0.7,swivel:0};
 W('decline-close-grip-bench-to-skull-crusher',{camera:{az:70,el:8},muscles:['triceps'],floats:true,
   props:[{type:'decline-bench',angle:20,uprights:true},{type:'barbell',hands:true,plates:[20]}],
-  frames:{start:dfr(0.22,dtop[0],dtop[1],{...cg,pz2:-0.1}),
-          mid:dfr(0.22,0.70,-0.25,{...cg,pz2:0.2}),
-          mid2:dfr(0.22,dtop[0],dtop[1],{...cg,pz2:-0.1}),
-          end:dfr(0.22,fore[0],fore[1],{px:0.15,pey:0.1,pz2:-0.1,fy:0.3,fz:-0.95,py:0.95,pz:0.3})}});
+  frames:{start:dfr(0.22,dtop[0],dtop[1],{...cg,pz2:0.0}),
+          mid:dfr(0.22,0.70,-0.25,{...cg,pey:-0.75,pz2:0.0}),
+          mid2:dfr(0.22,dtop[0],dtop[1],{...cg,pz2:0.0}),
+          mid3:dfr(0.22,(dtop[0]+fore[0])/2+0.05,(dtop[1]+fore[1])/2-0.02,{swivel:0,px:0.15,pey:-0.3,pz2:-0.1,fy:0.9,fz:-0.45,py:0.45,pz:0.9}),
+          end:dfr(0.22,fore[0],fore[1],{swivel:0,px:0.15,pey:-0.2,pz2:-0.1,fy:0.7,fz:-0.7,py:0.7,pz:0.7})}});
 const ez=(y,z,pz2,pey)=>({x:0.1,y,z,o:{px:0.25,pey,pz2,fx:-0.55,fy:0.83,fz:-0.1,py:0.1}});
 { const f=(y,z,pey,x={})=>dfr(x.hx??0.1,y,z,{px:0.25,pey,pz2:-0.1,fx:-0.55,fy:0.83,fz:-0.1,py:0.1,...x});
   W('decline-ez-bar-triceps-extension',{camera:{az:70,el:8},muscles:['triceps'],floats:true,
     props:[{type:'decline-bench',angle:20,uprights:true},{type:'ez-bar',grip:'inner',hands:true,plates:[10]}],
-    frames:{start:f(dtop[0],dtop[1],-0.6),mid:f((dtop[0]+fore[0])/2+0.03,(dtop[1]+fore[1])/2+0.02,-0.2),end:f(fore[0]+0.02,fore[1]+0.03,0.1,{hx:0.22,fx:0.0,fy:0.45,fz:-0.89,py:0.89,pz:0.45})}}); }
+    frames:{start:f(dtop[0],dtop[1],-0.6),mid:f((dtop[0]+dsh[1])/2+0.04,(dtop[1]+dsh[2]-0.30)/2+0.03,-0.2,{px:0.12}),end:f(dsh[1]+0.02,dsh[2]-0.30,0.1,{"hx": 0.13, "fx": -0.55, "fy": -0.174, "fz": -0.985, "py": 0.985, "pz": -0.174, "px": 0.35, "pey": -0.3, "pz2": -0.3})}}); }

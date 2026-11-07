@@ -10,7 +10,7 @@ const fr=(y,p,n,k=58)=>({root:{pos:[0,y,-0.02],pitch:p},neck:{flex:n},...legs(k)
 save('parallel-bar-dip',{az:60,el:8},['triceps','chest'],bars,{start:fr(1.39,3,-2),end:fr(1.14,8,-6)});
 save('dips-triceps-version',{az:60,el:8},['triceps'],bars,{start:fr(1.39,0,-2),end:fr(1.17,2,-4)});
 save('dips-chest-version',{az:60,el:8},['chest'],bars,{start:fr(1.39,22,6),end:fr(1.12,32,14)});
-save('parallel-bar-support-hold',{az:60,el:8},['shoulders'],bars,{start:fr(1.39,0,-2,40),end:fr(1.40,0,-2,40)});
+save('parallel-bar-support-hold',{az:60,el:8},['shoulders'],bars,{start:fr(1.39,0,-2,40)});
 // rings
 const rg=(y,p,n)=>({root:{pos:[0,y,-0.02],pitch:p},neck:{flex:n},...legs(64,14),
  armL:{pos:[0.255,1.22,0.02],contact:true,fingers:[0.28,-0.82,0.5],palm:[-0.8,-0.5,-0.3],pole:[0.25,0,-1],curl:0.82},

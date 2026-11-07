@@ -69,7 +69,7 @@
     },
     "rel": "chest",
     "hand": "grip",
-    "pron": 0
+    "pron": 30
    },
    "armR": {
     "fk": {
@@ -80,7 +80,7 @@
     },
     "rel": "chest",
     "hand": "grip",
-    "pron": 0
+    "pron": 30
    }
   },
   "mid": {
@@ -131,7 +131,7 @@
     },
     "rel": "chest",
     "hand": "grip",
-    "pron": 0
+    "pron": 30
    },
    "armR": {
     "fk": {
@@ -142,7 +142,7 @@
     },
     "rel": "chest",
     "hand": "grip",
-    "pron": 0
+    "pron": 30
    }
   },
   "end": {
@@ -193,7 +193,7 @@
     },
     "rel": "chest",
     "hand": "grip",
-    "pron": 0
+    "pron": 30
    },
    "armR": {
     "fk": {
@@ -204,7 +204,7 @@
     },
     "rel": "chest",
     "hand": "grip",
-    "pron": 0
+    "pron": 30
    }
   }
  }

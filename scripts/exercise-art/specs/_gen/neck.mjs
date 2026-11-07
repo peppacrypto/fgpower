@@ -22,7 +22,7 @@ W('side-neck-stretch', { camera:{az:15,el:6}, muscles:M, frames:{ start:sn(0,0),
 
 // isometric front and back
 const ifr = { ...stand, neck:{flex:0},
-  armL:H(1,[0.04,0.075,0.108],[-1,0.1,0.1],[0,0,-1],[0.8,-0.4,0.5],0.2), armR:H(-1,[0.04,0.075,0.108],[-1,0.1,0.1],[0,0,-1],[0.8,-0.4,0.5],0.2) };
+  armL:H(1,[0.06,0.088,0.108],[-0.6,0.8,0.1],[0,0,-1],[0.8,-0.4,0.5],0.2), armR:H(-1,[0.06,0.062,0.108],[-0.6,0.8,0.1],[0,0,-1],[0.8,-0.4,0.5],0.2) };
 const ibk = { ...stand, neck:{flex:0},
   armL:H(1,[0.04,0.07,-0.115],[-0.3,-0.95,0.1],[0,0,1],[0.5,-0.1,1],0.6), armR:H(-1,[0.04,0.07,-0.17],[-0.2,-0.97,0.1],[0,0,1],[0.5,-0.1,1],0.6) };
 const imid = { ...stand, neck:{flex:0},
@@ -47,7 +47,7 @@ W('lying-face-up-plate-neck-resistance', { camera:{az:70,el:8}, muscles:M, float
   frames:{ start:up(20), end:up(-40) } });
 const dn = nk => ({ root:{pos:[0,0.64,0.27],pitch:90}, neck:{flex:nk},
   armL:H(1,[0.103,0.07,-0.124],[-0.1,0.1,-1],[-1,0,0],[1,0.5,0],0.75), armR:H(-1,[0.103,0.07,-0.124],[-0.1,0.1,-1],[-1,0,0],[1,0.5,0],0.75),
-  legL:{pos:[0.1,0.72,-0.48],anchor:'ball',pitch:90,pole:[0,-1,0]}, legR:{pos:[-0.1,0.72,-0.48],anchor:'ball',pitch:90,pole:[0,-1,0]} });
+  legL:{pos:[0.1,0.72,-0.48],anchor:'ball',pitch:100,pole:[0,-1,0]}, legR:{pos:[-0.1,0.72,-0.48],anchor:'ball',pitch:100,pole:[0,-1,0]} });
 W('lying-face-down-plate-neck-resistance', { camera:{az:70,el:8}, muscles:M, floats:true,
   props:[{...bench,pos:[0,0,0]},{type:'weight-plate',follow:'head',kg:5,at:[0,0.07,-0.124],normal:[0,0,-1]}],
   frames:{ start:dn(-30), end:dn(45) } });

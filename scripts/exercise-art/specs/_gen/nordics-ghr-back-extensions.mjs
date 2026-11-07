@@ -35,6 +35,7 @@ nord('natural-glute-ham-raise', {az:78,el:12}, 72, cross, cross, cross);
 { const g = JSON.parse(fs.readFileSync(new URL('../_gallery/reverse-hyper.json', import.meta.url))); delete g.slug;
   for (const f of Object.values(g.frames)) { f.root.pos[1] += +(process.env.PY||0.03); f.root.pos[2] += +(process.env.PZ||-0.03); }
   g.frames.start.legL.fk.flex = g.frames.start.legR.fk.flex = +(process.env.PF||14); for (const f of [g.frames.end]) { f.legL.fk.flex = f.legR.fk.flex = -22; }
+  for (const f of Object.values(g.frames)) { f.armL.pos[0] = 0.27; f.armR.pos[0] = -0.27; f.armL.pole = [1,0.1,0]; f.armR.pole = [-1,0.1,0]; }
   W('reverse-hyperextension', g); }
 
 // ---- hyperextension bench 45 deg: hips on pad, ankles under rollers

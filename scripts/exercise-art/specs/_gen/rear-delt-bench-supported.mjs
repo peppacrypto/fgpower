@@ -14,10 +14,10 @@ const db = kg => [{type:'dumbbell',hand:'L',kg},{type:'dumbbell',hand:'R',kg}];
 const rel = (sh, s, dx, dy, dz) => [sh[0]+dx*s, sh[1]+dy, sh[2]+dz];
 const nrm=v=>{const l=Math.hypot(...v);return v.map(x=>x/l)};
 const lerp=(a,b,k)=>nrm(a.map((x,i)=>x+(b[i]-x)*k));
-const arcP=(sh,k)=>{const th=rad(15+72*k);return [sh[0]+0.47*S(th),sh[1]-0.47*C(th),sh[2]+0.02]};
-const POLE=k=>[0.3*(1-k),-0.2-0.1*k,-1];
+const RR=+(process.env.RR||0.55);const arcP=(sh,k)=>{const th=rad(15+72*k);return [sh[0]+RR*S(th),sh[1]-RR*C(th),sh[2]+0.02]};
+const PV=JSON.parse(process.env.PV||"[0,-0.4,-1,0,-0.4,-1]");const POLE=k=>[PV[0]*(1-k)+PV[3]*k,PV[1]*(1-k)+PV[4]*k,PV[2]*(1-k)+PV[5]*k];
 const ori=(keys,k)=>{const n=keys.length-1,x=Math.min(k*n,n-1e-9),i=Math.floor(x);return [lerp(keys[i][0],keys[i+1][0],x-i),lerp(keys[i][1],keys[i+1][1],x-i)]};
-const armK=(sh,s,k,o0,o1,mid)=>{const o=ori(mid?[o0,mid,o1]:[o0,o1],mid?k:Math.min(1,k/0.7));return arm(arcP(sh,k),s,o[0],o[1],POLE(k))};
+const armK=(sh,s,k,o0,o1,mid)=>{const o=ori(mid?[o0,mid,o1]:[o0,o1],mid?k:Math.min(1,k/0.5));return arm(arcP(sh,k),s,o[0],o[1],POLE(k))};
 const incl = a => ({ type:'adjustable-bench', angle:a, yaw:180 });
 
 
@@ -29,7 +29,7 @@ function flye(slug, a, muscles, {o0=HANG, o1=DOWN, one=false, m}={}) {
   W(slug, { camera:{az:one?60:140,el:12}, muscles, ...(one?{muscleSide:'L'}:{}), props:[incl(a),...(one?[{type:'dumbbell',hand:'L',kg:5}]:db(5))], frames:frames3(mk) });
 }
 flye('reverse-flyes',30,['posterior-deltoid','rhomboids']);
-flye('reverse-flyes-with-external-rotation',30,['posterior-deltoid','rhomboids'],{o0:[[0,-1,0],[0,0,-1]],o1:[[1,0,0],[0,0.5,0.85]],m:[[0.7,-0.7,0],[-0.7,-0.7,0]]});
+flye('reverse-flyes-with-external-rotation',30,['posterior-deltoid','rhomboids'],{o0:[[0,-1,0],[0,0,-1]],o1:[[1,0,0],[0,0.5,0.85]],m:[[0.85,-0.5,0],[-0.5,-0.85,0]]});
 flye('dumbbell-lying-rear-lateral-raise',15,['posterior-deltoid','rhomboids']);
 flye('dumbbell-lying-one-arm-rear-lateral-raise',15,['posterior-deltoid'],{one:true});
 const flatRoot = {pos:[0,0.63,0.12],pitch:90};

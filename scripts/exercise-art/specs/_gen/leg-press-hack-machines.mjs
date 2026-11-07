@@ -1,3 +1,4 @@
+const [DX,PX,PY,PZ,DY,A]=(process.env.P||"0,0.8,-0.2,0.4,0.04,25").split(",").map(Number);
 import fs from 'fs';
 const G=n=>JSON.parse(fs.readFileSync(new URL('../_gallery/'+n+'.json',import.meta.url)));
 const out=(slug,g,fn)=>{const s=structuredClone(g);s.slug=slug;if(fn)fn(s);
@@ -9,5 +10,5 @@ out('narrow-stance-leg-press',G('leg-press'),s=>{narrow(s);deeper(s);deeper(s);}
 out('hack-squat',G('hack-squat'));
 out('narrow-stance-hack-squats',G('hack-squat'),narrow);
 out('calf-press-on-the-leg-press-machine',G('leg-press-calf'));
-out('calf-press',G('seated-calf'),s=>{s.frames.end.root.pos[1]=0.589;});
-out('lying-machine-squat',G('lying-squat'));
+out('calf-press',G('seated-calf'),s=>{s.frames.end.root.pos[1]=0.589;for(const f of Object.values(s.frames)){f.armL.pos[1]+=0.03;f.armR.pos[1]+=0.03;}});
+out('lying-machine-squat',G('lying-squat'),s=>{for(const f of Object.values(s.frames)){f.armL.pos[1]+=DY;f.armR.pos[1]+=DY;const c=Math.cos(A*Math.PI/180),n=Math.sin(A*Math.PI/180);for(const a of [f.armL,f.armR])a.fingers=[0,0.3*c-0.95*n,0.3*n+0.95*c];f.armL.pos[0]+=DX;f.armR.pos[0]-=DX;f.armL.pole=[PX,PY,PZ];f.armR.pole=[-PX,PY,PZ];}});

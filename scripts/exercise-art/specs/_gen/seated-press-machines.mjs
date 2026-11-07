@@ -16,9 +16,10 @@ for (const [slug,g] of Object.entries(map)) {
   fs.writeFileSync(p, JSON.stringify(s,null,1)); }
 
 // post-fix: rotate grip (fingers+palm) about palm axis so the wrist is not ulnar-deviated; shift cable-press hands/chest clear
-const ROT = {'leverage-shoulder-press':25,'machine-shoulder-military-press':25,'leverage-incline-chest-press':25,'incline-cable-chest-press':25,'seated-cable-shoulder-press':25,'cable-chest-press':25};
+const DIPROT=-5;
+const ROT = {'dip-machine':DIPROT,'leverage-shoulder-press':25,'machine-shoulder-military-press':25,'leverage-incline-chest-press':25,'incline-cable-chest-press':25,'seated-cable-shoulder-press':35,'cable-chest-press':25};
 const PU={'cable-chest-press':{pulleyX:0.6,pulleyY:0.6}};
-const ROOTZ={'incline-cable-chest-press':0.03,'seated-cable-shoulder-press':0.03};
+const ROOTZ={'cable-chest-press':0.03,'incline-cable-chest-press':0.03,'seated-cable-shoulder-press':0.03};
 const rot = (v,a,deg)=>{const r=deg*Math.PI/180,c=Math.cos(r),s=Math.sin(r),d=a[0]*v[0]+a[1]*v[1]+a[2]*v[2];
   const x=[a[1]*v[2]-a[2]*v[1],a[2]*v[0]-a[0]*v[2],a[0]*v[1]-a[1]*v[0]];
   return [0,1,2].map(i=>+(v[i]*c+x[i]*s+a[i]*d*(1-c)).toFixed(4));};

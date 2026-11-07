@@ -5,7 +5,7 @@ const put=(slug,spec)=>{out[slug]={slug,...spec};};
 const clone=o=>JSON.parse(JSON.stringify(o));
 const fl=(a,b)=>fs.existsSync(W+a)?clone(JSON.parse(fs.readFileSync(W+a,'utf8'))):null;
 const wall=[{type:'wall',pos:[0,0,0.703],width:0.8}];
-const wallArm=(x,dy=0,dz=0)=>({pos:[x,1.2+dy,0.54+dz],fingers:[0,0.92,0.38],palm:[0,-0.38,0.92],pole:[x>0?0.3:-0.3,-1,-0.3],curl:0.12});
+const wallArm=(x,dy=0,dz=0)=>({pos:[x,1.2+dy,0.49+dz],fingers:[0,0.45,0.89],palm:[0,-0.89,0.45],pole:[x>0?0.3:-0.3,-1,-0.3],curl:0.12});
 // both legs, wall
 const bw=(dy,dz,up)=>({root:{pos:[0,0.925+dy,dz]},armL:wallArm(0.2),armR:wallArm(-0.2),
  legL:up?{pos:[0.1,0,0.13],anchor:'ball',pitch:50,toes:0}:{pos:[0.1,0,0.04],anchor:'sole'},

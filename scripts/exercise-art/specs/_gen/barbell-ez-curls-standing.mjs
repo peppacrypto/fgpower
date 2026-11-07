@@ -2,13 +2,13 @@ import fs from 'fs';
 const leg = s => ({ pos:[0.11*s,0,0.03], anchor:'sole', yaw:8*s, pitch:0, pole:[0.1*s,0,1] });
 const n = v => { const l = Math.hypot(...v); return v.map(x => x/l); };
 // hand orientation per phase; tilt t = ez slope (deg) along x
-const orient = (kind, ph, t=0) => {
+const orient = (kind, ph, t=0, tp) => {
   const st = Math.sin(t*Math.PI/180), ct = Math.cos(t*Math.PI/180);
   let u, p; // u = (y,z) direction of fingers
   if (kind==='under') {
     if (ph==='bot') { u=[-1,0.3]; p=[0,0.3,1]; }
     else if (ph==='mid') { u=[0.3,1]; p=[0,1,-0.3]; }
-    else { u=[0.6,0.8]; p=[0,0.75,-0.6]; }
+    else { u=tp?tp[0]:[0.6,0.8]; p=tp?tp[1]:[0,0.75,-0.6]; }
   } else {
     if (ph==='bot') { u=[-1,0]; p=[0,0,-1]; }
     else if (ph==='mid') { u=[0,1]; p=[0,-1,0]; }
@@ -19,7 +19,7 @@ const orient = (kind, ph, t=0) => {
   return {f, p:n(pn.map((v,i)=>v-d*f[i]))};
 };
 const arm = (s, x, y, z, o, ph) => {
-  const r = orient(o.kind, ph, o.tilt||0);
+  const r = orient(o.kind, ph, o.tilt||0, o.topP);
   const fx = r.f[0], px = r.p[0];
   return { pos:[x*s,y,z], contact:true, hand:'grip', grip:0.014,
     fingers:[fx*s, r.f[1], r.f[2]], palm:[px*s, r.p[1], r.p[2]],
@@ -40,8 +40,8 @@ const base = { kind:'under', x:0.2325, px:0.15, py:{bot:0,mid:-0.15,top:-0.3},
   pos:{bot:[0.84,0.17], mid:[1.12,0.33], top:[1.33,0.235]} };
 const bb = (extra={}) => ({type:'barbell',hands:true,plates:[20],...extra});
 mk('barbell-curl', {...base, x:0.2, props:[bb()]});
-mk('wide-grip-standing-barbell-curl', {...base, x:0.3, px:{bot:-0.15,mid:-0.15,top:-0.7}, pos:{bot:[0.84,0.17],mid:[1.12,0.33],top:[1.33,0.235]}, props:[bb()]});
-mk('close-grip-standing-barbell-curl', {...base, x:0.08, px:{bot:0.5,mid:0.7,top:0.8}, pos:{bot:[0.95,0.34],mid:[1.12,0.35],top:[1.31,0.30]}, props:[bb()]});
+mk('wide-grip-standing-barbell-curl', {...base, x:0.27, px:{bot:-0.15,mid:-0.15,top:0.3}, pos:{bot:[0.84,0.17],mid:[1.12,0.33],top:[1.33,0.235]}, props:[bb()]});
+mk('close-grip-standing-barbell-curl', {...base, x:0.11, px:{bot:0.5,mid:0.7,top:0.8}, pos:{bot:[0.95,0.34],mid:[1.12,0.35],top:[1.31,0.30]}, props:[bb()]});
 mk('reverse-barbell-curl', {...base, kind:'over', x:0.2, props:[bb()]});
 mk('ez-bar-curl', {...base, tilt:17, props:[{type:'ez-bar',grip:'outer',hands:true,plates:[10]}]});
 mk('close-grip-ez-bar-curl', {...base, x:0.10, px:{bot:0.2,mid:0.3,top:0.8}, tilt:20, pos:{bot:[0.95,0.34],mid:[1.12,0.33],top:[1.33,0.235]}, props:[{type:'ez-bar',grip:'inner',hands:true,plates:[10]}]});

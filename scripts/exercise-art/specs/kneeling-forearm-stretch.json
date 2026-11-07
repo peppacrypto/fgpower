@@ -24,7 +24,7 @@
     "pos": [
      0.19,
      0,
-     0.5
+     0.36
     ],
     "contact": true,
     "hand": "flat",
@@ -48,7 +48,7 @@
     "pos": [
      -0.19,
      0,
-     0.5
+     0.36
     ],
     "contact": true,
     "hand": "flat",
@@ -113,7 +113,7 @@
     "pos": [
      0.19,
      0,
-     0.5
+     0.36
     ],
     "contact": true,
     "hand": "flat",
@@ -137,7 +137,7 @@
     "pos": [
      -0.19,
      0,
-     0.5
+     0.36
     ],
     "contact": true,
     "hand": "flat",

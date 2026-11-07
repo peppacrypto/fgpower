@@ -7,7 +7,7 @@ const out={};const ARM={fk:{flex:0,abd:12,rot:0,elbow:25},rel:'chest'};
 const save=(slug,camera,props,frames,more={})=>{out[slug]={slug,camera,muscles:['lats'],props,frames,...more};};
 const lp=(att,extra={})=>[{type:'lat-pulldown',pos:[0,0,0],hands:true,attachment:att,...extra}];
 const seated=(pitch,sf,nf)=>({root:{pos:[0,0.57,-0.02],pitch},spine:{flex:sf},neck:{flex:nf},...sit});
-const over=[0.35,0.931,0.1], overP=[0,-0.2,0.98], pole=[1,-0.45,-0.15];
+const over=[0.35,0.931,0.1], overP=[0,-0.2,0.98], pole=[1,-1.6,-0.15];
 const under=[0.35,0.931,0.1], underP=[0,0.2,-0.98];
 function two(slug,att,x,fing,palm,cam={az:140,el:14},endY=1.14,endZ=0.26,p1=-4,p2=-12,pl=pole){
  save(slug,cam,lp(att),{
@@ -34,23 +34,24 @@ const stand=(z,p)=>({root:{pos:[0,0.92,z],pitch:p},spine:{flex:4},neck:{flex:-12
 const tower=att=>[{type:'cable-tower',pos:[0,0,0.66],yaw:180,pulleyY:2,hands:true,attachment:att}];
 const z0=-0.25;
 save('straight-arm-pulldown',{az:70,el:8},tower('straight-bar'),{
- start:{...stand(z0,30),...both([0.3,1.5,0.44],[0,0.2,0.98],[0,-0.98,0.2],[0.3,-0.2,-1])},
- end:{...stand(z0,32),...both([0.28,0.86,0.2],[0,-0.1,1],[0,-1,-0.1],[0.3,-0.2,-1])}});
+ start:{...stand(z0,30),...both([0.36,1.5,0.44],[0,0.2,0.98],[0,-0.98,0.2],[0.3,-0.2,-1])},
+ end:{...stand(z0,32),...both([0.36,0.86,0.2],[0,-0.1,1],[0,-1,-0.1],[0.3,-0.2,-1])}});
 save('rope-straight-arm-pulldown',{az:70,el:8},tower('rope'),{
- start:{...stand(z0,30),...both([0.06,1.5,0.44],[0,0.7,0.7],[-1,0,0.05],[0.2,-1,-0.2])},
- end:{...stand(z0,32),...both([0.12,0.86,0.2],[0.05,-0.5,0.85],[-1,0,0.0],[0.2,-1,-0.2])}});
+ start:{...stand(z0,30),...both([0.06,1.5,0.44],[0,0.7,0.7],[-0.95,0.3,0.05],[0.2,-1,-0.2])},
+ end:{...stand(z0,32),...both([0.12,0.86,0.2],[0.05,-0.5,0.85],[-0.95,0.3,0.0],[0.2,-1,-0.2])}});
 // incline pushdown
 const inc=(p)=>({root:{pos:[0,0.542,0.0556],pitch:-50},neck:{flex:6},legL:{pos:[0.21,0,0.62],anchor:'sole',pole:[0.15,0.4,1]},legR:{pos:[-0.21,0,0.62],anchor:'sole',pole:[-0.15,0.4,1]}});
-const ia=(p,f,pa,pole)=>both(p,f,pa,pole,{curl:0.82});
+const ia=(p,f,pa,pole)=>both(p,f,pa,[0.5,-0.8,-0.2],{curl:0.82});
 save('cable-incline-pushdown',{az:56,el:14},[{type:'incline-bench',angle:40,uprights:true},{type:'cable-tower',pos:[0,0,-1.15],yaw:0,pulleyY:2,hands:true,attachment:'straight-bar'}],{
- start:{...inc(),...ia([0.15,0.85,0.25],[0,-0.6,0.8],[0,-0.8,-0.6],[0.5,-0.3,-0.2])},
- mid:{...inc(),...ia([0.15,1.3,0.05],[0,0.2,0.98],[0,-0.98,0.2],[0.5,-0.3,-0.2])},
- end:{...inc(),...ia([0.15,1.38,-0.5],[0,0.6,-0.8],[0,0.8,0.6],[0.5,-0.3,-0.2])}});
+ start:{...inc(),...ia([0.22,0.85,0.25],[0,-0.6,0.8],[0,-0.8,-0.6],[0.5,-0.3,-0.2])},
+ mid:{...inc(),...ia([0.22,1.3,0.05],[0,0.2,0.98],[0,-0.98,0.2],[0.5,-0.3,-0.2])},
+ end:{...inc(),...ia([0.22,1.38,-0.5],[0,0.6,-0.8],[0,0.8,0.6],[0.5,-0.3,-0.2])}});
 // full ROM
 const st=(sf)=>({root:{pos:[0,0.92,0.1],pitch:4},spine:{flex:sf},neck:{flex:-6},legL:{pos:[0.13,0,0.1],anchor:'sole',yaw:6},legR:{pos:[-0.13,0,0.1],anchor:'sole',yaw:-6}});
 const cr=(x,y,z,f,pa,po)=>({armL:arm(1,[-x,y,z],f,pa,po),armR:arm(-1,[-x,y,z+0.1],f,pa,po)});
 save('full-range-of-motion-lat-pulldown',{az:24,el:7},[{type:'cable-crossover',pos:[0,0,0],hands:true,pulleyY:2,attachment:'d-handle'}],{
- start:{...st(2),...cr(0.08,1.75,0.3,[-0.5,1,0],[0,0.3,1],[1,-0.5,0])},
+ start:{...st(2),...cr(0.04,1.9,0.42,[-0.3,1,0],[0,0.3,1],[1,-0.5,0])},
+ mid0:{...st(2),...cr(-0.25,1.65,0.3,[-0.15,0.9,0.4],[-0.55,0.15,0.8],[0.9,-0.55,-0.3])},
  mid:{...st(2),...cr(-0.5,1.5,0.15,[0,0.7,0.7],[-1,0,0],[0.8,-0.6,-0.6])},
  end:{...st(4),...cr(-0.3,1.1,0.22,[0,0,1],[-1,0,0],[0.6,-0.9,-0.4])}});
 for(const [k,v] of Object.entries(out))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
