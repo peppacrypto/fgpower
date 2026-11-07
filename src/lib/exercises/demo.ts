@@ -1,7 +1,7 @@
 /**
- * An exercise's own rendered figure, when it has one (the home library): media of
- * kind ILLUSTRATION, a looped animation or, for a static hold, a single still.
- * The catalog's photo pairs have none and keep their Início / Fim frames.
+ * An exercise's own rendered figure, when it has one: media of kind ILLUSTRATION, a
+ * looped muted video (mp4) or an animated image, or, for a static hold, a single still.
+ * An exercise without one keeps its Início / Fim frames.
  */
 export interface MediaLike {
   url: string;
@@ -33,4 +33,9 @@ export function exerciseMediaParts<T extends MediaLike>(media: readonly T[]): Ex
     // A hold's demo is its only frame: showing it twice says nothing.
     frames: demo && frames.length === 1 && frames[0].url === demo.url ? [] : frames,
   };
+}
+
+/** The figure is a video: the newer renders are muted mp4 loops, the first ones animated webp. */
+export function isVideoUrl(url: string): boolean {
+  return /\.mp4(\?|$)/i.test(url);
 }

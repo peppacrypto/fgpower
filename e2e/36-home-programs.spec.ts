@@ -30,9 +30,10 @@ test("a home workout shows the figure large, in the sheet too, and logs reps wit
   await newUserOnTemplate(page, "home-figure", "casa-5x");
   await startDayFromToday(page, MONDAY);
 
-  const onScreen = page.locator("[data-workout-demo] img");
+  // The figure is a muted looping video (the older renders are animated images): whichever it is, it is shown large.
+  const onScreen = page.locator("[data-workout-demo] :is(video, img):visible").first();
   await expect(onScreen).toBeVisible();
-  await expect(onScreen).toHaveAttribute("src", /\/exercises\/[^/]+\/fig-(loop|start)\.webp$/);
+  await expect(onScreen).toHaveAttribute("src", /\/exercises\/[^/]+\/(f2-(loop\.mp4|start\.webp)|fig-(loop|start)\.webp)$/);
   const box = await onScreen.boundingBox();
   // Readable on a phone: nothing like the 48 px thumbnail.
   expect(box!.height).toBeGreaterThan(140);
@@ -41,7 +42,7 @@ test("a home workout shows the figure large, in the sheet too, and logs reps wit
   // Tapping the figure opens the technique sheet, which shows it too (never a square crop of a frame).
   await page.locator("[data-workout-demo]").click();
   const sheet = page.locator("[data-technique-sheet]");
-  await expect(sheet.locator("[data-exercise-demo] img")).toBeVisible({ timeout: 15_000 });
+  await expect(sheet.locator("[data-exercise-demo] :is(video, img):visible").first()).toBeVisible({ timeout: 15_000 });
   await sheet.getByRole("button", { name: "Voltar ao treino" }).click();
 
   // No load to type: ✓ needs only the reps.
@@ -64,20 +65,26 @@ test("with no load to raise, 'Na próxima' asks for reps and names the next vari
   await expect(main).not.toContainText("0 kg");
 });
 
-test("someone who asks for less motion gets a still instead of the animation", async ({ page }) => {
+test("someone who asks for less motion gets a still instead of the video", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/exercises/pushups");
-  const figure = page.locator("[data-exercise-demo] img").first();
-  await expect(figure).toBeVisible();
-  await expect.poll(() => figure.evaluate((img: HTMLImageElement) => img.currentSrc)).toMatch(/fig-(start|end)\.webp$/);
+  const still = page.locator("[data-exercise-demo] img:visible").first();
+  await expect(still).toBeVisible();
+  await expect.poll(() => still.evaluate((img: HTMLImageElement) => img.currentSrc)).toMatch(/f2-(start|end)\.webp$/);
+  await expect(page.locator("[data-exercise-demo] video:visible")).toHaveCount(0);
 
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.reload();
-  await expect.poll(() => page.locator("[data-exercise-demo] img").first().evaluate((img: HTMLImageElement) => img.currentSrc)).toMatch(/fig-loop\.webp$/);
+  const video = page.locator("[data-exercise-demo] video:visible").first();
+  await expect(video).toBeVisible();
+  await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.currentSrc)).toMatch(/f2-loop\.mp4$/);
+  // What lets a phone play it by itself, in place, without sound.
+  await expect(video).toHaveAttribute("loop", "");
+  await expect(video).toHaveAttribute("playsinline", "");
 });
 
 test("a static hold shows one picture, not an empty second frame", async ({ page }) => {
   await page.goto("/exercises/wall-lateral-press-hold");
-  await expect(page.locator("[data-exercise-demo] img").first()).toHaveAttribute("src", /fig-start\.webp$/);
+  await expect(page.locator("[data-exercise-demo] img").first()).toHaveAttribute("src", /(fig|f2)-start\.webp$/);
   await expect(page.getByText("Fim", { exact: true })).toHaveCount(0);
 });

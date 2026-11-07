@@ -201,14 +201,18 @@ export default async function WorkoutExecutionPage({ params, searchParams }: Pag
     });
     const why = deload || easeBack ? "deloads" : progressionPrincipleSlug(strategy);
     const figure = exerciseMediaParts(log.exercise.media);
+    const inlineFigure = log.exercise.equipmentId === "bodyweight" || log.exercise.equipmentId === "none";
     return {
       id: log.id,
       exerciseId: log.exerciseId,
       exerciseName: log.exercise.namePt,
       exerciseSlug: log.exercise.slug,
       imageUrl: log.exercise.media[0]?.url ?? null,
-      demoUrl: figure.demo?.url ?? null,
-      demoStillUrl: figure.still?.url ?? null,
+      // A move done with no equipment is often learned at home, with no one to copy: its figure shows the movement right on
+      // the screen. A gym move keeps the small thumbnail in the row (its figure is in the technique sheet and on its page),
+      // so the first set stays within reach on a small phone.
+      demoUrl: inlineFigure ? (figure.demo?.url ?? null) : null,
+      demoStillUrl: inlineFigure ? (figure.still?.url ?? null) : null,
       sortOrder: log.sortOrder,
       prescribedSets: log.prescribedSets,
       warmupSets: log.warmupSets,

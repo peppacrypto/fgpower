@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { exerciseMediaParts } from "./demo";
+import { exerciseMediaParts, isVideoUrl } from "./demo";
 
 const m = (kind: string, url: string) => ({ kind, url });
 
@@ -37,5 +37,13 @@ describe("exerciseMediaParts", () => {
 
   it("handles an exercise with no media", () => {
     expect(exerciseMediaParts([])).toEqual({ demo: null, still: null, frames: [] });
+  });
+});
+
+describe("isVideoUrl", () => {
+  it("tells a video loop from an image", () => {
+    expect(isVideoUrl("/exercises/pushups/f2-loop.mp4")).toBe(true);
+    expect(isVideoUrl("/exercises/pushups/f2-loop.mp4?v=2")).toBe(true);
+    expect(isVideoUrl("/exercises/pushups/fig-loop.webp")).toBe(false);
   });
 });

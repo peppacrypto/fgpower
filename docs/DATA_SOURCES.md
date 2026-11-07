@@ -174,11 +174,15 @@ For completeness, these were investigated and explicitly **not** used, with the 
 
 ---
 
-## 6. Home-training exercise figures (our own renders)
+## 6. Exercise figures (our own renders)
 
-Checked 2026-11-06. The figures of the home programs under
-`public/exercises/<slug>/fig-*.webp` are rendered by FGPOWER itself, with the tooling in
-`scripts/exercise-art/`.
+Checked 2026-11-07. The figures under `public/exercises/<slug>/f2-start.webp`, `f2-end.webp` and
+`f2-loop.mp4` (muted looping video, a still for a static hold) are rendered by FGPOWER itself, with the
+tooling in `scripts/exercise-art/`. On 2026-11-07 they cover 577 of the 996 exercises; the others still
+show the free-exercise-db photos of §1 (or an earlier figure) until their renders pass the checks and a
+visual audit. `node scripts/exercise-art/publish-figures.mjs` puts a batch in the app and removes the old
+photos of those exercises. Never run `scripts/build-exercise-catalog.mjs` afterwards: it would bring the old
+photos back into the seed.
 
 - **The body.** The mesh and morph targets are MakeHuman assets, whose `base.obj` header
   says "explicitly released as CC0 in september 2020"
@@ -189,8 +193,9 @@ Checked 2026-11-06. The figures of the home programs under
   statement and `assets/LICENSE.md`). Anny's code (Apache-2.0) is neither executed nor
   shipped: only CC0 data files were copied. Do not use Anny's optional `smplx` topology,
   which is non-commercial. CC0 gives no warranty of non-infringement.
-- **The rendering.** three.js (MIT). The face is removed and replaced by a plain mannequin
-  head; the props are simple boxes and cylinders of our own.
+- **The rendering.** three.js (MIT). The equipment (bars, plates, benches, racks, cable
+  stations, machines) is modelled by us in `scripts/exercise-art/props/`, from public measurements of
+  common gym gear; no manufacturer's model, logo or name is used.
 - **Credit.** Not legally required for CC0, but the figures are based on MakeHuman and Anny.
 - **Why not an existing set.** `everkinetic/data` covers too few of these moves (see §5).
   wger (per-image CC BY-SA 3.0/4.0, 383 images on 2026-11-06) mixes photos and line art and has
@@ -201,8 +206,8 @@ Checked 2026-11-06. The figures of the home programs under
   "product destined for resale".
 - **Never.** Assets from commercial apps are not used, traced or copied. A pose comes from
   the written description of the move, not from another party's image.
-- **Worth knowing.** These figures clear the caveat of §1 for every exercise that has one. The
-  same tooling could replace the rest of the free-exercise-db photos, one exercise at a time.
+- **Worth knowing.** These figures clear the caveat of §1 for every exercise that has one. The rest of
+  the free-exercise-db photos are replaced the same way, family by family.
 
 ---
 

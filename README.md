@@ -40,8 +40,9 @@ layer — all covered by unit, integration, and end-to-end tests.
   onboarding flow
 - Full exercise library (996 exercises) — searchable, filterable by muscle/equipment/
   movement pattern, accent-insensitive search (pt-BR + en)
-- Our own 3D figures for 77 home exercises: a looping demonstration with the working
-  muscles lit, rendered from `scripts/exercise-art` (see `docs/DATA_SOURCES.md` section 6)
+- Our own 3D figures for 577 exercises (and growing): a looping muted video with the working
+  muscles lit, plus start and end frames, rendered from `scripts/exercise-art` (see
+  `docs/DATA_SOURCES.md` section 6)
 - Rich exercise detail pages: setup, breathing, coaching cues, common mistakes, range of
   motion, scientific rationale with real citations and evidence levels (325 exercises
   fully curated; the rest carry base instructions/muscle/equipment data)
