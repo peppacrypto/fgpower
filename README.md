@@ -46,8 +46,8 @@ layer — all covered by unit, integration, and end-to-end tests.
 - Rich exercise detail pages: setup, breathing, coaching cues, common mistakes, range of
   motion, scientific rationale with real citations and evidence levels (325 exercises
   fully curated; the rest carry base instructions/muscle/equipment data)
-- Program library of 96 evidence-informed programs — the flagship **FGPOWER Adaptation**
-  plus 95 curated templates across hypertrophy, strength, general fitness and sports
+- Program library of 97 programs — the flagship **FGPOWER Adaptation**
+  plus 96 curated templates across hypertrophy, strength, general fitness and sports
   performance, the multi-block **GD** progression series, a 9-program mobility track, and
   a 9-program **Em casa** track (body weight only: floor, wall, chair, towel, door frame) —
   each with a full scientific rationale, weekly progression guidance, and cited sources

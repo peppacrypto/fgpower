@@ -163,8 +163,11 @@ const RELATED_GOALS: Record<string, string[]> = {
   SPORTS_PERFORMANCE: ["STRENGTH_HYPERTROPHY", "STRENGTH"],
 };
 
-/** Programs written for a specific audience: fine to pick, never a default. */
-const AUDIENCE_PENALTY: Record<string, number> = { "silver-strength-50plus": 10, "desk-worker": 5 };
+/**
+ * Programs written for a specific audience: fine to pick, never a default. "raye" is one person's gym card, in the
+ * library for her and for whoever she shares it with: it is never recommended to anyone else.
+ */
+const AUDIENCE_PENALTY: Record<string, number> = { "silver-strength-50plus": 10, "desk-worker": 5, raye: 1000 };
 
 /**
  * A short peaking / intensification block (e.g. "Pico de Força"): a deliberate

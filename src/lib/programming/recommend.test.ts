@@ -6,6 +6,7 @@ import {
   beginnerEntrySlug,
   isMidSeriesGd,
   recommendTemplates,
+  scoreTemplate,
   seriesStanding,
   templateFit,
   type RecommendProfile,
@@ -298,5 +299,14 @@ describe("recommendTemplates", () => {
       CATALOG_FIXTURE,
     );
     expect(strength.some((r) => r.template.slug === "strength-peak")).toBe(true);
+  });
+});
+
+describe("a personal gym card", () => {
+  it("is never recommended to someone else", () => {
+    const base = CATALOG_FIXTURE.find((t) => t.equipmentAccess === "FULL_GYM") ?? CATALOG_FIXTURE[0];
+    const card = { ...base, slug: "raye" };
+    const p = profile({ equipmentAccess: "FULL_GYM" });
+    expect(scoreTemplate(p, card)).toBeLessThan(scoreTemplate(p, base) - 500);
   });
 });

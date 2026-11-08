@@ -236,12 +236,12 @@ test("the library browses by category, keeps the profile preset one tap away, an
 
   const library = page.getByRole("region", { name: "Biblioteca de programas" });
 
-  // It opens unfiltered on "Todos", showing EVERY program: 96 distinct template links
+  // It opens unfiltered on "Todos", showing EVERY program: 97 distinct template links
   // (48 strength incl. the 9 folded GD blocks + 9 home + 15 calisthenics + 9 mobility + 14 yoga + 1 flagship).
   const hrefs = await library
     .locator('a[href^="/app/programs/templates/"]')
     .evaluateAll((links) => new Set(links.map((a) => a.getAttribute("href"))).size);
-  expect(hrefs).toBe(96);
+  expect(hrefs).toBe(97);
 
   // The GD card folds its 9 blocks (still links) behind one toggle; a newcomer starts at the Adaptação.
   const gd = library.locator('[data-series="gd"]');

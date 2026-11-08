@@ -34005,5 +34005,654 @@
     ]
    }
   ]
+ },
+ {
+  "slug": "raye",
+  "nameEn": "RAYE",
+  "namePt": "RAYE",
+  "taglineEn": "Five gym workouts, A to E: legs and glutes, back and biceps, hamstrings, chest, shoulders and triceps, quads and calves.",
+  "taglinePt": "Cinco treinos de academia, de A a E: pernas e glúteos, costas e bíceps, posterior de coxa, peito, ombros e tríceps, quadríceps e panturrilhas.",
+  "descriptionEn": "The five workouts of level 3 of a gym card (A to E), moved into the app as they are: 3 or 4 sets of 10 to 12 reps, with supersets where the card says so, and cardio of your choice at the end. The card expects 8 to 10 sessions of each workout before it is changed. The app changed nothing the card asks for; the numbers the card leaves out (plank time, reps of the back extension...) are starting points, marked in the notes.",
+  "descriptionPt": "Os cinco treinos do nível 3 de uma ficha de academia (A a E), passados para o app como estão: 3 ou 4 séries de 10 a 12 repetições, com bi-séries onde a ficha indica e cardio à escolha no fim. A ficha prevê de 8 a 10 treinos de cada um antes de ser trocada. O app não mudou nada do que a ficha pede; os números que a ficha deixa de fora (tempo da prancha, repetições do dorsal...) são pontos de partida, marcados nas notas.",
+  "audienceEn": "Whoever was given this card by the coach and wants to follow it in the app.",
+  "audiencePt": "Quem recebeu esta ficha do professor da academia e quer seguir com ela no app.",
+  "goal": "HYPERTROPHY",
+  "experienceLevel": "INTERMEDIATE",
+  "daysPerWeek": 5,
+  "durationWeeks": 8,
+  "sessionMinutes": 60,
+  "equipmentAccess": "FULL_GYM",
+  "trainingStyle": "BODY_PART_SPLIT",
+  "progressionStrategy": "DOUBLE",
+  "rationaleEn": "**A coach's card, not a plan the app chose.** This programming came ready-made from a gym card; the app neither picked nor changed it. It follows the classic split by muscle group, 3 or 4 sets of 10 to 12 reps, which works well when the load goes up little by little: when you do 12 reps on every set, raise the load next time (double progression). Questions about how to do an exercise or about the loads: ask your coach.",
+  "rationalePt": "**Ficha do professor, não um plano que o app escolheu.** Esta programação veio pronta de uma ficha de academia; o app não a escolheu nem a alterou. Ela segue a divisão clássica por grupo muscular, com 3 ou 4 séries de 10 a 12 repetições, que funciona bem quando a carga sobe aos poucos: quando fizer 12 repetições em todas as séries, suba a carga na próxima vez (progressão dupla). Dúvidas sobre como fazer um exercício ou sobre as cargas: fale com o professor.",
+  "restGuidanceEn": "The card gives no rest: 90 s on the compound lifts and 60 s on the isolations is a good start; short rests inside a superset.",
+  "restGuidancePt": "A ficha não indica o descanso: 90 s nos exercícios compostos e 60 s nos isolados é um bom começo; descanso curto dentro da bi-série.",
+  "weeklyGuidance": [
+   {
+    "week": 1,
+    "rirTarget": 2,
+    "setsNoteEn": "Use the 3 sets; add a 4th where the card asks for 3 or 4 if you feel good.",
+    "setsNotePt": "Faça as 3 séries; acrescente a 4ª onde a ficha pede 3 ou 4 se estiver bem.",
+    "noteEn": "Find the loads. Stop 2 reps before you cannot do one more.",
+    "notePt": "Ache as cargas. Pare 2 repetições antes de não conseguir fazer mais uma."
+   },
+   {
+    "week": 2,
+    "rirTarget": 2,
+    "setsNoteEn": "The card asks for 3 or 4 sets: do 4 when you feel good.",
+    "setsNotePt": "A ficha pede 3 ou 4 séries: faça 4 quando estiver bem.",
+    "noteEn": "When you do 12 reps on every set, raise the load next time.",
+    "notePt": "Quando fizer 12 repetições em todas as séries, suba a carga na próxima vez."
+   },
+   {
+    "week": 3,
+    "rirTarget": 2,
+    "setsNoteEn": "The card asks for 3 or 4 sets: do 4 when you feel good.",
+    "setsNotePt": "A ficha pede 3 ou 4 séries: faça 4 quando estiver bem.",
+    "noteEn": "When you do 12 reps on every set, raise the load next time.",
+    "notePt": "Quando fizer 12 repetições em todas as séries, suba a carga na próxima vez."
+   },
+   {
+    "week": 4,
+    "rirTarget": 2,
+    "setsNoteEn": "The card asks for 3 or 4 sets: do 4 when you feel good.",
+    "setsNotePt": "A ficha pede 3 ou 4 séries: faça 4 quando estiver bem.",
+    "noteEn": "When you do 12 reps on every set, raise the load next time.",
+    "notePt": "Quando fizer 12 repetições em todas as séries, suba a carga na próxima vez."
+   },
+   {
+    "week": 5,
+    "rirTarget": 2,
+    "setsNoteEn": "The card asks for 3 or 4 sets: do 4 when you feel good.",
+    "setsNotePt": "A ficha pede 3 ou 4 séries: faça 4 quando estiver bem.",
+    "noteEn": "When you do 12 reps on every set, raise the load next time.",
+    "notePt": "Quando fizer 12 repetições em todas as séries, suba a carga na próxima vez."
+   },
+   {
+    "week": 6,
+    "rirTarget": 2,
+    "setsNoteEn": "The card asks for 3 or 4 sets: do 4 when you feel good.",
+    "setsNotePt": "A ficha pede 3 ou 4 séries: faça 4 quando estiver bem.",
+    "noteEn": "When you do 12 reps on every set, raise the load next time.",
+    "notePt": "Quando fizer 12 repetições em todas as séries, suba a carga na próxima vez."
+   },
+   {
+    "week": 7,
+    "rirTarget": 2,
+    "setsNoteEn": "The card asks for 3 or 4 sets: do 4 when you feel good.",
+    "setsNotePt": "A ficha pede 3 ou 4 séries: faça 4 quando estiver bem.",
+    "noteEn": "When you do 12 reps on every set, raise the load next time.",
+    "notePt": "Quando fizer 12 repetições em todas as séries, suba a carga na próxima vez."
+   },
+   {
+    "week": 8,
+    "rirTarget": 2,
+    "setsNoteEn": "The card asks for 3 or 4 sets: do 4 when you feel good.",
+    "setsNotePt": "A ficha pede 3 ou 4 séries: faça 4 quando estiver bem.",
+    "noteEn": "When you do 12 reps on every set, raise the load next time.",
+    "notePt": "Quando fizer 12 repetições em todas as séries, suba a carga na próxima vez."
+   }
+  ],
+  "evidenceKeys": [],
+  "principleSlugs": [
+   "progressive-overload",
+   "double-progression"
+  ],
+  "days": [
+   {
+    "dayIndex": 0,
+    "nameEn": "Workout A — Legs and glutes",
+    "namePt": "Treino A — Pernas e glúteos",
+    "focusEn": "Squat, hip thrust, lunge, glutes and abductor on the cable, Bulgarian split squat and walking lunge. To finish, cardio of your choice: treadmill, bike, elliptical or step",
+    "focusPt": "Agachamento, hip thrust, afundo, glúteos e abdutor no cabo, búlgaro e passada. No fim, cardio à escolha: esteira, bicicleta, elíptico ou step",
+    "estimatedMinutes": 60,
+    "exercises": [
+     {
+      "exerciseSlug": "barbell-squat",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 120,
+      "warmupSets": 1,
+      "notesPt": "Agachamento livre. A ficha pede 3 ou 4 séries.",
+      "notesEn": "Free squat. The card asks for 3 or 4 sets."
+     },
+     {
+      "exerciseSlug": "barbell-hip-thrust",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 90,
+      "warmupSets": 0,
+      "notesPt": "Elevação de quadril com barra ou na máquina, como a ficha indica. A ficha pede 3 ou 4 séries.",
+      "notesEn": "Hip thrust with the bar or on the machine, as the card says. The card asks for 3 or 4 sets."
+     },
+     {
+      "exerciseSlug": "dumbbell-lunges",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 90,
+      "warmupSets": 0,
+      "notesPt": "Afundo. A ficha pede 3 ou 4 séries.",
+      "notesEn": "Lunge. The card asks for 3 or 4 sets."
+     },
+     {
+      "exerciseSlug": "one-legged-cable-kickback",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 45,
+      "warmupSets": 0,
+      "notesPt": "Glúteos no cross over, em bi-série com o abdutor. A ficha pede 3 ou 4 séries.",
+      "notesEn": "Cable glute kickback, a superset with the abductor. The card asks for 3 or 4 sets.",
+      "groupKey": "A"
+     },
+     {
+      "exerciseSlug": "thigh-abductor",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesPt": "Abdutor no cross over, com o pé para trás, em bi-série com os glúteos. No catálogo o mais próximo é a cadeira abdutora; se o professor usa o cabo, faça no cabo. A ficha pede 3 ou 4 séries.",
+      "notesEn": "Abductor on the cable, foot back, a superset with the glutes. The closest catalog exercise is the abductor machine; if your coach uses the cable, do it on the cable. The card asks for 3 or 4 sets.",
+      "groupKey": "A"
+     },
+     {
+      "exerciseSlug": "bulgarian-split-squat",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 90,
+      "warmupSets": 0,
+      "notesPt": "Agachamento búlgaro. A ficha pede 3 ou 4 séries.",
+      "notesEn": "Bulgarian split squat. The card asks for 3 or 4 sets."
+     },
+     {
+      "exerciseSlug": "bodyweight-walking-lunge",
+      "sets": 3,
+      "repMin": 20,
+      "repMax": 30,
+      "rirTarget": null,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesPt": "Passada sem carga (S/C). As repetições são passos: de 20 a 30.",
+      "notesEn": "Walking lunge with no load. The reps are steps: 20 to 30."
+     }
+    ]
+   },
+   {
+    "dayIndex": 1,
+    "nameEn": "Workout B — Back and biceps",
+    "namePt": "Treino B — Costas e bíceps",
+    "focusEn": "Pulldown, rows, one-arm row, face pull, biceps, superman, back extension, plank and ball. To finish, cardio of your choice: treadmill, bike, elliptical or step",
+    "focusPt": "Puxada, remadas, serrote, face pull, bíceps, superman, dorsal, prancha e bola. No fim, cardio à escolha: esteira, bicicleta, elíptico ou step",
+    "estimatedMinutes": 60,
+    "exercises": [
+     {
+      "exerciseSlug": "close-grip-front-lat-pulldown",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 90,
+      "warmupSets": 1,
+      "notesPt": "Aparelho 17: pulley, pegada aproximada. A ficha pede 3 ou 4 séries.",
+      "notesEn": "Machine 17: pulldown, close grip. The card asks for 3 or 4 sets."
+     },
+     {
+      "exerciseSlug": "leverage-iso-row",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 90,
+      "warmupSets": 0,
+      "notesPt": "Aparelho 12: remada. A ficha pede 3 ou 4 séries.",
+      "notesEn": "Machine 12: row. The card asks for 3 or 4 sets."
+     },
+     {
+      "exerciseSlug": "seated-cable-rows",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 90,
+      "warmupSets": 0,
+      "notesPt": "Aparelho 3: remada baixa. A ficha pede 3 ou 4 séries.",
+      "notesEn": "Machine 3: low row. The card asks for 3 or 4 sets."
+     },
+     {
+      "exerciseSlug": "one-arm-dumbbell-row",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 90,
+      "warmupSets": 0,
+      "notesPt": "Serrote. A ficha pede 3 ou 4 séries.",
+      "notesEn": "One-arm dumbbell row. The card asks for 3 or 4 sets."
+     },
+     {
+      "exerciseSlug": "face-pull",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesPt": "Face pull no cross over.",
+      "notesEn": "Face pull on the cable."
+     },
+     {
+      "exerciseSlug": "ez-bar-curl",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesPt": "Bíceps com barra W.",
+      "notesEn": "Biceps curl with the EZ bar."
+     },
+     {
+      "exerciseSlug": "incline-dumbbell-curl",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesPt": "Bíceps com halteres no banco inclinado.",
+      "notesEn": "Incline dumbbell curl."
+     },
+     {
+      "exerciseSlug": "superman",
+      "sets": 3,
+      "repMin": 20,
+      "repMax": 20,
+      "rirTarget": null,
+      "restSeconds": 45,
+      "warmupSets": 0,
+      "notesPt": "Superman isométrico: 20 s. Os números são o tempo em segundos.",
+      "notesEn": "Isometric superman: 20 s. The numbers are the time in seconds."
+     },
+     {
+      "exerciseSlug": "hyperextensions-back-extensions",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesPt": "Aparelho 8: dorsal. A ficha não traz as repetições: de 10 a 12 é um ponto de partida.",
+      "notesEn": "Machine 8: back extension. The card gives no reps: 10 to 12 is a starting point."
+     },
+     {
+      "exerciseSlug": "plank",
+      "sets": 3,
+      "repMin": 30,
+      "repMax": 30,
+      "rirTarget": null,
+      "restSeconds": 45,
+      "warmupSets": 0,
+      "notesPt": "Abdominal prancha. Os números são o tempo em segundos. A ficha não traz o tempo: 30 s é um ponto de partida.",
+      "notesEn": "Plank. The numbers are the time in seconds. The card gives no time: 30 s is a starting point."
+     },
+     {
+      "exerciseSlug": "ball-leg-curl",
+      "sets": 3,
+      "repMin": 12,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesPt": "Elevação de quadril com os pés na bola, para frente e para trás: 3 × 12.",
+      "notesEn": "Hip raise with the feet on the ball, forward and back: 3 × 12."
+     }
+    ]
+   },
+   {
+    "dayIndex": 2,
+    "nameEn": "Workout C — Hamstrings and adductors",
+    "namePt": "Treino C — Posterior de coxa e adutores",
+    "focusEn": "Leg curls, stiff-leg deadlift, adductor and sumo squat. To finish, cardio of your choice: treadmill, bike, elliptical or step",
+    "focusPt": "Mesa flexora, stiff, adutor e agachamento sumo. No fim, cardio à escolha: esteira, bicicleta, elíptico ou step",
+    "estimatedMinutes": 60,
+    "exercises": [
+     {
+      "exerciseSlug": "lying-leg-curls",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 90,
+      "warmupSets": 1,
+      "notesPt": "Aparelho 7: posterior. A ficha pede 3 ou 4 séries.",
+      "notesEn": "Machine 7: hamstring curl. The card asks for 3 or 4 sets."
+     },
+     {
+      "exerciseSlug": "seated-leg-curl",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 45,
+      "warmupSets": 0,
+      "notesPt": "Aparelho 1: posterior sentado, em bi-série com o stiff. A ficha pede 3 ou 4 séries.",
+      "notesEn": "Machine 1: seated leg curl, a superset with the stiff-leg deadlift. The card asks for 3 or 4 sets.",
+      "groupKey": "A"
+     },
+     {
+      "exerciseSlug": "stiff-legged-barbell-deadlift",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 90,
+      "warmupSets": 0,
+      "notesPt": "Stiff, em bi-série com o posterior sentado. A ficha pede 3 ou 4 séries.",
+      "notesEn": "Stiff-leg deadlift, a superset with the seated leg curl. The card asks for 3 or 4 sets.",
+      "groupKey": "A"
+     },
+     {
+      "exerciseSlug": "lying-leg-curls",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesPt": "Aparelho 7: posterior unilateral, uma perna de cada vez. A ficha pede 3 ou 4 séries.",
+      "notesEn": "Machine 7: single-leg hamstring curl, one leg at a time. The card asks for 3 or 4 sets."
+     },
+     {
+      "exerciseSlug": "stiff-legged-dumbbell-deadlift",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 90,
+      "warmupSets": 0,
+      "notesPt": "Stiff (a ficha repete o stiff depois do posterior unilateral). A ficha pede 3 ou 4 séries.",
+      "notesEn": "Stiff-leg deadlift (the card repeats it after the single-leg curl). The card asks for 3 or 4 sets."
+     },
+     {
+      "exerciseSlug": "thigh-adductor",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesPt": "Aparelho 5: adutor flexor. A ficha pede 3 ou 4 séries.",
+      "notesEn": "Machine 5: adductor. The card asks for 3 or 4 sets."
+     },
+     {
+      "exerciseSlug": "plie-dumbbell-squat",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 90,
+      "warmupSets": 0,
+      "notesPt": "Agachamento sumo. A ficha pede 3 ou 4 séries.",
+      "notesEn": "Sumo squat. The card asks for 3 or 4 sets."
+     }
+    ]
+   },
+   {
+    "dayIndex": 3,
+    "nameEn": "Workout D — Chest, shoulders and triceps",
+    "namePt": "Treino D — Peito, ombros e tríceps",
+    "focusEn": "Bench press, triceps, shoulder press, lateral raise, upright row and abs. To finish, cardio of your choice: treadmill, bike, elliptical or step",
+    "focusPt": "Supino, tríceps, desenvolvimento, elevação lateral, remada alta e abdominais. No fim, cardio à escolha: esteira, bicicleta, elíptico ou step",
+    "estimatedMinutes": 60,
+    "exercises": [
+     {
+      "exerciseSlug": "barbell-bench-press-medium-grip",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 120,
+      "warmupSets": 1,
+      "notesPt": "Supino reto. A ficha pede 3 ou 4 séries.",
+      "notesEn": "Flat bench press. The card asks for 3 or 4 sets."
+     },
+     {
+      "exerciseSlug": "leverage-incline-chest-press",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 90,
+      "warmupSets": 0,
+      "notesPt": "Supino inclinado articulado. A ficha pede 3 ou 4 séries.",
+      "notesEn": "Incline press on the lever machine. The card asks for 3 or 4 sets."
+     },
+     {
+      "exerciseSlug": "triceps-pushdown",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesPt": "Aparelho 22: tríceps cross over. A ficha pede 3 ou 4 séries.",
+      "notesEn": "Machine 22: cable triceps pushdown. The card asks for 3 or 4 sets."
+     },
+     {
+      "exerciseSlug": "tricep-dumbbell-kickback",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesPt": "Tríceps coice. A ficha pede 3 ou 4 séries.",
+      "notesEn": "Triceps kickback. The card asks for 3 or 4 sets."
+     },
+     {
+      "exerciseSlug": "standing-dumbbell-triceps-extension",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesPt": "Tríceps francês. A ficha pede 3 ou 4 séries.",
+      "notesEn": "French press. The card asks for 3 or 4 sets."
+     },
+     {
+      "exerciseSlug": "machine-shoulder-military-press",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 90,
+      "warmupSets": 0,
+      "notesPt": "Aparelho 16: desenvolvimento na máquina. A ficha pede 3 ou 4 séries.",
+      "notesEn": "Machine 16: shoulder press. The card asks for 3 or 4 sets."
+     },
+     {
+      "exerciseSlug": "side-lateral-raise",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesPt": "Elevação lateral. A ficha pede 3 ou 4 séries.",
+      "notesEn": "Lateral raise. The card asks for 3 or 4 sets."
+     },
+     {
+      "exerciseSlug": "upright-barbell-row",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesPt": "Remada alta. A ficha pede 3 ou 4 séries.",
+      "notesEn": "Upright row. The card asks for 3 or 4 sets."
+     },
+     {
+      "exerciseSlug": "pallof-press",
+      "sets": 3,
+      "repMin": 20,
+      "repMax": 20,
+      "rirTarget": null,
+      "restSeconds": 45,
+      "warmupSets": 0,
+      "notesPt": "Rotação de tronco no cross, isométrica: 20 s. Os números são o tempo em segundos.",
+      "notesEn": "Cable trunk rotation hold: 20 s. The numbers are the time in seconds."
+     },
+     {
+      "exerciseSlug": "side-bridge",
+      "sets": 3,
+      "repMin": 20,
+      "repMax": 20,
+      "rirTarget": null,
+      "restSeconds": 45,
+      "warmupSets": 0,
+      "notesPt": "Abdominal prancha lateral. Os números são o tempo em segundos. A ficha não traz o tempo: 20 s por lado é um ponto de partida.",
+      "notesEn": "Side plank. The numbers are the time in seconds. The card gives no time: 20 s a side is a starting point."
+     },
+     {
+      "exerciseSlug": "crunches",
+      "sets": 3,
+      "repMin": 12,
+      "repMax": 15,
+      "rirTarget": null,
+      "restSeconds": 45,
+      "warmupSets": 0,
+      "notesPt": "Abdominal curto. A ficha não traz as repetições: de 12 a 15 é um ponto de partida.",
+      "notesEn": "Short crunch. The card gives no reps: 12 to 15 is a starting point."
+     }
+    ]
+   },
+   {
+    "dayIndex": 4,
+    "nameEn": "Workout E — Quads and calves",
+    "namePt": "Treino E — Quadríceps e panturrilhas",
+    "focusEn": "Leg press, machine squat, leg extension, sissy squat and calves. To finish, cardio of your choice: treadmill, bike, elliptical or step",
+    "focusPt": "Leg press, agachamento na máquina, extensora, sissy squat e panturrilhas. No fim, cardio à escolha: esteira, bicicleta, elíptico ou step",
+    "estimatedMinutes": 60,
+    "exercises": [
+     {
+      "exerciseSlug": "leg-press",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 45,
+      "warmupSets": 1,
+      "notesPt": "Aparelho 14: leg press inclinado com anilha, seguido da panturrilha no mesmo aparelho. A ficha pede 3 ou 4 séries.",
+      "notesEn": "Machine 14: incline leg press, followed by calves on the same machine. The card asks for 3 or 4 sets.",
+      "groupKey": "A"
+     },
+     {
+      "exerciseSlug": "calf-press-on-the-leg-press-machine",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 90,
+      "warmupSets": 0,
+      "notesPt": "Panturrilha no leg press, logo depois do leg press inclinado.",
+      "notesEn": "Calf raise on the leg press, right after the incline leg press.",
+      "groupKey": "A"
+     },
+     {
+      "exerciseSlug": "hack-squat",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 90,
+      "warmupSets": 0,
+      "notesPt": "Aparelho 18: agachamento na máquina. A ficha pede 3 ou 4 séries.",
+      "notesEn": "Machine 18: machine squat. The card asks for 3 or 4 sets."
+     },
+     {
+      "exerciseSlug": "single-leg-leg-extension",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesPt": "Aparelho 1: quadríceps unilateral. A ficha pede 3 ou 4 séries.",
+      "notesEn": "Machine 1: single-leg extension. The card asks for 3 or 4 sets."
+     },
+     {
+      "exerciseSlug": "wall-sissy-squat",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesPt": "Flexão nórdica invertida ou agachamento isométrico na parede, como a ficha oferece. O catálogo tem o sissy squat; se fizer o isométrico, segure o tempo que o professor indicar. A ficha pede 3 ou 4 séries.",
+      "notesEn": "Reverse Nordic or a wall hold, as the card offers. The catalog has the sissy squat; for the hold, keep the time your coach says. The card asks for 3 or 4 sets."
+     },
+     {
+      "exerciseSlug": "leg-press",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 45,
+      "warmupSets": 0,
+      "notesPt": "Aparelho 11: leg press horizontal, seguido da panturrilha. A ficha pede 3 ou 4 séries.",
+      "notesEn": "Machine 11: horizontal leg press, followed by calves. The card asks for 3 or 4 sets.",
+      "groupKey": "B"
+     },
+     {
+      "exerciseSlug": "calf-press",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 90,
+      "warmupSets": 0,
+      "notesPt": "Panturrilha, logo depois do leg press horizontal.",
+      "notesEn": "Calf raise, right after the horizontal leg press.",
+      "groupKey": "B"
+     },
+     {
+      "exerciseSlug": "leg-extensions",
+      "sets": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rirTarget": null,
+      "restSeconds": 90,
+      "warmupSets": 0,
+      "notesPt": "Aparelho 1: quadríceps com drop-set na última série: reduza a carga e continue.",
+      "notesEn": "Machine 1: leg extension with a drop set on the last set: lower the load and keep going."
+     },
+     {
+      "exerciseSlug": "standing-dumbbell-calf-raise",
+      "sets": 3,
+      "repMin": 15,
+      "repMax": 20,
+      "rirTarget": null,
+      "restSeconds": 60,
+      "warmupSets": 0,
+      "notesPt": "Panturrilha em pé unilateral, com carga. A ficha pede 3 ou 4 séries de 15 a 20.",
+      "notesEn": "Single-leg standing calf raise, with load. The card asks for 3 or 4 sets of 15 to 20."
+     }
+    ]
+   }
+  ]
  }
 ]
