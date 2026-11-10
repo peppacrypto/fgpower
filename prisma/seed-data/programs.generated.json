@@ -34104,8 +34104,8 @@
     "dayIndex": 0,
     "nameEn": "Workout A — Legs and glutes",
     "namePt": "Treino A — Pernas e glúteos",
-    "focusEn": "Squat, hip thrust, lunge, glutes and abductor on the cable, Bulgarian split squat and walking lunge. To finish, cardio of your choice: treadmill, bike, elliptical or step",
-    "focusPt": "Agachamento, hip thrust, afundo, glúteos e abdutor no cabo, búlgaro e passada. No fim, cardio à escolha: esteira, bicicleta, elíptico ou step",
+    "focusEn": "Squat, hip thrust, static lunge, glutes and abduction on the cable, Bulgarian split squat and walking lunge. To finish, cardio of your choice: treadmill, bike, elliptical or step",
+    "focusPt": "Agachamento, hip thrust, afundo estático, glúteos e abdução no cabo, búlgaro e passada. No fim, cardio à escolha: esteira, bicicleta, elíptico ou step",
     "estimatedMinutes": 60,
     "exercises": [
      {
@@ -34131,15 +34131,15 @@
       "notesEn": "Hip thrust with the bar or on the machine, as the card says. The card asks for 3 or 4 sets."
      },
      {
-      "exerciseSlug": "dumbbell-lunges",
+      "exerciseSlug": "dumbbell-static-lunge",
       "sets": 3,
       "repMin": 10,
       "repMax": 12,
       "rirTarget": null,
       "restSeconds": 90,
       "warmupSets": 0,
-      "notesPt": "Afundo. A ficha pede 3 ou 4 séries.",
-      "notesEn": "Lunge. The card asks for 3 or 4 sets."
+      "notesPt": "Afundo estático com halteres. A ficha pede 3 ou 4 séries.",
+      "notesEn": "Dumbbell static lunge. The card asks for 3 or 4 sets."
      },
      {
       "exerciseSlug": "one-legged-cable-kickback",
@@ -34154,15 +34154,15 @@
       "groupKey": "A"
      },
      {
-      "exerciseSlug": "thigh-abductor",
+      "exerciseSlug": "cable-hip-abduction-back",
       "sets": 3,
       "repMin": 10,
       "repMax": 12,
       "rirTarget": null,
       "restSeconds": 60,
       "warmupSets": 0,
-      "notesPt": "Abdutor no cross over, com o pé para trás, em bi-série com os glúteos. No catálogo o mais próximo é a cadeira abdutora; se o professor usa o cabo, faça no cabo. A ficha pede 3 ou 4 séries.",
-      "notesEn": "Abductor on the cable, foot back, a superset with the glutes. The closest catalog exercise is the abductor machine; if your coach uses the cable, do it on the cable. The card asks for 3 or 4 sets.",
+      "notesPt": "Abdução no cross com o pé atrás, em bi-série com os glúteos. A ficha pede 3 ou 4 séries.",
+      "notesEn": "Cable hip abduction with the foot back, a superset with the glutes. The card asks for 3 or 4 sets.",
       "groupKey": "A"
      },
      {

@@ -58,6 +58,6 @@ const sw=(x,hy,sf)=>({root:{pos:[x,hy,0],pitch:0},spine:{flex:sf},neck:{flex:0},
 save('barbell-side-split-squat',{az:25,el:8},['quadriceps','adductors','glutes'],bbProps(),{
  start:{...sw(0.1,0.87,3),legL:L(0.5,0,0,{yaw:45,pole:[0.8,0.2,0.6]}),legR:R(-0.3,0,0,{yaw:-5,pole:[-0.2,0.3,1]})},
  end:sw(0.3,0.68,10)});
-{const b=JSON.parse(fs.readFileSync(W+'bulgarian-split-squat.json'));for(const k in b.frames){const F=b.frames[k];F.armL={...F.armL,pos:[0.24,0.17,0.03],fingers:[-0.3,-0.1,0.9]};F.armR={...F.armR,pos:[-0.24,0.17,0.03],fingers:[0.3,-0.1,0.9]};}out['bulgarian-split-squat']=b;}
+{const b=JSON.parse(fs.readFileSync(W+'bulgarian-split-squat.json'));for(const k in b.frames){const F=b.frames[k];F.armL={...F.armL,pos:[0.24,0.17,0.03],fingers:[-0.3,-0.1,0.9],hand:'flat',contact:true};F.armR={...F.armR,pos:[-0.24,0.17,0.03],fingers:[0.3,-0.1,0.9],hand:'flat',contact:true};}out['bulgarian-split-squat']=b;}
 for(const [k,v] of Object.entries(out))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
 console.log(Object.keys(out).join(' '));

@@ -1,8 +1,10 @@
 {
  "slug": "bulgarian-split-squat",
  "camera": {
-  "az": 72,
-  "el": 8
+  "az": 65,
+  "el": 6,
+  "padH": 0.04,
+  "pad": 0.02
  },
  "muscles": [
   "quadriceps",
@@ -15,14 +17,6 @@
     -0.11,
     0,
     -0.62
-   ]
-  },
-  {
-   "type": "wall",
-   "pos": [
-    0,
-    0,
-    -0.87
    ]
   }
  ],
@@ -58,7 +52,9 @@
      0,
      -0.1
     ],
-    "curl": 0.3
+    "curl": 0.3,
+    "hand": "flat",
+    "contact": true
    },
    "armR": {
     "pos": [
@@ -82,7 +78,9 @@
      0,
      -0.1
     ],
-    "curl": 0.3
+    "curl": 0.3,
+    "hand": "flat",
+    "contact": true
    },
    "legL": {
     "pos": [
@@ -137,7 +135,9 @@
      0,
      -0.1
     ],
-    "curl": 0.3
+    "curl": 0.3,
+    "hand": "flat",
+    "contact": true
    },
    "armR": {
     "pos": [
@@ -161,7 +161,9 @@
      0,
      -0.1
     ],
-    "curl": 0.3
+    "curl": 0.3,
+    "hand": "flat",
+    "contact": true
    },
    "legL": {
     "pos": [

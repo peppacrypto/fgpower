@@ -26456,17 +26456,24 @@
   "media": [
    {
     "kind": "IMAGE_START",
-    "url": "/exercises/one-legged-cable-kickback/0.webp",
-    "width": 640,
-    "height": 427,
+    "url": "/exercises/one-legged-cable-kickback/f2-start.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 0
    },
    {
     "kind": "IMAGE_END",
-    "url": "/exercises/one-legged-cable-kickback/1.webp",
-    "width": 640,
-    "height": 427,
+    "url": "/exercises/one-legged-cable-kickback/f2-end.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/one-legged-cable-kickback/f2-loop.mp4",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 2
    }
   ]
  },
@@ -39563,17 +39570,24 @@
   "media": [
    {
     "kind": "IMAGE_START",
-    "url": "/exercises/standing-dumbbell-triceps-extension/0.webp",
-    "width": 640,
-    "height": 427,
+    "url": "/exercises/standing-dumbbell-triceps-extension/f2-start.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 0
    },
    {
     "kind": "IMAGE_END",
-    "url": "/exercises/standing-dumbbell-triceps-extension/1.webp",
-    "width": 640,
-    "height": 427,
+    "url": "/exercises/standing-dumbbell-triceps-extension/f2-end.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/standing-dumbbell-triceps-extension/f2-loop.mp4",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 2
    }
   ]
  },
@@ -43700,17 +43714,24 @@
   "media": [
    {
     "kind": "IMAGE_START",
-    "url": "/exercises/upright-barbell-row/0.webp",
-    "width": 640,
-    "height": 427,
+    "url": "/exercises/upright-barbell-row/f2-start.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 0
    },
    {
     "kind": "IMAGE_END",
-    "url": "/exercises/upright-barbell-row/1.webp",
-    "width": 640,
-    "height": 427,
+    "url": "/exercises/upright-barbell-row/f2-end.webp",
+    "width": 800,
+    "height": 600,
     "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/upright-barbell-row/f2-loop.mp4",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 2
    }
   ]
  },
@@ -50549,24 +50570,24 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/bulgarian-split-squat/fig-end.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/bulgarian-split-squat/f2-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/bulgarian-split-squat/fig-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/bulgarian-split-squat/f2-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
    },
    {
     "kind": "ILLUSTRATION",
-    "url": "/exercises/bulgarian-split-squat/fig-loop.webp",
-    "width": 640,
-    "height": 480,
+    "url": "/exercises/bulgarian-split-squat/f2-loop.mp4",
+    "width": 800,
+    "height": 600,
     "sortOrder": 2
    }
   ]
@@ -51772,6 +51793,115 @@
     "url": "/exercises/step-back-burpee/fig-loop.webp",
     "width": 640,
     "height": 480,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower:dumbbell-static-lunge",
+  "slug": "dumbbell-static-lunge",
+  "nameEn": "Dumbbell Static Lunge",
+  "namePt": "Afundo Estático com Halteres",
+  "category": "STRENGTH",
+  "movementPattern": "lunge",
+  "equipment": "dumbbell",
+  "difficulty": "BEGINNER",
+  "forceType": "PUSH",
+  "laterality": "UNILATERAL",
+  "mechanics": "COMPOUND",
+  "instructionsEn": [
+   "Stand with a dumbbell in each hand, arms straight by your sides, and take a long step forward: both feet stay on the floor, the back one on the ball of the foot.",
+   "Lower the back knee toward the floor without touching it, until the front thigh is level with the floor. Keep the trunk upright and the front knee pointing the way the toes do.",
+   "Push the floor away with the front foot to come up, without moving your feet: it is a lunge in place, not a step.",
+   "Do every rep on one leg, then switch."
+  ],
+  "instructionsPt": [
+   "Fique em pé com um halter em cada mão, braços estendidos ao lado do corpo, e dê um passo largo à frente: os dois pés ficam no chão, o de trás apoiado na ponta.",
+   "Desça o joelho de trás em direção ao chão, sem encostar, até a coxa da frente ficar paralela ao chão. O tronco fica ereto e o joelho da frente aponta na direção dos dedos.",
+   "Empurre o chão com o pé da frente para subir, sem tirar os pés do lugar: é um afundo parado, não um passo.",
+   "Faça todas as repetições de uma perna e depois troque."
+  ],
+  "primaryMuscles": [
+   "quadriceps",
+   "glutes"
+  ],
+  "secondaryMuscles": [
+   "hamstrings",
+   "adductors"
+  ],
+  "media": [
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/dumbbell-static-lunge/f2-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/dumbbell-static-lunge/f2-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/dumbbell-static-lunge/f2-loop.mp4",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 2
+   }
+  ]
+ },
+ {
+  "sourceId": "fgpower:cable-hip-abduction-back",
+  "slug": "cable-hip-abduction-back",
+  "nameEn": "Cable Hip Abduction, Foot Back",
+  "namePt": "Abdução de Quadril no Cabo com o Pé Atrás",
+  "category": "STRENGTH",
+  "movementPattern": "hip-abduction",
+  "equipment": "cable",
+  "difficulty": "BEGINNER",
+  "forceType": "PULL",
+  "laterality": "UNILATERAL",
+  "mechanics": "ISOLATION",
+  "instructionsEn": [
+   "Strap the ankle cuff to your outer ankle and stand side-on to the cable tower, the pulley at its lowest. Hold the tower with your inner hand.",
+   "With the standing leg slightly bent and the trunk upright, take the outer leg out to the side and a little back, on a diagonal, until you feel the side of the glute squeeze.",
+   "Come back slowly, without letting the weight stack touch down and without turning the hips or leaning the trunk.",
+   "Do every rep on one side, then switch."
+  ],
+  "instructionsPt": [
+   "Prenda a tornozeleira no tornozelo de fora e fique de lado para o cross over, com a polia na altura mais baixa. Segure no aparelho com a mão de dentro.",
+   "Com a perna de apoio levemente flexionada e o tronco ereto, leve a perna de fora para o lado e um pouco para trás, em diagonal, até sentir a lateral do glúteo contrair.",
+   "Volte devagar, sem deixar o peso encostar na pilha e sem girar o quadril ou inclinar o tronco.",
+   "Faça todas as repetições de um lado e depois troque."
+  ],
+  "primaryMuscles": [
+   "abductors",
+   "glutes"
+  ],
+  "secondaryMuscles": [],
+  "media": [
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/cable-hip-abduction-back/f2-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/cable-hip-abduction-back/f2-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/cable-hip-abduction-back/f2-loop.mp4",
+    "width": 800,
+    "height": 600,
     "sortOrder": 2
    }
   ]

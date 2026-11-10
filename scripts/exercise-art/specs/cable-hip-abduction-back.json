@@ -1,0 +1,188 @@
+{
+ "slug": "cable-hip-abduction-back",
+ "camera": {
+  "az": 200,
+  "el": 8
+ },
+ "muscles": [
+  "abductors",
+  "glutes"
+ ],
+ "muscleSide": "L",
+ "props": [
+  {
+   "type": "cable-tower",
+   "pos": [
+    -0.5,
+    0,
+    0.25
+   ],
+   "yaw": 90,
+   "pulleyY": 0.2,
+   "foot": "L",
+   "attachment": "ankle-strap"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ],
+    "pitch": 0,
+    "roll": 0
+   },
+   "spine": {
+    "flex": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0,
+     0.0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -4,
+    "pole": [
+     0,
+     0,
+     1
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0.1,
+     0.0
+    ],
+    "anchor": "ankle",
+    "pitch": 0,
+    "yaw": 0,
+    "pole": [
+     0.3,
+     0,
+     1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.455,
+     1.1,
+     0.25
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -0.3,
+     1
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "curl": 0.0,
+    "pole": [
+     -1,
+     -0.2,
+     -0.3
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 25,
+     "rot": 0,
+     "elbow": 15
+    },
+    "rel": "chest"
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ],
+    "pitch": 0,
+    "roll": -4
+   },
+   "spine": {
+    "flex": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0,
+     0.0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -4,
+    "pole": [
+     0,
+     0,
+     1
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.5,
+     0.27,
+     -0.2
+    ],
+    "anchor": "ankle",
+    "pitch": 0,
+    "yaw": 0,
+    "pole": [
+     0.3,
+     0,
+     1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.455,
+     1.1,
+     0.25
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -0.3,
+     1
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "curl": 0.0,
+    "pole": [
+     -1,
+     -0.2,
+     -0.3
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 25,
+     "rot": 0,
+     "elbow": 15
+    },
+    "rel": "chest"
+   }
+  }
+ }
+}
