@@ -8,8 +8,9 @@
 //    so a reload with bad signal still has its JS/CSS and pictures;
 //  - everything else (RSC payloads, server actions, /api, HTML) goes straight
 //    to the network and is never cached;
-//  - reminders (W-017): shows each Web Push as a notification, opens the app
-//    on a tap, and re-subscribes when the browser rotates the subscription.
+//  - reminders (W-017) and the end of a rest: shows each Web Push as a
+//    notification, opens the app on a tap, and re-subscribes when the browser
+//    rotates the subscription.
 // On localhost (development) it caches no assets or photos (dev chunks aren't
 // hashed); navigations still get the offline page.
 // Bump CACHE_NAME whenever a SHELL_ASSETS file changes (offline.html included):
@@ -119,7 +120,22 @@ self.addEventListener("fetch", (event) => {
 // ---------------------------------------------------------------------------
 // Reminders (Web Push). The payload is { title, body, url, tag } from the
 // server (lib/push/send.ts); `url` is an app path (a tracked /r/<token>).
+// The end of a rest (lib/push/rest-alert.ts) comes tagged "rest-end".
 // ---------------------------------------------------------------------------
+
+const REST_END_TAG = "rest-end";
+
+/** A window of the app on the workout, on screen and focused: it shows (and sounds) the rest's end itself. */
+async function workoutOnScreen() {
+  try {
+    const windows = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+    return windows.some(
+      (c) => c.visibilityState === "visible" && c.focused && new URL(c.url).pathname.startsWith("/app/workout/"),
+    );
+  } catch {
+    return false;
+  }
+}
 
 self.addEventListener("push", (event) => {
   let data = {};
@@ -130,16 +146,25 @@ self.addEventListener("push", (event) => {
   }
   const url = typeof data.url === "string" && data.url.startsWith("/") && !data.url.startsWith("//") ? data.url : "/app/today";
   const title = typeof data.title === "string" && data.title ? data.title : "FGPOWER";
+  const tag = typeof data.tag === "string" && data.tag ? data.tag : "fgpower";
   // Always show one: iOS and Chrome revoke a subscription whose pushes show nothing.
   event.waitUntil(
-    self.registration.showNotification(title, {
-      body: typeof data.body === "string" ? data.body : "",
-      icon: "/icons/icon-192.png",
-      badge: "/icons/badge-96.png",
-      tag: typeof data.tag === "string" && data.tag ? data.tag : "fgpower",
-      lang: "pt-BR",
-      data: { url },
-    }),
+    (async () => {
+      const restEnd = tag === REST_END_TAG;
+      // The workout on screen already beeps and turns its bar green: the notification comes quietly there.
+      const quiet = restEnd && (await workoutOnScreen());
+      await self.registration.showNotification(title, {
+        body: typeof data.body === "string" ? data.body : "",
+        icon: "/icons/icon-192.png",
+        badge: "/icons/badge-96.png",
+        tag,
+        // A new rest's end replaces the last one in the tray, and still alerts.
+        renotify: restEnd && !quiet,
+        silent: quiet,
+        lang: "pt-BR",
+        data: { url },
+      });
+    })(),
   );
 });
 
@@ -157,6 +182,8 @@ self.addEventListener("notificationclick", (event) => {
         } catch {
           // Focus can be refused; navigating still brings the page to the target.
         }
+        // Already there (the workout a rest's end points to): focusing is enough, a reload would only cost.
+        if (new URL(open.url).pathname === target.pathname && !target.search) return;
         try {
           await open.navigate(target.href);
           return;

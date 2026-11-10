@@ -36,26 +36,26 @@ afterAll(async () => {
 const stored = () =>
   prisma.profile.findUniqueOrThrow({
     where: { userId: USER },
-    select: { restTimerSound: true, hapticsEnabled: true, loadIncrementKg: true, cableStepKg: true },
+    select: { restTimerSound: true, hapticsEnabled: true, restEndNotification: true, loadIncrementKg: true, cableStepKg: true },
   });
 
 it("saves the two switches and leaves the retired step and the gym's loads as they were", async () => {
-  const result = await updateWorkoutPreferences({ restTimerSound: false, hapticsEnabled: false });
+  const result = await updateWorkoutPreferences({ restTimerSound: false, hapticsEnabled: false, restEndNotification: false });
   expect(result).toEqual({ ok: true, savedAt: expect.any(String) });
-  expect(await stored()).toEqual({ restTimerSound: false, hapticsEnabled: false, loadIncrementKg: 1, cableStepKg: 2.5 });
+  expect(await stored()).toEqual({ restTimerSound: false, hapticsEnabled: false, restEndNotification: false, loadIncrementKg: 1, cableStepKg: 2.5 });
 });
 
 it("refuses a block that still carries the load step, and writes none of it", async () => {
-  const stale = { restTimerSound: true, hapticsEnabled: true, loadIncrementKg: 5 };
+  const stale = { restTimerSound: true, hapticsEnabled: true, restEndNotification: true, loadIncrementKg: 5 };
   const result = await updateWorkoutPreferences(stale as unknown as Parameters<typeof updateWorkoutPreferences>[0]);
   expect(result).toEqual({ ok: false, error: "Não foi possível salvar agora. Tente de novo." });
-  expect(await stored()).toEqual({ restTimerSound: false, hapticsEnabled: false, loadIncrementKg: 1, cableStepKg: 2.5 });
+  expect(await stored()).toEqual({ restTimerSound: false, hapticsEnabled: false, restEndNotification: false, loadIncrementKg: 1, cableStepKg: 2.5 });
 });
 
 it("says the session expired when there is none, and writes nothing", async () => {
   signedIn = false;
   try {
-    expect(await updateWorkoutPreferences({ restTimerSound: true, hapticsEnabled: true })).toEqual({ ok: false, error: SESSION_EXPIRED_ERROR });
+    expect(await updateWorkoutPreferences({ restTimerSound: true, hapticsEnabled: true, restEndNotification: true })).toEqual({ ok: false, error: SESSION_EXPIRED_ERROR });
   } finally {
     signedIn = true;
   }

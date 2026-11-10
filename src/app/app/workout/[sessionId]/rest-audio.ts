@@ -9,15 +9,35 @@ type AudioContextCtor = typeof AudioContext;
 
 let ctx: AudioContext | null = null;
 
+function isIos() {
+  return /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+}
+
 /**
- * iOS before 17 has no way to mix a page's sound with other apps: starting
- * Web Audio there pauses the user's music. Stay silent rather than do that.
+ * An iOS browser without the Audio Session API (Safari before 17, and Chrome,
+ * Firefox or Edge for iOS on any version) has no way to mix a page's sound
+ * with other apps: starting Web Audio there pauses the user's music. Stay
+ * silent rather than do that.
  */
 function canMixWithOtherAudio() {
   const nav = navigator as AudioSessionNavigator;
   if (nav.audioSession) return true;
-  const iOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-  return !iOS;
+  return !isIos();
+}
+
+/**
+ * On an iPhone or iPad the beep can't be counted on: silent where it can't
+ * mix (above), muted by the ring/silent switch where it can (Safari's
+ * "ambient" session), and never played with the screen locked, when the
+ * page's timers don't run. There the end of a rest arrives as a notification
+ * (rest-notification.ts), and the rest bar says how to turn that on.
+ */
+export function restSoundUnreliable(): boolean {
+  try {
+    return isIos();
+  } catch {
+    return false;
+  }
 }
 
 /** Call from the tap that starts a rest. */

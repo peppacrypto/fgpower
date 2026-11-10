@@ -221,6 +221,9 @@ model Profile {
   restTimerSound            Boolean         @default(true)
   /// Vibration at the end of a rest and on a record (Settings → Durante o treino).
   hapticsEnabled            Boolean         @default(true)
+  /// A notification at the end of a rest on this user's subscribed devices (Settings → Durante o treino):
+  /// the alert that reaches a locked iPhone, where a page can neither beep nor run its timers.
+  restEndNotification       Boolean         @default(true)
   onboardingCompletedAt     DateTime?
   // Age gate (A-049): an attested "18 anos ou mais" at onboarding step 1, before
   // any health question. Exact minimum age and minor/guardian handling are

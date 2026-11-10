@@ -247,9 +247,11 @@ test("Settings: vibration and the theme are kept; the theme applies before the p
   await newUserOnGd1(page, "c6-prefs");
   await page.goto("/app/settings");
 
-  // Durante o treino no longer has the single "Salto de carga": loads follow Minha academia (e2e/33).
+  // Durante o treino: the beep, vibration and the end-of-rest notification (e2e/37), all on by default. No single
+  // "Salto de carga" any more: loads follow Minha academia (e2e/33).
   const during = page.locator("section#durante-o-treino");
-  await expect(during.getByRole("switch")).toHaveCount(2);
+  await expect(during.getByRole("switch")).toHaveCount(3);
+  await expect(during.getByRole("switch", { name: /Notificação no fim do descanso/ })).toBeChecked();
   await expect(page.getByRole("radiogroup", { name: /Salto de carga/ })).toHaveCount(0);
 
   // Vibração off — the page's first tap now. Retried: a tap while the page is still hydrating flips

@@ -106,6 +106,7 @@ export default async function SettingsPage({ searchParams }: PageProps<"/app/set
           initial={{
             restTimerSound: profile.restTimerSound,
             hapticsEnabled: profile.hapticsEnabled,
+            restEndNotification: profile.restEndNotification,
           }}
         />
       </Section>

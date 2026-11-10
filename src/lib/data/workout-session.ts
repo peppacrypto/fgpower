@@ -220,7 +220,14 @@ export async function getWorkoutUserContext(userId: string, firstWorkouts = 3) {
   const [profile, finished] = await Promise.all([
     prisma.profile.findUnique({
       where: { userId },
-      select: { restTimerSound: true, hapticsEnabled: true, limitations: true, missingGear: true, ...GYM_LOADS_SELECT },
+      select: {
+        restTimerSound: true,
+        hapticsEnabled: true,
+        restEndNotification: true,
+        limitations: true,
+        missingGear: true,
+        ...GYM_LOADS_SELECT,
+      },
     }),
     prisma.workoutSession.findMany({
       where: { userId, status: "COMPLETED" },

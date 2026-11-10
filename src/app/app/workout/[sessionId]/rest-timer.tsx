@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { ChevronRight, Minus, Pause, Play, Plus, X } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { restTimerSpeech, spokenDuration } from "@/lib/training/rest-timer-speech";
@@ -196,6 +196,7 @@ export function RestTimerBar({
   onTogglePause,
   onDismiss,
   onAnnounce,
+  hint = null,
 }: {
   timer: RestTimer;
   sound: boolean;
@@ -209,6 +210,8 @@ export function RestTimerBar({
   onTogglePause: () => void;
   onDismiss: () => void;
   onAnnounce: (text: string) => void;
+  /** Over the bar, inside the room it reserves: how to get the end-of-rest alert on this device (rest-notification-hint). */
+  hint?: ReactNode;
 }) {
   const [now, setNow] = useState(() => Date.now());
   const [seenEndAt, setSeenEndAt] = useState<number | null>(null);
@@ -300,6 +303,7 @@ export function RestTimerBar({
       ref={barRef}
       className="pointer-events-none fixed inset-x-0 bottom-0 z-30 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] max-[359px]:px-2 sm:left-64 sm:px-4"
     >
+      {hint}
       <div
         data-rest-state={ended ? "ended" : paused ? "paused" : "running"}
         className={cn(

@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState, useTransition } 
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, unstable_isUnrecognizedActionError, unstable_rethrow } from "next/navigation";
-import { ArrowLeftRight, ChevronDown, ChevronLeft, ChevronRight, Info, Pencil, Plus, SkipForward, Undo2, X } from "lucide-react";
+import { ArrowLeftRight, ChevronDown, ChevronLeft, ChevronRight, Info, Maximize2, Pencil, Plus, SkipForward, Undo2, X } from "lucide-react";
 import { GLoad, GNotes, GCheck } from "@/components/ui/glyph";
 import { ExerciseDemo, FIGURE_BACKGROUND } from "@/components/exercises/exercise-demo";
 import { Button } from "@/components/ui/button";
@@ -62,6 +62,10 @@ import { RirSheet, rirSpareWords } from "./rir-sheet";
 import { FinishSheet, type FinishStats } from "./finish-sheet";
 import { RestTimerBar, clearStoredRestTimer, useRestTimer } from "./rest-timer";
 import { unlockRestAudio } from "./rest-audio";
+import { cancelRestAlert, restAlertNext, useRestAlert } from "./rest-notification";
+import { RestAlertHint } from "./rest-notification-hint";
+import { rememberWorkoutFigure } from "./figure-bone";
+import { FIGURE_HEIGHT, encodeFigureMemory } from "./workout-figure";
 import { useWakeLock } from "./use-wake-lock";
 import { rememberLimitationsEcho } from "./limitations-bone";
 import { recordRows } from "./pr-moment";
@@ -1764,6 +1768,7 @@ export function WorkoutExecutionClient({
     draftsRef.current = {};
     clearStoredDrafts(session.id);
     clearStoredRestTimer(session.id);
+    cancelRestAlert();
   }
 
   /**
@@ -1847,6 +1852,31 @@ export function WorkoutExecutionClient({
       {announcement.n % 2 ? " " : ""}
     </p>
   );
+
+  // The end-of-rest notification's line (rest-notification): the next set of the exercise the
+  // rest leads to, else the exercise after it — so a change in the set table re-sends it.
+  const alertIndex = rest.timer ? (typeof rest.timer.nextIndex === "number" ? rest.timer.nextIndex : rest.timer.exerciseIndex) : -1;
+  const alertRows = alertIndex >= 0 ? rowsByExercise[alertIndex] : undefined;
+  const alertRow = alertRows ? [...alertRows.prescribed, ...alertRows.extras].find((r) => !r.done) : undefined;
+  const alertNext = rest.timer
+    ? restAlertNext({
+        set: alertRow ? rowName(alertRow) : null,
+        exercise: session.exercises[alertIndex]?.exerciseName ?? null,
+        nextExercise: session.exercises.slice(alertIndex + 1).find((ex) => !ex.wasSkipped && !ex.replaced)?.exerciseName ?? null,
+      })
+    : null;
+  const alertDevice = useRestAlert({ sessionId: session.id, timer: rest.timer, next: alertNext, on: session.restAlert.on });
+
+  // The figure a reopened workout lands on (the first exercise with a set still to do), so its
+  // loading skeleton keeps the figure's room (figure-bone).
+  const landingAt = session.exercises.findIndex(
+    (ex, i) => !ex.wasSkipped && !ex.replaced && rowsByExercise[i].prescribed.some((r) => !r.done),
+  );
+  const landing = session.exercises[landingAt < 0 ? session.exercises.length - 1 : landingAt];
+  const landingFigure = landing?.demoUrl ? landing.demoSize : null;
+  useEffect(() => {
+    rememberWorkoutFigure(encodeFigureMemory(session.id, landingFigure));
+  }, [session.id, landingFigure]);
 
   if (!exercise || !rows) {
     return (
@@ -1960,6 +1990,7 @@ export function WorkoutExecutionClient({
       : rest.timer && rest.timer.exerciseIndex === exerciseIndex && complete && !isLast
         ? { name: session.exercises[nextIndex].exerciseName, onGo: () => goTo(nextIndex) }
         : null;
+
   const staleSave = session.stale?.saveAsDay
     ? { since: session.stale.since, saveAsDay: session.stale.saveAsDay, preferred: session.stale.leftOpen && !touched }
     : null;
@@ -2337,22 +2368,32 @@ export function WorkoutExecutionClient({
           </button>
         </div>
 
-        {/* A move learned at home has no one to copy: its figure shows the movement right here. */}
+        {/* The movement itself, where the doubt comes up (workout-figure): no tap needed to see it; a tap opens the
+            technique sheet with it larger. Its height follows the screen's, so the skeleton keeps exactly its room. */}
         {exercise.demoUrl ? (
           <button
             type="button"
             onClick={() => setTechniqueOpen(true)}
             aria-haspopup="dialog"
             aria-label={`Ver técnica de ${exercise.exerciseName}`}
-            className={cn("mt-2 block w-full overflow-hidden rounded-[var(--radius-md)]", FIGURE_BACKGROUND)}
-            data-workout-demo
+            className={cn("relative mt-2 block w-full overflow-hidden rounded-[var(--radius-md)]", FIGURE_BACKGROUND)}
+            data-workout-demo={exercise.demoSize}
           >
             <ExerciseDemo
               src={exercise.demoUrl}
               still={exercise.demoStillUrl}
               alt={`${exercise.exerciseName} — demonstração do movimento`}
-              className="mx-auto h-[clamp(150px,24dvh,220px)] w-auto max-w-full object-contain [mask-image:linear-gradient(90deg,transparent,#000_14%,#000_86%,transparent)]"
+              className={cn(
+                "mx-auto w-auto max-w-full object-contain [mask-image:linear-gradient(90deg,transparent,#000_14%,#000_86%,transparent)]",
+                FIGURE_HEIGHT[exercise.demoSize],
+              )}
             />
+            <span
+              aria-hidden
+              className="absolute bottom-1.5 right-1.5 flex size-7 items-center justify-center rounded-full bg-black/55 text-white"
+            >
+              <Maximize2 className="size-3.5" />
+            </span>
           </button>
         ) : null}
 
@@ -2777,6 +2818,7 @@ export function WorkoutExecutionClient({
           onTogglePause={rest.togglePause}
           onDismiss={rest.dismiss}
           onAnnounce={announce}
+          hint={session.restAlert.on && session.restAlert.settings ? <RestAlertHint device={alertDevice} firstWorkout={session.firstWorkout} /> : null}
         />
       ) : null}
 

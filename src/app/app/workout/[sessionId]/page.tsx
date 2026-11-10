@@ -1,5 +1,7 @@
 import { getExerciseRungs } from "@/lib/data/alternatives";
 import { exerciseMediaParts } from "@/lib/exercises/demo";
+import { vapidPublicKey } from "@/lib/push/config";
+import { reminderSchedulerEnabled } from "@/lib/reminders/scheduler";
 import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
@@ -43,6 +45,7 @@ import { blockingGear } from "@/lib/exercises/gear";
 import { deriveGroups } from "@/lib/programming/groups";
 import { WorkoutExecutionClient } from "./workout-execution-client";
 import { gearOf, planSlotIndex } from "./workout-gear";
+import { figureSizeFor } from "./workout-figure";
 import type { ExecutionGroup, ExecutionSession } from "./types";
 
 export async function generateMetadata({ params }: PageProps<"/app/workout/[sessionId]">): Promise<Metadata> {
@@ -201,18 +204,18 @@ export default async function WorkoutExecutionPage({ params, searchParams }: Pag
     });
     const why = deload || easeBack ? "deloads" : progressionPrincipleSlug(strategy);
     const figure = exerciseMediaParts(log.exercise.media);
-    const inlineFigure = log.exercise.equipmentId === "bodyweight" || log.exercise.equipmentId === "none";
     return {
       id: log.id,
       exerciseId: log.exerciseId,
       exerciseName: log.exercise.namePt,
       exerciseSlug: log.exercise.slug,
       imageUrl: log.exercise.media[0]?.url ?? null,
-      // A move done with no equipment is often learned at home, with no one to copy: its figure shows the movement right on
-      // the screen. A gym move keeps the small thumbnail in the row (its figure is in the technique sheet and on its page),
-      // so the first set stays within reach on a small phone.
-      demoUrl: inlineFigure ? (figure.demo?.url ?? null) : null,
-      demoStillUrl: inlineFigure ? (figure.still?.url ?? null) : null,
+      // Every exercise with a figure shows the movement right on the screen, where a beginner has the doubt: large for a
+      // move with no equipment (often learned at home, with no one to copy), a notch smaller otherwise, so the first set
+      // stays within a short scroll on a small phone. One without a figure keeps the small photo in the row.
+      demoUrl: figure.demo?.url ?? null,
+      demoStillUrl: figure.demo ? (figure.still?.url ?? null) : null,
+      demoSize: figureSizeFor(log.exercise.equipmentId),
       sortOrder: log.sortOrder,
       prescribedSets: log.prescribedSets,
       warmupSets: log.warmupSets,
@@ -287,6 +290,8 @@ export default async function WorkoutExecutionPage({ params, searchParams }: Pag
     restTimerSound: profile?.restTimerSound ?? true,
     haptics: profile?.hapticsEnabled ?? true,
     firstWorkout: finishedWorkouts === 0,
+    // Lembretes (where a device turns notifications on) shows only while the scheduler runs (reminders-section).
+    restAlert: { on: (profile?.restEndNotification ?? true) && vapidPublicKey() !== null, settings: reminderSchedulerEnabled() },
     limitations: finishedWorkouts < ECHO_LIMITATIONS_FOR ? limitations : null,
     stale,
     week: week

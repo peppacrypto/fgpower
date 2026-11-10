@@ -16,6 +16,7 @@ export const workoutPreferencesSchema = z
   .object({
     restTimerSound: z.boolean(),
     hapticsEnabled: z.boolean(),
+    restEndNotification: z.boolean(),
   })
   .strict();
 

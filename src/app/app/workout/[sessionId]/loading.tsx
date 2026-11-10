@@ -2,6 +2,8 @@ import { cookies } from "next/headers";
 import { Bone, SkeletonScreen } from "@/components/ui/skeleton";
 import { NestedSkeleton } from "@/components/ui/skeleton-client";
 import { LimitationsBone } from "./limitations-bone";
+import { FigureBone } from "./figure-bone";
+import { WORKOUT_FIGURE_COOKIE, boneFigure, type WorkoutFigureSize } from "./workout-figure";
 import { LIMITATIONS_ECHO_COOKIE, echoPx } from "./limitations-echo";
 import { SummarySkeleton } from "./summary/loading";
 import { EditSetsSkeleton } from "./summary/editar/loading";
@@ -13,7 +15,9 @@ const GRID = "grid grid-cols-[2.25rem_minmax(0,1fr)_minmax(0,1fr)_3rem_3rem] ite
  * The live workout, drawn block by block as workout-execution-client.tsx lays
  * out its first exercise: the sticky header (with the program week's line), the "Você informou" note when
  * this device's screen last showed one (LimitationsBone, limitations-echo),
- * the name (two lines, as most are), the exercise nav row, the actions, the
+ * the name (two lines, as most are), the exercise nav row, the exercise's
+ * figure (FigureBone: the one this device last knew the workout lands on, else
+ * the usual compact one — nine in ten program exercises have one), the actions, the
  * program's note, the first-time / last-time box, the warm-up line and then
  * the set table on its real grid. Heights follow the real blocks so the table
  * lands where it will be (within a few px on a phone; a one-line name or a
@@ -23,7 +27,7 @@ const GRID = "grid grid-cols-[2.25rem_minmax(0,1fr)_minmax(0,1fr)_3rem_3rem] ite
  * (and again below 338px), the coaching box below 367px, the warm-up line
  * below 382px. Keep in step with the workout layout.
  */
-function WorkoutSkeleton({ limitationsPx }: { limitationsPx: number }) {
+function WorkoutSkeleton({ limitationsPx, figure }: { limitationsPx: number; figure: WorkoutFigureSize | null }) {
   return (
     <SkeletonScreen label="o treino" className="flex min-h-dvh flex-col">
       <div className="sticky top-[env(safe-area-inset-top,0px)] z-20 border-b border-border bg-background/95 px-4 py-3">
@@ -63,6 +67,7 @@ function WorkoutSkeleton({ limitationsPx }: { limitationsPx: number }) {
           </div>
           <Bone className="size-11 shrink-0" />
         </div>
+        <FigureBone server={figure} />
         {/* Ver técnica · Trocar · Pular exercício · Nota */}
         <div className="mt-2 flex h-11 items-center gap-4">
           <Bone className="h-3.5 w-20" />
@@ -124,10 +129,12 @@ function WorkoutSkeleton({ limitationsPx }: { limitationsPx: number }) {
  * device's pref instead — LimitationsBone).
  */
 export default async function WorkoutLoading() {
-  const limitationsPx = echoPx((await cookies()).get(LIMITATIONS_ECHO_COOKIE)?.value);
+  const jar = await cookies();
+  const limitationsPx = echoPx(jar.get(LIMITATIONS_ECHO_COOKIE)?.value);
+  const figure = boneFigure(jar.get(WORKOUT_FIGURE_COOKIE)?.value, null);
   return (
     <NestedSkeleton
-      own={<WorkoutSkeleton limitationsPx={limitationsPx} />}
+      own={<WorkoutSkeleton limitationsPx={limitationsPx} figure={figure} />}
       routes={[
         ["/app/workout/*/summary", <SummarySkeleton key="summary" />],
         ["/app/workout/*/summary/editar", <EditSetsSkeleton key="edit" />],

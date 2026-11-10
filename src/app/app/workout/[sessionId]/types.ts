@@ -1,3 +1,4 @@
+import type { WorkoutFigureSize } from "./workout-figure";
 import type { LoadGrid } from "@/lib/training/load-grid";
 
 export interface ExecutionSetLog {
@@ -19,10 +20,12 @@ export interface ExecutionExerciseLog {
   exerciseName: string;
   exerciseSlug: string;
   imageUrl: string | null;
-  /** The exercise's own figure (the home library): shown large on the screen, animated or still. */
+  /** The exercise's own figure (its demonstration loop): shown on the screen, above the sets, animated or still. */
   demoUrl: string | null;
   /** The frame shown in the animation's place to someone who asks for less motion. */
   demoStillUrl: string | null;
+  /** How tall the figure stands (workout-figure): large for a move with no equipment, else compact. */
+  demoSize: WorkoutFigureSize;
   sortOrder: number;
   prescribedSets: number;
   warmupSets: number;
@@ -158,6 +161,12 @@ export interface ExecutionSession {
   haptics: boolean;
   /** No workout finished yet: this is the user's very first. */
   firstWorkout: boolean;
+  /**
+   * The end-of-rest notification (rest-notification.ts): `on` when the user keeps it on
+   * (Profile.restEndNotification) and this server can push; `settings` when Settings shows the
+   * switch that turns notifications on for a device (Lembretes), so the iPhone hint can point there.
+   */
+  restAlert: { on: boolean; settings: boolean };
   /**
    * What the user wrote about injuries/limitations at onboarding, echoed at
    * the top of their first few workouts; null afterwards or when empty.

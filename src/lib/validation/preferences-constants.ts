@@ -13,4 +13,6 @@
 export interface WorkoutPreferences {
   restTimerSound: boolean;
   hapticsEnabled: boolean;
+  /** A notification when a rest ends, on the devices with notifications on (rest-alert). */
+  restEndNotification: boolean;
 }

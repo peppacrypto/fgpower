@@ -256,10 +256,12 @@ test("what the user wrote about injuries is echoed on their first workouts, and 
   await expect(echo).toBeVisible();
   await expect(page.getByText("“Evitar agachamento profundo por causa do joelho”")).toBeVisible();
   await expect(page.getByText(/use Pular exercício ou fale com um profissional/)).toBeVisible();
-  // It doesn't push the first set below the fold.
+  // It doesn't push the first set out of reach. The exercise's figure now stands above the sets
+  // (every exercise with one shows it, e2e/37), so on a 664 px screen, on a first workout with this
+  // note, the first set's boxes are a short scroll away: under a fifth of the screen (~120 px).
   const viewport = page.viewportSize()!;
   const kg1 = await page.getByLabel("Série 1 — kg", { exact: true }).boundingBox();
-  expect(kg1!.y + kg1!.height).toBeLessThanOrEqual(viewport.height);
+  expect(kg1!.y + kg1!.height).toBeLessThanOrEqual(viewport.height * 1.2);
 
   // On the other exercises: a one-line reminder that opens in full.
   await page.getByRole("button", { name: "Próximo exercício" }).first().click();
