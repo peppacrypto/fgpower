@@ -56,13 +56,14 @@ W('seated-bent-over-one-arm-dumbbell-triceps-extension', { camera:{az:95,el:8}, 
 
 // The classic two-hand overhead extension: palms flat and up under the top plate, side by side, thumbs toward each other
 // around the handle. Arms by position so both hands stay together under the plate through the whole rep: angle-driven arms
-// spread the hands 28 cm apart at the bottom, and a wrapped grip pinched the handle (audit 2026-11-07; a user asked for clear demos).
-{
-  const file = new URL('../standing-dumbbell-triceps-extension.json', import.meta.url)
+// spread the hands 28 cm apart at the bottom, a wrapped grip pinched the handle (audit 2026-11-07; a user asked for clear
+// demos), and the dumbbell was listed twice (spec props + frame props: two overlapping dumbbells).
+// at: palm centres (world) per frame and the dumbbell's tilt; the palms push along its axis, the fingers point back and in.
+const byPosition = (slug, at, staticProps) => {
+  const file = new URL(`../${slug}.json`, import.meta.url)
   const s = JSON.parse(fs.readFileSync(file, 'utf8'))
-  // Palm centres (world) and the dumbbell's tilt: the palms push along its axis, the fingers point back and a little inward.
-  const at = { start: [1.975, 0.062, 0.2], mid: [1.89, -0.199, -0.3], end: [1.667, -0.176, -0.5] }
-  delete s.props
+  if (staticProps.length) s.props = staticProps
+  else delete s.props
   for (const [k, f] of Object.entries(s.frames)) {
     const [y, z, t] = at[k]
     for (const [arm, sx] of [['armL', 1], ['armR', -1]]) {
@@ -72,3 +73,6 @@ W('seated-bent-over-one-arm-dumbbell-triceps-extension', { camera:{az:95,el:8}, 
   }
   fs.writeFileSync(file, JSON.stringify(s, null, 1))
 }
+byPosition('standing-dumbbell-triceps-extension', { start: [1.975, 0.062, 0.2], mid: [1.89, -0.199, -0.3], end: [1.667, -0.176, -0.5] }, [])
+// TODO seated-triceps-press (held back): same fix, but on the shoulder-press-bench the pad top is at y 1.29, so the hands and the
+// dumbbell end up inside it at the bottom. Seat it on the end of a flat-bench first, then byPosition with that bench.
