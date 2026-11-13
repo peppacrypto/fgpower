@@ -1,0 +1,137 @@
+{
+ "slug": "external-rotation-with-cable",
+ "camera": {
+  "az": 40,
+  "el": 8
+ },
+ "muscles": [
+  "posterior-deltoid"
+ ],
+ "props": [
+  {
+   "type": "cable-tower",
+   "pos": [
+    -0.75,
+    0,
+    0
+   ],
+   "yaw": 90,
+   "pulleyY": 1.08,
+   "hand": "L",
+   "attachment": "d-handle"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.93,
+     0
+    ],
+    "pitch": 2
+   },
+   "spine": {
+    "flex": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.15,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.15,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 8,
+     "rot": 45,
+     "elbow": 90
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "pron": 0.5
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 6,
+     "rot": 0,
+     "elbow": 12
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.93,
+     0
+    ],
+    "pitch": 2
+   },
+   "spine": {
+    "flex": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.15,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.15,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 8,
+     "rot": -60,
+     "elbow": 90
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "pron": 0.5
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 6,
+     "rot": 0,
+     "elbow": 12
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   }
+  }
+ },
+ "muscleSide": "L"
+}

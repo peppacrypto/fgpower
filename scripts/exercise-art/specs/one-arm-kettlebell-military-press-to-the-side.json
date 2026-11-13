@@ -1,0 +1,171 @@
+{
+ "slug": "one-arm-kettlebell-military-press-to-the-side",
+ "camera": {
+  "az": 62,
+  "el": 6
+ },
+ "muscles": [
+  "anterior-deltoid",
+  "lateral-deltoid",
+  "triceps"
+ ],
+ "muscleSide": "L",
+ "props": [
+  {
+   "type": "kettlebell",
+   "hand": "L",
+   "kg": 16,
+   "mode": "rack"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.925,
+     0
+    ]
+   },
+   "neck": {
+    "twist": 0
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0.03
+    ],
+    "anchor": "sole",
+    "yaw": 8,
+    "pitch": 0,
+    "pole": [
+     0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0.03
+    ],
+    "anchor": "sole",
+    "yaw": -8,
+    "pitch": 0,
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.25,
+     1.44,
+     0.2
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     1,
+     0.12
+    ],
+    "palm": [
+     -0.9,
+     -0.05,
+     -0.45
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.25,
+     -1,
+     -0.15
+    ]
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 8,
+     "elbow": 14
+    },
+    "curl": 0.3
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.925,
+     0
+    ]
+   },
+   "neck": {
+    "twist": 0
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0.03
+    ],
+    "anchor": "sole",
+    "yaw": 8,
+    "pitch": 0,
+    "pole": [
+     0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0.03
+    ],
+    "anchor": "sole",
+    "yaw": -8,
+    "pitch": 0,
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.25,
+     1.96,
+     0.07
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     1,
+     0.03
+    ],
+    "palm": [
+     -0.5,
+     0,
+     0.87
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.8,
+     -0.1,
+     -0.3
+    ]
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 8,
+     "elbow": 14
+    },
+    "curl": 0.3
+   }
+  }
+ }
+}

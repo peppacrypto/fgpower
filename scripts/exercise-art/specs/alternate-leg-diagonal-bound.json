@@ -1,0 +1,186 @@
+{
+ "slug": "alternate-leg-diagonal-bound",
+ "camera": {
+  "az": 60,
+  "el": 8
+ },
+ "muscles": [
+  "quadriceps",
+  "glutes",
+  "hamstrings"
+ ],
+ "floats": true,
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.86,
+     -0.5
+    ],
+    "pitch": 10
+   },
+   "neck": {
+    "flex": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": -30,
+     "abd": 8,
+     "elbow": 70
+    },
+    "curl": 0.5
+   },
+   "armR": {
+    "fk": {
+     "flex": 40,
+     "abd": 8,
+     "elbow": 80
+    },
+    "curl": 0.5
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0,
+     -0.3
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.1,
+     0,
+     1
+    ],
+    "pitch": 0
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0,
+     -0.7
+    ],
+    "anchor": "ball",
+    "pole": [
+     -0.1,
+     0,
+     1
+    ],
+    "pitch": 30
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     -0.15,
+     1.2,
+     0.1
+    ],
+    "pitch": 10
+   },
+   "neck": {
+    "flex": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": -40,
+     "abd": 8,
+     "elbow": 70
+    },
+    "curl": 0.5
+   },
+   "armR": {
+    "fk": {
+     "flex": 70,
+     "abd": 8,
+     "elbow": 80
+    },
+    "curl": 0.5
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0.35,
+     0
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.1,
+     0,
+     1
+    ],
+    "pitch": 10
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.35,
+     -0.15
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.1,
+     0,
+     1
+    ],
+    "pitch": 0
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     -0.3,
+     0.86,
+     0.75
+    ],
+    "pitch": 12
+   },
+   "neck": {
+    "flex": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": -30,
+     "abd": 30,
+     "elbow": 70
+    },
+    "curl": 0.5
+   },
+   "armR": {
+    "fk": {
+     "flex": 45,
+     "abd": 8,
+     "elbow": 80
+    },
+    "curl": 0.5
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0.1,
+     0.35
+    ],
+    "anchor": "ball",
+    "pole": [
+     0.1,
+     0,
+     1
+    ],
+    "pitch": 40
+   },
+   "legR": {
+    "pos": [
+     -0.3,
+     0,
+     0.8
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.1,
+     0,
+     1
+    ],
+    "pitch": 0
+   }
+  }
+ }
+}

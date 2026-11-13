@@ -1,0 +1,150 @@
+{
+ "slug": "smith-machine-leg-press",
+ "camera": {
+  "az": 95,
+  "el": 6
+ },
+ "muscles": [
+  "quadriceps"
+ ],
+ "floats": true,
+ "props": [
+  {
+   "type": "smith",
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "follow": "feet"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.13,
+     0.3
+    ],
+    "pitch": -90
+   },
+   "neck": {
+    "flex": 4
+   },
+   "armL": {
+    "pos": [
+     0.38,
+     0.15,
+     -0.1
+    ],
+    "hand": "relaxed",
+    "pole": [
+     1,
+     -0.4,
+     -0.5
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.38,
+     0.15,
+     -0.1
+    ],
+    "hand": "relaxed",
+    "pole": [
+     -1,
+     -0.4,
+     -0.5
+    ]
+   },
+   "legL": {
+    "fk": {
+     "flex": 140.7,
+     "abd": 12,
+     "rot": 0,
+     "knee": 55.4
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 140.7,
+     "abd": 12,
+     "rot": 0,
+     "knee": 55.4
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 0
+    }
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.13,
+     0.14
+    ],
+    "pitch": -90
+   },
+   "neck": {
+    "flex": 4
+   },
+   "armL": {
+    "pos": [
+     0.38,
+     0.15,
+     -0.1
+    ],
+    "hand": "relaxed",
+    "pole": [
+     1,
+     -0.4,
+     -0.5
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.38,
+     0.15,
+     -0.1
+    ],
+    "hand": "relaxed",
+    "pole": [
+     -1,
+     -0.4,
+     -0.5
+    ]
+   },
+   "legL": {
+    "fk": {
+     "flex": 122.9,
+     "abd": 12,
+     "rot": 0,
+     "knee": 45.7
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 122.9,
+     "abd": 12,
+     "rot": 0,
+     "knee": 45.7
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 0
+    }
+   }
+  }
+ }
+}

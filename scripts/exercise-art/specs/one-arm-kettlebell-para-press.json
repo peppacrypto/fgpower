@@ -1,0 +1,245 @@
+{
+ "slug": "one-arm-kettlebell-para-press",
+ "camera": {
+  "az": 35,
+  "el": 6
+ },
+ "muscles": [
+  "anterior-deltoid",
+  "lateral-deltoid",
+  "triceps"
+ ],
+ "muscleSide": "L",
+ "props": [
+  {
+   "type": "kettlebell",
+   "hand": "L",
+   "kg": 16,
+   "mode": "rack"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.925,
+     0
+    ]
+   },
+   "neck": {
+    "twist": 0
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0.03
+    ],
+    "anchor": "sole",
+    "yaw": 8,
+    "pitch": 0,
+    "pole": [
+     0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0.03
+    ],
+    "anchor": "sole",
+    "yaw": -8,
+    "pitch": 0,
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.3,
+     1.44,
+     0.2
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     1,
+     0.1
+    ],
+    "palm": [
+     -0.78,
+     -0.05,
+     -0.62
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.8,
+     -0.55,
+     -0.2
+    ]
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 8,
+     "elbow": 14
+    },
+    "curl": 0.3
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.925,
+     0
+    ]
+   },
+   "neck": {
+    "twist": 0
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0.03
+    ],
+    "anchor": "sole",
+    "yaw": 8,
+    "pitch": 0,
+    "pole": [
+     0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0.03
+    ],
+    "anchor": "sole",
+    "yaw": -8,
+    "pitch": 0,
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.32,
+     1.7,
+     0.14
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     1,
+     0.06
+    ],
+    "palm": [
+     -0.2,
+     0,
+     0.98
+    ],
+    "curl": 0.85,
+    "pole": [
+     1,
+     -0.2,
+     -0.2
+    ]
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 8,
+     "elbow": 14
+    },
+    "curl": 0.3
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.925,
+     0
+    ]
+   },
+   "neck": {
+    "twist": 0
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0.03
+    ],
+    "anchor": "sole",
+    "yaw": 8,
+    "pitch": 0,
+    "pole": [
+     0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0.03
+    ],
+    "anchor": "sole",
+    "yaw": -8,
+    "pitch": 0,
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.3,
+     1.96,
+     0.07
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     1,
+     0.03
+    ],
+    "palm": [
+     -0.1,
+     0,
+     0.99
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.8,
+     -0.1,
+     -0.3
+    ]
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 8,
+     "elbow": 14
+    },
+    "curl": 0.3
+   }
+  }
+ }
+}

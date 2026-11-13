@@ -1,0 +1,201 @@
+{
+ "slug": "single-cone-sprint-drill",
+ "camera": {
+  "az": 70,
+  "el": 8
+ },
+ "muscles": [
+  "quadriceps",
+  "calves"
+ ],
+ "floats": true,
+ "props": [
+  {
+   "type": "cone",
+   "pos": [
+    0.55,
+    0,
+    0.1
+   ]
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.9,
+     0
+    ],
+    "pitch": 12
+   },
+   "neck": {
+    "flex": -12
+   },
+   "armL": {
+    "fk": {
+     "flex": -40,
+     "abd": 22,
+     "elbow": 90
+    },
+    "rel": "chest",
+    "curl": 0.5
+   },
+   "armR": {
+    "fk": {
+     "flex": 70,
+     "abd": 22,
+     "elbow": 90
+    },
+    "rel": "chest",
+    "curl": 0.5
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0.22,
+     0.16
+    ],
+    "anchor": "ball",
+    "pitch": 35,
+    "pole": [
+     0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0,
+     -0.05
+    ],
+    "anchor": "ball",
+    "pitch": 25,
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.9,
+     0
+    ],
+    "pitch": 12
+   },
+   "neck": {
+    "flex": -12
+   },
+   "armL": {
+    "fk": {
+     "flex": 15,
+     "abd": 22,
+     "elbow": 90
+    },
+    "rel": "chest",
+    "curl": 0.5
+   },
+   "armR": {
+    "fk": {
+     "flex": 15,
+     "abd": 22,
+     "elbow": 90
+    },
+    "rel": "chest",
+    "curl": 0.5
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0,
+     -0.05
+    ],
+    "anchor": "ball",
+    "pitch": 25,
+    "pole": [
+     0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0,
+     -0.05
+    ],
+    "anchor": "ball",
+    "pitch": 25,
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.9,
+     0
+    ],
+    "pitch": 12
+   },
+   "neck": {
+    "flex": -12
+   },
+   "armL": {
+    "fk": {
+     "flex": 70,
+     "abd": 22,
+     "elbow": 90
+    },
+    "rel": "chest",
+    "curl": 0.5
+   },
+   "armR": {
+    "fk": {
+     "flex": -40,
+     "abd": 22,
+     "elbow": 90
+    },
+    "rel": "chest",
+    "curl": 0.5
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0,
+     -0.05
+    ],
+    "anchor": "ball",
+    "pitch": 25,
+    "pole": [
+     0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0.22,
+     0.16
+    ],
+    "anchor": "ball",
+    "pitch": 35,
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   }
+  }
+ }
+}

@@ -1,0 +1,186 @@
+{
+ "slug": "cable-hip-adduction",
+ "camera": {
+  "az": 25,
+  "el": 8
+ },
+ "muscles": [
+  "adductors"
+ ],
+ "muscleSide": "L",
+ "props": [
+  {
+   "type": "cable-tower",
+   "pos": [
+    0.8,
+    0,
+    0
+   ],
+   "yaw": -90,
+   "pulleyY": 0.2,
+   "foot": "L",
+   "attachment": "ankle-strap"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ],
+    "pitch": 2
+   },
+   "neck": {
+    "flex": 0
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 25,
+     "elbow": 10
+    },
+    "curl": 0.2
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 25,
+     "elbow": 10
+    },
+    "curl": 0.2
+   },
+   "legR": {
+    "pos": [
+     -0.12,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -4
+   },
+   "legL": {
+    "pos": [
+     0.38,
+     0.14,
+     0
+    ],
+    "anchor": "ankle",
+    "pitch": -4,
+    "pole": [
+     0,
+     0.1,
+     1
+    ]
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ],
+    "pitch": 2
+   },
+   "neck": {
+    "flex": 0
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 25,
+     "elbow": 10
+    },
+    "curl": 0.2
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 25,
+     "elbow": 10
+    },
+    "curl": 0.2
+   },
+   "legR": {
+    "pos": [
+     -0.12,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -4
+   },
+   "legL": {
+    "pos": [
+     0.12,
+     0.2,
+     0.06
+    ],
+    "anchor": "ankle",
+    "pitch": -6,
+    "pole": [
+     0,
+     0.1,
+     1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ],
+    "pitch": 2
+   },
+   "neck": {
+    "flex": 0
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 25,
+     "elbow": 10
+    },
+    "curl": 0.2
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 25,
+     "elbow": 10
+    },
+    "curl": 0.2
+   },
+   "legR": {
+    "pos": [
+     -0.12,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -4
+   },
+   "legL": {
+    "pos": [
+     -0.1,
+     0.16,
+     0.2
+    ],
+    "anchor": "ankle",
+    "pitch": -8,
+    "pole": [
+     0,
+     0.1,
+     1
+    ]
+   }
+  }
+ }
+}

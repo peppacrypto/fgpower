@@ -1,0 +1,367 @@
+{
+ "slug": "conans-wheel",
+ "camera": {
+  "az": 24,
+  "el": 8
+ },
+ "muscles": [
+  "quadriceps",
+  "biceps",
+  "spinal-erectors"
+ ],
+ "props": [
+  {
+   "type": "conans-wheel",
+   "pos": [
+    -2.45,
+    0,
+    0.1
+   ],
+   "follow": true
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.875,
+     0.02
+    ],
+    "pitch": 3
+   },
+   "spine": {
+    "flex": -6
+   },
+   "neck": {
+    "flex": -10
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0.2
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "toes": 0,
+    "yaw": 5
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0.02,
+     -0.16
+    ],
+    "anchor": "ball",
+    "pitch": 22,
+    "toes": 0,
+    "yaw": -5
+   },
+   "armL": {
+    "pos": [
+     0.22,
+     1.44,
+     0.31
+    ],
+    "contact": false,
+    "fingers": [
+     -0.5,
+     0.75,
+     0.2
+    ],
+    "palm": [
+     -0.4,
+     0.1,
+     -0.9
+    ],
+    "curl": 0.5,
+    "pole": [
+     0.5,
+     -0.3,
+     0
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.22,
+     1.44,
+     0.31
+    ],
+    "contact": false,
+    "fingers": [
+     0.5,
+     0.75,
+     0.2
+    ],
+    "palm": [
+     0.4,
+     0.1,
+     -0.9
+    ],
+    "curl": 0.5,
+    "pole": [
+     -0.5,
+     -0.3,
+     0
+    ]
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.887,
+     0.02
+    ],
+    "pitch": 3
+   },
+   "spine": {
+    "flex": -6
+   },
+   "neck": {
+    "flex": -10
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 5
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0.07,
+     0.05
+    ],
+    "anchor": "ball",
+    "pitch": 30,
+    "toes": 0,
+    "yaw": -5
+   },
+   "armL": {
+    "pos": [
+     0.22,
+     1.44,
+     0.31
+    ],
+    "contact": false,
+    "fingers": [
+     -0.5,
+     0.75,
+     0.2
+    ],
+    "palm": [
+     -0.4,
+     0.1,
+     -0.9
+    ],
+    "curl": 0.5,
+    "pole": [
+     0.5,
+     -0.3,
+     0
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.22,
+     1.44,
+     0.31
+    ],
+    "contact": false,
+    "fingers": [
+     0.5,
+     0.75,
+     0.2
+    ],
+    "palm": [
+     0.4,
+     0.1,
+     -0.9
+    ],
+    "curl": 0.5,
+    "pole": [
+     -0.5,
+     -0.3,
+     0
+    ]
+   }
+  },
+  "mid2": {
+   "root": {
+    "pos": [
+     0,
+     0.887,
+     0.02
+    ],
+    "pitch": 3
+   },
+   "spine": {
+    "flex": -6
+   },
+   "neck": {
+    "flex": -10
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0.07,
+     0.05
+    ],
+    "anchor": "ball",
+    "pitch": 30,
+    "toes": 0,
+    "yaw": 5
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -5
+   },
+   "armL": {
+    "pos": [
+     0.22,
+     1.44,
+     0.31
+    ],
+    "contact": false,
+    "fingers": [
+     -0.5,
+     0.75,
+     0.2
+    ],
+    "palm": [
+     -0.4,
+     0.1,
+     -0.9
+    ],
+    "curl": 0.5,
+    "pole": [
+     0.5,
+     -0.3,
+     0
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.22,
+     1.44,
+     0.31
+    ],
+    "contact": false,
+    "fingers": [
+     0.5,
+     0.75,
+     0.2
+    ],
+    "palm": [
+     0.4,
+     0.1,
+     -0.9
+    ],
+    "curl": 0.5,
+    "pole": [
+     -0.5,
+     -0.3,
+     0
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.875,
+     0.02
+    ],
+    "pitch": 3
+   },
+   "spine": {
+    "flex": -6
+   },
+   "neck": {
+    "flex": -10
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0.02,
+     -0.16
+    ],
+    "anchor": "ball",
+    "pitch": 22,
+    "toes": 0,
+    "yaw": 5
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0.2
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "toes": 0,
+    "yaw": -5
+   },
+   "armL": {
+    "pos": [
+     0.22,
+     1.44,
+     0.31
+    ],
+    "contact": false,
+    "fingers": [
+     -0.5,
+     0.75,
+     0.2
+    ],
+    "palm": [
+     -0.4,
+     0.1,
+     -0.9
+    ],
+    "curl": 0.5,
+    "pole": [
+     0.5,
+     -0.3,
+     0
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.22,
+     1.44,
+     0.31
+    ],
+    "contact": false,
+    "fingers": [
+     0.5,
+     0.75,
+     0.2
+    ],
+    "palm": [
+     0.4,
+     0.1,
+     -0.9
+    ],
+    "curl": 0.5,
+    "pole": [
+     -0.5,
+     -0.3,
+     0
+    ]
+   }
+  }
+ }
+}

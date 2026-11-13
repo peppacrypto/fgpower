@@ -1,0 +1,172 @@
+{
+ "slug": "leg-over-floor-press",
+ "camera": {
+  "az": 45,
+  "el": 14
+ },
+ "muscles": [
+  "chest",
+  "triceps",
+  "anterior-deltoid"
+ ],
+ "muscleSide": "L",
+ "floats": true,
+ "props": [
+  {
+   "type": "kettlebell",
+   "hand": "L",
+   "kg": 16,
+   "mode": "rack"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.17,
+     0.2
+    ],
+    "pitch": -90
+   },
+   "neck": {
+    "flex": 6
+   },
+   "legR": {
+    "pos": [
+     -0.42,
+     0,
+     0.92
+    ],
+    "anchor": "heel",
+    "pitch": -70,
+    "pole": [
+     0,
+     1,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     -0.3,
+     0.6,
+     0.82
+    ],
+    "anchor": "ankle",
+    "pitch": -55,
+    "yaw": -15,
+    "pole": [
+     0,
+     1,
+     0
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.34,
+     0.36,
+     -0.26
+    ],
+    "contact": true,
+    "fingers": [
+     0.05,
+     1,
+     0
+    ],
+    "palm": [
+     -0.5,
+     0,
+     0.87
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.7,
+     -0.15,
+     0.1
+    ]
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 75,
+     "elbow": 4
+    },
+    "curl": 0.2
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.17,
+     0.2
+    ],
+    "pitch": -90
+   },
+   "neck": {
+    "flex": 6
+   },
+   "legR": {
+    "pos": [
+     -0.42,
+     0,
+     0.92
+    ],
+    "anchor": "heel",
+    "pitch": -70,
+    "pole": [
+     0,
+     1,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     -0.3,
+     0.6,
+     0.82
+    ],
+    "anchor": "ankle",
+    "pitch": -55,
+    "yaw": -15,
+    "pole": [
+     0,
+     1,
+     0
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.19,
+     0.67,
+     -0.26
+    ],
+    "contact": true,
+    "fingers": [
+     0.05,
+     1,
+     0
+    ],
+    "palm": [
+     -0.5,
+     0,
+     0.87
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.8,
+     -0.1,
+     -0.3
+    ]
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 75,
+     "elbow": 4
+    },
+    "curl": 0.2
+   }
+  }
+ }
+}

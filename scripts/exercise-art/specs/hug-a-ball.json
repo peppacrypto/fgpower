@@ -1,0 +1,120 @@
+{
+ "slug": "hug-a-ball",
+ "camera": {
+  "az": 60,
+  "el": 10
+ },
+ "muscles": [
+  "spinal-erectors"
+ ],
+ "props": [
+  {
+   "type": "stability-ball",
+   "pos": [
+    0,
+    0,
+    0.5
+   ],
+   "radius": 0.325,
+   "load": 0.4
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.12,
+     -0.2
+    ],
+    "pitch": 12
+   },
+   "spine": {
+    "flex": 28
+   },
+   "neck": {
+    "flex": 10
+   },
+   "armL": {
+    "pos": [
+     0.295,
+     0.4,
+     0.52
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     -0.3,
+     0,
+     1
+    ],
+    "palm": [
+     -1,
+     0,
+     0.1
+    ],
+    "pole": [
+     1,
+     -0.3,
+     -0.5
+    ],
+    "curl": 0.3
+   },
+   "armR": {
+    "pos": [
+     -0.295,
+     0.4,
+     0.52
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0.3,
+     0,
+     1
+    ],
+    "palm": [
+     1,
+     0,
+     0.1
+    ],
+    "pole": [
+     -1,
+     -0.3,
+     -0.5
+    ],
+    "curl": 0.3
+   },
+   "legL": {
+    "pos": [
+     0.55,
+     0,
+     0.5
+    ],
+    "anchor": "sole",
+    "yaw": 0,
+    "pitch": 0,
+    "pole": [
+     0.3,
+     1,
+     0.3
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.55,
+     0,
+     0.5
+    ],
+    "anchor": "sole",
+    "yaw": 0,
+    "pitch": 0,
+    "pole": [
+     -0.3,
+     1,
+     0.3
+    ]
+   }
+  }
+ }
+}

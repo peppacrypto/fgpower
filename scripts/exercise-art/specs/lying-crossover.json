@@ -1,0 +1,83 @@
+{
+ "slug": "lying-crossover",
+ "camera": {
+  "az": 30,
+  "el": 35
+ },
+ "muscles": [
+  "abductors"
+ ],
+ "props": [
+  {
+   "type": "floor-mat"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.125,
+     0
+    ],
+    "pitch": -90
+   },
+   "neck": {
+    "flex": 0
+   },
+   "spine": {
+    "twist": -12,
+    "flex": 0
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.09,
+     0.86
+    ],
+    "anchor": "ankle",
+    "pole": [
+     0,
+     1,
+     0
+    ],
+    "pitch": -90
+   },
+   "legL": {
+    "fk": {
+     "flex": 90,
+     "abd": -30,
+     "rot": 0,
+     "knee": 100
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "armL": {
+    "fk": {
+     "flex": 5,
+     "abd": 35,
+     "rot": 0,
+     "elbow": 5
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "curl": 0.2
+   },
+   "armR": {
+    "fk": {
+     "flex": 5,
+     "abd": 35,
+     "rot": 0,
+     "elbow": 5
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "curl": 0.2
+   }
+  }
+ },
+ "muscleSide": "L"
+}

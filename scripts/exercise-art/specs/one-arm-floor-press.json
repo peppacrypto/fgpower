@@ -1,0 +1,207 @@
+{
+ "slug": "one-arm-floor-press",
+ "camera": {
+  "az": 50,
+  "el": 10
+ },
+ "muscles": [
+  "triceps",
+  "chest"
+ ],
+ "muscleSide": "L",
+ "floats": true,
+ "props": [
+  {
+   "type": "dumbbell",
+   "hand": "L"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.125,
+     0.2
+    ],
+    "pitch": -90
+   },
+   "neck": {
+    "flex": 6
+   },
+   "spine": {
+    "flex": -3
+   },
+   "armL": {
+    "pos": [
+     0.22,
+     0.66,
+     -0.2
+    ],
+    "contact": true,
+    "hand": "grip",
+    "grip": 0.014,
+    "fingers": [
+     0,
+     0.95,
+     -0.3
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "pole": [
+     1,
+     -0.3,
+     0.1
+    ],
+    "curl": 0.82
+   },
+   "armR": {
+    "pos": [
+     -0.3,
+     0.05,
+     0
+    ],
+    "rel": "world",
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -1,
+     -0.3,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.2,
+     0,
+     0.55
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.2,
+     1,
+     0.3
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.2,
+     0,
+     0.55
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.2,
+     1,
+     0.3
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.125,
+     0.2
+    ],
+    "pitch": -90
+   },
+   "neck": {
+    "flex": 6
+   },
+   "spine": {
+    "flex": -3
+   },
+   "armL": {
+    "pos": [
+     0.22,
+     0.34,
+     -0.17
+    ],
+    "contact": true,
+    "hand": "grip",
+    "grip": 0.014,
+    "fingers": [
+     0,
+     0.95,
+     -0.3
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "pole": [
+     1,
+     -0.3,
+     0.1
+    ],
+    "curl": 0.82
+   },
+   "armR": {
+    "pos": [
+     -0.3,
+     0.05,
+     0
+    ],
+    "rel": "world",
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -1,
+     -0.3,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.2,
+     0,
+     0.55
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.2,
+     1,
+     0.3
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.2,
+     0,
+     0.55
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.2,
+     1,
+     0.3
+    ]
+   }
+  }
+ }
+}

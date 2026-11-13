@@ -1,0 +1,199 @@
+{
+ "slug": "tuck-crunch",
+ "camera": {
+  "az": 88,
+  "el": 20
+ },
+ "muscles": [
+  "abdominals"
+ ],
+ "floats": true,
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.1,
+     0
+    ],
+    "pitch": -90
+   },
+   "spine": {
+    "flex": 0,
+    "weights": [
+     0,
+     0.1,
+     0.3,
+     0.3,
+     0.3
+    ]
+   },
+   "neck": {
+    "flex": 6
+   },
+   "armL": {
+    "pos": [
+     0.27,
+     0,
+     0.11
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0.08,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     1,
+     0.5,
+     -0.2
+    ],
+    "curl": -0.3
+   },
+   "armR": {
+    "pos": [
+     -0.27,
+     0,
+     0.11
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     -0.08,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -1,
+     0.5,
+     -0.2
+    ],
+    "curl": -0.3
+   },
+   "legL": {
+    "fk": {
+     "flex": 88,
+     "abd": -2,
+     "knee": 25
+    },
+    "foot": {
+     "pitch": 20
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 88,
+     "abd": 2,
+     "knee": 25
+    },
+    "foot": {
+     "pitch": 20
+    }
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.1,
+     0
+    ],
+    "pitch": -92
+   },
+   "spine": {
+    "flex": 24,
+    "weights": [
+     0,
+     0.1,
+     0.3,
+     0.3,
+     0.3
+    ]
+   },
+   "neck": {
+    "flex": 10
+   },
+   "armL": {
+    "pos": [
+     0.27,
+     0,
+     0.11
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0.08,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     1,
+     0.5,
+     -0.2
+    ],
+    "curl": -0.3
+   },
+   "armR": {
+    "pos": [
+     -0.27,
+     0,
+     0.11
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     -0.08,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -1,
+     0.5,
+     -0.2
+    ],
+    "curl": -0.3
+   },
+   "legL": {
+    "fk": {
+     "flex": 100,
+     "abd": -2,
+     "knee": 60
+    },
+    "foot": {
+     "pitch": 20
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 100,
+     "abd": 2,
+     "knee": 60
+    },
+    "foot": {
+     "pitch": 20
+    }
+   }
+  }
+ }
+}

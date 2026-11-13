@@ -1,0 +1,171 @@
+{
+ "slug": "moving-claw-series",
+ "camera": {
+  "az": 112,
+  "el": 8
+ },
+ "muscles": [
+  "hamstrings",
+  "glutes",
+  "quadriceps"
+ ],
+ "floats": true,
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.9,
+     0
+    ],
+    "pitch": 8
+   },
+   "neck": {
+    "flex": -4
+   },
+   "armL": {
+    "fk": {
+     "flex": 70,
+     "abd": 8,
+     "elbow": 90
+    },
+    "curl": 0.5
+   },
+   "armR": {
+    "fk": {
+     "flex": -40,
+     "abd": 8,
+     "elbow": 90
+    },
+    "curl": 0.5
+   },
+   "legL": {
+    "fk": {
+     "flex": -10,
+     "abd": 3,
+     "rot": 0,
+     "knee": 100
+    },
+    "rel": "pelvis"
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0,
+     0
+    ],
+    "anchor": "ball",
+    "pole": [
+     -0.1,
+     0,
+     1
+    ],
+    "pitch": 5
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.9,
+     0
+    ],
+    "pitch": 8
+   },
+   "neck": {
+    "flex": -4
+   },
+   "armL": {
+    "fk": {
+     "flex": 10,
+     "abd": 8,
+     "elbow": 90
+    },
+    "curl": 0.5
+   },
+   "armR": {
+    "fk": {
+     "flex": 20,
+     "abd": 8,
+     "elbow": 90
+    },
+    "curl": 0.5
+   },
+   "legL": {
+    "fk": {
+     "flex": 50,
+     "abd": 3,
+     "rot": 0,
+     "knee": 90
+    },
+    "rel": "pelvis"
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0,
+     0
+    ],
+    "anchor": "ball",
+    "pole": [
+     -0.1,
+     0,
+     1
+    ],
+    "pitch": 5
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.9,
+     0
+    ],
+    "pitch": 8
+   },
+   "neck": {
+    "flex": -4
+   },
+   "armL": {
+    "fk": {
+     "flex": -40,
+     "abd": 30,
+     "elbow": 90
+    },
+    "curl": 0.5
+   },
+   "armR": {
+    "fk": {
+     "flex": 70,
+     "abd": 8,
+     "elbow": 90
+    },
+    "curl": 0.5
+   },
+   "legL": {
+    "fk": {
+     "flex": 70,
+     "abd": 3,
+     "rot": 0,
+     "knee": 5
+    },
+    "rel": "pelvis"
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0,
+     0
+    ],
+    "anchor": "ball",
+    "pole": [
+     -0.1,
+     0,
+     1
+    ],
+    "pitch": 5
+   }
+  }
+ }
+}

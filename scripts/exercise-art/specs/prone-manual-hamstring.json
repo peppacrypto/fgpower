@@ -1,0 +1,190 @@
+{
+ "slug": "prone-manual-hamstring",
+ "camera": {
+  "az": 105,
+  "el": 15
+ },
+ "muscles": [
+  "hamstrings"
+ ],
+ "props": [
+  {
+   "type": "floor-mat"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.15,
+     0
+    ],
+    "pitch": 92
+   },
+   "spine": {
+    "flex": -15
+   },
+   "neck": {
+    "flex": -8
+   },
+   "legL": {
+    "fk": {
+     "flex": 0,
+     "abd": 3,
+     "knee": 0
+    },
+    "foot": {
+     "pitch": 60
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 0,
+     "abd": 3,
+     "knee": 0
+    },
+    "foot": {
+     "pitch": 60
+    }
+   },
+   "armL": {
+    "pos": [
+     0.3,
+     0.03,
+     0.5
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     1,
+     0.3,
+     0
+    ],
+    "curl": 0.1
+   },
+   "armR": {
+    "pos": [
+     -0.3,
+     0.03,
+     0.5
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -1,
+     0.3,
+     0
+    ],
+    "curl": 0.1
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.15,
+     0
+    ],
+    "pitch": 92
+   },
+   "spine": {
+    "flex": -15
+   },
+   "neck": {
+    "flex": -8
+   },
+   "legL": {
+    "fk": {
+     "flex": 0,
+     "abd": 3,
+     "knee": 115
+    },
+    "foot": {
+     "pitch": 60
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 0,
+     "abd": 3,
+     "knee": 0
+    },
+    "foot": {
+     "pitch": 60
+    }
+   },
+   "armL": {
+    "pos": [
+     0.3,
+     0.03,
+     0.5
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     1,
+     0.3,
+     0
+    ],
+    "curl": 0.1
+   },
+   "armR": {
+    "pos": [
+     -0.3,
+     0.03,
+     0.5
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -1,
+     0.3,
+     0
+    ],
+    "curl": 0.1
+   }
+  }
+ },
+ "muscleSide": "L"
+}

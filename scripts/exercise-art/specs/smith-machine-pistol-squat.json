@@ -1,0 +1,208 @@
+{
+ "slug": "smith-machine-pistol-squat",
+ "camera": {
+  "az": 68,
+  "el": 8
+ },
+ "muscles": [
+  "quadriceps"
+ ],
+ "props": [
+  {
+   "type": "barbell",
+   "hands": true,
+   "plates": [
+    20,
+    10
+   ]
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0.07,
+     0.928,
+     0.2
+    ],
+    "pitch": 3
+   },
+   "armL": {
+    "pos": [
+     0.33,
+     0.215,
+     -0.015
+    ],
+    "rel": "chest",
+    "contact": true,
+    "fingers": [
+     -0.3,
+     0.45,
+     -0.85
+    ],
+    "palm": [
+     0,
+     0.97,
+     0.2
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.5,
+     -0.7,
+     -0.6
+    ],
+    "scap": {
+     "elev": 0,
+     "prot": 0
+    }
+   },
+   "armR": {
+    "pos": [
+     -0.33,
+     0.215,
+     -0.015
+    ],
+    "rel": "chest",
+    "contact": true,
+    "fingers": [
+     0.3,
+     0.45,
+     -0.85
+    ],
+    "palm": [
+     0,
+     0.97,
+     0.2
+    ],
+    "curl": 0.85,
+    "pole": [
+     -0.5,
+     -0.7,
+     -0.6
+    ],
+    "scap": {
+     "elev": 0,
+     "prot": 0
+    }
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0,
+     0.28
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "fk": {
+     "flex": 85,
+     "abd": 0,
+     "knee": 4
+    },
+    "foot": {
+     "pitch": -20
+    }
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0.07,
+     0.585,
+     -0.1
+    ],
+    "pitch": 32
+   },
+   "neck": {
+    "flex": -18
+   },
+   "armL": {
+    "pos": [
+     0.33,
+     0.215,
+     -0.015
+    ],
+    "rel": "chest",
+    "contact": true,
+    "fingers": [
+     -0.3,
+     0.45,
+     -0.85
+    ],
+    "palm": [
+     0,
+     0.97,
+     0.2
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.5,
+     -0.7,
+     -0.6
+    ],
+    "scap": {
+     "elev": 0,
+     "prot": 0
+    }
+   },
+   "armR": {
+    "pos": [
+     -0.33,
+     0.215,
+     -0.015
+    ],
+    "rel": "chest",
+    "contact": true,
+    "fingers": [
+     0.3,
+     0.45,
+     -0.85
+    ],
+    "palm": [
+     0,
+     0.97,
+     0.2
+    ],
+    "curl": 0.85,
+    "pole": [
+     -0.5,
+     -0.7,
+     -0.6
+    ],
+    "scap": {
+     "elev": 0,
+     "prot": 0
+    }
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0,
+     0.28
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "fk": {
+     "flex": 100,
+     "abd": 0,
+     "knee": 4
+    },
+    "foot": {
+     "pitch": -20
+    }
+   }
+  }
+ },
+ "muscleSide": "L"
+}

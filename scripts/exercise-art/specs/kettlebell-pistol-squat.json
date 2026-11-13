@@ -1,0 +1,202 @@
+{
+ "slug": "kettlebell-pistol-squat",
+ "camera": {
+  "az": 60,
+  "el": 6
+ },
+ "muscles": [
+  "quadriceps",
+  "glutes"
+ ],
+ "props": [
+  {
+   "type": "kettlebell",
+   "hands": true,
+   "kg": 16,
+   "mode": "horns"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0.11,
+     0.925,
+     0
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.20500000000000002,
+     1.2,
+     0.2
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.4,
+     -1,
+     -0.5
+    ]
+   },
+   "armR": {
+    "pos": [
+     0.015,
+     1.2,
+     0.2
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     1,
+     0,
+     0
+    ],
+    "curl": 0.85,
+    "pole": [
+     -0.4,
+     -1,
+     -0.5
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0,
+     0.03
+    ],
+    "anchor": "sole",
+    "yaw": 0,
+    "pitch": 0,
+    "pole": [
+     0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.3,
+     0.5
+    ],
+    "anchor": "heel",
+    "yaw": 0,
+    "pitch": 20,
+    "pole": [
+     -0.1,
+     1,
+     0
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0.11,
+     0.42,
+     -0.16
+    ],
+    "pitch": 18
+   },
+   "spine": {
+    "flex": 4
+   },
+   "neck": {
+    "flex": -14
+   },
+   "armL": {
+    "pos": [
+     0.20500000000000002,
+     0.77,
+     0.24
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.5,
+     -1,
+     -0.52
+    ]
+   },
+   "armR": {
+    "pos": [
+     0.015,
+     0.77,
+     0.24
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     1,
+     0,
+     0
+    ],
+    "curl": 0.85,
+    "pole": [
+     -0.5,
+     -1,
+     -0.52
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0,
+     0.03
+    ],
+    "anchor": "sole",
+    "yaw": 0,
+    "pitch": 0,
+    "pole": [
+     0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.2,
+     0.55
+    ],
+    "anchor": "heel",
+    "yaw": 0,
+    "pitch": 20,
+    "pole": [
+     -0.1,
+     1,
+     0
+    ]
+   }
+  }
+ }
+}

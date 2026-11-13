@@ -1,0 +1,82 @@
+{
+ "slug": "lying-bent-leg-groin",
+ "camera": {
+  "az": 25,
+  "el": 35
+ },
+ "muscles": [
+  "adductors"
+ ],
+ "props": [
+  {
+   "type": "floor-mat"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.125,
+     0
+    ],
+    "pitch": -90
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.07,
+     0.09,
+     0.42
+    ],
+    "anchor": "ankle",
+    "pole": [
+     1,
+     0.3,
+     0
+    ],
+    "pitch": -60,
+    "yaw": -40
+   },
+   "legR": {
+    "pos": [
+     -0.07,
+     0.09,
+     0.42
+    ],
+    "anchor": "ankle",
+    "pole": [
+     -1,
+     0.3,
+     0
+    ],
+    "pitch": -60,
+    "yaw": 40
+   },
+   "armL": {
+    "fk": {
+     "flex": 5,
+     "abd": 35,
+     "rot": 0,
+     "elbow": 5
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "curl": 0.2
+   },
+   "armR": {
+    "fk": {
+     "flex": 5,
+     "abd": 35,
+     "rot": 0,
+     "elbow": 5
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "curl": 0.2
+   }
+  }
+ }
+}

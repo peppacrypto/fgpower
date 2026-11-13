@@ -1,0 +1,211 @@
+{
+ "slug": "alternate-heel-touchers",
+ "camera": {
+  "az": 20,
+  "el": 35
+ },
+ "muscles": [
+  "obliques",
+  "abdominals"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.1,
+     0
+    ],
+    "pitch": -90
+   },
+   "neck": {
+    "flex": -4,
+    "side": 0
+   },
+   "spine": {
+    "flex": 0,
+    "side": 0,
+    "weights": [
+     0,
+     0.1,
+     0.3,
+     0.3,
+     0.3
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.27,
+     0.02,
+     0
+    ],
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "contact": true,
+    "hand": "flat",
+    "pole": [
+     1,
+     0,
+     -0.3
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.27,
+     0.02,
+     0
+    ],
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "contact": true,
+    "hand": "flat",
+    "pole": [
+     -1,
+     0,
+     -0.3
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.28,
+     0,
+     0.5
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.2,
+     1,
+     0.1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.28,
+     0,
+     0.5
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.2,
+     1,
+     0.1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.1,
+     0
+    ],
+    "pitch": -90
+   },
+   "neck": {
+    "flex": -4,
+    "side": 8
+   },
+   "spine": {
+    "flex": 10,
+    "side": -24,
+    "weights": [
+     0,
+     0.1,
+     0.3,
+     0.3,
+     0.3
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.27,
+     0.02,
+     0
+    ],
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "contact": true,
+    "hand": "flat",
+    "pole": [
+     1,
+     0,
+     -0.3
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.27,
+     0.02,
+     0.2
+    ],
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "contact": true,
+    "hand": "flat",
+    "pole": [
+     -1,
+     0,
+     -0.3
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.28,
+     0,
+     0.5
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.2,
+     1,
+     0.1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.28,
+     0,
+     0.5
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.2,
+     1,
+     0.1
+    ]
+   }
+  }
+ }
+}

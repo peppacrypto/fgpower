@@ -1,0 +1,198 @@
+{
+ "slug": "hip-flexion-with-band",
+ "camera": {
+  "az": 95,
+  "el": 8
+ },
+ "muscles": [
+  "quadriceps"
+ ],
+ "muscleSide": "L",
+ "props": [
+  {
+   "type": "anchor-post",
+   "pos": [
+    0.1,
+    0,
+    -0.85
+   ],
+   "yaw": 0,
+   "bandY": 0.2
+  },
+  {
+   "type": "band",
+   "follow": "pelvis",
+   "a": [
+    0.1,
+    0.2,
+    -0.79
+   ],
+   "b": {
+    "ankle": "L"
+   },
+   "rest": 0.5,
+   "width": 0.03
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ],
+    "pitch": 2
+   },
+   "neck": {
+    "flex": 0
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 18,
+     "elbow": 10
+    },
+    "curl": 0.2
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 18,
+     "elbow": 10
+    },
+    "curl": 0.2
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -6
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0.1,
+     -0.06
+    ],
+    "anchor": "ankle",
+    "pitch": -5,
+    "pole": [
+     0,
+     0,
+     1
+    ]
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ],
+    "pitch": 2
+   },
+   "neck": {
+    "flex": 0
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 18,
+     "elbow": 10
+    },
+    "curl": 0.2
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 18,
+     "elbow": 10
+    },
+    "curl": 0.2
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -6
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0.3,
+     0.2
+    ],
+    "anchor": "ankle",
+    "pitch": -10,
+    "pole": [
+     0,
+     0.2,
+     1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ],
+    "pitch": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 18,
+     "elbow": 10
+    },
+    "curl": 0.2
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 18,
+     "elbow": 10
+    },
+    "curl": 0.2
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -6
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0.5,
+     0.4
+    ],
+    "anchor": "ankle",
+    "pitch": -12,
+    "pole": [
+     0,
+     0.3,
+     1
+    ]
+   }
+  }
+ }
+}

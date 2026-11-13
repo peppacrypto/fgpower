@@ -1,0 +1,568 @@
+{
+ "slug": "battling-ropes",
+ "camera": {
+  "az": 58,
+  "el": 12
+ },
+ "muscles": [
+  "shoulders",
+  "forearms"
+ ],
+ "timing": {
+  "there": 1,
+  "back": 0
+ },
+ "loopFps": 20,
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.78,
+     0
+    ],
+    "pitch": 22
+   },
+   "spine": {
+    "flex": 8
+   },
+   "neck": {
+    "flex": -26
+   },
+   "legL": {
+    "pos": [
+     0.2,
+     0,
+     0.06
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 10,
+    "pole": [
+     0.3,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.2,
+     0,
+     -0.1
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -10,
+    "pole": [
+     -0.3,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.29,
+     1.14,
+     0.46
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -0.3,
+     0.95
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "curl": 0.8,
+    "pole": [
+     0.8,
+     -0.5,
+     -0.3
+    ],
+    "hand": "grip",
+    "grip": 0.018
+   },
+   "armR": {
+    "pos": [
+     -0.29,
+     0.8,
+     0.46
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -0.3,
+     0.95
+    ],
+    "palm": [
+     1,
+     0,
+     0
+    ],
+    "curl": 0.8,
+    "pole": [
+     -0.8,
+     -0.5,
+     -0.3
+    ],
+    "hand": "grip",
+    "grip": 0.018
+   },
+   "props": [
+    {
+     "type": "battling-ropes",
+     "hands": true,
+     "phase": 0,
+     "anchor": [
+      0,
+      0.03,
+      3.5
+     ]
+    }
+   ]
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.78,
+     0
+    ],
+    "pitch": 22
+   },
+   "spine": {
+    "flex": 8
+   },
+   "neck": {
+    "flex": -26
+   },
+   "legL": {
+    "pos": [
+     0.2,
+     0,
+     0.06
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 10,
+    "pole": [
+     0.3,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.2,
+     0,
+     -0.1
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -10,
+    "pole": [
+     -0.3,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.29,
+     0.97,
+     0.46
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -0.3,
+     0.95
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "curl": 0.8,
+    "pole": [
+     0.8,
+     -0.5,
+     -0.3
+    ],
+    "hand": "grip",
+    "grip": 0.018
+   },
+   "armR": {
+    "pos": [
+     -0.29,
+     0.97,
+     0.46
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -0.3,
+     0.95
+    ],
+    "palm": [
+     1,
+     0,
+     0
+    ],
+    "curl": 0.8,
+    "pole": [
+     -0.8,
+     -0.5,
+     -0.3
+    ],
+    "hand": "grip",
+    "grip": 0.018
+   },
+   "props": [
+    {
+     "type": "battling-ropes",
+     "hands": true,
+     "phase": 0.25,
+     "anchor": [
+      0,
+      0.03,
+      3.5
+     ]
+    }
+   ]
+  },
+  "mid2": {
+   "root": {
+    "pos": [
+     0,
+     0.78,
+     0
+    ],
+    "pitch": 22
+   },
+   "spine": {
+    "flex": 8
+   },
+   "neck": {
+    "flex": -26
+   },
+   "legL": {
+    "pos": [
+     0.2,
+     0,
+     0.06
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 10,
+    "pole": [
+     0.3,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.2,
+     0,
+     -0.1
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -10,
+    "pole": [
+     -0.3,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.29,
+     0.8,
+     0.46
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -0.3,
+     0.95
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "curl": 0.8,
+    "pole": [
+     0.8,
+     -0.5,
+     -0.3
+    ],
+    "hand": "grip",
+    "grip": 0.018
+   },
+   "armR": {
+    "pos": [
+     -0.29,
+     1.14,
+     0.46
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -0.3,
+     0.95
+    ],
+    "palm": [
+     1,
+     0,
+     0
+    ],
+    "curl": 0.8,
+    "pole": [
+     -0.8,
+     -0.5,
+     -0.3
+    ],
+    "hand": "grip",
+    "grip": 0.018
+   },
+   "props": [
+    {
+     "type": "battling-ropes",
+     "hands": true,
+     "phase": 0.5,
+     "anchor": [
+      0,
+      0.03,
+      3.5
+     ]
+    }
+   ]
+  },
+  "mid3": {
+   "root": {
+    "pos": [
+     0,
+     0.78,
+     0
+    ],
+    "pitch": 22
+   },
+   "spine": {
+    "flex": 8
+   },
+   "neck": {
+    "flex": -26
+   },
+   "legL": {
+    "pos": [
+     0.2,
+     0,
+     0.06
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 10,
+    "pole": [
+     0.3,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.2,
+     0,
+     -0.1
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -10,
+    "pole": [
+     -0.3,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.29,
+     0.97,
+     0.46
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -0.3,
+     0.95
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "curl": 0.8,
+    "pole": [
+     0.8,
+     -0.5,
+     -0.3
+    ],
+    "hand": "grip",
+    "grip": 0.018
+   },
+   "armR": {
+    "pos": [
+     -0.29,
+     0.97,
+     0.46
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -0.3,
+     0.95
+    ],
+    "palm": [
+     1,
+     0,
+     0
+    ],
+    "curl": 0.8,
+    "pole": [
+     -0.8,
+     -0.5,
+     -0.3
+    ],
+    "hand": "grip",
+    "grip": 0.018
+   },
+   "props": [
+    {
+     "type": "battling-ropes",
+     "hands": true,
+     "phase": 0.75,
+     "anchor": [
+      0,
+      0.03,
+      3.5
+     ]
+    }
+   ]
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.78,
+     0
+    ],
+    "pitch": 22
+   },
+   "spine": {
+    "flex": 8
+   },
+   "neck": {
+    "flex": -26
+   },
+   "legL": {
+    "pos": [
+     0.2,
+     0,
+     0.06
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 10,
+    "pole": [
+     0.3,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.2,
+     0,
+     -0.1
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -10,
+    "pole": [
+     -0.3,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.29,
+     1.14,
+     0.46
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -0.3,
+     0.95
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "curl": 0.8,
+    "pole": [
+     0.8,
+     -0.5,
+     -0.3
+    ],
+    "hand": "grip",
+    "grip": 0.018
+   },
+   "armR": {
+    "pos": [
+     -0.29,
+     0.8,
+     0.46
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -0.3,
+     0.95
+    ],
+    "palm": [
+     1,
+     0,
+     0
+    ],
+    "curl": 0.8,
+    "pole": [
+     -0.8,
+     -0.5,
+     -0.3
+    ],
+    "hand": "grip",
+    "grip": 0.018
+   },
+   "props": [
+    {
+     "type": "battling-ropes",
+     "hands": true,
+     "phase": 1,
+     "anchor": [
+      0,
+      0.03,
+      3.5
+     ]
+    }
+   ]
+  }
+ }
+}

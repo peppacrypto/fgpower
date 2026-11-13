@@ -1,0 +1,81 @@
+{
+ "slug": "behind-head-chest-stretch",
+ "camera": {
+  "az": 35,
+  "el": 8
+ },
+ "muscles": [
+  "chest"
+ ],
+ "props": [
+  {
+   "type": "floor-mat"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.125,
+     -0.1
+    ],
+    "pitch": 2
+   },
+   "spine": {
+    "flex": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.14,
+     0,
+     0.55
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.05,
+     1,
+     0.1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.14,
+     0,
+     0.55
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.05,
+     1,
+     0.1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": -25,
+     "abd": 95,
+     "rot": 0,
+     "elbow": 135
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "curl": 0.3
+   },
+   "armR": {
+    "fk": {
+     "flex": -25,
+     "abd": 95,
+     "rot": 0,
+     "elbow": 135
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "curl": 0.3
+   }
+  }
+ }
+}

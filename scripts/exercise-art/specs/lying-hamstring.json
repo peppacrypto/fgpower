@@ -1,0 +1,107 @@
+{
+ "slug": "lying-hamstring",
+ "camera": {
+  "az": 62,
+  "el": 14
+ },
+ "muscles": [
+  "hamstrings"
+ ],
+ "props": [
+  {
+   "type": "floor-mat"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.125,
+     0
+    ],
+    "pitch": -90
+   },
+   "neck": {
+    "flex": 4
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0.96,
+     0
+    ],
+    "anchor": "ankle",
+    "pole": [
+     0,
+     0,
+     -1
+    ],
+    "pitch": -180
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.09,
+     0.86
+    ],
+    "anchor": "ankle",
+    "pole": [
+     0,
+     1,
+     0
+    ],
+    "pitch": -90
+   },
+   "armL": {
+    "pos": [
+     0.2,
+     0.58,
+     -0.2
+    ],
+    "hand": "relaxed",
+    "fingers": [
+     0,
+     1,
+     0.1
+    ],
+    "palm": [
+     0,
+     0.1,
+     1
+    ],
+    "curl": 0.3,
+    "pole": [
+     0.6,
+     -0.6,
+     -0.3
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.2,
+     0.58,
+     -0.2
+    ],
+    "hand": "relaxed",
+    "fingers": [
+     0,
+     1,
+     0.1
+    ],
+    "palm": [
+     0,
+     0.1,
+     1
+    ],
+    "curl": 0.3,
+    "pole": [
+     -0.6,
+     -0.6,
+     -0.3
+    ]
+   }
+  }
+ },
+ "muscleSide": "L"
+}

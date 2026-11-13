@@ -1,0 +1,402 @@
+{
+ "slug": "supine-two-arm-overhead-throw",
+ "camera": {
+  "az": 70,
+  "el": 12
+ },
+ "muscles": [
+  "abdominals"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.115,
+     0
+    ],
+    "pitch": -90
+   },
+   "spine": {
+    "flex": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.15,
+     0,
+     0.52
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.1,
+     1,
+     0.3
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.15,
+     0,
+     0.52
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.1,
+     1,
+     0.3
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.125,
+     0.16,
+     -0.93
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0.1,
+     -1
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "curl": 0.25,
+    "pole": [
+     0.4,
+     0.1,
+     -0.6
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.125,
+     0.16,
+     -0.93
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0.1,
+     -1
+    ],
+    "palm": [
+     1,
+     0,
+     0
+    ],
+    "curl": 0.25,
+    "pole": [
+     -0.4,
+     0.1,
+     -0.6
+    ]
+   },
+   "props": [
+    {
+     "type": "medicine-ball",
+     "kg": 6,
+     "hands": true
+    }
+   ]
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.115,
+     0
+    ],
+    "pitch": -86
+   },
+   "spine": {
+    "flex": 2
+   },
+   "neck": {
+    "flex": 2
+   },
+   "legL": {
+    "pos": [
+     0.15,
+     0,
+     0.52
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.1,
+     1,
+     0.3
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.15,
+     0,
+     0.52
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.1,
+     1,
+     0.3
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.125,
+     0.62,
+     -0.8
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0.6,
+     -0.8
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "curl": 0.25,
+    "pole": [
+     0.4,
+     -0.2,
+     -0.3
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.125,
+     0.62,
+     -0.8
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0.6,
+     -0.8
+    ],
+    "palm": [
+     1,
+     0,
+     0
+    ],
+    "curl": 0.25,
+    "pole": [
+     -0.4,
+     -0.2,
+     -0.3
+    ]
+   },
+   "props": [
+    {
+     "type": "medicine-ball",
+     "kg": 6,
+     "hands": true
+    }
+   ]
+  },
+  "mid2": {
+   "root": {
+    "pos": [
+     0,
+     0.1,
+     0
+    ],
+    "pitch": -70
+   },
+   "spine": {
+    "flex": 8
+   },
+   "neck": {
+    "flex": 4
+   },
+   "legL": {
+    "pos": [
+     0.15,
+     0,
+     0.52
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.1,
+     1,
+     0.3
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.15,
+     0,
+     0.52
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.1,
+     1,
+     0.3
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.125,
+     0.88,
+     -0.55
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     1,
+     0.1
+    ],
+    "palm": [
+     -1,
+     -0.3,
+     0
+    ],
+    "curl": 0.25,
+    "pole": [
+     0.4,
+     -0.4,
+     -0.2
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.125,
+     0.88,
+     -0.55
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     1,
+     0.1
+    ],
+    "palm": [
+     1,
+     -0.3,
+     0
+    ],
+    "curl": 0.25,
+    "pole": [
+     -0.4,
+     -0.4,
+     -0.2
+    ]
+   },
+   "props": [
+    {
+     "type": "medicine-ball",
+     "kg": 6,
+     "hands": true
+    }
+   ]
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.11,
+     0
+    ],
+    "pitch": -12
+   },
+   "spine": {
+    "flex": 14
+   },
+   "neck": {
+    "flex": 6
+   },
+   "legL": {
+    "pos": [
+     0.15,
+     0,
+     0.52
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.1,
+     1,
+     0.3
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.15,
+     0,
+     0.52
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.1,
+     1,
+     0.3
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.125,
+     0.75,
+     0.4
+    ],
+    "hand": "open",
+    "fingers": [
+     0,
+     0.3,
+     1
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "pole": [
+     0.4,
+     -0.4,
+     -0.2
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.125,
+     0.75,
+     0.4
+    ],
+    "hand": "open",
+    "fingers": [
+     0,
+     0.3,
+     1
+    ],
+    "palm": [
+     1,
+     0,
+     0
+    ],
+    "pole": [
+     -0.4,
+     -0.4,
+     -0.2
+    ]
+   },
+   "props": [
+    {
+     "type": "medicine-ball",
+     "kg": 6,
+     "at": [
+      0,
+      1,
+      1.7
+     ]
+    }
+   ]
+  }
+ }
+}

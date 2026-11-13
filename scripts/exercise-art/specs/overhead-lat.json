@@ -1,0 +1,96 @@
+{
+ "slug": "overhead-lat",
+ "camera": {
+  "az": 150,
+  "el": 10
+ },
+ "muscles": [
+  "lats"
+ ],
+ "props": [
+  {
+   "type": "floor-mat"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.125,
+     -0.1
+    ],
+    "pitch": 2
+   },
+   "spine": {
+    "flex": 0,
+    "side": -14
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.14,
+     0,
+     0.55
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.05,
+     1,
+     0.1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.14,
+     0,
+     0.55
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.05,
+     1,
+     0.1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 165,
+     "abd": 5,
+     "rot": 0,
+     "elbow": 140
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "curl": 0.3
+   },
+   "armR": {
+    "pos": [
+     -0.3,
+     0.1,
+     0
+    ],
+    "hand": "relaxed",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": 0.3,
+    "pole": [
+     -0.8,
+     -0.4,
+     -0.3
+    ]
+   }
+  }
+ },
+ "muscleSide": "L"
+}

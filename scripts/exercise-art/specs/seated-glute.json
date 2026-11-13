@@ -1,0 +1,109 @@
+{
+ "slug": "seated-glute",
+ "camera": {
+  "az": 45,
+  "el": 18
+ },
+ "muscles": [
+  "glutes"
+ ],
+ "props": [
+  {
+   "type": "floor-mat"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.125,
+     -0.15
+    ],
+    "pitch": -8
+   },
+   "spine": {
+    "flex": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0,
+     0.5
+    ],
+    "anchor": "sole",
+    "pole": [
+     0,
+     1,
+     0.1
+    ]
+   },
+   "legL": {
+    "fk": {
+     "flex": 90,
+     "abd": 55,
+     "rot": -90,
+     "knee": 140
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "armL": {
+    "pos": [
+     0.27,
+     0.03,
+     -0.25
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     -1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     0.5,
+     0,
+     -1
+    ],
+    "curl": 0.1
+   },
+   "armR": {
+    "pos": [
+     -0.27,
+     0.03,
+     -0.25
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     -1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -0.5,
+     0,
+     -1
+    ],
+    "curl": 0.1
+   }
+  }
+ },
+ "muscleSide": "L"
+}

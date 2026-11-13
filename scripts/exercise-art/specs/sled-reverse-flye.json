@@ -1,0 +1,244 @@
+{
+ "slug": "sled-reverse-flye",
+ "camera": {
+  "az": 150,
+  "el": 14
+ },
+ "muscles": [
+  "posterior-deltoid",
+  "rhomboids"
+ ],
+ "props": [
+  {
+   "type": "sled",
+   "pos": [
+    0,
+    0,
+    2.3
+   ],
+   "yaw": 0,
+   "plates": 2
+  },
+  {
+   "type": "sled-straps",
+   "hands": true,
+   "to": [
+    0,
+    0.13,
+    1.7699999999999998
+   ]
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.84,
+     -0.03
+    ],
+    "pitch": 24
+   },
+   "spine": {
+    "flex": 2
+   },
+   "neck": {
+    "flex": -14
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 6,
+    "pole": [
+     0.2,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -6,
+    "pole": [
+     -0.2,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 30,
+     "abd": 8,
+     "rot": 0,
+     "elbow": 10
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "curl": 0.5,
+    "pron": 0
+   },
+   "armR": {
+    "fk": {
+     "flex": 30,
+     "abd": 8,
+     "rot": 0,
+     "elbow": 10
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "curl": 0.5,
+    "pron": 0
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.84,
+     -0.03
+    ],
+    "pitch": 24
+   },
+   "spine": {
+    "flex": 2
+   },
+   "neck": {
+    "flex": -14
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 6,
+    "pole": [
+     0.2,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -6,
+    "pole": [
+     -0.2,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 22,
+     "abd": 50,
+     "rot": 0,
+     "elbow": 10
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "curl": 0.5,
+    "pron": 0
+   },
+   "armR": {
+    "fk": {
+     "flex": 22,
+     "abd": 50,
+     "rot": 0,
+     "elbow": 10
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "curl": 0.5,
+    "pron": 0
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.84,
+     -0.03
+    ],
+    "pitch": 24
+   },
+   "spine": {
+    "flex": 2
+   },
+   "neck": {
+    "flex": -14
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 6,
+    "pole": [
+     0.2,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -6,
+    "pole": [
+     -0.2,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 8,
+     "abd": 88,
+     "rot": 0,
+     "elbow": 10
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "curl": 0.5,
+    "pron": 0
+   },
+   "armR": {
+    "fk": {
+     "flex": 8,
+     "abd": 88,
+     "rot": 0,
+     "elbow": 10
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "curl": 0.5,
+    "pron": 0
+   }
+  }
+ }
+}

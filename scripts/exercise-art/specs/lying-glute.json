@@ -1,0 +1,108 @@
+{
+ "slug": "lying-glute",
+ "camera": {
+  "az": 35,
+  "el": 30
+ },
+ "muscles": [
+  "glutes"
+ ],
+ "props": [
+  {
+   "type": "floor-mat"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.125,
+     0
+    ],
+    "pitch": -90
+   },
+   "neck": {
+    "flex": 8
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.09,
+     0.42
+    ],
+    "anchor": "ankle",
+    "pole": [
+     0,
+     1,
+     0.2
+    ],
+    "pitch": -30
+   },
+   "legL": {
+    "pos": [
+     -0.09,
+     0.64,
+     0.17
+    ],
+    "anchor": "ankle",
+    "pole": [
+     1,
+     0.2,
+     -0.2
+    ],
+    "pitch": -90,
+    "yaw": -40
+   },
+   "armL": {
+    "pos": [
+     0,
+     0.42,
+     -0.05
+    ],
+    "hand": "relaxed",
+    "fingers": [
+     0,
+     0.5,
+     1
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "curl": 0.3,
+    "pole": [
+     0.8,
+     -0.4,
+     -0.3
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.2,
+     0.42,
+     -0.05
+    ],
+    "hand": "relaxed",
+    "fingers": [
+     0,
+     0.5,
+     1
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "curl": 0.3,
+    "pole": [
+     -0.8,
+     -0.4,
+     -0.3
+    ]
+   }
+  }
+ },
+ "muscleSide": "L"
+}

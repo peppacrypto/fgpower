@@ -1,0 +1,267 @@
+{
+ "slug": "smith-machine-hip-raise",
+ "camera": {
+  "az": 100,
+  "el": 6
+ },
+ "muscles": [
+  "abdominals"
+ ],
+ "floats": true,
+ "props": [
+  {
+   "type": "smith",
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "follow": "feet"
+  },
+  {
+   "type": "flat-bench",
+   "pos": [
+    0,
+    0,
+    -0.05
+   ],
+   "yaw": 0
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.545,
+     0.2
+    ],
+    "pitch": -90
+   },
+   "neck": {
+    "flex": 4
+   },
+   "spine": {
+    "flex": 0
+   },
+   "armL": {
+    "pos": [
+     0.25,
+     0.47,
+     -0.1
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.25,
+     0.47,
+     -0.1
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ]
+   },
+   "legL": {
+    "fk": {
+     "flex": 131.1,
+     "abd": 12,
+     "rot": 0,
+     "knee": 52.5
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 131.1,
+     "abd": 12,
+     "rot": 0,
+     "knee": 52.5
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 0
+    }
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.58,
+     0.2
+    ],
+    "pitch": -97
+   },
+   "neck": {
+    "flex": 4
+   },
+   "spine": {
+    "flex": 5
+   },
+   "armL": {
+    "pos": [
+     0.25,
+     0.47,
+     -0.1
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.25,
+     0.47,
+     -0.1
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ]
+   },
+   "legL": {
+    "fk": {
+     "flex": 137.3,
+     "abd": 12,
+     "rot": 0,
+     "knee": 51
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 137.3,
+     "abd": 12,
+     "rot": 0,
+     "knee": 51
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 0
+    }
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.62,
+     0.2
+    ],
+    "pitch": -104
+   },
+   "neck": {
+    "flex": 4
+   },
+   "spine": {
+    "flex": 10
+   },
+   "armL": {
+    "pos": [
+     0.25,
+     0.47,
+     -0.1
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.25,
+     0.47,
+     -0.1
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ]
+   },
+   "legL": {
+    "fk": {
+     "flex": 144.3,
+     "abd": 12,
+     "rot": 0,
+     "knee": 51
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 144.3,
+     "abd": 12,
+     "rot": 0,
+     "knee": 51
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 0
+    }
+   }
+  }
+ }
+}

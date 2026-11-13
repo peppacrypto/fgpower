@@ -1,0 +1,186 @@
+{
+ "slug": "fast-skipping",
+ "camera": {
+  "az": 112,
+  "el": 8
+ },
+ "muscles": [
+  "quadriceps",
+  "calves",
+  "glutes"
+ ],
+ "floats": true,
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.93,
+     0
+    ],
+    "pitch": 6
+   },
+   "neck": {
+    "flex": -4
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0.62,
+     0.3
+    ],
+    "anchor": "sole",
+    "pitch": 5,
+    "pole": [
+     0.05,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0,
+     0
+    ],
+    "anchor": "ball",
+    "pitch": 5,
+    "pole": [
+     -0.05,
+     0,
+     1
+    ]
+   },
+   "armR": {
+    "fk": {
+     "flex": 75,
+     "abd": 8,
+     "elbow": 70
+    },
+    "curl": 0.5
+   },
+   "armL": {
+    "fk": {
+     "flex": -35,
+     "abd": 8,
+     "elbow": 80
+    },
+    "curl": 0.5
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.95,
+     0.2
+    ],
+    "pitch": 4
+   },
+   "neck": {
+    "flex": -4
+   },
+   "armL": {
+    "fk": {
+     "flex": 20,
+     "abd": 8,
+     "elbow": 80
+    },
+    "curl": 0.5
+   },
+   "armR": {
+    "fk": {
+     "flex": 20,
+     "abd": 8,
+     "elbow": 80
+    },
+    "curl": 0.5
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0.08,
+     0.1
+    ],
+    "anchor": "ball",
+    "pole": [
+     0.1,
+     0,
+     1
+    ],
+    "pitch": 25
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.08,
+     -0.05
+    ],
+    "anchor": "ball",
+    "pole": [
+     -0.1,
+     0,
+     1
+    ],
+    "pitch": 25
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.93,
+     0
+    ],
+    "pitch": 6
+   },
+   "neck": {
+    "flex": -4
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.62,
+     0.3
+    ],
+    "anchor": "sole",
+    "pitch": 5,
+    "pole": [
+     -0.05,
+     0,
+     1
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0,
+     0
+    ],
+    "anchor": "ball",
+    "pitch": 5,
+    "pole": [
+     0.05,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 75,
+     "abd": 8,
+     "elbow": 70
+    },
+    "curl": 0.5
+   },
+   "armR": {
+    "fk": {
+     "flex": -35,
+     "abd": 8,
+     "elbow": 80
+    },
+    "curl": 0.5
+   }
+  }
+ }
+}

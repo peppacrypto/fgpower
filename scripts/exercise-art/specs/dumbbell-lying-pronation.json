@@ -1,0 +1,155 @@
+{
+ "slug": "dumbbell-lying-pronation",
+ "camera": {
+  "az": 240,
+  "el": 12
+ },
+ "muscles": [
+  "forearms"
+ ],
+ "props": [
+  {
+   "type": "flat-bench",
+   "pos": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "type": "dumbbell",
+   "hand": "L",
+   "kg": 5
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.6,
+     0.2
+    ],
+    "yaw": 180,
+    "pitch": 90
+   },
+   "spine": {
+    "flex": 0
+   },
+   "neck": {
+    "flex": -20
+   },
+   "legL": {
+    "fk": {
+     "flex": 0,
+     "abd": 0,
+     "knee": 0,
+     "rot": 0
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 25
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 0,
+     "abd": 0,
+     "knee": 0,
+     "rot": 0
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 25
+    }
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 90,
+     "rot": -6,
+     "elbow": 90
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "pron": -0.9,
+    "autoRoll": false
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 75,
+     "rot": 0,
+     "elbow": 140
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.6,
+     0.2
+    ],
+    "yaw": 180,
+    "pitch": 90
+   },
+   "spine": {
+    "flex": 0
+   },
+   "neck": {
+    "flex": -20
+   },
+   "legL": {
+    "fk": {
+     "flex": 0,
+     "abd": 0,
+     "knee": 0,
+     "rot": 0
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 25
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 0,
+     "abd": 0,
+     "knee": 0,
+     "rot": 0
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 25
+    }
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 90,
+     "rot": 6,
+     "elbow": 90
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "pron": 0.9,
+    "autoRoll": false
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 75,
+     "rot": 0,
+     "elbow": 140
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   }
+  }
+ },
+ "muscleSide": "L",
+ "floats": true
+}

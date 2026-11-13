@@ -1,0 +1,329 @@
+{
+ "slug": "seated-band-hamstring-curl",
+ "floats": true,
+ "camera": {
+  "az": 90,
+  "el": 8
+ },
+ "muscles": [
+  "hamstrings"
+ ],
+ "props": [
+  {
+   "type": "flat-bench",
+   "pos": [
+    0,
+    0,
+    -0.4
+   ],
+   "height": 0.42
+  },
+  {
+   "type": "anchor-post",
+   "pos": [
+    0,
+    0,
+    1.5
+   ],
+   "yaw": 180,
+   "bandY": 0.2
+  },
+  {
+   "type": "band",
+   "follow": "pelvis",
+   "a": [
+    0,
+    0.2,
+    1.44
+   ],
+   "b": {
+    "ankle": "L"
+   },
+   "rest": 0.5,
+   "width": 0.03
+  },
+  {
+   "type": "band",
+   "follow": "pelvis",
+   "a": [
+    0,
+    0.2,
+    1.44
+   ],
+   "b": {
+    "ankle": "R"
+   },
+   "rest": 0.5,
+   "width": 0.03
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.52,
+     -0.05
+    ],
+    "pitch": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "armL": {
+    "pos": [
+     0.15,
+     0.67,
+     0.06999999999999999
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     1,
+     -0.3,
+     -0.5
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.15,
+     0.67,
+     0.06999999999999999
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -1,
+     -0.3,
+     -0.5
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0.5,
+     0.8
+    ],
+    "anchor": "ankle",
+    "pitch": -10,
+    "pole": [
+     0,
+     0.3,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0.5,
+     0.8
+    ],
+    "anchor": "ankle",
+    "pitch": -10,
+    "pole": [
+     0,
+     0.3,
+     1
+    ]
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.52,
+     -0.05
+    ],
+    "pitch": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "armL": {
+    "pos": [
+     0.15,
+     0.67,
+     0.06999999999999999
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     1,
+     -0.3,
+     -0.5
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.15,
+     0.67,
+     0.06999999999999999
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -1,
+     -0.3,
+     -0.5
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0.3,
+     0.72
+    ],
+    "anchor": "ankle",
+    "pitch": -30,
+    "pole": [
+     0,
+     0.3,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0.3,
+     0.72
+    ],
+    "anchor": "ankle",
+    "pitch": -30,
+    "pole": [
+     0,
+     0.3,
+     1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.52,
+     -0.05
+    ],
+    "pitch": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "armL": {
+    "pos": [
+     0.15,
+     0.67,
+     0.06999999999999999
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     1,
+     -0.3,
+     -0.5
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.15,
+     0.67,
+     0.06999999999999999
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -1,
+     -0.3,
+     -0.5
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0.12,
+     0.36
+    ],
+    "anchor": "ankle",
+    "pitch": -20,
+    "pole": [
+     0,
+     0.3,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0.12,
+     0.36
+    ],
+    "anchor": "ankle",
+    "pitch": -20,
+    "pole": [
+     0,
+     0.3,
+     1
+    ]
+   }
+  }
+ }
+}

@@ -1,0 +1,187 @@
+{
+ "slug": "extended-range-one-arm-kettlebell-floor-press",
+ "camera": {
+  "az": 30,
+  "el": 14
+ },
+ "muscles": [
+  "chest",
+  "anterior-deltoid"
+ ],
+ "muscleSide": "L",
+ "floats": true,
+ "props": [
+  {
+   "type": "kettlebell",
+   "hand": "L",
+   "kg": 16,
+   "mode": "rack"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.17,
+     0.2
+    ],
+    "pitch": -90
+   },
+   "spine": {
+    "twist": 18,
+    "weights": [
+     0,
+     0,
+     0.3,
+     0.7,
+     1
+    ]
+   },
+   "neck": {
+    "flex": 6
+   },
+   "legL": {
+    "pos": [
+     0,
+     0,
+     0.6
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.3,
+     1,
+     0
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.5,
+     0,
+     0.85
+    ],
+    "anchor": "heel",
+    "pitch": -70,
+    "pole": [
+     0,
+     1,
+     0
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.34,
+     0.36,
+     -0.26
+    ],
+    "contact": true,
+    "fingers": [
+     0.05,
+     1,
+     0
+    ],
+    "palm": [
+     -0.5,
+     0,
+     0.87
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.7,
+     -0.15,
+     0.1
+    ]
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 55,
+     "elbow": 4
+    },
+    "curl": 0.2
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.17,
+     0.2
+    ],
+    "pitch": -90
+   },
+   "spine": {
+    "twist": 18,
+    "weights": [
+     0,
+     0,
+     0.3,
+     0.7,
+     1
+    ]
+   },
+   "neck": {
+    "flex": 6
+   },
+   "legL": {
+    "pos": [
+     0,
+     0,
+     0.6
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.3,
+     1,
+     0
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.5,
+     0,
+     0.85
+    ],
+    "anchor": "heel",
+    "pitch": -70,
+    "pole": [
+     0,
+     1,
+     0
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.19,
+     0.67,
+     -0.26
+    ],
+    "contact": true,
+    "fingers": [
+     0.05,
+     1,
+     0
+    ],
+    "palm": [
+     -0.5,
+     0,
+     0.87
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.8,
+     -0.1,
+     -0.3
+    ]
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 55,
+     "elbow": 4
+    },
+    "curl": 0.2
+   }
+  }
+ }
+}

@@ -1,0 +1,252 @@
+{
+ "slug": "press-sit-up",
+ "camera": {
+  "az": 62,
+  "el": 14
+ },
+ "muscles": [
+  "abdominals",
+  "shoulders"
+ ],
+ "floats": true,
+ "props": [
+  {
+   "type": "decline-situp-bench",
+   "angle": 30
+  },
+  {
+   "type": "barbell",
+   "hands": true,
+   "plates": [
+    10
+   ]
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.7497,
+     -0.1251
+    ],
+    "pitch": -120
+   },
+   "neck": {
+    "flex": 14
+   },
+   "spine": {
+    "flex": 0,
+    "weights": [
+     0,
+     0.1,
+     0.25,
+     0.3,
+     0.35
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 40,
+     "abd": 0,
+     "rot": 0,
+     "elbow": 125
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "grip": 0.014,
+    "pron": 79
+   },
+   "armR": {
+    "fk": {
+     "flex": 40,
+     "abd": 0,
+     "rot": 0,
+     "elbow": 125
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "grip": 0.014,
+    "pron": 79
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0.9364,
+     0.4264
+    ],
+    "anchor": "ankle",
+    "pitch": -5,
+    "pole": [
+     0.05,
+     1,
+     0.3
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0.9364,
+     0.4264
+    ],
+    "anchor": "ankle",
+    "pitch": -5,
+    "pole": [
+     -0.05,
+     1,
+     0.3
+    ]
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.7497,
+     -0.1251
+    ],
+    "pitch": -117
+   },
+   "neck": {
+    "flex": 20
+   },
+   "spine": {
+    "flex": 28,
+    "weights": [
+     0,
+     0.1,
+     0.25,
+     0.3,
+     0.35
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 100,
+     "abd": 0,
+     "rot": 0,
+     "elbow": 60
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "grip": 0.014,
+    "pron": 79
+   },
+   "armR": {
+    "fk": {
+     "flex": 100,
+     "abd": 0,
+     "rot": 0,
+     "elbow": 60
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "grip": 0.014,
+    "pron": 79
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0.9364,
+     0.4264
+    ],
+    "anchor": "ankle",
+    "pitch": -5,
+    "pole": [
+     0.05,
+     1,
+     0.3
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0.9364,
+     0.4264
+    ],
+    "anchor": "ankle",
+    "pitch": -5,
+    "pole": [
+     -0.05,
+     1,
+     0.3
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.7497,
+     -0.1251
+    ],
+    "pitch": -114
+   },
+   "neck": {
+    "flex": 26
+   },
+   "spine": {
+    "flex": 60,
+    "weights": [
+     0,
+     0.1,
+     0.25,
+     0.3,
+     0.35
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 165,
+     "abd": 0,
+     "rot": 0,
+     "elbow": 5
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "grip": 0.014,
+    "pron": 79
+   },
+   "armR": {
+    "fk": {
+     "flex": 165,
+     "abd": 0,
+     "rot": 0,
+     "elbow": 5
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "grip": 0.014,
+    "pron": 79
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0.9364,
+     0.4264
+    ],
+    "anchor": "ankle",
+    "pitch": -5,
+    "pole": [
+     0.05,
+     1,
+     0.3
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0.9364,
+     0.4264
+    ],
+    "anchor": "ankle",
+    "pitch": -5,
+    "pole": [
+     -0.05,
+     1,
+     0.3
+    ]
+   }
+  }
+ }
+}

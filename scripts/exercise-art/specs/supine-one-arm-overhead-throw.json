@@ -1,0 +1,285 @@
+{
+ "slug": "supine-one-arm-overhead-throw",
+ "camera": {
+  "az": 70,
+  "el": 12
+ },
+ "muscles": [
+  "abdominals",
+  "shoulders"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.115,
+     0
+    ],
+    "pitch": -90
+   },
+   "spine": {
+    "flex": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.15,
+     0,
+     0.52
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.1,
+     1,
+     0.3
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.15,
+     0,
+     0.52
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.1,
+     1,
+     0.3
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 172,
+     "abd": 8,
+     "elbow": 3
+    },
+    "rel": "chest",
+    "hand": "open",
+    "pron": 0
+   },
+   "armR": {
+    "fk": {
+     "flex": 10,
+     "abd": 20,
+     "elbow": 8
+    },
+    "rel": "chest"
+   },
+   "props": [
+    {
+     "type": "medicine-ball",
+     "kg": 6,
+     "hand": "L"
+    }
+   ]
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.115,
+     0
+    ],
+    "pitch": -86
+   },
+   "spine": {
+    "flex": 2
+   },
+   "neck": {
+    "flex": 2
+   },
+   "legL": {
+    "pos": [
+     0.15,
+     0,
+     0.52
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.1,
+     1,
+     0.3
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.15,
+     0,
+     0.52
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.1,
+     1,
+     0.3
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 140,
+     "abd": 8,
+     "elbow": 3
+    },
+    "rel": "chest",
+    "hand": "open",
+    "pron": 0
+   },
+   "armR": {
+    "fk": {
+     "flex": 30,
+     "abd": 20,
+     "elbow": 8
+    },
+    "rel": "chest"
+   },
+   "props": [
+    {
+     "type": "medicine-ball",
+     "kg": 6,
+     "hand": "L"
+    }
+   ]
+  },
+  "mid2": {
+   "root": {
+    "pos": [
+     0,
+     0.1,
+     0
+    ],
+    "pitch": -60
+   },
+   "spine": {
+    "flex": 10
+   },
+   "neck": {
+    "flex": 4
+   },
+   "legL": {
+    "pos": [
+     0.15,
+     0,
+     0.52
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.1,
+     1,
+     0.3
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.15,
+     0,
+     0.52
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.1,
+     1,
+     0.3
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 105,
+     "abd": 8,
+     "elbow": 5
+    },
+    "rel": "chest",
+    "hand": "open",
+    "pron": 0
+   },
+   "armR": {
+    "fk": {
+     "flex": 50,
+     "abd": 22,
+     "elbow": 8
+    },
+    "rel": "chest"
+   },
+   "props": [
+    {
+     "type": "medicine-ball",
+     "kg": 6,
+     "hand": "L"
+    }
+   ]
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.11,
+     0
+    ],
+    "pitch": -14
+   },
+   "spine": {
+    "flex": 14
+   },
+   "neck": {
+    "flex": 6
+   },
+   "legL": {
+    "pos": [
+     0.15,
+     0,
+     0.52
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.1,
+     1,
+     0.3
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.15,
+     0,
+     0.52
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.1,
+     1,
+     0.3
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 88,
+     "abd": 8,
+     "elbow": 5
+    },
+    "rel": "chest",
+    "hand": "open",
+    "pron": 0
+   },
+   "armR": {
+    "fk": {
+     "flex": 60,
+     "abd": 22,
+     "elbow": 8
+    },
+    "rel": "chest"
+   },
+   "props": [
+    {
+     "type": "medicine-ball",
+     "kg": 6,
+     "at": [
+      0,
+      1,
+      1.7
+     ]
+    }
+   ]
+  }
+ }
+}

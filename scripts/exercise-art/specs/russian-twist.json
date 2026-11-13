@@ -1,0 +1,217 @@
+{
+ "slug": "russian-twist",
+ "camera": {
+  "az": 25,
+  "el": 18
+ },
+ "muscles": [
+  "obliques",
+  "abdominals"
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.11,
+     -0.05
+    ],
+    "pitch": -50
+   },
+   "neck": {
+    "flex": -4
+   },
+   "spine": {
+    "flex": 0,
+    "twist": 40,
+    "weights": [
+     0,
+     0.1,
+     0.3,
+     0.3,
+     0.3
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 84,
+     "abd": -16,
+     "rot": 0,
+     "elbow": 8
+    },
+    "rel": "chest"
+   },
+   "armR": {
+    "fk": {
+     "flex": 84,
+     "abd": -16,
+     "rot": 0,
+     "elbow": 8
+    },
+    "rel": "chest"
+   },
+   "legL": {
+    "pos": [
+     0.12,
+     0,
+     0.5
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.1,
+     1,
+     0.3
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.12,
+     0,
+     0.5
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.1,
+     1,
+     0.3
+    ]
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.11,
+     -0.05
+    ],
+    "pitch": -50
+   },
+   "neck": {
+    "flex": -4
+   },
+   "spine": {
+    "flex": 0,
+    "twist": 0,
+    "weights": [
+     0,
+     0.1,
+     0.3,
+     0.3,
+     0.3
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 84,
+     "abd": -16,
+     "rot": 0,
+     "elbow": 8
+    },
+    "rel": "chest"
+   },
+   "armR": {
+    "fk": {
+     "flex": 84,
+     "abd": -16,
+     "rot": 0,
+     "elbow": 8
+    },
+    "rel": "chest"
+   },
+   "legL": {
+    "pos": [
+     0.12,
+     0,
+     0.5
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.1,
+     1,
+     0.3
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.12,
+     0,
+     0.5
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.1,
+     1,
+     0.3
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.11,
+     -0.05
+    ],
+    "pitch": -50
+   },
+   "neck": {
+    "flex": -4
+   },
+   "spine": {
+    "flex": 0,
+    "twist": -40,
+    "weights": [
+     0,
+     0.1,
+     0.3,
+     0.3,
+     0.3
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 84,
+     "abd": -16,
+     "rot": 0,
+     "elbow": 8
+    },
+    "rel": "chest"
+   },
+   "armR": {
+    "fk": {
+     "flex": 84,
+     "abd": -16,
+     "rot": 0,
+     "elbow": 8
+    },
+    "rel": "chest"
+   },
+   "legL": {
+    "pos": [
+     0.12,
+     0,
+     0.5
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.1,
+     1,
+     0.3
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.12,
+     0,
+     0.5
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.1,
+     1,
+     0.3
+    ]
+   }
+  }
+ }
+}

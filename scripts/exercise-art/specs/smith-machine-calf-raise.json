@@ -1,0 +1,235 @@
+{
+ "slug": "smith-machine-calf-raise",
+ "camera": {
+  "az": 60,
+  "el": 8
+ },
+ "muscles": [
+  "calves"
+ ],
+ "props": [
+  {
+   "type": "barbell",
+   "hands": true,
+   "plates": [
+    20,
+    10
+   ]
+  },
+  {
+   "type": "calf-block",
+   "height": 0.1
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.97,
+     -0.07
+    ],
+    "pitch": 2
+   },
+   "spine": {
+    "flex": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "armL": {
+    "pos": [
+     0.33,
+     0.215,
+     -0.015
+    ],
+    "rel": "chest",
+    "contact": true,
+    "fingers": [
+     -0.3,
+     0.45,
+     -0.85
+    ],
+    "palm": [
+     0,
+     0.97,
+     0.2
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.5,
+     -0.7,
+     -0.6
+    ],
+    "scap": {
+     "elev": 0,
+     "prot": 0
+    }
+   },
+   "armR": {
+    "pos": [
+     -0.33,
+     0.215,
+     -0.015
+    ],
+    "rel": "chest",
+    "contact": true,
+    "fingers": [
+     0.3,
+     0.45,
+     -0.85
+    ],
+    "palm": [
+     0,
+     0.97,
+     0.2
+    ],
+    "curl": 0.85,
+    "pole": [
+     -0.5,
+     -0.7,
+     -0.6
+    ],
+    "scap": {
+     "elev": 0,
+     "prot": 0
+    }
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0.1,
+     -0.07
+    ],
+    "anchor": "ball",
+    "pitch": -14,
+    "toes": 0,
+    "pole": [
+     0.05,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.1,
+     -0.07
+    ],
+    "anchor": "ball",
+    "pitch": -14,
+    "toes": 0,
+    "pole": [
+     -0.05,
+     0,
+     1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     1.095,
+     -0.07
+    ],
+    "pitch": 2
+   },
+   "spine": {
+    "flex": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "armL": {
+    "pos": [
+     0.33,
+     0.215,
+     -0.015
+    ],
+    "rel": "chest",
+    "contact": true,
+    "fingers": [
+     -0.3,
+     0.45,
+     -0.85
+    ],
+    "palm": [
+     0,
+     0.97,
+     0.2
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.5,
+     -0.7,
+     -0.6
+    ],
+    "scap": {
+     "elev": 0,
+     "prot": 0
+    }
+   },
+   "armR": {
+    "pos": [
+     -0.33,
+     0.215,
+     -0.015
+    ],
+    "rel": "chest",
+    "contact": true,
+    "fingers": [
+     0.3,
+     0.45,
+     -0.85
+    ],
+    "palm": [
+     0,
+     0.97,
+     0.2
+    ],
+    "curl": 0.85,
+    "pole": [
+     -0.5,
+     -0.7,
+     -0.6
+    ],
+    "scap": {
+     "elev": 0,
+     "prot": 0
+    }
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0.1,
+     -0.07
+    ],
+    "anchor": "ball",
+    "pitch": 50,
+    "toes": 0,
+    "pole": [
+     0.05,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.1,
+     -0.07
+    ],
+    "anchor": "ball",
+    "pitch": 50,
+    "toes": 0,
+    "pole": [
+     -0.05,
+     0,
+     1
+    ]
+   }
+  }
+ },
+ "floats": true
+}

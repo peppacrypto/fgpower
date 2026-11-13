@@ -1,0 +1,117 @@
+{
+ "slug": "chest-stretch-on-stability-ball",
+ "camera": {
+  "az": 30,
+  "el": 12
+ },
+ "muscles": [
+  "chest"
+ ],
+ "muscleSide": "L",
+ "props": [
+  {
+   "type": "stability-ball",
+   "pos": [
+    0.5,
+    0,
+    0.05
+   ],
+   "radius": 0.325,
+   "load": 0.3
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.5,
+     -0.1
+    ],
+    "pitch": 78
+   },
+   "spine": {
+    "flex": 5
+   },
+   "neck": {
+    "flex": -10
+   },
+   "armL": {
+    "pos": [
+     0.5,
+     0.57,
+     0.28
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     -0.6,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     -0.6
+    ],
+    "pole": [
+     1,
+     1,
+     -0.3
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.19,
+     0,
+     0.42
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -0.5,
+     0.3,
+     -0.8
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0.075,
+     -0.5
+    ],
+    "anchor": "ankle",
+    "pitch": 160,
+    "pole": [
+     0,
+     -1,
+     0.05
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.075,
+     -0.5
+    ],
+    "anchor": "ankle",
+    "pitch": 160,
+    "pole": [
+     0,
+     -1,
+     0.05
+    ]
+   }
+  }
+ }
+}

@@ -1,0 +1,224 @@
+{
+ "slug": "dumbbell-shrug",
+ "camera": {
+  "az": 25,
+  "el": 6
+ },
+ "muscles": [
+  "traps"
+ ],
+ "props": [
+  {
+   "type": "dumbbell",
+   "hand": "L",
+   "kg": 15
+  },
+  {
+   "type": "dumbbell",
+   "hand": "R",
+   "kg": 15
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ],
+    "pitch": 0
+   },
+   "spine": {
+    "flex": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.12,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 6,
+    "pole": [
+     0.15,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.12,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -6,
+    "pole": [
+     -0.15,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.28,
+     0.8,
+     0.02
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.15,
+     0,
+     -1
+    ],
+    "scap": {
+     "elev": 0,
+     "prot": 0
+    }
+   },
+   "armR": {
+    "pos": [
+     -0.28,
+     0.8,
+     0.02
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     1,
+     0,
+     0
+    ],
+    "curl": 0.85,
+    "pole": [
+     -0.15,
+     0,
+     -1
+    ],
+    "scap": {
+     "elev": 0,
+     "prot": 0
+    }
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ],
+    "pitch": 0
+   },
+   "spine": {
+    "flex": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.12,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 6,
+    "pole": [
+     0.15,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.12,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -6,
+    "pole": [
+     -0.15,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.28,
+     0.8600000000000001,
+     0.02
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     -1,
+     0,
+     0
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.15,
+     0,
+     -1
+    ],
+    "scap": {
+     "elev": 8,
+     "prot": 0
+    }
+   },
+   "armR": {
+    "pos": [
+     -0.28,
+     0.8600000000000001,
+     0.02
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     1,
+     0,
+     0
+    ],
+    "curl": 0.85,
+    "pole": [
+     -0.15,
+     0,
+     -1
+    ],
+    "scap": {
+     "elev": 8,
+     "prot": 0
+    }
+   }
+  }
+ }
+}

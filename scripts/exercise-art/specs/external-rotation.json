@@ -1,0 +1,143 @@
+{
+ "slug": "external-rotation",
+ "camera": {
+  "az": 50,
+  "el": 15
+ },
+ "muscles": [
+  "posterior-deltoid"
+ ],
+ "props": [
+  {
+   "type": "flat-bench",
+   "pos": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "type": "dumbbell",
+   "hand": "L",
+   "kg": 5
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.72,
+     0.1
+    ],
+    "yaw": 90,
+    "roll": 80
+   },
+   "spine": {
+    "flex": 0
+   },
+   "neck": {
+    "side": -6
+   },
+   "legL": {
+    "fk": {
+     "flex": -5,
+     "abd": 0,
+     "knee": 15,
+     "rot": 0
+    },
+    "rel": "pelvis"
+   },
+   "legR": {
+    "fk": {
+     "flex": -5,
+     "abd": 0,
+     "knee": 15,
+     "rot": 0
+    },
+    "rel": "pelvis"
+   },
+   "armL": {
+    "fk": {
+     "flex": 20,
+     "abd": 12,
+     "rot": 30,
+     "elbow": 90
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "pron": 0.5,
+    "autoRoll": false
+   },
+   "armR": {
+    "fk": {
+     "flex": 70,
+     "abd": 0,
+     "rot": 0,
+     "elbow": 100
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.72,
+     0.1
+    ],
+    "yaw": 90,
+    "roll": 80
+   },
+   "spine": {
+    "flex": 0
+   },
+   "neck": {
+    "side": -6
+   },
+   "legL": {
+    "fk": {
+     "flex": -5,
+     "abd": 0,
+     "knee": 15,
+     "rot": 0
+    },
+    "rel": "pelvis"
+   },
+   "legR": {
+    "fk": {
+     "flex": -5,
+     "abd": 0,
+     "knee": 15,
+     "rot": 0
+    },
+    "rel": "pelvis"
+   },
+   "armL": {
+    "fk": {
+     "flex": 20,
+     "abd": 12,
+     "rot": -90,
+     "elbow": 90
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "pron": 0.5,
+    "autoRoll": false
+   },
+   "armR": {
+    "fk": {
+     "flex": 70,
+     "abd": 0,
+     "rot": 0,
+     "elbow": 100
+    },
+    "rel": "chest",
+    "hand": "relaxed"
+   }
+  }
+ },
+ "muscleSide": "L",
+ "floats": true
+}

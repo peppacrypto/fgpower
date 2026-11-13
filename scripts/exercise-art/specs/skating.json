@@ -1,0 +1,152 @@
+{
+ "slug": "skating",
+ "camera": {
+  "az": 40,
+  "el": 9
+ },
+ "muscles": [
+  "quadriceps",
+  "glutes"
+ ],
+ "floats": true,
+ "props": [
+  {
+   "type": "inline-skate",
+   "foot": "L"
+  },
+  {
+   "type": "inline-skate",
+   "foot": "R"
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0.02,
+     0.86,
+     -0.04
+    ],
+    "pitch": 30,
+    "yaw": 6
+   },
+   "spine": {
+    "flex": 14,
+    "twist": -8
+   },
+   "neck": {
+    "flex": -34
+   },
+   "legL": {
+    "pos": [
+     0.06,
+     0.112,
+     0.16
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 4,
+    "pole": [
+     0.2,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.5,
+     0.112,
+     -0.32
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -28,
+    "pole": [
+     -0.5,
+     0,
+     0.8
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": -42,
+     "abd": 26,
+     "elbow": 28
+    },
+    "curl": 0.5
+   },
+   "armR": {
+    "fk": {
+     "flex": 46,
+     "abd": 26,
+     "elbow": 70
+    },
+    "curl": 0.5
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     -0.02,
+     0.86,
+     -0.04
+    ],
+    "pitch": 30,
+    "yaw": -6
+   },
+   "spine": {
+    "flex": 14,
+    "twist": 8
+   },
+   "neck": {
+    "flex": -34
+   },
+   "legL": {
+    "pos": [
+     0.5,
+     0.112,
+     -0.32
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 28,
+    "pole": [
+     0.5,
+     0,
+     0.8
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.06,
+     0.112,
+     0.16
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -4,
+    "pole": [
+     -0.2,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 46,
+     "abd": 26,
+     "elbow": 70
+    },
+    "curl": 0.5
+   },
+   "armR": {
+    "fk": {
+     "flex": -42,
+     "abd": 26,
+     "elbow": 28
+    },
+    "curl": 0.5
+   }
+  }
+ }
+}

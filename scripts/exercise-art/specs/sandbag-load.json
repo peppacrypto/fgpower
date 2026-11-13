@@ -1,0 +1,232 @@
+{
+ "slug": "sandbag-load",
+ "camera": {
+  "az": 118,
+  "el": 9
+ },
+ "muscles": [
+  "quadriceps",
+  "spinal-erectors"
+ ],
+ "props": [
+  {
+   "type": "sandbag-platform",
+   "pos": [
+    0,
+    0,
+    1.05
+   ],
+   "height": 1.2
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.58,
+     -0.17
+    ],
+    "pitch": 64
+   },
+   "spine": {
+    "flex": 18
+   },
+   "neck": {
+    "flex": -40
+   },
+   "legL": {
+    "pos": [
+     0.36,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 25,
+    "pole": [
+     1,
+     0,
+     0.9
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.36,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -25,
+    "pole": [
+     -1,
+     0,
+     0.9
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.2,
+     0.172,
+     0.34
+    ],
+    "contact": true,
+    "fingers": [
+     -0.557,
+     -0.743,
+     0.371
+    ],
+    "palm": [
+     -0.83,
+     0.498,
+     -0.249
+    ],
+    "curl": 0.35,
+    "pole": [
+     -0.5,
+     0.3,
+     -1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.2,
+     0.172,
+     0.34
+    ],
+    "contact": true,
+    "fingers": [
+     0.557,
+     -0.743,
+     0.371
+    ],
+    "palm": [
+     0.83,
+     0.498,
+     -0.249
+    ],
+    "curl": 0.35,
+    "pole": [
+     0.5,
+     0.3,
+     -1
+    ]
+   },
+   "props": [
+    {
+     "type": "loading-sandbag",
+     "at": [
+      0,
+      0.252,
+      0.3
+     ]
+    }
+   ]
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.9,
+     -0.02
+    ],
+    "pitch": -6
+   },
+   "spine": {
+    "flex": -5
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.36,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 25,
+    "pole": [
+     1,
+     0,
+     0.9
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.36,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -25,
+    "pole": [
+     -1,
+     0,
+     0.9
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.2,
+     0.97,
+     0.31
+    ],
+    "contact": true,
+    "fingers": [
+     -0.557,
+     -0.743,
+     0.371
+    ],
+    "palm": [
+     -0.83,
+     0.498,
+     -0.249
+    ],
+    "curl": 0.35,
+    "pole": [
+     0.9,
+     0.2,
+     -0.3
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.2,
+     0.97,
+     0.31
+    ],
+    "contact": true,
+    "fingers": [
+     0.557,
+     -0.743,
+     0.371
+    ],
+    "palm": [
+     0.83,
+     0.498,
+     -0.249
+    ],
+    "curl": 0.35,
+    "pole": [
+     -0.9,
+     0.2,
+     -0.3
+    ]
+   },
+   "props": [
+    {
+     "type": "loading-sandbag",
+     "at": [
+      0,
+      1.1,
+      0.27
+     ]
+    }
+   ]
+  }
+ }
+}

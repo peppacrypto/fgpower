@@ -1,0 +1,228 @@
+{
+ "slug": "smith-incline-shoulder-raise",
+ "camera": {
+  "az": 56,
+  "el": 14
+ },
+ "muscles": [
+  "shoulders",
+  "anterior-deltoid"
+ ],
+ "floats": true,
+ "props": [
+  {
+   "type": "smith",
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "follow": true
+  },
+  {
+   "type": "incline-bench",
+   "angle": 40,
+   "pos": [
+    0,
+    0,
+    0.03
+   ]
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.542,
+     0.0856
+    ],
+    "pitch": -50
+   },
+   "neck": {
+    "flex": 6
+   },
+   "armL": {
+    "pos": [
+     0.2,
+     1.43,
+     0
+    ],
+    "contact": true,
+    "hand": "grip",
+    "grip": 0.014,
+    "fingers": [
+     0.05,
+     1,
+     -0.05
+    ],
+    "palm": [
+     0,
+     0.05,
+     1
+    ],
+    "pole": [
+     0.3,
+     -0.8,
+     -0.1
+    ],
+    "curl": 0.8,
+    "scap": {
+     "prot": 1
+    }
+   },
+   "armR": {
+    "pos": [
+     -0.2,
+     1.43,
+     0
+    ],
+    "contact": true,
+    "hand": "grip",
+    "grip": 0.014,
+    "fingers": [
+     -0.05,
+     1,
+     -0.05
+    ],
+    "palm": [
+     0,
+     0.05,
+     1
+    ],
+    "pole": [
+     -0.3,
+     -0.8,
+     -0.1
+    ],
+    "curl": 0.8,
+    "scap": {
+     "prot": 1
+    }
+   },
+   "legL": {
+    "pos": [
+     0.21,
+     0,
+     0.65
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.15,
+     0.4,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.21,
+     0,
+     0.65
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.15,
+     0.4,
+     1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.542,
+     0.0856
+    ],
+    "pitch": -50
+   },
+   "neck": {
+    "flex": 6
+   },
+   "armL": {
+    "pos": [
+     0.2,
+     1.34,
+     0
+    ],
+    "contact": true,
+    "hand": "grip",
+    "grip": 0.014,
+    "fingers": [
+     0.05,
+     1,
+     -0.05
+    ],
+    "palm": [
+     0,
+     0.05,
+     1
+    ],
+    "pole": [
+     0.3,
+     -0.8,
+     -0.1
+    ],
+    "curl": 0.8,
+    "scap": {
+     "prot": -0.6
+    }
+   },
+   "armR": {
+    "pos": [
+     -0.2,
+     1.34,
+     0
+    ],
+    "contact": true,
+    "hand": "grip",
+    "grip": 0.014,
+    "fingers": [
+     -0.05,
+     1,
+     -0.05
+    ],
+    "palm": [
+     0,
+     0.05,
+     1
+    ],
+    "pole": [
+     -0.3,
+     -0.8,
+     -0.1
+    ],
+    "curl": 0.8,
+    "scap": {
+     "prot": -0.6
+    }
+   },
+   "legL": {
+    "pos": [
+     0.21,
+     0,
+     0.65
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.15,
+     0.4,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.21,
+     0,
+     0.65
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.15,
+     0.4,
+     1
+    ]
+   }
+  }
+ }
+}
