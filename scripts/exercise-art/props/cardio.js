@@ -1663,7 +1663,10 @@ function stairClimber(p, ctx) {
   // Hand rails: a one-piece hoop per side, from the tower, back along the user, down to the rear of the base.
   for (const s of [-1, 1]) {
     const rail = [[s * 0.12, 1.2, 0.6], [s * 0.3, 1.14, 0.44], [s * 0.3, 1.1, 0.26], [s * 0.3, 0.98, -0.2], [s * 0.3, 0.72, -0.34], [s * 0.3, 0.07, -0.42]]
-    g.add(pipe(rail, 0.0175, mat.chrome, { bend: 0.1, seg: 16 }))
+    // Built as separate tubes (front sweep, hand run, rear drop) so each part's box hugs its tube instead of the whole hoop.
+    g.add(pipe(rail.slice(0, 3), 0.0175, mat.chrome, { bend: 0.1, seg: 16 }))
+    g.add(pipe(rail.slice(2, 4), 0.0175, mat.chrome, { bend: 0, seg: 16 }))
+    g.add(pipe(rail.slice(3), 0.0175, mat.chrome, { bend: 0.1, seg: 16 }))
     // Foam section where hands rest.
     const a = [s * 0.3, 1.092, 0.23]
     const b = [s * 0.3, 1.0, -0.13]
@@ -1819,14 +1822,22 @@ function inlineSkate(p, ctx) {
       const hw = (0.054 + 0.012 * Math.sin(Math.PI * sstep(0.1, 0.9, u))) * end
       // The top line: high at the ankle, sloping over the instep to a rounded toe cap.
       const top = (0.082 + 0.09 * (1 - sstep(0.18, 0.62, u)) + 0.008 * Math.sin(Math.PI * sstep(0.62, 1, u))) * Math.pow(end, 0.6)
-      const ring = []
-      for (let j = 0; j < NA; j++) {
-        const a = (j / NA) * Math.PI * 2
+      // A shell with a wall: the outer skin, the rim, then the inner skin back round, so a foot in the cavity is outside the solid.
+      // The mouth is open over the ankle (gap, in radians either side of the top) and closes over the toes into a cap.
+      const gap = 0.95 * (1 - sstep(0.3, 0.55, u))
+      const wall = 0.007
+      const at = (a, k) => {
         const c = Math.cos(a)
-        const s = Math.sin(a)
-        const yy = s > 0 ? top * Math.pow(s, 0.72) : -0.014 * end * Math.pow(-s, 0.4)
-        ring.push([hw * Math.sign(c) * Math.pow(Math.abs(c), 0.7), yy + 0.002, z])
+        const sn = Math.sin(a)
+        const w = hw - k
+        const yy = sn > 0 ? (top - k) * Math.pow(sn, 0.72) : -0.014 * end * Math.pow(-sn, 0.4) + k * end
+        return [w * Math.sign(c) * Math.pow(Math.abs(c), 0.7), yy + 0.002, z]
       }
+      const ring = []
+      const a0 = Math.PI / 2 + gap
+      const span = Math.PI * 2 - 2 * gap
+      for (let j = 0; j <= NA; j++) ring.push(at(a0 + (j / NA) * span, 0))
+      for (let j = NA; j >= 0; j--) ring.push(at(a0 + (j / NA) * span, wall * end))
       rings.push(ring)
     }
     return loftGeo(rings)
@@ -1870,24 +1881,21 @@ function inlineSkate(p, ctx) {
     const rings = []
     const NY = 16
     const NA = 28
-    for (let i = 0; i <= NY; i++) {
+    // Hollow sleeve: outer skin up, rim over the top, inner skin back down, open at both ends for the shin.
+    const skin = (i, k) => {
       const u = i / NY
       const y = u * 0.14
-      const rx = 0.058 + 0.004 * Math.sin(u * Math.PI)
-      const rz = 0.073 - 0.008 * u
-      const taper = i === NY ? 0.985 : 1
+      const rx = 0.058 + 0.004 * Math.sin(u * Math.PI) - k
+      const rz = 0.073 - 0.008 * u - k
       const ring = []
       for (let j = 0; j < NA; j++) {
         const a = (j / NA) * Math.PI * 2
-        ring.push([rx * taper * Math.cos(a), y, 0.006 - rz * taper * Math.sin(a)])
+        ring.push([rx * Math.cos(a), y, 0.006 - rz * Math.sin(a)])
       }
-      rings.push(ring)
+      return ring
     }
-    // Close the top with a soft liner roll.
-    const last = rings[rings.length - 1]
-    rings.push(last.map(([x, y, z]) => [x * 0.86, y + 0.006, z * 0.86]))
-    rings.push(last.map(([x, y, z]) => [x * 0.6, y + 0.004, z * 0.6]))
-    rings.push(last.map(([x, y, z]) => [x * 0.01, y + 0.002, z * 0.01]))
+    for (let i = 0; i <= NY; i++) rings.push(skin(i, 0))
+    for (let i = NY; i >= 0; i--) rings.push(skin(i, 0.007))
     return loftGeo(rings)
   })
   cuff.add(mesh(cuffGeo, M.shroud))
