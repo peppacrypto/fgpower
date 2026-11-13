@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-// Renders the final pictures of exercises and puts them in the app: public/exercises/<slug>/f2-start.webp, f2-end.webp and
-// f2-loop.mp4 (new names on purpose: the app caches exercise images for a month), removes the exercise's old photos, and
+// Renders the final pictures of exercises and puts them in the app: public/exercises/<slug>/f3-start.webp, f3-end.webp and
+// f3-loop.mp4 (a new prefix for every engine generation: the files are served as immutable for a year, see next.config.ts,
+// so a changed picture must get a new name), removes the exercise's old photos and earlier figures, and
 // rewrites its media list in prisma/seed-data/exercises.generated.json. Never run build-exercise-catalog.mjs afterwards: it
 // would bring the old photos back.
 //
@@ -27,6 +28,8 @@ const opt = (k) => {
 const NO_RENDER = argv.includes('--no-render')
 const DRY = argv.includes('--dry')
 const RENDER_ONLY = argv.includes('--render-only')
+/** File-name prefix of this engine generation; bump it whenever published pictures change (they are cached as immutable). */
+const PREFIX = 'f3'
 
 let slugs = []
 if (opt('--slugs')) slugs = opt('--slugs').split(',')
@@ -100,16 +103,16 @@ for (const slug of slugs) {
   if (DRY) continue
   fs.mkdirSync(dir, { recursive: true })
   for (const f of fs.readdirSync(dir)) {
-    if (/^(\d+\.webp|fig-.*|f2-.*)$/.test(f)) {
+    if (/^(\d+\.webp|fig-.*|f\d+-.*)$/.test(f)) {
       fs.rmSync(path.join(dir, f))
       removed++
     }
   }
   for (const f of files) {
-    fs.copyFileSync(path.join(r, f), path.join(dir, `f2-${f}`))
-    bytes += fs.statSync(path.join(dir, `f2-${f}`)).size
+    fs.copyFileSync(path.join(r, f), path.join(dir, `${PREFIX}-${f}`))
+    bytes += fs.statSync(path.join(dir, `${PREFIX}-${f}`)).size
   }
-  const u = (f) => `/exercises/${slug}/f2-${f}`
+  const u = (f) => `/exercises/${slug}/${PREFIX}-${f}`
   const endFirst = spec.keyFrame === 'end'
   ex.media = hold
     ? [
