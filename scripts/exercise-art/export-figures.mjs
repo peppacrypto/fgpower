@@ -41,7 +41,8 @@ const run = (list, extra) => {
     execFileSync('node', [path.join(HERE, 'render.mjs'), ...part, '--out', RENDER_DIR, ...extra], { stdio: 'inherit' })
   }
 }
-run(moving, ['--loop', '20'])
+// --loop is a frame rate since 2026-11-13 (the loop's length comes from the tempo, motion.js): 8 fps keeps the webp small.
+run(moving, ['--loop', '8'])
 run(holds, [])
 
 const manifest = []

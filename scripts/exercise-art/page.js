@@ -3,6 +3,8 @@ import * as THREE from './vendor/three.module.js'
 import { Body, mixFrames } from './rig.js'
 import { makePaint, MUSCLE_NAMES } from './paint.js'
 import { PROPS, propErrors } from './props/index.js'
+import { prepareSpec } from './prep.js'
+import { segmentsOf, tempoFor, timelineOf, poseDistance } from './motion.js'
 
 const W = 1600
 const H = 1200
@@ -101,7 +103,7 @@ scene.add(framePropsGroup)
 const FOLLOW_KEYS = ['hand', 'hands', 'foot', 'feet', 'follow']
 const isDynamic = (p) => FOLLOW_KEYS.some((k) => p[k] !== undefined)
 
-function fillProps(group, list, ctx = null) {
+function fillProps(group, list, ctx = null, frameOwn = new Set()) {
   while (group.children.length) group.remove(group.children[0])
   for (const p of list || []) {
     const make = PROPS[p.type]
@@ -114,8 +116,25 @@ function fillProps(group, list, ctx = null) {
     }
     if (p.frameIgnore) g.userData.frameIgnore = true
     group.add(g)
+    g.updateMatrixWorld(true)
+    g.userData.fit = fitMode(p, g, frameOwn.has(p))
   }
   group.updateMatrixWorld(true)
+}
+
+/**
+ * How a prop counts in the camera's fit (see renderSpec): 'full' for what the performer holds or moves (a barbell, dumbbells, a
+ * frame's own props: a ball in the air), 'near' for everything else (benches, racks, walls, door frames, machines, cable
+ * stations): only its parts near the performer count, the rest may leave the frame. A station that follows a hand (a cable
+ * tower drawing its cable to the handle) is tall and stands on the floor: still 'near'. frameIgnore: not at all.
+ */
+function fitMode(p, g, frameOwn) {
+  if (p.frameIgnore) return 'skip'
+  const held = p.hand !== undefined || p.hands !== undefined || p.foot !== undefined || p.feet !== undefined
+  if (!held && !frameOwn) return 'near'
+  const box = new THREE.Box3().setFromObject(g)
+  if (box.max.y - box.min.y > 1.2 && box.min.y < 0.15) return 'near'
+  return 'full'
 }
 const buildProps = (list) => fillProps(propsGroup, list)
 
@@ -145,19 +164,25 @@ function isFrameIgnored(o) {
   return false
 }
 
+/** The props' vertices in world coordinates, split by how they count in the fit: { full: [...], near: [...] }. */
 function propPoints(group = propsGroup) {
-  const pts = []
+  const out = { full: [], near: [] }
   const v = new THREE.Vector3()
-  group.traverse((o) => {
-    if (o.isMesh && o.geometry.attributes.position && !isFrameIgnored(o)) {
-      const a = o.geometry.attributes.position
-      for (let i = 0; i < a.count; i++) {
-        v.fromBufferAttribute(a, i).applyMatrix4(o.matrixWorld)
-        pts.push(v.x, v.y, v.z)
+  for (const g of group.children) {
+    const mode = g.userData.fit || 'near'
+    if (mode === 'skip') continue
+    const pts = out[mode]
+    g.traverse((o) => {
+      if (o.isMesh && o.geometry.attributes.position && !isFrameIgnored(o)) {
+        const a = o.geometry.attributes.position
+        for (let i = 0; i < a.count; i++) {
+          v.fromBufferAttribute(a, i).applyMatrix4(o.matrixWorld)
+          pts.push(v.x, v.y, v.z)
+        }
       }
-    }
-  })
-  return pts
+    })
+  }
+  return out
 }
 
 function setBodyPose(positions) {
@@ -172,25 +197,15 @@ function snapshot() {
   return renderer.domElement.toDataURL('image/png')
 }
 
-window.renderSpec = async function renderSpec(spec, opts = {}) {
-  const az = spec.camera?.az ?? 90
-  const el = spec.camera?.el ?? 8
-  const ca = (az * Math.PI) / 180
-  const ce = (el * Math.PI) / 180
-  const dir = new THREE.Vector3(Math.sin(ca) * Math.cos(ce), Math.sin(ce), Math.cos(ca) * Math.cos(ce)) // from target to camera
-  const worldUp = new THREE.Vector3(0, 1, 0)
-  const right = worldUp.clone().cross(dir).normalize()
-  const up = dir.clone().cross(right).normalize()
-
+/**
+ * What every view of a spec needs: the prepared spec (prep.js: grip magnet, free grips, resting hands, as check.mjs checks it),
+ * the blend at(t) over its key frames, and the loop's timeline (motion.js). Builds its still props and paints its muscles.
+ */
+function prepare(rawSpec, opts) {
+  const spec = prepareSpec(body, rawSpec)
   buildProps((spec.props || []).filter((p) => !isDynamic(p)))
   paint.setMuscles(spec.muscles || [], spec.muscleSide)
-
   const frameSpecs = spec.frames
-  const names = Object.keys(frameSpecs)
-  const posed = {}
-  const reports = {}
-  // Sampling the mix too keeps the framing steady across the whole loop.
-  const loopN = opts.loopFrames || 0
   const startF = body.resolveFrame(frameSpecs.start)
   const endF = body.resolveFrame(frameSpecs.end || frameSpecs.start)
   // t runs 0..1 from start to end, through the optional mid, mid2 and mid3 poses, evenly spaced.
@@ -200,91 +215,24 @@ window.renderSpec = async function renderSpec(spec, opts = {}) {
     const i = Math.floor(x)
     return mixFrames(keys[i], keys[i + 1], x - i)
   }
-  const samples = [...names.map((n) => frameSpecs[n]), at(0.25), at(0.5), at(0.75)]
-  let bounds = null
-  const pp = propPoints()
-  const merge = (b) => {
-    if (!bounds) bounds = { ...b }
-    else {
-      bounds.minR = Math.min(bounds.minR, b.minR)
-      bounds.maxR = Math.max(bounds.maxR, b.maxR)
-      bounds.minU = Math.min(bounds.minU, b.minU)
-      bounds.maxU = Math.max(bounds.maxU, b.maxU)
-      bounds.minD = Math.min(bounds.minD, b.minD)
-      bounds.maxD = Math.max(bounds.maxD, b.maxD)
-    }
-  }
-  let minX = Infinity, maxX = -Infinity, minZ = Infinity, maxZ = -Infinity
-  for (const f of samples) {
-    const r = body.solve(f)
-    merge(collectBounds(r.positions, right, up, dir))
-    for (let k = 0; k < r.positions.length; k += 3) {
-      minX = Math.min(minX, r.positions[k]); maxX = Math.max(maxX, r.positions[k])
-      minZ = Math.min(minZ, r.positions[k + 2]); maxZ = Math.max(maxZ, r.positions[k + 2])
-    }
-    const moving = movingProps(spec, f)
-    if (moving.length) {
-      fillProps(framePropsGroup, moving, r.report)
-      const fp = propPoints(framePropsGroup)
-      if (fp.length) merge(collectBounds(fp, right, up, dir))
-    }
-  }
-  if (pp.length) {
-    // Walls and long props must not force the camera far out: they only count where the figure is.
-    const wide = (spec.props || []).some((p) => p.type === 'wall' || p.type === 'door-frame' || p.type === 'door-corner')
-    if (!wide) merge(collectBounds(pp, right, up, dir))
-    else {
-      const b = collectBounds(pp, right, up, dir)
-      bounds.minD = Math.min(bounds.minD, b.minD)
-      bounds.maxD = Math.max(bounds.maxD, b.maxD)
-    }
-  }
-  pool.position.x = (minX + maxX) / 2
-  pool.position.z = (minZ + maxZ) / 2
-  const poolSize = Math.max(maxX - minX, maxZ - minZ, 0.9) * 1.9
-  pool.scale.set(poolSize, poolSize, 1)
-  // The floor always lies inside the frame.
-  bounds.minU = Math.min(bounds.minU, 0)
-  const cR = (bounds.minR + bounds.maxR) / 2
-  const cU = (bounds.minU + bounds.maxU) / 2
-  const aspect = W / H
-  const wR = bounds.maxR - bounds.minR
-  const hU = bounds.maxU - bounds.minU
-  // Wider margins left and right than top and bottom: the app shows some thumbnails as squares cut from this 4:3 frame,
-  // and the figure must survive that crop.
-  const padH = spec.camera?.padH ?? 0.135
-  const padV = spec.camera?.pad ?? 0.07
-  const viewH = Math.max(hU / (1 - 2 * padV), wR / (aspect * (1 - 2 * padH)))
-  const viewW = viewH * aspect
-  // A long lens: depth reads naturally and the figure keeps its proportions. Fitted so the nearest face of the movement's
-  // bounds fills the frame.
-  const FOV = 22
-  const tanV = Math.tan((FOV * Math.PI) / 360)
-  const midD = (bounds.minD + bounds.maxD) / 2
-  const target = right.clone().multiplyScalar(cR).add(up.clone().multiplyScalar(cU)).addScaledVector(dir, midD)
-  const fit = Math.max(viewH / 2 / tanV, viewW / 2 / (tanV * aspect)) + (bounds.maxD - bounds.minD) / 2
-  const camera = new THREE.PerspectiveCamera(FOV, aspect, 0.1, 80)
-  camera.position.copy(target).addScaledVector(dir, fit)
-  camera.up.copy(worldUp)
-  camera.lookAt(target)
+  // The loop's timeline (motion.js): which way is the lift, a slower lowering, pauses at the ends, minimum-jerk moves.
+  const keyNames = ['start', ...['mid', 'mid2', 'mid3'].filter((k) => frameSpecs[k]), 'end']
+  const keyFrames = keyNames.map((k) => frameSpecs[k] || frameSpecs.start)
+  const keyReports = keyFrames.map((f) => body.solve(f, { surface: false }).report)
+  const segs = segmentsOf(spec, opts.info || {}, keyReports, keyFrames)
+  const fps = opts.fps || 20
+  const tl = timelineOf(segs, tempoFor(spec, opts.info || {}), fps, spec.timing || null)
+  const timeline = { lift: segs.lift, inferred: segs.inferred, dirs: segs.dirs, lengths: segs.lengths, seconds: tl.seconds, frames: tl.frames, fps, parts: tl.parts, ts: tl.ts.map((t) => +t.toFixed(4)) }
+  return { spec, frameSpecs, names: Object.keys(frameSpecs), at, tl, timeline, keyReports }
+}
 
-  // Light from up, camera side.
-  const lightDir = new THREE.Vector3().copy(dir).multiplyScalar(0.55).add(new THREE.Vector3(0.25, 1, 0.2)).normalize()
-  const cw = new THREE.Vector3(0, 0.6, 0)
-  sun.position.copy(cw).addScaledVector(lightDir, 8)
-  // From behind the figure, opposite the camera: the bright edge that separates a grey body from a black background.
-  rim.position.copy(cw).addScaledVector(dir, -6).add(new THREE.Vector3(-1.5, 3, 0))
-  rim.target.position.copy(cw)
-  sun.target.position.copy(cw)
-  const sc = Math.max(viewW, viewH) * 1.1
-  sun.shadow.camera.left = -sc
-  sun.shadow.camera.right = sc
-  sun.shadow.camera.top = sc
-  sun.shadow.camera.bottom = -sc
-  sun.shadow.camera.near = 0.5
-  sun.shadow.camera.far = 20
-  sun.shadow.camera.updateProjectionMatrix()
-
+window.renderSpec = async function renderSpec(rawSpec, opts = {}) {
+  const ctx = prepare(rawSpec, opts)
+  const { spec, frameSpecs, names, at, tl, timeline } = ctx
+  const { camera, dir, viewW, viewH, bounds, bodyB, aspect } = setView(ctx, spec.camera?.az ?? 90, spec.camera?.el ?? 8, spec.camera?.padH, spec.camera?.pad)
+  const worldUp = new THREE.Vector3(0, 1, 0)
+  const reports = {}
+  const loopN = opts.loopFrames || 0
   const images = {}
   for (const n of names) {
     const r = body.solve(frameSpecs[n])
@@ -321,21 +269,7 @@ window.renderSpec = async function renderSpec(spec, opts = {}) {
   }
   const loop = []
   if (loopN) {
-    // There and back, eased so the ends linger like a real rep. `timing` (seconds) shows a set tempo instead.
-    const ts = []
-    if (spec.timing) {
-      const fps = opts.fps || 6
-      const ease = (x) => 0.5 - 0.5 * Math.cos(x * Math.PI)
-      const { there = 1, holdEnd = 0, back = 1, holdStart = 0 } = spec.timing
-      const n = (sec) => Math.max(0, Math.round(sec * fps))
-      for (let i = 0; i < n(there); i++) ts.push(ease(i / n(there)))
-      for (let i = 0; i < n(holdEnd); i++) ts.push(1)
-      for (let i = 0; i < n(back); i++) ts.push(1 - ease(i / n(back)))
-      for (let i = 0; i < n(holdStart); i++) ts.push(0)
-    } else {
-      for (let i = 0; i < loopN; i++) ts.push(0.5 - 0.5 * Math.cos((i / loopN) * 2 * Math.PI))
-    }
-    for (const t of ts) {
+    for (const t of tl.ts) {
       const mixed = at(t)
       const r = body.solve(mixed)
       setBodyPose(r.positions)
@@ -344,7 +278,182 @@ window.renderSpec = async function renderSpec(spec, opts = {}) {
       loop.push(snapshot())
     }
   }
-  return { images, reports, loop, closeups, view: { viewW, viewH } }
+  const r3 = (b) => Object.fromEntries(Object.entries(b).map(([k, x]) => [k, +x.toFixed(3)]))
+  return { images, reports, loop, closeups, view: { viewW, viewH, bounds: r3(bounds), body: r3(bodyB) }, prep: spec.__prep, timeline }
+}
+
+/**
+ * For motion-strips.mjs: `count` moments evenly spread over the loop's time (0 to 100 %, the tempo included) from the spec's
+ * camera, and a side view (from the figure's left, low) of the start and of the deepest moment: the one farthest from the start.
+ */
+window.renderStrip = async function renderStrip(rawSpec, opts = {}) {
+  const ctx = prepare(rawSpec, opts)
+  const { spec, frameSpecs, at, tl, timeline } = ctx
+  const count = opts.count || 7
+  const shoot = (camera, frame) => {
+    const r = body.solve(frame)
+    setBodyPose(r.positions)
+    fillProps(framePropsGroup, movingProps(spec, frame), r.report)
+    renderer.render(scene, camera)
+    return snapshot()
+  }
+  const strip = []
+  const main = setView(ctx, spec.camera?.az ?? 90, spec.camera?.el ?? 8, spec.camera?.padH, spec.camera?.pad)
+  const hasLoop = !!(frameSpecs.end || frameSpecs.mid)
+  for (let k = 0; k < count; k++) {
+    const u = count > 1 ? k / (count - 1) : 0
+    const i = Math.min(tl.ts.length - 1, Math.round(u * tl.ts.length)) % tl.ts.length
+    const t = hasLoop ? tl.ts[i] : 0
+    strip.push({ label: `${Math.round(u * 100)}%  t${t.toFixed(2)}`, image: shoot(main.camera, at(t)), t })
+  }
+  // The deepest moment: farthest from the start pose, on 33 samples of the path.
+  const r0 = body.solve(at(0), { surface: false }).report
+  let deepT = 0
+  let deepD = -1
+  for (let i = 0; i <= 32; i++) {
+    const t = i / 32
+    const d = poseDistance(r0, body.solve(at(t), { surface: false }).report)
+    if (d > deepD) {
+      deepD = d
+      deepT = t
+    }
+  }
+  const yaw = frameSpecs.start.root?.yaw || 0
+  const side = setView(ctx, 90 + yaw, 4, 0.08, 0.05)
+  // From the side a rack's upright or a station's frame often stands between the camera and the body: the still props go
+  // see-through for these two shots (their materials are shared, so they are put back after).
+  const saved = []
+  propsGroup.traverse((o) => {
+    if (!o.isMesh) return
+    for (const m of Array.isArray(o.material) ? o.material : [o.material]) {
+      if (saved.some((s) => s.m === m)) continue
+      saved.push({ m, transparent: m.transparent, opacity: m.opacity, depthWrite: m.depthWrite })
+      m.transparent = true
+      m.opacity = 0.28
+      m.depthWrite = false
+    }
+  })
+  const sideShots = { start: shoot(side.camera, at(0)), deepest: shoot(side.camera, at(deepT)), deepT }
+  for (const s of saved) Object.assign(s.m, { transparent: s.transparent, opacity: s.opacity, depthWrite: s.depthWrite })
+  return { strip, side: sideShots, timeline, prep: spec.__prep }
+}
+
+/**
+ * THE FIT: a camera on the spec from az/el (degrees), with its lights and floor pool. It frames the performer over the whole loop,
+ * with what it holds or moves (fitMode 'full'); every other prop (benches, racks, walls, door frames, machines, cable stations)
+ * counts only where it lies within a margin of the performer, so a tall rack or a wall never shrinks the figure: it runs out
+ * of the frame instead.
+ */
+function setView(ctx, az, el, padH0, padV0) {
+  const { spec, frameSpecs, names, at } = ctx
+  const ca = (az * Math.PI) / 180
+  const ce = (el * Math.PI) / 180
+  const dir = new THREE.Vector3(Math.sin(ca) * Math.cos(ce), Math.sin(ce), Math.cos(ca) * Math.cos(ce)) // from target to camera
+  const worldUp = new THREE.Vector3(0, 1, 0)
+  const right = worldUp.clone().cross(dir).normalize()
+  const up = dir.clone().cross(right).normalize()
+  const samples = [...names.map((n) => frameSpecs[n]), ...[1, 2, 3, 4, 5, 6, 7].map((i) => at(i / 8))]
+  let bounds = null
+  let bodyB = null
+  const grow = (into, b) => {
+    if (!into) return { ...b }
+    into.minR = Math.min(into.minR, b.minR)
+    into.maxR = Math.max(into.maxR, b.maxR)
+    into.minU = Math.min(into.minU, b.minU)
+    into.maxU = Math.max(into.maxU, b.maxU)
+    into.minD = Math.min(into.minD, b.minD)
+    into.maxD = Math.max(into.maxD, b.maxD)
+    return into
+  }
+  const nearPts = []
+  const fullPts = []
+  const pp = propPoints()
+  nearPts.push(pp.near)
+  fullPts.push(pp.full)
+  let minX = Infinity, maxX = -Infinity, minZ = Infinity, maxZ = -Infinity
+  for (const f of samples) {
+    const r = body.solve(f)
+    bodyB = grow(bodyB, collectBounds(r.positions, right, up, dir))
+    for (let k = 0; k < r.positions.length; k += 3) {
+      minX = Math.min(minX, r.positions[k]); maxX = Math.max(maxX, r.positions[k])
+      minZ = Math.min(minZ, r.positions[k + 2]); maxZ = Math.max(maxZ, r.positions[k + 2])
+    }
+    const moving = movingProps(spec, f)
+    if (moving.length) {
+      fillProps(framePropsGroup, moving, r.report, new Set(f.props || []))
+      const fp = propPoints(framePropsGroup)
+      nearPts.push(fp.near)
+      fullPts.push(fp.full)
+    }
+  }
+  bounds = { ...bodyB }
+  for (const pts of fullPts) if (pts.length) grow(bounds, collectBounds(pts, right, up, dir))
+  {
+    // Near the performer: within M of its own bounds (4 cm and 6 % of its size: 14 cm for a standing figure).
+    const M = 0.04 + 0.06 * Math.max(bodyB.maxR - bodyB.minR, bodyB.maxU - bodyB.minU)
+    const v = new THREE.Vector3()
+    for (const pts of nearPts) {
+      for (let i = 0; i < pts.length; i += 3) {
+        v.set(pts[i], pts[i + 1], pts[i + 2])
+        const r = v.dot(right)
+        const u = v.dot(up)
+        if (r < bodyB.minR - M || r > bodyB.maxR + M || u < bodyB.minU - M || u > bodyB.maxU + M) continue
+        const d = v.dot(dir)
+        if (r < bounds.minR) bounds.minR = r
+        if (r > bounds.maxR) bounds.maxR = r
+        if (u < bounds.minU) bounds.minU = u
+        if (u > bounds.maxU) bounds.maxU = u
+        if (d < bounds.minD) bounds.minD = d
+        if (d > bounds.maxD) bounds.maxD = d
+      }
+    }
+  }
+  pool.position.x = (minX + maxX) / 2
+  pool.position.z = (minZ + maxZ) / 2
+  const poolSize = Math.max(maxX - minX, maxZ - minZ, 0.9) * 1.9
+  pool.scale.set(poolSize, poolSize, 1)
+  // The floor always lies inside the frame.
+  bounds.minU = Math.min(bounds.minU, 0)
+  const cR = (bounds.minR + bounds.maxR) / 2
+  const cU = (bounds.minU + bounds.maxU) / 2
+  const aspect = W / H
+  const wR = bounds.maxR - bounds.minR
+  const hU = bounds.maxU - bounds.minU
+  // Wider margins left and right than top and bottom: the app shows some thumbnails as squares cut from this 4:3 frame,
+  // and the figure must survive that crop.
+  const padH = padH0 ?? 0.135
+  const padV = padV0 ?? 0.07
+  const viewH = Math.max(hU / (1 - 2 * padV), wR / (aspect * (1 - 2 * padH)))
+  const viewW = viewH * aspect
+  // A long lens: depth reads naturally and the figure keeps its proportions. Fitted so the nearest face of the movement's
+  // bounds fills the frame.
+  const FOV = 22
+  const tanV = Math.tan((FOV * Math.PI) / 360)
+  const midD = (bounds.minD + bounds.maxD) / 2
+  const target = right.clone().multiplyScalar(cR).add(up.clone().multiplyScalar(cU)).addScaledVector(dir, midD)
+  const fit = Math.max(viewH / 2 / tanV, viewW / 2 / (tanV * aspect)) + (bounds.maxD - bounds.minD) / 2
+  const camera = new THREE.PerspectiveCamera(FOV, aspect, 0.1, 80)
+  camera.position.copy(target).addScaledVector(dir, fit)
+  camera.up.copy(worldUp)
+  camera.lookAt(target)
+
+  // Light from up, camera side.
+  const lightDir = new THREE.Vector3().copy(dir).multiplyScalar(0.55).add(new THREE.Vector3(0.25, 1, 0.2)).normalize()
+  const cw = new THREE.Vector3(0, 0.6, 0)
+  sun.position.copy(cw).addScaledVector(lightDir, 8)
+  // From behind the figure, opposite the camera: the bright edge that separates a grey body from a black background.
+  rim.position.copy(cw).addScaledVector(dir, -6).add(new THREE.Vector3(-1.5, 3, 0))
+  rim.target.position.copy(cw)
+  sun.target.position.copy(cw)
+  const sc = Math.max(viewW, viewH) * 1.1
+  sun.shadow.camera.left = -sc
+  sun.shadow.camera.right = sc
+  sun.shadow.camera.top = sc
+  sun.shadow.camera.bottom = -sc
+  sun.shadow.camera.near = 0.5
+  sun.shadow.camera.far = 20
+  sun.shadow.camera.updateProjectionMatrix()
+  return { camera, dir, viewW, viewH, bounds, bodyB, aspect }
 }
 
 async function init() {

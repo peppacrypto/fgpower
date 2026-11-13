@@ -10,8 +10,9 @@
 //                   camera on +X (az 30..120) sees the body unhidden. With a camera on -X, set mirror.
 //   angle (deg)     the lever's angle when static, as far as a machine has one.
 // A handle's centre is where ctx.hands.*.centre must be; radius 0.0165, so "grip": 0.0165. "hand [x,y,z]" below is that centre: today it is
-// armL.pos with contact:true (the gallery's way). The bar runs along the thumb: fingers and palm below keep it so. The handle (and the
-// lever it is on) follows the hand, the hand does not snap to it: put the hand exactly on the numbers below. Levers swing on arcs, hands interpolate on straight
+// armL.pos with contact:true (the gallery's way). The bar runs along the thumb: fingers and palm below keep it so. Every Asm.grip() is in
+// the grip registry (part group userData.grips, with its radius): prep.js's grip magnet puts a closed hand within 8 cm of one onto it
+// (and along it), and check.mjs flags hover:/grip: when it cannot. Still put the hand on the numbers below. Levers swing on arcs, hands interpolate on straight
 // lines, so give a machine with a long swing a "mid" frame on the arc, as the gallery does. Better still use fk arms and legs for
 // anything turning around a joint (leg extension, curls, arm machines): fk moves on a true arc, and the pad stays on the limb exactly.
 //
@@ -42,7 +43,8 @@
 //   pitch 28: hips [0,1.116,0]. Yoke pads rest on the shoulders, following the shoulder joints: pad faces y = shoulder joint + .065. Handles on the
 //   yoke: hand [.301,1.59,.07] -> [.301,1.64,.052], fingers [0,.95,.3], palm [0,-.3,.95], pole [.8,-.6,.1]. A shrug: shoulders rise with scap.elev, feet flat.
 // seated-calf     (seated-calf-raise) Hips [0,.598,0], root.pitch -3. Balls [+-.12,.115,.585], anchor "ball", toes 0, pitch -18 -> 24, pole [0,.2,1]. Pads sit on the
-//   lower thighs, following the knees (knee + [0,.1,-.085]). Handles on the pad: hand [.1,.777,.365] at pitch -18, [.1,.836,.309] at pitch 24.
+//   lower thighs, following the knees (knee + [0,.1,-.085]). Handles on the pad, raised 4 cm on 2026-11-13 so the fingers close under them:
+//   about hand [.1,.817,.36] at pitch -18, [.1,.876,.305] at pitch 24 (the magnet settles it).
 // chest-press     (machine-bench-press load:"stack", leverage-chest-press; variant:"incline"|"decline" for those) Plates by default. Hips [0,.538,0], neck 4,
 //   legs { fk:{flex:88,abd:6,knee:84}, rel:"world" }. Each hand drives its own lever (plates) or both share one yoke (stack). From -> to, with mid on the arc:
 //     flat     root.pitch -12: hand [.25,.93,.2] -> [.236,.95,.479]  (stack: x stays .25). Pivot [.443,1.616,.302]. fingers [0,.6,.8]->[0,.5,.87], palm [0,-.8,.6]->[0,-.87,.5].
@@ -61,7 +63,7 @@
 // dip-machine     (dip-machine) Hips [0,.558,0], root.pitch -8. Hand [.31,.72,.06] -> [.31,.46,.02] with a mid on the arc around [y .481, z .75]: the handle is the lever's end, along it, so the thumb points
 //   down the lever. fingers [.906,-.405,-.121] -> [.906,-.423,.002], palm [-.423,-.868,-.259] -> [-.423,-.906,.005], pole [.25,-.2,-1] -> [.25,-.1,-1].
 // machine-curl    (machine-bicep-curl) Hips [0,.578,0], root.pitch 4. Arms { fk:{flex:55,abd:0,elbow:12 -> 108}, rel:"world", fingers, palm, scap:{elev:0,prot:6} }: elbow pivot [.194,.869,.3].
-//   With q = flex+elbow: fingers [0,-cos q,sin q], palm [0,sin q,cos q].
+//   With q = flex+elbow: fingers [0,-cos q,sin q], palm [0,sin q,cos q]. A closed fk hand is a grip; the lever's reach follows the hands' grip centres.
 // machine-preacher (machine-preacher-curls) Hips [0,.618,0], root.pitch 8. Same arms with flex 50, elbow 12 -> 112, elbow pivot [.194,.883,.317]. One bar across both hands.
 // machine-triceps (machine-triceps-extension) Hips [0,.578,0], root.pitch -6, back pad. Same arms with flex 72, elbow 118 -> 10, palm negated: [0,-sin q,-cos q], elbow pivot [.194,.948,.258].
 // hip-machine     (thigh-abductor mode:"abductor" default, thigh-adductor mode:"adductor") Hips [0,.558,0], root.pitch -16. Legs { fk:{flex:90,abd:2 -> 32,knee:84}, rel:"world", foot:{pitch:2} }
@@ -702,7 +704,8 @@ class Asm {
       return p
     })
     this.lathe(prof, m, A, d, 28)
-    if (name) this.grips.push({ name, a: A.toArray(), b: B.toArray() })
+    // The grip registry (grasp.js reads it from part groups' userData.grips): where a closed hand can hold, and the radius.
+    if (name) this.grips.push({ name, a: A.toArray(), b: B.toArray(), r: rad })
     return this
   }
   /** One iron plate, flat on the plane through pos normal to dir. D outer diameter, T thickness. */
@@ -1691,10 +1694,11 @@ machines['seated-calf'] = function seatedCalf(p, ctx) {
     a.holes([0.0252, 0.14, pad.z - 0.035], [0.0252, 0.32, pad.z - 0.012], 5, 0.0048, [1, 0, 0])
     a.tube([-0.14, pad.y + 0.075, pad.z], [0.14, pad.y + 0.075, pad.z], 0.045, 0.045, M.arm, { side: [0, 1, 0] })
     for (const s of [-1, 1]) a.pad({ name: s > 0 ? 'kneeL' : 'kneeR', c: [s * 0.12, pad.y, pad.z], n: [0, -1, 0], u: [0, 0, 1], w: 0.17, l: 0.16, t: 0.058, r: 0.028, rc: 0.05, crown: 0.012 })
-    // A short bar on top for the hands.
-    for (const s of [-1, 1]) a.grip([s * 0.02, pad.y + 0.1, pad.z - 0.0], [s * 0.15, pad.y + 0.1, pad.z - 0.0], 0.0165, { name: `handle${s > 0 ? 'L' : 'R'}` })
-    a.rod([0, pad.y + 0.075, pad.z], [0, pad.y + 0.1, pad.z], 0.0125, M.steel)
-    a.rod([-0.03, pad.y + 0.1, pad.z], [0.03, pad.y + 0.1, pad.z], 0.0125, M.steel)
+    // A short bar on top for the hands, high enough over the cross tube for the fingers to close under it (2.2 cm).
+    const hy = pad.y + 0.14
+    for (const s of [-1, 1]) a.grip([s * 0.02, hy, pad.z - 0.0], [s * 0.15, hy, pad.z - 0.0], 0.0165, { name: `handle${s > 0 ? 'L' : 'R'}` })
+    a.rod([0, pad.y + 0.075, pad.z], [0, hy, pad.z], 0.0125, M.steel)
+    a.rod([-0.03, hy, pad.z], [0.03, hy, pad.z], 0.0125, M.steel)
     // The plates, on a horn crossing the end of the beam. The upright horn takes more.
     a.horn([0.035, 0.0, 1.2], [1, 0, 0], 0.24, [[0.45, 0.038], [0.31, 0.03]])
     a.horn([-0.035, 0.0, 1.2], [-1, 0, 0], 0.24, [[0.45, 0.038], [0.31, 0.03]])
@@ -2052,17 +2056,19 @@ function armMachine(p, ctx, kind) {
       }
     }),
   )
-  // Lever angle from the hands. Rest is +Z from the elbow.
+  // Lever angle from the hands. Rest is +Z from the elbow. Its reach too, as on the pec deck: the handle sits where the grip's
+  // centre is (a closed hand holds the bar across the base of its fingers), so the hand never hovers off it.
   const axis = new V3(1, 0, 0)
   let ang = (p.angle ?? 0) * D
+  let R = c.R
   if (ctx) {
     const e = new V3(0, ey, ez)
-    if (p.side === 'L' || p.side === 'R') ang = angleAbout(axis, [0, 0, 1], toLocal(p, ctx.hands[p.side].centre).sub(e).setX(0))
-    else ang = angleAbout(axis, [0, 0, 1], avg(toLocal(p, ctx.hands.L.centre), toLocal(p, ctx.hands.R.centre)).sub(e).setX(0))
+    const h = (p.side === 'L' || p.side === 'R' ? toLocal(p, ctx.hands[p.side].centre) : avg(toLocal(p, ctx.hands.L.centre), toLocal(p, ctx.hands.R.centre))).sub(e).setX(0)
+    ang = angleAbout(axis, [0, 0, 1], h)
+    R = Math.max(0.24, Math.min(0.4, Math.round(h.length() / 0.001) * 0.001))
   }
-  swing(root, `arm-lever${kind}`, [0, ey, ez], axis, ang, (a) => {
+  swing(root, `arm-lever${kind},${R.toFixed(3)}`, [0, ey, ez], axis, ang, (a) => {
     const X = 0.315
-    const R = c.R
     a.rod([-X, 0, 0], [X, 0, 0], 0.016, M.chrome)
     for (const s of [-1, 1]) {
       a.tube([s * X, 0, -0.03], [s * X, 0, R + 0.03], 0.02, 0.05, M.arm, { side: [1, 0, 0], r: 0.006 })
@@ -2238,7 +2244,7 @@ machines.smith = function smith(p, ctx) {
       }
       a.lathe([[0.025, 0], [0.036, 0], [0.036, 0.022], [0.025, 0.022]], M.steel, [x0 + s * at, 0, 0], [s, 0, 0], 22)
     }
-    a.grips.push({ name: 'bar', a: [-X, 0, 0], b: [X, 0, 0] })
+    a.grips.push({ name: 'bar', a: [-X, 0, 0], b: [X, 0, 0], r: 0.0145 })
   })
   bar.position.set(0, y, zAt(y))
   root.add(bar)

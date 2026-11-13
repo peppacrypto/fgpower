@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 // Renders exercise pose specs to images.
 //
-//   node render.mjs specs/pushups.json [more.json ...] [--out out] [--loop 16] [--quick]
+//   node render.mjs specs/pushups.json [more.json ...] [--out out] [--loop 8] [--closeups] [--closeups-at 0.25,0.5] [--final]
 //
-// Writes <out>/<slug>/start.png, end.png, sheet.png, report.json, and with --loop loop.webp.
+// Writes <out>/<slug>/start.png, end.png, sheet.png, report.json, view.json (camera fit, prep.js changes, the loop's timeline), and
+// with --loop <fps> a preview loop.webp on the tempo of motion.js. --final writes what the app ships: start.webp, end.webp and
+// loop.mp4 (20 fps, under 80 KB).
 // report.json is the thing to read first: reach errors (non-zero means a hand or foot cannot get there) and the
 // lowest point of the body (below about -0.01 means it sinks into the floor).
 //
@@ -27,8 +29,13 @@ const flag = (k, d) => {
 const outRoot = path.resolve(flag('--out', path.join(HERE, 'out')))
 const finalMode = args.includes('--final')
 if (finalMode) args.splice(args.indexOf('--final'), 1)
-const FINAL_FPS = 20
-const loopN = finalMode ? 48 : Number(flag('--loop', 0))
+// The loop runs on the tempo of motion.js (a lift, a slower lowering, pauses at the ends): its length in seconds comes from the
+// spec, the frames from this rate. --loop <fps> renders a preview loop.webp at that rate (8 is plenty to judge a rep).
+const FINAL_FPS = Number(process.env.ART_FPS || 20)
+const FINAL_CRF = String(process.env.ART_CRF || 27)
+const MAX_KB = 80
+const loopFps = finalMode ? FINAL_FPS : Number(flag('--loop', 0))
+const loopN = loopFps > 0 ? 1 : 0
 flag('--look', '') // older calls pass --look studio; it is the only look now
 const closeupsAt = flag('--closeups-at', '').split(',').filter(Boolean).map(Number)
 const wantCloseups = args.includes('--closeups') || closeupsAt.length > 0
@@ -58,6 +65,7 @@ if (!process.env.ART_LOCKED) {
 const require = createRequire(path.resolve(HERE, '..', '..', 'package.json'))
 const { chromium } = require('playwright')
 const sharp = require('sharp')
+const { catalogInfo } = await import('./catalog.mjs')
 
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.json': 'application/json' }
 const server = http.createServer((req, res) => {
@@ -107,7 +115,7 @@ for (const file of specs) {
   fs.mkdirSync(dir, { recursive: true })
   let res
   try {
-    res = await page.evaluate(([s, o]) => window.renderSpec(s, o), [spec, { loopFrames: loopN, fps: finalMode ? FINAL_FPS : Number(spec.loopFps || 6), closeups: wantCloseups, closeupsAt }])
+    res = await page.evaluate(([s, o]) => window.renderSpec(s, o), [spec, { loopFrames: loopN, fps: loopFps || FINAL_FPS, closeups: wantCloseups, closeupsAt, info: catalogInfo(slug) }])
   } catch (e) {
     failed++
     console.error(`${slug}: render failed: ${e.message}`)
@@ -122,12 +130,18 @@ for (const file of specs) {
       const framesDir = path.join(dir, '.frames')
       fs.mkdirSync(framesDir, { recursive: true })
       await Promise.all(res.loop.map(async (d, i) => sharp(buf(d)).resize(OUT_W, OUT_H, { kernel: 'lanczos3' }).png({ compressionLevel: 1 }).toFile(path.join(framesDir, `${String(i).padStart(3, '0')}.png`))))
-      execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-framerate', String(FINAL_FPS), '-i', path.join(framesDir, '%03d.png'), '-c:v', 'libx264', '-preset', 'veryslow', '-crf', '27', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', '-an', path.join(dir, 'loop.mp4')])
+      // The app ships every loop: under MAX_KB each. A busy one is encoded again a little coarser until it fits.
+      for (const crf of [FINAL_CRF, '29', '31']) {
+        execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-framerate', String(FINAL_FPS), '-i', path.join(framesDir, '%03d.png'), '-c:v', 'libx264', '-preset', 'veryslow', '-crf', crf, '-pix_fmt', 'yuv420p', '-movflags', '+faststart', '-an', path.join(dir, 'loop.mp4')])
+        if (fs.statSync(path.join(dir, 'loop.mp4')).size <= MAX_KB * 1024 || Number(crf) >= 31) break
+      }
       fs.rmSync(framesDir, { recursive: true, force: true })
     }
     fs.writeFileSync(path.join(dir, 'report.json'), JSON.stringify(res.reports, null, 1))
+    fs.writeFileSync(path.join(dir, 'view.json'), JSON.stringify({ view: res.view, prep: res.prep, timeline: res.timeline }, null, 1))
     const kb = (n) => (fs.existsSync(path.join(dir, n)) ? (fs.statSync(path.join(dir, n)).size / 1024).toFixed(0) : '-')
-    console.log(`${slug}: final start ${kb('start.webp')} KB, end ${kb('end.webp')} KB, loop ${kb('loop.mp4')} KB`)
+    const tl = res.timeline
+    console.log(`${slug}: final start ${kb('start.webp')} KB, end ${kb('end.webp')} KB, loop ${kb('loop.mp4')} KB (${tl.frames} frames, ${tl.seconds} s, lift ${tl.lift})`)
     continue
   }
   const shots = []
@@ -161,11 +175,12 @@ for (const file of specs) {
     const framesDir = path.join(dir, '.frames')
     fs.mkdirSync(framesDir, { recursive: true })
     frames.forEach((f, i) => fs.writeFileSync(path.join(framesDir, `${String(i).padStart(3, '0')}.png`), f))
-    const fps = Number(spec.loopFps || (spec.timing ? 6 : 9))
-    execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-framerate', String(fps), '-i', path.join(framesDir, '%03d.png'), '-c:v', 'libwebp_anim', '-lossless', '0', '-quality', '72', '-compression_level', '6', '-loop', '0', path.join(dir, 'loop.webp')])
+    execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-framerate', String(loopFps), '-i', path.join(framesDir, '%03d.png'), '-c:v', 'libwebp_anim', '-lossless', '0', '-quality', '72', '-compression_level', '6', '-loop', '0', path.join(dir, 'loop.webp')])
     fs.rmSync(framesDir, { recursive: true, force: true })
   }
   fs.writeFileSync(path.join(dir, 'report.json'), JSON.stringify(res.reports, null, 1))
+  // The camera's fit and what prep.js did to the spec (grip magnet, free grips, resting hands): for review and debugging.
+  fs.writeFileSync(path.join(dir, 'view.json'), JSON.stringify({ view: res.view, prep: res.prep, timeline: res.timeline }, null, 1))
   const issues = []
   for (const [fname, r] of Object.entries(res.reports)) {
     for (const [limb, miss] of Object.entries(r.reach)) if (miss > 0.005) issues.push(`${fname}.${limb} misses by ${miss} m`)
