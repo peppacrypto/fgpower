@@ -77,6 +77,11 @@ layer — all covered by unit, integration, and end-to-end tests.
 - Opt-in training reminders over Web Push (capped at 1/day and 3/week, never on rest or
   deload days) and an unsubscribable weekly e-mail digest (Resend)
 - Body-weight logging with a trend chart, folded into the progress views
+- Dieta (`/app/dieta`, from Perfil): the user's eating plan, one São Paulo day at a time —
+  targets and what the eaten items add up to, one tap per item (alternatives as a choice),
+  saved through an outbox that retries and keeps unsent marks on the device, plus the day's
+  weight and waist with the 7-day average. Owner-only; plans are loaded per account with
+  `scripts/one-off/2026-11-13-diet-plan.ts` (no editor yet)
 
 ## Architecture
 

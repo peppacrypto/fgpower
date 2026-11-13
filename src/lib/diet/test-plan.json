@@ -1,0 +1,47 @@
+{
+  "title": "Plano de teste",
+  "version": "2026-01-01",
+  "targets": { "kcal": 1800, "protein": 150, "carbs": 180, "fat": 50, "fiber": 30 },
+  "goal": "Manter o peso (plano de teste).",
+  "meals": [
+    {
+      "id": "cafe",
+      "name": "Café",
+      "items": [
+        { "id": "cafe-pao", "food": "Pão integral", "amount": "2 fatias", "measure": "50 g", "grams": 50, "kcal": 120, "protein": 6, "carbs": 22, "fat": 1.5 },
+        { "id": "cafe-ovos", "food": "Ovos mexidos", "amount": "2 unidades", "measure": "sem óleo", "grams": 100, "kcal": 150, "protein": 12.5, "carbs": 1, "fat": 10 }
+      ]
+    },
+    {
+      "id": "almoco",
+      "name": "Almoço",
+      "items": [
+        { "id": "almoco-arroz", "food": "Arroz integral cozido", "amount": "120 g", "measure": "5 colheres de sopa", "grams": 120, "kcal": 150, "protein": 3, "carbs": 31, "fat": 1 },
+        {
+          "id": "almoco-tilapia",
+          "food": "Filé de tilápia grelhado",
+          "label": "Tilápia",
+          "amount": "150 g",
+          "measure": "1 filé",
+          "grams": 150,
+          "kcal": 190,
+          "protein": 39,
+          "carbs": 0,
+          "fat": 4,
+          "alternatives": [
+            { "id": "almoco-atum", "food": "Atum em lata, escorrido", "amount": "1 lata (≈ 120 g)", "measure": "escorrido", "grams": 120, "kcal": 140, "protein": 31, "carbs": 0, "fat": 1.2 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lanche",
+      "name": "Lanche",
+      "items": [
+        { "id": "lanche-iogurte", "food": "Iogurte natural desnatado", "amount": "170 g", "measure": "1 pote", "grams": 170, "kcal": 70, "protein": 7, "carbs": 10, "fat": 0.3 }
+      ]
+    }
+  ],
+  "swaps": ["100 g de arroz cozido = 1 pão francês"],
+  "rules": ["Beba água ao longo do dia.", "Pese-se de manhã, em jejum."]
+}

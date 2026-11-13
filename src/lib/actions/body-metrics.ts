@@ -33,6 +33,8 @@ function revalidateBody() {
   revalidatePath("/app/progress");
   revalidatePath("/app/progress/body");
   revalidatePath("/app/today");
+  // Dieta logs the day's weight and waist through here too, under its 7-day average.
+  revalidatePath("/app/dieta");
 }
 
 /** "2026-09-28" → its São Paulo day number, or null when it isn't a real date. */

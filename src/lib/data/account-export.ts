@@ -10,6 +10,8 @@ import { isTimedHold, setKind } from "@/lib/training/set-plan";
 import { formatSpTime, spDayKey } from "@/lib/training/stale";
 import { EQUIPMENT_LABEL, EXPERIENCE_LABEL, GOAL_LABEL, PROGRESSION_LABEL } from "@/lib/constants/program-labels";
 import { toCsv, type CsvCell } from "@/lib/export/csv";
+import type { DietOption } from "@/lib/diet/plan";
+import { dietMealsSchema } from "@/lib/validation/diet-plan";
 
 /**
  * "Exportar meus dados" (W-151): everything the account keeps, readable by a
@@ -53,6 +55,8 @@ export async function loadAccountExport(userId: string) {
     emails,
     dismissals,
     sessions,
+    dietPlan,
+    dietLogs,
   ] = await Promise.all([
     prisma.user.findUnique({
       where: { id: userId },
@@ -294,6 +298,25 @@ export async function loadAccountExport(userId: string) {
       orderBy: { createdAt: "asc" },
       select: { ipAddress: true, userAgent: true, createdAt: true, updatedAt: true, expiresAt: true },
     }),
+    // Dieta (v5): the plan and every day's marks — each with the option it logged, in words.
+    prisma.dietPlan.findUnique({ where: { userId }, omit: { id: true, userId: true } }),
+    prisma.dietLog.findMany({
+      where: { userId },
+      orderBy: [{ day: "asc" }, { createdAt: "asc" }],
+      select: {
+        day: true,
+        eaten: true,
+        choiceId: true,
+        meal: true,
+        food: true,
+        amount: true,
+        kcal: true,
+        protein: true,
+        carbs: true,
+        fat: true,
+        updatedAt: true,
+      },
+    }),
   ]);
 
   return {
@@ -327,6 +350,8 @@ export async function loadAccountExport(userId: string) {
     emails,
     dismissals,
     sessions,
+    dietPlan,
+    dietLogs,
   };
 }
 
@@ -412,6 +437,37 @@ const iso = (d: Date | null | undefined) => (d ? d.toISOString() : null);
 /** A São Paulo Monday day number (ProgramEnrollment.deloadMondays) as "YYYY-MM-DD". */
 function dayNoKey(dayNo: number): string {
   return new Date(dayNo * 86_400_000).toISOString().slice(0, 10);
+}
+
+/** An option of the diet plan in words: what to eat and its numbers, never its id. */
+function readableOption(o: DietOption) {
+  return {
+    food: o.food,
+    amount: o.amount,
+    measure: o.measure ?? null,
+    grams: round2(o.grams),
+    kcal: round2(o.kcal),
+    protein: round2(o.protein),
+    carbs: round2(o.carbs),
+    fat: round2(o.fat),
+  };
+}
+
+/** Plain data without its "id" keys (a stored plan that no longer parses still goes out, as stored). */
+function withoutIds(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(withoutIds);
+  if (!value || typeof value !== "object") return value;
+  return Object.fromEntries(Object.entries(value).filter(([k]) => k !== "id").map(([k, v]) => [k, withoutIds(v)]));
+}
+
+/** DietPlan.meals in words: each meal's items and their alternatives, without the plan's ids. */
+function readableMeals(raw: unknown) {
+  const parsed = dietMealsSchema.safeParse(raw);
+  if (!parsed.success) return withoutIds(raw);
+  return parsed.data.map((meal) => ({
+    name: meal.name,
+    items: meal.items.map((item) => ({ ...readableOption(item), alternatives: (item.alternatives ?? []).map(readableOption) })),
+  }));
 }
 
 /** A set row nobody filled in or ✓'d: the workout opened it, nothing more. */
@@ -511,10 +567,12 @@ export function toExportJson(data: AccountExportData, now: Date = new Date()) {
   const p = data.profile;
   const gym = gymLoadsOf(p);
   const reminders = data.reminderPreference;
+  const diet = data.dietPlan;
   return {
     format: "fgpower-export",
     // 4: Minha academia — the gym's loads and missing gear (profile), each exercise's own step.
-    version: 4,
+    // 5: Dieta — the eating plan and each day's marks.
+    version: 5,
     exportedAt: now.toISOString(),
     account: data.user
       ? {
@@ -680,6 +738,36 @@ export function toExportJson(data: AccountExportData, now: Date = new Date()) {
       unit: m.unit,
       measuredAt: iso(m.measuredAt),
     })),
+    // Dieta (v5): the plan in words (no ids), and every day's marks with the option logged.
+    diet: {
+      plan: diet
+        ? {
+            title: diet.title,
+            version: diet.version,
+            goal: diet.goal,
+            targets: { kcal: diet.kcal, protein: round2(diet.protein), carbs: round2(diet.carbs), fat: round2(diet.fat), fiber: round2(diet.fiber) },
+            meals: readableMeals(diet.meals),
+            swaps: diet.swaps,
+            rules: diet.rules,
+            createdAt: iso(diet.createdAt),
+            updatedAt: iso(diet.updatedAt),
+          }
+        : null,
+      days: data.dietLogs.map((r) => ({
+        date: dayNoKey(r.day),
+        meal: r.meal,
+        food: r.food,
+        amount: r.amount,
+        eaten: r.eaten,
+        // The plan's alternative was picked instead of the item itself.
+        alternative: r.choiceId !== null,
+        kcal: round2(r.kcal),
+        protein: round2(r.protein),
+        carbs: round2(r.carbs),
+        fat: round2(r.fat),
+        markedAt: iso(r.updatedAt),
+      })),
+    },
     favoriteExercises: data.favorites.map((f) => f.exercise.namePt),
     exerciseNotes: data.exerciseNotes.map((n) => ({ exercise: n.exercise.namePt, note: n.note, updatedAt: iso(n.updatedAt) })),
     // "Este aparelho sobe de…" (v4): the exercise's own load step, over the gym's.

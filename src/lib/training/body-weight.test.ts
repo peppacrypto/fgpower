@@ -6,6 +6,7 @@ import {
   formatRate,
   measurementWeek,
   movingAverage7,
+  weekOverWeek,
   weeklyRate,
 } from "./body-weight";
 
@@ -102,5 +103,51 @@ describe("measurementWeek", () => {
     expect(measurementWeek({ templateSlug: "gd-adaptacao", week: 4, lastGuidanceWeek: 4 })).toBeNull();
     expect(measurementWeek({ templateSlug: "ppl-6x", week: 1, lastGuidanceWeek: 8 })).toBeNull();
     expect(measurementWeek({ templateSlug: null, week: 1, lastGuidanceWeek: null })).toBeNull();
+  });
+});
+
+describe("weekOverWeek (Dieta's 7-day average)", () => {
+  it("averages this week's weigh-ins and last week's, and the change between the two as shown", () => {
+    // Days 101–107 this week (4 weigh-ins), 94–100 last week (3).
+    const w = weekOverWeek(
+      [
+        { day: 94, value: 83 },
+        { day: 96, value: 82.6 },
+        { day: 100, value: 82.5 },
+        { day: 101, value: 82.4 },
+        { day: 103, value: 82 },
+        { day: 105, value: 81.9 },
+        { day: 107, value: 81.6 },
+      ],
+      107,
+    );
+    expect(w).toEqual({ avg: 82, count: 4, prevAvg: 82.7, prevCount: 3, change: -0.7 });
+  });
+
+  it("needs 3 weigh-ins in a week for its average; days after the one shown don't count", () => {
+    const points = [
+      { day: 101, value: 80 },
+      { day: 102, value: 81 },
+      { day: 104, value: 79 },
+      { day: 106, value: 90 },
+    ];
+    expect(weekOverWeek(points, 104)).toEqual({ avg: 80, count: 3, prevAvg: null, prevCount: 0, change: null });
+    expect(weekOverWeek(points, 103)).toMatchObject({ avg: null, count: 2, change: null });
+    // Day 108 drops day 101 out of the week: 81, 79, 90.
+    expect(weekOverWeek(points, 108)).toMatchObject({ avg: 83.3, count: 3, prevAvg: null, prevCount: 1 });
+  });
+
+  it("keeps one value per day (the latest given) and skips what isn't a number", () => {
+    const w = weekOverWeek(
+      [
+        { day: 1, value: 70 },
+        { day: 1, value: 72 },
+        { day: 2, value: 72 },
+        { day: 3, value: Number.NaN },
+        { day: 4, value: 72 },
+      ],
+      7,
+    );
+    expect(w).toMatchObject({ avg: 72, count: 3 });
   });
 });
