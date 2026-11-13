@@ -6,8 +6,10 @@
 //   const result = checker.check(specObject)   // { slug, issues:[{level:'E'|'W', key, msg, frames, value}], errors, warnings, allowed, frames, ms }
 //   console.log(formatResult(result))
 //
-// WHAT IS LOOKED AT. The key frames (start, mid, mid2, mid3, end, plus any other name in spec.frames) and the loop's in-betweens at
-// t = 0.25, 0.5, 0.75 and the middle of each segment between key frames. In-betweens print as t.25 and so on.
+// WHAT IS LOOKED AT. The spec as prep.js prepares it (grip magnet, free grips, resting hands: what page.js draws). Its key frames
+// (start, mid, mid2, mid3, end, plus any other name in spec.frames) and the loop's in-betweens at every eighth of the path (t.13,
+// t.25, t.38 ...) and the middle of each segment between key frames; then one pass over 24 samples of the loop (checkLoop) for
+// twitches, slides, balance and the range of motion (MOTION.md).
 //
 // ISSUES, by key. E is an error (check.mjs exits 1), W a warning. Every message says the frames in brackets, worst value first.
 //   reach:<limb>             E  the hand or foot can't get to its target (over 5 mm).
@@ -28,6 +30,14 @@
 //                            E  over 24 samples of the loop, a hand turns more than 30 deg against its forearm, or the forearm's
 //                               twist changes more than 30, or a wrist angle crosses from one extreme to the other, between two
 //                               neighbouring samples: a twitch. Frames are given as tA-tB.
+//   hover:<armL|armR>        E  a closed hand that holds no prop of its own is 1.5 to 25 cm from the axis of the nearest graspable
+//                               (grasp.js: machine handles, bars, rods): it should be on that handle (the magnet reaches 8 cm).
+//   grip:<armL|armR>         E  also: a closed hand on a machine's handle (grip registry) over 40 deg across it.
+//   contact:<armL|armR>      E  an open hand declared on a surface (contact) whose palm is over 3.5 cm from the floor, props and skin.
+//   slide:<limb>             E  a planted heel, ball of the foot, palm, or grip on a still bar slides over 3 cm while it stays planted.
+//   balance                  E/W only the feet bear weight and the centre of mass (weights included) is outside them: over 8 cm E
+//                               (W when a part that should rest only just floats), 4 to 8 cm W.
+//   rom:<pattern>.<what>     W  the range of motion against MOTION.md's standard for the catalog's movement pattern.
 //   mode:<limb>, rel:<limb>  E  a limb changes between pos and fk, or changes its `rel`, between frames: the loop jumps there.
 //   props:<...>              E  a frame's `props` don't have the same items in every frame: they can't interpolate.
 //   towel:length             E  a plain towel rope changes length between frames (over 2 cm).
@@ -75,6 +85,10 @@ const { Body, mixFrames, SHOULDER_FORBIDDEN, SHOULDER_ROT, interpRange: interp, 
 void SHOULDER_ROT
 const { PROPS, propErrors } = await import('./props/index.js')
 const { MUSCLE_NAMES } = await import('./paint.js')
+const { prepareSpec, isClosedArm } = await import('./prep.js')
+const { graspablesOf, bestGraspable, heldSides, nearestOnAxis } = await import('./grasp.js')
+const { anglesOf } = await import('./motion.js')
+const { catalogInfo } = await import('./catalog.mjs')
 
 const { Vector3: V3, Quaternion: Q4 } = THREE
 const D = 180 / Math.PI
@@ -92,6 +106,20 @@ const DRIFT_BETWEEN = 0.025
 const STILL = 0.015
 const CONTACT_GAP = 0.03
 const TWITCH = 30 // degrees a hand (in its forearm's frame) or a forearm's twist may change between two of 24 samples of the loop
+const HOVER = 0.015 // a closed hand's grip centre may be this far from its handle's axis
+const HOVER_NEAR = 0.25 // ... once a handle lies this near: farther off, the hand holds something else (a towel, a rope, a foot)
+const CONTACT_FAR = 0.035 // a hand declared on a surface (contact) may have its palm centre this far from the nearest one
+const LOOP_N = 24 // samples of the loop for twitches, slides, balance and the range of motion
+const PLANT = 0.02 // a heel, the ball of a foot or a palm this near the floor or a still prop is planted on it
+const SLIDE = 0.03 // ... and may then move this much along it while it stays planted
+const BASE_GAP = 0.025 // skin this near the floor or a still prop bears weight (the base of support, or other support)
+/** Props in the hands that pull on the body (cables, bands, straps): the centre of mass may lean outside the feet against them. */
+const PULLING = /cable|pulley|crossover|lat-pulldown|seated-row|functional|band|tube|strap|suspension|trx|rope|towel|sled|harness|chain/
+const BALANCE_W = 0.04 // the centre of mass this far outside the feet (standing, nothing else holding the body): a warning
+const BALANCE_E = 0.08 // ... this far: an error, the figure would fall
+const BODY_KG = 75
+/** Share of the body's mass per body part (de Leva 1996, rounded), by qa-lib's part names without the side. */
+const SEG_MASS = { head: 0.057, neck: 0.012, chest: 0.16, abdomen: 0.163, pelvis: 0.112, upperarm: 0.027, forearm: 0.016, palm: 0.005, fingers: 0.001, thigh: 0.142, shin: 0.043, foot: 0.012, toes: 0.002 }
 
 /** Degrees. Measured the way a physiotherapist does, with some room: this catches what no body can do, not what is merely hard. */
 export const LIMITS = {
@@ -652,7 +680,10 @@ function buildProp(p, ctx, index) {
     g.position.set(q[0], q[1], q[2])
     g.rotation.y = ((p.yaw || 0) * Math.PI) / 180
   }
-  return { parts: partsOf(g, p.type, index) }
+  const parts = partsOf(g, p.type, index)
+  // What a closed hand can hold on it (grasp.js), with the prop's name for the messages. A prop in the hands is held by construction.
+  const grasp = p.hand || p.hands ? [] : graspablesOf(g).map((x) => ({ ...x, type: p.type }))
+  return { parts, grasp }
 }
 
 // ------------------------------------------------------------------------------------------------------------------- the body
@@ -954,7 +985,7 @@ export function isFlatHand(arm) {
   if (!arm || arm.fk) return false
   const placed = arm.contact || arm.resolved
   const mode = arm.hand || (arm.curl === undefined ? (arm.contact ? 'flat' : 'relaxed') : arm.curl < 0 ? 'flat' : 'legacy')
-  return !!placed && mode === 'flat'
+  return !!placed && (mode === 'flat' || mode === 'rest')
 }
 
 function checkJoints(m, spec, say, frame) {
@@ -1091,9 +1122,11 @@ class Checker {
     this.muscles = new Set(MUSCLE_NAMES)
   }
 
-  check(spec, { verbose = false, measure = null } = {}) {
+  check(rawSpec, { verbose = false, measure = null } = {}) {
     const t0 = performance.now()
     const body = this.body
+    // What is drawn is the prepared spec: the grip magnet, free grips and resting hands (prep.js) are part of the pose.
+    const spec = prepareSpec(body, rawSpec)
     const issues = new Map()
     const say = (level, key, value, msg, frame) => {
       const name = frame ?? this.currentFrame
@@ -1124,8 +1157,10 @@ class Checker {
     const segments = keys.length - 1
     const ts = []
     if (hasMotion) {
+      // Every eighth of the path, for the body through itself or the equipment between key frames (a hand crossing a thigh, a bar
+      // through the knees on the way down), and the middle of each segment.
       const onKey = (t) => Math.abs(t * segments - Math.round(t * segments)) < 1e-6
-      for (const t of [0.25, 0.5, 0.75]) if (!onKey(t)) ts.push(t)
+      for (const t of [0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875]) if (!onKey(t)) ts.push(t)
       for (let i = 0; i < segments; i++) {
         const t = (i + 0.5) / segments
         if (!ts.some((u) => Math.abs(u - t) < 0.04)) ts.push(t)
@@ -1140,11 +1175,15 @@ class Checker {
     // The props that never move, built once.
     const staticList = (spec.props || []).filter((p) => !isDynamic(p))
     const staticParts = []
+    const staticGrasp = []
     staticList.forEach((p, i) => {
       if (WORN.has(p.type)) return
       const b = buildProp(p, null, i)
       if (b.error) say('E', `${b.code}:${p.type}`, 1, b.error, 'all')
-      else staticParts.push(...b.parts)
+      else {
+        staticParts.push(...b.parts)
+        staticGrasp.push(...b.grasp)
+      }
     })
     for (const n of keyNames) {
       for (const p of frameSpecs[n].props || []) if (!PROPS[p.type]) say('E', `prop-unknown:${p.type}`, 1, `unknown prop "${p.type}"`, n)
@@ -1165,14 +1204,20 @@ class Checker {
 
       // Props that follow the body, and those of this frame.
       const dynamic = []
+      const dynGrasp = []
       const moving = [...(spec.props || []).filter(isDynamic), ...(sample.frame.props || [])]
       moving.forEach((p, i) => {
         if (WORN.has(p.type)) return
         const b = buildProp(p, r, 1000 + i)
         if (b.error) say('E', `${b.code}:${p.type}`, 1, b.error)
-        else dynamic.push(...b.parts)
+        else {
+          dynamic.push(...b.parts)
+          dynGrasp.push(...b.grasp)
+        }
       })
       const parts = staticParts.concat(dynamic)
+      this.checkHover(spec, sample.frame, r, staticGrasp.concat(dynGrasp), say)
+      if (sample.key) this.checkContactHands(sample.frame, r, parts, say)
       const grips = this.gripsOf(sample.frame, r)
       this.checkBodyAgainstProps(parts, grips, r, say)
       this.checkThinParts(parts, grips, say)
@@ -1193,7 +1238,7 @@ class Checker {
       }
     }
     this.currentFrame = null
-    if (hasMotion) this.checkTwitch(at, say)
+    this.checkLoop(spec, at, hasMotion, staticParts, staticGrasp, say)
     this.finishMotion(spec, track, hasMotion, say)
     this.finishContacts(spec, track, keyNames, say)
     this.checkTowelRope(spec, keyNames, say)
@@ -1458,47 +1503,308 @@ class Checker {
   }
 
   /**
-   * A hand or forearm that twitches inside the loop: 24 samples over the whole loop, and between two neighbours the hand may
-   * not turn more than TWITCH degrees in the forearm's frame, the forearm may not twist more than TWITCH, and a wrist angle
-   * may not cross from one extreme to the other (past half its limit on both sides).
+   * An open hand declared on a surface (contact:true: flat, resting) must touch one: its palm centre within CONTACT_FAR of the
+   * floor, a prop or the skin (its own arm and both hands left out). Otherwise it floats where the spec says it presses.
    */
-  checkTwitch(at, say) {
+  checkContactHands(frame, r, parts, say) {
+    const body = this.body
+    for (const s of ['L', 'R']) {
+      const a = frame[`arm${s}`]
+      if (!a || !a.contact || a.fk || isClosedArm(a) || a.hand === 'fist' || a.hand === 'pinch' || a.hand === 'ball') continue
+      const c = r.hands && r.hands[s] && r.hands[s].centre
+      if (!c) continue
+      let near = Math.max(0, c[1])
+      for (const part of parts) {
+        if (near <= CONTACT_FAR) break
+        const b = part.box
+        const m = near
+        if (c[0] < b[0] - m || c[1] < b[1] - m || c[2] < b[2] - m || c[0] > b[3] + m || c[1] > b[4] + m || c[2] > b[5] + m) continue
+        const d = part.signed(c[0], c[1], c[2], Math.min(near, 0.2))
+        if (d < near) near = Math.max(0, d)
+      }
+      if (near > CONTACT_FAR) {
+        const own = new Set([`upperarm.${s}`, `forearm.${s}`, 'palm.L', 'palm.R', 'fingers.L', 'fingers.R'])
+        for (let g = 0; g < body.segNames.length && near > CONTACT_FAR; g++) {
+          if (own.has(body.segNames[g])) continue
+          const grid = body.grid(g)
+          if (grid.nearest(c[0], c[1], c[2], near)) near = Math.min(near, Math.sqrt(grid.bestD2))
+        }
+      }
+      if (near > CONTACT_FAR) say('E', `contact:arm${s}`, near, `the ${s} hand is declared on a surface (contact) but its palm is ${cm(near)} cm from the floor, every prop and the skin: put pos on the surface it presses (the palm's point on it), or drop contact`)
+    }
+  }
+
+  /**
+   * A closed hand that nothing in it follows (no dumbbell, no bar) must be on a handle: its grip centre within HOVER of the axis
+   * of the nearest graspable (grasp.js: machine handles, bars, rungs) once one lies within HOVER_NEAR, and its grip axis along
+   * that handle. prep.js's magnet already pulls hands within 8 cm onto their handle at the key frames: what is left is a hand
+   * farther off, or an in-between that leaves a moving handle.
+   */
+  checkHover(spec, frame, r, grasp, say) {
+    if (!grasp.length) return
+    const held = heldSides(spec, frame)
+    for (const s of ['L', 'R']) {
+      if (held.has(s) || !isClosedArm(frame[`arm${s}`])) continue
+      const h = r.hands && r.hands[s]
+      if (!h) continue
+      const best = bestGraspable(grasp, h.centre, h.thumb, HOVER_NEAR)
+      if (!best) continue
+      const what = `${best.g.type}${best.g.name ? ` ${best.g.name}` : ''}`
+      if (best.d > HOVER) say('E', `hover:arm${s}`, best.d, `the ${s} hand closes ${cm(best.d)} cm from the axis of the nearest handle (${what}, r ${cm(best.g.r)} cm): put pos on that axis, 4 cm inside its ends (the magnet only reaches 8 cm)`)
+      else if (best.ang > 40 && best.g.src === 'grip') say('E', `grip:arm${s}`, best.ang, `the ${s} hand closes across the handle ${what}: ${deg(best.ang)} deg between its grip axis and the handle. Thumb along the handle: turn fingers and palm`)
+    }
+  }
+
+  /**
+   * One pass over LOOP_N samples of the loop (start to end; it comes back the same way): twitches (a hand, a forearm or a wrist jerking between two neighbouring samples), planted
+   * feet and hands that slide, the centre of mass outside the feet, and the range of motion against MOTION.md's standards.
+   */
+  checkLoop(spec, at, hasMotion, staticParts, staticGrasp, say) {
     const body = this.body
     const { by } = body
-    const N = 24
+    const info = catalogInfo(spec.slug || '')
+    const N = hasMotion ? LOOP_N : 1
+    const rows = []
     let prev = null
     for (let i = 0; i < N; i++) {
-      const t = i / (N - 1)
+      const t = N > 1 ? i / (N - 1) : 0
       const name = `t${String(+t.toFixed(2)).replace(/^0(?=\.)/, '')}`
       const frame = at(t)
       const { report: r } = body.solve(frame)
       const m = measureJoints(body, frame, r)
+      // Twitches: a hand, a forearm or a wrist jerking between two neighbouring samples.
       const cur = {}
       for (const s of ['L', 'R']) {
         const rel = body.Q[by[`lowerarm01.${s}`].i].clone().invert().multiply(body.Q[by[`wrist.${s}`].i])
         cur[s] = { rel, twist: r.twist[`forearm${s}`] ?? 0, flex: m.angles[`wristFlex${s}`], dev: m.angles[`wristDev${s}`] }
       }
-      if (prev) {
-        for (const s of ['L', 'R']) {
-          const a = prev.v[s]
-          const b = cur[s]
-          const turn = (2 * Math.acos(clamp(Math.abs(a.rel.dot(b.rel)), -1, 1))) / (Math.PI / 180)
-          const where = `${prev.name}-${name}`
-          if (turn > TWITCH) say('E', `twitch:hand.${s}`, turn, `hand ${s} jerks ${deg(turn)} deg against its forearm between two neighbouring moments of the loop (max ${TWITCH}): blend fingers/palm smoothly between key frames, or give roll/swivel in every key frame`, where)
-          const dt = Math.abs(b.twist - a.twist)
-          if (dt > TWITCH) say('E', `twitch:forearm.${s}`, dt, `forearm ${s} twists ${deg(dt)} deg between two neighbouring moments of the loop (${a.twist} to ${b.twist}, max ${TWITCH}): the palm or the pole flips between key frames`, where)
-          if (a.flex !== undefined && b.flex !== undefined) {
-            const hf = 0.5 * LIMITS.wristFlex
-            const he = 0.5 * LIMITS.wristExt
-            if ((a.flex > hf && b.flex < -he) || (a.flex < -he && b.flex > hf)) say('E', `twitch:wrist.${s}.flex`, Math.abs(b.flex - a.flex), `wrist ${s} snaps from ${deg(a.flex)} to ${deg(b.flex)} deg of flexion between two neighbouring moments of the loop`, where)
-            const hu = 0.5 * LIMITS.wristUlnar
-            const hr = 0.5 * LIMITS.wristRadial
-            if ((a.dev > hu && b.dev < -hr) || (a.dev < -hr && b.dev > hu)) say('E', `twitch:wrist.${s}.dev`, Math.abs(b.dev - a.dev), `wrist ${s} snaps from ${deg(a.dev)} to ${deg(b.dev)} deg sideways (+ ulnar) between two neighbouring moments of the loop`, where)
+      if (prev && hasMotion) this.twitchBetween(prev, { name, v: cur }, say)
+      prev = { name, v: cur }
+      body.preparePose()
+      rows.push({ name, t, frame, r, a: anglesOf(r, frame), com: this.centreOfMass(spec, r), support: this.supportOf(spec, frame, r, staticParts, staticGrasp) })
+    }
+    if (hasMotion) this.checkSlides(rows, spec, say)
+    this.checkBalance(rows, spec, info, say)
+    if (hasMotion || ROM_POSTURE.has(info.movementPattern)) this.checkRange(rows, spec, info, say)
+  }
+
+  /** Twitches: between two neighbouring samples a hand may not turn over TWITCH degrees against its forearm, the forearm not twist over TWITCH, a wrist angle not cross from one extreme to the other. */
+  twitchBetween(prev, next, say) {
+    const where = `${prev.name}-${next.name}`
+    for (const s of ['L', 'R']) {
+      const a = prev.v[s]
+      const b = next.v[s]
+      const turn = (2 * Math.acos(clamp(Math.abs(a.rel.dot(b.rel)), -1, 1))) / (Math.PI / 180)
+      if (turn > TWITCH) say('E', `twitch:hand.${s}`, turn, `hand ${s} jerks ${deg(turn)} deg against its forearm between two neighbouring moments of the loop (max ${TWITCH}): blend fingers/palm smoothly between key frames, or give roll/swivel in every key frame`, where)
+      const dt = Math.abs(b.twist - a.twist)
+      if (dt > TWITCH) say('E', `twitch:forearm.${s}`, dt, `forearm ${s} twists ${deg(dt)} deg between two neighbouring moments of the loop (${a.twist} to ${b.twist}, max ${TWITCH}): the palm or the pole flips between key frames`, where)
+      if (a.flex !== undefined && b.flex !== undefined) {
+        const hf = 0.5 * LIMITS.wristFlex
+        const he = 0.5 * LIMITS.wristExt
+        if ((a.flex > hf && b.flex < -he) || (a.flex < -he && b.flex > hf)) say('E', `twitch:wrist.${s}.flex`, Math.abs(b.flex - a.flex), `wrist ${s} snaps from ${deg(a.flex)} to ${deg(b.flex)} deg of flexion between two neighbouring moments of the loop`, where)
+        const hu = 0.5 * LIMITS.wristUlnar
+        const hr = 0.5 * LIMITS.wristRadial
+        if ((a.dev > hu && b.dev < -hr) || (a.dev < -hr && b.dev > hu)) say('E', `twitch:wrist.${s}.dev`, Math.abs(b.dev - a.dev), `wrist ${s} snaps from ${deg(a.dev)} to ${deg(b.dev)} deg sideways (+ ulnar) between two neighbouring moments of the loop`, where)
+      }
+    }
+  }
+
+  /** Where a point rests: 'floor' (within PLANT of it), 'prop' (of a still prop's surface), or null. */
+  restingOn(p, staticParts) {
+    if (p[1] <= PLANT) return 'floor'
+    for (const part of staticParts) {
+      const b = part.box
+      const m = PLANT
+      if (p[0] < b[0] - m || p[1] < b[1] - m || p[2] < b[2] - m || p[0] > b[3] + m || p[1] > b[4] + m || p[2] > b[5] + m) continue
+      if (Math.abs(part.signed(p[0], p[1], p[2], m * 1.5)) <= m) return 'prop'
+    }
+    return null
+  }
+
+  /**
+   * What holds the body up in this pose: planted heels and balls of the feet, planted palms, hands closed on a handle that is not
+   * in them, and any other body part resting on the floor or a still prop (a seat, a bench, a knee on the floor).
+   */
+  supportOf(spec, frame, r, staticParts, staticGrasp) {
+    const body = this.body
+    const out = { feet: [], hands: [], grips: [], other: false }
+    for (const s of ['L', 'R']) {
+      const f = r.feet[s]
+      for (const k of ['heel', 'ball']) {
+        const on = this.restingOn(f[k], staticParts)
+        if (on) out.feet.push({ s, k, p: f[k], on, fwd: f.forward })
+      }
+    }
+    const held = heldSides(spec, frame)
+    for (const s of ['L', 'R']) {
+      const a = frame[`arm${s}`] || {}
+      const h = r.hands[s]
+      if (isClosedArm(a)) {
+        if (held.has(s)) continue
+        const g = bestGraspable(staticGrasp, h.centre, h.thumb, HOVER)
+        if (g) out.grips.push({ s, g: g.g, u: nearestOnAxis(g.g, h.centre, 0).u * Math.hypot(...g.g.b.map((x, i) => x - g.g.a[i])), p: h.centre })
+        // A closed hand on a machine's moving handle holds the body too.
+        else if ((spec.props || []).some((p) => p.follow)) out.grips.push({ s, g: null, p: h.centre })
+      } else if (a.contact || a.resolved) {
+        const on = this.restingOn(h.centre, staticParts)
+        if (on) out.hands.push({ s, p: h.centre, on })
+      }
+    }
+    // The skin touching the floor or a still prop (soft contact: BASE_GAP): the soles and toes give the base of support,
+    // anything else (a seat, a back on a bench, knees, forearms, fingertips on the floor) holds the body up as well.
+    const P = body.ctlPos
+    out.base = []
+    // other: a part within BASE_GAP bears weight; nearly: one within twice that only just floats (an in-between lifting a back
+    // off the floor by a few cm: a warning, not a fall).
+    for (const [G, flag] of [[BASE_GAP, 'other'], [2 * BASE_GAP, 'nearly']]) {
+      for (let g = 0; g < body.segNames.length; g++) {
+        const base = body.segNames[g].split('.')[0]
+        const foot = base === 'foot' || base === 'toes'
+        if ((!foot || flag === 'nearly') && out[flag]) continue
+        if (foot && flag === 'nearly') continue
+        const B = body.segBox
+        const near = staticParts.filter((part) => overlap(part.box, B, 0, g * 6, G))
+        if (B[g * 6 + 1] > G && !near.length) continue
+        for (const k of body.segVerts[g]) {
+          const x = P[k * 3], y = P[k * 3 + 1], z = P[k * 3 + 2]
+          let touching = y <= G
+          for (const part of near) {
+            if (touching) break
+            const b = part.box
+            if (x < b[0] - G || y < b[1] - G || z < b[2] - G || x > b[3] + G || y > b[4] + G || z > b[5] + G) continue
+            if (part.signed(x, y, z, G * 1.5) <= G) touching = true
+          }
+          if (!touching) continue
+          if (foot) out.base.push([x, z])
+          else {
+            out[flag] = true
+            break
           }
         }
       }
-      prev = { name, v: cur }
     }
+    return out
+  }
+
+  /** The whole system's centre of mass: the body by its parts' shares (SEG_MASS), and the free weights it holds. [x, y, z] */
+  centreOfMass(spec, r) {
+    const body = this.body
+    const P = body.ctlPos
+    let mx = 0, my = 0, mz = 0, m = 0
+    for (let g = 0; g < body.segNames.length; g++) {
+      const share = SEG_MASS[body.segNames[g].split('.')[0]] || 0
+      const list = body.segVerts[g]
+      if (!share || !list.length) continue
+      let cx = 0, cy = 0, cz = 0
+      for (const k of list) {
+        cx += P[k * 3]
+        cy += P[k * 3 + 1]
+        cz += P[k * 3 + 2]
+      }
+      const w = share * BODY_KG
+      mx += (cx / list.length) * w
+      my += (cy / list.length) * w
+      mz += (cz / list.length) * w
+      m += w
+    }
+    for (const p of spec.props || []) {
+      const plates = Array.isArray(p.plates) ? p.plates.reduce((t, x) => t + (typeof x === 'number' ? x : 0), 0) : 0
+      let kg = 0
+      let at = null
+      if ((p.hand === 'L' || p.hand === 'R') && /dumbbell|kettlebell|plate|sandbag|ball/.test(p.type)) {
+        kg = p.kg ?? (p.type === 'kettlebell' ? 16 : 10)
+        at = r.hands[p.hand].centre
+      } else if (p.hands && /bar|barbell|log|axle/.test(p.type)) {
+        kg = (p.type === 'ez-bar' ? 10 : 20) + 2 * plates
+        at = r.hands.L.centre.map((x, i) => (x + r.hands.R.centre[i]) / 2)
+      }
+      if (!kg || !at) continue
+      mx += at[0] * kg
+      my += at[1] * kg
+      mz += at[2] * kg
+      m += kg
+    }
+    return [mx / m, my / m, mz / m]
+  }
+
+  /**
+   * Planted heels, balls of the feet, palms and grips on a still bar must not slide while they stay planted: a step lifts the
+   * foot (a mid frame with it in the air). A limb that rides a prop (a towel, a glider, a slider: the prop follows it) may slide.
+   */
+  checkSlides(rows, spec, say) {
+    const riding = this.followedLimbs(spec, rows[0].frame)
+    const runs = new Map() // key -> { p0, from, worst }
+    const flush = (key, run, to) => {
+      if (run && run.worst > SLIDE) say('E', `slide:${key.split('/')[0]}`, run.worst, `${run.what} stays planted ${run.on === 'floor' ? 'on the floor' : run.on === 'bar' ? 'on its bar' : 'on the prop'} from ${run.from} to ${to}, yet slides ${cm(run.worst)} cm along it: keep its key frames on one spot, or lift it between them`, `${run.from}-${to}`)
+    }
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i]
+      // A towel, a slider or a disc a frame moves (its own props): what rests on it slides with it.
+      const movers = (row.frame.props || []).filter((p) => p.pos && /^(towel|slider|gliding-disc|slide-disc|skate|furniture-slider)$/.test(p.type)).map((p) => p.pos)
+      const onMover = (p) => movers.some((m) => Math.hypot(p[0] - m[0], p[2] - m[2]) < 0.3)
+      const now = new Map()
+      for (const f of row.support.feet) if (!riding.has(`leg${f.s}`) && !onMover(f.p)) now.set(`leg${f.s}/${f.k}`, { p: f.p, on: f.on, what: `the ${f.s} foot's ${f.k}` })
+      for (const h of row.support.hands) if (!riding.has(`arm${h.s}`) && !onMover(h.p)) now.set(`arm${h.s}/palm`, { p: h.p, on: h.on, what: `the ${h.s} palm` })
+      for (const g of row.support.grips) if (g.g) now.set(`arm${g.s}/grip`, { u: g.u, g: g.g, on: 'bar', what: `the ${g.s} hand` })
+      for (const [key, run] of runs) {
+        if (!now.has(key)) {
+          flush(key, run, rows[i - 1].name)
+          runs.delete(key)
+        }
+      }
+      for (const [key, x] of now) {
+        const run = runs.get(key)
+        if (!run) {
+          runs.set(key, { first: x, from: row.name, worst: 0, on: x.on, what: x.what })
+          continue
+        }
+        const a = run.first
+        let d
+        if (x.on === 'bar') d = a.g === x.g ? Math.abs(x.u - a.u) : 0
+        else if (x.on === 'floor') d = Math.hypot(x.p[0] - a.p[0], x.p[2] - a.p[2])
+        else d = Math.hypot(x.p[0] - a.p[0], x.p[1] - a.p[1], x.p[2] - a.p[2])
+        if (d > run.worst) run.worst = d
+      }
+    }
+    for (const [key, run] of runs) flush(key, run, rows[rows.length - 1].name)
+  }
+
+  /**
+   * Standing on the feet alone (nothing else on the floor or a prop, no hand holding on): the centre of mass, the free weights
+   * included, must be over the feet. Its distance outside the planted heels and balls (a sole is 9 cm wide) is a warning from
+   * BALANCE_W, an error from BALANCE_E. Jumps, Olympic lifts and cardio move through the air or on momentum: left out.
+   */
+  checkBalance(rows, spec, info, say) {
+    if (spec.floats || /PLYOMETRICS|OLYMPIC|CARDIO/.test(info.category || '')) return
+    // A machine holds the body (follow: its seat, pads and handles move with it), and a cable, band or strap pulls on it: the
+    // centre of mass may then lie outside the feet.
+    if ((spec.props || []).some((p) => p.follow || ((p.hand || p.hands) && PULLING.test(p.type)))) return
+    let worst = 0
+    let where = ''
+    let nearly = false
+    for (const row of rows) {
+      const sp = row.support
+      if (sp.other || sp.hands.length || sp.grips.length || !sp.base.length) continue
+      const out = outsideHull([row.com[0], row.com[2]], sp.base)
+      if (out > worst + 1e-9) {
+        worst = out
+        where = row.name
+        nearly = !!sp.nearly
+      }
+    }
+    const what = `only the feet bear weight (nothing else is within ${cm(BASE_GAP)} cm of the floor or a prop), and the centre of mass (weights included) is ${cm(worst)} cm outside them`
+    if (worst > BALANCE_E && nearly) say('W', 'balance', worst, `${what}: a part that should rest on something (a back, the hips, the knees) floats a few cm off it here. Add a mid frame that keeps it down, or lower it`, where)
+    else if (worst > BALANCE_E) say('E', 'balance', worst, `${what}: the figure would fall. If a part should rest on something (a back on a bench or a roller, knees on the floor), it floats: put it there; if it stands, bring the hips or the load over the mid-foot`, where)
+    else if (worst > BALANCE_W) say('W', 'balance', worst, `${what}: check the balance (hips back, the load over the mid-foot)`, where)
+  }
+
+  /** The range of motion against MOTION.md's standard for the catalog's movement pattern: warnings, rom:<pattern>.<what>. */
+  checkRange(rows, spec, info, say) {
+    const rule = ROM[info.movementPattern]
+    if (!rule) return
+    const slug = spec.slug || ''
+    if (ROM_EXEMPT.test(slug)) return
+    rule(rows, spec, slug, (what, value, msg) => say('W', `rom:${info.movementPattern}.${what}`, value, msg, 'loop'))
   }
 
   checkMotion(r, track, sample) {
@@ -1632,6 +1938,213 @@ class Checker {
       }
     }
   }
+}
+
+/** How far a 2D point lies outside the convex hull of points (0 inside). */
+function outsideHull(q, pts) {
+  if (!pts.length) return 0
+  const P = [...pts].sort((a, b) => a[0] - b[0] || a[1] - b[1])
+  const cross = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+  const lower = []
+  for (const p of P) {
+    while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], p) <= 0) lower.pop()
+    lower.push(p)
+  }
+  const upper = []
+  for (const p of [...P].reverse()) {
+    while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], p) <= 0) upper.pop()
+    upper.push(p)
+  }
+  const hull = lower.slice(0, -1).concat(upper.slice(0, -1))
+  const segDist = (a, b) => {
+    const dx = b[0] - a[0], dy = b[1] - a[1]
+    const l2 = dx * dx + dy * dy || 1e-12
+    const t = clamp(((q[0] - a[0]) * dx + (q[1] - a[1]) * dy) / l2, 0, 1)
+    return Math.hypot(q[0] - a[0] - t * dx, q[1] - a[1] - t * dy)
+  }
+  if (hull.length === 1) return Math.hypot(q[0] - hull[0][0], q[1] - hull[0][1])
+  if (hull.length === 2) return segDist(hull[0], hull[1])
+  let inside = true
+  let best = Infinity
+  for (let i = 0; i < hull.length; i++) {
+    const a = hull[i], b = hull[(i + 1) % hull.length]
+    if (cross(a, b, q) < 0) inside = false
+    best = Math.min(best, segDist(a, b))
+  }
+  return inside ? 0 : best
+}
+
+// ------------------------------------------------------------------------------------------------------------------- the range of motion
+// MOTION.md's standard of a textbook rep, per movement pattern of the catalog, measured on the loop's samples with motion.js's
+// angles (degrees; 0 is a straight joint, hip flexion 0 standing and 90 seated). Warnings: a judgement, the poser decides.
+// A partial range on purpose (rack pulls, half squats, pin presses, isometric holds) is left out by name: ROM_EXEMPT.
+const ROM_EXEMPT = /half|quarter|partial|rack-pull|off-pins|pin-press|board|isometric|hold|static|negative|eccentric|pulse|bridge-hold|wall-sit/
+/** Patterns whose standard is a posture, which a hold (no end frame) shows too. */
+const ROM_POSTURE = new Set(['anti-extension', 'carry'])
+/** The moving side's values of a two-sided measure: the side with the larger range, or the spec's muscleSide. */
+const sideOf = (rows, spec, key) => {
+  if (spec.muscleSide === 'L' || spec.muscleSide === 'R') return rows.map((r) => r.a[`${key}${spec.muscleSide}`])
+  const L = rows.map((r) => r.a[`${key}L`])
+  const R = rows.map((r) => r.a[`${key}R`])
+  const span = (v) => Math.max(...v) - Math.min(...v)
+  return span(L) >= span(R) ? L : R
+}
+const mx = (v) => Math.max(...v)
+const mn = (v) => Math.min(...v)
+const isMachine = (spec, re) => (spec.props || []).some((p) => re.test(p.type))
+const ROM = {
+  squat(rows, spec, slug, warn) {
+    const knee = sideOf(rows, spec, 'knee')
+    if (isMachine(spec, /leg-press|hack|lying-squat|seated-leg-press|belt/)) {
+      const need = /hack/.test(slug) || isMachine(spec, /hack/) ? 110 : 95
+      if (mx(knee) < need) warn('depth', need - mx(knee), `the knees bend only ${deg(mx(knee))} deg at the bottom: a full rep on this machine goes to about ${need} (hips as low as the sled allows)`)
+    } else if (/split|lunge|step/.test(slug)) {
+      if (mx(knee) < 80) warn('depth', 80 - mx(knee), `the front knee bends only ${deg(mx(knee))} deg at the bottom: a split squat goes to about 90, the back knee near the floor`)
+    } else if (!/jump|box|bench|chair|sit|sissy|speed|band|plate-mover|frankenstein/.test(slug)) {
+      // Thighs at least parallel at the bottom: the hip joint no higher than the knee joint (3 cm of slack).
+      let best = Infinity
+      for (const r of rows) {
+        for (const s of ['L', 'R']) {
+          const h = r.r.joints[`upperleg01.${s}`][1] - r.r.joints[`lowerleg01.${s}`][1]
+          if (h < best) best = h
+        }
+      }
+      if (best > 0.03) warn('depth', best, `at the bottom the hips stay ${cm(best)} cm above the knees: a full squat goes at least to the thighs parallel to the floor`)
+    }
+    if (mn(knee) > 25 && !/pistol|shrimp|sissy/.test(slug)) warn('top', mn(knee), `the knees stay bent ${deg(mn(knee))} deg at the top: a rep ends standing tall, knees nearly straight`)
+    const flex = mx(rows.map((r) => r.a.spineFlex))
+    if (flex > 25) warn('back', flex, `the spine bends ${deg(flex)} deg forward: a squat keeps the back flat (neutral)`)
+  },
+  lunge(rows, spec, slug, warn) {
+    const knee = sideOf(rows, spec, 'knee')
+    if (/step-up|step-ups/.test(slug)) {
+      if (mn(knee) > 20) warn('top', mn(knee), `the stepping knee stays bent ${deg(mn(knee))} deg on top of the step: a step-up ends standing tall on it`)
+      return
+    }
+    if (mx(knee) < 80) warn('depth', 80 - mx(knee), `the front knee bends only ${deg(mx(knee))} deg at the bottom: a lunge goes to about 90, the back knee just off the floor`)
+    const flex = mx(rows.map((r) => r.a.spineFlex))
+    if (flex > 20) warn('back', flex, `the trunk folds ${deg(flex)} deg: a lunge keeps the chest up, the back flat`)
+  },
+  hinge(rows, spec, slug, warn) {
+    const hip = sideOf(rows, spec, 'hipFlex')
+    if (/hyperextension|back-extension|reverse-hyper|nordic|good-morning/.test(slug)) {
+      if (mx(hip) - mn(hip) < 45 && !/nordic/.test(slug)) warn('range', 45 - (mx(hip) - mn(hip)), `the hips move only ${deg(mx(hip) - mn(hip))} deg: a full rep folds at the hips to about 60-90 and comes back to a straight line`)
+      return
+    }
+    if (mx(hip) < 60) warn('depth', 60 - mx(hip), `the hips fold only ${deg(mx(hip))} deg at the bottom: a deadlift or RDL hinges to about 70-90 (bar below the knees)`)
+    if (mn(hip) > 15) warn('lockout', mn(hip), `the hips stay folded ${deg(mn(hip))} deg at the top: lockout is standing tall, hips fully extended`)
+    const flex = mx(rows.map((r) => r.a.spineFlex))
+    if (flex > 20) warn('back', flex, `the spine rounds ${deg(flex)} deg: a hinge keeps the back flat from start to lockout`)
+  },
+  'horizontal-push'(rows, spec, slug, warn) {
+    if (/fly|flye|crossover|butterfly|iron-cross|squeeze|svend/.test(slug)) return
+    const elbow = sideOf(rows, spec, 'elbow')
+    if (mx(elbow) < 75) warn('bottom', 75 - mx(elbow), `the elbows bend only ${deg(mx(elbow))} deg at the bottom: a press brings the bar or the chest down to touch (elbows about 90)`)
+    if (mn(elbow) > 25) warn('lockout', mn(elbow), `the elbows stay bent ${deg(mn(elbow))} deg at the top: a press ends with the arms straight`)
+  },
+  'vertical-push'(rows, spec, slug, warn) {
+    const elbow = sideOf(rows, spec, 'elbow')
+    const elev = sideOf(rows, spec, 'shElev')
+    if (/handstand-hold|wall-handstand-hold/.test(slug)) return
+    if (mn(elbow) > 25) warn('lockout', mn(elbow), `the elbows stay bent ${deg(mn(elbow))} deg at the top: a press locks out overhead`)
+    if (mx(elev) < 145 && !/pike|handstand/.test(slug)) warn('overhead', 145 - mx(elev), `the arms rise only ${deg(mx(elev))} deg: overhead is the arms by the ears (about 160-170)`)
+    if (mx(elbow) < 70) warn('bottom', 70 - mx(elbow), `the elbows bend only ${deg(mx(elbow))} deg at the bottom: a press starts at the shoulders (bar or hands about chin height)`)
+  },
+  'horizontal-pull'(rows, spec, slug, warn) {
+    if (/front-lever|upright/.test(slug)) return
+    const elbow = sideOf(rows, spec, 'elbow')
+    if (mx(elbow) < 75) warn('end', 75 - mx(elbow), `the elbows bend only ${deg(mx(elbow))} deg at the end of the pull: a row brings the handle to the body, elbows past the trunk`)
+    if (mn(elbow) > 35) warn('stretch', mn(elbow), `the arms stay bent ${deg(mn(elbow))} deg at the start: a row starts with the arms long, shoulder blades forward`)
+  },
+  'vertical-pull'(rows, spec, slug, warn) {
+    if (/scapular|muscle-up|rope-climb|skin-the-cat|towel|kipping/.test(slug)) return
+    const elbow = sideOf(rows, spec, 'elbow')
+    if (mn(elbow) > 30) warn('hang', mn(elbow), `the arms stay bent ${deg(mn(elbow))} deg at the bottom: a pull-up or pulldown starts from long arms`)
+    if (mx(elbow) < 90) warn('top', 90 - mx(elbow), `the elbows bend only ${deg(mx(elbow))} deg at the top: pull until the chin clears the bar (pull-up) or the bar meets the upper chest (pulldown)`)
+    if (/pull-?up|chin/.test(slug) && !/band|assisted/.test(slug)) {
+      // Chin over the bar: at the top the head joint is at least 7 cm above the hands' centres (the chin about 7 cm under it).
+      let best = -Infinity
+      for (const r of rows) best = Math.max(best, r.r.joints.head[1] - (r.r.hands.L.centre[1] + r.r.hands.R.centre[1]) / 2)
+      if (best < 0.07) warn('chin', 0.07 - best, `the chin never clears the bar (head ${cm(best)} cm above the hands at the top): a full pull-up ends chin over the bar`)
+    }
+  },
+  'elbow-flexion'(rows, spec, slug, warn) {
+    const elbow = sideOf(rows, spec, 'elbow')
+    const low = /preacher|spider/.test(slug) ? 35 : 30
+    if (mn(elbow) > low) warn('bottom', mn(elbow), `the elbows stay bent ${deg(mn(elbow))} deg at the bottom: a curl starts from (nearly) straight arms`)
+    if (mx(elbow) < 105) warn('top', 105 - mx(elbow), `the elbows bend only ${deg(mx(elbow))} deg at the top: a curl finishes with the forearm close to the upper arm (about 120-140)`)
+  },
+  'elbow-extension'(rows, spec, slug, warn) {
+    const elbow = sideOf(rows, spec, 'elbow')
+    if (mn(elbow) > 20) warn('lockout', mn(elbow), `the elbows stay bent ${deg(mn(elbow))} deg at the end: a triceps extension finishes with the arms straight`)
+    if (mx(elbow) < 75) warn('stretch', 75 - mx(elbow), `the elbows bend only ${deg(mx(elbow))} deg: a full rep lowers until the forearms pass 90 deg`)
+  },
+  'shoulder-abduction'(rows, spec, slug, warn) {
+    if (/press|lean/.test(slug)) return
+    const elbow = sideOf(rows, spec, 'elbow')
+    if (mx(elbow) > 45) warn('elbows', mx(elbow) - 45, `the elbows bend ${deg(mx(elbow))} deg: a raise keeps the arms long, elbows soft (10-30 deg). A grip's pos is the bar: 0.6 m from the shoulder joint for a near-straight arm`)
+    const elev = sideOf(rows, spec, 'shElev')
+    const over = /over-?head|above-head/.test(slug)
+    const need = over ? 150 : 75
+    if (mx(elev) < need) warn('top', need - mx(elev), `the arms rise only ${deg(mx(elev))} deg: ${over ? 'this raise ends overhead' : 'a raise goes to about shoulder height (90)'}`)
+    if (mn(elev) > 35) warn('bottom', mn(elev), `the arms never come down (${deg(mn(elev))} deg at the bottom): each rep starts with the arms low`)
+  },
+  'shoulder-extension'(rows, spec, slug, warn) {
+    if (/rear|reverse|face-pull|pull-apart|back-fly|prone|y-raise|t-raise|lateral/.test(slug)) {
+      const elbow = sideOf(rows, spec, 'elbow')
+      if (mx(elbow) > 45 && !/face-pull|row/.test(slug)) warn('elbows', mx(elbow) - 45, `the elbows bend ${deg(mx(elbow))} deg: a rear-delt raise keeps the arms long, elbows soft (10-30 deg). A grip's pos is the bar: 0.6 m from the shoulder joint for a near-straight arm`)
+      const pec = sideOf(rows, spec, 'pec')
+      if (mx(pec) - mn(pec) < 40) warn('range', 40 - (mx(pec) - mn(pec)), `the arms open only ${deg(mx(pec) - mn(pec))} deg: a rear-delt raise or pull-apart brings the arms out to the sides, in line with the shoulders`)
+      return
+    }
+    const elev = sideOf(rows, spec, 'shElev')
+    if (mx(elev) - mn(elev) < 50 && !/hang|push-off|hold/.test(slug)) warn('range', 50 - (mx(elev) - mn(elev)), `the arms sweep only ${deg(mx(elev) - mn(elev))} deg: a pullover or straight-arm pulldown moves from overhead to the hips`)
+  },
+  'knee-flexion'(rows, spec, slug, warn) {
+    const knee = sideOf(rows, spec, 'knee')
+    if (/nordic|glute-ham|ghr/.test(slug)) return
+    if (mx(knee) < 90) warn('curl', 90 - mx(knee), `the knees bend only ${deg(mx(knee))} deg: a leg curl brings the heels toward the glutes (about 110-130)`)
+    if (mn(knee) > 30) warn('stretch', mn(knee), `the knees stay bent ${deg(mn(knee))} deg at the start: a leg curl starts from straight legs`)
+  },
+  'knee-extension'(rows, spec, slug, warn) {
+    if (/sissy/.test(slug)) return
+    const knee = sideOf(rows, spec, 'knee')
+    if (mn(knee) > 15) warn('lockout', mn(knee), `the knees stay bent ${deg(mn(knee))} deg at the top: a leg extension ends with the legs straight`)
+    if (mx(knee) < 75) warn('stretch', 75 - mx(knee), `the knees bend only ${deg(mx(knee))} deg at the bottom: a full rep starts from about 90`)
+  },
+  'plantar-flexion'(rows, spec, slug, warn) {
+    const ankle = sideOf(rows, spec, 'plantar')
+    if (mx(ankle) - mn(ankle) < 25) warn('range', 25 - (mx(ankle) - mn(ankle)), `the ankles move only ${deg(mx(ankle) - mn(ankle))} deg: a calf raise goes from the heels low (stretch) to high on the toes`)
+  },
+  'hip-extension'(rows, spec, slug, warn) {
+    if (/superman|arch|bird-dog|lower-back|reverse-hyper/.test(slug)) return
+    const hip = sideOf(rows, spec, 'hipFlex')
+    if (mn(hip) > 10) warn('lockout', mn(hip), `the hips stay folded ${deg(mn(hip))} deg at the top: a hip thrust or bridge ends with knees, hips and shoulders in one line`)
+    if (mx(hip) < 40 && !/kickback/.test(slug)) warn('depth', 40 - mx(hip), `the hips fold only ${deg(mx(hip))} deg at the bottom: each rep lowers the hips well down`)
+  },
+  'hip-abduction'(rows, spec, slug, warn) {
+    const abd = sideOf(rows, spec, 'hipAbd')
+    if (mx(abd) - mn(abd) < 25) warn('range', 25 - (mx(abd) - mn(abd)), `the leg opens only ${deg(mx(abd) - mn(abd))} deg: hip abduction lifts it to about 35-45`)
+  },
+  'trunk-flexion'(rows, spec, slug, warn) {
+    const flex = rows.map((r) => r.a.spineFlex)
+    const hip = sideOf(rows, spec, 'hipFlex')
+    if (mx(flex) - mn(flex) < 20 && mx(hip) - mn(hip) < 35 && !/l-sit/.test(slug)) warn('range', 20 - (mx(flex) - mn(flex)), `the trunk curls only ${deg(mx(flex) - mn(flex))} deg and the hips fold ${deg(mx(hip) - mn(hip))}: a crunch rolls the spine up (shoulders off the floor), a leg raise lifts the legs to about 90`)
+  },
+  rotation(rows, spec, slug, warn) {
+    const tw = rows.map((r) => r.a.spineTwist)
+    if (mx(tw) - mn(tw) < 20) warn('range', 20 - (mx(tw) - mn(tw)), `the trunk turns only ${deg(mx(tw) - mn(tw))} deg: a rotation turns the chest well round, the hips steady`)
+  },
+  'anti-extension'(rows, spec, slug, warn) {
+    if (/dead-bug|roll|saw/.test(slug)) return
+    const hip = sideOf(rows, spec, 'hipFlex')
+    if (mx(hip) > 25) warn('pike', mx(hip), `the hips pike ${deg(mx(hip))} deg: a plank holds shoulders, hips and ankles in one line`)
+    if (mn(hip) < -15) warn('sag', -mn(hip), `the hips sag ${deg(-mn(hip))} deg below the line: a plank holds shoulders, hips and ankles in one line`)
+  },
+  carry(rows, spec, slug, warn) {
+    const lean = mx(rows.map((r) => r.a.trunkLean))
+    if (lean > 15) warn('posture', lean, `the trunk leans ${deg(lean)} deg: a carry walks tall`)
+  },
 }
 
 function orderFrames(frames, samples) {

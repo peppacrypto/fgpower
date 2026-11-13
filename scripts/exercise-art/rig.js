@@ -16,8 +16,12 @@
 //       curl:0..1, scap:{elev,prot} }
 //       pos is the wrist, or the palm surface when contact is true. pole says where the elbow points.
 //       fingers and palm are directions; they use the same frame as pos.
-//       hand: "relaxed" (default in the air) | "flat" (palm on a surface, default with contact:true) | "open" | "fist" |
-//         "grip" | "hook" (fingers only, the thumb stays out) | "pinch" | "ball". Older specs use curl instead.
+//       hand: "relaxed" (default in the air) | "flat" (palm on a surface, default with contact:true) | "rest" (laid on the body,
+//         fingers together and softly curved: prep.js gives it to open hands resting on the skin) | "open" | "fist" |
+//         "grip" | "hook" (fingers only, the thumb stays out) | "pinch" | "ball". Older specs use curl instead; a closed one
+//         (curl over 0.55 with fingers and palm, pos or fk) is a grip.
+//       freeGrip: true (prep.js: a dumbbell, plate or single handle in this hand alone) keeps the wrist in a comfortable band
+//         and lets the weight follow the hand (freePlan below).
 //       With "grip" or "hook": grip is the bar's radius in metres (barbell 0.014, dumbbell 0.016, cable handle 0.015, thick
 //         bar 0.025, rope 0.018), pos is the point on the bar's axis in the middle of the hand, fingers is where the fingers
 //         would point if the hand opened, palm is the way the palm faces. Both are perpendicular to the bar, whose axis is
@@ -38,8 +42,9 @@
 //         report.angles.handRollL/R and elbowSwivelL/R give what was used. Key frames choose; resolveFrame writes rollFrom
 //         and swivelFrom (internal), which the in-betweens blend, so a loop never flips. Give roll/swivel in every key
 //         frame or in none.
-//     { fk:{ flex, abd, rot, elbow }, rel:"chest", pron, curl, hand, scap }
-//       flex 90 is a forward raise, abd 90 is a side raise, elbow 0 is straight, pron turns the forearm.
+//     { fk:{ flex, abd, rot, elbow }, rel:"chest", pron, curl, hand, scap, nudge }
+//       flex 90 is a forward raise, abd 90 is a side raise, elbow 0 is straight, pron turns the forearm. nudge [x,y,z] (world) moves
+//       the wrist: prep.js's grip magnet writes it to put an fk hand on its handle.
 //     scap: the shoulder girdle, normally left out: it follows the upper arm by itself. elev rises with the arm from 70
 //       degrees up to 24 at the top, prot (degrees, + forward) is + reaching forward and - with the elbow behind the trunk.
 //       Give { elev } or { prot } only to force them: a shrug is elev 22, a row's squeeze prot -15.
@@ -76,7 +81,7 @@ const qEuler = (e = {}) =>
 const lerp = (a, b, t) => a + (b - a) * t
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x))
 
-function basisQ(x, y) {
+export function basisQ(x, y) {
   const yy = y.clone().normalize()
   const xx = x.clone().addScaledVector(yy, -x.dot(yy)).normalize()
   const zz = xx.clone().cross(yy)
@@ -97,6 +102,9 @@ function twistAngle(q, axis) {
 const HAND_PRESETS = {
   relaxed: { spread: 3, cup: 0.5, f: [[18, 25, 12], [24, 30, 14], [30, 34, 16], [36, 38, 18]], thumb: [[0.7, 0.55, 0.35], [0.85, 0.3, 0.4], [0.9, 0.1, 0.4]] },
   flat: { spread: 8, cup: 0, f: [2, 3, 2], thumb: [[0.75, 0.65, 0], [0.85, 0.52, 0], [0.92, 0.38, 0]] },
+  // A hand laid on the body or on a padded surface: fingers together and softly curved, the thumb alongside. prep.js gives it to
+  // any open hand resting on the body (hips, thighs, head), where a relaxed hand's curled fingers would dig in like a claw.
+  rest: { spread: 2, cup: 0.2, f: [[9, 9, 4], [10, 10, 5], [12, 11, 6], [14, 12, 7]], thumb: [[0.78, 0.6, 0.06], [0.86, 0.5, 0.06], [0.92, 0.38, 0.05]] },
   open: { spread: 11, cup: 0, f: [4, 6, 3], thumb: [[0.65, 0.75, 0], [0.75, 0.65, 0], [0.85, 0.5, 0]] },
   fist: { spread: 0, cup: 1, f: [[76, 95, 55], [80, 98, 55], [84, 98, 55], [88, 98, 55]], thumb: [[0.55, 0.35, 0.75], [0.7, -0.35, 0.6], [0.35, -0.85, 0.35]] },
   ball: { spread: 7, cup: 0.5, f: [14, 16, 10], thumb: [[0.6, 0.7, 0.25], [0.7, 0.6, 0.3], [0.8, 0.45, 0.35]] },
@@ -114,9 +122,14 @@ const isGripSpec = (spec) => spec.hand === 'grip' || spec.hand === 'hook'
  * the owner saw as crooked, pinching hands. `pos` keeps its meaning, now the bar's axis, as the props' notes already say.
  */
 function upgradeHand(spec) {
-  if (!spec || spec.hand || spec.fk || spec.pos === undefined || spec.curl === undefined || spec.curl <= 0.55 || !spec.fingers || !spec.palm) return spec
+  if (!spec || spec.hand || spec.curl === undefined || spec.curl <= 0.55 || !spec.fingers || !spec.palm) return spec
+  // An fk arm's closed hand too (machine curls, the pec deck): its handle follows report.hands.centre, which for a grip is the
+  // bar's axis across the base of the fingers, not the middle of the palm.
+  if (!spec.fk && spec.pos === undefined) return spec
   return { ...spec, hand: 'grip', grip: spec.grip ?? 0.016 }
 }
+/** A hand that lies on a surface: placed (contact or resolved) and flat or resting. */
+const isLaidMode = (mode) => mode === 'flat' || mode === 'rest'
 
 /** The mode a spec asks for. Specs written before modes used a single 'curl'. */
 function handMode(spec) {
@@ -307,7 +320,8 @@ export class Body {
     }
   }
 
-  solve(frame) {
+  /** opts.surface false skips the render mesh's subdivision (prep.js only needs the bones and the control mesh). */
+  solve(frame, opts = {}) {
     const nb = this.bones.length
     const assigned = new Array(nb).fill(null)
     const Q = new Array(nb)
@@ -401,7 +415,12 @@ export class Body {
     }
     const armTarget = (s, spec, S, qHand, plan) => {
       const si = this.side[s]
-      if (spec.fk) return fkArm(s, spec, S)
+      if (spec.fk) {
+        // nudge: a world offset of the wrist, written by prep.js's grip magnet to bring an fk hand onto its handle.
+        const r = fkArm(s, spec, S)
+        if (spec.nudge) r.T.add(v3(spec.nudge))
+        return r
+      }
       let T = toWorld(spec.rel || 'world', spec.pos)
       if (plan && plan.T) T = plan.T.clone()
       else if (qHand && isGripSpec(spec) && !spec.resolved) T = T.sub(this._gripCentre(s, spec.grip ?? 0.016).sub(si.W).applyQuaternion(qHand))
@@ -422,6 +441,49 @@ export class Body {
       const want = basisQ(f.clone().cross(n), f)
       return want.multiply(fRest.clone().invert())
     }
+    // A free grip (freeGrip:true, written by prep.js when a dumbbell, a plate or a cable's single handle follows this hand alone):
+    // the weight hangs from the hand wherever it is, so a lifter's wrist stays nearly straight. The arm stays exactly as declared
+    // (the wrist where the declared hand puts it); the hand's bend at the wrist is brought into FREE_WRIST (a little extension
+    // under a load is natural, a hooked or sideways-bent wrist is not), keeping the declared turn of the forearm (pronation,
+    // at most FREE_TWIST). The bar (fingers x palm) and the prop that follows it move with the hand.
+    const FREE_WRIST = { ext: 20, flex: 15, ulnar: 10, radial: 6 }
+    const FREE_TWIST = 104
+    const freePlan = (s, spec, S) => {
+      const q0 = handQ(s, spec)
+      if (!q0) return null
+      const si = this.side[s]
+      const { T, pole } = armTarget(s, spec, S, q0, null)
+      const sol = this._twoBone(S, T, si.a, si.b, pole)
+      const fw = sol.T.clone().sub(sol.E).normalize()
+      // The declared wrist, measured as qa-lib does: + flexion toward the palm, + deviation toward the little finger.
+      const f0 = si.fingerDir.clone().applyQuaternion(q0)
+      const n0 = si.palmNormal.clone().applyQuaternion(q0)
+      const t0 = (s === 'L' ? n0.clone().cross(f0) : f0.clone().cross(n0)).normalize()
+      const flex0 = Math.atan2(-fw.dot(n0), fw.dot(f0)) / D
+      const dev0 = Math.asin(clamp(fw.dot(t0), -1, 1)) / D
+      const qLower = basisQ(sol.hinge, fw).multiply(basisQ(si.armHinge, si.lo).invert())
+      const loAxis = si.lo.clone().normalize()
+      const qLi = qLower.clone().invert()
+      const tw0 = clamp(twistAngle(qLi.clone().multiply(q0), loAxis), -FREE_TWIST, FREE_TWIST)
+      // Straight: fingers along the forearm, palm as declared, then turned about the forearm to the declared twist.
+      const nDecl = dirWorld(spec.rel || 'world', spec.palm)
+      let n = nDecl.clone().addScaledVector(fw, -nDecl.dot(fw))
+      if (n.lengthSq() < 0.01) n = sol.hinge.clone()
+      n.normalize()
+      let q = basisQ(fw.clone().cross(n), fw).multiply(basisQ(si.fingerDir.clone().cross(si.palmNormal), si.fingerDir).invert())
+      q = rot(fw, tw0 - twistAngle(qLi.clone().multiply(q), loAxis)).multiply(q)
+      // Then bent back toward the declared wrist, as far as the band allows.
+      const flex = clamp(flex0, -FREE_WRIST.ext, FREE_WRIST.flex)
+      const dev = clamp(dev0, -FREE_WRIST.radial, FREE_WRIST.ulnar)
+      const f = si.fingerDir.clone().applyQuaternion(q)
+      const nn = si.palmNormal.clone().applyQuaternion(q)
+      const t = s === 'L' ? nn.clone().cross(f) : f.clone().cross(nn)
+      q = rot(f.clone().cross(nn), flex).multiply(q)
+      const f2 = si.fingerDir.clone().applyQuaternion(q)
+      q = rot(t.clone().cross(f2), dev).multiply(q)
+      return { q, T: T.clone(), free: true }
+    }
+    const isFree = (spec) => spec.freeGrip && isGripSpec(spec) && spec.fingers && spec.palm
 
     // Auto-roll and auto-swivel. A hand around a bar turns about the bar's axis, a flat hand turns on its surface about the
     // palm's normal (the roll), and the elbow moves on its circle around the shoulder-to-wrist axis (the swivel, up to 35
@@ -433,6 +495,8 @@ export class Body {
     const SWIVEL = 35
     const armPlan = (s, spec, S, seed) => {
       if (spec.fk || !spec.pos) return null
+      // A free grip (a dumbbell or a handle that follows this hand alone) takes its orientation from the forearm: nothing to search.
+      if (spec.freeGrip && isGripSpec(spec)) return null
       const qh0 = handQ(s, spec)
       if (!qh0) return null
       const si = this.side[s]
@@ -440,7 +504,7 @@ export class Body {
       const mode = handMode(spec)
       const placed = spec.contact || spec.resolved
       const grip = isGripSpec(spec) || (mode === 'legacy' && placed)
-      const flat = !grip && mode === 'flat' && placed
+      const flat = !grip && isLaidMode(mode) && placed
       const rollForced = typeof spec.roll === 'number'
       const swivelForced = typeof spec.swivel === 'number'
       const canRoll = (grip || flat) && (spec.autoRoll !== false || rollForced)
@@ -621,7 +685,7 @@ export class Body {
       const spec = armSpecs[s]
       const si = this.side[s]
       const S0 = P[by[`upperarm01.${s}`].i]
-      plans[s] = armPlan(s, spec, S0)
+      plans[s] = isFree(spec) ? freePlan(s, spec, S0) : armPlan(s, spec, S0)
       const qh = plans[s] ? plans[s].q : handQ(s, spec)
       // The girdle follows the declared elbow: the swivel moves the elbow, not the shoulder (raised, it would meet the head).
       const p1 = plans[s] ? { ...plans[s], swivel: plans[s].swivel0 } : null
@@ -679,7 +743,8 @@ export class Body {
       const si = this.side[s]
       const S = P[by[`upperarm01.${s}`].i].clone()
       // The shoulder girdle has moved the shoulder: refine the plan from there, starting at the first pass's answer.
-      if (plans[s] && plans[s].searched) plans[s] = armPlan(s, spec, S, plans[s])
+      if (plans[s] && plans[s].free) plans[s] = freePlan(s, spec, S)
+      else if (plans[s] && plans[s].searched) plans[s] = armPlan(s, spec, S, plans[s])
       const qh = plans[s] ? plans[s].q : handQ(s, spec)
       const { T, pole } = armTarget(s, spec, S, qh, plans[s])
       const solved = this._twoBone(S, T, si.a, si.b, pole)
@@ -811,7 +876,12 @@ export class Body {
       const t = (s === 'L' ? n.clone().cross(f) : f.clone().cross(n)).normalize()
       const centreRest = isGripSpec(armSpecs[s]) ? this._gripCentre(s, armSpecs[s].grip ?? 0.016) : si.palmCentre
       const c = w.clone().add(centreRest.clone().sub(si.W).applyQuaternion(q))
-      report.hands[s] = { wrist: w.toArray(), centre: c.toArray(), fingers: f.toArray(), palm: n.toArray(), thumb: t.toArray(), quat: q.toArray() }
+      // The fingertips (thumb first), for prep.js's resting hands.
+      const tips = [1, 2, 3, 4, 5].map((F) => {
+        const b = by[`finger${F}-3.${s}`]
+        return P[b.i].clone().add(b.tail.clone().sub(b.head).applyQuaternion(Q[b.i])).toArray()
+      })
+      report.hands[s] = { wrist: w.toArray(), centre: c.toArray(), fingers: f.toArray(), palm: n.toArray(), thumb: t.toArray(), quat: q.toArray(), tips }
       const qf = Q[by[`foot.${s}`].i]
       const a = P[by[`foot.${s}`].i]
       const toWorld = (x) => a.clone().add(x.clone().sub(si.A).applyQuaternion(qf)).toArray()
@@ -827,7 +897,7 @@ export class Body {
     }
     const trunkFrame = (name) => ({ pos: P[by[name].i].toArray(), quat: Q[by[name].i].toArray() })
     report.frames = { pelvis: { pos: pelvisPos.toArray(), quat: qRoot.toArray() }, chest: trunkFrame('spine01'), head: trunkFrame('head') }
-    if (this.surface) this.surface.update(this.ctlPos)
+    if (this.surface && opts.surface !== false) this.surface.update(this.ctlPos)
     return { positions: this.pos, report }
   }
 
@@ -846,8 +916,24 @@ export class Body {
       const a = out[`arm${s}`]
       return a && a.pos && !a.fk && ((a.autoRoll !== false && typeof a.roll !== 'number') || (a.autoPole !== false && typeof a.swivel !== 'number'))
     })
+    // Free grips take their hand from the forearm: the wrist below is computed with the hand the solve really used.
+    const freeArms = ['L', 'R'].filter((s) => {
+      const a = out[`arm${s}`]
+      return a && a.pos && !a.fk && a.freeGrip && isGripSpec(a) && a.fingers && a.palm
+    })
+    let solvedReport = null
+    if (autoArms.length || freeArms.length) solvedReport = this.solve(frame, { surface: false }).report
+    for (const s of freeArms) {
+      const a = out[`arm${s}`]
+      const h = solvedReport.hands[s]
+      if (a.rel && a.rel !== 'world') continue
+      // The hand as drawn: straightened at the wrist, the bar where that puts it. Converted below to the same wrist.
+      a.pos = h.centre.slice()
+      a.fingers = h.fingers.slice()
+      a.palm = h.palm.slice()
+    }
     if (autoArms.length) {
-      const { report } = this.solve(frame)
+      const report = solvedReport
       for (const s of autoArms) {
         const a = out[`arm${s}`]
         if (a.autoRoll !== false && typeof a.roll !== 'number' && report.angles[`handRoll${s}`] !== undefined) a.rollFrom = report.angles[`handRoll${s}`]
