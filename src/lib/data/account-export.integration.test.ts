@@ -9,6 +9,9 @@ import {
   TREINOS_CSV_HEADER,
   type AccountExportData,
 } from "./account-export";
+import { isoOfDay as isoDay } from "@/lib/diet/days";
+import { saveDietPlan } from "@/lib/diet/save-plan";
+import testPlan from "@/lib/diet/test-plan.json";
 
 /**
  * "Exportar meus dados" (W-151) against the real local Postgres: a GD fork,
@@ -264,10 +267,10 @@ describe("toTreinosCsv", () => {
 });
 
 describe("toExportJson", () => {
-  it("is v4, readable (names, not ids) and only this account's", async () => {
+  it("is v5, readable (names, not ids) and only this account's", async () => {
     const data = toExportJson(await loadAccountExport(USER_ID), new Date("2026-09-12T12:00:00Z"));
     const text = JSON.stringify(data);
-    expect(data).toMatchObject({ format: "fgpower-export", version: 4, exportedAt: "2026-09-12T12:00:00.000Z" });
+    expect(data).toMatchObject({ format: "fgpower-export", version: 5, exportedAt: "2026-09-12T12:00:00.000Z" });
     expect(data.account).toMatchObject({ email: emailOf(1), name: "Pessoa 1" });
 
     // No raw ids anywhere: not as keys, not as values.
@@ -338,7 +341,7 @@ describe("GET /api/account/export", () => {
     const json = await get();
     expect(json.headers.get("content-type")).toBe("application/json; charset=utf-8");
     expect(json.headers.get("content-disposition")).toMatch(/filename="fgpower-dados-\d{4}-\d{2}-\d{2}\.json"$/);
-    expect((await json.json()).version).toBe(4);
+    expect((await json.json()).version).toBe(5);
   });
 
   it("holds back a burst of exports: the seventh in ten minutes waits, and says how long", async () => {
@@ -380,7 +383,7 @@ describe("signInSessions + reminder engagement (A-051)", () => {
     });
 
     const data = toExportJson(await loadAccountExport(USER_ID), new Date("2026-09-12T12:00:00Z"));
-    expect(data.version).toBe(4);
+    expect(data.version).toBe(5);
 
     // The sign-in session block: device + IP + the dates (never the token).
     expect(data.signInSessions).toContainEqual(
@@ -423,7 +426,7 @@ describe("Minha academia (v4)", () => {
     await prisma.exerciseLoadStep.create({ data: { userId: OTHER_ID, exerciseId: ex.id, stepKg: 20 } });
 
     const data = toExportJson(await loadAccountExport(USER_ID), new Date("2026-09-12T12:00:00Z"));
-    expect(data.version).toBe(4);
+    expect(data.version).toBe(5);
     // The rack in words, the stacks and plates in kg, the missing gear by the names Settings shows.
     expect(data.profile).toMatchObject({
       dumbbellScheme: "halteres de 2 em 2 kg",
@@ -451,6 +454,81 @@ describe("Minha academia (v4)", () => {
       kettlebellStepKg: 4,
       missingGear: [],
     });
+  });
+});
+
+describe("Dieta (v5)", () => {
+  it("carries the plan in words and every day's marks with the option logged — this account's only, never an id", async () => {
+    await saveDietPlan(USER_ID, testPlan);
+    await prisma.dietLog.createMany({
+      data: [
+        { userId: USER_ID, day: 20_404, itemId: "almoco-tilapia", choiceId: "almoco-atum", eaten: true, meal: "Almoço", food: "Atum em lata, escorrido", amount: "1 lata (≈ 120 g)", kcal: 140, protein: 31, carbs: 0, fat: 1.2 },
+        { userId: USER_ID, day: 20_405, itemId: "cafe-pao", eaten: true, meal: "Café", food: "Pão integral", amount: "2 fatias", kcal: 120, protein: 6, carbs: 22, fat: 1.5 },
+      ],
+    });
+    // The other account's plan and marks never show up here.
+    await saveDietPlan(OTHER_ID, { ...testPlan, title: "Plano da outra pessoa" });
+    await prisma.dietLog.create({
+      data: { userId: OTHER_ID, day: 20_406, itemId: "cafe-ovos", eaten: true, meal: "Café", food: "Ovos mexidos", amount: "2 unidades", kcal: 150, protein: 12.5, carbs: 1, fat: 10 },
+    });
+
+    const data = toExportJson(await loadAccountExport(USER_ID), new Date("2026-09-12T12:00:00Z"));
+    expect(data.version).toBe(5);
+    expect(data.diet.plan).toMatchObject({
+      title: "Plano de teste",
+      version: "2026-01-01",
+      goal: "Manter o peso (plano de teste).",
+      targets: { kcal: 1800, protein: 150, carbs: 180, fat: 50, fiber: 30 },
+      swaps: ["100 g de arroz cozido = 1 pão francês"],
+    });
+    const meals = data.diet.plan!.meals as { name: string; items: { food: string; alternatives: { food: string }[] }[] }[];
+    expect(meals.map((m) => m.name)).toEqual(["Café", "Almoço", "Lanche"]);
+    expect(meals[1].items[1]).toMatchObject({
+      food: "Filé de tilápia grelhado",
+      kcal: 190,
+      alternatives: [{ food: "Atum em lata, escorrido", kcal: 140 }],
+    });
+    expect(data.diet.days).toEqual([
+      {
+        date: isoDay(20_404),
+        meal: "Almoço",
+        food: "Atum em lata, escorrido",
+        amount: "1 lata (≈ 120 g)",
+        eaten: true,
+        alternative: true,
+        kcal: 140,
+        protein: 31,
+        carbs: 0,
+        fat: 1.2,
+        markedAt: expect.any(String),
+      },
+      {
+        date: isoDay(20_405),
+        meal: "Café",
+        food: "Pão integral",
+        amount: "2 fatias",
+        eaten: true,
+        alternative: false,
+        kcal: 120,
+        protein: 6,
+        carbs: 22,
+        fat: 1.5,
+        markedAt: expect.any(String),
+      },
+    ]);
+    // Words, never the plan's ids — nor anything of the other account's diet.
+    const text = JSON.stringify(data);
+    expect(text).not.toMatch(/"(id|userId|itemId|choiceId)":/);
+    expect(text).not.toContain("almoco-atum");
+    expect(text).not.toContain("Plano da outra pessoa");
+    expect(text).not.toContain(isoDay(20_406));
+  });
+
+  it("is empty for an account without a plan", async () => {
+    await prisma.dietPlan.deleteMany({ where: { userId: OTHER_ID } });
+    await prisma.dietLog.deleteMany({ where: { userId: OTHER_ID } });
+    const data = toExportJson(await loadAccountExport(OTHER_ID), new Date("2026-09-12T12:00:00Z"));
+    expect(data.diet).toEqual({ plan: null, days: [] });
   });
 });
 

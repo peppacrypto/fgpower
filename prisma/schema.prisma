@@ -8,7 +8,7 @@
 //   4. Scientific evidence system
 //   5. Canonical workout templates (admin curated)
 //   6. User programs (custom / forked)
-//   7. Training log (sessions, exercise logs, set logs, PRs, body metrics)
+//   7. Training log (sessions, exercise logs, set logs, PRs, body metrics, diet)
 //   8. Social layer (follows, activities, FGs, notifications, blocks, reports)
 //   9. Re-engagement (reminders, Web Push, e-mail, background jobs)
 
@@ -56,6 +56,8 @@ model User {
   setLogs           SetLog[]
   personalRecords   ExercisePersonalRecord[]
   bodyMetrics       BodyMetric[]
+  dietPlan          DietPlan?
+  dietLogs          DietLog[]
 
   following        Follow[]        @relation("FollowFollower")
   followers        Follow[]        @relation("FollowFollowing")
@@ -1147,6 +1149,65 @@ model BodyMetric {
   @@unique([userId, kind, day])
   @@index([userId, kind, measuredAt(sort: Desc)])
   @@index([sessionId])
+}
+
+/// The user's eating plan — health data, owner-only: read only by the owner's
+/// own screens (Dieta, the Perfil card) and the owner's export, never by /u,
+/// /t, the feed or an image. One per user: the active plan, replaced whole by
+/// scripts/one-off/2026-11-13-diet-plan.ts (no editor yet). Written through
+/// lib/validation/diet-plan (dietPlanSchema), which also reads `meals` back.
+model DietPlan {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  /// The plan's own label as its file had it (its date, "2026-11-13").
+  version   String?
+  /// The aim, in words ("Perder 0,5 a 1,0 kg por semana").
+  goal      String?
+  /// Daily targets: kcal, then grams.
+  kcal      Int
+  protein   Float
+  carbs     Float
+  fat       Float
+  fiber     Float?
+  /// The meals, their items and each item's alternatives (DietMeal[]).
+  meals     Json
+  /// One sentence each ("100 g de arroz cozido = 250 g de batata cozida").
+  swaps     String[] @default([])
+  rules     String[] @default([])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// One item of the plan on one São Paulo day — health data, owner-only:
+/// whether it was eaten and which option filled it (the item itself or one of
+/// its alternatives). The option is copied in (meal, food, amount, macros), so
+/// a day keeps what was eaten after the plan changes. A row is kept only while
+/// it says something: eaten, or an alternative picked.
+model DietLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// São Paulo day number (lib/training/day-rotation dayNumberOf), as BodyMetric.day.
+  day       Int
+  /// The plan item's id ("m2-frango"): the slot, whichever option fills it.
+  itemId    String
+  /// The alternative picked ("m2-sardinha"); null = the item itself.
+  choiceId  String?
+  eaten     Boolean
+  meal      String
+  food      String
+  amount    String
+  kcal      Float
+  protein   Float
+  carbs     Float
+  fat       Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Leads with userId: also backs the ON DELETE CASCADE (A-036).
+  @@unique([userId, day, itemId])
 }
 
 // ---------------------------------------------------------------------------

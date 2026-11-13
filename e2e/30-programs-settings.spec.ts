@@ -399,7 +399,9 @@ test("export: a spreadsheet of the sets and everything in JSON, named by the day
   const [json] = await Promise.all([page.waitForEvent("download"), zone.getByRole("link", { name: "JSON" }).click()]);
   expect(json.suggestedFilename()).toMatch(/^fgpower-dados-\d{4}-\d{2}-\d{2}\.json$/);
   const data = JSON.parse((await (await json.createReadStream()).toArray()).join(""));
-  expect(data).toMatchObject({ format: "fgpower-export", version: 4 });
+  expect(data).toMatchObject({ format: "fgpower-export", version: 5 });
+  // Dieta (v5): an account without a plan exports an empty diet.
+  expect(data.diet).toEqual({ plan: null, days: [] });
   expect(data.workouts[0]).toMatchObject({ name: "Quinta — Puxar (moderado)", status: "Concluído", program: "GD 1" });
   // Minha academia (v4): the default gym, nothing missing, no exercise with its own step.
   expect(data.profile).toMatchObject({ stackStepKg: 5, cableStepKg: 5, smallestPlateKg: 2.5, kettlebellStepKg: 4, missingGear: [] });

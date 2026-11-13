@@ -120,6 +120,31 @@ export async function getBodyweightGlance(userId: string, now: Date = new Date()
   };
 }
 
+export interface DayBodyValue {
+  /** The value logged that day, if any. */
+  value: number | null;
+  /** The latest value on or before that day (that day's included): the field's placeholder and "Confere?". */
+  last: { value: number; day: number } | null;
+}
+
+/** A day's weight and waist (Dieta's quick inputs), each with the latest logged on or before it. */
+export async function getDayWeightAndWaist(userId: string, day: number): Promise<{ weight: DayBodyValue; waist: DayBodyValue }> {
+  const [weight, waist] = await Promise.all(
+    (["BODYWEIGHT", "WAIST"] as const).map((kind) =>
+      prisma.bodyMetric.findFirst({
+        where: { userId, kind, day: { lte: day } },
+        orderBy: { day: "desc" },
+        select: { day: true, value: true },
+      }),
+    ),
+  );
+  const of = (row: { day: number; value: number } | null): DayBodyValue => ({
+    value: row && row.day === day ? row.value : null,
+    last: row ? { value: row.value, day: row.day } : null,
+  });
+  return { weight: of(weight), waist: of(waist) };
+}
+
 /** The latest weigh-in on or before a day (the check-in's placeholder for that workout's day). */
 export async function getWeighInOnOrBefore(userId: string, day: number) {
   return prisma.bodyMetric.findFirst({

@@ -129,6 +129,43 @@ export function weeklyRate(points: readonly AveragedPoint[]): WeeklyRate | null 
   return { kgPerWeek, pctPerWeek: (kgPerWeek / ref.avg) * 100 };
 }
 
+export interface WeekOverWeek {
+  /** The average of the weigh-ins in [endDay − 6, endDay]; null with fewer than 3 in it. */
+  avg: number | null;
+  count: number;
+  /** The same for the 7 days before: [endDay − 13, endDay − 7]. */
+  prevAvg: number | null;
+  prevCount: number;
+  /** avg − prevAvg, of the two as shown (rounded to 0.1); null without both. */
+  change: number | null;
+}
+
+/**
+ * This week's average weight against last week's (Dieta's "Média de 7
+ * dias"): two back-to-back 7-day windows ending on `endDay`, each averaging
+ * the weigh-ins it has (a missed morning isn't a zero) once it has 3 — the
+ * plan's "3 a 4 manhãs por semana". Weigh-ins after `endDay` don't count.
+ * One value per day (the latest given).
+ */
+export function weekOverWeek(points: readonly DayValue[], endDay: number): WeekOverWeek {
+  const byDay = new Map<number, number>();
+  for (const p of points) if (Number.isFinite(p.value)) byDay.set(p.day, p.value);
+  const windowAvg = (from: number, to: number) => {
+    const values = [...byDay.entries()].filter(([day]) => day >= from && day <= to).map(([, v]) => v);
+    const avg = values.length >= MIN_WEIGH_INS_FOR_AVERAGE ? roundTenth(values.reduce((a, b) => a + b, 0) / values.length) : null;
+    return { avg, count: values.length };
+  };
+  const week = windowAvg(endDay - 6, endDay);
+  const prev = windowAvg(endDay - 13, endDay - 7);
+  return {
+    avg: week.avg,
+    count: week.count,
+    prevAvg: prev.avg,
+    prevCount: prev.count,
+    change: week.avg != null && prev.avg != null ? roundTenth(week.avg - prev.avg) : null,
+  };
+}
+
 /** Under this a week's change reads "estável". */
 const STABLE_KG_PER_WEEK = 0.05;
 const MINUS = "−";

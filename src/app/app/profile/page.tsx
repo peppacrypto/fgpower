@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Bell, BookOpen, Heart, History, Settings, ExternalLink } from "lucide-react";
+import { Bell, BookOpen, Heart, History, Settings, ExternalLink, Utensils } from "lucide-react";
 import { SectionHead } from "@/components/ui/section-head";
 import { GArrow, GCohort } from "@/components/ui/glyph";
 import { requireUser } from "@/lib/auth/require-user";
 import { getOwnIdentity, getProfile, getPublicProfileOrigin } from "@/lib/data/profile";
 import { listFavoriteExercises } from "@/lib/data/favorites";
+import { getDietGlance } from "@/lib/data/diet";
 import { getGraphCounts } from "@/lib/data/social";
 import { prisma } from "@/lib/db";
 import { profileHref } from "@/lib/social/links";
@@ -16,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ExerciseCard } from "@/components/exercises/exercise-card";
 import { formatNumber, plural, pluralWord } from "@/lib/utils/format";
+import { cn } from "@/lib/utils/cn";
 import { publicProfileLabel } from "@/lib/validation/username";
 
 export const metadata: Metadata = { title: "Perfil" };
@@ -36,7 +38,7 @@ const GOAL_LABEL: Record<string, string> = {
 
 export default async function ProfilePage() {
   const user = await requireUser();
-  const [profile, identity, favorites, sessionCount, graph, publicOrigin] = await Promise.all([
+  const [profile, identity, favorites, sessionCount, graph, publicOrigin, diet] = await Promise.all([
     getProfile(user.id),
     // Handle and name from the DB: the session cookie cache can be minutes stale.
     getOwnIdentity(user.id),
@@ -44,6 +46,8 @@ export default async function ProfilePage() {
     prisma.workoutSession.count({ where: { userId: user.id, status: "COMPLETED", totalWorkingSets: { gt: 0 } } }),
     getGraphCounts(user.id),
     getPublicProfileOrigin(),
+    // Owner-only (this page is the user's own): today's diet at a glance, when there's a plan.
+    getDietGlance(user.id),
   ]);
   const { followers: followerCount, following: followingCount, requests: requestCount } = graph;
   const name = identity?.name ?? user.name;
@@ -113,31 +117,54 @@ export default async function ProfilePage() {
         </div>
       ) : null}
 
-      {/* On the phone these have no tab; the desktop sidebar links them directly. */}
-      <div className="mt-5 grid grid-cols-2 gap-2 sm:hidden">
-        <Button variant="outline" size="sm" asChild>
+      {/* Today's diet, when the account has a plan — first, as it's opened every day (owner-only:
+          this is the user's own profile). */}
+      {diet ? (
+        <Link href="/app/dieta" className="card is-link mt-5 flex min-h-11 items-center gap-3 px-4 py-3" data-diet-card>
+          <Utensils className="size-4 shrink-0 text-accent" aria-hidden />
+          <p className="min-w-0 flex-1 text-sm tabular-nums">
+            <span className="font-semibold">Dieta de hoje:</span>{" "}
+            <span className="text-muted">
+              {diet.eaten} de {plural(diet.items, "item", "itens")} · {formatNumber(Math.round(diet.kcal), 0)} kcal de{" "}
+              {formatNumber(diet.kcalTarget, 0)}
+            </span>
+          </p>
+          <GArrow className="size-3.5 shrink-0 text-muted" />
+        </Link>
+      ) : null}
+
+      {/* On the phone the first four have no tab; the desktop sidebar links them directly.
+          Dieta has no other way in: it shows on every screen size. */}
+      <div className={cn("grid grid-cols-2 gap-2", diet ? "mt-2" : "mt-5")}>
+        <Button variant="outline" size="sm" asChild className="sm:hidden">
           <Link href="/app/feed">
             <GCohort className="size-4" />
             Feed
           </Link>
         </Button>
-        <Button variant="outline" size="sm" asChild>
+        <Button variant="outline" size="sm" asChild className="sm:hidden">
           <Link href="/app/notifications">
             <Bell className="size-4" />
             Notificações
             <UnreadCountPip />
           </Link>
         </Button>
-        <Button variant="outline" size="sm" asChild>
+        <Button variant="outline" size="sm" asChild className="sm:hidden">
           <Link href="/app/history">
             <History className="size-4" />
             Histórico
           </Link>
         </Button>
-        <Button variant="outline" size="sm" asChild>
+        <Button variant="outline" size="sm" asChild className="sm:hidden">
           <Link href="/app/science">
             <BookOpen className="size-4" />
             Ciência
+          </Link>
+        </Button>
+        <Button variant="outline" size="sm" asChild className="col-span-2 sm:col-span-1">
+          <Link href="/app/dieta">
+            <Utensils className="size-4" />
+            Dieta
           </Link>
         </Button>
       </div>
