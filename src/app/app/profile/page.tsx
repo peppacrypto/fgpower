@@ -118,7 +118,8 @@ export default async function ProfilePage() {
       ) : null}
 
       {/* Today's diet, when the account has a plan — first, as it's opened every day (owner-only:
-          this is the user's own profile). */}
+          this is the user's own profile). It is Dieta's way in, on every screen size; an account
+          without a plan gets no link, as the page would have nothing to mark. */}
       {diet ? (
         <Link href="/app/dieta" className="card is-link mt-5 flex min-h-11 items-center gap-3 px-4 py-3" data-diet-card>
           <Utensils className="size-4 shrink-0 text-accent" aria-hidden />
@@ -133,38 +134,31 @@ export default async function ProfilePage() {
         </Link>
       ) : null}
 
-      {/* On the phone the first four have no tab; the desktop sidebar links them directly.
-          Dieta has no other way in: it shows on every screen size. */}
-      <div className={cn("grid grid-cols-2 gap-2", diet ? "mt-2" : "mt-5")}>
-        <Button variant="outline" size="sm" asChild className="sm:hidden">
+      {/* On the phone these have no tab; the desktop sidebar links them directly. */}
+      <div className={cn("grid grid-cols-2 gap-2 sm:hidden", diet ? "mt-2" : "mt-5")}>
+        <Button variant="outline" size="sm" asChild>
           <Link href="/app/feed">
             <GCohort className="size-4" />
             Feed
           </Link>
         </Button>
-        <Button variant="outline" size="sm" asChild className="sm:hidden">
+        <Button variant="outline" size="sm" asChild>
           <Link href="/app/notifications">
             <Bell className="size-4" />
             Notificações
             <UnreadCountPip />
           </Link>
         </Button>
-        <Button variant="outline" size="sm" asChild className="sm:hidden">
+        <Button variant="outline" size="sm" asChild>
           <Link href="/app/history">
             <History className="size-4" />
             Histórico
           </Link>
         </Button>
-        <Button variant="outline" size="sm" asChild className="sm:hidden">
+        <Button variant="outline" size="sm" asChild>
           <Link href="/app/science">
             <BookOpen className="size-4" />
             Ciência
-          </Link>
-        </Button>
-        <Button variant="outline" size="sm" asChild className="col-span-2 sm:col-span-1">
-          <Link href="/app/dieta">
-            <Utensils className="size-4" />
-            Dieta
           </Link>
         </Button>
       </div>

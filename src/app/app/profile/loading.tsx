@@ -35,8 +35,6 @@ function ProfileSkeleton() {
         {[0, 1, 2, 3].map((i) => (
           <Bone key={i} className="h-11" />
         ))}
-        {/* Dieta, the whole row. */}
-        <Bone className="col-span-2 h-11" />
       </div>
       <div className="card mt-6 grid grid-cols-3 divide-x divide-border">
         {[0, 1, 2].map((i) => (

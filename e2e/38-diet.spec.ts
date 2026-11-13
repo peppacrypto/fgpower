@@ -52,9 +52,10 @@ async function noHorizontalScroll(page: Page) {
 test("Dieta: the import, items marked with an alternative, kept after a reload and on Perfil; no day after today", async ({ page }) => {
   const user = await newOnboardedUser(page, { label: "diet-marks" });
 
-  // No plan yet: Perfil links Dieta all the same, without the card; the page says so plainly.
+  // No plan yet: Perfil has no way to Dieta (nothing to mark there); the page itself says so plainly.
   await page.goto("/app/profile");
-  await expect(page.getByRole("link", { name: "Dieta", exact: true })).toHaveAttribute("href", "/app/dieta");
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  await expect(page.locator('a[href="/app/dieta"]')).toHaveCount(0);
   await expect(page.locator("[data-diet-card]")).toHaveCount(0);
   await page.goto("/app/dieta");
   await expect(page.getByRole("heading", { level: 1, name: "Dieta" })).toBeVisible();

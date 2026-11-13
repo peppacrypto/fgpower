@@ -2,12 +2,13 @@
  * One-off, 2026-11-13: loads a diet plan (Dieta, /app/dieta) as the active plan of the account with the given
  * e-mail, replacing the one it has. The plan is a JSON file checked by the same schema the app reads plans with
  * (src/lib/validation/diet-plan.ts); nobody's plan lives in the repo — it comes from the command line, as a path or
- * on stdin ("-"), which is how it reaches the production container. Days already marked keep what they logged.
- * Idempotent. Dry run by default:
+ * on stdin ("-") or inline in base64 ("base64:…"), which is how it reaches the production container. Days already
+ * marked keep what they logged. Idempotent. Dry run by default:
  *
  *   npx tsx scripts/one-off/2026-11-13-diet-plan.ts <plan.json> <email>            # checks it, shows what it would do
  *   npx tsx scripts/one-off/2026-11-13-diet-plan.ts <plan.json> <email> --apply    # saves it
  *   ssh railway-web -- "npx tsx scripts/one-off/2026-11-13-diet-plan.ts - <email> --apply" < plan.json
+ *   ssh railway-web -- "npx tsx scripts/one-off/2026-11-13-diet-plan.ts base64:$(base64 -w0 plan.json) <email> --apply"
  */
 import "dotenv/config";
 import { readFileSync } from "node:fs";
@@ -16,14 +17,18 @@ import { saveDietPlan } from "@/lib/diet/save-plan";
 import { planItems, planTotals } from "@/lib/diet/plan";
 import { describeDietPlanIssues, dietPlanSchema } from "@/lib/validation/diet-plan";
 
-const USAGE = "usage: npx tsx scripts/one-off/2026-11-13-diet-plan.ts <plan.json | -> <email> [--apply]";
+const USAGE = "usage: npx tsx scripts/one-off/2026-11-13-diet-plan.ts <plan.json | - | base64:…> <email> [--apply]";
 
 function fail(message: string): never {
   console.error(message);
   process.exit(1);
 }
 
+/** Written inline as "base64:<the file in base64>": one argument, for a remote shell that may not pass stdin on. */
+const BASE64_PREFIX = "base64:";
+
 function readPlanText(source: string): string {
+  if (source.startsWith(BASE64_PREFIX)) return Buffer.from(source.slice(BASE64_PREFIX.length), "base64").toString("utf8");
   if (source !== "-") {
     try {
       return readFileSync(source, "utf8");
