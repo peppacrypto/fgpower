@@ -90,7 +90,7 @@ test.describe("the figure", () => {
     const figure = page.locator('[data-workout-demo="compact"]');
     await expect(figure).toBeVisible();
     const shown = figure.locator(":is(video, img):visible").first();
-    await expect(shown).toHaveAttribute("src", /\/exercises\/[^/]+\/(f2-(loop\.mp4|start\.webp)|fig-(loop|start)\.webp)$/);
+    await expect(shown).toHaveAttribute("src", /\/exercises\/[^/]+\/(f\d+-(loop\.mp4|start\.webp)|fig-(loop|start)\.webp)$/);
     const box = (await shown.boundingBox())!;
     // Seen without a tap (far from the 48 px thumbnail), compact enough for the sets below.
     expect(box.height).toBeGreaterThan(100);

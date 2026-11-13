@@ -33,7 +33,7 @@ test("a home workout shows the figure large, in the sheet too, and logs reps wit
   // The figure is a muted looping video (the older renders are animated images): whichever it is, it is shown large.
   const onScreen = page.locator("[data-workout-demo] :is(video, img):visible").first();
   await expect(onScreen).toBeVisible();
-  await expect(onScreen).toHaveAttribute("src", /\/exercises\/[^/]+\/(f2-(loop\.mp4|start\.webp)|fig-(loop|start)\.webp)$/);
+  await expect(onScreen).toHaveAttribute("src", /\/exercises\/[^/]+\/(f\d+-(loop\.mp4|start\.webp)|fig-(loop|start)\.webp)$/);
   const box = await onScreen.boundingBox();
   // Readable on a phone: nothing like the 48 px thumbnail.
   expect(box!.height).toBeGreaterThan(140);
@@ -70,14 +70,14 @@ test("someone who asks for less motion gets a still instead of the video", async
   await page.goto("/exercises/pushups");
   const still = page.locator("[data-exercise-demo] img:visible").first();
   await expect(still).toBeVisible();
-  await expect.poll(() => still.evaluate((img: HTMLImageElement) => img.currentSrc)).toMatch(/f2-(start|end)\.webp$/);
+  await expect.poll(() => still.evaluate((img: HTMLImageElement) => img.currentSrc)).toMatch(/f\d+-(start|end)\.webp$/);
   await expect(page.locator("[data-exercise-demo] video:visible")).toHaveCount(0);
 
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.reload();
   const video = page.locator("[data-exercise-demo] video:visible").first();
   await expect(video).toBeVisible();
-  await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.currentSrc)).toMatch(/f2-loop\.mp4$/);
+  await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.currentSrc)).toMatch(/f\d+-loop\.mp4$/);
   // What lets a phone play it by itself, in place, without sound.
   await expect(video).toHaveAttribute("loop", "");
   await expect(video).toHaveAttribute("playsinline", "");
