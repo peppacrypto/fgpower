@@ -147,7 +147,12 @@ test("builder: 'Agrupar com o próximo' makes a superset, the rest becomes the s
   await page.getByRole("button", { name: "Salvar programa" }).click({ force: true }); // sticky save bar (Playwright scroll quirk)
   await expect(page.getByRole("button", { name: "Salvo" })).toBeVisible({ timeout: 15_000 });
   await page.reload();
-  await page.getByRole("tab", { name: TERCA }).click();
+  // Tapped again until it takes: a tap while the reloaded page is still hydrating leaves Segunda selected.
+  const terca = page.getByRole("tab", { name: TERCA });
+  await expect(async () => {
+    await terca.click();
+    await expect(terca).toHaveAttribute("aria-selected", "true", { timeout: 1_000 });
+  }).toPass({ timeout: 15_000 });
   await expect(rowNamed("Agachamento Hack")).toHaveAttribute("data-group", "A1");
   await expect(rowNamed("Cadeira Extensora")).toHaveAttribute("data-group", "A2");
   await expect(rowNamed(FACE_PULL)).toHaveAttribute("data-group", "B1");
