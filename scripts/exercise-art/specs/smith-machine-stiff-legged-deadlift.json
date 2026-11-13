@@ -1,8 +1,8 @@
 {
  "slug": "smith-machine-stiff-legged-deadlift",
  "camera": {
-  "az": 100,
-  "el": 8
+  "az": 90,
+  "el": 6
  },
  "muscles": [
   "hamstrings",
@@ -10,11 +10,13 @@
  ],
  "props": [
   {
-   "type": "barbell",
-   "hands": true,
-   "plates": [
-    20
-   ]
+   "type": "smith",
+   "pos": [
+    0,
+    0,
+    0.15
+   ],
+   "follow": "hands"
   }
  ],
  "frames": {
@@ -33,8 +35,8 @@
    "armL": {
     "pos": [
      0.235,
-     0.87,
-     0.135
+     0.8,
+     0.15
     ],
     "contact": true,
     "fingers": [
@@ -57,8 +59,8 @@
    "armR": {
     "pos": [
      -0.235,
-     0.87,
-     0.135
+     0.8,
+     0.15
     ],
     "contact": true,
     "fingers": [
@@ -111,19 +113,19 @@
    "root": {
     "pos": [
      0,
-     0.86,
-     -0.16
+     0.9,
+     -0.15
     ],
-    "pitch": 33
+    "pitch": 32
    },
    "neck": {
-    "flex": -40
+    "flex": -8
    },
    "armL": {
     "pos": [
      0.235,
-     0.7,
-     0.13
+     0.62,
+     0.15
     ],
     "contact": true,
     "fingers": [
@@ -146,8 +148,8 @@
    "armR": {
     "pos": [
      -0.235,
-     0.7,
-     0.13
+     0.62,
+     0.15
     ],
     "contact": true,
     "fingers": [
@@ -200,19 +202,19 @@
    "root": {
     "pos": [
      0,
-     0.78,
-     -0.32
+     0.875,
+     -0.33
     ],
-    "pitch": 70
+    "pitch": 72
    },
    "neck": {
-    "flex": -40
+    "flex": -14
    },
    "armL": {
     "pos": [
      0.235,
-     0.307,
-     0.1
+     0.45,
+     0.15
     ],
     "contact": true,
     "fingers": [
@@ -235,8 +237,8 @@
    "armR": {
     "pos": [
      -0.235,
-     0.307,
-     0.1
+     0.45,
+     0.15
     ],
     "contact": true,
     "fingers": [

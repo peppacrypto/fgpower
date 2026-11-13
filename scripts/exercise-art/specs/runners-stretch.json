@@ -1,8 +1,8 @@
 {
  "slug": "runners-stretch",
  "camera": {
-  "az": 70,
-  "el": 10
+  "az": 80,
+  "el": 8
  },
  "muscles": [
   "hamstrings"
@@ -12,49 +12,50 @@
    "root": {
     "pos": [
      0,
-     0.58,
-     0.01
+     0.5,
+     -0.2
     ],
-    "pitch": 70
+    "pitch": 55
    },
    "spine": {
-    "flex": 24
+    "flex": 25
    },
    "neck": {
     "flex": -15
    },
    "legL": {
     "pos": [
-     0.1,
+     0.18,
      0,
-     0.75
+     0.26
     ],
-    "anchor": "sole",
+    "anchor": "heel",
+    "pitch": -30,
     "pole": [
-     0.1,
-     0.5,
+     0,
+     0.3,
      1
     ]
    },
    "legR": {
     "pos": [
-     -0.1,
-     0.05,
-     -0.68
+     -0.12,
+     0.16,
+     -0.85
     ],
-    "anchor": "ball",
+    "anchor": "ankle",
     "pole": [
-     -0.1,
-     -0.2,
-     1
+     0,
+     -1,
+     0
     ],
-    "pitch": 60
+    "pitch": 130
    },
    "armL": {
     "pos": [
-     0.3,
-     0.02,
-     0.45
+     0.5,
+     0,
+     0
     ],
     "contact": true,
     "hand": "flat",
@@ -69,7 +70,7 @@
      0
     ],
     "pole": [
-     0.6,
+     1,
      -0.3,
      -1
     ],
@@ -77,9 +78,9 @@
    },
    "armR": {
     "pos": [
-     -0.08,
-     0.02,
-     0.45
+     -0.14,
+     0,
+     0
     ],
     "contact": true,
     "hand": "flat",
@@ -94,12 +95,107 @@
      0
     ],
     "pole": [
-     -0.16,
+     -0.28,
+     -0.3,
+     -1
+    ],
+    "curl": 0.2
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.46,
+     -0.5
+    ],
+    "pitch": 55
+   },
+   "spine": {
+    "flex": 28
+   },
+   "neck": {
+    "flex": -15
+   },
+   "legL": {
+    "pos": [
+     0.18,
+     0,
+     0.26
+    ],
+    "anchor": "heel",
+    "pitch": -30,
+    "pole": [
+     0,
+     0.3,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.12,
+     0.16,
+     -0.85
+    ],
+    "anchor": "ankle",
+    "pole": [
+     0,
+     -1,
+     0
+    ],
+    "pitch": 130
+   },
+   "armL": {
+    "pos": [
+     0.5,
+     0,
+     0
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     1,
+     -0.3,
+     -1
+    ],
+    "curl": 0.2
+   },
+   "armR": {
+    "pos": [
+     -0.14,
+     0,
+     0
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -0.28,
      -0.3,
      -1
     ],
     "curl": 0.2
    }
   }
- }
+ },
+ "muscleSide": "L"
 }

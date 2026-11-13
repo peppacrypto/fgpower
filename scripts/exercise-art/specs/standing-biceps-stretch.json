@@ -1,7 +1,7 @@
 {
  "slug": "standing-biceps-stretch",
  "camera": {
-  "az": 150,
+  "az": 80,
   "el": 8
  },
  "muscles": [
@@ -45,8 +45,8 @@
    "armL": {
     "pos": [
      0.06,
-     1.04,
-     -0.36
+     0.92,
+     -0.19
     ],
     "rel": "world",
     "pole": [
@@ -59,7 +59,69 @@
    "armR": {
     "pos": [
      -0.06,
-     1.04,
+     0.92,
+     -0.19
+    ],
+    "rel": "world",
+    "pole": [
+     -0.5,
+     0.2,
+     -1
+    ],
+    "hand": "ball"
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ],
+    "pitch": 0
+   },
+   "spine": {
+    "flex": -3
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 4
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -4
+   },
+   "armL": {
+    "pos": [
+     0.08,
+     1,
+     -0.36
+    ],
+    "rel": "world",
+    "pole": [
+     0.5,
+     0.2,
+     -1
+    ],
+    "hand": "ball"
+   },
+   "armR": {
+    "pos": [
+     -0.08,
+     1,
      -0.36
     ],
     "rel": "world",
@@ -71,5 +133,8 @@
     "hand": "ball"
    }
   }
+ },
+ "tempo": {
+  "lift": "even"
  }
 }

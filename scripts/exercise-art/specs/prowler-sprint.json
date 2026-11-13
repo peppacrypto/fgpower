@@ -489,5 +489,11 @@
   "rom:carry.posture": "a sled sprint leans forward by design",
   "rom:horizontal-pull.stretch": "sprint on fixed handles, arms stay long and braced; it is not a row",
   "rom:horizontal-pull.end": "sprint on fixed handles, not a row"
+ },
+ "tempo": {
+  "lift": "there",
+  "up": 0.55,
+  "down": 0.6,
+  "squeeze": 0.3
  }
 }

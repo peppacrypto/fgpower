@@ -4,6 +4,12 @@
   "az": 35,
   "el": 10
  },
+ "tempo": {
+  "lift": "even",
+  "even": 1.5,
+  "squeeze": 0.05,
+  "stretch": 0.05
+ },
  "muscles": [
   "shoulders",
   "obliques"

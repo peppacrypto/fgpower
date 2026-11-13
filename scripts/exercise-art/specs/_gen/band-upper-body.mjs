@@ -9,8 +9,8 @@ const fk=(f,a,r,e,hand)=>({armL:{fk:{flex:f,abd:a,rot:r,elbow:e},rel:'chest',han
 const both=(p,f,pa,pole,curl)=>({armL:arm(1,p,f,pa,pole,curl),armR:arm(-1,p,f,pa,pole,curl)});
 const feetTube=(rest)=>[{type:'band-tube',hands:true,via:[{foot:'L',edge:'out'},{foot:'L',edge:'in'},{foot:'R',edge:'in'},{foot:'R',edge:'out'}],rest}];
 // pull apart: gallery
-save('band-pull-apart',{az:18,el:8},['posterior-deltoid','rhomboids'],
- [{type:'band',hands:true,a:{hand:'L',r:0.007,axis:[0,1,0]},b:{hand:'R',r:0.007,axis:[0,1,0]},width:0.032,rest:0.42}],{
+save('band-pull-apart',{az:28,el:22},['posterior-deltoid','rhomboids'],
+ [{type:'band',hands:true,a:{hand:'L',r:0.007,axis:[0,1,0]},b:{hand:'R',r:0.007,axis:[0,1,0]},width:0.045,thick:0.006,rest:0.42}],{
  start:{...stand(0),...both([0.19,1.38,0.66],[0,0.02,1],[0,-1,0.02],[0.4,-0.8,-0.4])},
  mid:{...stand(0),...both([0.45,1.38,0.60],[0.42,0.02,0.91],[0,-1,0.02],[0.2,-0.9,-0.4])},
  mid2:{...stand(0),...both([0.65,1.38,0.43],[0.77,0.02,0.64],[0,-1,0.02],[0.2,-0.9,-0.4])},
@@ -46,10 +46,10 @@ save('cross-over-with-bands',{az:40,el:8},['chest'],postBands(-1.2),{
 // bench
 const bench=(z=0.2)=>({root:{pos:[0,0.532,z],pitch:-90},legL:{pos:[0.2,0,0.72],anchor:'sole',yaw:6},legR:{pos:[-0.2,0,0.72],anchor:'sole',yaw:-6}});
 const benchTube=(x)=>[{type:'flat-bench',height:0.44},
- {type:'band-tube',hand:'L',via:[{pos:[0.18,0.04,-0.6]}],rest:1.0},
- {type:'band-tube',hand:'R',via:[{pos:[-0.18,0.04,-0.6]}],rest:1.0}];
+ {type:'band-tube',hand:'L',via:[{pos:[0.3,0.04,-0.15]}],rest:1.0},
+ {type:'band-tube',hand:'R',via:[{pos:[-0.3,0.04,-0.15]}],rest:1.0}];
 save('bench-press-with-bands',{az:40,el:5},['chest','triceps'],benchTube(),{
- start:{...bench(),...both([0.2,0.78,-0.17],[-0.5,0.45,-0.75],[0,0.85,0.5],[1,-0.5,0.2])},
+ start:{...bench(),...both([0.24,0.72,-0.08],[-0.5,0.45,-0.75],[0,0.85,0.5],[1,-0.5,0.2])},
  end:{...bench(),...both([0.2,1.19,-0.12],[-0.5,0.45,-0.75],[0,0.85,0.5],[1,-0.2,0.2])}});
 save('band-skull-crusher',{az:60,el:6},['triceps'],benchTube(),{
  start:{...bench(),...both([0.14,0.9,-0.52],[-0.5,0.45,-0.75],[0,0.85,0.5],[1,0.2,0.2])},

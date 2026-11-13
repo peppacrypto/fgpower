@@ -1,10 +1,12 @@
 {
  "slug": "cuban-press",
  "camera": {
-  "az": 20,
+  "az": 25,
   "el": 6
  },
  "muscles": [
+  "posterior-deltoid",
+  "traps",
   "shoulders"
  ],
  "props": [
@@ -55,10 +57,10 @@
    },
    "armL": {
     "fk": {
-     "flex": 0,
-     "abd": 88,
-     "rot": 90,
-     "elbow": 90
+     "flex": 14,
+     "abd": 4,
+     "rot": 0,
+     "elbow": 6
     },
     "rel": "chest",
     "hand": "grip",
@@ -66,10 +68,10 @@
    },
    "armR": {
     "fk": {
-     "flex": 0,
-     "abd": 88,
-     "rot": 90,
-     "elbow": 90
+     "flex": 14,
+     "abd": 4,
+     "rot": 0,
+     "elbow": 6
     },
     "rel": "chest",
     "hand": "grip",
@@ -112,8 +114,64 @@
    "armL": {
     "fk": {
      "flex": 0,
+     "abd": 85,
+     "rot": -25,
+     "elbow": 125
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "pron": 0.5
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 85,
+     "rot": -25,
+     "elbow": 125
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "pron": 0.5
+   }
+  },
+  "mid2": {
+   "root": {
+    "pos": [
+     0,
+     0.93,
+     0
+    ],
+    "pitch": 2
+   },
+   "spine": {
+    "flex": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.15,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.15,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
      "abd": 88,
-     "rot": -90,
+     "rot": 90,
      "elbow": 90
     },
     "rel": "chest",
@@ -124,7 +182,7 @@
     "fk": {
      "flex": 0,
      "abd": 88,
-     "rot": -90,
+     "rot": 90,
      "elbow": 90
     },
     "rel": "chest",
@@ -132,7 +190,7 @@
     "pron": 0.5
    }
   },
-  "mid2": {
+  "mid3": {
    "root": {
     "pos": [
      0,
@@ -244,5 +302,10 @@
     "pron": 0.5
    }
   }
+ },
+ "tempo": {
+  "lift": "there",
+  "up": 1,
+  "down": 1.8
  }
 }

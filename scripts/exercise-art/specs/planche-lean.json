@@ -1,7 +1,7 @@
 {
  "slug": "planche-lean",
  "camera": {
-  "az": 58,
+  "az": 75,
   "el": 6
  },
  "muscles": [
@@ -13,16 +13,16 @@
    "root": {
     "pos": [
      0,
-     0.415,
-     0.05
+     0.42,
+     0.06
     ],
-    "pitch": 72
+    "pitch": 74
    },
    "spine": {
-    "flex": -6
+    "flex": -8
    },
    "neck": {
-    "flex": -8
+    "flex": -12
    },
    "armL": {
     "pos": [
@@ -32,10 +32,15 @@
     ],
     "hand": "flat",
     "contact": true,
-    "fingers": [
-     1,
+    "pole": [
      0,
-     -0.5
+     0,
+     -1
+    ],
+    "fingers": [
+     0.9,
+     0,
+     -0.6
     ],
     "palm": [
      0,
@@ -52,10 +57,15 @@
     ],
     "hand": "flat",
     "contact": true,
-    "fingers": [
-     -1,
+    "pole": [
      0,
-     -0.5
+     0,
+     -1
+    ],
+    "fingers": [
+     -0.9,
+     0,
+     -0.6
     ],
     "palm": [
      0,
@@ -71,7 +81,7 @@
      -0.74
     ],
     "anchor": "ball",
-    "pitch": 62,
+    "pitch": 72,
     "yaw": 0,
     "toes": 0
    },
@@ -82,7 +92,7 @@
      -0.74
     ],
     "anchor": "ball",
-    "pitch": 62,
+    "pitch": 72,
     "yaw": 0,
     "toes": 0
    }

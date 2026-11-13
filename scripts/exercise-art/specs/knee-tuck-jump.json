@@ -5,7 +5,8 @@
   "el": 6
  },
  "muscles": [
-  "hamstrings"
+  "quadriceps",
+  "abdominals"
  ],
  "floats": true,
  "frames": {
@@ -105,10 +106,10 @@
    "root": {
     "pos": [
      0,
-     1.225,
+     1.12,
      0
     ],
-    "pitch": 5
+    "pitch": 6
    },
    "armL": {
     "pos": [
@@ -161,29 +162,36 @@
    "legL": {
     "pos": [
      0.11,
-     1,
-     0.3
+     0.66,
+     0.2
     ],
     "anchor": "ankle",
     "pole": [
      0.1,
-     0.3,
-     1
+     1,
+     0.6
     ]
    },
    "legR": {
     "pos": [
      -0.11,
-     1,
-     0.3
+     0.66,
+     0.2
     ],
     "anchor": "ankle",
     "pole": [
      -0.1,
-     0.3,
-     1
+     1,
+     0.6
     ]
    }
   }
+ },
+ "tempo": {
+  "lift": "there",
+  "up": 0.45,
+  "down": 0.6,
+  "squeeze": 0.12,
+  "stretch": 0.18
  }
 }

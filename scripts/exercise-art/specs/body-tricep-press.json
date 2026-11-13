@@ -1,12 +1,11 @@
 {
  "slug": "body-tricep-press",
  "camera": {
-  "az": 75,
-  "el": 6
+  "az": 90,
+  "el": 4
  },
  "muscles": [
-  "triceps",
-  "chest"
+  "triceps"
  ],
  "props": [
   {

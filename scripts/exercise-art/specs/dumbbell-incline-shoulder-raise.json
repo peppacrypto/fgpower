@@ -1,11 +1,12 @@
 {
  "slug": "dumbbell-incline-shoulder-raise",
  "camera": {
-  "az": 85,
-  "el": 6
+  "az": 35,
+  "el": 12
  },
  "muscles": [
-  "shoulders"
+  "anterior-deltoid",
+  "chest"
  ],
  "floats": true,
  "props": [
@@ -64,7 +65,7 @@
    "armL": {
     "pos": [
      0.19,
-     1.392,
+     1.3519999999999999,
      -0.3643
     ],
     "contact": true,
@@ -93,7 +94,7 @@
    "armR": {
     "pos": [
      -0.19,
-     1.392,
+     1.3519999999999999,
      -0.3643
     ],
     "contact": true,
@@ -161,7 +162,7 @@
    "armL": {
     "pos": [
      0.19,
-     1.422,
+     1.3969999999999998,
      -0.3643
     ],
     "contact": true,
@@ -190,7 +191,7 @@
    "armR": {
     "pos": [
      -0.19,
-     1.422,
+     1.3969999999999998,
      -0.3643
     ],
     "contact": true,

@@ -15,11 +15,11 @@ save('face-pull',{az:55,el:6},['posterior-deltoid','rhomboids'],front('rope',1.7
  end:{...st(-2),...both([0.15,1.55,0.3],[0.2,0.5,0.87],[-0.7,-0.7,0.2],[0.8,0.1,-0.2])}},{});
 // shrugs
 const sh=(e,y)=>({...st(0),...both([0.17,y,0.2],[0,-1,0],[0,0,-1],[0.3,-0.4,-1],{scap:{elev:e}})});
-save('cable-shrugs',{az:40,el:6},['traps'],front('straight-bar',0.2),{start:sh(0,0.8),end:sh(1,0.86)});
+save('cable-shrugs',{az:40,el:6},['traps'],front('straight-bar',0.2),{start:sh(0,0.78),end:sh(2.5,0.88)},{tempo:{lift:'there',up:1.0,down:1.8,squeeze:0.35}});
 // rear delt fly
 const cx=[{type:'cable-crossover',pos:[0,0,0.45],hands:true,pulleyY:2,cross:true,attachment:'d-handle'}];
 const rd=(fl,ab,el)=>({...st(18),armL:{fk:{flex:fl,abd:ab,rot:0,elbow:el},rel:'chest',hand:'grip',pron:1},armR:{fk:{flex:fl,abd:ab,rot:0,elbow:el},rel:'chest',hand:'grip',pron:1}});
-save('cable-rear-delt-fly',{az:35,el:8},['posterior-deltoid','rhomboids'],cx,{
+save('cable-rear-delt-fly',{az:10,el:8},['posterior-deltoid','rhomboids'],cx,{
  start:rd(75,-8,10),end:rd(5,82,10)});
 // seated lateral raise: seated upright, side-on to a low pulley, handle in the far (left) hand, cable across the front
 const seat=(fl,abd)=>({root:{pos:[0,0.55,-0.05],pitch:3},spine:{flex:2},neck:{flex:0},
@@ -37,7 +37,7 @@ save('front-cable-raise',{az:60,el:6},['anterior-deltoid'],[{type:'cable-tower',
 const dr=(fl,ab,el)=>({...st(0,0),armL:{fk:{flex:fl,abd:ab,rot:0,elbow:el},rel:'chest',hand:'grip',pron:1},
  armR:{pos:[-0.24,0.17,0.03],rel:'pelvis',pole:[-1,-0.15,-0.6],fingers:[0.3,-0.1,0.9],palm:[1,0,-0.1],curl:0.3,hand:'flat',contact:true}});
 save('standing-low-pulley-deltoid-raise',{az:35,el:6},['lateral-deltoid','anterior-deltoid'],[{type:'cable-tower',pos:[0.75,0,0],yaw:-90,pulleyY:0.2,hand:'L',attachment:'d-handle'}],{
- start:dr(20,-12,14),mid:dr(40,40,14),end:dr(35,88,14)},{muscleSide:'L'});
+ start:dr(32,-14,8),mid:dr(40,40,14),end:dr(35,88,14)},{muscleSide:'L'});
 // bent-over low pulley side lateral
 const bo=(fl,ab,el)=>({root:{pos:[0,0.925,-0.15],pitch:75},spine:{flex:0},neck:{flex:-30},
  legL:{pos:[0.13,0,0],anchor:'sole',pole:[0,1,1]},legR:{pos:[-0.13,0,0],anchor:'sole',pole:[0,1,1]},
@@ -48,7 +48,7 @@ save('bent-over-low-pulley-side-lateral',{az:50,el:8},['posterior-deltoid','late
 // presses (fk arms: elbows out under the bar, forearms vertical, locking out overhead)
 const pa=(abd,fl,el,rot)=>({fk:{flex:fl,abd,rot,elbow:el},rel:'chest',hand:'grip',pron:0});
 const pf=(l,r)=>({...st(0,0),armL:pa(...l),armR:pa(...r)});
-const lo=[80,15,100,0],mi=[125,10,50,0],hi=[168,5,6,0];
+const lo=[62,12,118,0],mi=[118,10,55,0],hi=[168,5,6,0];
 const pr=[{type:'cable-crossover',pos:[0,0,0.6],hands:true,pulleyY:0.2,attachment:'d-handle',span:3.2}];
 save('cable-shoulder-press',{az:30,el:6},['shoulders'],pr,{start:pf(lo,lo),mid:pf(mi,mi),end:pf(hi,hi)});
 save('alternating-cable-shoulder-press',{az:30,el:6},['shoulders'],pr,{start:pf(hi,lo),mid:pf(mi,mi),end:pf(lo,hi)});

@@ -1,8 +1,8 @@
 {
  "slug": "iliotibial-tract-smr",
  "camera": {
-  "az": 10,
-  "el": 22
+  "az": 50,
+  "el": 12
  },
  "muscles": [
   "abductors"

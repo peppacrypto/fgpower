@@ -1,8 +1,8 @@
 {
  "slug": "shoulder-raise",
  "camera": {
-  "az": 35,
-  "el": 6
+  "az": 25,
+  "el": 4
  },
  "muscles": [
   "shoulders"
@@ -97,7 +97,7 @@
     },
     "rel": "chest",
     "scap": {
-     "elev": 14,
+     "elev": 26,
      "prot": 0
     }
    },
@@ -110,10 +110,16 @@
     },
     "rel": "chest",
     "scap": {
-     "elev": 14,
+     "elev": 26,
      "prot": 0
     }
    }
   }
+ },
+ "tempo": {
+  "lift": "there",
+  "up": 0.8,
+  "down": 1.9,
+  "squeeze": 0.5
  }
 }

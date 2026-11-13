@@ -24,16 +24,16 @@
    "root": {
     "pos": [
      0,
-     0.52,
+     0.55,
      -0.25
     ],
-    "pitch": 62
+    "pitch": 60
    },
    "spine": {
-    "flex": 4
+    "flex": 3
    },
    "neck": {
-    "flex": -25
+    "flex": -16
    },
    "armL": {
     "pos": [
@@ -530,5 +530,10 @@
     ]
    }
   }
+ },
+ "tempo": {
+  "lift": "there",
+  "up": 0.7,
+  "down": 1.3
  }
 }

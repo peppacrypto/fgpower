@@ -1,8 +1,8 @@
 {
  "slug": "smith-machine-reverse-calf-raises",
  "camera": {
-  "az": 60,
-  "el": 8
+  "az": 90,
+  "el": 6
  },
  "muscles": [
   "calves"
@@ -104,10 +104,10 @@
     "pos": [
      0.11,
      0.112,
-     -0.03
+     0.02
     ],
     "anchor": "heel",
-    "pitch": -18,
+    "pitch": -24,
     "pole": [
      0.05,
      0,
@@ -118,10 +118,10 @@
     "pos": [
      -0.11,
      0.112,
-     -0.03
+     0.02
     ],
     "anchor": "heel",
-    "pitch": -18,
+    "pitch": -24,
     "pole": [
      -0.05,
      0,
@@ -206,10 +206,10 @@
     "pos": [
      0.11,
      0.112,
-     -0.03
+     0.02
     ],
     "anchor": "heel",
-    "pitch": 18,
+    "pitch": 16,
     "pole": [
      0.05,
      0,
@@ -220,10 +220,10 @@
     "pos": [
      -0.11,
      0.112,
-     -0.03
+     0.02
     ],
     "anchor": "heel",
-    "pitch": 18,
+    "pitch": 16,
     "pole": [
      -0.05,
      0,

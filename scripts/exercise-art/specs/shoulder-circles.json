@@ -1,8 +1,8 @@
 {
  "slug": "shoulder-circles",
  "camera": {
-  "az": 40,
-  "el": 8
+  "az": 25,
+  "el": 6
  },
  "muscles": [
   "shoulders"
@@ -45,7 +45,7 @@
     "rel": "chest",
     "scap": {
      "elev": 0,
-     "prot": 10
+     "prot": 16
     }
    },
    "armR": {
@@ -58,7 +58,7 @@
     "rel": "chest",
     "scap": {
      "elev": 0,
-     "prot": 10
+     "prot": 16
     }
    }
   },
@@ -97,8 +97,8 @@
     },
     "rel": "chest",
     "scap": {
-     "elev": 10,
-     "prot": 0
+     "elev": 19.05255888325765,
+     "prot": 8.000000000000002
     }
    },
    "armR": {
@@ -110,8 +110,8 @@
     },
     "rel": "chest",
     "scap": {
-     "elev": 10,
-     "prot": 0
+     "elev": 19.05255888325765,
+     "prot": 8.000000000000002
     }
    }
   },
@@ -150,8 +150,8 @@
     },
     "rel": "chest",
     "scap": {
-     "elev": 0,
-     "prot": -10
+     "elev": 19.052558883257653,
+     "prot": -7.9999999999999964
     }
    },
    "armR": {
@@ -163,8 +163,8 @@
     },
     "rel": "chest",
     "scap": {
-     "elev": 0,
-     "prot": -10
+     "elev": 19.052558883257653,
+     "prot": -7.9999999999999964
     }
    }
   },
@@ -203,8 +203,8 @@
     },
     "rel": "chest",
     "scap": {
-     "elev": -5,
-     "prot": 0
+     "elev": 2.6942229581241772e-15,
+     "prot": -16
     }
    },
    "armR": {
@@ -216,10 +216,174 @@
     },
     "rel": "chest",
     "scap": {
-     "elev": -5,
-     "prot": 0
+     "elev": 2.6942229581241772e-15,
+     "prot": -16
+    }
+   }
+  },
+  "mid4": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 8,
+     "rot": 0,
+     "elbow": 5
+    },
+    "rel": "chest",
+    "scap": {
+     "elev": -8.660254037844386,
+     "prot": -8.000000000000007
+    }
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 8,
+     "rot": 0,
+     "elbow": 5
+    },
+    "rel": "chest",
+    "scap": {
+     "elev": -8.660254037844386,
+     "prot": -8.000000000000007
+    }
+   }
+  },
+  "mid5": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 8,
+     "rot": 0,
+     "elbow": 5
+    },
+    "rel": "chest",
+    "scap": {
+     "elev": -8.660254037844386,
+     "prot": 8.000000000000002
+    }
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 8,
+     "rot": 0,
+     "elbow": 5
+    },
+    "rel": "chest",
+    "scap": {
+     "elev": -8.660254037844386,
+     "prot": 8.000000000000002
+    }
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 8,
+     "rot": 0,
+     "elbow": 5
+    },
+    "rel": "chest",
+    "scap": {
+     "elev": -2.4492935982947065e-15,
+     "prot": 16
+    }
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 8,
+     "rot": 0,
+     "elbow": 5
+    },
+    "rel": "chest",
+    "scap": {
+     "elev": -2.4492935982947065e-15,
+     "prot": 16
     }
    }
   }
+ },
+ "tempo": {
+  "lift": "even",
+  "even": 1.8,
+  "hold": 0
  }
 }

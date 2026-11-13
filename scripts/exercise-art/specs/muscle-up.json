@@ -4,6 +4,11 @@
   "az": 70,
   "el": 6
  },
+ "tempo": {
+  "lift": "there",
+  "up": 1.1,
+  "down": 2.6
+ },
  "muscles": [
   "lats",
   "triceps",
@@ -212,7 +217,7 @@
     "pitch": -15
    },
    "neck": {
-    "flex": -9
+    "flex": -5
    },
    "armL": {
     "pos": [
@@ -299,7 +304,7 @@
     "pitch": -8
    },
    "neck": {
-    "flex": -14
+    "flex": -6
    },
    "armL": {
     "pos": [
@@ -473,7 +478,7 @@
     "pitch": 25
    },
    "neck": {
-    "flex": 6
+    "flex": -2
    },
    "armL": {
     "pos": [

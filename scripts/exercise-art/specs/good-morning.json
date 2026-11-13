@@ -1,7 +1,7 @@
 {
  "slug": "good-morning",
  "camera": {
-  "az": 100,
+  "az": 90,
   "el": 8
  },
  "muscles": [
@@ -118,10 +118,10 @@
    "root": {
     "pos": [
      0,
-     0.8,
-     -0.3
+     0.82,
+     -0.36
     ],
-    "pitch": 75
+    "pitch": 85
    },
    "neck": {
     "flex": -30

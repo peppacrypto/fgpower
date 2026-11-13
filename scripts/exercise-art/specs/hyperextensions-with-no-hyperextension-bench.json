@@ -8,6 +8,11 @@
   "spinal-erectors"
  ],
  "floats": true,
+ "tempo": {
+  "lift": "there",
+  "up": 1,
+  "down": 1.8
+ },
  "props": [
   {
    "type": "flat-bench",
@@ -16,6 +21,17 @@
     0,
     0,
     0
+   ]
+  },
+  {
+   "type": "barbell",
+   "plates": [
+    20
+   ],
+   "pos": [
+    0,
+    0.97,
+    -0.12
    ]
   }
  ],
@@ -27,7 +43,7 @@
      0.98,
      0.64
     ],
-    "pitch": 150
+    "pitch": 140
    },
    "neck": {
     "flex": 0

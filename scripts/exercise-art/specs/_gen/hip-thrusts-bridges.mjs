@@ -32,14 +32,14 @@ W('pelvic-tilt-into-bridge', { camera:{az:70,el:10}, muscles:['spinal-erectors',
            end:pt({pos:[0,0.335,-0.04],pitch:-118},34,{flex:0,weights:[0,0,0,0.4,0.6]}) } });
 // hip lift with band: gallery band-hips
 const bh = JSON.parse(fs.readFileSync(new URL('../_gallery/band-hips.json', import.meta.url)));
-for (const p of bh.props) if (p.type==='dumbbell') { p.pos[0]*=1.5; } else if (p.points) { p.points[0][0]*=1.5; p.points[4][0]*=1.5; }
+for (const p of bh.props) if (p.type==='dumbbell') { p.pos[0]*=1.75; } else if (p.points) { p.points[0][0]*=1.75; p.points[4][0]*=1.75; p.rest=1.3; p.width=0.07; p.thick=0.005; }
 for (const f of Object.values(bh.frames)) { f.neck={flex:8}; for (const a of ['armL','armR']) f[a].fk.abd=30; }
 W('hip-lift-with-band', { ...bh, slug:undefined });
 // physioball hip bridge: upper back on ball
-const pb = (r, nk) => ({ root:r, neck:{flex:nk}, armL:{fk:{flex:0,abd:22,elbow:4},curl:0.2}, armR:{fk:{flex:0,abd:22,elbow:4},curl:0.2}, ...legs(0.18,0.42,0.2) });
+const pb = (r, nk) => ({ root:r, neck:{flex:nk}, armL:{pos:[0.34,0,-0.25],contact:true,fingers:[0.08,0,1],palm:[0,-1,0],pole:[1,0.5,-0.2],curl:-0.3}, armR:{pos:[-0.34,0,-0.25],contact:true,fingers:[-0.08,0,1],palm:[0,-1,0],pole:[-1,0.5,-0.2],curl:-0.3}, ...legs(0.18,0.42,0.2) });
 W('physioball-hip-bridge', { camera:{az:68,el:8}, muscles:['glutes','hamstrings'],
   props:[{type:'stability-ball', pos:[0,0,-0.5], radius:0.325, load:1}],
-  frames:{ start:pb({pos:[0,0.25,-0.1],pitch:-60},10), end:pb({pos:[0,0.52,-0.05],pitch:-92},14) } });
+  frames:{ start:pb({pos:[0,0.25,-0.1],pitch:-60},24), end:pb({pos:[0,0.52,-0.05],pitch:-92},28) } });
 const ld=n=>JSON.parse(fs.readFileSync(new URL(`../${n}.json`, import.meta.url)));
 const sv=(n,o)=>fs.writeFileSync(new URL(`../${n}.json`, import.meta.url), JSON.stringify(o,null,1));
 { const bl=ld('butt-lift-bridge'); bl.frames.start.neck={flex:14}; bl.frames.end.neck={flex:38};

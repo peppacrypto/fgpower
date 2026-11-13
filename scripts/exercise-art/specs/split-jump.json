@@ -23,20 +23,20 @@
    },
    "armL": {
     "fk": {
-     "flex": 15,
-     "abd": 12,
+     "flex": -35,
+     "abd": 6,
      "rot": 0,
-     "elbow": 40
+     "elbow": 25
     },
     "rel": "chest",
     "curl": 0.3
    },
    "armR": {
     "fk": {
-     "flex": 15,
-     "abd": 12,
+     "flex": 55,
+     "abd": 6,
      "rot": 0,
-     "elbow": 40
+     "elbow": 50
     },
     "rel": "chest",
     "curl": 0.3
@@ -80,32 +80,31 @@
    },
    "armL": {
     "fk": {
-     "flex": 50,
-     "abd": 12,
+     "flex": 140,
+     "abd": 8,
      "rot": 0,
-     "elbow": 60
+     "elbow": 15
     },
     "rel": "chest",
     "curl": 0.3
    },
    "armR": {
     "fk": {
-     "flex": 50,
-     "abd": 12,
+     "flex": 140,
+     "abd": 8,
      "rot": 0,
-     "elbow": 60
+     "elbow": 15
     },
     "rel": "chest",
     "curl": 0.3
    },
    "legL": {
     "pos": [
-     0.1,
-     0.45,
-     0.05
+     0.11,
+     0.5,
+     0.34
     ],
     "anchor": "ankle",
-    "pitch": 20,
     "pole": [
      0.1,
      0,
@@ -114,15 +113,15 @@
    },
    "legR": {
     "pos": [
-     -0.1,
-     0.45,
-     0.05
+     -0.11,
+     0.5,
+     -0.42
     ],
-    "anchor": "ankle",
-    "pitch": 20,
+    "anchor": "ball",
+    "pitch": 50,
     "pole": [
      -0.1,
-     0,
+     -0.3,
      1
     ]
    }
@@ -141,20 +140,20 @@
    },
    "armL": {
     "fk": {
-     "flex": 15,
-     "abd": 12,
+     "flex": -35,
+     "abd": 6,
      "rot": 0,
-     "elbow": 40
+     "elbow": 25
     },
     "rel": "chest",
     "curl": 0.3
    },
    "armR": {
     "fk": {
-     "flex": 15,
-     "abd": 12,
+     "flex": 55,
+     "abd": 6,
      "rot": 0,
-     "elbow": 40
+     "elbow": 50
     },
     "rel": "chest",
     "curl": 0.3
@@ -187,5 +186,12 @@
     ]
    }
   }
+ },
+ "tempo": {
+  "lift": "there",
+  "up": 0.45,
+  "down": 0.6,
+  "squeeze": 0.12,
+  "stretch": 0.18
  }
 }

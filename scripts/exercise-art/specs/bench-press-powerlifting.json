@@ -211,5 +211,9 @@
     "curl": 0.82
    }
   }
+ },
+ "tempo": {
+  "lift": "there",
+  "stretch": 0.45
  }
 }

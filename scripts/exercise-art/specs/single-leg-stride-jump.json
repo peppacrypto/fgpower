@@ -7,6 +7,11 @@
   "glutes",
   "calves"
  ],
+ "tempo": {
+  "lift": "there",
+  "up": 0.4,
+  "down": 0.45
+ },
  "camera": {
   "az": 50,
   "el": 6
@@ -155,18 +160,18 @@
    },
    "armL": {
     "fk": {
-     "flex": 170,
+     "flex": 60,
      "abd": 26,
-     "elbow": 10
+     "elbow": 90
     },
     "rel": "chest",
     "curl": 0.5
    },
    "armR": {
     "fk": {
-     "flex": 170,
+     "flex": -25,
      "abd": 26,
-     "elbow": 10
+     "elbow": 90
     },
     "rel": "chest",
     "curl": 0.5

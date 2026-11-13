@@ -222,5 +222,11 @@
     ]
    }
   }
+ },
+ "tempo": {
+  "lift": "there",
+  "up": 0.7,
+  "down": 1.3,
+  "maxLoop": 6
  }
 }

@@ -37,8 +37,8 @@ const sleg=(s,x,z,pitch=-70,y=0.08)=>({pos:[s*x,y,z],pitch,pole:[s*0.1,1,0.1]});
 const mat=[{type:'floor-mat'}];
 const seated=(roll,pitch,y)=>({...sroot(16,12),legL:{...sleg(1,0.11,0.8,pitch,y),roll},legR:sleg(-1,0.11,0.81),
  armL:grip(1,[0.12,0.34,0.42]),armR:grip(-1,[0.12,0.34,0.42])});
-save('peroneals-stretch',{az:25,el:8},['calves'],[...mat,...STRAP],{start:seated(-25,-72,0.2)},{muscleSide:'L'});
-save('posterior-tibialis-stretch',{az:25,el:8},['calves'],[...mat,...STRAP],{start:seated(25,-72,0.2)},{muscleSide:'L'});
+save('peroneals-stretch',{az:25,el:8},['calves'],[...mat,...STRAP],{start:seated(-12,-72,0.2),end:{...seated(-34,-72,0.2),...sroot(22,14),armL:grip(1,[0.12,0.34,0.36]),armR:grip(-1,[0.12,0.34,0.36])}},{muscleSide:'L'});
+save('posterior-tibialis-stretch',{az:25,el:8},['calves'],[...mat,...STRAP],{start:seated(12,-72,0.2),end:{...seated(34,-72,0.2),...sroot(22,14),armL:grip(1,[0.12,0.34,0.36]),armR:grip(-1,[0.12,0.34,0.36])}},{muscleSide:'L'});
 save('seated-hamstring-and-calf-stretch',{az:80,el:8},['hamstrings','calves'],[...mat,...STRAP],{start:{...sroot(20,12),legL:sleg(1,0.11,0.8,-82),legR:sleg(-1,0.11,0.81),
  armL:grip(1,[0.14,0.38,0.5]),armR:grip(-1,[0.14,0.38,0.5])}},{muscleSide:'L'});
 save('seated-calf-stretch',{az:80,el:8},['calves'],[...mat,{type:'stretch-strap',foot:'L',hand:'L'}],{start:{...sroot(8,6),legL:sleg(1,0.11,0.8,-82),
@@ -49,6 +49,6 @@ save('standing-hamstring-and-calf-stretch',{az:90,el:5},['hamstrings','calves'],
  root:{pos:[0,0.83,0.0],pitch:60},spine:{flex:15},neck:{flex:-10},
  legL:{pos:[0.11,0,0.44],anchor:'heel',pitch:-35,pole:[0,0.5,1]},
  legR:{pos:[-0.11,0,-0.35],anchor:'sole',pitch:0,pole:[0,0.1,1]},
- armL:{...grip(1,[0.14,0.55,0.55]),fingers:[0,-0.5,0.85]},armR:{...grip(-1,[0.14,0.55,0.55]),fingers:[0,-0.5,0.85]}}},{muscleSide:'L'});
+ armL:{...grip(1,[0.14,0.55,0.5]),fingers:[0,-0.5,0.85]},armR:{...grip(-1,[0.14,0.55,0.5]),fingers:[0,-0.5,0.85]}}},{muscleSide:'L'});
 for(const [k,v] of Object.entries(out))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
 console.log(Object.keys(out).join(' '));

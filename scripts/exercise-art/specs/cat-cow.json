@@ -18,7 +18,7 @@
     "pitch": 81
    },
    "neck": {
-    "flex": -35
+    "flex": -25
    },
    "armL": {
     "pos": [
@@ -107,10 +107,10 @@
      0.5,
      0
     ],
-    "pitch": 90
+    "pitch": 84
    },
    "neck": {
-    "flex": 40
+    "flex": 18
    },
    "armL": {
     "pos": [
@@ -189,7 +189,7 @@
     ]
    },
    "spine": {
-    "flex": 30
+    "flex": 20
    }
   },
   "end": {
@@ -202,7 +202,7 @@
     "pitch": 81
    },
    "neck": {
-    "flex": -35
+    "flex": -25
    },
    "armL": {
     "pos": [
@@ -284,5 +284,8 @@
     "flex": -4
    }
   }
+ },
+ "tempo": {
+  "lift": "even"
  }
 }

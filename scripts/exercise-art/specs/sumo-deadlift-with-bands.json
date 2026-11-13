@@ -24,7 +24,8 @@
    "hands": true,
    "to": "feet",
    "x": 0.3,
-   "width": 0.044,
+   "width": 0.08,
+   "thick": 0.012,
    "rest": 0.42
   }
  ],

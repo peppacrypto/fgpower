@@ -10,17 +10,13 @@
  "props": [
   {
    "type": "stability-ball",
+   "pos": [
+    0,
+    0,
+    0
+   ],
    "radius": 0.325,
-   "load": 0.8,
-   "follow": {
-    "on": [
-     "upperleg01",
-     "spine01"
-    ],
-    "side": "both",
-    "clear": 0.12,
-    "at": 0.45
-   }
+   "load": 0.8
   }
  ],
  "frames": {
@@ -28,13 +24,13 @@
    "root": {
     "pos": [
      0,
-     0.6,
-     0.05
+     0.66,
+     -0.1
     ],
-    "pitch": -100
+    "pitch": -96
    },
    "spine": {
-    "flex": -40
+    "flex": -12
    },
    "neck": {
     "flex": -10
@@ -93,7 +89,7 @@
     "pos": [
      0.2,
      0,
-     0.62
+     0.57
     ],
     "anchor": "sole",
     "yaw": 0,
@@ -108,7 +104,7 @@
     "pos": [
      -0.2,
      0,
-     0.62
+     0.57
     ],
     "anchor": "sole",
     "yaw": 0,
@@ -124,16 +120,16 @@
    "root": {
     "pos": [
      0,
-     0.6,
-     0.05
+     0.66,
+     -0.1
     ],
-    "pitch": -100
+    "pitch": -66
    },
    "spine": {
-    "flex": 10
+    "flex": 28
    },
    "neck": {
-    "flex": 25
+    "flex": 18
    },
    "armL": {
     "pos": [
@@ -189,7 +185,7 @@
     "pos": [
      0.2,
      0,
-     0.62
+     0.57
     ],
     "anchor": "sole",
     "yaw": 0,
@@ -204,7 +200,7 @@
     "pos": [
      -0.2,
      0,
-     0.62
+     0.57
     ],
     "anchor": "sole",
     "yaw": 0,

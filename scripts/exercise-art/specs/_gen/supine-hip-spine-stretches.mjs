@@ -21,10 +21,10 @@ const bentUp=(s,x=0.11)=>leg(s,[x,0.3,0.28],[0.1,1,-0.4],{sa:-30});
 const RL=+(process.env.RL||-10);const FP=+(process.env.FP||0);
 const twist=(arm)=>({...root({roll:-38}),spine:{twist:-5},neck:{twist:-40,flex:0},
  legL:leg(1,[-0.38,0.09,0.42],[-0.6,1,0],{roll:RL}),legR:{fk:{flex:0,abd:0,rot:0,knee:0},rel:'pelvis',foot:{pitch:FP}},...arm});
-save('reclined-spinal-twist',{az:40,el:42},['spinal-erectors','obliques'],{
+save('reclined-spinal-twist',{az:20,el:55},['spinal-erectors','obliques'],{
  start:{...root(),neck:{flex:0},legL:bentUp(1),legR:{fk:{flex:0,abd:0,rot:0,knee:0},rel:'pelvis',foot:{pitch:FP}},armL:T(1),armR:T(-1)},
  end:twist({armL:T(1),armR:T(-1)})});
-const KF=+(process.env.KF||112),KA=+(process.env.KA||-30),KK=+(process.env.KK||105),KR=+(process.env.KR||-25),RS=+(process.env.RS||-1),KH=+(process.env.KH||-0.08);
+const KF=+(process.env.KF||100),KA=+(process.env.KA||-50),KK=+(process.env.KK||105),KR=+(process.env.KR||-35),RS=+(process.env.RS||-1),KH=+(process.env.KH||-0.08);
 const K0F=+(process.env.K0F||120),K0A=+(process.env.K0A||-10),K0R=+(process.env.K0R||-10);
 const kneePt=(f,a,roll)=>{const c=Math.cos(a*D),d=[0.11+0.432*Math.sin(a*D)*Math.cos(f*D),0.432*Math.sin(f*D),0.432*Math.cos(f*D)*c];
  const r=RS*roll*D,x=d[0]-0.11+0.11-0,y=d[1];const X=0.11*0+ (d[0])*Math.cos(r)-(y)*Math.sin(r),Y=0.1+(d[0])*Math.sin(r)+(y)*Math.cos(r);return [X,Y,d[2]];};
@@ -49,40 +49,49 @@ const ank=(s)=>{const f=(HFL+(-90-HPI))*D,a=HAB*D,g=(HFL+(-90-HPI)-HKN)*D;
  const t=V(f),h=V(g);return [s*0.11+0.432*t[0]+0.428*h[0],HYY+0.432*t[1]+0.428*h[1],0.432*t[2]+0.428*h[2]];};
 const AX=+(process.env.AX||0.422),AY=+(process.env.AY||0.511),AZ=+(process.env.AZ||0.139),SA=+(process.env.SA||70),KP=JSON.parse(process.env.KP||'[0.435,1.347,-0.595]');
 const APv=JSON.parse(process.env.APV||'[0.176,-1.055,-1.424]');const APO=(s)=>[s*APv[0],APv[1],APv[2]];const HFGv=JSON.parse(process.env.HFGV||'[1.049,0.575,0.55]');const HFG=(s)=>[s*HFGv[0],HFGv[1],HFGv[2]];
-const hb=(roll)=>({root:{pos:[0,HYY,+(process.env.RZ||0.096)],pitch:HPI,...(roll?{roll}:{})},neck:{flex:6},spine:{flex:+(process.env.SPF||22.515)},
- legL:leg(1,[AX,AY,AZ],KP,{sa:SA}),legR:leg(-1,[AX,AY,AZ],KP,{sa:SA}),
- armL:{pos:[AX+HHO,AY,AZ],hand:'grip',grip:0.02,fingers:HFG(1),palm:[-1,0,0],curl:0.8,pole:APO(1)},
- armR:{pos:[-AX-HHO,AY,AZ],hand:'grip',grip:0.02,fingers:HFG(-1),palm:[1,0,0],curl:0.8,pole:APO(-1)}});
-save('happy-baby',{az:30,el:30},['adductors'],{start:hb(0),end:hb(+(process.env.HR||2.74))});
+const hb=(roll,ax=AX,ay=AY,az=AZ)=>({root:{pos:[0,HYY,+(process.env.RZ||0.096)],pitch:HPI,...(roll?{roll}:{})},neck:{flex:6},spine:{flex:+(process.env.SPF||22.515)},
+ legL:leg(1,[ax,ay,az],KP,{sa:SA}),legR:leg(-1,[ax,ay,az],KP,{sa:SA}),
+ armL:{pos:[ax+HHO,ay,az],hand:'grip',grip:0.02,fingers:HFG(1),palm:[-1,0,0],curl:0.8,pole:APO(1)},
+ armR:{pos:[-ax-HHO,ay,az],hand:'grip',grip:0.02,fingers:HFG(-1),palm:[1,0,0],curl:0.8,pole:APO(-1)}});
+save('happy-baby',{az:+(process.env.HAZ||150),el:30},['adductors'],{start:hb(0,+(process.env.SAX||0.22),+(process.env.SAY||0.62),+(process.env.SAZ||0.1)),end:hb(+(process.env.HR||2.74))});
 const HX=+(process.env.HX||0.11),SD=+(process.env.SD||0.12),AL=+(process.env.AL||0.07);
 // leg bent at hip flex f and knee k (supine, pelvis frame); returns shin-axis hold point for the hand
 const shinPt=(s,f,k,abd=0)=>{const x=s*(HX+0.0);const kn=[x,0.1+0.432*Math.sin(f*D),0.432*Math.cos(f*D)];const a=(f-k)*D;
  return [s*(Math.abs(kn[0])+AL),kn[1]+SD*Math.sin(a),kn[2]+SD*Math.cos(a)];};
 const FG=JSON.parse(process.env.FG||'[0,1,-0.3]'),PA=JSON.parse(process.env.PA||'[-1,0,0]'),PL=JSON.parse(process.env.PL||'[0.8,-0.3,0.5]');
 const HC=+(process.env.HC||0);const hug=(s,f,k,cross)=>{const q=shinPt(s,f,k);if(cross){q[0]=+(process.env.CX||0.11);q[1]+=+(process.env.CY||0.05);q[2]+=+(process.env.CZ||0.1);} return {pos:q,contact:true,hand:'flat',fingers:[s*FG[0],FG[1],FG[2]],palm:[s*PA[0],PA[1],PA[2]],curl:0.3,pole:[s*PL[0],PL[1],PL[2]]};};
+const TT=+(process.env.TT||0.3);const tp=(x,f,dy=0)=>[x,0.1+TT*Math.sin(f*D)+0.035+dy,TT*Math.cos(f*D)];
 const HF=+(process.env.HF||112),HK=+(process.env.HK||120),HF2=+(process.env.HF2||122);
 save('hug-knees-to-chest',{az:62,el:14},['spinal-erectors','glutes'],{
- start:{...root(),neck:{flex:8},legL:FK(HF,0,0,HK,0),legR:FK(HF,0,0,HK,0),armL:hug(1,HF,HK),armR:hug(-1,HF,HK)},
+ start:{...root(),neck:{flex:2},legL:FK(+(process.env.HS||90),0,0,105,0),legR:FK(+(process.env.HS||90),0,0,105,0),armL:{...hug(1,HF,HK),pos:tp(0.2,+(process.env.HS||90),+(process.env.HD||0.03))},armR:{...hug(-1,HF,HK),pos:tp(-0.2,+(process.env.HS||90),+(process.env.HD||0.03))}},
  end:{...root(),neck:{flex:6},legL:FK(HF2,0,0,HK,0),legR:FK(HF2,0,0,HK,0),armL:hug(1,HF2,HK),armR:hug(-1,HF2,HK)}});
 const HF1=+(process.env.HF1||115);
 save('one-knee-to-chest',{az:62,el:14},['glutes'],{
- start:{...root(),neck:{flex:4},legL:FK(HF1,0,0,HK,0),legR:FK(0),armL:hug(1,HF1,HK),armR:hug(-1,HF1,HK,1)},
- end:{...root(),neck:{flex:6},legL:FK(HF2,0,0,HK,0),legR:FK(0),armL:hug(1,HF2,HK),armR:hug(-1,HF2,HK,1)}});
+ start:{...root(),neck:{flex:2},legL:FK(+(process.env.HS||90),0,0,105,0),legR:FK(0),armL:{...hug(1,HF1,HK),pos:tp(0.2,+(process.env.HS||90),+(process.env.HD||0.03))},armR:{...hug(-1,HF1,HK,1),pos:tp(-0.04,+(process.env.HS||90),0.03)}},
+ end:{...root(),neck:{flex:6},legL:FK(HF2,0,0,HK,0),legR:FK(0),armL:hug(1,HF2,HK),armR:{...hug(-1,HF2,HK,1),pos:tp(-0.04,HF2,0.03)}}});
 const AOK=JSON.parse(process.env.AOK||'[-0.13,0.262,0.333,-0.124,1.284,-0.764,0.123,0.828,0.176,0.486,0.275,-0.529,0.149,0.468,-0.257,0.391,0.543,-0.351,0.514,-0.843,-0.053,0.51,-0.574,0.118,0.043,-0.002,-0.177,-0.058,-0.133,0.139]');
 const aok=(d)=>({...root(),neck:{flex:+(process.env.NF||2)+4*d},legR:leg(-1,[AOK[0],AOK[1]+AOK[24]*d,AOK[2]+AOK[25]*d],AOK.slice(3,6),{sa:AOK[28]||0,roll:AOK[29]||0}),legL:leg(1,[AOK[6],AOK[7]+AOK[24]*d,AOK[8]+AOK[25]*d],AOK.slice(9,12),{sa:AOK[26]||0,roll:AOK[27]||0}),
   armR:hold(-1,[AOK[12],AOK[13]+AOK[24]*d,AOK[14]+AOK[25]*d],[1,0,0],[0,1,0.3],0.035,AOK.slice(18,21)),armL:hold(1,[AOK[15],AOK[16]+AOK[24]*d,AOK[17]+AOK[25]*d],[1,0,0],[0,1,0.3],0.035,AOK.slice(21,24))});
-save('ankle-on-the-knee',{az:50,el:20},['glutes'],{start:aok(0),end:aok(1)});
-const WA=+(process.env.WA||-30),WF=+(process.env.WF||85),WR=+(process.env.WR||-25);
-save('windmills',{az:30,el:40},['abductors'],{
+const NF=JSON.parse(process.env.NFP||'[-0.11,0.5,-0.04]'),LA=JSON.parse(process.env.LAP||'[-0.09,0.43,-0.14]'),LP=JSON.parse(process.env.LPO||'[1,0.3,-0.2]');
+const hh=(s,q,fg)=>({pos:q,contact:true,hand:'flat',fingers:fg,palm:[s*-1,0,0],curl:0.5,pole:[s*0.6,-0.5,-0.3]});
+const ak=(d)=>{const f=85+33*d,k=105+30*d;const rk=[-0.11,0.1+0.432*Math.sin(f*D),0.432*Math.cos(f*D)];const ra=[-0.11,rk[1]+0.428*Math.sin((f-k)*D),rk[2]+0.428*Math.cos((f-k)*D)];
+ const la=[0.11+(LA[0]-0.11)*d,0.09+(LA[1]-0.09)*d,0.40+(LA[2]-0.40)*d];
+ const hp=[-0.11,0.1+0.30*Math.sin(f*D)+0.1*d,0.3*Math.cos(f*D)];
+ return {...root(),neck:{flex:4*d},legR:FK(f,0,0,k,0),legL:FK(85+(+(process.env.LF||110)-85)*d,(+(process.env.LB||35))*d,(+(process.env.LR||-45))*d,105+(+(process.env.LK||150)-105)*d,0),
+  armR:{...hug(-1,f,k),pos:tp(-0.17,f)},
+  armL:{...hug(1,f,k),pos:tp(-0.04,f,+(process.env.DY||0.03))}};};
+save('ankle-on-the-knee',{az:50,el:20},['glutes'],{start:ak(0),end:ak(1)});
+const WA=+(process.env.WA||-35),WF=+(process.env.WF||85),WR=+(process.env.WR||-25);
+save('windmills',{az:20,el:55},['abductors','obliques'],{
  start:{...root(),neck:{flex:0},legL:FK(0),legR:FK(0),armL:T(1),armR:T(-1)},
  mid:{...root(),legL:FK(90),legR:FK(0),armL:T(1),armR:T(-1)},
- end:{...root({roll:WR}),legL:FK(WF,WA),legR:FK(0),armL:T(1),armR:T(-1)}},{muscleSide:'L'});
+ end:{...root({roll:WR}),neck:{twist:+(process.env.WNT||-30)},legL:FK(WF,WA),legR:FK(0,+(process.env.WRA||15)),armL:T(1),armR:T(-1)}},{muscleSide:'L'});
 const P=(s)=>({fk:{flex:0,abd:AB,rot:0,elbow:4},rel:'chest',hand:'relaxed',pron:PR});
-const IK=+(process.env.IK||80),IA=+(process.env.IA||-30),IP=+(process.env.IP||60),IR=+(process.env.IR||20),IY=+(process.env.IY||0.15);
+const IK=+(process.env.IK||60),IA=+(process.env.IA||-30),IP=+(process.env.IP||60),IR=+(process.env.IR||35),IY=+(process.env.IY||0.15);
 const pr=(extra={})=>({pos:[0,IY,0],pitch:90,...extra});
-save('iron-crosses-stretch',{az:30,el:40},['quadriceps'],{
+save('iron-crosses-stretch',{az:20,el:+(process.env.ICE||72)},['glutes','obliques','spinal-erectors'],{
  start:{root:pr(),neck:{twist:70},legL:FK(0,0,0,0,IP),legR:FK(0,0,0,0,IP),armL:P(1),armR:P(-1)},
  mid:{root:pr(),neck:{twist:70},legL:FK(0,0,0,IK,IP),legR:FK(0,0,0,0,IP),armL:P(1),armR:P(-1)},
- end:{root:pr({roll:IR}),neck:{twist:70},legL:FK(+(process.env.IF||-30),IA,0,IK,IP),legR:FK(0,+(process.env.RA||10),0,0,IP),armL:P(1),armR:P(-1)}},{muscleSide:'L'});
+ end:{root:pr({roll:IR}),neck:{twist:70},legL:FK(+(process.env.IF||-30),IA,0,IK,IP),legR:FK(0,+(process.env.RA||45),0,0,IP),armL:P(1),armR:P(-1)}},{muscleSide:'L'});
 for(const [k,v] of Object.entries(out))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
 console.log(Object.keys(out).join(' '));

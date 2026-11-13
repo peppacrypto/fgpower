@@ -1,5 +1,10 @@
 {
  "slug": "lunge-pass-through",
+ "tempo": {
+  "lift": "back",
+  "up": 1.2,
+  "down": 2.4
+ },
  "camera": {
   "az": 50,
   "el": 6
@@ -215,10 +220,10 @@
    "root": {
     "pos": [
      -0.1,
-     0.6,
-     0.03
+     0.58,
+     0.05
     ],
-    "pitch": 8
+    "pitch": 0
    },
    "armR": {
     "pos": [
@@ -232,7 +237,7 @@
     "fingers": [
      0.45,
      -0.89,
-     0
+     0.3
     ],
     "palm": [
      0.89,
@@ -273,7 +278,7 @@
     "pos": [
      0.12,
      0.03,
-     0.66
+     0.72
     ],
     "anchor": "heel",
     "pitch": -12,
@@ -318,24 +323,24 @@
    "root": {
     "pos": [
      -0.015,
-     0.49,
-     0.39
+     0.5,
+     0.36
     ],
-    "pitch": 28
+    "pitch": 30
    },
    "spine": {
-    "flex": 6,
-    "twist": 20
+    "flex": 5,
+    "twist": 14
    },
    "neck": {
-    "flex": 10,
-    "twist": -6
+    "flex": -4,
+    "twist": -4
    },
    "armR": {
     "pos": [
      0.12,
      0.335,
-     0.5489999999999999
+     0.574
     ],
     "contact": true,
     "hand": "grip",
@@ -361,7 +366,7 @@
     "pos": [
      0.12,
      0.335,
-     0.641
+     0.666
     ],
     "contact": true,
     "hand": "grip",
@@ -387,7 +392,7 @@
     "pos": [
      0.12,
      0,
-     0.66
+     0.72
     ],
     "anchor": "heel",
     "pitch": 0,
@@ -432,24 +437,24 @@
    "root": {
     "pos": [
      -0.015,
-     0.49,
-     0.39
+     0.5,
+     0.36
     ],
-    "pitch": 28
+    "pitch": 30
    },
    "spine": {
-    "flex": 6,
-    "twist": 20
+    "flex": 5,
+    "twist": 14
    },
    "neck": {
-    "flex": 10,
-    "twist": -6
+    "flex": -4,
+    "twist": -4
    },
    "armR": {
     "pos": [
      0.12,
      0.335,
-     0.5489999999999999
+     0.574
     ],
     "contact": true,
     "hand": "grip",
@@ -475,7 +480,7 @@
     "pos": [
      0.14,
      0.335,
-     0.641
+     0.666
     ],
     "contact": true,
     "hand": "grip",
@@ -501,7 +506,7 @@
     "pos": [
      0.12,
      0,
-     0.66
+     0.72
     ],
     "anchor": "heel",
     "pitch": 0,

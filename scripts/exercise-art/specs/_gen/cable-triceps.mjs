@@ -57,10 +57,9 @@ save('cable-incline-triceps-extension',{az:70,el:12},['triceps'],[{type:'incline
 // kneeling, head and arms on a sideways bench
 const kn=()=>({root:{pos:[0,0.59,0.0],pitch:75},neck:{flex:8},spine:{flex:4},
  legL:{pos:[0.11,0.145,-0.4],anchor:'ankle',pitch:41,pole:[0,1,1]},legR:{pos:[-0.11,0.145,-0.4],anchor:'ankle',pitch:41,pole:[0,1,1]}});
+const kE=[0.12,0.6,0.78];
+const kh=(deg)=>{const r=deg*Math.PI/180,dy=Math.cos(r),dz=Math.sin(r);return both([0.12,kE[1]+0.34*dy,kE[2]+0.34*dz],[0,dy,dz],[0,-dz,dy],[0.12,0,1]);};
 save('kneeling-cable-triceps-extension',{az:70,el:10},['triceps'],[{type:'flat-bench',yaw:90,pos:[0,0,0.62]},{type:'cable-tower',pos:[0,0,-0.8],yaw:0,pulleyY:2,hands:true,attachment:'straight-bar'}],{
- start:{...kn(),...both([0.12,0.84,0.62],[0,0.64,-0.77],[0,0.77,0.64],[0.12,0,1])},
- mid:{...kn(),...both([0.12,0.88,0.8],[0,0.8,0.6],[0,-0.6,0.8],[0.12,0,1])},
- mid2:{...kn(),...both([0.12,0.66,0.92],[0,0.4,0.92],[0,-0.92,0.4],[0.3,-0.3,1])},
- end:{...kn(),...both([0.12,0.6,1.12],[0,0,1],[0,-1,0],[0.3,-0.3,1])}});
+ start:{...kn(),...kh(-20)},mid:{...kn(),...kh(35)},end:{...kn(),...kh(90)}},{tempo:{lift:'there',up:1.0,down:1.8,maxLoop:4.2}});
 for(const [k,v] of Object.entries(out))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
 console.log(Object.keys(out).length);

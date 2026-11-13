@@ -5,7 +5,10 @@
   "el": 8
  },
  "muscles": [
-  "shoulders"
+  "quadriceps",
+  "glutes",
+  "traps",
+  "posterior-deltoid"
  ],
  "props": [
   {
@@ -24,16 +27,16 @@
    "root": {
     "pos": [
      0,
-     0.6,
-     -0.08
+     0.62,
+     -0.1
     ],
-    "pitch": 25
+    "pitch": 18
    },
    "spine": {
-    "flex": 8
+    "flex": 4
    },
    "neck": {
-    "flex": -12
+    "flex": -8
    },
    "legL": {
     "pos": [
@@ -57,8 +60,8 @@
    },
    "armL": {
     "fk": {
-     "flex": 90,
-     "abd": 4,
+     "flex": 30,
+     "abd": 16,
      "rot": 0,
      "elbow": 0
     },
@@ -68,8 +71,8 @@
    },
    "armR": {
     "fk": {
-     "flex": 90,
-     "abd": 4,
+     "flex": 30,
+     "abd": 16,
      "rot": 0,
      "elbow": 0
     },
@@ -136,5 +139,10 @@
     "pron": 0
    }
   }
+ },
+ "tempo": {
+  "lift": "there",
+  "up": 1,
+  "down": 1.8
  }
 }

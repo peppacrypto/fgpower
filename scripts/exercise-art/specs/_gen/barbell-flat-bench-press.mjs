@@ -27,4 +27,4 @@ mk('close-grip-ez-bar-press', {...base, x:0.1, px:0.25, pey:-0.6, bot:[0.70,-0.0
   ['triceps'], {noRack:true, bar:{type:'ez-bar',grip:'inner',hands:true,plates:[10]}});
 mk('barbell-guillotine-bench-press', {...base, top:[0,-0.30], bot:[0.745,-0.30], px:0.9, pey:-0.15, topPole:-0.1, botPole:-0.1}, ['chest']);
 mk('neck-press', {...base, top:[0,-0.30], bot:[0.72,-0.30], px:0.9, pey:-0.15, topPole:-0.1, botPole:-0.1}, ['chest']);
-mk('jm-press', {...base, x:0.2, top:[0,-0.20], bot:[0.84,-0.24], px:0.25, pey:-0.5, topPole:0.2, botPole:1.0}, ['triceps'], {mid:{y:0.95,z:-0.22,pz2:0.5}});
+mk('jm-press', {...base, x:0.2, top:[0,-0.20], bot:[0.86,-0.28], px:0.25, pey:-0.5, topPole:0.2, botPole:1.0}, ['triceps'], {mid:{y:0.80,z:-0.22,pz2:0.5}});

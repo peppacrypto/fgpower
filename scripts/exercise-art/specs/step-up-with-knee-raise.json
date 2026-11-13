@@ -1,8 +1,8 @@
 {
  "slug": "step-up-with-knee-raise",
  "camera": {
-  "az": 80,
-  "el": 8
+  "az": 90,
+  "el": 5
  },
  "muscles": [
   "quadriceps",
@@ -29,7 +29,7 @@
      0.82,
      -0.02
     ],
-    "pitch": 14
+    "pitch": 8
    },
    "spine": {
     "flex": 2
@@ -124,9 +124,9 @@
    },
    "armL": {
     "fk": {
-     "flex": 10,
+     "flex": 25,
      "abd": 12,
-     "elbow": 20
+     "elbow": 40
     },
     "rel": "chest"
    },
@@ -134,7 +134,7 @@
     "fk": {
      "flex": -20,
      "abd": 14,
-     "elbow": 20
+     "elbow": 40
     },
     "rel": "chest"
    }
@@ -183,17 +183,17 @@
    },
    "armL": {
     "fk": {
-     "flex": 30,
+     "flex": 45,
      "abd": 10,
-     "elbow": 60
+     "elbow": 70
     },
     "rel": "chest"
    },
    "armR": {
     "fk": {
-     "flex": -15,
+     "flex": -30,
      "abd": 10,
-     "elbow": 60
+     "elbow": 50
     },
     "rel": "chest"
    }

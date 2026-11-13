@@ -37,14 +37,14 @@ for(const s of slugs){const j=L(s),F=j.frames;
   towelFix(j);}
  if(s==='seated-thigh-lift-curl'){F.end.legL.pos[2]+=0.12;F.end.legL.pos[1]-=0.04;for(const f in F){F[f].armL.pos[0]=0.24;F[f].armL.palm=[f==='start'?-0.4:0.05,1,0.15];F[f].armL.fingers=[0.4,F[f].armL.fingers[1],0.9];F[f].armR.pos[0]-=0.03;}
   F.end.armL.pos[2]-=0.06;F.end.armL.pos[1]-=0.04;}
- fix(s,j);
+ fix(s,j);post(s,j);
  fs.writeFileSync(D+s+'.json',JSON.stringify(j,null,1));}
 
 function fix(s,j){const F=j.frames,N=(a,b)=>a.map((v,i)=>+(v+b[i]).toFixed(4));
  if(s==='supine-elbow-row'||s==='hips-up-elbow-row'){
   j.qaAllow={'rom:horizontal-pull.stretch':'floor elbow row is a bent-arm drive by design: the forearms stay vertical (about 90 deg) and the elbows press into the floor; there is no long-arm start'};}
  if(s==='seated-towel-row'){
-  const fz=+(process.env.FZ||0.86),fz2=+(process.env.FZ2||0.60),ry=+(process.env.RY||0.11);
+  const fz=+(process.env.FZ||0.86),fz2=+(process.env.FZ2||0.76),ry=+(process.env.RY||0.11);
   const mk=(z,y,hz,hy,hx)=>({legL:{pos:[0.1,y,z]},legR:{pos:[-0.1,y,z]},hz,hy,hx});
   const set=(f,ankZ,ankY,hx,hy,hz)=>{const fr=F[f];fr.root.pos[1]=ry;
    for(const k of ['legL','legR']){fr[k].pos=[k==='legL'?0.1:-0.1,ankY,ankZ];}
@@ -84,4 +84,14 @@ function fix(s,j){const F=j.frames,N=(a,b)=>a.map((v,i)=>+(v+b[i]).toFixed(4));
    fr.armL.pos=[...P[0]];fr.armR.pos=[...P[4]];
    fr.armL.pole=[0.3,-0.3,-1];fr.armR.pole=[-0.3,-0.3,-1];
    fr.armL.palm=[-0.1,0.9,0.2];fr.armR.palm=[0.1,0.9,0.2];fr.armL.fingers=[0,0.2,1];fr.armR.fingers=[0,0.2,1];}}
+}
+
+function post(s,j){const F=j.frames;
+ if(s==='hips-up-elbow-row'){F.end.root=JSON.parse(JSON.stringify(F.start.root));F.start.neck.flex=36;F.end.neck.flex=36;
+  j.tempo={lift:'there',up:1.0,down:1.8,squeeze:0.5};}
+ if(s==='knee-grip-lean-back-curl'){F.end.root.pitch=4;F.end.root.pos[2]=F.start.root.pos[2]+0.04;F.end.neck.flex=3;}
+ if(s==='seated-knee-grip-row'){F.end.root.pitch=-8;F.end.neck.flex=14;delete F.end.spine;}
+ if(s==='seated-towel-row'){F.end.root.pitch=-1;F.end.spine={flex:-1};}
+ if(s==='seated-towel-foot-curl'){j.camera={az:70,el:8};j.muscleSide='L';}
+ if(s==='door-frame-one-arm-curl'){j.camera={az:65,el:12};}
 }

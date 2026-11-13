@@ -5,7 +5,7 @@
   "el": 8
  },
  "muscles": [
-  "shoulders"
+  "lateral-deltoid"
  ],
  "props": [
   {
@@ -58,7 +58,7 @@
    "armL": {
     "fk": {
      "flex": 0,
-     "abd": 6,
+     "abd": 30,
      "rot": 0,
      "elbow": 0
     },
@@ -69,7 +69,7 @@
    "armR": {
     "fk": {
      "flex": 0,
-     "abd": 6,
+     "abd": 30,
      "rot": 0,
      "elbow": 0
     },
@@ -116,7 +116,7 @@
    "armL": {
     "fk": {
      "flex": 0,
-     "abd": 40,
+     "abd": 52,
      "rot": 0,
      "elbow": 0
     },
@@ -127,7 +127,7 @@
    "armR": {
     "fk": {
      "flex": 0,
-     "abd": 40,
+     "abd": 52,
      "rot": 0,
      "elbow": 0
     },
@@ -174,7 +174,7 @@
    "armL": {
     "fk": {
      "flex": 0,
-     "abd": 86,
+     "abd": 76,
      "rot": 0,
      "elbow": 0
     },
@@ -185,7 +185,7 @@
    "armR": {
     "fk": {
      "flex": 0,
-     "abd": 86,
+     "abd": 76,
      "rot": 0,
      "elbow": 0
     },
@@ -194,5 +194,10 @@
     "pron": 0
    }
   }
+ },
+ "tempo": {
+  "lift": "there",
+  "up": 0.5,
+  "down": 0.9
  }
 }

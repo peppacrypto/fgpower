@@ -44,9 +44,81 @@
    },
    "armL": {
     "pos": [
-     -0.22,
+     0.29,
+     0.9,
+     0.03
+    ],
+    "rel": "world",
+    "pole": [
+     0.3,
+     -1,
+     -0.2
+    ],
+    "hand": "relaxed"
+   },
+   "armR": {
+    "pos": [
+     -0.29,
+     0.9,
+     0.03
+    ],
+    "rel": "world",
+    "pole": [
+     -0.3,
+     -1,
+     -0.2
+    ],
+    "hand": "relaxed",
+    "fingers": [
+     0.66,
+     0,
+     0.75
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ]
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ],
+    "pitch": 0
+   },
+   "spine": {
+    "flex": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 4
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -4
+   },
+   "armL": {
+    "pos": [
+     0.25,
      1.38,
-     0.32
+     0.5
     ],
     "rel": "world",
     "pole": [
@@ -58,27 +130,99 @@
    },
    "armR": {
     "pos": [
-     -0.3,
-     1.12,
+     -0.2,
+     1.2,
      0.3
     ],
     "rel": "world",
-    "contact": true,
-    "hand": "grip",
     "pole": [
-     -0.4,
+     -0.3,
      -1,
-     -0.2
+     0.3
     ],
+    "hand": "relaxed",
     "fingers": [
-     1,
+     0.66,
      0,
-     0
+     0.75
     ],
     "palm": [
      0,
+     -1,
+     0
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
      0,
-     -1
+     0.92,
+     0
+    ],
+    "pitch": 0
+   },
+   "spine": {
+    "flex": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 4
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -4
+   },
+   "armL": {
+    "pos": [
+     -0.2,
+     1.38,
+     0.34
+    ],
+    "rel": "world",
+    "pole": [
+     0.3,
+     -1,
+     0.3
+    ],
+    "hand": "relaxed"
+   },
+   "armR": {
+    "pos": [
+     -0.05,
+     1.4,
+     0.24
+    ],
+    "rel": "world",
+    "contact": true,
+    "hand": "flat",
+    "pole": [
+     -0.5,
+     -1,
+     0.2
+    ],
+    "fingers": [
+     0.66,
+     0,
+     0.75
+    ],
+    "palm": [
+     0,
+     -1,
+     0
     ]
    }
   }

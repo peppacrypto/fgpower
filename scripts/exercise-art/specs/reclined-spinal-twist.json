@@ -1,8 +1,8 @@
 {
  "slug": "reclined-spinal-twist",
  "camera": {
-  "az": 40,
-  "el": 42
+  "az": 20,
+  "el": 55
  },
  "muscles": [
   "spinal-erectors",

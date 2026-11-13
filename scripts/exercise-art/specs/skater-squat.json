@@ -1,8 +1,8 @@
 {
  "slug": "skater-squat",
  "camera": {
-  "az": 72,
-  "el": 8
+  "az": 90,
+  "el": 5
  },
  "muscles": [
   "quadriceps",
@@ -26,7 +26,7 @@
      0.915,
      -0.01
     ],
-    "pitch": 6
+    "pitch": 4
    },
    "armL": {
     "fk": {
@@ -91,10 +91,10 @@
    "root": {
     "pos": [
      0.03,
-     0.45,
-     -0.22
+     0.38,
+     -0.16
     ],
-    "pitch": 40
+    "pitch": 20
    },
    "spine": {
     "flex": -4
@@ -154,8 +154,8 @@
    "legR": {
     "pos": [
      -0.11,
-     0.32,
-     -0.72
+     0.48,
+     -0.6
     ],
     "anchor": "ankle",
     "pitch": 125

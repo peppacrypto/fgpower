@@ -1,8 +1,8 @@
 {
  "slug": "latissimus-dorsi-smr",
  "camera": {
-  "az": 10,
-  "el": 22
+  "az": 50,
+  "el": 14
  },
  "muscles": [
   "lats"

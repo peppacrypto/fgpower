@@ -18,7 +18,7 @@ const P={
   half: {x:0.27,dy:0.18,dz:0.2,f:[0,0.8,0.1],p:[-0.6,0.1,0.0],pole:[0.9,-0.6,0.1]},
   nin:  {x:0.30,dy:0.10,dz:0.04,f:[0,1,0],p:[-1,0,0],pole:[0.5,-0.7,-0.3]},
   upS:  {x:0.22,dy:0.685,dz:0.06,f:[0,1,-0.1],p:[0,0.1,1],pole:[1,-0.2,0]},
-  nup:  {x:0.20,dy:0.68,dz:0.0, f:[0,1,0],p:[-1,0,0],pole:[0.9,-0.3,-0.3]},
+  nup:  {x:0.215,dy:0.68,dz:0.0, f:[0,1,0],p:[-1,0,0],pole:[0.9,-0.3,-0.3]},
 };
 const TH=+(process.env.TH||0);
 const rot=(f,p,t)=>{const c=Math.cos(R(t)),s=Math.sin(R(t));const k=[p[1]*f[2]-p[2]*f[1],p[2]*f[0]-p[0]*f[2],p[0]*f[1]-p[1]*f[0]];return f.map((a,i)=>a*c+k[i]*s)};
@@ -51,8 +51,8 @@ const bench={type:'adjustable-bench',angle:45,pos:[-0.95,0,0.0],yaw:-90};
 one('standing-palm-in-one-arm-dumbbell-press',STAND,[bench,...dbs(1)],'nin','nup',{pos:[-0.36,1.05,0.0],contact:true,hand:'flat',fingers:[0,0,1],palm:[0,-1,0],pole:[-1,-0.3,-0.3]});
 // alternating
 {const slug='standing-alternating-dumbbell-press';const s=frame(STAND,'ear','ear');
- out(slug,{slug,camera:cam,muscles:['shoulders','triceps'],props:dbs(),frames:{start:s,mid:frame(STAND,'up','ear'),mid1:frame(STAND,'up','ear'),mid2:frame(STAND,'ear','up'),mid3:frame(STAND,'ear','up'),end:frame(STAND,'ear','ear')}});}
-// see-saw: press left while bending right (away from working arm)
+ out(slug,{slug,camera:cam,muscles:['shoulders','triceps'],tempo:{lift:'there',up:1,down:1.8},props:dbs(),frames:{start:s,mid:frame(STAND,'up','ear'),mid1:frame(STAND,'up','ear'),mid2:frame(STAND,'ear','up'),mid3:frame(STAND,'ear','up'),end:frame(STAND,'ear','ear')}});}
+// see-saw: both arms move in opposition, torso leans away from the pressing arm
 {const slug='see-saw-press-alternating-side-press';
  out(slug,{slug,camera:{az:20,el:6},muscles:['shoulders','obliques'],props:dbs(),
-  frames:{start:frame(STAND,'chest','chest'),mid:frame(STAND,'half','chest',{spine:{side:-2}}),end:frame(STAND,'upS','chest',{spine:{side:-4}})}});}
+  frames:{start:frame(STAND,'upS','ear',{spine:{side:-5}}),mid1:frame(STAND,'midp','midp'),mid2:frame(STAND,'ear','upS',{spine:{side:5}}),mid3:frame(STAND,'midp','midp'),end:frame(STAND,'upS','ear',{spine:{side:-5}})}});}

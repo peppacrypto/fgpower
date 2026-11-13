@@ -75,7 +75,7 @@
      -0.81
     ],
     "anchor": "ball",
-    "pitch": 15,
+    "pitch": 0,
     "toes": 0,
     "pole": [
      0,
@@ -90,7 +90,7 @@
      -0.81
     ],
     "anchor": "ball",
-    "pitch": 15,
+    "pitch": 0,
     "toes": 0,
     "pole": [
      0,
@@ -167,7 +167,7 @@
      -0.81
     ],
     "anchor": "ball",
-    "pitch": 26.25,
+    "pitch": 11.25,
     "toes": 0,
     "pole": [
      0,
@@ -182,7 +182,7 @@
      -0.81
     ],
     "anchor": "ball",
-    "pitch": 26.25,
+    "pitch": 11.25,
     "toes": 0,
     "pole": [
      0,
@@ -258,7 +258,7 @@
      -0.81
     ],
     "anchor": "ball",
-    "pitch": 37.5,
+    "pitch": 22.5,
     "toes": 0,
     "pole": [
      0,
@@ -273,7 +273,7 @@
      -0.81
     ],
     "anchor": "ball",
-    "pitch": 37.5,
+    "pitch": 22.5,
     "toes": 0,
     "pole": [
      0,
@@ -350,7 +350,7 @@
      -0.81
     ],
     "anchor": "ball",
-    "pitch": 48.75,
+    "pitch": 33.75,
     "toes": 0,
     "pole": [
      0,
@@ -365,7 +365,7 @@
      -0.81
     ],
     "anchor": "ball",
-    "pitch": 48.75,
+    "pitch": 33.75,
     "toes": 0,
     "pole": [
      0,
@@ -441,7 +441,7 @@
      -0.81
     ],
     "anchor": "ball",
-    "pitch": 60,
+    "pitch": 45,
     "toes": 0,
     "pole": [
      0,
@@ -456,7 +456,7 @@
      -0.81
     ],
     "anchor": "ball",
-    "pitch": 60,
+    "pitch": 45,
     "toes": 0,
     "pole": [
      0,
@@ -465,5 +465,9 @@
     ]
    }
   }
+ },
+ "tempo": {
+  "lift": "even",
+  "stretch": 0.9
  }
 }

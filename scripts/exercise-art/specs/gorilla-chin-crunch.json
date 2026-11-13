@@ -22,7 +22,7 @@
      1.185,
      -0.03
     ],
-    "pitch": -2
+    "pitch": 2
    },
    "spine": {
     "flex": 0
@@ -80,22 +80,22 @@
    },
    "legL": {
     "fk": {
-     "flex": 90,
+     "flex": 4,
      "abd": 2,
-     "knee": 95
+     "knee": 6
     },
     "foot": {
-     "pitch": 10
+     "pitch": 28
     }
    },
    "legR": {
     "fk": {
-     "flex": 90,
+     "flex": 4,
      "abd": 2,
-     "knee": 95
+     "knee": 6
     },
     "foot": {
-     "pitch": 10
+     "pitch": 28
     }
    }
   },
@@ -103,7 +103,7 @@
    "root": {
     "pos": [
      0,
-     1.42,
+     1.2,
      -0.14
     ],
     "pitch": -10

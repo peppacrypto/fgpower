@@ -1,5 +1,17 @@
 {
  "slug": "scissor-kick",
+ "tempo": {
+  "lift": "even",
+  "up": 0.8,
+  "down": 0.8,
+  "pauses": 0
+ },
+ "timing": {
+  "there": 0.8,
+  "holdEnd": 0,
+  "back": 0.8,
+  "holdStart": 0
+ },
  "camera": {
   "az": 88,
   "el": 16
@@ -70,7 +82,7 @@
    },
    "legL": {
     "fk": {
-     "flex": 48,
+     "flex": 50,
      "abd": 1,
      "knee": 3
     },
@@ -80,7 +92,7 @@
    },
    "legR": {
     "fk": {
-     "flex": 16,
+     "flex": 14,
      "abd": 1,
      "knee": 3
     },
@@ -151,7 +163,7 @@
    },
    "legL": {
     "fk": {
-     "flex": 16,
+     "flex": 14,
      "abd": 1,
      "knee": 3
     },
@@ -161,7 +173,7 @@
    },
    "legR": {
     "fk": {
-     "flex": 48,
+     "flex": 50,
      "abd": 1,
      "knee": 3
     },

@@ -1,24 +1,26 @@
 {
  "slug": "downward-dog",
  "camera": {
-  "az": 72,
-  "el": 6
+  "az": 90,
+  "el": 4
  },
  "muscles": [
-  "hamstrings"
+  "hamstrings",
+  "calves",
+  "shoulders"
  ],
  "frames": {
   "start": {
    "root": {
     "pos": [
      0,
-     0.91,
-     0.09
+     0.72,
+     0.2
     ],
-    "pitch": 139
+    "pitch": 118
    },
    "neck": {
-    "flex": -20
+    "flex": -35
    },
    "armL": {
     "pos": [
@@ -109,7 +111,7 @@
     "pitch": 141
    },
    "neck": {
-    "flex": -20
+    "flex": -35
    },
    "armL": {
     "pos": [
@@ -190,5 +192,9 @@
     ]
    }
   }
+ },
+ "tempo": {
+  "lift": "even",
+  "hold": 1
  }
 }

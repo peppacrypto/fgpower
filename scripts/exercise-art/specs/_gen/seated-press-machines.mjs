@@ -76,3 +76,28 @@ for (const slug of ['leverage-shoulder-press', 'machine-shoulder-military-press'
   const poles = [[0.12, -0.2, -1], [0.12, -0.25, -1], [0.1, -0.3, -1]];
   onArc('dip-machine', [0.35, 0.8, 1.25], at, (i, t) => ({ pole: poles[i], fingers: lerp([0, -0.35, 0.94], [0, -0.95, 0.3], t), palm: lerp([0, -0.94, -0.35], [0, -0.3, -0.95], t) }));
 }
+
+// Coach review 2026-11-13: cameras side-on, press starts at mid-chest with elbows 45-60 deg and forearms near vertical, neutral head.
+{
+  const EDIT = {
+    'leverage-chest-press': { cam: { az: 80, el: 5 }, d: [0, 0.04, 0.03], pole: [1, -0.6, -0.35] },
+    'machine-bench-press': { cam: { az: 80, el: 5 }, d: [0, 0.04, 0.03], pole: [1, -0.6, -0.35] },
+    'leverage-decline-chest-press': { cam: { az: 80, el: 5 }, d: [0, 0.07, 0.0], pole: [1, -0.7, -0.3] },
+    'leverage-incline-chest-press': { cam: { az: 80, el: 5 }, d: [0, 0.05, 0.02], pole: [1, -0.6, -0.35], neck: 0, endPole: [1, -0.9, -0.2] },
+    'incline-cable-chest-press': { cam: { az: 80, el: 5 }, d: [0, 0.03, 0.02], pole: [1, -0.7, -0.4], neck: 4 },
+    'seated-cable-shoulder-press': { cam: { az: 85, el: 5 } },
+    'dip-machine': { cam: { az: 70, el: 8 } },
+  };
+  for (const [slug, e] of Object.entries(EDIT)) {
+    const p = new URL(`../${slug}.json`, import.meta.url); const s = JSON.parse(fs.readFileSync(p));
+    s.camera = e.cam;
+    const f = s.frames.start;
+    for (const [k, sg] of [['armL', 1], ['armR', -1]]) {
+      if (e.d) for (let i = 0; i < 3; i++) f[k].pos[i] = +(f[k].pos[i] + e.d[i]).toFixed(4);
+      if (e.pole) f[k].pole = [sg * e.pole[0], e.pole[1], e.pole[2]];
+    }
+    if (e.endPole) for (const [k, sg] of [['armL', 1], ['armR', -1]]) s.frames.end[k].pole = [sg * e.endPole[0], e.endPole[1], e.endPole[2]];
+    if (e.neck !== undefined) for (const fr of Object.values(s.frames)) fr.neck = { flex: e.neck };
+    fs.writeFileSync(p, JSON.stringify(s, null, 1));
+  }
+}

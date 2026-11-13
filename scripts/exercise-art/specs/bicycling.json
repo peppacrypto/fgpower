@@ -5,7 +5,9 @@
   "el": 6
  },
  "muscles": [
-  "quadriceps"
+  "quadriceps",
+  "glutes",
+  "hamstrings"
  ],
  "floats": true,
  "timing": {

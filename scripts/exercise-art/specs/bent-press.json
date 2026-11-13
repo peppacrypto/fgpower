@@ -1,5 +1,8 @@
 {
  "slug": "bent-press",
+ "tempo": {
+  "lift": "back"
+ },
  "camera": {
   "az": 25,
   "el": 6
@@ -36,9 +39,9 @@
     "twist": 15
    },
    "neck": {
-    "flex": 3,
-    "side": 12,
-    "twist": 33
+    "flex": 6,
+    "side": 0,
+    "twist": 27
    },
    "armL": {
     "pos": [
@@ -136,14 +139,14 @@
    },
    "neck": {
     "flex": 6,
-    "side": 0,
-    "twist": 33
+    "side": 9,
+    "twist": 27
    },
    "armL": {
     "pos": [
-     0.35,
-     1.634,
-     0.07
+     0.264,
+     1.509,
+     0.132
     ],
     "contact": true,
     "fingers": [
@@ -152,15 +155,15 @@
      0
     ],
     "palm": [
-     -0.94,
+     -0.985,
      0,
-     0.342
+     0.174
     ],
     "curl": 0.85,
     "pole": [
-     0.562,
-     -0.821,
-     -0.1
+     0.355,
+     -0.934,
+     0.033
     ],
     "scap": {
      "elev": -0.5
@@ -237,9 +240,9 @@
     "twist": 46.1
    },
    "neck": {
-    "flex": -2,
-    "side": -4,
-    "twist": 33
+    "flex": -3,
+    "side": -6,
+    "twist": 27
    },
    "armL": {
     "pos": [

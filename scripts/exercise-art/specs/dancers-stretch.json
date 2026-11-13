@@ -1,8 +1,8 @@
 {
  "slug": "dancers-stretch",
  "camera": {
-  "az": 145,
-  "el": 20
+  "az": 125,
+  "el": 18
  },
  "muscles": [
   "spinal-erectors",
@@ -116,11 +116,11 @@
     "pitch": -15
    },
    "spine": {
-    "twist": -50,
+    "twist": -56,
     "flex": 12
    },
    "neck": {
-    "twist": -15
+    "twist": -16.8
    },
    "legL": {
     "pos": [

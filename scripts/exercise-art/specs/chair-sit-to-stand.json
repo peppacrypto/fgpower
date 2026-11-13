@@ -1,8 +1,8 @@
 {
  "slug": "chair-sit-to-stand",
  "camera": {
-  "az": 70,
-  "el": 8
+  "az": 90,
+  "el": 5
  },
  "muscles": [
   "quadriceps"

@@ -1,11 +1,12 @@
 {
  "slug": "lying-crossover",
  "camera": {
-  "az": 30,
+  "az": 20,
   "el": 35
  },
  "muscles": [
-  "abductors"
+  "abductors",
+  "glutes"
  ],
  "props": [
   {
@@ -26,7 +27,7 @@
     "flex": 0
    },
    "spine": {
-    "twist": -12,
+    "twist": 0,
     "flex": 0
    },
    "legR": {
@@ -46,7 +47,7 @@
    "legL": {
     "fk": {
      "flex": 90,
-     "abd": -30,
+     "abd": 0,
      "rot": 0,
      "knee": 100
     },
@@ -58,7 +59,7 @@
    "armL": {
     "fk": {
      "flex": 5,
-     "abd": 35,
+     "abd": 25,
      "rot": 0,
      "elbow": 5
     },
@@ -69,7 +70,72 @@
    "armR": {
     "fk": {
      "flex": 5,
-     "abd": 35,
+     "abd": 25,
+     "rot": 0,
+     "elbow": 5
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "curl": 0.2
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.125,
+     0
+    ],
+    "pitch": -90
+   },
+   "neck": {
+    "flex": 0
+   },
+   "spine": {
+    "twist": -18,
+    "flex": 0
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.09,
+     0.86
+    ],
+    "anchor": "ankle",
+    "pole": [
+     0,
+     1,
+     0
+    ],
+    "pitch": -90
+   },
+   "legL": {
+    "fk": {
+     "flex": 95,
+     "abd": -28,
+     "rot": 0,
+     "knee": 100
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "armL": {
+    "fk": {
+     "flex": 5,
+     "abd": 25,
+     "rot": 0,
+     "elbow": 5
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "curl": 0.2
+   },
+   "armR": {
+    "fk": {
+     "flex": 5,
+     "abd": 25,
      "rot": 0,
      "elbow": 5
     },
@@ -79,5 +145,9 @@
    }
   }
  },
- "muscleSide": "L"
+ "muscleSide": "L",
+ "tempo": {
+  "up": 2,
+  "down": 2.4
+ }
 }

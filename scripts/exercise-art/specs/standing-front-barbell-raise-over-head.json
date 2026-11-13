@@ -1,7 +1,7 @@
 {
  "slug": "standing-front-barbell-raise-over-head",
  "camera": {
-  "az": 70,
+  "az": 90,
   "el": 6
  },
  "muscles": [
@@ -23,9 +23,9 @@
     "pos": [
      0,
      0.92,
-     -0.1
+     -0.08
     ],
-    "pitch": -6
+    "pitch": 0
    },
    "legL": {
     "pos": [
@@ -83,9 +83,9 @@
     "pos": [
      0,
      0.92,
-     -0.1
+     -0.08
     ],
-    "pitch": -6
+    "pitch": 0
    },
    "legL": {
     "pos": [
@@ -143,9 +143,9 @@
     "pos": [
      0,
      0.92,
-     -0.1
+     -0.08
     ],
-    "pitch": -6
+    "pitch": 0
    },
    "legL": {
     "pos": [
@@ -203,9 +203,9 @@
     "pos": [
      0,
      0.92,
-     -0.1
+     -0.08
     ],
-    "pitch": -6
+    "pitch": 0
    },
    "legL": {
     "pos": [
@@ -263,9 +263,9 @@
     "pos": [
      0,
      0.92,
-     -0.1
+     -0.08
     ],
-    "pitch": -6
+    "pitch": 0
    },
    "legL": {
     "pos": [

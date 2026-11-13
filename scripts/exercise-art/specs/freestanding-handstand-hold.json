@@ -5,15 +5,17 @@
   "el": 6
  },
  "muscles": [
-  "anterior-deltoid"
+  "anterior-deltoid",
+  "triceps",
+  "traps"
  ],
  "frames": {
   "start": {
    "root": {
     "pos": [
      0,
-     1.075,
-     -0.03
+     1.068,
+     0.0
     ],
     "pitch": 180
    },

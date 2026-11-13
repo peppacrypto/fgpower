@@ -1,8 +1,8 @@
 {
  "slug": "sofa-reverse-hyperextension",
  "camera": {
-  "az": 60,
-  "el": 14
+  "az": 100,
+  "el": 12
  },
  "muscles": [
   "glutes"
@@ -167,7 +167,7 @@
    },
    "legL": {
     "fk": {
-     "flex": -5,
+     "flex": 0,
      "abd": 1,
      "knee": 3
     },
@@ -178,7 +178,7 @@
    },
    "legR": {
     "fk": {
-     "flex": -5,
+     "flex": 0,
      "abd": 1,
      "knee": 3
     },

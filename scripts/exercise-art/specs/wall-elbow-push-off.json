@@ -1,8 +1,8 @@
 {
  "slug": "wall-elbow-push-off",
  "camera": {
-  "az": 85,
-  "el": 5
+  "az": 62,
+  "el": 8
  },
  "muscles": [
   "posterior-deltoid"
@@ -292,5 +292,10 @@
     "anchor": "sole"
    }
   }
+ },
+ "tempo": {
+  "lift": "back",
+  "up": 1,
+  "down": 2
  }
 }

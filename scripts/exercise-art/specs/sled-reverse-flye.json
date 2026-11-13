@@ -1,7 +1,7 @@
 {
  "camera": {
-  "az": 150,
-  "el": 14
+  "az": 100,
+  "el": 12
  },
  "muscles": [
   "posterior-deltoid",
@@ -82,8 +82,8 @@
      "elbow": 10
     },
     "rel": "chest",
-    "hand": "relaxed",
-    "curl": 0.5,
+    "hand": "fist",
+    "curl": 0.9,
     "pron": 0
    },
    "armR": {
@@ -94,8 +94,8 @@
      "elbow": 10
     },
     "rel": "chest",
-    "hand": "relaxed",
-    "curl": 0.5,
+    "hand": "fist",
+    "curl": 0.9,
     "pron": 0
    }
   },
@@ -152,8 +152,8 @@
      "elbow": 10
     },
     "rel": "chest",
-    "hand": "relaxed",
-    "curl": 0.5,
+    "hand": "fist",
+    "curl": 0.9,
     "pron": 0
    },
    "armR": {
@@ -164,8 +164,8 @@
      "elbow": 10
     },
     "rel": "chest",
-    "hand": "relaxed",
-    "curl": 0.5,
+    "hand": "fist",
+    "curl": 0.9,
     "pron": 0
    }
   },
@@ -222,8 +222,8 @@
      "elbow": 10
     },
     "rel": "chest",
-    "hand": "relaxed",
-    "curl": 0.5,
+    "hand": "fist",
+    "curl": 0.9,
     "pron": 0
    },
    "armR": {
@@ -234,8 +234,8 @@
      "elbow": 10
     },
     "rel": "chest",
-    "hand": "relaxed",
-    "curl": 0.5,
+    "hand": "fist",
+    "curl": 0.9,
     "pron": 0
    }
   }

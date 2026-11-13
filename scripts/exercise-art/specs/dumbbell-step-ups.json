@@ -1,8 +1,8 @@
 {
  "slug": "dumbbell-step-ups",
  "camera": {
-  "az": 80,
-  "el": 8
+  "az": 90,
+  "el": 5
  },
  "muscles": [
   "quadriceps",
@@ -39,7 +39,7 @@
      0.82,
      -0.02
     ],
-    "pitch": 14
+    "pitch": 8
    },
    "spine": {
     "flex": 2

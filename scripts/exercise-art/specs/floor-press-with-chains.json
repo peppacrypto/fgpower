@@ -1,8 +1,8 @@
 {
  "slug": "floor-press-with-chains",
  "camera": {
-  "az": 40,
-  "el": 8
+  "az": 20,
+  "el": 22
  },
  "muscles": [
   "triceps",
@@ -32,7 +32,8 @@
    "type": "chains",
    "hands": true,
    "x": 0.97,
-   "length": 1.2,
+   "length": 0.95,
+   "leader": 0.1,
    "base": [
     [
      0.97,
@@ -236,5 +237,9 @@
     "curl": 0.82
    }
   }
+ },
+ "tempo": {
+  "lift": "there",
+  "stretch": 1
  }
 }

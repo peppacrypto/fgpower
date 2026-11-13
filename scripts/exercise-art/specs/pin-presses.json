@@ -1,8 +1,8 @@
 {
  "slug": "pin-presses",
  "camera": {
-  "az": 40,
-  "el": 8
+  "az": 15,
+  "el": 22
  },
  "muscles": [
   "triceps",
@@ -22,7 +22,7 @@
    ],
    "yaw": 180,
    "frameIgnore": true,
-   "pinY": 0.8,
+   "pinY": 0.95,
    "barY": 1.02
   },
   {
@@ -78,8 +78,8 @@
    "armL": {
     "pos": [
      0.4,
-     0.8,
-     -0.18
+     0.95,
+     -0.2
     ],
     "contact": true,
     "hand": "grip",
@@ -104,8 +104,8 @@
    "armR": {
     "pos": [
      -0.4,
-     0.8,
-     -0.18
+     0.95,
+     -0.2
     ],
     "contact": true,
     "hand": "grip",
@@ -222,5 +222,9 @@
     "curl": 0.82
    }
   }
+ },
+ "tempo": {
+  "lift": "there",
+  "stretch": 1
  }
 }

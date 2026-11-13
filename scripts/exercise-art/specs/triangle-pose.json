@@ -1,33 +1,29 @@
 {
  "slug": "triangle-pose",
  "camera": {
-  "az": 15,
+  "az": 12,
   "el": 6
  },
  "muscles": [
-  "hamstrings"
+  "hamstrings",
+  "obliques"
  ],
  "frames": {
   "start": {
    "root": {
     "pos": [
-     0.15,
-     0.76,
+     0,
+     0.62,
      0
     ],
-    "yaw": 0,
-    "roll": -30
-   },
-   "spine": {
-    "side": 45
+    "yaw": 0
    },
    "neck": {
-    "twist": -10,
-    "flex": -20
+    "twist": 0
    },
    "legL": {
     "pos": [
-     0.6,
+     0.62,
      0,
      0
     ],
@@ -41,12 +37,12 @@
    },
    "legR": {
     "pos": [
-     -0.22,
+     -0.62,
      0,
      0
     ],
     "anchor": "sole",
-    "yaw": -15,
+    "yaw": -80,
     "pole": [
      -1,
      0.1,
@@ -54,39 +50,89 @@
     ]
    },
    "armL": {
-    "pos": [
-     0.65,
-     0.3,
-     0.065
-    ],
-    "contact": true,
-    "hand": "flat",
-    "fingers": [
-     0,
-     -0.5,
-     1
-    ],
-    "palm": [
-     0,
-     -1,
-     0
-    ],
-    "pole": [
-     0.5,
-     -0.3,
-     -1
-    ],
-    "curl": 0.2
+    "fk": {
+     "flex": 0,
+     "abd": 90,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "world"
    },
    "armR": {
     "fk": {
      "flex": 0,
-     "abd": 165,
+     "abd": 90,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "world"
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     -0.1,
+     0.62,
+     0
+    ],
+    "yaw": 0,
+    "roll": -34
+   },
+   "spine": {
+    "side": 0
+   },
+   "neck": {
+    "twist": -10,
+    "side": 0,
+    "flex": -20
+   },
+   "legL": {
+    "pos": [
+     0.62,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 90,
+    "pole": [
+     1,
+     0.1,
+     0.3
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.62,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -80,
+    "pole": [
+     -1,
+     0.1,
+     0
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 25,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "world"
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 158,
      "rot": 0,
      "elbow": 0
     },
     "rel": "world"
    }
   }
- }
+ },
+ "muscleSide": "L"
 }

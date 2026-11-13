@@ -5,8 +5,8 @@
   "el": 7
  },
  "muscles": [
-  "quadriceps",
-  "abdominals"
+  "abdominals",
+  "quadriceps"
  ],
  "frames": {
   "start": {
@@ -66,7 +66,7 @@
      -0.1
     ],
     "anchor": "ball",
-    "pitch": 90,
+    "pitch": 92,
     "toes": 0,
     "yaw": 20,
     "pole": [
@@ -149,7 +149,7 @@
      -0.62
     ],
     "anchor": "ball",
-    "pitch": 90,
+    "pitch": 92,
     "toes": 0,
     "yaw": 20,
     "pole": [
@@ -248,7 +248,7 @@
      -0.62
     ],
     "anchor": "ball",
-    "pitch": 90,
+    "pitch": 92,
     "toes": 0,
     "yaw": -20,
     "pole": [
@@ -331,7 +331,7 @@
      -0.1
     ],
     "anchor": "ball",
-    "pitch": 90,
+    "pitch": 92,
     "toes": 0,
     "yaw": -20,
     "pole": [

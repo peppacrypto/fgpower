@@ -1,8 +1,8 @@
 {
  "slug": "smith-machine-pistol-squat",
  "camera": {
-  "az": 68,
-  "el": 8
+  "az": 90,
+  "el": 6
  },
  "muscles": [
   "quadriceps"
@@ -113,10 +113,10 @@
    "root": {
     "pos": [
      0.07,
-     0.46,
-     -0.04
+     0.39,
+     -0.07
     ],
-    "pitch": 34
+    "pitch": 24
    },
    "neck": {
     "flex": -18
@@ -194,7 +194,7 @@
    },
    "legR": {
     "fk": {
-     "flex": 100,
+     "flex": 96,
      "abd": 0,
      "knee": 4
     },
@@ -203,7 +203,7 @@
     }
    },
    "spine": {
-    "flex": -6
+    "flex": 10
    }
   }
  },

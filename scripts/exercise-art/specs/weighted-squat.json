@@ -49,17 +49,17 @@
    },
    "armL": {
     "fk": {
-     "flex": 0,
-     "abd": 32,
-     "elbow": 6
+     "flex": 25,
+     "abd": 8,
+     "elbow": 50
     },
     "rel": "chest"
    },
    "armR": {
     "fk": {
-     "flex": 0,
-     "abd": 32,
-     "elbow": 6
+     "flex": 25,
+     "abd": 8,
+     "elbow": 50
     },
     "rel": "chest"
    },
@@ -111,17 +111,17 @@
    },
    "armL": {
     "fk": {
-     "flex": 0,
-     "abd": 32,
-     "elbow": 6
+     "flex": 40,
+     "abd": 8,
+     "elbow": 60
     },
     "rel": "chest"
    },
    "armR": {
     "fk": {
-     "flex": 0,
-     "abd": 32,
-     "elbow": 6
+     "flex": 40,
+     "abd": 8,
+     "elbow": 60
     },
     "rel": "chest"
    },

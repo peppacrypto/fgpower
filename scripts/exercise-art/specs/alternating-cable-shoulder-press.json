@@ -68,10 +68,10 @@
    },
    "armR": {
     "fk": {
-     "flex": 15,
-     "abd": 80,
+     "flex": 12,
+     "abd": 62,
      "rot": 0,
-     "elbow": 100
+     "elbow": 118
     },
     "rel": "chest",
     "hand": "grip",
@@ -114,9 +114,9 @@
    "armL": {
     "fk": {
      "flex": 10,
-     "abd": 125,
+     "abd": 118,
      "rot": 0,
-     "elbow": 50
+     "elbow": 55
     },
     "rel": "chest",
     "hand": "grip",
@@ -125,9 +125,9 @@
    "armR": {
     "fk": {
      "flex": 10,
-     "abd": 125,
+     "abd": 118,
      "rot": 0,
-     "elbow": 50
+     "elbow": 55
     },
     "rel": "chest",
     "hand": "grip",
@@ -169,10 +169,10 @@
    },
    "armL": {
     "fk": {
-     "flex": 15,
-     "abd": 80,
+     "flex": 12,
+     "abd": 62,
      "rot": 0,
-     "elbow": 100
+     "elbow": 118
     },
     "rel": "chest",
     "hand": "grip",

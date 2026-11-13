@@ -1,12 +1,15 @@
 {
  "camera": {
-  "az": 60,
-  "el": 10
+  "az": 70,
+  "el": 8
  },
  "muscles": [
   "quadriceps",
   "glutes"
  ],
+ "tempo": {
+  "lift": "even"
+ },
  "props": [
   {
    "type": "sled",
@@ -36,7 +39,7 @@
      0.89,
      0
     ],
-    "pitch": -10
+    "pitch": -16
    },
    "spine": {
     "flex": -3
@@ -130,7 +133,7 @@
      0.89,
      0
     ],
-    "pitch": -10
+    "pitch": -16
    },
    "spine": {
     "flex": -3
@@ -224,7 +227,7 @@
      0.89,
      -0.1
     ],
-    "pitch": -10
+    "pitch": -16
    },
    "spine": {
     "flex": -3
@@ -318,7 +321,7 @@
      0.89,
      -0.2
     ],
-    "pitch": -10
+    "pitch": -16
    },
    "spine": {
     "flex": -3
@@ -413,7 +416,7 @@
      0.89,
      -0.2
     ],
-    "pitch": -10
+    "pitch": -16
    },
    "spine": {
     "flex": -3

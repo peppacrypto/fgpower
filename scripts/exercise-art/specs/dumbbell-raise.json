@@ -6,7 +6,8 @@
  },
  "muscles": [
   "shoulders",
-  "lateral-deltoid"
+  "lateral-deltoid",
+  "traps"
  ],
  "props": [
   {
@@ -166,9 +167,9 @@
    },
    "armL": {
     "pos": [
-     0.3,
+     0.28,
      1.02,
-     0.16
+     0.19
     ],
     "contact": true,
     "fingers": [
@@ -194,9 +195,9 @@
    },
    "armR": {
     "pos": [
-     -0.3,
+     -0.28,
      1.02,
-     0.16
+     0.19
     ],
     "contact": true,
     "fingers": [
@@ -266,9 +267,9 @@
    },
    "armL": {
     "pos": [
-     0.33999999999999997,
+     0.27,
      1.2,
-     0.24
+     0.22
     ],
     "contact": true,
     "fingers": [
@@ -294,9 +295,9 @@
    },
    "armR": {
     "pos": [
-     -0.33999999999999997,
+     -0.27,
      1.2,
-     0.24
+     0.22
     ],
     "contact": true,
     "fingers": [

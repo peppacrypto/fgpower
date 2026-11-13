@@ -29,12 +29,12 @@ function smith(slug,hx,[f,p],muscles,pe=[0.3,0.2,-0.9],bEnd=0.32,ps=null,barY=0.
  wr({slug,camera:{az:75,el:6},muscles,props:[{type:'smith',barY,plates:[]}],...extra,frames:{start:b.start,end:b.end}});
 }
 smith('incline-push-up-close-grip',0.06,OVER,['triceps','chest'],[0.36,0.5,-0.8],0.50);
-smith('incline-push-up-medium',0.20,OVER,['chest','triceps'],[0.1,0.1,-1]);
-smith('incline-push-up-reverse-grip',0.20,UNDER,['chest','triceps'],[0.2,-0.3,-0.9],0.32,[-0.5,0,-0.85]);
-smith('incline-push-up-wide',0.40,OVER,['chest','triceps'],undefined,undefined,undefined,undefined,{abStart:-0.1});
+smith('incline-push-up-medium',0.20,OVER,['chest','triceps'],[0.1,0.1,-1],undefined,undefined,undefined,{camera:{az:40,el:6}});
+smith('incline-push-up-reverse-grip',0.20,UNDER,['chest','triceps'],[0.2,-0.3,-0.9],0.32,[-0.5,0,-0.85],undefined,{camera:{az:45,el:6}});
+smith('incline-push-up-wide',0.40,OVER,['chest','triceps'],undefined,undefined,undefined,undefined,{abStart:-0.1,camera:{az:35,el:6}});
 // body tricep press: bar at chest height, elbows go forward
 {const barY=1.12,hx=0.19;const b=build({hx,H:[0,barY],fy:0,fpOff:5,hand:bar(barY,OVER[0],OVER[1]),poleEnd:[0.1,-1,0.3],abEnd:[0.5,0.3]});
- wr({slug:'body-tricep-press',camera:{az:75,el:6},muscles:['triceps','chest'],props:[{type:'smith',barY,plates:[]}],frames:{start:b.start,end:b.end}});}
+ wr({slug:'body-tricep-press',camera:{az:90,el:4},muscles:['triceps'],props:[{type:'smith',barY,plates:[]}],frames:{start:b.start,end:b.end}});}
 // feet raised
 {const hx=0.45,hz=0.0;
  const hand=(k,h)=>({pos:[k*h,0,0],contact:true,hand:'flat',fingers:[k*0.12,0,1],palm:[0,-1,0]});

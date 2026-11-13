@@ -327,5 +327,11 @@
     "rel": "chest"
    }
   }
+ },
+ "tempo": {
+  "lift": "back",
+  "up": 1,
+  "down": 1.8,
+  "maxLoop": 6
  }
 }

@@ -42,17 +42,17 @@ nord('natural-glute-ham-raise', {az:78,el:12}, 72, cross, cross, cross);
   W('reverse-hyperextension', g); }
 
 // ---- hyperextension bench 45 deg: hips on pad, ankles under rollers
-{ const fr = (pitch, flex) => ({ root:{pos:[0,+(process.env.RY||0.97),+(process.env.RZ||-0.045)],pitch}, neck:{flex:flex>0?-10:0}, spine:{flex, weights:[0,0.1,0.25,0.3,0.35]}, ...cross,
+{ const fr = (pitch, flex) => ({ root:{pos:[0,+(process.env.RY||0.97),+(process.env.RZ||-0.045)],pitch}, neck:{flex:0}, spine:{flex:0, weights:[0,0.1,0.25,0.3,0.35]}, ...cross,
     legL:{pos:[+(process.env.HX||0.1),+(process.env.HY||0.2),+(process.env.HZ||-0.6)],anchor:"sole",pitch:+(process.env.HP||70),pole:[0.05,-0.7,0.7]}, legR:{pos:[-(process.env.HX||0.1),+(process.env.HY||0.2),+(process.env.HZ||-0.6)],anchor:"sole",pitch:+(process.env.HP||70),pole:[-0.05,-0.7,0.7]} });
   W('hyperextensions-back-extensions', { camera:{az:90,el:8}, muscles:['spinal-erectors','glutes'], floats:true,
     props:[{type:'hyperextension-bench'}], frames:{ start:fr(+(process.env.P0||45),0), mid:fr(+(process.env.P1||75),8), end:fr(+(process.env.P2||108),+(process.env.F2||0)) } }); }
 
 // ---- flat bench, hips on the edge, legs held on the bench (the holder is not drawn)
-{ const H = 0.7, P0 = +(process.env.B0||150), P1 = +(process.env.B1||112), P2 = +(process.env.B2||88);
+{ const H = 0.7, P0 = +(process.env.B0||132), P1 = +(process.env.B1||112), P2 = +(process.env.B2||88);
   const fr = (pitch, flex) => ({ root:{pos:[0,H+0.28,0.64],pitch}, neck:{flex:flex>0?-15:0}, spine:{flex, weights:[0,0.1,0.25,0.3,0.35]}, ...cross,
     legL:{pos:[0.1,H+0.2,-0.12],anchor:'ankle',pitch:160,pole:[0,-1,0.05]}, legR:{pos:[-0.1,H+0.2,-0.12],anchor:'ankle',pitch:160,pole:[0,-1,0.05]} });
-  W('hyperextensions-with-no-hyperextension-bench', { camera:{az:90,el:8}, muscles:['spinal-erectors'], floats:true,
-    props:[{type:'flat-bench',height:H,pos:[0,0,0]}], frames:{ start:fr(P0,0), mid:fr(P1,10), end:fr(P2,8) } }); }
+  W('hyperextensions-with-no-hyperextension-bench', { camera:{az:90,el:8}, muscles:['spinal-erectors'], floats:true, tempo:{lift:'there',up:1,down:1.8},
+    props:[{type:'flat-bench',height:H,pos:[0,0,0]},{type:'barbell',plates:[20],pos:[0,H+0.27,-0.12]}], frames:{ start:fr(P0,0), mid:fr(P1,10), end:fr(P2,8) } }); }
 
 // ---- sofa reverse hyperextension: prone on the seat, diagonal, hips at the front edge, legs swing up
 { const PSI = +(process.env.PSI||252), psi = PSI*Math.PI/180, f = [Math.sin(psi), Math.cos(psi)], lf = [Math.cos(psi), -Math.sin(psi)];
@@ -62,12 +62,12 @@ nord('natural-glute-ham-raise', {az:78,el:12}, 72, cross, cross, cross);
     armL:{pos:hand(1),contact:true,hand:'flat',fingers:[f[0]+(process.env.FW||0)*lf[0],0,f[1]+(process.env.FW||0)*lf[1]],palm:[0,-1,0],pole:[lf[0],0.4,lf[1]-0.3*f[1]]},
     armR:{pos:hand(-1),contact:true,hand:'flat',fingers:[f[0]-(process.env.FW||0)*lf[0],0,f[1]-(process.env.FW||0)*lf[1]],palm:[0,-1,0],pole:[-lf[0],0.4,-lf[1]-0.3*f[1]]},
     legL:{fk:{flex:fl,abd:1,knee:3},rel:'pelvis',foot:{pitch:30}}, legR:{fk:{flex:fl,abd:1,knee:3},rel:'pelvis',foot:{pitch:30}} });
-  W('sofa-reverse-hyperextension', { camera:{az:60,el:14}, muscles:['glutes'], floats:true,
-    props:[{type:'sofa',pos:[0,0,0],width:2.6}], frames:{ start:fr(28), end:fr(-5) } }); }
+  W('sofa-reverse-hyperextension', { camera:{az:100,el:12}, muscles:['glutes'], floats:true,
+    props:[{type:'sofa',pos:[0,0,0],width:2.6}], frames:{ start:fr(28), end:fr(0) } }); }
 
 // ---- flutter kicks: prone on a flat bench, hips on the edge, hands on the bench front, legs scissor between level and down
 { const H = 0.7, hand = s => ({ pos:[-s*0.13,H+0.0,+(process.env.FZ||-0.38)],contact:true,hand:'flat',fingers:[0,0,-1],palm:[0,-1,0],pole:[-s*1,0.4,0.3] });
   const fr = (a, b) => ({ root:{pos:[0,H+0.17,+(process.env.FRZ||0.66)],yaw:180,pitch:90}, neck:{flex:-10}, armL:hand(1), armR:hand(-1),
     legL:{fk:{flex:a,abd:1,knee:2},rel:'pelvis',foot:{pitch:30}}, legR:{fk:{flex:b,abd:1,knee:2},rel:'pelvis',foot:{pitch:30}} });
-  W('flutter-kicks', { camera:{az:90,el:10}, muscles:['glutes'], floats:true,
-    props:[{type:'flat-bench',height:H,pos:[0,0,0]}], frames:{ start:fr(+(process.env.KU||18),+(process.env.KD||55)), end:fr(+(process.env.KD||55),+(process.env.KU||-10)) } }); }
+  W('flutter-kicks', { camera:{az:90,el:10}, muscles:['glutes'], floats:true, tempo:{lift:'even',up:0.5,down:0.5},
+    props:[{type:'flat-bench',height:H,pos:[0,0,0]}], frames:{ start:fr(+(process.env.KU||0),+(process.env.KD||45)), end:fr(+(process.env.KD||45),+(process.env.KU||0)) } }); }

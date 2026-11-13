@@ -22,10 +22,24 @@
   {
    "type": "bar-bands",
    "hands": true,
-   "to": "feet",
-   "x": 0.16,
-   "width": 0.044,
-   "rest": 0.42
+   "to": "floor",
+   "drawPeg": false,
+   "pegs": [
+    [
+     0.42,
+     0.03,
+     0.14
+    ],
+    [
+     -0.42,
+     0.03,
+     0.14
+    ]
+   ],
+   "x": 0.42,
+   "width": 0.09,
+   "thick": 0.014,
+   "rest": 0.3
   }
  ],
  "frames": {

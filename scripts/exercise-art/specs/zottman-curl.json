@@ -77,7 +77,7 @@
     "rel": "chest",
     "hand": "grip",
     "grip": 0.016,
-    "pron": -90
+    "pron": 90
    }
   },
   "mid": {
@@ -257,7 +257,7 @@
     "rel": "chest",
     "hand": "grip",
     "grip": 0.016,
-    "pron": 90
+    "pron": -90
    }
   },
   "mid3": {
@@ -317,8 +317,13 @@
     "rel": "chest",
     "hand": "grip",
     "grip": 0.016,
-    "pron": 90
+    "pron": -90
    }
   }
+ },
+ "tempo": {
+  "up": 1,
+  "down": 1.8,
+  "maxLoop": 8
  }
 }

@@ -1,8 +1,14 @@
 {
  "slug": "straight-raises-on-incline-bench",
  "camera": {
-  "az": 55,
-  "el": 12
+  "az": 80,
+  "el": 8
+ },
+ "tempo": {
+  "lift": "there",
+  "up": 1,
+  "squeeze": 0.35,
+  "down": 1.8
  },
  "muscles": [
   "posterior-deltoid",

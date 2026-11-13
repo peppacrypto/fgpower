@@ -1,8 +1,8 @@
 {
  "slug": "standing-pelvic-tilt",
  "camera": {
-  "az": 100,
-  "el": 8
+  "az": 90,
+  "el": 5
  },
  "muscles": [
   "spinal-erectors"
@@ -13,10 +13,13 @@
    "root": {
     "pos": [
      0,
-     0.9,
+     0.92,
      0
     ],
-    "pitch": -10
+    "pitch": 6
+   },
+   "spine": {
+    "flex": -6
    },
    "armL": {
     "pos": [
@@ -77,10 +80,13 @@
    "root": {
     "pos": [
      0,
-     0.9,
-     0
+     0.92,
+     0.03
     ],
-    "pitch": 12
+    "pitch": -12
+   },
+   "spine": {
+    "flex": 12
    },
    "armL": {
     "pos": [

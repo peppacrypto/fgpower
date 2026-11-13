@@ -5,7 +5,9 @@
   "el": 10
  },
  "muscles": [
-  "triceps"
+  "triceps",
+  "chest",
+  "anterior-deltoid"
  ],
  "floats": true,
  "props": [
@@ -153,8 +155,8 @@
    "armL": {
     "pos": [
      0.34,
-     0.36,
-     -0.22
+     0.4,
+     -0.2
     ],
     "contact": true,
     "hand": "grip",
@@ -170,17 +172,17 @@
      1
     ],
     "pole": [
-     0.7,
+     0.75,
      -0.4,
-     0.2
+     -0.2
     ],
     "curl": 0.82
    },
    "armR": {
     "pos": [
      -0.34,
-     0.36,
-     -0.22
+     0.4,
+     -0.2
     ],
     "contact": true,
     "hand": "grip",
@@ -196,9 +198,9 @@
      1
     ],
     "pole": [
-     -0.7,
+     -0.75,
      -0.4,
-     0.2
+     -0.2
     ],
     "curl": 0.82
    }

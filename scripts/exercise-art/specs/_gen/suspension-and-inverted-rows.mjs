@@ -13,46 +13,40 @@ const sup=(th,zh,y0=0.06)=>{const s=Math.sin(rad(th)),c=Math.cos(rad(th));
 const legsHeel=(P,zh)=>({legL:{pos:[0.11,0,zh],anchor:'heel',pitch:P,toes:P,pole:[0.1,0.3,1]},legR:{pos:[-0.11,0,zh],anchor:'heel',pitch:P,toes:P,pole:[-0.1,0.3,1]}});
 const body=(b,zh,nk,arms)=>({root:{pos:r4(b.root),pitch:b.P},neck:{flex:nk},...arms,...legsHeel(b.P,zh)});
 // ---- strap row: hands carried on straps from one anchor
-function strapRow(slug,ths,the,cam,zh=0.5){
+function strapRow(slug,ths,the,cam,zh=0.5,more={}){
  const a=sup(ths,zh),b=sup(the,zh);
- const hs=[0.17,a.sh[1]+(+process.env.OFF||0.63),a.sh[2]];const SP=process.env.SP?JSON.parse(process.env.SP):[0.1,-1,0.2];
- const HX=+(process.env.HX||0.1);const he=[HX,b.sh[1]+0.26*b.n[1],b.sh[2]+0.26*b.n[2]];
- const m=sup((ths+the)/2,zh),hm=[HX,m.sh[1]+0.36*m.n[1],m.sh[2]+0.36*m.n[2]];
- const ay=+(process.env.AY||2.6);const T0=+(process.env.T0||1),T1=+(process.env.T1||1),T2=+(process.env.T2||1);
+ const hs=[0.17,a.sh[1]+(+(process.env.OFF||more.off||0.63)),a.sh[2]];const SP=process.env.SP?JSON.parse(process.env.SP):[0.1,-1,0.2];
+ const HX=+(process.env.HX||0.1);const he=[HX,b.sh[1]+(+process.env.EO||0.26)*b.n[1],b.sh[2]+(+process.env.EO||0.26)*b.n[2]];
+ const m=sup((ths+the)/2,zh),hm=[HX,m.sh[1]+(+process.env.MF||more.mf||0.36)*m.n[1],m.sh[2]+(+process.env.MF||more.mf||0.36)*m.n[2]];
+ const ay=+(process.env.AY||more.ay||2.6);const T0=+(process.env.T0||1),T1=+(process.env.T1||1),T2=+(process.env.T2||1);
  const az=(he[1]**2+he[2]**2+he[0]**2-hs[1]**2-hs[2]**2-hs[0]**2-2*ay*(he[1]-hs[1]))/(2*(he[2]-hs[2]));
  const anc=[0,ay,az];
  const arm=(s,h,pole,PT)=>{const f=nrm([-h[0]*0+(anc[0]-s*h[0]),anc[1]-h[1],anc[2]-h[2]]);
   return {pos:r4([s*h[0],h[1],h[2]]),contact:true,fingers:r4([-s*f[0]*0+f[0]*-1*-1*0+(-s*h[0]*0)+ (anc[0]-s*h[0])/Math.hypot(...[anc[0]-s*h[0],anc[1]-h[1],anc[2]-h[2]]),f[1],f[2]]),palm:r4(nrm([-s,PT*(pole[1]>-0.9?1:1),0])),pole:[s*pole[0],pole[1],pole[2]],curl:0.82};};
  const A=(h,p,t)=>({armL:arm(1,h,p,t),armR:arm(-1,h,p,t)});
+ const {ay:_a,mf:_m,off:_o,...more2}=more;
  save(slug,cam,MR,[{type:'suspension-trainer',anchor:r4(anc),hands:true,frameIgnore:true}],
-  {start:body(a,zh,14,A(hs,SP,T0)),mid:body(m,zh,6,A(hm,process.env.MP?JSON.parse(process.env.MP):[0.3,-1,-0.2],T1)),end:body(b,zh,0,A(he,process.env.EPO?JSON.parse(process.env.EPO):[0.9,-0.1,-0.7],T2))});
+  {start:body(a,zh,14,A(hs,SP,T0)),mid:body(m,zh,6,A(hm,process.env.MP?JSON.parse(process.env.MP):[0.3,-1,-0.2],T1)),end:body(b,zh,0,A(he,process.env.EPO?JSON.parse(process.env.EPO):[0.9,-0.1,-0.7],T2))},more2);
+ if(process.env.NOMID)delete out[slug].frames.mid;
 }
-strapRow('suspended-row',50,82,{az:78,el:8});
-strapRow('inverted-row-with-straps',22,42,{az:80,el:8},0.6);
+strapRow('suspended-row',+(process.env.S1||50),+(process.env.S2||62),{az:78,el:8},0.5,{tempo:{lift:'there',up:1,down:1.8},ay:3.4,mf:0.42});
+strapRow('inverted-row-with-straps',22,42,{az:80,el:8},0.6,{tempo:{lift:'there',up:1,down:1.8}});
 // ---- inverted row on a bar in a rack
-(function(){
- const Y=1.1,hz=0;let ths=Math.asin((Y-0.62-0.06)/1.33)*180/Math.PI;
+const bar=(slug,Y,bx,cam)=>{
+ const hz=0;let ths=Math.asin((Y-0.62-0.06)/1.33)*180/Math.PI;
  const zh=hz+1.33*Math.cos(rad(ths));
  let best=[1e9,0];
  for(let t=ths;t<85;t+=0.25){const b=sup(t,zh);
   const e=Math.hypot(Y-b.sh[1]-(-0.1*b.d[1]+0.15*b.n[1]),hz-b.sh[2]-(-0.1*b.d[2]+0.15*b.n[2]));if(e<best[0])best=[e,t];}
- console.log('inverted-row start',ths.toFixed(1),'end',best[1],'resid',best[0].toFixed(3));
+ console.log(slug,'start',ths.toFixed(1),'end',best[1],'resid',best[0].toFixed(3));
  const a=sup(ths,zh),b=sup(best[1],zh);
- const arm=(s,pole)=>({pos:[s*0.4,Y,hz],contact:true,fingers:[0,1,0],palm:[0,0,1],pole:[s*pole[0],pole[1],pole[2]],curl:0.82});
+ const arm=(s,pole)=>({pos:[s*bx,Y,hz],contact:true,fingers:[0,1,0],palm:[0,0,1],pole:[s*pole[0],pole[1],pole[2]],curl:0.82});
  const A=p=>({armL:arm(1,p),armR:arm(-1,p)});
- save('inverted-row',{az:60,el:8},MR,[{type:'pull-up-bar',height:Y,width:1.2,mount:'rack'}],
+ save(slug,cam,MR,[{type:'pull-up-bar',height:Y,width:1.2,mount:'rack'}],
   {start:body(a,zh,14,A([1,-0.6,-0.3])),end:body(b,zh,-4,A([1,-0.3,0.2]))});
-})();
-// ---- bodyweight mid row: hanging head-down, thighs over the bar
-(function(){
- const Y=2.25;
- const arm=s=>({pos:[s*(+process.env.BX||0.3),Y,0],contact:true,fingers:[0,1,0],palm:[0,0,1],pole:[s*1,0,0.5],curl:0.82});
- const leg=(F,K)=>({fk:{flex:F,abd:4,rot:0,knee:K},rel:'pelvis',foot:{pitch:0}});
- const HZ=+(process.env.MZ||0.33),HY=+(process.env.MY||1.95);
- const fr=(P,F,K,nk)=>({root:{pos:[0,HY,HZ],pitch:P},neck:{flex:nk},armL:arm(1),armR:arm(-1),legL:leg(F,K),legR:leg(F,K)});
- save('bodyweight-mid-row',{az:75,el:6},MR,[{type:'pull-up-bar',height:Y,width:1.2}],
-  {start:fr(+(process.env.P0||-134),+(process.env.F0||60),+(process.env.K0||95),-10),end:fr(+(process.env.P1||-105),+(process.env.F1||60),+(process.env.K1||95),-10)},{floats:true});
-})();
+};
+bar('inverted-row',1.1,0.4,{az:60,el:8});
+bar('bodyweight-mid-row',+(process.env.MY2||1.0),0.3,{az:85,el:6});
 // ---- standing-floor bodies (prone on toes)
 const prone=(P,zb,y0=0.12)=>{const s=Math.sin(rad(P)),c=Math.cos(rad(P));
  const root=[0,y0+0.86*c+0.01,zb+0.86*s-0.026];const d=[0,c,s];
@@ -84,7 +78,7 @@ function bisectAnchor(hs,he,ay){return [0,ay,(he[1]**2+he[2]**2+he[0]**2-hs[1]**
 // suspended reverse crunch: plank facing away, feet in handles (rig as the gallery)
 (function(){
  const g=JSON.parse(fs.readFileSync(W+'_gallery/suspension-feet.json','utf8'));
- delete g.slug;for(const f of Object.values(g.frames))for(const l of ['legL','legR']){f[l].pos[1]+=0.05;f[l].pos[2]+=0.04;f[l].pitch+=30;}const HZ=+(process.env.HZ||0.52),FX=+(process.env.FX||0.12);for(const f of Object.values(g.frames))for(const [l,sg] of [['armL',1],['armR',-1]]){f[l].pos[2]=HZ;f[l].fingers=[sg*FX,0,1];}save('suspended-reverse-crunch',g.camera,g.muscles,g.props,g.frames,{floats:true});
+ delete g.slug;for(const f of Object.values(g.frames))for(const l of ['legL','legR']){f[l].pos[1]+=0.05;f[l].pos[2]+=0.04;f[l].pitch+=30;}g.frames.start.root.pos[1]=+(process.env.SY||0.55);g.frames.start.neck.flex=-3;g.frames.end.neck.flex=-20;const HZ=+(process.env.HZ||0.52),FX=+(process.env.FX||0.12);for(const f of Object.values(g.frames))for(const [l,sg] of [['armL',1],['armR',-1]]){f[l].pos[2]=HZ;f[l].fingers=[sg*FX,0,1];}save('suspended-reverse-crunch',g.camera,g.muscles,g.props,g.frames,{floats:true});
 })();
 // suspended split squat: rear (right) foot in the handle
 (function(){

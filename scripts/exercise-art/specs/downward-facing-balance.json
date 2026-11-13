@@ -42,13 +42,13 @@
     "flex": 5
    },
    "neck": {
-    "flex": -30
+    "flex": -6
    },
    "armL": {
     "pos": [
      0.2,
      0,
-     0.5
+     0.52
     ],
     "contact": true,
     "fingers": [
@@ -72,7 +72,7 @@
     "pos": [
      -0.2,
      0,
-     0.5
+     0.52
     ],
     "contact": true,
     "fingers": [
@@ -134,15 +134,15 @@
     "flex": 0
    },
    "neck": {
-    "flex": -30
+    "flex": -6
    },
    "armL": {
     "pos": [
      0.2,
-     0.2,
-     0.625
+     0,
+     0.52
     ],
-    "contact": false,
+    "contact": true,
     "fingers": [
      0.05,
      0,
@@ -163,10 +163,10 @@
    "armR": {
     "pos": [
      -0.2,
-     0.2,
-     0.625
+     0,
+     0.52
     ],
-    "contact": false,
+    "contact": true,
     "fingers": [
      -0.05,
      0,
@@ -224,13 +224,13 @@
     "flex": -6
    },
    "neck": {
-    "flex": -30
+    "flex": -6
    },
    "armL": {
     "pos": [
      0.2,
      0,
-     0.75
+     0.52
     ],
     "contact": true,
     "fingers": [
@@ -254,7 +254,7 @@
     "pos": [
      -0.2,
      0,
-     0.75
+     0.52
     ],
     "contact": true,
     "fingers": [

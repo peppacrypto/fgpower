@@ -6,7 +6,9 @@
  },
  "muscles": [
   "shoulders",
-  "triceps"
+  "quadriceps",
+  "glutes",
+  "spinal-erectors"
  ],
  "props": [
   {
@@ -532,5 +534,10 @@
  },
  "qaAllow": {
   "prop:log-bar": "the hands sit in the log handle windows; the check boxes the whole solid cheek around the window, so any real grip counts as inside"
+ },
+ "tempo": {
+  "lift": "there",
+  "up": 1,
+  "down": 1.8
  }
 }

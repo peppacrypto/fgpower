@@ -42,7 +42,7 @@
      "flex": -5,
      "abd": 3,
      "rot": 0,
-     "knee": 100
+     "knee": 15
     },
     "rel": "pelvis"
    },
@@ -51,7 +51,7 @@
      "flex": -5,
      "abd": 3,
      "rot": 0,
-     "knee": 100
+     "knee": 15
     },
     "rel": "pelvis"
    },
@@ -124,7 +124,7 @@
      "flex": -5,
      "abd": 3,
      "rot": 0,
-     "knee": 100
+     "knee": 15
     },
     "rel": "pelvis"
    },
@@ -133,7 +133,7 @@
      "flex": -5,
      "abd": 3,
      "rot": 0,
-     "knee": 100
+     "knee": 15
     },
     "rel": "pelvis"
    },
@@ -206,7 +206,7 @@
      "flex": -5,
      "abd": 3,
      "rot": 0,
-     "knee": 100
+     "knee": 15
     },
     "rel": "pelvis"
    },
@@ -215,7 +215,7 @@
      "flex": -5,
      "abd": 3,
      "rot": 0,
-     "knee": 100
+     "knee": 15
     },
     "rel": "pelvis"
    },

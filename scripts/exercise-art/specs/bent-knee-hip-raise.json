@@ -12,7 +12,7 @@
    "root": {
     "pos": [
      0,
-     0.105,
+     0.1,
      0
     ],
     "pitch": -90
@@ -70,9 +70,9 @@
    },
    "legL": {
     "fk": {
-     "flex": 33,
+     "flex": 62,
      "abd": 1,
-     "knee": 70
+     "knee": 100
     },
     "foot": {
      "pitch": 0
@@ -80,9 +80,9 @@
    },
    "legR": {
     "fk": {
-     "flex": 33,
+     "flex": 62,
      "abd": 1,
-     "knee": 70
+     "knee": 100
     },
     "foot": {
      "pitch": 0
@@ -93,10 +93,10 @@
    "root": {
     "pos": [
      0,
-     0.19,
-     -0.01
+     0.2,
+     -0.03
     ],
-    "pitch": -114
+    "pitch": -122
    },
    "neck": {
     "flex": 0
@@ -161,9 +161,9 @@
    },
    "legL": {
     "fk": {
-     "flex": 108,
+     "flex": 115,
      "abd": 1,
-     "knee": 70
+     "knee": 100
     },
     "foot": {
      "pitch": 0
@@ -171,9 +171,9 @@
    },
    "legR": {
     "fk": {
-     "flex": 108,
+     "flex": 115,
      "abd": 1,
-     "knee": 70
+     "knee": 100
     },
     "foot": {
      "pitch": 0

@@ -1,8 +1,14 @@
 {
  "slug": "kettlebell-halo",
  "camera": {
-  "az": 50,
+  "az": 60,
   "el": 12
+ },
+ "tempo": {
+  "lift": "even",
+  "even": 1.2,
+  "squeeze": 0.05,
+  "stretch": 0.05
  },
  "muscles": [
   "shoulders",

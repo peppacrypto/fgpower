@@ -5,7 +5,8 @@
   "el": 3
  },
  "muscles": [
-  "abdominals"
+  "abdominals",
+  "lats"
  ],
  "frames": {
   "start": {
@@ -412,5 +413,10 @@
     ]
    }
   }
+ },
+ "tempo": {
+  "lift": "back",
+  "up": 1,
+  "down": 1.8
  }
 }

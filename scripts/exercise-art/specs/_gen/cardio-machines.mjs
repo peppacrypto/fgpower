@@ -16,10 +16,10 @@ const tm = (slug, o) => {
       if (l.anchor==='ball'||l.anchor==='heel'||l.anchor==='sole') l.pos[1]+=0.012;
       
       if (l.anchor==='heel') { l.pos[2] += o.stride; }
+      if (l.anchor==='ball') { l.pos[2] += o.bz||0; }
       if (air) { // stance foot: leaves the belt in the flight phase; swing foot: higher knee drive
         if (l.anchor==='sole') { l.pos[1] += o.fly; }
-        if (l.anchor==='ankle') { l.pos[1] += o.knee; l.pos[2] += o.knee*0.4; }
-        if (l.anchor==='ankle') l.pitch = 62 - 0;
+        if (l.anchor==='ankle') { if (o.ay!=null) { l.pos[1]=o.ay; l.pos[2]=o.az; l.pitch=o.ap; } else { l.pos[1] += o.knee; l.pos[2] += o.knee*0.4; l.pitch = 62; } }
       }
     }
     if (air) f.root.pos[1] += o.fly;
@@ -28,9 +28,9 @@ const tm = (slug, o) => {
   }
   W(slug, s);
 };
-tm('walking-treadmill', {there:1,   pitch:7,  stride:0,    fly:0,    knee:0,    rootY:0,    elbow:92, swing:30});
-tm('jogging-treadmill', {there:0.75,pitch:9,  stride:0.02, fly:0.04, knee:0.05, rootY:0, elbow:90, swing:38});
-tm('running-treadmill', {there:0.55,pitch:13, stride:0.03, fly:0.08, knee:0.10, rootY:0, elbow:85, swing:48});
+tm('walking-treadmill', {there:1.15,pitch:4,  stride:-0.05,bz:0.10, fly:0,    ay:0.37, az:-0.16, ap:8, rootY:0,    elbow:100, swing:16});
+tm('jogging-treadmill', {there:1.0, pitch:8,  stride:0.02, fly:0,    knee:0.0, rootY:0, elbow:90, swing:38});
+tm('running-treadmill', {there:0.75,pitch:15, stride:0.03, fly:0,    knee:0.14, rootY:0, elbow:85, swing:48});
 
 const SW = {y:1.065,saddle:-0.05,p0:14,p1:-16,lift:0.03,px:1.2,z:-0.22};
 // ---- cycling: feet (balls) on the crank circle
@@ -71,4 +71,5 @@ cyc('recumbent-bike','recumbent-bike',0,0.42,0.43,0, an=>-22+6*Math.sin(rad(an))
   rec.root.pos = [0,0.524,-0.31]; rec.root.pitch = -4; rec.spine.flex = 2; rec.neck.flex = 0;
   for (const a of ['armL','armR']) { rec[a].pos = [rec[a].pos[0],0.82,0.12]; rec[a].pole=[(a==='armL'?1:-1)*0.5,-0.2,-0.5]; }
   s.frames = { start:catchF, mid:F.mid, mid2:fin, mid3:rec, end:JSON.parse(JSON.stringify(catchF)) };
+  s.camera = {az:90, el:8, ...(s.camera||{}), az:90, el:8}; s.muscles=['glutes','hamstrings','lats','quadriceps']; s.tempo={lift:'there', up:0.6, down:1.2, squeeze:0.3, stretch:0.1};
   W('rowing-stationary', s); }

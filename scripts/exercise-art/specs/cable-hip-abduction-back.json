@@ -1,7 +1,7 @@
 {
  "slug": "cable-hip-abduction-back",
  "camera": {
-  "az": 200,
+  "az": 180,
   "el": 8
  },
  "muscles": [
@@ -27,7 +27,7 @@
   "start": {
    "root": {
     "pos": [
-     0,
+     -0.08,
      0.92,
      0
     ],
@@ -107,12 +107,12 @@
   "end": {
    "root": {
     "pos": [
-     0,
+     -0.09,
      0.92,
      0
     ],
     "pitch": 0,
-    "roll": -4
+    "roll": 0
    },
    "spine": {
     "flex": 0
@@ -137,9 +137,9 @@
    },
    "legL": {
     "pos": [
-     0.5,
+     0.47,
      0.27,
-     -0.2
+     -0.07
     ],
     "anchor": "ankle",
     "pitch": 0,

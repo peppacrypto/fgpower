@@ -78,7 +78,7 @@
      "flex": 168,
      "abd": 6,
      "rot": 0,
-     "elbow": 125
+     "elbow": 140
     },
     "rel": "chest",
     "hand": "relaxed",
@@ -90,7 +90,7 @@
      "flex": 168,
      "abd": 6,
      "rot": 0,
-     "elbow": 125
+     "elbow": 140
     },
     "rel": "chest",
     "hand": "relaxed",
@@ -148,7 +148,7 @@
      "flex": 168,
      "abd": 6,
      "rot": 0,
-     "elbow": 65
+     "elbow": 70
     },
     "rel": "chest",
     "hand": "relaxed",
@@ -160,7 +160,7 @@
      "flex": 168,
      "abd": 6,
      "rot": 0,
-     "elbow": 65
+     "elbow": 70
     },
     "rel": "chest",
     "hand": "relaxed",

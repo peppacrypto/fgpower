@@ -1,11 +1,13 @@
 {
  "slug": "iron-crosses-stretch",
  "camera": {
-  "az": 30,
-  "el": 40
+  "az": 20,
+  "el": 72
  },
  "muscles": [
-  "quadriceps"
+  "glutes",
+  "obliques",
+  "spinal-erectors"
  ],
  "frames": {
   "start": {
@@ -84,7 +86,7 @@
      "flex": 0,
      "abd": 0,
      "rot": 0,
-     "knee": 80
+     "knee": 60
     },
     "rel": "pelvis",
     "foot": {
@@ -134,7 +136,7 @@
      0
     ],
     "pitch": 90,
-    "roll": 20
+    "roll": 35
    },
    "neck": {
     "twist": 70
@@ -144,7 +146,7 @@
      "flex": -30,
      "abd": -30,
      "rot": 0,
-     "knee": 80
+     "knee": 60
     },
     "rel": "pelvis",
     "foot": {
@@ -154,7 +156,7 @@
    "legR": {
     "fk": {
      "flex": 0,
-     "abd": 10,
+     "abd": 45,
      "rot": 0,
      "knee": 0
     },

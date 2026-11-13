@@ -58,10 +58,10 @@
    },
    "armL": {
     "fk": {
-     "flex": -25,
-     "abd": 27,
+     "flex": -45,
+     "abd": 20,
      "rot": 0,
-     "elbow": 90
+     "elbow": 75
     },
     "rel": "chest",
     "hand": "grip",
@@ -119,8 +119,8 @@
    },
    "armL": {
     "fk": {
-     "flex": -25,
-     "abd": 27,
+     "flex": -45,
+     "abd": 20,
      "rot": 0,
      "elbow": 6
     },

@@ -1,40 +1,46 @@
 {
  "slug": "external-rotation-with-band",
  "camera": {
-  "az": 40,
+  "az": 35,
   "el": 8
  },
  "muscles": [
+  "shoulders",
   "posterior-deltoid"
  ],
  "props": [
   {
+   "type": "anchor-post",
+   "pos": [
+    -0.72,
+    0,
+    0.26
+   ],
+   "yaw": 90,
+   "bandY": 1.08,
+   "band": false
+  },
+  {
    "type": "band",
    "hands": true,
    "a": {
-    "hand": "L",
-    "r": 0.007,
+    "pos": [
+     -0.655,
+     1.08,
+     0.26
+    ],
     "axis": [
      0,
      1,
      0
-    ]
+    ],
+    "r": 0.01
    },
    "b": {
-    "pos": [
-     -0.9,
-     1.08,
-     0.25
-    ],
-    "axis": [
-     0,
-     1,
-     0
-    ],
-    "r": 0.02
+    "hand": "L"
    },
-   "width": 0.032,
-   "rest": 0.5
+   "rest": 0.45,
+   "width": 0.022
   }
  ],
  "frames": {
@@ -130,7 +136,7 @@
     "fk": {
      "flex": 0,
      "abd": 8,
-     "rot": -60,
+     "rot": -55,
      "elbow": 90
     },
     "rel": "chest",
@@ -149,5 +155,10 @@
    }
   }
  },
- "muscleSide": "L"
+ "muscleSide": "L",
+ "tempo": {
+  "lift": "there",
+  "up": 1,
+  "down": 1.8
+ }
 }

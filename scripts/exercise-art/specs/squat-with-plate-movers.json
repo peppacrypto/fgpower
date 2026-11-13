@@ -1,8 +1,8 @@
 {
  "slug": "squat-with-plate-movers",
  "camera": {
-  "az": 48,
-  "el": 8
+  "az": 20,
+  "el": 16
  },
  "muscles": [
   "quadriceps",

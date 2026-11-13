@@ -1,8 +1,8 @@
 {
  "slug": "battling-ropes",
  "camera": {
-  "az": 58,
-  "el": 12
+  "az": 80,
+  "el": 10
  },
  "muscles": [
   "shoulders",
@@ -18,16 +18,16 @@
    "root": {
     "pos": [
      0,
-     0.78,
+     0.8,
      0
     ],
-    "pitch": 22
+    "pitch": 16
    },
    "spine": {
-    "flex": 8
+    "flex": 4
    },
    "neck": {
-    "flex": -26
+    "flex": -16
    },
    "legL": {
     "pos": [
@@ -62,7 +62,7 @@
    "armL": {
     "pos": [
      0.29,
-     1.14,
+     1.18,
      0.46
     ],
     "contact": true,
@@ -88,7 +88,7 @@
    "armR": {
     "pos": [
      -0.29,
-     0.8,
+     0.76,
      0.46
     ],
     "contact": true,
@@ -128,16 +128,16 @@
    "root": {
     "pos": [
      0,
-     0.78,
+     0.8,
      0
     ],
-    "pitch": 22
+    "pitch": 16
    },
    "spine": {
-    "flex": 8
+    "flex": 4
    },
    "neck": {
-    "flex": -26
+    "flex": -16
    },
    "legL": {
     "pos": [
@@ -238,16 +238,16 @@
    "root": {
     "pos": [
      0,
-     0.78,
+     0.8,
      0
     ],
-    "pitch": 22
+    "pitch": 16
    },
    "spine": {
-    "flex": 8
+    "flex": 4
    },
    "neck": {
-    "flex": -26
+    "flex": -16
    },
    "legL": {
     "pos": [
@@ -282,7 +282,7 @@
    "armL": {
     "pos": [
      0.29,
-     0.8,
+     0.76,
      0.46
     ],
     "contact": true,
@@ -308,7 +308,7 @@
    "armR": {
     "pos": [
      -0.29,
-     1.14,
+     1.18,
      0.46
     ],
     "contact": true,
@@ -348,16 +348,16 @@
    "root": {
     "pos": [
      0,
-     0.78,
+     0.8,
      0
     ],
-    "pitch": 22
+    "pitch": 16
    },
    "spine": {
-    "flex": 8
+    "flex": 4
    },
    "neck": {
-    "flex": -26
+    "flex": -16
    },
    "legL": {
     "pos": [
@@ -458,16 +458,16 @@
    "root": {
     "pos": [
      0,
-     0.78,
+     0.8,
      0
     ],
-    "pitch": 22
+    "pitch": 16
    },
    "spine": {
-    "flex": 8
+    "flex": 4
    },
    "neck": {
-    "flex": -26
+    "flex": -16
    },
    "legL": {
     "pos": [
@@ -502,7 +502,7 @@
    "armL": {
     "pos": [
      0.29,
-     1.14,
+     1.18,
      0.46
     ],
     "contact": true,
@@ -528,7 +528,7 @@
    "armR": {
     "pos": [
      -0.29,
-     0.8,
+     0.76,
      0.46
     ],
     "contact": true,

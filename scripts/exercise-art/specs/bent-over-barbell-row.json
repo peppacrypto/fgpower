@@ -1,7 +1,7 @@
 {
  "slug": "bent-over-barbell-row",
  "camera": {
-  "az": 100,
+  "az": 90,
   "el": 8
  },
  "muscles": [
@@ -24,7 +24,7 @@
      0.8,
      -0.3
     ],
-    "pitch": 65
+    "pitch": 62
    },
    "neck": {
     "flex": -35
@@ -32,7 +32,7 @@
    "armL": {
     "pos": [
      0.235,
-     0.32,
+     0.34,
      0.12
     ],
     "contact": true,
@@ -56,7 +56,7 @@
    "armR": {
     "pos": [
      -0.235,
-     0.32,
+     0.34,
      0.12
     ],
     "contact": true,
@@ -113,7 +113,7 @@
      0.8,
      -0.3
     ],
-    "pitch": 65
+    "pitch": 62
    },
    "neck": {
     "flex": -35
@@ -202,7 +202,7 @@
      0.8,
      -0.3
     ],
-    "pitch": 65
+    "pitch": 62
    },
    "neck": {
     "flex": -35

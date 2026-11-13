@@ -1,7 +1,7 @@
 {
  "slug": "cable-deadlifts",
  "camera": {
-  "az": 35,
+  "az": 62,
   "el": 12
  },
  "muscles": [
@@ -41,22 +41,22 @@
    "root": {
     "pos": [
      0,
-     0.53,
-     -0.2
+     0.62,
+     -0.26
     ],
-    "pitch": 40
+    "pitch": 52
    },
    "spine": {
-    "flex": 2
+    "flex": 3
    },
    "neck": {
-    "flex": -22
+    "flex": -34
    },
    "armL": {
     "pos": [
      0.33,
-     0.29,
-     0.06
+     0.3,
+     0.08
     ],
     "contact": true,
     "fingers": [
@@ -79,8 +79,8 @@
    "armR": {
     "pos": [
      -0.33,
-     0.29,
-     0.06
+     0.3,
+     0.08
     ],
     "contact": true,
     "fingers": [
@@ -144,7 +144,7 @@
     "flex": 1
    },
    "neck": {
-    "flex": -14
+    "flex": -18
    },
    "armL": {
     "pos": [

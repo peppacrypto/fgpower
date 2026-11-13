@@ -1,11 +1,13 @@
 {
  "slug": "cable-internal-rotation",
  "camera": {
-  "az": 40,
-  "el": 8
+  "az": 20,
+  "el": 10
  },
  "muscles": [
-  "anterior-deltoid"
+  "chest",
+  "lats",
+  "shoulders"
  ],
  "props": [
   {
@@ -13,7 +15,7 @@
    "pos": [
     0.75,
     0,
-    0
+    0.2
    ],
    "yaw": -90,
    "pulleyY": 1.08,
@@ -59,7 +61,7 @@
     "fk": {
      "flex": 0,
      "abd": 8,
-     "rot": -60,
+     "rot": -55,
      "elbow": 90
     },
     "rel": "chest",
@@ -133,5 +135,10 @@
    }
   }
  },
- "muscleSide": "L"
+ "muscleSide": "L",
+ "tempo": {
+  "lift": "there",
+  "up": 1,
+  "down": 1.8
+ }
 }

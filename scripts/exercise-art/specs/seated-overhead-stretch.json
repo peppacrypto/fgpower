@@ -1,12 +1,12 @@
 {
  "slug": "seated-overhead-stretch",
  "camera": {
-  "az": 20,
-  "el": 8
+  "az": 0,
+  "el": 6
  },
  "muscles": [
-  "abdominals",
-  "obliques"
+  "obliques",
+  "abdominals"
  ],
  "props": [
   {
@@ -21,22 +21,21 @@
      0.125,
      0
     ],
-    "pitch": 0,
-    "roll": 8
+    "pitch": 0
    },
    "spine": {
-    "side": 26
+    "side": 14
    },
    "legL": {
     "pos": [
      0.05,
      0.09,
-     0.42
+     0.4
     ],
     "anchor": "ankle",
     "pole": [
-     0.6,
-     0.8,
+     0.5,
+     0.87,
      0
     ],
     "pitch": 0,
@@ -47,12 +46,12 @@
     "pos": [
      -0.05,
      0.09,
-     0.42
+     0.4
     ],
     "anchor": "ankle",
     "pole": [
-     -0.6,
-     0.8,
+     -0.5,
+     0.87,
      0
     ],
     "pitch": 0,
@@ -61,9 +60,9 @@
    },
    "armL": {
     "pos": [
-     0.34,
+     0.42,
      0,
-     -0.1
+     0
     ],
     "contact": true,
     "hand": "flat",
@@ -78,35 +77,20 @@
      0
     ],
     "pole": [
-     0.5,
+     1,
      0.2,
-     -1
+     -0.5
     ]
    },
    "armR": {
-    "pos": [
-     -0.11,
-     0,
-     -0.06
-    ],
-    "rel": "head",
+    "fk": {
+     "flex": 172,
+     "abd": 14,
+     "elbow": 4
+    },
+    "rel": "chest",
     "hand": "relaxed",
-    "fingers": [
-     0.3,
-     0.2,
-     -1
-    ],
-    "palm": [
-     0,
-     -0.3,
-     1
-    ],
-    "curl": 0.5,
-    "pole": [
-     -1,
-     0.6,
-     -0.1
-    ]
+    "curl": 0.2
    }
   },
   "end": {
@@ -116,22 +100,21 @@
      0.125,
      0
     ],
-    "pitch": 0,
-    "roll": 8
+    "pitch": 0
    },
    "spine": {
-    "side": 32
+    "side": 26
    },
    "legL": {
     "pos": [
      0.05,
      0.09,
-     0.42
+     0.4
     ],
     "anchor": "ankle",
     "pole": [
-     0.6,
-     0.8,
+     0.5,
+     0.87,
      0
     ],
     "pitch": 0,
@@ -142,12 +125,12 @@
     "pos": [
      -0.05,
      0.09,
-     0.42
+     0.4
     ],
     "anchor": "ankle",
     "pole": [
-     -0.6,
-     0.8,
+     -0.5,
+     0.87,
      0
     ],
     "pitch": 0,
@@ -156,9 +139,9 @@
    },
    "armL": {
     "pos": [
-     0.34,
+     0.42,
      0,
-     -0.1
+     0
     ],
     "contact": true,
     "hand": "flat",
@@ -173,35 +156,20 @@
      0
     ],
     "pole": [
-     0.5,
+     1,
      0.2,
-     -1
+     -0.5
     ]
    },
    "armR": {
-    "pos": [
-     -0.11,
-     0,
-     -0.06
-    ],
-    "rel": "head",
+    "fk": {
+     "flex": 172,
+     "abd": 14,
+     "elbow": 4
+    },
+    "rel": "chest",
     "hand": "relaxed",
-    "fingers": [
-     0.3,
-     0.2,
-     -1
-    ],
-    "palm": [
-     0,
-     -0.3,
-     1
-    ],
-    "curl": 0.5,
-    "pole": [
-     -1,
-     0.8,
-     -0.1
-    ]
+    "curl": 0.2
    }
   }
  }

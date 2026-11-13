@@ -1,8 +1,8 @@
 {
  "slug": "all-fours-quad-stretch",
  "camera": {
-  "az": 105,
-  "el": 18
+  "az": 90,
+  "el": 14
  },
  "muscles": [
   "quadriceps"

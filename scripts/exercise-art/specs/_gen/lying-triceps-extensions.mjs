@@ -23,8 +23,8 @@ function pt(a,psi,th,{hd0=-0.05,k0=0.03,U=0.279,F=0.325}={}){
 function build(slug,o){
   const {a=0,x=0.1,bar,db=0,psi=0,ths,mus=['triceps'],pole,neutral=false,one=false,camera={az:40,el:8},legs=true,fk=0}=o;
   const frames={};
-  const mk=(th,xx)=>{
-    const po={F:o.F??0.325}; const g=pt(a,psi,th,po); const h=o.adj?pt(a,psi,th+o.adj,po):g; g.fy=h.fy;g.fz=h.fz;g.py=h.py;g.pz=h.pz;
+  const mk=(th,xx,ff)=>{
+    const po={F:ff??o.F??0.325}; const g=pt(a,psi,th,po); const h=o.adj?pt(a,psi,th+o.adj,po):g; g.fy=h.fy;g.fz=h.fz;g.py=h.py;g.pz=h.pz;
     const fr={root:{pos:[0,SY+0.0,0.2],pitch:-(90-a)},neck:{flex:6},spine:{flex:-4},legL:leg(1),legR:leg(-1)};
     if(a!==0){fr.root.pos=[0,o.hipY,0.2];fr.legL={pos:[0.22,o.legY,o.legZ],anchor:'sole',pole:[0.3,1,0.3]};fr.legR={pos:[-0.22,o.legY,o.legZ],anchor:'sole',pole:[-0.3,1,0.3]};}
     const arm=s=>{
@@ -38,7 +38,7 @@ function build(slug,o){
     else fr.armR=arm(-1);
     return fr;
   };
-  ths.forEach((th,i)=>{ frames[['start','mid','mid2','end'][ths.length===2?(i?3:0):ths.length===3?[0,1,3][i]:i]]=mk(th,o.xs?o.xs[i]:x); });
+  ths.forEach((th,i)=>{ frames[['start','mid','mid2','end'][ths.length===2?(i?3:0):ths.length===3?[0,1,3][i]:i]]=mk(th,o.xs?o.xs[i]:x,o.Fs?o.Fs[i]:undefined); });
   const props=[{type:o.bench||'flat-bench',...(o.benchOpt||{})}];
   if(bar) props.push({type:bar.type,hands:true,...bar.opt});
   if(db){ props.push({type:'dumbbell',kg:db,hand:'L'}); if(!one) props.push({type:'dumbbell',kg:db,hand:'R'}); }
@@ -47,11 +47,11 @@ function build(slug,o){
 const ez=g=>({type:'ez-bar',opt:{grip:g,plates:[10]}});
 build('ez-bar-skullcrusher',{x:0.1,bar:ez('inner'),ths:[0,35,70,100],camera:{az:70,el:6}});
 build('lying-triceps-press',{x:0.2325,bar:ez('outer'),ths:[0,45,100],camera:{az:70,el:6}});
-build('lying-close-grip-barbell-triceps-press-to-chin',{x:0.1,bar:ez('inner'),ths:[0,50,112],camera:{az:70,el:6}});
-build('lying-close-grip-barbell-triceps-extension-behind-the-head',{x:0.1,bar:ez('inner'),psi:50,adj:30,curl:0.5,F:0.36,ths:[50,70,100,140],camera:{az:70,el:10}});
+build('lying-close-grip-barbell-triceps-press-to-chin',{x:0.1,bar:ez('inner'),ths:[0,55,122],camera:{az:70,el:6}});
+build('lying-close-grip-barbell-triceps-extension-behind-the-head',{x:0.1,bar:ez('inner'),psi:50,adj:30,curl:0.5,F:0.36,ths:[50,70,100,140],camera:{az:55,el:22}});
 build('lying-dumbbell-tricep-extension',{x:0.17,db:10,neutral:true,ths:[0,45,100],camera:{az:70,el:6}});
 build('dumbbell-tricep-extension-pronated-grip',{x:0.22,db:10,ths:[0,45,100],camera:{az:70,el:6}});
 build('decline-dumbbell-triceps-extension',{a:-20,hipY:0.73,legZ:0.66,legY:0.3,bench:'decline-bench',x:0.17,db:10,neutral:true,ths:[0,45,100],camera:{az:70,el:6}});
 build('one-arm-pronated-dumbbell-triceps-extension',{x:0.19,db:10,one:true,ths:[0,45,100],camera:{az:70,el:6}});
 build('one-arm-supinated-dumbbell-triceps-extension',{sup:true,pole:[-0.2,0.8,0.6],x:0.19,db:10,one:true,ths:[0,45,100],camera:{az:70,el:6}});
-build('tate-press',{x:0.27,db:10,pole:[0.6,1,0.3],ths:[0,45,100],camera:{az:70,el:6}});
+build('tate-press',{x:0.27,xs:[0.27,0.2,0.12],Fs:[0.325,0.3,0.25],db:10,pole:[0.6,1,0.3],ths:[0,-40,-75],camera:{az:70,el:6}});

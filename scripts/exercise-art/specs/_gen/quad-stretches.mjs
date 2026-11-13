@@ -55,4 +55,40 @@ save('looking-at-ceiling',{az:90,el:8},['quadriceps'],mat,{start:{root:{pos:[0,0
  legL:kleg,legR:kleg,armL:heel(1),armR:heel(-1)}});
 const TU=fs.existsSync(W+'_gen/quad-tuned.json')?JSON.parse(fs.readFileSync(W+'_gen/quad-tuned.json')):{};
 for(const [k,v] of Object.entries(out)){for(const [l,o] of Object.entries(TU[k]||{}))Object.assign(v.frames.start[l]||{},o)}
+// ---- entry frames: current (tuned) pose becomes `end`; `start` = entry into the stretch
+const rel0={fingers:[0,-1,0],palm:[-1,0,0]};
+const hip=(s)=>({pos:[s*0.26,0.55,0.0],hand:'relaxed',fingers:[0,-1,0],palm:[-s,0,0],pole:[s*1,0,-1]});
+const STARTS={
+ 'looking-at-ceiling':{root:{pos:[0,0.5,0.0],pitch:0},spine:{flex:0},neck:{flex:0},armL:hip(1),armR:hip(-1)},
+ 'all-fours-quad-stretch':{legL:{pos:[0.11,0.075,-0.44],anchor:'ankle',pitch:160,pole:[0,-1,0.05]},armL:{pos:[0.19,0,0.5],contact:true,fingers:[0,0,1],palm:[0,-1,0],pole:[0.3,0,-1],curl:-0.25},spine:{twist:0}},
+ 'intermediate-hip-flexor-and-quad-stretch':{legL:{pos:[0.11,0.1,-0.75],anchor:'ankle',pole:[0.2,1,0]},armL:{pos:[0.18,0.02,0.25],contact:true,hand:'flat',fingers:[0,0,1],palm:[0,-1,0],pole:[1,0,-0.5]},armR:{pos:[-0.18,0.02,0.25],contact:true,hand:'flat',fingers:[0,0,1],palm:[0,-1,0],pole:[-1,0,-0.5]}},
+ 'on-your-back-quad-stretch':{legL:{pos:[0.15,0.5,0.95],anchor:'ankle',pole:[0,1,0]},armL:{pos:[0.28,0.45,0.2],hand:'relaxed',fingers:[0,0,1],palm:[-1,0,0],pole:[1,0,0]}},
+ 'on-your-side-quad-stretch':{legL:{pos:[-0.05,0.3,-0.8],anchor:'ankle',pole:[0,1,0]},armL:{pos:[-0.15,0.4,0.0],contact:false,hand:'relaxed',fingers:[0,0,-1],palm:[1,0,0],pole:[-1,0,0]}},
+ 'quad-stretch':{legL:{pos:[-0.05,0.3,-0.8],anchor:'ankle',pole:[0,1,0]},armL:{pos:[-0.15,0.4,0.0],hand:'relaxed',fingers:[0,0,-1],palm:[1,0,0],pole:[-1,0,0]},armR:{pos:[0.3,0.2,0.5],hand:'relaxed',fingers:[0,0,1],palm:[0,-1,0],pole:[1,0,0],curl:0.2}},
+ 'side-lying-floor-stretch':{armL:{pos:[-0.15,0.4,0.0],hand:'relaxed',fingers:[0,0,-1],palm:[1,0,0],pole:[-1,0,0],curl:0.2}},
+ 'side-lying-groin-stretch':{legL:{fk:{flex:5,abd:15,rot:0,knee:0},rel:'pelvis',foot:{pitch:0}}},
+ 'one-half-locust':{legR:{pos:[-0.11,0.15,-0.85],anchor:'ankle',pole:[0,1,0]},armR:{pos:[-0.3,0.02,0.05],contact:true,hand:'flat',fingers:[0,0,-1],palm:[0,-1,0],pole:[-1,0,0],curl:0.1},spine:{flex:-20}},
+};
+const MUS={'one-half-locust':['glutes','quadriceps']};
+const CAM={'one-half-locust':{az:250,el:20},'looking-at-ceiling':{az:90,el:8},'all-fours-quad-stretch':{az:90,el:14},'intermediate-hip-flexor-and-quad-stretch':{az:80,el:15},'on-your-back-quad-stretch':{az:90,el:12},'on-your-side-quad-stretch':{az:150,el:22},'quad-stretch':{az:90,el:12},'side-lying-floor-stretch':{az:20,el:25},'side-lying-groin-stretch':{az:20,el:22}};
+delete STARTS['all-fours-quad-stretch'];delete STARTS['side-lying-floor-stretch'];
+const DELTA={
+ 'quad-stretch':{legL:[0,-0.03,-0.45],armL:[0,-0.1,-0.25],armR:[0,-0.05,-0.25]},
+ 'one-half-locust':{legR:[0,0.15,-0.2],armR:[0,0.1,-0.12]},
+ 'intermediate-hip-flexor-and-quad-stretch':{legL:[0,0.1,-0.25],armL:[0,0.05,-0.12],armR:[0,0.05,-0.12]}};
+for(const [k,v] of Object.entries(out)){
+ if(DELTA[k])delete STARTS[k];
+ if(CAM[k])v.camera=CAM[k]; if(MUS[k])v.muscles=MUS[k];
+ const st=STARTS[k]; if(!st)continue;
+ const end=JSON.parse(JSON.stringify(v.frames.start)); const start=JSON.parse(JSON.stringify(end));
+ for(const [l,o] of Object.entries(st)){ if(o&&typeof o==='object'&&!Array.isArray(o)&&(l==='root'||l==='spine'||l==='neck'))start[l]={...(start[l]||{}),...o}; else start[l]=o; }
+ v.frames={start,end};
+}
+for(const [k,d] of Object.entries(DELTA)){const v=out[k];const T=(TU[k]||{});const e=JSON.parse(JSON.stringify(v.frames.start));if(!v.frames.end)v.frames.end=e;const end=v.frames.end;const st=JSON.parse(JSON.stringify(end));v.frames.start=st;
+ for(const [l,o] of Object.entries(d)){const a=st[l];if(Array.isArray(o))a.pos=a.pos.map((x,i)=>x+o[i]);else if(o==='mirrorFloor'||o==='floor'){st[l]={pos:[(l==='armR'?-1:1)*0.27,0.0,0.05],contact:true,hand:'flat',fingers:[0,0,l==='armR'?-1:-1],palm:[0,-1,0],pole:[(l==='armR'?1:-1),-1,-1],curl:0.1}}}}
+
+const MIDS={};
+for(const [k,m] of Object.entries(MIDS)){const v=out[k];const mid=JSON.parse(JSON.stringify(v.frames.end));for(const [l,o] of Object.entries(m))Object.assign(mid[l],o);v.frames={start:v.frames.start,mid,end:v.frames.end}}
+const T2=fs.existsSync(W+'_gen/quad-tuned2.json')?JSON.parse(fs.readFileSync(W+'_gen/quad-tuned2.json')):{};
+for(const [k,v] of Object.entries(out)){for(const [f,ls] of Object.entries(T2[k]||{}))for(const [l,o] of Object.entries(ls))Object.assign(v.frames[f][l]||(v.frames[f][l]={}),o)}
 for(const [k,v] of Object.entries(out))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));

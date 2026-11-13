@@ -1,10 +1,11 @@
 {
  "slug": "external-rotation-with-cable",
  "camera": {
-  "az": 40,
+  "az": 35,
   "el": 8
  },
  "muscles": [
+  "shoulders",
   "posterior-deltoid"
  ],
  "props": [
@@ -13,7 +14,7 @@
    "pos": [
     -0.75,
     0,
-    0
+    0.2
    ],
    "yaw": 90,
    "pulleyY": 1.08,
@@ -114,7 +115,7 @@
     "fk": {
      "flex": 0,
      "abd": 8,
-     "rot": -60,
+     "rot": -55,
      "elbow": 90
     },
     "rel": "chest",
@@ -133,5 +134,10 @@
    }
   }
  },
- "muscleSide": "L"
+ "muscleSide": "L",
+ "tempo": {
+  "lift": "there",
+  "up": 1,
+  "down": 1.8
+ }
 }

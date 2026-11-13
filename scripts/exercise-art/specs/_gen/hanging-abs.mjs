@@ -12,26 +12,27 @@ save('hanging-leg-raise',cam,bar,{
  start:fr(1.185,-0.03,2,0,-4,O,[4,6]),
  end:fr(1.2,-0.1,-14,10,6,O,[118,45])});
 save('hanging-pike',cam,bar,{
- start:fr(1.185,-0.03,-2,0,-4,O,[90,95]),
- end:fr(1.2,-0.12,-12,8,4,O,[132,10])});
+ start:fr(1.185,-0.03,2,0,-4,O,[4,6]),
+ end:fr(1.2,-0.12,-12,8,4,O,[132,10])},{tempo:{lift:'there',up:1,down:1.8,squeeze:0.35,stretch:0.2}});
 save('gorilla-chin-crunch',cam,bar,{
- start:fr(1.185,-0.03,-2,0,-4,arms(0.2,'under'),[90,95]),
- end:fr(1.42,-0.14,-10,22,2,arms(0.2,'under'),[122,118])});
+ start:fr(1.185,-0.03,2,0,-4,arms(0.2,'under'),[4,6]),
+ end:fr(1.2,-0.14,-10,22,2,arms(0.2,'under'),[122,118])});
 save('wind-sprints',cam,bar,{
  start:fr(1.185,-0.03,-2,0,-4,O,[100,100],[4,6]),
- end:fr(1.185,-0.03,-2,0,-4,O,[4,6],[100,100])});
+ end:fr(1.185,-0.03,-2,0,-4,O,[4,6],[100,100])},{tempo:{lift:'even',up:0.4,down:0.4,squeeze:0,stretch:0}});
 // captain's chair
 const Y2=1.30,ch=s=>({pos:[s*0.225,Y2+0.10,0.29],contact:true,fingers:[0,0,1],palm:[-s,0,0],pole:[s*0.15,-1,-0.15],curl:0.82});
 const CA={armL:ch(1),armR:ch(-1)};
 save('knee-hip-raise-on-parallel-bars',{az:64,el:10},[{type:'captains-chair'}],{
  start:{root:{pos:[0,1.144,-0.075],pitch:0},neck:{flex:2},spine:{flex:0},...CA,legL:lg(6,8),legR:lg(6,8)},
- end:{root:{pos:[0,1.144,-0.075],pitch:-8},neck:{flex:12},spine:{flex:6},...CA,legL:lg(112,96),legR:lg(112,96)}});
+ mid:{root:{pos:[0,1.144,-0.075],pitch:-6},neck:{flex:8},spine:{flex:4},...CA,legL:lg(75,112),legR:lg(75,112)},
+ end:{root:{pos:[0,1.144,-0.06],pitch:-10},neck:{flex:14},spine:{flex:6},...CA,legL:lg(118,115),legR:lg(118,115)}});
 // one-handed hang
-const H=1.8;
+const H=2.25;
 const oh=(y,z,r)=>({root:{pos:[0,y,z],pitch:0,roll:r},neck:{flex:0},spine:{flex:0},
  armL:{pos:[0.19,H,0],contact:true,fingers:[0,1,0],palm:[0,0,1],pole:[0.3,-1,0.4],curl:0.82},
- armR:{fk:{flex:0,abd:14,rot:0,elbow:10},rel:'chest'},
- legL:{pos:[0.13,0,0.02],anchor:'sole',yaw:6},legR:{pos:[-0.13,0,0.02],anchor:'sole',yaw:-6}});
-save('one-handed-hang',{az:150,el:8},[{type:'pull-up-bar',height:H}],{start:oh(0.9,-0.03,-4)},{muscles:['lats'],muscleSide:'L'});
+ armR:{fk:{flex:0,abd:12,rot:0,elbow:8}},
+ legL:lg(3,4),legR:lg(3,4)});
+save('one-handed-hang',{az:35,el:8},[{type:'pull-up-bar',height:H}],{start:oh(1.185,-0.03,-4)},{muscles:['lats'],muscleSide:'L'});
 for(const [k,v] of Object.entries(out))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
 console.log(Object.keys(out).join(' '));

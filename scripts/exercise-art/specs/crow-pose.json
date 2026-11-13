@@ -1,11 +1,13 @@
 {
  "slug": "crow-pose",
  "camera": {
-  "az": 60,
-  "el": 8
+  "az": 90,
+  "el": 6
  },
  "muscles": [
-  "shoulders"
+  "shoulders",
+  "abdominals",
+  "forearms"
  ],
  "props": [],
  "frames": {
@@ -13,16 +15,16 @@
    "root": {
     "pos": [
      0,
-     0.6,
-     -0.05
+     0.5,
+     -0.1
     ],
-    "pitch": 80
+    "pitch": 60
    },
    "spine": {
-    "flex": 28
+    "flex": 30
    },
    "neck": {
-    "flex": -12
+    "flex": -15
    },
    "armL": {
     "pos": [
@@ -42,7 +44,12 @@
      -1,
      0
     ],
-    "spread": 1
+    "spread": 1,
+    "pole": [
+     0.5,
+     0,
+     -1
+    ]
    },
    "armR": {
     "pos": [
@@ -62,12 +69,17 @@
      -1,
      0
     ],
-    "spread": 1
+    "spread": 1,
+    "pole": [
+     -0.5,
+     0,
+     -1
+    ]
    },
    "legL": {
     "fk": {
-     "flex": 100,
-     "abd": 20,
+     "flex": 110,
+     "abd": 32,
      "knee": 150
     },
     "foot": {
@@ -76,8 +88,94 @@
    },
    "legR": {
     "fk": {
-     "flex": 100,
-     "abd": 20,
+     "flex": 110,
+     "abd": 32,
+     "knee": 150
+    },
+    "foot": {
+     "pitch": 40
+    }
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.72,
+     0
+    ],
+    "pitch": 96
+   },
+   "spine": {
+    "flex": 32
+   },
+   "neck": {
+    "flex": -50
+   },
+   "armL": {
+    "pos": [
+     0.2,
+     0,
+     0.5
+    ],
+    "hand": "flat",
+    "contact": true,
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "spread": 1,
+    "pole": [
+     0.5,
+     0,
+     -1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.2,
+     0,
+     0.5
+    ],
+    "hand": "flat",
+    "contact": true,
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "spread": 1,
+    "pole": [
+     -0.5,
+     0,
+     -1
+    ]
+   },
+   "legL": {
+    "fk": {
+     "flex": 135,
+     "abd": 32,
+     "knee": 150
+    },
+    "foot": {
+     "pitch": 40
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 135,
+     "abd": 32,
      "knee": 150
     },
     "foot": {
@@ -86,5 +184,12 @@
    }
   }
  },
- "floats": true
+ "floats": true,
+ "tempo": {
+  "lift": "there",
+  "up": 1.4,
+  "down": 2,
+  "squeeze": 1,
+  "stretch": 0.3
+ }
 }

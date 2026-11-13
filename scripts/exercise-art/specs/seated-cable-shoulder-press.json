@@ -1,8 +1,8 @@
 {
  "slug": "seated-cable-shoulder-press",
  "camera": {
-  "az": 30,
-  "el": 6
+  "az": 85,
+  "el": 5
  },
  "muscles": [
   "shoulders"
@@ -144,7 +144,7 @@
    "armL": {
     "pos": [
      0.1,
-     1.65,
+     1.67,
      0.02
     ],
     "contact": true,
@@ -168,7 +168,7 @@
    "armR": {
     "pos": [
      -0.1,
-     1.65,
+     1.67,
      0.02
     ],
     "contact": true,

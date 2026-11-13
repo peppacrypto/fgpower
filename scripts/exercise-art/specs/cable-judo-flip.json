@@ -27,15 +27,15 @@
    "root": {
     "pos": [
      0,
-     0.8,
+     0.84,
      0
     ],
     "pitch": 4,
     "yaw": 0
    },
    "spine": {
-    "flex": 26,
-    "twist": 20,
+    "flex": 12,
+    "twist": 25,
     "side": 0,
     "weights": [
      0.1,
@@ -50,7 +50,7 @@
    },
    "legL": {
     "pos": [
-     0.3,
+     0.34,
      0,
      0
     ],
@@ -59,7 +59,7 @@
    },
    "legR": {
     "pos": [
-     -0.3,
+     -0.34,
      0,
      0
     ],
@@ -68,20 +68,84 @@
    },
    "armL": {
     "fk": {
-     "flex": 45,
+     "flex": 40,
      "abd": -10,
      "rot": 0,
-     "elbow": 15
+     "elbow": 10
     },
     "rel": "chest",
     "hand": "grip"
    },
    "armR": {
     "fk": {
-     "flex": 45,
+     "flex": 40,
      "abd": -10,
      "rot": 0,
-     "elbow": 15
+     "elbow": 10
+    },
+    "rel": "chest",
+    "hand": "grip"
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.85,
+     0
+    ],
+    "pitch": 4,
+    "yaw": 0
+   },
+   "spine": {
+    "flex": 8,
+    "twist": -5,
+    "side": 0,
+    "weights": [
+     0.1,
+     0.2,
+     0.25,
+     0.25,
+     0.2
+    ]
+   },
+   "neck": {
+    "flex": 2
+   },
+   "legL": {
+    "pos": [
+     0.34,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 15
+   },
+   "legR": {
+    "pos": [
+     -0.34,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -15
+   },
+   "armL": {
+    "fk": {
+     "flex": 70,
+     "abd": -10,
+     "rot": 0,
+     "elbow": 50
+    },
+    "rel": "chest",
+    "hand": "grip"
+   },
+   "armR": {
+    "fk": {
+     "flex": 70,
+     "abd": -10,
+     "rot": 0,
+     "elbow": 50
     },
     "rel": "chest",
     "hand": "grip"
@@ -91,15 +155,15 @@
    "root": {
     "pos": [
      0,
-     0.8,
+     0.86,
      0
     ],
     "pitch": 4,
     "yaw": 0
    },
    "spine": {
-    "flex": 24,
-    "twist": -35,
+    "flex": 4,
+    "twist": -42,
     "side": 0,
     "weights": [
      0.1,
@@ -114,7 +178,7 @@
    },
    "legL": {
     "pos": [
-     0.3,
+     0.34,
      0,
      0
     ],
@@ -123,7 +187,7 @@
    },
    "legR": {
     "pos": [
-     -0.3,
+     -0.34,
      0,
      0
     ],
@@ -132,20 +196,20 @@
    },
    "armL": {
     "fk": {
-     "flex": 75,
+     "flex": 100,
      "abd": -10,
      "rot": 0,
-     "elbow": 100
+     "elbow": 70
     },
     "rel": "chest",
     "hand": "grip"
    },
    "armR": {
     "fk": {
-     "flex": 75,
+     "flex": 100,
      "abd": -10,
      "rot": 0,
-     "elbow": 100
+     "elbow": 70
     },
     "rel": "chest",
     "hand": "grip"

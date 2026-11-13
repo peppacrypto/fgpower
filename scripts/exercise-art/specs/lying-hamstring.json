@@ -1,8 +1,8 @@
 {
  "slug": "lying-hamstring",
  "camera": {
-  "az": 62,
-  "el": 14
+  "az": 80,
+  "el": 12
  },
  "muscles": [
   "hamstrings"
@@ -23,21 +23,19 @@
     "pitch": -90
    },
    "neck": {
-    "flex": 4
+    "flex": 2
    },
    "legL": {
-    "pos": [
-     0.11,
-     0.96,
-     0
-    ],
-    "anchor": "ankle",
-    "pole": [
-     0,
-     0,
-     -1
-    ],
-    "pitch": -180
+    "fk": {
+     "flex": 50,
+     "abd": 0,
+     "rot": 0,
+     "knee": 0
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 0
+    }
    },
    "legR": {
     "pos": [
@@ -54,54 +52,93 @@
     "pitch": -90
    },
    "armL": {
-    "pos": [
-     0.2,
-     0.58,
-     -0.2
-    ],
+    "fk": {
+     "flex": 5,
+     "abd": 35,
+     "rot": 0,
+     "elbow": 5
+    },
+    "rel": "chest",
     "hand": "relaxed",
-    "fingers": [
-     0,
-     1,
-     0.1
-    ],
-    "palm": [
-     0,
-     0.1,
-     1
-    ],
-    "curl": 0.3,
-    "pole": [
-     0.6,
-     -0.6,
-     -0.3
-    ]
+    "curl": 0.2
    },
    "armR": {
-    "pos": [
-     -0.2,
-     0.58,
-     -0.2
-    ],
+    "fk": {
+     "flex": 5,
+     "abd": 35,
+     "rot": 0,
+     "elbow": 5
+    },
+    "rel": "chest",
     "hand": "relaxed",
-    "fingers": [
+    "curl": 0.2
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.125,
+     0
+    ],
+    "pitch": -90
+   },
+   "neck": {
+    "flex": 2
+   },
+   "legL": {
+    "fk": {
+     "flex": 108,
+     "abd": 0,
+     "rot": 0,
+     "knee": 0
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 0
+    }
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0.09,
+     0.86
+    ],
+    "anchor": "ankle",
+    "pole": [
      0,
      1,
-     0.1
+     0
     ],
-    "palm": [
-     0,
-     0.1,
-     1
-    ],
-    "curl": 0.3,
-    "pole": [
-     -0.6,
-     -0.6,
-     -0.3
-    ]
+    "pitch": -90
+   },
+   "armL": {
+    "fk": {
+     "flex": 5,
+     "abd": 35,
+     "rot": 0,
+     "elbow": 5
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "curl": 0.2
+   },
+   "armR": {
+    "fk": {
+     "flex": 5,
+     "abd": 35,
+     "rot": 0,
+     "elbow": 5
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "curl": 0.2
    }
   }
  },
- "muscleSide": "L"
+ "muscleSide": "L",
+ "tempo": {
+  "up": 2,
+  "down": 2.4
+ }
 }

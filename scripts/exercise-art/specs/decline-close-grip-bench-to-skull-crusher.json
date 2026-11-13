@@ -4,6 +4,14 @@
   "az": 70,
   "el": 8
  },
+ "tempo": {
+  "lift": "there",
+  "up": 1.2,
+  "down": 1.7,
+  "squeeze": 0.4,
+  "stretch": 0.4,
+  "maxLoop": 6.5
+ },
  "muscles": [
   "triceps"
  ],

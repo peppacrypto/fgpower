@@ -1,8 +1,14 @@
 {
  "slug": "alternating-floor-press",
  "camera": {
-  "az": 35,
+  "az": 75,
   "el": 12
+ },
+ "tempo": {
+  "lift": "even",
+  "up": 1,
+  "down": 1.8,
+  "pauses": 0.35
  },
  "muscles": [
   "chest",

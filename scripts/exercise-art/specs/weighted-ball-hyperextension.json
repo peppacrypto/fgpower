@@ -43,13 +43,13 @@
      0.8,
      -0.05
     ],
-    "pitch": 136
+    "pitch": 150
    },
    "spine": {
-    "flex": 52
+    "flex": 6
    },
    "neck": {
-    "flex": 10
+    "flex": 0
    },
    "armL": {
     "pos": [
@@ -134,16 +134,16 @@
    "root": {
     "pos": [
      0,
-     0.72,
+     0.74,
      -0.05
     ],
-    "pitch": 80
+    "pitch": 86
    },
    "spine": {
-    "flex": -10
+    "flex": -4
    },
    "neck": {
-    "flex": -14
+    "flex": 0
    },
    "armL": {
     "pos": [

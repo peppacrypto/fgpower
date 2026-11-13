@@ -34,7 +34,7 @@ W('dumbbell-one-arm-triceps-extension', { camera:{az:62,el:8}, muscles:M, muscle
   props:[{type:'shoulder-press-bench'}, {type:'dumbbell', hand:'L', kg:10}],
   frames:{ start:{...seatRoot,...seatLegs, armL:one(8), armR:freeArm}, end:{...seatRoot,...seatLegs, armL:one(125), armR:freeArm} } });
 // ---------- bent-over kickbacks (fk arms: upper arm fixed along the torso, forearm swings) ----------
-const kickArm = (el) => ({ fk:{flex:-25,abd:27,rot:0,elbow:el}, rel:'chest', hand:'grip', pron:0 });
+const kickArm = (el) => ({ fk:{flex:-45,abd:20,rot:0,elbow:el}, rel:'chest', hand:'grip', pron:0 });
 const restThigh = { fk:{flex:0,abd:24,elbow:8}, rel:'chest', hand:'relaxed' };
 const bentRoot = { root:{pos:[0,0.8,-0.3],pitch:65}, neck:{flex:-35} };
 const bentLegs = { legL:{pos:[0.14,0,-0.05],anchor:'sole',yaw:6,pole:[0.2,0.5,1]}, legR:{pos:[-0.14,0,-0.05],anchor:'sole',yaw:-6,pole:[-0.2,0.5,1]} };
@@ -44,15 +44,15 @@ const bench = { type:'flat-bench' };
 const kbk = (r, l, e, one2) => ({ ...r, ...l, armL:kickArm(e), armR: one2 ? one2 : kickArm(e) });
 const dbs = [{type:'dumbbell',hand:'L',kg:8},{type:'dumbbell',hand:'R',kg:8}];
 W('tricep-dumbbell-kickback', { camera:{az:95,el:8}, muscles:M, props:dbs,
-  frames:{ start:kbk(bentRoot,bentLegs,90), end:kbk(bentRoot,bentLegs,6) } });
+  frames:{ start:kbk(bentRoot,bentLegs,75), end:kbk(bentRoot,bentLegs,6) } });
 W('standing-bent-over-two-arm-dumbbell-triceps-extension', { camera:{az:95,el:8}, muscles:M, props:dbs,
-  frames:{ start:kbk(bentRoot,bentLegs,90), end:kbk(bentRoot,bentLegs,6) } });
+  frames:{ start:kbk(bentRoot,bentLegs,75), end:kbk(bentRoot,bentLegs,6) } });
 W('standing-bent-over-one-arm-dumbbell-triceps-extension', { camera:{az:95,el:8}, muscles:M, muscleSide:'L', props:[dbs[0]],
-  frames:{ start:kbk(bentRoot,bentLegs,90,restThigh), end:kbk(bentRoot,bentLegs,6,restThigh) } });
+  frames:{ start:kbk(bentRoot,bentLegs,75,restThigh), end:kbk(bentRoot,bentLegs,6,restThigh) } });
 W('seated-bent-over-two-arm-dumbbell-triceps-extension', { camera:{az:95,el:8}, muscles:M, floats:false, props:[bench,...dbs],
-  frames:{ start:kbk(seatBenchRoot,seatBenchLegs,90), end:kbk(seatBenchRoot,seatBenchLegs,6) } });
+  frames:{ start:kbk(seatBenchRoot,seatBenchLegs,80), end:kbk(seatBenchRoot,seatBenchLegs,6) } });
 W('seated-bent-over-one-arm-dumbbell-triceps-extension', { camera:{az:95,el:8}, muscles:M, muscleSide:'L', props:[bench,dbs[0]],
-  frames:{ start:kbk(seatBenchRoot,seatBenchLegs,90,restThigh), end:kbk(seatBenchRoot,seatBenchLegs,6,restThigh) } });
+  frames:{ start:kbk(seatBenchRoot,seatBenchLegs,80,restThigh), end:kbk(seatBenchRoot,seatBenchLegs,6,restThigh) } });
 
 // The classic two-hand overhead extension: palms flat and up under the top plate, side by side, thumbs toward each other
 // around the handle. Arms by position so both hands stay together under the plate through the whole rep: angle-driven arms

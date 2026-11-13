@@ -62,5 +62,51 @@ mk('split-squats',['quadriceps'],{az:90,el:6},{start:lunge('L'),mid:airS(),end:l
  fix(o.start,'L');fix(o.end,'R');
  out['split-squats'].frames={start:tall('L'),mid:o.start,mid2:o.mid,mid3:o.end,end:tall('R')};}
 out['split-squats'].muscles=['hamstrings','quadriceps'];
+
+// ---- coach audit fixes (2026-11-13) ----
+const PLY={lift:'there',up:0.45,down:0.6,squeeze:0.12,stretch:0.18};
+const swing=(flex,elbow=12,abd=8)=>({fk:{flex,abd,rot:0,elbow},rel:'chest',curl:0.3});
+const A=(l,r)=>({armL:cp(l),armR:cp(r)});
+// freehand jump squat: arm swing back at the bottom, overhead at take-off, full triple extension
+{const s=cp(sq),e=cp(jmp);Object.assign(s,A(swing(-35,10,10),swing(-35,10,10)));
+ Object.assign(e,A(swing(150,8,10),swing(150,8,10)));e.root={pos:[0,1.27,0.05],pitch:0};
+ e.legL.pos=[0.12,0.26,0.05];e.legR.pos=[-0.12,0.26,0.05];e.legL.pitch=60;e.legR.pitch=60;e.legL.yaw=4;e.legR.yaw=-4;
+ out['freehand-jump-squat']={slug:'freehand-jump-squat',camera:{az:50,el:8},muscles:['quadriceps','glutes'],floats:true,tempo:PLY,frames:{start:s,end:e}};}
+// star jump
+{const o=out['star-jump'];o.muscles=['quadriceps','glutes','lateral-deltoid'];
+ const s=o.frames.start;s.root={pos:[0,0.74,-0.08],pitch:14};Object.assign(s,side(25,10,15));}
+// knee tuck: knees to the chest, realistic height
+{const o=out['knee-tuck-jump'];o.muscles=['quadriceps','abdominals'];o.tempo=PLY;
+ const e=o.frames.end;e.root={pos:[0,1.12,0],pitch:6};
+ e.legL={pos:[0.11,0.66,0.2],anchor:'ankle',pole:[0.1,1,0.6]};e.legR={pos:[-0.11,0.66,0.2],anchor:'ankle',pole:[-0.1,1,0.6]};}
+// butt kick: heels to the glutes, quarter squat with arm swing
+{const o=out['double-leg-butt-kick'];o.tempo=PLY;const s=o.frames.start,e=o.frames.end;
+ s.root={pos:[0,0.78,-0.06],pitch:14};Object.assign(s,A(swing(-30,50,30),swing(-30,50,30)));
+ Object.assign(e,A(swing(75,95,30),swing(75,95,30)));e.root={pos:[0,1.2,0],pitch:0};
+ e.legL={pos:[0.11,1.02,-0.34],anchor:'ankle',pitch:75,pole:[0.1,-0.2,1]};e.legR={pos:[-0.11,1.02,-0.34],anchor:'ankle',pitch:75,pole:[-0.1,-0.2,1]};}
+// frog hops: deep squat, hands down between the knees, arm drive and a long forward jump
+{const o=out['frog-hops'];const f=o.frames;
+ const dn=()=>swing(85,10,0),fw=()=>swing(130,10,8);
+ f.start.root={pos:[0,0.4,-0.1],pitch:36};Object.assign(f.start,A(dn(),dn()));
+ f.mid.root.pos=[0,0.98,0.0];Object.assign(f.mid,A(fw(),fw()));
+ Object.assign(f.end,A(swing(150,8,8),swing(150,8,8)));
+ f.end.root.pos=[0,1.1,0.8];for(const l of ['legL','legR'])f.end[l].pos[2]=0.8;
+ o.tempo=PLY;}
+// lunge jumps
+{const L=(front)=>{const r=lunge(front);const fr=front==='L'?'armR':'armL',bk=front==='L'?'armL':'armR';
+  r[fr]=swing(55,50,6);r[bk]=swing(-35,25,6);return r;};
+ const air=(base,fl)=>{const e=base();Object.assign(e,A(swing(fl,15,8),swing(fl,15,8)));return e;};
+ // scissors: legs cross together in the air, swap, opposite leg lands in front, opposite arm swing
+ out['scissors-jump'].frames={start:L('L'),mid:air(airT,150),end:L('R')};out['scissors-jump'].tempo=PLY;
+ // split jump: same split in the air, lands on the same leg, arms swing up
+ const sp=()=>{const e=airS();e.legL={pos:[0.11,0.5,0.34],anchor:'ankle',pole:[0.1,0,1]};e.legR={pos:[-0.11,0.5,-0.42],anchor:'ball',pitch:50,pole:[-0.1,-0.3,1]};return e;};
+ const lm=L('L');
+ out['split-jump'].frames={start:lm,mid:air(sp,140),end:cp(lm)};out['split-jump'].tempo=PLY;
+ // alternating jumping lunge: drop into the lunge, jump, swap in the air, land in the opposite lunge
+ const lo=air(airT,90);lo.root.pos=[0,1.12,0];
+ const ZF=0.34,ZB=-0.45;const fx=(t,f)=>{const F=f==='L'?'legL':'legR',B=f==='L'?'legR':'legL';t[F].pos[2]=ZF;t[B].pos[2]=ZB;return t;};
+ const st=(f)=>{const t=fx(L(f),f);t.root.pos=[0,0.87,0];return t;};
+ fx(lo,'L');lo.legL.pos[2]=0.05;lo.legR.pos[2]=0.05;
+ out['split-squats'].frames={start:st('L'),mid:fx(L('L'),'L'),mid2:lo,mid3:fx(L('R'),'R'),end:st('R')};out['split-squats'].tempo=PLY;}
 for(const [k,v] of Object.entries(out))fs.writeFileSync(D+k+'.json',JSON.stringify(v,null,1));
 console.log(Object.keys(out).map(k=>'specs/'+k+'.json').join(' '));

@@ -20,16 +20,18 @@ save('incline-hammer-curls',{az:70,el:10},{start:{...base(),...both(lowH,hF,hP,[
 save('alternate-incline-dumbbell-curl',{az:70,el:10},{
  start:{...base(),armL:A(1,low,dF,dP,pole),armR:A(-1,low,dF,dP,pole)},
  mid:{...base(),armL:A(1,top,tF,tP,[0.3,-0.5,-0.9]),armR:A(-1,low,dF,dP,pole)},
- end:{...base(),armL:A(1,low,dF,dP,pole),armR:A(-1,top,tF,tP,[0.3,-0.5,-0.9])}});
+ end:{...base(),armL:A(1,low,dF,dP,pole),armR:A(-1,top,tF,tP,[0.3,-0.5,-0.9])}},props(),{tempo:{up:1.0,down:1.8}});
 // inner: palms out, curl outward to side of deltoids
 save('incline-inner-biceps-curl',{az:20,el:10},{
  start:{...base(),...both(low,dF,dP,pole)},
- end:{...base(),...both([0.46,0.97,0.08],[0.3,0.4,0.85],[0.3,0.2,0.9],[0.2,-1,-0.4])}});
+ mid:{...base(),...both([0.38,0.60,-0.06],[0.15,-0.2,1],[-0.2,0.4,0.85],[0.2,-0.6,-0.9])},
+ end:{...base(),...both([0.37,0.94,0.10],[0.15,0.4,0.9],[0.1,0.3,0.95],[0.2,-0.6,-0.9])}});
 // supine flat bench
 const fl={root:{pos:[0,0.52,0.1],pitch:-88},neck:{flex:4},legL:{pos:[0.15,0,0.62],anchor:'sole',pole:[0,1,0.1]},legR:{pos:[-0.15,0,0.62],anchor:'sole',pole:[0,1,0.1]}};
-save('lying-supine-dumbbell-curl',{az:75,el:10},{
+save('lying-supine-dumbbell-curl',{az:50,el:20},{
  start:{...fl,...both([0.43,0.10,-0.04],hF,hP,[0.5,-1,-0.3])},
- end:{...fl,...both([0.40,0.58,-0.30],[0,0.7,0.7],[-1,0,0],[0.5,-1,-0.3])}},
+ mid:{...fl,...both([0.43,0.42,-0.04],[0,0.3,1],[-1,0,0],[0.5,-1,-0.3])},
+ end:{...fl,...both([0.42,0.67,-0.16],[0,0.7,0.7],[-1,0,0],[0.5,-1,-0.3])}},
  [{type:'adjustable-bench',angle:0},{type:'dumbbell',kg:10,hand:'L'},{type:'dumbbell',kg:10,hand:'R'}]);
 for(const [k,v] of Object.entries(out))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
 console.log(Object.keys(out).join(' '));

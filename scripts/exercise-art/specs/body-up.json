@@ -5,7 +5,9 @@
   "el": 6
  },
  "muscles": [
-  "triceps"
+  "triceps",
+  "anterior-deltoid",
+  "chest"
  ],
  "frames": {
   "start": {

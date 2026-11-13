@@ -4,8 +4,8 @@
   "rom:trunk-flexion.range": "lateral flexion (spine.side 28 deg), not measured by the sagittal trunk-flexion rule"
  },
  "camera": {
-  "az": 15,
-  "el": 5
+  "az": 6,
+  "el": 4
  },
  "muscles": [
   "obliques",
@@ -33,7 +33,8 @@
     "side": 0
    },
    "neck": {
-    "flex": 0
+    "flex": 0,
+    "side": 0
    },
    "legL": {
     "pos": [
@@ -127,7 +128,8 @@
     "side": 28
    },
    "neck": {
-    "flex": 0
+    "flex": 0,
+    "side": -8.4
    },
    "legL": {
     "pos": [

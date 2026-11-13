@@ -4,6 +4,11 @@
   "az": 62,
   "el": 6
  },
+ "tempo": {
+  "lift": "there",
+  "up": 1,
+  "down": 1.9
+ },
  "muscles": [
   "forearms"
  ],
@@ -55,13 +60,13 @@
     "contact": true,
     "fingers": [
      0,
-     -0.1,
+     -0.35,
      1
     ],
     "palm": [
      0,
      -1,
-     -0.1
+     -0.35
     ],
     "curl": 0.85,
     "pole": [
@@ -79,13 +84,13 @@
     "contact": true,
     "fingers": [
      0,
-     -0.1,
+     -0.35,
      1
     ],
     "palm": [
      0,
      -1,
-     -0.1
+     -0.35
     ],
     "curl": 0.85,
     "pole": [
@@ -99,7 +104,7 @@
      "type": "wrist-roller",
      "hands": true,
      "kg": 5,
-     "drop": 1.08,
+     "drop": 0.95,
      "ropeLength": 1.15
     }
    ]
@@ -151,13 +156,13 @@
     "contact": true,
     "fingers": [
      0,
-     0.07,
+     0.3,
      1
     ],
     "palm": [
      0,
      -1,
-     0.07
+     0.3
     ],
     "curl": 0.85,
     "pole": [
@@ -175,13 +180,13 @@
     "contact": true,
     "fingers": [
      0,
-     0.07,
+     -0.35,
      1
     ],
     "palm": [
      0,
      -1,
-     0.07
+     -0.35
     ],
     "curl": 0.85,
     "pole": [
@@ -195,7 +200,199 @@
      "type": "wrist-roller",
      "hands": true,
      "kg": 5,
-     "drop": 0.8,
+     "drop": 0.82,
+     "ropeLength": 1.15
+    }
+   ]
+  },
+  "mid2": {
+   "root": {
+    "pos": [
+     0,
+     0.925,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0,
+     0.03
+    ],
+    "anchor": "sole",
+    "yaw": 8,
+    "pitch": 0,
+    "pole": [
+     0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0,
+     0.03
+    ],
+    "anchor": "sole",
+    "yaw": -8,
+    "pitch": 0,
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.14,
+     1.34,
+     0.6
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0.3,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0.3
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.4,
+     -0.8,
+     -0.3
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.14,
+     1.34,
+     0.6
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0.3,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0.3
+    ],
+    "curl": 0.85,
+    "pole": [
+     -0.4,
+     -0.8,
+     -0.3
+    ]
+   },
+   "props": [
+    {
+     "type": "wrist-roller",
+     "hands": true,
+     "kg": 5,
+     "drop": 0.7,
+     "ropeLength": 1.15
+    }
+   ]
+  },
+  "mid3": {
+   "root": {
+    "pos": [
+     0,
+     0.925,
+     0
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.11,
+     0,
+     0.03
+    ],
+    "anchor": "sole",
+    "yaw": 8,
+    "pitch": 0,
+    "pole": [
+     0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.11,
+     0,
+     0.03
+    ],
+    "anchor": "sole",
+    "yaw": -8,
+    "pitch": 0,
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.14,
+     1.34,
+     0.6
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     -0.35,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     -0.35
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.4,
+     -0.8,
+     -0.3
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.14,
+     1.34,
+     0.6
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     0.3,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0.3
+    ],
+    "curl": 0.85,
+    "pole": [
+     -0.4,
+     -0.8,
+     -0.3
+    ]
+   },
+   "props": [
+    {
+     "type": "wrist-roller",
+     "hands": true,
+     "kg": 5,
+     "drop": 0.58,
      "ropeLength": 1.15
     }
    ]
@@ -247,13 +444,13 @@
     "contact": true,
     "fingers": [
      0,
-     0.25,
+     0.3,
      1
     ],
     "palm": [
      0,
      -1,
-     0.25
+     0.3
     ],
     "curl": 0.85,
     "pole": [
@@ -271,13 +468,13 @@
     "contact": true,
     "fingers": [
      0,
-     0.25,
+     -0.35,
      1
     ],
     "palm": [
      0,
      -1,
-     0.25
+     -0.35
     ],
     "curl": 0.85,
     "pole": [
@@ -291,7 +488,7 @@
      "type": "wrist-roller",
      "hands": true,
      "kg": 5,
-     "drop": 0.55,
+     "drop": 0.45,
      "ropeLength": 1.15
     }
    ]

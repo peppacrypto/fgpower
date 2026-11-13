@@ -1,7 +1,7 @@
 {
  "slug": "one-arm-side-deadlift",
  "camera": {
-  "az": 20,
+  "az": -75,
   "el": 10
  },
  "muscles": [
@@ -24,21 +24,21 @@
    "root": {
     "pos": [
      0,
-     0.53,
-     -0.2
+     0.62,
+     -0.26
     ],
-    "pitch": 40
+    "pitch": 50
    },
    "spine": {
     "flex": 2
    },
    "neck": {
-    "flex": -22
+    "flex": -32
    },
    "armL": {
     "pos": [
      0.33,
-     0.29,
+     0.3,
      0.06
     ],
     "contact": true,
@@ -62,9 +62,9 @@
    "armR": {
     "fk": {
      "flex": 0,
-     "abd": 22,
+     "abd": 12,
      "rot": 0,
-     "elbow": 6
+     "elbow": 10
     },
     "rel": "world"
    },
@@ -141,9 +141,9 @@
    "armR": {
     "fk": {
      "flex": 0,
-     "abd": 22,
+     "abd": 12,
      "rot": 0,
-     "elbow": 6
+     "elbow": 10
     },
     "rel": "world"
    },
@@ -220,9 +220,9 @@
    "armR": {
     "fk": {
      "flex": 0,
-     "abd": 22,
+     "abd": 12,
      "rot": 0,
-     "elbow": 6
+     "elbow": 10
     },
     "rel": "world"
    },

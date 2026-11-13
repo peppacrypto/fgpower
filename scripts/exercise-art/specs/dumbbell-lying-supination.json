@@ -1,8 +1,8 @@
 {
  "slug": "dumbbell-lying-supination",
  "camera": {
-  "az": 50,
-  "el": 15
+  "az": 60,
+  "el": 10
  },
  "muscles": [
   "forearms"
@@ -58,16 +58,97 @@
     "rel": "pelvis"
    },
    "armL": {
+    "pos": [
+     0.355,
+     0.98,
+     0.236
+    ],
+    "rel": "world",
+    "pole": [
+     0,
+     0,
+     -1
+    ],
+    "hand": "grip",
+    "fingers": [
+     1,
+     0,
+     0
+    ],
+    "palm": [
+     0,
+     -0.74,
+     -0.67
+    ]
+   },
+   "armR": {
     "fk": {
-     "flex": 20,
-     "abd": 12,
-     "rot": 6,
-     "elbow": 90
+     "flex": 70,
+     "abd": 0,
+     "rot": 0,
+     "elbow": 100
     },
     "rel": "chest",
+    "hand": "relaxed"
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.72,
+     0.1
+    ],
+    "yaw": 90,
+    "roll": 80
+   },
+   "spine": {
+    "flex": 0
+   },
+   "neck": {
+    "side": -6
+   },
+   "legL": {
+    "fk": {
+     "flex": -5,
+     "abd": 0,
+     "knee": 15,
+     "rot": 0
+    },
+    "rel": "pelvis"
+   },
+   "legR": {
+    "fk": {
+     "flex": -5,
+     "abd": 0,
+     "knee": 15,
+     "rot": 0
+    },
+    "rel": "pelvis"
+   },
+   "armL": {
+    "pos": [
+     0.355,
+     0.98,
+     0.236
+    ],
+    "rel": "world",
+    "pole": [
+     0,
+     0,
+     -1
+    ],
     "hand": "grip",
-    "pron": 0.9,
-    "autoRoll": false
+    "fingers": [
+     1,
+     0,
+     0
+    ],
+    "palm": [
+     0,
+     0,
+     -1
+    ]
    },
    "armR": {
     "fk": {
@@ -115,16 +196,28 @@
     "rel": "pelvis"
    },
    "armL": {
-    "fk": {
-     "flex": 20,
-     "abd": 12,
-     "rot": -6,
-     "elbow": 90
-    },
-    "rel": "chest",
+    "pos": [
+     0.355,
+     0.98,
+     0.236
+    ],
+    "rel": "world",
+    "pole": [
+     0,
+     0,
+     -1
+    ],
     "hand": "grip",
-    "pron": -0.9,
-    "autoRoll": false
+    "fingers": [
+     1,
+     0,
+     0
+    ],
+    "palm": [
+     0,
+     0.74,
+     -0.67
+    ]
    },
    "armR": {
     "fk": {
@@ -139,5 +232,10 @@
   }
  },
  "muscleSide": "L",
- "floats": true
+ "floats": true,
+ "tempo": {
+  "lift": "there",
+  "up": 1.2,
+  "down": 1.8
+ }
 }

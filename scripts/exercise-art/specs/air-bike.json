@@ -19,11 +19,11 @@
     "pitch": -82
    },
    "neck": {
-    "flex": 6
+    "flex": 2
    },
    "spine": {
-    "flex": 24,
-    "twist": 24,
+    "flex": 34,
+    "twist": 34,
     "weights": [
      0,
      0.1,
@@ -92,7 +92,7 @@
    },
    "legR": {
     "fk": {
-     "flex": 35,
+     "flex": 30,
      "abd": 1,
      "knee": 5
     },
@@ -111,10 +111,10 @@
     "pitch": -82
    },
    "neck": {
-    "flex": 6
+    "flex": 2
    },
    "spine": {
-    "flex": 24,
+    "flex": 34,
     "twist": 0,
     "weights": [
      0,
@@ -203,11 +203,11 @@
     "pitch": -82
    },
    "neck": {
-    "flex": 6
+    "flex": 2
    },
    "spine": {
-    "flex": 24,
-    "twist": -24,
+    "flex": 34,
+    "twist": -34,
     "weights": [
      0,
      0.1,
@@ -266,7 +266,7 @@
    },
    "legL": {
     "fk": {
-     "flex": 35,
+     "flex": 30,
      "abd": 1,
      "knee": 5
     },
@@ -285,5 +285,11 @@
     }
    }
   }
+ },
+ "tempo": {
+  "lift": "even",
+  "up": 1,
+  "down": 1,
+  "pauses": 0
  }
 }

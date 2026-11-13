@@ -5,6 +5,7 @@
   "el": 6
  },
  "muscles": [
+  "forearms",
   "biceps"
  ],
  "props": [
@@ -125,7 +126,7 @@
    "armL": {
     "pos": [
      0.2,
-     1.12,
+     1.1,
      0.33
     ],
     "contact": true,
@@ -151,7 +152,7 @@
    "armR": {
     "pos": [
      -0.2,
-     1.12,
+     1.1,
      0.33
     ],
     "contact": true,
@@ -219,8 +220,8 @@
    "armL": {
     "pos": [
      0.2,
-     1.33,
-     0.235
+     1.27,
+     0.24
     ],
     "contact": true,
     "hand": "grip",
@@ -245,8 +246,8 @@
    "armR": {
     "pos": [
      -0.2,
-     1.33,
-     0.235
+     1.27,
+     0.24
     ],
     "contact": true,
     "hand": "grip",

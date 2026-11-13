@@ -1,30 +1,29 @@
 {
  "slug": "half-moon-pose",
  "camera": {
-  "az": 12,
+  "az": 0,
   "el": 8
  },
  "muscles": [
-  "hamstrings"
+  "hamstrings",
+  "glutes"
  ],
  "frames": {
   "start": {
    "root": {
     "pos": [
-     0.18,
-     0.68,
-     -0.1
+     0.13,
+     1.03,
+     0
     ],
-    "roll": -85,
-    "yaw": 0
+    "roll": -105
    },
    "neck": {
-    "twist": -90,
     "flex": 0
    },
    "legL": {
     "pos": [
-     0.25,
+     0.1,
      0,
      0
     ],
@@ -38,25 +37,18 @@
    "legR": {
     "pos": [
      -0.58,
-     0.72,
+     0.75,
      0
     ],
     "anchor": "ankle",
     "pole": [
      0,
-     1,
-     0
+     0,
+     1
     ],
-    "pitch": 0,
-    "roll": -30
+    "roll": -80
    },
    "armL": {
-    "pos": [
-     0.6,
-     0,
-     -0.05
-    ],
-    "contact": true,
     "hand": "flat",
     "fingers": [
      0,
@@ -73,17 +65,111 @@
      -0.3,
      -1
     ],
-    "curl": 0.2
+    "curl": 0.2,
+    "pos": [
+     0.52,
+     0.23,
+     0
+    ],
+    "contact": true
    },
    "armR": {
     "fk": {
      "flex": 0,
-     "abd": 170,
+     "abd": 90,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest"
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0.13,
+     1.03,
+     0
+    ],
+    "roll": -105
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.1,
+     0.3,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.7,
+     1.12,
+     0
+    ],
+    "anchor": "ankle",
+    "pole": [
+     0,
+     0,
+     1
+    ],
+    "roll": -90
+   },
+   "armL": {
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     0.5,
+     -0.3,
+     -1
+    ],
+    "curl": 0.2,
+    "pos": [
+     0.52,
+     0.23,
+     0
+    ],
+    "contact": true
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 90,
      "rot": 0,
      "elbow": 0
     },
     "rel": "chest"
    }
   }
+ },
+ "props": [
+  {
+   "type": "yoga-block",
+   "orient": "tall",
+   "pos": [
+    0.52,
+    0,
+    0
+   ]
+  }
+ ],
+ "tempo": {
+  "lift": "even"
  }
 }

@@ -1,13 +1,20 @@
 {
  "slug": "romanian-deadlift-from-deficit",
  "camera": {
-  "az": 100,
+  "az": 90,
   "el": 8
  },
  "muscles": [
   "hamstrings",
   "glutes"
  ],
+ "tempo": {
+  "lift": "back",
+  "up": 1,
+  "down": 1.8,
+  "squeeze": 0.4,
+  "stretch": 0.4
+ },
  "props": [
   {
    "type": "deficit-platform",
@@ -115,8 +122,8 @@
    "root": {
     "pos": [
      0,
-     0.97,
-     -0.15
+     0.98,
+     -0.14
     ],
     "pitch": 33
    },
@@ -127,7 +134,7 @@
     "pos": [
      0.235,
      0.79,
-     0.15
+     0.13
     ],
     "contact": true,
     "fingers": [
@@ -151,7 +158,7 @@
     "pos": [
      -0.235,
      0.79,
-     0.15
+     0.13
     ],
     "contact": true,
     "fingers": [
@@ -204,10 +211,10 @@
    "root": {
     "pos": [
      0,
-     0.955,
-     -0.3
+     0.965,
+     -0.26
     ],
-    "pitch": 66
+    "pitch": 68
    },
    "neck": {
     "flex": -40
@@ -215,8 +222,8 @@
    "armL": {
     "pos": [
      0.235,
-     0.53,
-     0.1
+     0.46,
+     0.11
     ],
     "contact": true,
     "fingers": [
@@ -239,8 +246,8 @@
    "armR": {
     "pos": [
      -0.235,
-     0.53,
-     0.1
+     0.46,
+     0.11
     ],
     "contact": true,
     "fingers": [

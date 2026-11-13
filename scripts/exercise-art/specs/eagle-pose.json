@@ -1,7 +1,7 @@
 {
  "slug": "eagle-pose",
  "camera": {
-  "az": 15,
+  "az": 40,
   "el": 6
  },
  "muscles": [
@@ -12,10 +12,67 @@
    "root": {
     "pos": [
      0.05,
-     0.72,
+     0.82,
      0
     ],
-    "pitch": 6
+    "pitch": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.08,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.2,
+     0.3,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     0.25,
+     0.4,
+     0.26
+    ],
+    "anchor": "ankle",
+    "pole": [
+     0.6,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 70,
+     "abd": -30,
+     "rot": 0,
+     "elbow": 120
+    },
+    "rel": "chest"
+   },
+   "armR": {
+    "fk": {
+     "flex": 80,
+     "abd": -40,
+     "rot": 0,
+     "elbow": 130
+    },
+    "rel": "chest"
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0.05,
+     0.74,
+     0
+    ],
+    "pitch": 0
    },
    "neck": {
     "flex": 0
@@ -65,5 +122,8 @@
     "rel": "chest"
    }
   }
+ },
+ "tempo": {
+  "lift": "even"
  }
 }

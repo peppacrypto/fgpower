@@ -1,5 +1,17 @@
 {
  "slug": "toe-touchers",
+ "tempo": {
+  "lift": "there",
+  "up": 1,
+  "down": 1.8,
+  "pauses": 0
+ },
+ "timing": {
+  "there": 1,
+  "holdEnd": 0.2,
+  "back": 1.8,
+  "holdStart": 0.2
+ },
  "camera": {
   "az": 90,
   "el": 18
@@ -12,17 +24,17 @@
    "root": {
     "pos": [
      0,
-     0.105,
+     0.1,
      0
     ],
     "pitch": -90
    },
    "neck": {
-    "flex": 8
+    "flex": 0
    },
    "armL": {
     "fk": {
-     "flex": 90,
+     "flex": 160,
      "abd": 10,
      "elbow": 4
     },
@@ -31,7 +43,7 @@
    },
    "armR": {
     "fk": {
-     "flex": 90,
+     "flex": 160,
      "abd": 10,
      "elbow": 4
     },
@@ -40,9 +52,9 @@
    },
    "legL": {
     "fk": {
-     "flex": 88,
+     "flex": 90,
      "abd": 1,
-     "knee": 8
+     "knee": 0
     },
     "foot": {
      "pitch": 0
@@ -50,9 +62,9 @@
    },
    "legR": {
     "fk": {
-     "flex": 88,
+     "flex": 90,
      "abd": 1,
-     "knee": 8
+     "knee": 0
     },
     "foot": {
      "pitch": 0
@@ -101,9 +113,9 @@
    },
    "legL": {
     "fk": {
-     "flex": 88,
+     "flex": 90,
      "abd": 1,
-     "knee": 8
+     "knee": 0
     },
     "foot": {
      "pitch": 0
@@ -111,9 +123,9 @@
    },
    "legR": {
     "fk": {
-     "flex": 88,
+     "flex": 90,
      "abd": 1,
-     "knee": 8
+     "knee": 0
     },
     "foot": {
      "pitch": 0

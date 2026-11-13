@@ -5,7 +5,8 @@
   "el": 8
  },
  "muscles": [
-  "quadriceps"
+  "quadriceps",
+  "glutes"
  ],
  "frames": {
   "start": {
@@ -97,10 +98,10 @@
    "root": {
     "pos": [
      0,
-     0.68,
-     -0.12
+     0.52,
+     -0.2
     ],
-    "pitch": 20
+    "pitch": 30
    },
    "spine": {
     "flex": -4
@@ -185,5 +186,14 @@
     ]
    }
   }
+ },
+ "tempo": {
+  "lift": "back"
+ },
+ "timing": {
+  "there": 0.8,
+  "holdEnd": 0,
+  "back": 0.6,
+  "holdStart": 0
  }
 }

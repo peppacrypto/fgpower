@@ -80,7 +80,7 @@
     "rel": "chest",
     "hand": "grip",
     "grip": 0.016,
-    "pron": -90
+    "pron": 90
    }
   },
   "mid": {
@@ -140,7 +140,7 @@
     "rel": "chest",
     "hand": "grip",
     "grip": 0.016,
-    "pron": -45
+    "pron": 45
    }
   },
   "end": {
@@ -200,7 +200,7 @@
     "rel": "chest",
     "hand": "grip",
     "grip": 0.016,
-    "pron": -10
+    "pron": 10
    }
   }
  }

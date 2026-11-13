@@ -294,5 +294,10 @@
    }
   }
  },
- "muscleSide": "R"
+ "muscleSide": "R",
+ "tempo": {
+  "lift": "there",
+  "up": 1,
+  "down": 1.8
+ }
 }

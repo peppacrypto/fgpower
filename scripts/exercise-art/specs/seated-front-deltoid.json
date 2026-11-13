@@ -5,7 +5,7 @@
   "el": 10
  },
  "muscles": [
-  "shoulders"
+  "anterior-deltoid"
  ],
  "props": [
   {
@@ -56,7 +56,7 @@
    },
    "armL": {
     "fk": {
-     "flex": -35,
+     "flex": 0,
      "abd": 90,
      "rot": 0,
      "elbow": 0
@@ -67,7 +67,71 @@
    },
    "armR": {
     "fk": {
-     "flex": -35,
+     "flex": 0,
+     "abd": 90,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "curl": 0.1
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.125,
+     -0.1
+    ],
+    "pitch": 0
+   },
+   "spine": {
+    "flex": -4
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.14,
+     0,
+     0.55
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.05,
+     1,
+     0.1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.14,
+     0,
+     0.55
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.05,
+     1,
+     0.1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": -40,
+     "abd": 90,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "curl": 0.1
+   },
+   "armR": {
+    "fk": {
+     "flex": -40,
      "abd": 90,
      "rot": 0,
      "elbow": 0
@@ -77,5 +141,9 @@
     "curl": 0.1
    }
   }
+ },
+ "tempo": {
+  "up": 2,
+  "down": 2.4
  }
 }

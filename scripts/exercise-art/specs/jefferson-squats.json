@@ -36,10 +36,10 @@
     "pitch": 43
    },
    "spine": {
-    "flex": 2
+    "flex": 1
    },
    "neck": {
-    "flex": -20
+    "flex": -30
    },
    "armL": {
     "pos": [

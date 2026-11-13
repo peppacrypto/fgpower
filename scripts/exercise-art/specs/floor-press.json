@@ -1,8 +1,8 @@
 {
  "slug": "floor-press",
  "camera": {
-  "az": 40,
-  "el": 8
+  "az": 20,
+  "el": 22
  },
  "muscles": [
   "triceps",
@@ -218,5 +218,9 @@
     "curl": 0.82
    }
   }
+ },
+ "tempo": {
+  "lift": "there",
+  "stretch": 1
  }
 }

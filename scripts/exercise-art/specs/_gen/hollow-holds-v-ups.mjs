@@ -14,15 +14,15 @@ save('dead-bug',{az:76,el:20},{start:db(90,90,90,90),end:db(172,90,90,5)});
 const hol=(sf)=>fr(lie(0.1),A(168,3,6,{hand:'relaxed'}),A(168,3,6),L(10,3,3),L(10,3,3),{spine:{flex:sf},neck:{flex:18}});
 save('hollow-body-hold',{az:70,el:10},{start:hol(16)});
 // boat
-save('boat-pose',{az:80,el:8},{start:fr({root:{pos:[0,0.087,0],pitch:-38},},{...A(130,3,6),rel:'world'},{...A(130,3,6),rel:'world'},L(97,3,2),L(97,3,2),{spine:{flex:-4},neck:{flex:-6}})});
+save('boat-pose',{az:80,el:8},{start:fr({root:{pos:[0,0.087,0],pitch:-38},},{...A(92,3,6),rel:'world'},{...A(92,3,6),rel:'world'},L(97,3,2),L(97,3,2),{spine:{flex:-4},neck:{flex:-6}})},{muscles:['abdominals','quadriceps']});
 // jackknife
 save('jackknife-sit-up',{az:80,el:10},{
  start:fr(lie(0.1),A(168,3,6),A(168,3,6),L(5,3,3),L(5,3,3),{neck:{flex:8}}),
- end:fr({root:{pos:[0,0.086,0],pitch:-45}},A(125,3,4),A(125,3,4),L(80,3,2),L(80,3,2),{spine:{flex:12},neck:{flex:12}})});
+ end:fr({root:{pos:[0,0.086,0],pitch:-45}},A(105,3,4),A(105,3,4),L(100,3,2),L(100,3,2),{spine:{flex:12},neck:{flex:12}})},{muscles:['abdominals','quadriceps']});
 // cocoons
 save('cocoons',{az:76,el:12},{
  start:fr(lie(),A(168,3,6),A(168,3,6),L(5,3,3),L(5,3,3),{neck:{flex:4}}),
- end:fr(lie(0.12,-110),A(85,10,6),A(85,10,6),L(115,125,5),L(115,125,5),{spine:{flex:30},neck:{flex:20}})});
+ end:fr(lie(0.12,-110),A(90,10,20),A(90,10,20),L(115,125,5),L(115,125,5),{spine:{flex:45},neck:{flex:30}})});
 // bottoms up
 const bt=(y,p,lf,kn)=>fr(lie(y,p),A(8,3,12),A(8,3,12),L(lf,kn),L(lf,kn),{neck:{flex:4}});
 save('bottoms-up',{az:76,el:12},{

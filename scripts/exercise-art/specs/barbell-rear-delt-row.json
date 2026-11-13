@@ -1,11 +1,12 @@
 {
  "slug": "barbell-rear-delt-row",
  "camera": {
-  "az": 70,
-  "el": 14
+  "az": 140,
+  "el": 25
  },
  "muscles": [
-  "shoulders"
+  "posterior-deltoid",
+  "rhomboids"
  ],
  "props": [
   {

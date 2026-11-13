@@ -5,7 +5,8 @@
   "el": 10
  },
  "muscles": [
-  "abdominals"
+  "abdominals",
+  "quadriceps"
  ],
  "frames": {
   "start": {
@@ -76,7 +77,7 @@
    },
    "armL": {
     "fk": {
-     "flex": 125,
+     "flex": 105,
      "abd": 4,
      "rot": 0,
      "elbow": 3
@@ -85,7 +86,7 @@
    },
    "armR": {
     "fk": {
-     "flex": 125,
+     "flex": 105,
      "abd": 4,
      "rot": 0,
      "elbow": 3
@@ -94,7 +95,7 @@
    },
    "legL": {
     "fk": {
-     "flex": 80,
+     "flex": 100,
      "abd": 2,
      "knee": 3
     },
@@ -104,7 +105,7 @@
    },
    "legR": {
     "fk": {
-     "flex": 80,
+     "flex": 100,
      "abd": 2,
      "knee": 3
     },

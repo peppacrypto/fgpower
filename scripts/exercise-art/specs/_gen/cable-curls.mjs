@@ -31,14 +31,14 @@ std('standing-one-arm-cable-curl','under',0.2,'d-handle',{one:true});
 const high = (slug, abd, pY) => {
   const fr = el => { const a = s => ({ fk:{flex:0,abd,rot:s*0,elbow:el}, rel:'chest', pron:-90 }); 
     return { root:{pos:[0,0.93,0]}, neck:{flex:0}, legL:leg(1), legR:leg(-1), armL:{fk:{flex:0,abd,rot:0,elbow:el},rel:'chest',hand:'grip',grip:0.015}, armR:{fk:{flex:0,abd,rot:0,elbow:el},rel:'chest',hand:'grip',grip:0.015} }; };
-  const s = { camera:{az:25,el:6}, muscles:['biceps'], props:[
+  const s = { camera:{az:12,el:12}, muscles:['biceps'], props:[
     {type:'cable-tower',pos:[1.3,0,0],yaw:-90,pulleyY:pY,hand:'L',attachment:'d-handle'},
     {type:'cable-tower',pos:[-1.3,0,0],yaw:90,pulleyY:pY,hand:'R',attachment:'d-handle'}],
     frames:{ start:fr(25), mid:fr(80), end:fr(140) } };
   out(slug, s);
 };
 high('high-cable-curls', 90, 1.9);
-high('overhead-cable-curl', 90, 2.0);
+high('overhead-cable-curl', 105, 2.3);
 
 // lying cable curl: on mat, feet on machine frame, bar over thighs
 const lying = () => {

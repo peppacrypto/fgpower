@@ -1,8 +1,13 @@
 {
  "slug": "chest-push-with-run-release",
  "camera": {
-  "az": 70,
+  "az": 90,
   "el": 8
+ },
+ "tempo": {
+  "lift": "there",
+  "up": 0.45,
+  "down": 1.4
  },
  "muscles": [
   "chest",

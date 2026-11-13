@@ -25,16 +25,6 @@
     0.66
    ],
    "yaw": 90
-  },
-  {
-   "type": "dumbbell",
-   "kg": 20,
-   "pos": [
-    0,
-    0.66,
-    0.22
-   ],
-   "yaw": 90
   }
  ],
  "frames": {
@@ -125,7 +115,37 @@
      -1
     ],
     "curl": 0.7
-   }
+   },
+   "props": [
+    {
+     "type": "flat-bench",
+     "pos": [
+      0,
+      0,
+      -0.45
+     ],
+     "yaw": 90
+    },
+    {
+     "type": "flat-bench",
+     "pos": [
+      0,
+      0,
+      0.66
+     ],
+     "yaw": 90
+    },
+    {
+     "type": "dumbbell",
+     "kg": 20,
+     "pos": [
+      0,
+      0.64,
+      0.16
+     ],
+     "yaw": 90
+    }
+   ]
   },
   "end": {
    "root": {
@@ -214,7 +234,37 @@
      -1
     ],
     "curl": 0.7
-   }
+   },
+   "props": [
+    {
+     "type": "flat-bench",
+     "pos": [
+      0,
+      0,
+      -0.45
+     ],
+     "yaw": 90
+    },
+    {
+     "type": "flat-bench",
+     "pos": [
+      0,
+      0,
+      0.66
+     ],
+     "yaw": 90
+    },
+    {
+     "type": "dumbbell",
+     "kg": 20,
+     "pos": [
+      0,
+      0.55,
+      0.18
+     ],
+     "yaw": 90
+    }
+   ]
   }
  },
  "floats": false

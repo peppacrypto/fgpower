@@ -13,10 +13,10 @@
    "root": {
     "pos": [
      0,
-     0.72,
-     -0.1
+     0.78,
+     -0.06
     ],
-    "pitch": 20
+    "pitch": 14
    },
    "spine": {
     "flex": -6
@@ -26,20 +26,20 @@
    },
    "armL": {
     "fk": {
-     "flex": 15,
-     "abd": 12,
+     "flex": -30,
+     "abd": 30,
      "rot": 0,
-     "elbow": 40
+     "elbow": 50
     },
     "rel": "chest",
     "curl": 0.3
    },
    "armR": {
     "fk": {
-     "flex": 15,
-     "abd": 12,
+     "flex": -30,
+     "abd": 30,
      "rot": 0,
-     "elbow": 40
+     "elbow": 50
     },
     "rel": "chest",
     "curl": 0.3
@@ -77,27 +77,27 @@
    "root": {
     "pos": [
      0,
-     1.225,
+     1.2,
      0
     ],
     "pitch": 0
    },
    "armL": {
     "fk": {
-     "flex": 10,
-     "abd": 12,
+     "flex": 75,
+     "abd": 30,
      "rot": 0,
-     "elbow": 40
+     "elbow": 95
     },
     "rel": "chest",
     "curl": 0.3
    },
    "armR": {
     "fk": {
-     "flex": 10,
-     "abd": 12,
+     "flex": 75,
+     "abd": 30,
      "rot": 0,
-     "elbow": 40
+     "elbow": 95
     },
     "rel": "chest",
     "curl": 0.3
@@ -105,31 +105,38 @@
    "legL": {
     "pos": [
      0.11,
-     1,
-     -0.3
+     1.02,
+     -0.34
     ],
     "anchor": "ankle",
-    "pitch": 70,
+    "pitch": 75,
     "pole": [
      0.1,
-     -0.3,
+     -0.2,
      1
     ]
    },
    "legR": {
     "pos": [
      -0.11,
-     1,
-     -0.3
+     1.02,
+     -0.34
     ],
     "anchor": "ankle",
-    "pitch": 70,
+    "pitch": 75,
     "pole": [
      -0.1,
-     -0.3,
+     -0.2,
      1
     ]
    }
   }
+ },
+ "tempo": {
+  "lift": "there",
+  "up": 0.45,
+  "down": 0.6,
+  "squeeze": 0.12,
+  "stretch": 0.18
  }
 }

@@ -28,16 +28,16 @@ const inc = (slug, a, x, muscles, o={}) => {
   W('barbell-incline-bench-press-medium-grip', { camera:{az:40,el:10}, muscles:['chest'], floats:true,
     props:[{type:'incline-bench',angle:30,uprights:true},{type:'barbell',hands:true,plates:[20]}],
     frames:{ start:fr(top[0],top[1],-0.1), end:fr(bot[0],bot[1],0.15) } }); }
-{ const {top,fr} = inc('', 30, 0.40, [], {px:0.9,pey:-0.3,D:0.585});
-  W('barbell-incline-shoulder-raise', { camera:{az:85,el:6}, muscles:['shoulders'], floats:true,
+{ const {top,fr} = inc('', 30, 0.40, [], {px:0.9,pey:-0.3,D:0.575});
+  W('barbell-incline-shoulder-raise', { camera:{az:35,el:12}, muscles:['anterior-deltoid','chest'], floats:true,
     props:[{type:'incline-bench',angle:30,uprights:true},{type:'barbell',hands:true,plates:[20]}],
-    frames:{ start:fr(top[0],top[1],-0.1,{prot:0}), end:fr(top[0]+0.03,top[1],-0.1,{prot:1}) } }); }
-{ const {top,fr} = inc('', 30, 0.20, [], {px:0.9,pey:-0.3, grip:0.016});
+    frames:{ start:fr(top[0],top[1],-0.1,{prot:0}), end:fr(top[0]+0.045,top[1],-0.1,{prot:1}) } }); }
+{ const {top,fr} = inc('', 30, 0.20, [], {px:0.9,pey:-0.3, grip:0.016, D:0.58});
   const mk = (y,z,scap) => { const B=inclineBase(30); const L=hand(1,[0.19,y,z],{grip:0.016,px:0.5,pey:-0.5,scap}), R=hand(-1,[0.19,y,z],{grip:0.016,px:0.5,pey:-0.5,scap});
     return frame(B.root,incLegs,6,L,R); };
-  W('dumbbell-incline-shoulder-raise', { camera:{az:85,el:6}, muscles:['shoulders'], floats:true,
+  W('dumbbell-incline-shoulder-raise', { camera:{az:35,el:12}, muscles:['anterior-deltoid','chest'], floats:true,
     props:[{type:'incline-bench',angle:30},{type:'dumbbell',hand:'L'},{type:'dumbbell',hand:'R'}],
-    frames:{ start:mk(top[0],top[1],{prot:0}), end:mk(top[0]+0.03,top[1],{prot:1}) } }); }
+    frames:{ start:mk(top[0],top[1],{prot:0}), end:mk(top[0]+0.045,top[1],{prot:1}) } }); }
 { // incline triceps extension, bench 60, bar overhead in line with torso; end: bar behind head
   const a=60, B=inclineBase(a), sh=B.sh, h=[Math.sin(rad(a)),-Math.cos(rad(a))]; // head direction (y,z)
   const x=0.15;
@@ -65,7 +65,7 @@ W('wide-grip-decline-barbell-bench-press',{camera:{az:40,el:14},muscles:['chest'
 // forehead arc (bar over the face)
 const fore=[dsh[1]+0.04, dsh[2]-0.27];
 const cg={px:0.08,pey:-0.7,swivel:0,roll:-45};
-W('decline-close-grip-bench-to-skull-crusher',{camera:{az:70,el:8},muscles:['triceps'],floats:true,
+W('decline-close-grip-bench-to-skull-crusher',{camera:{az:70,el:8},tempo:{lift:'there',up:1.2,down:1.7,squeeze:0.4,stretch:0.4,maxLoop:6.5},muscles:['triceps'],floats:true,
   props:[{type:'decline-bench',angle:20,uprights:true},{type:'barbell',hands:true,plates:[20]}],
   frames:{start:dfr(0.23,dtop[0]+0.025,dtop[1],{...cg,pz2:0.0,fx:-0.1}),
           mida:dfr(0.23,dtop[0]+0.025-0.04,dtop[1]-0.01,{...cg,pz2:0.0,fx:-0.1}),

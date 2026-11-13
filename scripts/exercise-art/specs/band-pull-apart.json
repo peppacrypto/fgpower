@@ -1,8 +1,8 @@
 {
  "slug": "band-pull-apart",
  "camera": {
-  "az": 18,
-  "el": 8
+  "az": 28,
+  "el": 22
  },
  "muscles": [
   "posterior-deltoid",
@@ -30,7 +30,8 @@
      0
     ]
    },
-   "width": 0.032,
+   "width": 0.045,
+   "thick": 0.006,
    "rest": 0.42
   }
  ],

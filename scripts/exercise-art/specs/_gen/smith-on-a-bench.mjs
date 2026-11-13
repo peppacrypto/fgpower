@@ -69,7 +69,7 @@ const flatH = (s,z) => ({ pos:[0.15*s,0.44,z], contact:true, hand:'flat', finger
 const hipFrame = (rootY, pitch, flex, footY) => ({ root:{pos:[0,rootY,0.2],pitch}, neck:{flex:4}, spine:{flex},
   armL:flatH(1,0), armR:flatH(-1,0),
   legL:fkLeg(1,rootY,0.2,footY-0.07,-(pitch+90),FT), legR:fkLeg(-1,rootY,0.2,footY-0.07,-(pitch+90),FT) });
-out('smith-machine-hip-raise', { camera:{az:100,el:6}, muscles:['abdominals'], floats:true,
+out('smith-machine-hip-raise', { camera:{az:75,el:10}, tempo:{lift:'there',up:1,down:1.8,squeeze:0.35}, muscles:['abdominals'], floats:true,
   props:[SMF, {type:'flat-bench',pos:[0,0,-0.05],yaw:0}],
   frames:{ start:hipFrame(0.545,-90,0,1.36), mid:hipFrame(0.58,-97,5,1.40), end:hipFrame(0.62,-104,10,1.44) } });
 
@@ -78,5 +78,5 @@ const floorArm = (s,z) => ({ pos:[0.38*s,0.15,-0.1], hand:'relaxed', pole:[s,-0.
 const lpFrame = (hz, ay, rootY) => ({ root:{pos:[0,rootY,hz],pitch:-90}, neck:{flex:4},
   armL:floorArm(1,-0.1), armR:floorArm(-1,-0.1),
   legL:fkLeg(1,rootY,hz,ay-0.07,0,FT), legR:fkLeg(-1,rootY,hz,ay-0.07,0,FT) });
-out('smith-machine-leg-press', { camera:{az:95,el:6}, muscles:['quadriceps'], floats:true, props:[SMF],
+out('smith-machine-leg-press', { camera:{az:75,el:10}, tempo:{lift:'there'}, muscles:['quadriceps'], floats:true, props:[SMF],
   frames:{ start:lpFrame(0.3,0.9,0.13), end:lpFrame(0.14,1.04,0.13) } });

@@ -110,13 +110,10 @@
      0.095,
      0
     ],
-    "pitch": 4
-   },
-   "spine": {
-    "flex": -5
+    "pitch": -8
    },
    "neck": {
-    "flex": 1
+    "flex": 14
    },
    "armL": {
     "pos": [

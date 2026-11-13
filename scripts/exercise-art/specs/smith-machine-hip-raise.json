@@ -1,8 +1,14 @@
 {
  "slug": "smith-machine-hip-raise",
  "camera": {
-  "az": 100,
-  "el": 6
+  "az": 75,
+  "el": 10
+ },
+ "tempo": {
+  "lift": "there",
+  "up": 1,
+  "down": 1.8,
+  "squeeze": 0.35
  },
  "muscles": [
   "abdominals"

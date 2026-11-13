@@ -16,15 +16,15 @@
      0.11,
      -0.05
     ],
-    "pitch": -52
+    "pitch": -45
    },
    "neck": {
-    "flex": -12,
-    "twist": -20
+    "flex": -6,
+    "twist": -24
    },
    "spine": {
     "flex": 0,
-    "twist": 40,
+    "twist": 48,
     "weights": [
      0,
      0.1,
@@ -119,10 +119,10 @@
      0.11,
      -0.05
     ],
-    "pitch": -52
+    "pitch": -45
    },
    "neck": {
-    "flex": -12,
+    "flex": -6,
     "twist": 0
    },
    "spine": {
@@ -222,15 +222,15 @@
      0.11,
      -0.05
     ],
-    "pitch": -52
+    "pitch": -45
    },
    "neck": {
-    "flex": -12,
-    "twist": 20
+    "flex": -6,
+    "twist": 24
    },
    "spine": {
     "flex": 0,
-    "twist": -40,
+    "twist": -48,
     "weights": [
      0,
      0.1,
@@ -318,6 +318,12 @@
     ]
    }
   }
+ },
+ "tempo": {
+  "lift": "even",
+  "up": 1,
+  "down": 1,
+  "pauses": 0.2
  },
  "props": [
   {

@@ -21,15 +21,15 @@ const st=(dy,dz,pitch)=>({root:{pos:[0.05,0.925+H+dy,dz]},armL:wallArm(0.2,H+dy,
  legL:{pos:[0.1,H,0.03],anchor:'ball',pitch,toes:0},legR:{fk:{flex:-2,abd:0,knee:85},foot:{pitch:30}}});
 put('step-single-leg-calf-raise',{camera:{az:80,el:6},floats:true,muscles:['calves'],muscleSide:'L',
  props:[...wall,{type:'calf-block',height:H,style:'board',pos:[0.1,0,0.03]}],
- frames:{start:st(-0.045,-0.04,-18),mid:st(0.015,-0.04,16),end:st(0.07,-0.04,50)}});
+ frames:{start:st(-0.055,-0.04,-18),mid:st(0.015,-0.04,16),end:st(0.07,-0.04,50)}});
 // dumbbells at sides, on board
 const dbf=(dy,dz,pitch)=>({root:{pos:[0,0.925+H+dy,dz]},
- armL:{pos:[0.3,0.825+H+dy,0.09+dz],contact:true,fingers:[0,-1,0],palm:[-1,0,0],curl:0.85,pole:[0.15,0,-1]},
- armR:{pos:[-0.3,0.825+H+dy,0.09+dz],contact:true,fingers:[0,-1,0],palm:[1,0,0],curl:0.85,pole:[-0.15,0,-1]},
+ armL:{pos:[0.33,0.825+H+dy,0.0+dz],contact:true,fingers:[0,-1,0],palm:[-1,0,0],curl:0.85,pole:[0.15,0,-1]},
+ armR:{pos:[-0.33,0.825+H+dy,0.0+dz],contact:true,fingers:[0,-1,0],palm:[1,0,0],curl:0.85,pole:[-0.15,0,-1]},
  legL:{pos:[0.11,H,0.03],anchor:'ball',pitch,toes:0},legR:{pos:[-0.11,H,0.03],anchor:'ball',pitch,toes:0}});
 put('standing-dumbbell-calf-raise',{camera:{az:58,el:8},floats:true,muscles:['calves'],
  props:[{type:'calf-block',height:H,style:'board',width:0.5,pos:[0,0,0.03]},{type:'dumbbell',kg:15,hand:'L'},{type:'dumbbell',kg:15,hand:'R'}],
- frames:{start:dbf(0,0,0),end:dbf(0.08,0.05,50)}});
+ frames:{start:dbf(-0.045,-0.03,-18),mid:dbf(0.015,-0.04,16),end:dbf(0.07,-0.04,50)}});
 // bands under feet, handles at shoulders
 const bd=(dy,dz,up)=>({root:{pos:[0,0.925+dy,dz]},
  armL:{pos:[0.3,1.46+dy,0.1+dz],contact:true,fingers:[0,1,0.1],palm:[0,-0.05,1],curl:0.85,pole:[1,-0.8,-0.2]},
@@ -43,7 +43,7 @@ put('calf-raises-with-bands',{camera:{az:30,el:6},muscles:['calves'],
 const DY=0.0625;
 const dd=(dy,dz,pitch)=>({root:{pos:[0,0.925+DY+dy,dz]},armL:wallArm(0.2,DY+dy,dz),armR:wallArm(-0.2,DY+dy,dz),
  legL:{pos:[0.11,DY,0.04],anchor:'ball',pitch,toes:0},legR:{pos:[-0.11,DY,0.04],anchor:'ball',pitch,toes:0}});
-put('calf-raise-on-a-dumbbell',{camera:{az:80,el:6},floats:true,muscles:['calves'],
+put('calf-raise-on-a-dumbbell',{camera:{az:50,el:14},floats:true,muscles:['calves'],
  props:[...wall,{type:'dumbbell',kg:5,pos:[0.11,0,0.04]},{type:'dumbbell',kg:5,pos:[-0.11,0,0.04]}],
  frames:{start:dd(-0.04,-0.04,-18),mid:dd(0.015,-0.04,16),end:dd(0.07,-0.04,50)}});
 // barbell on back

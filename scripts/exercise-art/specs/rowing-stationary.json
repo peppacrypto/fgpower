@@ -1,12 +1,14 @@
 {
  "slug": "rowing-stationary",
  "camera": {
-  "az": 64,
-  "el": 9
+  "az": 90,
+  "el": 8
  },
  "muscles": [
-  "quadriceps",
-  "middle-back"
+  "glutes",
+  "hamstrings",
+  "lats",
+  "quadriceps"
  ],
  "floats": true,
  "props": [
@@ -482,5 +484,12 @@
     ]
    }
   }
+ },
+ "tempo": {
+  "lift": "there",
+  "up": 0.6,
+  "down": 1.2,
+  "squeeze": 0.3,
+  "stretch": 0.1
  }
 }

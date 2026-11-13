@@ -22,21 +22,26 @@
    "kg": 10
   }
  ],
+ "tempo": {
+  "lift": "there",
+  "up": 1,
+  "down": 1.8
+ },
  "frames": {
   "start": {
    "root": {
     "pos": [
      0,
-     0.545,
+     0.56,
      -0.2
     ],
-    "pitch": 42
+    "pitch": 35
    },
    "spine": {
-    "flex": 8
+    "flex": 0
    },
    "neck": {
-    "flex": 42
+    "flex": 45
    },
    "armL": {
     "pos": [
@@ -123,16 +128,16 @@
    "root": {
     "pos": [
      0,
-     0.545,
+     0.56,
      -0.2
     ],
-    "pitch": 42
+    "pitch": 35
    },
    "spine": {
-    "flex": 8
+    "flex": 0
    },
    "neck": {
-    "flex": -30
+    "flex": -40
    },
    "armL": {
     "pos": [

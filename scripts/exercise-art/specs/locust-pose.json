@@ -18,7 +18,7 @@
     "pitch": 90
    },
    "neck": {
-    "flex": -2
+    "flex": 0
    },
    "armL": {
     "fk": {
@@ -72,11 +72,11 @@
     "flex": -24
    },
    "neck": {
-    "flex": -6
+    "flex": 0
    },
    "armL": {
     "fk": {
-     "flex": -35,
+     "flex": -12,
      "abd": 8,
      "elbow": 0
     },
@@ -85,7 +85,7 @@
    },
    "armR": {
     "fk": {
-     "flex": -35,
+     "flex": -12,
      "abd": 8,
      "elbow": 0
     },
@@ -126,11 +126,11 @@
     "flex": -12
    },
    "neck": {
-    "flex": -3
+    "flex": 0
    },
    "armL": {
     "fk": {
-     "flex": -35,
+     "flex": -12,
      "abd": 8,
      "elbow": 0
     },
@@ -139,7 +139,7 @@
    },
    "armR": {
     "fk": {
-     "flex": -35,
+     "flex": -12,
      "abd": 8,
      "elbow": 0
     },

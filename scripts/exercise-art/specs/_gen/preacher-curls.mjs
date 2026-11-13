@@ -35,7 +35,7 @@ const std = (slug, o, props, extra={}) => write(slug, { props, ...extra,
 const dbs = (kg=10) => [{type:'dumbbell',hand:'L',kg},{type:'dumbbell',hand:'R',kg}];
 
 std('preacher-curl', {grip:'under',x:0.15,tx:0.15,px:-0.25}, [bench, ez()]);
-std('reverse-barbell-preacher-curls', {grip:'over',x:0.2325,tx:0.29,px:-0.2}, [bench, ez('outer')]);
+std('reverse-barbell-preacher-curls', {grip:'over',x:0.2325,tx:0.29,px:-0.2}, [bench, ez('outer')], {muscles:['forearms','biceps'],camera:{az:55,el:18}});
 std('cable-preacher-curl', {grip:'under',x:0.2}, [bench, {type:'cable-tower',pos:[0,0,1.45],yaw:180,pulleyY:0.2,hands:true,attachment:'straight-bar'}]);
 std('two-arm-dumbbell-preacher-curl', {grip:'under',x:0.18,r:0.016}, [bench, ...dbs()]);
 std('preacher-hammer-dumbbell-curl', {grip:'hammer',x:0.17,r:0.016}, [bench, ...dbs()]);

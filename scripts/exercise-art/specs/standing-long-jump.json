@@ -10,6 +10,12 @@
   "calves"
  ],
  "floats": true,
+ "tempo": {
+  "up": 1,
+  "down": 0.25,
+  "squeeze": 0.1,
+  "stretch": 0.1
+ },
  "frames": {
   "start": {
    "root": {
@@ -70,17 +76,17 @@
    "root": {
     "pos": [
      0,
-     0.94,
+     0.91,
      -0.4
     ],
-    "pitch": 20
+    "pitch": 32
    },
    "neck": {
-    "flex": -8
+    "flex": -10
    },
    "armL": {
     "fk": {
-     "flex": 150,
+     "flex": 105,
      "abd": 6,
      "elbow": 10
     },
@@ -88,7 +94,7 @@
    },
    "armR": {
     "fk": {
-     "flex": 150,
+     "flex": 105,
      "abd": 6,
      "elbow": 10
     },
@@ -127,27 +133,27 @@
    "root": {
     "pos": [
      0,
-     1.2,
+     1.15,
      0.6
     ],
-    "pitch": 14
+    "pitch": 26
    },
    "neck": {
-    "flex": -6
+    "flex": -8
    },
    "armL": {
     "fk": {
-     "flex": 110,
+     "flex": 80,
      "abd": 6,
-     "elbow": 20
+     "elbow": 25
     },
     "curl": 0.5
    },
    "armR": {
     "fk": {
-     "flex": 110,
+     "flex": 80,
      "abd": 6,
-     "elbow": 20
+     "elbow": 25
     },
     "curl": 0.5
    },

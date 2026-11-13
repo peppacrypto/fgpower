@@ -1,8 +1,8 @@
 {
  "slug": "seated-floor-hamstring-stretch",
  "camera": {
-  "az": 40,
-  "el": 22
+  "az": 70,
+  "el": 12
  },
  "muscles": [
   "hamstrings"
@@ -43,10 +43,10 @@
    },
    "legL": {
     "fk": {
-     "flex": 70,
-     "abd": 70,
-     "rot": -70,
-     "knee": 130
+     "flex": 84,
+     "abd": 52,
+     "rot": -75,
+     "knee": 135
     },
     "rel": "world",
     "foot": {
@@ -109,13 +109,13 @@
      0.125,
      -0.05
     ],
-    "pitch": 32
+    "pitch": 36
    },
    "spine": {
-    "flex": 26
+    "flex": 10
    },
    "neck": {
-    "flex": 10
+    "flex": 0
    },
    "legR": {
     "pos": [
@@ -132,10 +132,10 @@
    },
    "legL": {
     "fk": {
-     "flex": 70,
-     "abd": 70,
-     "rot": -70,
-     "knee": 130
+     "flex": 84,
+     "abd": 52,
+     "rot": -75,
+     "knee": 135
     },
     "rel": "world",
     "foot": {
@@ -144,9 +144,9 @@
    },
    "armL": {
     "pos": [
-     0.03,
-     0.27,
-     0.6
+     0.06,
+     0.2,
+     0.62
     ],
     "hand": "relaxed",
     "fingers": [
@@ -168,9 +168,9 @@
    },
    "armR": {
     "pos": [
-     -0.14,
-     0.25,
-     0.74
+     -0.2,
+     0.2,
+     0.66
     ],
     "hand": "relaxed",
     "fingers": [

@@ -8,6 +8,11 @@
   "obliques",
   "abdominals"
  ],
+ "tempo": {
+  "lift": "there",
+  "up": 1,
+  "down": 1.8
+ },
  "qaAllow": {
   "rom:trunk-flexion.range": "lateral bend: the trunk side-flexes (about 56 deg total), it does not curl forward"
  },

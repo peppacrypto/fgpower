@@ -126,11 +126,11 @@
     "pitch": -114
    },
    "neck": {
-    "flex": -6
+    "flex": -14
    },
    "spine": {
     "flex": 44,
-    "twist": 30,
+    "twist": 45,
     "weights": [
      0,
      0.1,

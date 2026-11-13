@@ -1,5 +1,11 @@
 {
  "slug": "decline-reverse-crunch",
+ "tempo": {
+  "lift": "there",
+  "up": 1,
+  "down": 1.8,
+  "squeeze": 0.4
+ },
  "camera": {
   "az": 70,
   "el": 12
@@ -202,7 +208,7 @@
    "root": {
     "pos": [
      0,
-     0.56,
+     0.58,
      0.22
     ],
     "pitch": -68

@@ -33,27 +33,28 @@ save('pallof-press',{az:50,el:6},['abdominals','obliques'],[tower(1.35)],{
  start:pg(0,0.34,1.28),mid:pg(0,0.48,1.32),end:pg(0,0.6,1.38)});
 save('pallof-press-with-rotation',{az:50,el:6},['abdominals','obliques'],[tower(1.35)],{
  start:pg(0,0.34,1.28),mid:pg(-16,0.44,1.31),mid2:pg(-28,0.52,1.34),end:pg(-40,0.58,1.38)});
-save('standing-cable-wood-chop',{az:-55,el:8},['abdominals','obliques'],[tower(2.0)],{
- start:{...trunk(0.9,-4,25,0.22),...fkA(150,AB,10)},
- end:{...trunk(0.82,28,-30,0.22),...fkA(55,AB,10)}});
+save('standing-cable-wood-chop',{az:-55,el:8},['abdominals','obliques'],[tower(2.0,'d-handle',{pos:[0.8,0,0.5]})],{
+ start:{...trunk(0.9,-2,28,0.24),...fkA(150,AB,5)},
+ end:{...trunk(0.85,12,-32,0.24),...fkA(35,AB,5)}});
 const fk1=(fl,el)=>({...fkA(fl,AB,el),armR:{fk:{flex:fl*0.5,abd:30,rot:0,elbow:25},rel:'chest',hand:'relaxed'}});
-save('standing-cable-lift',{az:-55,el:8},['abdominals','obliques'],[tower(0.2,'d-handle',{hand:'L',hands:undefined,pos:[0.8,0,0.2]})],{
- start:{...trunk(0.82,28,25,0.22),...fk1(55,10)},mid:{...trunk(0.86,14,0,0.22),...fk1(100,10)},
- end:{...trunk(0.9,-4,-30,0.22),...fk1(150,10)}});
+save('standing-cable-lift',{az:-35,el:8},['abdominals','obliques'],[tower(0.2,'d-handle',{hand:'L',hands:undefined,pos:[0.8,0,0.2]})],{
+ start:{...trunk(0.87,10,28,0.24),...fk1(25,8)},mid:{...trunk(0.89,6,0,0.24),...fk1(85,8)},
+ end:{...trunk(0.91,-2,-35,0.24),...fk1(150,8)}},{tempo:{lift:'there'}});
 save('cable-judo-flip',{az:-55,el:8},['abdominals','obliques'],[tower(0.2,'rope')],{
- start:{...trunk(0.8,26,20,0.3),...fkA(45,AB,15)},
- end:{...trunk(0.8,24,-35,0.3),...fkA(75,AB,100)}});
-// Russian twists on stability ball, hips up, arms straight above the chest, rotate away
-const ru=(tw)=>({root:{pos:[0,0.46,0.28],pitch:-70},spine:{flex:6,twist:tw},neck:{flex:10},
- armL:{fk:{flex:90,abd:0,rot:0,elbow:0},rel:'chest',hand:'grip'},armR:{fk:{flex:90,abd:0,rot:0,elbow:0},rel:'chest',hand:'grip'},
- legL:{pos:[0.15,0,0.85],anchor:'sole',pitch:0,pole:[0.2,0.2,1]},legR:{pos:[-0.15,0,0.85],anchor:'sole',pitch:0,pole:[-0.2,0.2,1]}});
-save('cable-russian-twists',{az:70,el:10},['abdominals','obliques'],[{type:'stability-ball',pos:[0,0,0],radius:0.325,load:0.6},tower(1.1,'d-handle',{pos:[0.8,0,0.8]})],{
- start:ru(35),end:ru(-35)});
+ start:{...trunk(0.84,12,25,0.34),...fkA(40,AB,10)},
+ mid:{...trunk(0.85,8,-5,0.34),...fkA(70,AB,50)},
+ end:{...trunk(0.86,4,-42,0.34),...fkA(100,AB,70)}});
+// Russian twists seated on the ball, torso leaned back, feet planted, arms long at chest height, rotate each way
+const ru=(tw)=>({root:{pos:[0,0.47,0.0],pitch:-35},spine:{flex:4,twist:tw},neck:{flex:6},
+ armL:{fk:{flex:55,abd:0,rot:0,elbow:0},rel:'chest',hand:'grip'},armR:{fk:{flex:55,abd:0,rot:0,elbow:0},rel:'chest',hand:'grip'},
+ legL:{pos:[0.2,0,0.45],anchor:'sole',pole:[0.2,0.5,1]},legR:{pos:[-0.2,0,0.45],anchor:'sole',pole:[-0.2,0.5,1]}});
+save('cable-russian-twists',{az:-40,el:10},['abdominals','obliques'],[{type:'stability-ball',pos:[0,0,-0.02],radius:0.325,load:0.6},tower(1.5,'d-handle',{pos:[0.8,0,0.3]})],{
+ start:ru(40),end:ru(-45)});
 // One-arm high-pulley side bend: handle at shoulder, bend away from the tower
-const sb=(side)=>({...stand({y:0.9,side,lx:0.1,rx:0.1}),
+const sb=(side)=>({...stand({y:0.92,side,lx:0.1,rx:0.1,pitch:0,sf:0}),spine:{flex:0,twist:0,side,weights:[0.3,0.3,0.2,0.1,0.1]},
  armL:{fk:{flex:5,abd:20,rot:0,elbow:145},rel:'chest',hand:'grip'},
- armR:{fk:{flex:-5,abd:35,rot:0,elbow:105},rel:'chest',hand:'relaxed'}});
-save('one-arm-high-pulley-cable-side-bends',{az:20,el:6},['obliques','abdominals'],[tower(2.0,'d-handle',{hand:'L',hands:undefined})],{
- start:sb(0),end:sb(-22)},{qaAllow:{'rom:trunk-flexion.range':'lateral flexion (side bend), not a sagittal crunch: the pattern table has no side-bend entry'}});
+ armR:{fk:{flex:0,abd:12,rot:0,elbow:12},rel:'chest',hand:'relaxed'}});
+save('one-arm-high-pulley-cable-side-bends',{az:8,el:4},['obliques','abdominals'],[tower(2.0,'d-handle',{hand:'L',hands:undefined})],{
+ start:sb(0),end:sb(28)},{qaAllow:{'rom:trunk-flexion.range':'lateral flexion (side bend), not a sagittal crunch: the pattern table has no side-bend entry'}});
 for(const [k,v] of Object.entries(out))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
 console.log(Object.keys(out).join(' '));

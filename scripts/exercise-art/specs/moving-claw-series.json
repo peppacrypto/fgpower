@@ -10,43 +10,52 @@
   "quadriceps"
  ],
  "floats": true,
+ "tempo": {
+  "up": 0.5,
+  "down": 0.2,
+  "squeeze": 0.05,
+  "stretch": 0.05
+ },
  "frames": {
   "start": {
    "root": {
     "pos": [
      0,
-     0.9,
+     0.93,
      0
     ],
-    "pitch": 8
+    "pitch": 5
    },
    "neck": {
-    "flex": -4
+    "flex": -3
    },
    "armL": {
     "fk": {
-     "flex": 70,
-     "abd": 8,
+     "flex": -40,
+     "abd": 25,
      "elbow": 90
     },
     "curl": 0.5
    },
    "armR": {
     "fk": {
-     "flex": -40,
-     "abd": 8,
+     "flex": 75,
+     "abd": 15,
      "elbow": 90
     },
     "curl": 0.5
    },
    "legL": {
     "fk": {
-     "flex": -10,
+     "flex": 85,
      "abd": 3,
      "rot": 0,
-     "knee": 100
+     "knee": 95
     },
-    "rel": "pelvis"
+    "rel": "pelvis",
+    "foot": {
+     "pitch": -15
+    }
    },
    "legR": {
     "pos": [
@@ -67,38 +76,41 @@
    "root": {
     "pos": [
      0,
-     0.9,
+     0.93,
      0
     ],
-    "pitch": 8
+    "pitch": 5
    },
    "neck": {
-    "flex": -4
+    "flex": -3
    },
    "armL": {
     "fk": {
      "flex": 10,
-     "abd": 8,
+     "abd": 20,
      "elbow": 90
     },
     "curl": 0.5
    },
    "armR": {
     "fk": {
-     "flex": 20,
-     "abd": 8,
+     "flex": 30,
+     "abd": 15,
      "elbow": 90
     },
     "curl": 0.5
    },
    "legL": {
     "fk": {
-     "flex": 50,
+     "flex": 45,
      "abd": 3,
      "rot": 0,
-     "knee": 90
+     "knee": 55
     },
-    "rel": "pelvis"
+    "rel": "pelvis",
+    "foot": {
+     "pitch": -10
+    }
    },
    "legR": {
     "pos": [
@@ -119,38 +131,41 @@
    "root": {
     "pos": [
      0,
-     0.9,
+     0.93,
      0
     ],
-    "pitch": 8
+    "pitch": 5
    },
    "neck": {
-    "flex": -4
+    "flex": -3
    },
    "armL": {
     "fk": {
-     "flex": -40,
-     "abd": 30,
+     "flex": 70,
+     "abd": 15,
      "elbow": 90
     },
     "curl": 0.5
    },
    "armR": {
     "fk": {
-     "flex": 70,
-     "abd": 8,
+     "flex": -40,
+     "abd": 25,
      "elbow": 90
     },
     "curl": 0.5
    },
    "legL": {
     "fk": {
-     "flex": 70,
+     "flex": 5,
      "abd": 3,
      "rot": 0,
-     "knee": 5
+     "knee": 50
     },
-    "rel": "pelvis"
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 5
+    }
    },
    "legR": {
     "pos": [

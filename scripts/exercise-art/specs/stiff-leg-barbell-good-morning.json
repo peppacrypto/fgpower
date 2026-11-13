@@ -1,7 +1,7 @@
 {
  "slug": "stiff-leg-barbell-good-morning",
  "camera": {
-  "az": 100,
+  "az": 90,
   "el": 8
  },
  "muscles": [
@@ -118,10 +118,10 @@
    "root": {
     "pos": [
      0,
-     0.78,
-     -0.34
+     0.89,
+     -0.3
     ],
-    "pitch": 78
+    "pitch": 85
    },
    "neck": {
     "flex": -30

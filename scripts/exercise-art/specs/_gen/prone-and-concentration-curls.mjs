@@ -41,7 +41,7 @@ const db = h => ({ type:'dumbbell', hand:h, kg:10 });
   const legs = { legL:{ pos:[0.11,h+0.4,-0.1], anchor:'ankle' } };
   const mk = (x, arm) => ({ E:[x, E[1], E[2]], ...arm });
   const legs2 = {
-    legL:{ fk:{flex:-5,abd:3,rot:0,knee:100}, rel:'pelvis' }, legR:{ fk:{flex:-5,abd:3,rot:0,knee:100}, rel:'pelvis' } };
+    legL:{ fk:{flex:-5,abd:3,rot:0,knee:15}, rel:'pelvis' }, legR:{ fk:{flex:-5,abd:3,rot:0,knee:15}, rel:'pelvis' } };
   write('lying-high-bench-barbell-curl', { ths:T4, camera:{az:70,el:8}, floats:true,
     props:[{type:'flat-bench',height:h}, bb], root, neck:{flex:-55}, spine:{flex:0}, 
     legL:legs2.legL, legR:legs2.legR,
@@ -84,15 +84,15 @@ const db = h => ({ type:'dumbbell', hand:h, kg:10 });
 }
 // ---- standing concentration curl: hinged, arm hanging, elbow out
 {
-  const ps = 55;
-  const root = { pos:[0,0.86,-0.1], pitch:ps };
-  const sy = 0.86+0.46*Math.cos(ps*D), sz = -0.1+0.46*Math.sin(ps*D);
+  const ps = 68;
+  const root = { pos:[0,0.8,-0.2], pitch:ps };
+  const sy = 0.8+0.46*Math.cos(ps*D), sz = -0.2+0.46*Math.sin(ps*D);
   const leg = s => ({ pos:[0.27*s,0,0.05], anchor:'sole', yaw:15, pole:[0.3*s,0.4,1] });
-  const E = [0.24, sy-0.275, sz];
+  const E = [0.2, sy-0.275, sz];
   write('standing-concentration-curl', { ths:{start:5,mid:70,end:130}, camera:{az:60,el:8}, root, neck:{flex:-35},
     legL:leg(1), legR:leg(-1), props:[db('L')], muscleSide:'L',
     arms:[{side:'L',E,dir:1,pole:[0.7,-0.2,-0.6],hx:0.2,L:0.375}],
-    other:{ side:'R', frame:{ pos:[-0.2, 0.72, 0.14], hand:'flat', contact:true, fingers:[0,-1,0], palm:[0,0,-1] } } });
+    other:{ side:'R', frame:{ pos:[-0.17, 0.62, 0.1], hand:'flat', contact:true, fingers:[0,-1,0], palm:[0,0,-1] } } });
 }
 // ---- standing behind an incline bench, arm draped over the top
 {

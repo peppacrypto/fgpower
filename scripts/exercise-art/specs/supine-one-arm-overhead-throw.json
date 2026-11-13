@@ -1,8 +1,13 @@
 {
  "slug": "supine-one-arm-overhead-throw",
  "camera": {
-  "az": 70,
-  "el": 12
+  "az": 90,
+  "el": 10
+ },
+ "tempo": {
+  "lift": "there",
+  "up": 0.45,
+  "down": 1.4
  },
  "muscles": [
   "abdominals",
@@ -150,10 +155,10 @@
      0.1,
      0
     ],
-    "pitch": -60
+    "pitch": -75
    },
    "spine": {
-    "flex": 10
+    "flex": 6
    },
    "neck": {
     "flex": 4
@@ -186,7 +191,7 @@
    },
    "armL": {
     "fk": {
-     "flex": 105,
+     "flex": 110,
      "abd": 8,
      "elbow": 5
     },
@@ -217,13 +222,13 @@
      0.11,
      0
     ],
-    "pitch": -14
+    "pitch": -45
    },
    "spine": {
-    "flex": 14
+    "flex": 10
    },
    "neck": {
-    "flex": 6
+    "flex": 2
    },
    "legL": {
     "pos": [
@@ -253,7 +258,7 @@
    },
    "armL": {
     "fk": {
-     "flex": 88,
+     "flex": 85,
      "abd": 8,
      "elbow": 5
     },
@@ -275,8 +280,8 @@
      "kg": 6,
      "at": [
       0,
-      1,
-      1.7
+      1.1,
+      1.5
      ]
     }
    ]

@@ -20,13 +20,13 @@
    "root": {
     "pos": [
      0,
-     0.93,
+     0.97,
      -0.03
     ],
-    "pitch": -4
+    "pitch": -6
    },
    "spine": {
-    "flex": -5
+    "flex": -6
    },
    "neck": {
     "flex": -14
@@ -83,11 +83,11 @@
     "pos": [
      0.2,
      0,
-     0.03
+     0.18
     ],
-    "anchor": "sole",
+    "anchor": "ball",
     "yaw": 12,
-    "pitch": 0,
+    "pitch": 28,
     "pole": [
      0.25,
      0,
@@ -98,11 +98,11 @@
     "pos": [
      -0.2,
      0,
-     0.03
+     0.18
     ],
-    "anchor": "sole",
+    "anchor": "ball",
     "yaw": -12,
-    "pitch": 0,
+    "pitch": 28,
     "pole": [
      -0.25,
      0,
@@ -177,9 +177,9 @@
     "pos": [
      0.2,
      0,
-     0.03
+     0.18
     ],
-    "anchor": "sole",
+    "anchor": "ball",
     "yaw": 12,
     "pitch": 0,
     "pole": [
@@ -192,9 +192,9 @@
     "pos": [
      -0.2,
      0,
-     0.03
+     0.18
     ],
-    "anchor": "sole",
+    "anchor": "ball",
     "yaw": -12,
     "pitch": 0,
     "pole": [
@@ -271,9 +271,9 @@
     "pos": [
      0.2,
      0,
-     0.03
+     0.18
     ],
-    "anchor": "sole",
+    "anchor": "ball",
     "yaw": 12,
     "pitch": 0,
     "pole": [
@@ -286,9 +286,9 @@
     "pos": [
      -0.2,
      0,
-     0.03
+     0.18
     ],
-    "anchor": "sole",
+    "anchor": "ball",
     "yaw": -12,
     "pitch": 0,
     "pole": [
@@ -302,16 +302,16 @@
    "root": {
     "pos": [
      0,
-     0.62,
-     -0.28
+     0.6,
+     -0.3
     ],
     "pitch": 60
    },
    "spine": {
-    "flex": 18
+    "flex": 14
    },
    "neck": {
-    "flex": -20
+    "flex": -10
    },
    "armL": {
     "pos": [
@@ -365,9 +365,9 @@
     "pos": [
      0.2,
      0,
-     0.03
+     0.18
     ],
-    "anchor": "sole",
+    "anchor": "ball",
     "yaw": 12,
     "pitch": 0,
     "pole": [
@@ -380,9 +380,9 @@
     "pos": [
      -0.2,
      0,
-     0.03
+     0.18
     ],
-    "anchor": "sole",
+    "anchor": "ball",
     "yaw": -12,
     "pitch": 0,
     "pole": [
@@ -392,5 +392,12 @@
     ]
    }
   }
+ },
+ "tempo": {
+  "lift": "back",
+  "up": 1,
+  "down": 0.3,
+  "squeeze": 0.2,
+  "stretch": 0.15
  }
 }

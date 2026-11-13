@@ -79,9 +79,9 @@
    },
    "legL": {
     "fk": {
-     "flex": 5,
+     "flex": -15,
      "abd": 2,
-     "knee": 22
+     "knee": 60
     },
     "foot": {
      "pitch": 28
@@ -89,9 +89,9 @@
    },
    "legR": {
     "fk": {
-     "flex": 5,
+     "flex": -15,
      "abd": 2,
-     "knee": 22
+     "knee": 60
     },
     "foot": {
      "pitch": 28
@@ -163,9 +163,9 @@
    },
    "legL": {
     "fk": {
-     "flex": 5,
+     "flex": -15,
      "abd": 2,
-     "knee": 22
+     "knee": 60
     },
     "foot": {
      "pitch": 28
@@ -173,9 +173,9 @@
    },
    "legR": {
     "fk": {
-     "flex": 5,
+     "flex": -15,
      "abd": 2,
-     "knee": 22
+     "knee": 60
     },
     "foot": {
      "pitch": 28
@@ -244,9 +244,9 @@
    },
    "legL": {
     "fk": {
-     "flex": 5,
+     "flex": -15,
      "abd": 2,
-     "knee": 22
+     "knee": 60
     },
     "foot": {
      "pitch": 28
@@ -254,9 +254,9 @@
    },
    "legR": {
     "fk": {
-     "flex": 5,
+     "flex": -15,
      "abd": 2,
-     "knee": 22
+     "knee": 60
     },
     "foot": {
      "pitch": 28
@@ -325,9 +325,9 @@
    },
    "legL": {
     "fk": {
-     "flex": 5,
+     "flex": -15,
      "abd": 2,
-     "knee": 22
+     "knee": 60
     },
     "foot": {
      "pitch": 28
@@ -335,15 +335,21 @@
    },
    "legR": {
     "fk": {
-     "flex": 5,
+     "flex": -15,
      "abd": 2,
-     "knee": 22
+     "knee": 60
     },
     "foot": {
      "pitch": 28
     }
    }
   }
+ },
+ "tempo": {
+  "lift": "there",
+  "up": 1,
+  "down": 1.8,
+  "maxLoop": 8
  },
  "qaAllow": {
   "rom:vertical-pull.chin": "second half of the rep is behind the neck, the bar stops at the back of the neck"

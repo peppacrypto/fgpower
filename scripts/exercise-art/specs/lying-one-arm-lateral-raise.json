@@ -5,8 +5,8 @@
   "rom:shoulder-abduction.bottom": "prone on a bench the arms hang straight down, which is 70-90 deg from the horizontal trunk; the hang is the textbook start"
  },
  "camera": {
-  "az": 60,
-  "el": 12
+  "az": 165,
+  "el": 28
  },
  "muscles": [
   "posterior-deltoid"

@@ -1,12 +1,14 @@
 {
  "slug": "standing-lateral-stretch",
  "camera": {
-  "az": 20,
-  "el": 8
+  "az": 0,
+  "el": 5
  },
  "muscles": [
-  "abdominals"
+  "obliques",
+  "lats"
  ],
+ "muscleSide": "L",
  "props": [],
  "frames": {
   "start": {
@@ -23,14 +25,15 @@
     "side": 0
    },
    "neck": {
-    "flex": 0
+    "flex": 0,
+    "side": 20
    },
    "armL": {
     "fk": {
-     "flex": 160,
-     "abd": 35,
+     "flex": 0,
+     "abd": 172,
      "rot": 0,
-     "elbow": 130
+     "elbow": 0
     },
     "rel": "chest",
     "hand": "relaxed"
@@ -100,17 +103,18 @@
     "roll": -3
    },
    "spine": {
-    "side": -30
+    "side": -26
    },
    "neck": {
-    "flex": 0
+    "flex": 0,
+    "side": 20
    },
    "armL": {
     "fk": {
-     "flex": 160,
-     "abd": 35,
+     "flex": 0,
+     "abd": 172,
      "rot": 0,
-     "elbow": 130
+     "elbow": 0
     },
     "rel": "chest",
     "hand": "relaxed"

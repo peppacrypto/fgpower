@@ -48,18 +48,18 @@ spec('chair-squat',{az:60,el:8},['quadriceps'],bar,{
 
 // 8 Hang power clean
 { const gr = (s,y,z) => ({ pos:[0.3*s,y,z], contact:true, fingers:[0,-1,0], palm:[0,0,-1], pole:[0.4*s,0,-0.6], curl:0.82 });
-  const ft = (anch,p,z,y=0) => ({ L:{pos:[0.14,y,z],anchor:anch,pitch:p,yaw:6,pole:[0.15,0,1]}, R:{pos:[-0.14,y,z],anchor:anch,pitch:p,yaw:-6,pole:[-0.15,0,1]} });
+  const ft = (anch,p,z,y=0) => ({ L:{pos:[0.14,y,z],anchor:anch,pitch:p,yaw:6,pole:[0.15,0,1],...(anch==='ball'?{toes:0}:{})}, R:{pos:[-0.14,y,z],anchor:anch,pitch:p,yaw:-6,pole:[-0.15,0,1],...(anch==='ball'?{toes:0}:{})} });
   const mk = (root, arm, f, neck=0) => ({ root, spine:{flex:0}, neck:{flex:neck}, armL:arm(1), armR:arm(-1), legL:f.L, legR:f.R });
   const hand = (y,z,fing,palm,pole,el) => s => ({ pos:[0.3*s,y,z], contact:true, curl:0.82, fingers:fing, palm, pole:[pole[0]*s,pole[1],pole[2]], scap:{elev:el,prot:0} });
-  const flat = ft('sole',0,0);
+  const flat = ft('ball',0,0.1);
   // convert world-frame arm to chest frame (chest origin ~ root + 0.275 up the torso)
   const toChest = (root, w) => { const a=root.pitch*Math.PI/180, c=Math.cos(a), sn=Math.sin(a);
     const ch=[root.pos[0], root.pos[1]+0.275*c, root.pos[2]+0.275*sn];
     const L=(v,off=[0,0,0])=>{ const y=v[1]-off[1], z=v[2]-off[2]; return [v[0]-off[0], y*c+z*sn, -y*sn+z*c]; };
     return { ...w, pos:L(w.pos,ch).map(x=>+x.toFixed(3)), fingers:L(w.fingers).map(x=>+x.toFixed(3)), palm:L(w.palm).map(x=>+x.toFixed(3)), pole:L(w.pole).map(x=>+x.toFixed(3)), rel:'chest' }; };
   const chestFrame = (f) => { const r=f.root; f.armL=toChest(r,f.armL); f.armR=toChest(r,f.armR); return f; };
-  const hang = mk({pos:[0,0.84,-0.27],pitch:48}, s=>gr(s,0.6,0.11), flat, -30);
-  const top = mk({pos:[0,0.93,0],pitch:0}, hand(1.02,0.19,[0,-0.95,0.3],[0,-0.3,-1],[1,-0.3,-0.5],6), flat);
+  const hang = mk({pos:[0,0.86,-0.22],pitch:45}, s=>gr(s,0.7,0.13), flat, -15);
+  const top = mk({pos:[0,1.01,0],pitch:0}, hand(1.1,0.17,[0,-0.95,0.3],[0,-0.3,-1],[1,-0.3,-0.5],12), ft('ball',50,0.1,0));
   const turn = mk({pos:[0,0.88,0],pitch:0}, s=>({pos:[0.22*s,0.08,0.17],rel:'chest',contact:true,curl:0.82,fingers:[0.02*s,-0.45,-0.9],palm:[0,0.9,-0.45],pole:[0.3*s,-0.7,0.6],scap:{elev:2,prot:0.3}}), flat);
   const rackA = s => ({ pos:[0.2*s,0.2,0.13],rel:'chest',contact:true,curl:0.82,fingers:[0.02*s,0.1,-1],palm:[0,1,0.1],pole:[0.3*s,-0.6,1],scap:{elev:0,prot:0.5} });
   const catchW = mk({pos:[0,0.82,-0.04],pitch:5}, hand(1.17,0.2,[0,-0.6,0.8],[0,-0.8,-0.6],[0.6,-0.5,-0.8],8), flat);
@@ -86,3 +86,45 @@ spec('chair-squat',{az:60,el:8},['quadriceps'],bar,{
     legL:{pos:[0.11,0,0.3],anchor:'sole'}, legR:rear });
   spec('smith-single-leg-split-squat',{az:70,el:6},['quadriceps','glutes'],[...bar,{type:'flat-bench',height:0.45,pos:[0,0,-1.15]}],
     {start:f(0.9,0.12,3),end:f(0.52,0.0,8)},{muscleSide:'L'}); }
+
+// ---- coach review 2026-11-13 fixes ----
+// NOTE: the Smith prop's grip magnet twists a back-bar hand 159 deg (and smith.json itself fails check), so the back-bar lifts keep the
+// free barbell that rides the hands; the hands-in-front lifts below use the rails.
+const mod = (slug, fn) => { const s = J(slug); fn(s); out(s); };
+const sm = (z=0, follow='hands') => [{ type:'smith', pos:[0,0,z], follow }];
+const setHandZ = (s, z) => { for (const f of Object.values(s.frames)) for (const a of ['armL','armR']) if (f[a]?.pos && !f[a].rel) f[a].pos[2] = z; };
+spec('smith-machine-squat',{az:90,el:6},['quadriceps','glutes'],bar,{
+  start:sq(0.92,0.12,0,0,0,0.18), mid:sq(0.66,0.04,10,-1,-3,0.18), end:sq(0.35,-0.04,20,-3,-6,0.18)});
+spec('chair-squat',{az:90,el:6},['quadriceps'],[...bar,{type:'squat-box',height:0.4,pos:[0,0,-0.16]}],{
+  start:sq(0.92,0.12,0,0,0,0.14,{sx:0.2,yaw:24,px:0.5}),
+  mid:sq(0.7,0.06,18,0,-3,0.14,{sx:0.2,yaw:24,px:0.5}),
+  end:sq(0.5,-0.14,31,0,-6,0.14,{sx:0.2,yaw:24,px:0.5})});
+mod('lunge-sprint', s => { s.camera={az:90,el:8}; s.tempo={lift:'there',up:0.6,down:0.25};
+  const a = s.frames.mid; a.root.pos[1]=1.3; a.legL.pos[1]=0.55; a.legR.pos[1]=0.55; a.legL.pos[2]=0.2; a.legR.pos[2]=-0.2; });
+mod('smith-machine-one-arm-upright-row', s => { s.camera={az:35,el:6}; s.muscleSide='L'; s.props=[{type:'smith',pos:[0,0,0.17],follow:'hand-L'}];
+  const rest = {pos:[-0.17,-0.1,0],rel:'pelvis',contact:true,fingers:[0,-1,0],palm:[1,0,0]};
+  const ys=[0.8,1.0,1.14], ps=[[0.4,-0.2,-1],[1,-0.1,-0.4],[1,0.1,-0.4]];
+  Object.keys(s.frames).forEach((k,i)=>{ const f=s.frames[k]; f.armL.pos=[0.2,ys[i],0.17]; f.armL.pole=ps[i]; f.armL.scap={elev:0,prot:0}; f.armR={...rest}; }); });
+mod('smith-machine-upright-row', s => { s.camera={az:35,el:6}; s.props=sm(0.17);
+  const ys=[0.8,1.0,1.14], ps=[[0.4,-0.2,-1],[1,-0.1,-0.4],[1,0.1,-0.4]];
+  Object.keys(s.frames).forEach((k,i)=>{ for (const [a,w] of [['armL',1],['armR',-1]]) { const h=s.frames[k][a]; h.pos=[0.2*w,ys[i],0.17]; h.pole=ps[i].map((v,j)=>j==0?v*w:v); h.scap={elev:0,prot:0}; } }); });
+mod('smith-machine-stiff-legged-deadlift', s => { s.props=sm(0.15); s.camera={az:90,el:6};
+  const F=s.frames; F.start.root={pos:[0,0.925,0],pitch:0}; F.mid.root={pos:[0,0.9,-0.15],pitch:32}; F.end.root={pos:[0,0.875,-0.33],pitch:72};
+  F.start.neck={flex:0}; F.mid.neck={flex:-8}; F.end.neck={flex:-14};
+  const ys={start:0.8,mid:0.62,end:0.45}; for (const k in F) for (const a of ['armL','armR']) { F[k][a].pos[1]=ys[k]; F[k][a].pos[2]=0.15; } });
+mod('smith-machine-bent-over-row', s => { s.props=sm(0.17); s.camera={az:90,el:6}; setHandZ(s,0.17);
+  for (const f of Object.values(s.frames)) f.root.pitch=55; s.frames.start.armL.pos[1]=0.40; s.frames.start.armR.pos[1]=0.40; for (const a of ['armL','armR']) { const w=a==='armL'?1:-1; s.frames.end[a].pole=[0.9*w,0.3,-1]; s.frames.end[a].pos[1]=0.8; } });
+mod('smith-machine-behind-the-back-shrug', s => { s.props=sm(-0.14); s.camera={az:100,el:6};
+  for (const a of ['armL','armR']) { s.frames.end[a].pos[1]=0.88; s.frames.end[a].scap.elev=14; } });
+mod('smith-machine-reverse-calf-raises', s => { s.camera={az:90,el:6}; s.props=[...bar,{type:'calf-block',height:0.1,pos:[0,0,0.0]}];
+  for (const a of ['legL','legR']) { s.frames.start[a].pitch=-24; s.frames.end[a].pitch=16; s.frames.start[a].pos[2]=0.02; s.frames.end[a].pos[2]=0.02; } });
+mod('smith-machine-pistol-squat', s => { s.camera={az:90,el:6};
+  s.frames.end.root={pos:[0.07,0.39,-0.07],pitch:30}; s.frames.end.spine={flex:2}; s.frames.end.legR.fk.flex=100; });
+mod('smith-single-leg-split-squat', s => { s.camera={az:90,el:6};
+  s.props=[...bar,{type:'flat-bench',height:0.45,pos:[0,0,-1.12]}];
+  for (const k of ['start','end']) s.frames[k].legR.pos=[-0.11,0.51,-0.6];
+  s.frames.end.root.pos[1]=0.5; s.frames.start.root.pos[2]=0.12; s.frames.end.root.pos[2]=0.1; });
+mod('chair-squat', s => { const F=s.frames; F.mid.root.pos[2]=0.02; const m2=JSON.parse(JSON.stringify(F.mid)); m2.root={pos:[0,0.58,-0.1],pitch:26}; m2.spine={flex:-3};
+  s.frames={start:F.start,mid:F.mid,mid2:m2,end:F.end}; });
+mod('smith-machine-pistol-squat', s => { s.frames.end.root.pitch=24; s.frames.end.spine={flex:10}; s.frames.end.legR.fk.flex=96; s.frames.end.root.pos[1]=0.39; });
+mod('smith-single-leg-split-squat', s => { s.frames.start.root.pos[2]=0.12; s.frames.end.root.pos[2]=0.0; });

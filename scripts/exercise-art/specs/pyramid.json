@@ -1,8 +1,8 @@
 {
  "slug": "pyramid",
  "camera": {
-  "az": 70,
-  "el": 8
+  "az": 85,
+  "el": 6
  },
  "muscles": [
   "spinal-erectors"
@@ -27,13 +27,105 @@
      0.72,
      0
     ],
-    "pitch": 112
+    "pitch": 106
    },
    "spine": {
-    "flex": 10
+    "flex": 2
    },
    "neck": {
-    "flex": -20
+    "flex": -6
+   },
+   "armL": {
+    "pos": [
+     0.2,
+     0,
+     0.55
+    ],
+    "contact": true,
+    "fingers": [
+     0.05,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3,
+    "pole": [
+     0.5,
+     0.3,
+     -0.8
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.2,
+     0,
+     0.55
+    ],
+    "contact": true,
+    "fingers": [
+     -0.05,
+     0,
+     1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "curl": -0.3,
+    "pole": [
+     -0.5,
+     0.3,
+     -0.8
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.12,
+     0,
+     -0.5
+    ],
+    "anchor": "ball",
+    "pitch": 40,
+    "pole": [
+     0.1,
+     -1,
+     0
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.12,
+     0,
+     -0.5
+    ],
+    "anchor": "ball",
+    "pitch": 40,
+    "pole": [
+     -0.1,
+     -1,
+     0
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.72,
+     0
+    ],
+    "pitch": 122
+   },
+   "spine": {
+    "flex": 16
+   },
+   "neck": {
+    "flex": -6
    },
    "armL": {
     "pos": [

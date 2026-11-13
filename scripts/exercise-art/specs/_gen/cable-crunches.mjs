@@ -3,7 +3,8 @@ const W='/home/dev-peppa/fgpower/scripts/exercise-art/specs/';
 const out={};
 const save=(slug,camera,props,frames,more={})=>{out[slug]={slug,camera,muscles:['abdominals'],props,frames,...more};};
 const ROT=+process.env.ROT||-30;const rotf=f=>{const a=ROT*Math.PI/180,c=Math.cos(a),n=Math.sin(a);return [f[0],f[1]*c-f[2]*n,f[1]*n+f[2]*c];};
-let DX=0.05;const hand=(s,p,f,pa,pole)=>({pos:[s*(p[0]+DX),p[1],p[2]],contact:true,fingers:(f=rotf(f),[s*f[0],f[1],f[2]]),palm:[s*pa[0],pa[1],pa[2]],curl:0.78,pole:[s*pole[0],pole[1],pole[2]]});
+let DX=0.05;const REL=process.env.REL||'head';const hand=(s,p,f,pa,pole)=>({...(p.rel?{rel:p.rel}:{}),pos:[s*(p[0]+DX),p[1],p[2]],contact:true,fingers:(f=rotf(f),[s*f[0],f[1],f[2]]),palm:[s*pa[0],pa[1],pa[2]],curl:0.78,pole:[s*pole[0],pole[1],pole[2]]});
+const HX=+process.env.HX||0.13,HY=+process.env.HY||0.1,HZ=+process.env.HZ||0.02;const hh=()=>{const h=sd=>({rel:'head',pos:[sd*HX,HY,HZ],contact:true,fingers:[0,0.9,-0.4],palm:[-sd,0,0],curl:0.78,pole:[sd*0.5,-0.6,0.5]});return {armL:h(1),armR:h(-1)};};
 const both=(p,f,pa,pole)=>({armL:hand(1,p,f,pa,pole),armR:hand(-1,p,f,pa,pole)});
 const tower=(y,yaw,z,att='rope',x={hands:true})=>({type:'cable-tower',pos:[0,0,z],yaw,pulleyY:y,attachment:att,...x});
 // kneeling
@@ -12,24 +13,24 @@ const kn=(z,pitch,sf,nf,hipz=0)=>({root:{pos:[0,0.5,z],pitch},spine:{flex:sf,wei
 const kt=[tower(2,180,0.66)];
 const ropeBeside=[0.1,0.9,0.5],ropeUp=[0.1,0.9,0.5];
 save('cable-crunch',{az:60,el:8},kt,{
- start:{...kn(-0.25,-4,-6,-6),...both([0.13,1.3,0.22],[0,0.3,0.95],[-1,0,0],[0.4,-1,-0.3])},
- end:{...kn(-0.25,22,42,20),...both([0.13,0.95,0.38],[0,0.3,0.9],[-1,0,0],[0.4,-1,-0.3])}});
+ start:{...kn(-0.25,-4,-6,-6),...hh()},
+ end:{...kn(-0.25,15,50,26),...hh()}});
 save('rope-crunch',{az:60,el:8},kt,{
- start:{...kn(-0.25,0,0,0),...both([0.08,1.38,0.2],[0,0.3,0.95],[-1,0,0],[0.4,-1,-0.3])},
- end:{...kn(-0.25,22,42,20),...both([0.13,0.95,0.38],[0,0.3,0.9],[-1,0,0],[0.4,-1,-0.3])}});
-save('kneeling-cable-crunch-with-alternating-oblique-twists',{az:50,el:20},kt,{
- start:{...kn(-0.25,-2,-4,-4),...both([0.15,1.3,0.2],[0,0.3,0.95],[-1,0,0],[0.4,-1,-0.3])},
- mid:{...kn(-0.25,20,36,16),spine:{flex:36,twist:-28,weights:[0,0.1,0.25,0.3,0.35]},...both([0.2,0.98,0.34],[0,0.3,0.95],[-1,0,0],[0.4,-1,-0.3])},
- end:{...kn(-0.25,20,36,16),spine:{flex:36,twist:28,weights:[0,0.1,0.25,0.3,0.35]},...both([0.2,0.98,0.34],[0,0.3,0.95],[-1,0,0],[0.4,-1,-0.3])}});
+ start:{...kn(-0.25,0,0,0),...hh()},
+ end:{...kn(-0.25,15,50,26),...hh()}});
+const tw=t=>({...kn(-0.25,16,40,18),spine:{flex:40,twist:t,weights:[0,0.1,0.25,0.3,0.35]},...hh()});
+save('kneeling-cable-crunch-with-alternating-oblique-twists',{az:25,el:25},kt,{
+ start:{...kn(-0.25,-2,-4,-4),...hh()},
+ mid:tw(0),mid2:tw(-28),end:tw(28)});
 // standing, back to tower
 const stn=(pitch,sf,nf)=>({root:{pos:[0,0.92,0],pitch},spine:{flex:sf,weights:[0,0.1,0.25,0.3,0.35]},neck:{flex:nf},
- legL:{pos:[0.15,0,0],anchor:'sole',yaw:6},legR:{pos:[-0.15,0,0],anchor:'sole',yaw:-6}});
+ legL:{pos:[0.17,0,0],anchor:'sole',yaw:6},legR:{pos:[-0.17,0,0],anchor:'sole',yaw:-6}});
 const bt=[tower(+process.env.PY||2,0,+process.env.TZ||-0.85)];
-const SR=(process.env.SR||'0.26,0.18,0.1').split(',').map(Number);
+const SR=(process.env.SR||'0.26,0.18,0.06').split(',').map(Number);
 const sh=()=>{const h=(sd)=>({pos:[sd*SR[0],SR[1],SR[2]],rel:'chest',contact:true,fingers:[-sd*(-0.3),0.8,0.2],palm:[-sd*0.9,0,+process.env.PZ||-0.2],curl:0.78,pole:[sd*0.5,-1,+0.4]});return {armL:h(1),armR:h(-1)};};
 save('standing-rope-crunch',{az:115,el:8},bt,{
  start:{...stn(-4,-2,-4),...sh()},
- end:{...stn(18,40,18),...sh()}});
+ end:{...stn(8,56,26),...sh()}});
 // seated on flat bench, back to the pulley
 const sb=(pitch,sf,nf)=>({root:{pos:[0,0.54,0],pitch},spine:{flex:sf,weights:[0,0.1,0.25,0.3,0.35]},neck:{flex:nf},
  legL:{pos:[0.15,0,0.55],anchor:'sole',yaw:6},legR:{pos:[-0.15,0,0.55],anchor:'sole',yaw:-6}});
@@ -49,9 +50,10 @@ const bo=(pitch,sf,side)=>({root:{pos:[0,0.3,0.26],pitch},spine:{flex:sf,side,we
  legL:{pos:[0.25,0,0.74],anchor:'sole',yaw:8,pole:[0.3,0.5,0.7]},legR:{pos:[-0.25,0,0.74],anchor:'sole',yaw:-8,pole:[-0.3,0.5,0.7]}});
 const bh=[{type:'bosu',pos:[0,0,0]},tower(0.2,180,1.5,'d-handle')];
 const ba=(x,y=0.62,z=0.4)=>both([x,y,z],[0,0,1],[-1,0,0],[0.3,-1,-0.3]);
-save('bosu-ball-cable-crunch-with-side-bends',{az:60,el:14},bh,{
- start:{...bo(-78,-14,0),...ba(0.09,+process.env.SY||0.62,+process.env.SZ||0.3)},
+save('bosu-ball-cable-crunch-with-side-bends',{az:25,el:35},bh,{
+ start:{...bo(-78,-14,0),...ba(0.09,0.62,0.3)},
  mid:{...bo(-62,34,0),...ba(0.09)},
- end:{...bo(-62,34,18),...ba(0.09)}});
+ mid2:{...bo(-62,34,22),...ba(0.09)},
+ end:{...bo(-62,34,-22),...ba(0.09)}});
 for(const [k,v] of Object.entries(out))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
 console.log(Object.keys(out).join(' '));

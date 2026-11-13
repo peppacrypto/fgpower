@@ -1,5 +1,10 @@
 {
  "slug": "barbell-rollout-from-bench",
+ "tempo": {
+  "lift": "back",
+  "up": 1,
+  "down": 1.8
+ },
  "camera": {
   "az": 70,
   "el": 8

@@ -2,7 +2,7 @@
  "slug": "wall-sissy-squat",
  "camera": {
   "az": 90,
-  "el": 7
+  "el": 4
  },
  "muscles": [
   "quadriceps"
@@ -13,7 +13,7 @@
    "pos": [
     -0.325,
     0,
-    0.1
+    0.195
    ]
   }
  ],
@@ -23,7 +23,7 @@
     "pos": [
      0.04,
      1,
-     0.27
+     0.3
     ],
     "pitch": -2
    },
@@ -42,7 +42,7 @@
     "pos": [
      -0.29,
      0.93,
-     0.1
+     0.18
     ],
     "contact": true,
     "fingers": [
@@ -60,26 +60,27 @@
      -1,
      -0.87
     ],
-    "curl": 0.3
+    "curl": 0.3,
+    "hand": "flat"
    },
    "legL": {
     "pos": [
      0.15,
      0,
-     0.31
+     0.34
     ],
     "anchor": "ball",
-    "pitch": 35,
+    "pitch": 45,
     "toes": 0
    },
    "legR": {
     "pos": [
      -0.07,
      0,
-     0.31
+     0.34
     ],
     "anchor": "ball",
-    "pitch": 35,
+    "pitch": 45,
     "toes": 0
    }
   },
@@ -87,10 +88,10 @@
    "root": {
     "pos": [
      0.04,
-     0.795,
-     0.366
+     0.76,
+     0.48
     ],
-    "pitch": -24
+    "pitch": -28
    },
    "neck": {
     "flex": 26
@@ -107,7 +108,7 @@
     "pos": [
      -0.29,
      0.93,
-     0.1
+     0.18
     ],
     "contact": true,
     "fingers": [
@@ -125,26 +126,27 @@
      -1,
      -0.87
     ],
-    "curl": 0.3
+    "curl": 0.3,
+    "hand": "flat"
    },
    "legL": {
     "pos": [
      0.15,
      0,
-     0.31
+     0.34
     ],
     "anchor": "ball",
-    "pitch": 45,
+    "pitch": 62,
     "toes": 0
    },
    "legR": {
     "pos": [
      -0.07,
      0,
-     0.31
+     0.34
     ],
     "anchor": "ball",
-    "pitch": 45,
+    "pitch": 62,
     "toes": 0
    }
   }

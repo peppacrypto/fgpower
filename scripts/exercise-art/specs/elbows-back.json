@@ -1,7 +1,7 @@
 {
  "slug": "elbows-back",
  "camera": {
-  "az": 140,
+  "az": 100,
   "el": 8
  },
  "muscles": [
@@ -10,6 +10,98 @@
  "props": [],
  "frames": {
   "start": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ],
+    "pitch": 0
+   },
+   "spine": {
+    "flex": 0
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 4
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -4
+   },
+   "armL": {
+    "pos": [
+     0.09,
+     0.95,
+     -0.1
+    ],
+    "rel": "world",
+    "pole": [
+     1,
+     -0.1,
+     -0.1
+    ],
+    "hand": "flat",
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     0,
+     0,
+     -1
+    ],
+    "scap": {
+     "elev": 0,
+     "prot": 0
+    }
+   },
+   "armR": {
+    "pos": [
+     -0.09,
+     0.95,
+     -0.1
+    ],
+    "rel": "world",
+    "pole": [
+     -1,
+     -0.1,
+     -0.1
+    ],
+    "hand": "flat",
+    "contact": true,
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     0,
+     0,
+     -1
+    ],
+    "scap": {
+     "elev": 0,
+     "prot": 0
+    }
+   }
+  },
+  "end": {
    "root": {
     "pos": [
      0,
@@ -51,8 +143,8 @@
     "rel": "world",
     "pole": [
      1,
-     0,
-     -0.4
+     -0.2,
+     -1
     ],
     "hand": "flat",
     "contact": true,
@@ -65,7 +157,11 @@
      0,
      0,
      -1
-    ]
+    ],
+    "scap": {
+     "elev": 0,
+     "prot": -1
+    }
    },
    "armR": {
     "pos": [
@@ -76,8 +172,8 @@
     "rel": "world",
     "pole": [
      -1,
-     0,
-     -0.4
+     -0.2,
+     -1
     ],
     "hand": "flat",
     "contact": true,
@@ -90,8 +186,15 @@
      0,
      0,
      -1
-    ]
+    ],
+    "scap": {
+     "elev": 0,
+     "prot": -1
+    }
    }
   }
+ },
+ "tempo": {
+  "lift": "even"
  }
 }

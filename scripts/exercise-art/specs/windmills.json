@@ -1,11 +1,12 @@
 {
  "slug": "windmills",
  "camera": {
-  "az": 30,
-  "el": 40
+  "az": 20,
+  "el": 55
  },
  "muscles": [
-  "abductors"
+  "abductors",
+  "obliques"
  ],
  "frames": {
   "start": {
@@ -133,10 +134,13 @@
     "pitch": -90,
     "roll": -25
    },
+   "neck": {
+    "twist": -30
+   },
    "legL": {
     "fk": {
      "flex": 85,
-     "abd": -30,
+     "abd": -35,
      "rot": 0,
      "knee": 0
     },
@@ -148,7 +152,7 @@
    "legR": {
     "fk": {
      "flex": 0,
-     "abd": 0,
+     "abd": 15,
      "rot": 0,
      "knee": 0
     },

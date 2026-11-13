@@ -1,8 +1,8 @@
 {
  "slug": "side-jackknife",
  "camera": {
-  "az": 76,
-  "el": 10
+  "az": 150,
+  "el": 25
  },
  "muscles": [
   "obliques",
@@ -62,7 +62,7 @@
     "pos": [
      0.3,
      0.02,
-     0.28
+     0.1
     ],
     "fingers": [
      0,
@@ -80,7 +80,8 @@
      0.3
     ],
     "curl": 0.1,
-    "contact": true
+    "contact": true,
+    "hand": "flat"
    },
    "legL": {
     "pos": [
@@ -128,8 +129,8 @@
     "flex": 0
    },
    "spine": {
-    "flex": 24,
-    "side": 6,
+    "flex": 34,
+    "side": 24,
     "weights": [
      0,
      0.1,
@@ -166,7 +167,7 @@
     "pos": [
      0.3,
      0.02,
-     0.28
+     0.1
     ],
     "fingers": [
      0,
@@ -184,12 +185,13 @@
      0.3
     ],
     "curl": 0.1,
-    "contact": true
+    "contact": true,
+    "hand": "flat"
    },
    "legL": {
     "pos": [
      0.08,
-     0.61,
+     0.66,
      -0.6399999999999999
     ],
     "anchor": "ankle",

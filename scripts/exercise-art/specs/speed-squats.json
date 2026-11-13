@@ -227,5 +227,12 @@
     }
    }
   }
+ },
+ "tempo": {
+  "lift": "back",
+  "up": 0.5,
+  "down": 1.1,
+  "squeeze": 0.1,
+  "stretch": 0.2
  }
 }

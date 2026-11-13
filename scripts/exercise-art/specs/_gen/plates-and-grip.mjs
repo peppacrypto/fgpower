@@ -21,9 +21,9 @@ const fr = (arms, extra={}) => ({ root:{pos:[0,0.925,0]}, ...arms, ...legs(), ..
 }
 // car-drivers: plate at shoulder height, turned like a wheel
 {
-  const c=[0,1.38,0.5], f = th => fr(plateArms(c,th,[+(process.env.PX??0.8),+(process.env.PY??-1),+(process.env.PZ??-0.2)],0.213,0.05,+(process.env.TK??0)));
-  W('car-drivers',{camera:{az:30,el:6},muscles:['shoulders','anterior-deltoid'],props:[{type:'weight-plate',hands:true,kg:15}],
-    frames:{ start:f(+(process.env.A??36)), mid:f(+(process.env.A??36)/2), mid2:f(0), mid3:f(-(process.env.A??36)/2), end:f(-(process.env.A??36)) }});
+  const c=[0,1.38,0.62], f = th => fr(plateArms(c,th,[+(process.env.PX??0.8),+(process.env.PY??-1),+(process.env.PZ??-0.2)],0.213,0.05,+(process.env.TK??0)));
+  W('car-drivers',{camera:{az:12,el:6},tempo:{lift:'even'},muscles:['shoulders','anterior-deltoid','traps'],props:[{type:'weight-plate',hands:true,kg:15}],
+    frames:{ start:f(+(process.env.A??60)), mid:f(+(process.env.A??60)/2), mid2:f(0), mid3:f(-(process.env.A??60)/2), end:f(-(process.env.A??60)) }});
 }
 // svend press
 {
@@ -47,27 +47,26 @@ const fr = (arms, extra={}) => ({ root:{pos:[0,0.925,0]}, ...arms, ...legs(), ..
 // plate pinch (hold) and plate hand squeeze
 {
   const arm = { fk:{flex:0,abd:8,elbow:14}, curl:0.3 };
-  W('plate-pinch',{camera:{az:62,el:6},muscles:['forearms'],props:[{type:'weight-plate',hand:'L',kg:10,count:2}],
-    frames:{ start:{ root:{pos:[0,0.925,0]}, armL:{pos:[0.3,0.86,0.02],contact:true,fingers:[0.02,-1,0],palm:[-1,0,0],curl:0.7,pole:[0.5,0,-1]}, armR:arm, ...legs() }}});
-  const h = (s,curl) => ({pos:[s*0.3,0.86,0.02],contact:true,fingers:[s*0.02,-1,0],palm:[-s,0,0],curl,pole:[s*0.5,0,-1]});
-  const f = curl => ({ root:{pos:[0,0.925,0]}, armL:h(1,curl), armR:h(-1,curl), ...legs() });
-  W('standing-olympic-plate-hand-squeeze',{camera:{az:62,el:6},muscles:['forearms'],props:[{type:'weight-plate',hand:'L',kg:10},{type:'weight-plate',hand:'R',kg:10}],
-    frames:{ start:f(0.3), end:f(0.85) }});
+  const pl=(y,curl)=>({ root:{pos:[0,0.925,0]}, armL:{pos:[0.3,y,0.02],contact:true,fingers:[0.02,-1,0],palm:[-1,0,0],curl,pole:[0.5,0,-1]}, armR:arm, ...legs() });
+  W('plate-pinch',{camera:{az:62,el:6},muscles:['forearms'],muscleSide:'L',timing:{there:1,holdEnd:0.8,back:1,holdStart:0.4},props:[{type:'weight-plate',hand:'L',kg:10,count:2}],
+    frames:{ start:pl(0.86,0.6), end:pl(0.91,0.9) }});
+  const h = (s,curl,y=0.86) => ({pos:[s*0.3,y,0.02],contact:true,fingers:[s*0.02,-1,0],palm:[-s,0,0],curl,pole:[s*0.5,0,-1]});
+  const f = (curl,y) => ({ root:{pos:[0,0.925,0]}, armL:h(1,curl,y), armR:h(-1,curl,y), ...legs() });
+  W('standing-olympic-plate-hand-squeeze',{camera:{az:62,el:6},muscles:['forearms'],timing:{there:1,holdEnd:0.4,back:1.1,holdStart:0.4},props:[{type:'weight-plate',hand:'L',kg:10},{type:'weight-plate',hand:'R',kg:10}],
+    frames:{ start:f(0.2,0.84), end:f(0.95,0.9) }});
 }
 // wrist roller
 {
-  const a = (fy,pm,drop) => ({ root:{pos:[0,0.925,0]}, ...legs(0.11),
-    armL:{pos:[0.14,1.34,0.6],contact:true,fingers:[0,fy,1],palm:[0,-1,pm],curl:0.85,pole:[0.4,-0.8,-0.3]},
-    armR:{pos:[-0.14,1.34,0.6],contact:true,fingers:[0,fy,1],palm:[0,-1,pm],curl:0.85,pole:[-0.4,-0.8,-0.3]},
-    props:[{type:'wrist-roller',hands:true,kg:5,drop,ropeLength:1.15}] });
-  W('wrist-roller',{camera:{az:62,el:6},muscles:['forearms'],frames:{ start:a(-0.1,-0.1,1.08), mid:a(0.07,0.07,0.8), end:a(0.25,0.25,0.55) }});
+  const a = (fl,fr_,drop) => { const h=(s,fy)=>({pos:[s*0.14,1.34,0.6],contact:true,fingers:[0,fy,1],palm:[0,-1,fy],curl:0.85,pole:[s*0.4,-0.8,-0.3]});
+    return { root:{pos:[0,0.925,0]}, ...legs(0.11), armL:h(1,fl), armR:h(-1,fr_), props:[{type:'wrist-roller',hands:true,kg:5,drop,ropeLength:1.15}] }; };
+  W('wrist-roller',{camera:{az:62,el:6},tempo:{lift:'there',up:1.0,down:1.9},muscles:['forearms'],frames:{ start:a(-0.35,-0.35,0.95), mid:a(0.3,-0.35,0.82), mid2:a(0.3,0.3,0.7), mid3:a(-0.35,0.3,0.58), end:a(0.3,-0.35,0.45) }});
 }
-// wrist rotations with straight bar: palms down, hands see-saw alternately
+// wrist rotations with straight bar: elbows at the sides, forearms forward, bar rolls about its own axis
 {
-  const hand = (s,e) => { const t=e*Math.PI/180; return { pos:[s*0.2,1.3+0.07*Math.sin(t),0.5+0.02*Math.cos(t)-0.02], contact:true,hand:'grip',grip:0.014, fingers:[0,Math.sin(t),Math.cos(t)], palm:[0,-Math.cos(t),Math.sin(t)], pole:[s*0.3,-1,-0.3] }; };
-  const f = (eL,eR) => ({ root:{pos:[0,0.925,0]}, armL:hand(1,eL), armR:hand(-1,eR), ...legs() });
-  W('wrist-rotations-with-straight-bar',{camera:{az:55,el:8},muscles:['forearms'],props:[{type:'barbell',hands:true,plates:[]}],
-    frames:{ start:f(30,-30), mid:f(0,0), end:f(-30,30) }});
+  const hand = (s,e) => { const t=e*Math.PI/180, pa=[0,-Math.cos(t),-Math.sin(t)]; return { pos:[s*0.2,1.08+0.036*pa[1],0.33+0.036*pa[2]+0.1], contact:true,hand:'grip',grip:0.014, fingers:[0,0,1], palm:pa, pole:[s*0.5,-1,-0.1] }; };
+  const f = e => ({ root:{pos:[0,0.925,0]}, armL:hand(1,e), armR:hand(-1,e), ...legs() });
+  W('wrist-rotations-with-straight-bar',{camera:{az:25,el:14},muscles:['forearms'],props:[{type:'barbell',hands:true,plates:[]}],
+    frames:{ start:f(-20), mid:f(30), end:f(80) }});
 }
 // behind-the-back wrist curl: palms back, bar behind the glutes, wrists only
 {
@@ -75,5 +74,5 @@ const fr = (arms, extra={}) => ({ root:{pos:[0,0.925,0]}, ...arms, ...legs(), ..
     return { pos:[s*0.21, 0.865+0.08*fi[1]+0.03*pa[1], -0.1+0.08*fi[2]+0.03*pa[2]], contact:true,hand:'grip',grip:0.014, fingers:[0,fi[1],fi[2]], palm:[0,pa[1],pa[2]], pole:[s*0.3,0.3,-1] }; };
   const f = a => ({ root:{pos:[0,0.925,0]}, armL:hand(1,a), armR:hand(-1,a), ...legs() });
   W('standing-palms-up-barbell-behind-the-back-wrist-curl',{qaAllow:{'rom:elbow-flexion.top':'wrist-only curl: elbows stay straight behind the back by design; only the wrists move'},camera:{az:125,el:10},muscles:['forearms'],props:[{type:'barbell',hands:true,plates:[]}],
-    frames:{ start:f(-25), end:f(55) }});
+    tempo:{lift:'there',up:1.0,down:1.8},frames:{ start:f(-50), end:f(75) }});
 }

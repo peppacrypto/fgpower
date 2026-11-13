@@ -1,8 +1,14 @@
 {
  "slug": "leg-over-floor-press",
  "camera": {
-  "az": 45,
+  "az": 75,
   "el": 14
+ },
+ "tempo": {
+  "lift": "even",
+  "up": 1,
+  "down": 1.8,
+  "pauses": 0.3
  },
  "muscles": [
   "chest",
@@ -34,9 +40,9 @@
    },
    "legR": {
     "pos": [
-     -0.42,
+     -0.1,
      0,
-     0.92
+     0.95
     ],
     "anchor": "heel",
     "pitch": -70,
@@ -48,15 +54,13 @@
    },
    "legL": {
     "pos": [
-     -0.3,
-     0.6,
-     0.82
-    ],
-    "anchor": "ankle",
-    "pitch": -55,
-    "yaw": -15,
-    "pole": [
+     -0.28,
      0,
+     0.3
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.3,
      1,
      0
     ]
@@ -108,9 +112,9 @@
    },
    "legR": {
     "pos": [
-     -0.42,
+     -0.1,
      0,
-     0.92
+     0.95
     ],
     "anchor": "heel",
     "pitch": -70,
@@ -122,15 +126,13 @@
    },
    "legL": {
     "pos": [
-     -0.3,
-     0.6,
-     0.82
-    ],
-    "anchor": "ankle",
-    "pitch": -55,
-    "yaw": -15,
-    "pole": [
+     -0.28,
      0,
+     0.3
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.3,
      1,
      0
     ]

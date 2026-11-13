@@ -1,8 +1,8 @@
 {
  "slug": "lying-bent-leg-groin",
  "camera": {
-  "az": 25,
-  "el": 35
+  "az": 0,
+  "el": 30
  },
  "muscles": [
   "adductors"
@@ -26,34 +26,87 @@
     "flex": 0
    },
    "legL": {
-    "pos": [
-     0.07,
-     0.09,
-     0.42
-    ],
-    "anchor": "ankle",
-    "pole": [
-     1,
-     0.3,
-     0
-    ],
-    "pitch": -60,
-    "yaw": -40
+    "fk": {
+     "flex": 92,
+     "abd": 20,
+     "rot": -25,
+     "knee": 125
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 35
+    }
    },
    "legR": {
+    "fk": {
+     "flex": 92,
+     "abd": 20,
+     "rot": -25,
+     "knee": 125
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 35
+    }
+   },
+   "armL": {
+    "fk": {
+     "flex": 5,
+     "abd": 35,
+     "rot": 0,
+     "elbow": 5
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "curl": 0.2
+   },
+   "armR": {
+    "fk": {
+     "flex": 5,
+     "abd": 35,
+     "rot": 0,
+     "elbow": 5
+    },
+    "rel": "chest",
+    "hand": "relaxed",
+    "curl": 0.2
+   }
+  },
+  "end": {
+   "root": {
     "pos": [
-     -0.07,
-     0.09,
-     0.42
-    ],
-    "anchor": "ankle",
-    "pole": [
-     -1,
-     0.3,
+     0,
+     0.125,
      0
     ],
-    "pitch": -60,
-    "yaw": 40
+    "pitch": -90
+   },
+   "neck": {
+    "flex": 0
+   },
+   "legL": {
+    "fk": {
+     "flex": 78,
+     "abd": 42,
+     "rot": -25,
+     "knee": 125
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 35
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 78,
+     "abd": 42,
+     "rot": -25,
+     "knee": 125
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 35
+    }
    },
    "armL": {
     "fk": {
@@ -78,5 +131,9 @@
     "curl": 0.2
    }
   }
+ },
+ "tempo": {
+  "up": 2,
+  "down": 2.4
  }
 }

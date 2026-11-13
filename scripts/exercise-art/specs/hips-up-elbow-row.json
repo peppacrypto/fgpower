@@ -99,13 +99,13 @@
    "root": {
     "pos": [
      0,
-     0.39,
-     0.24
+     0.36,
+     0.1
     ],
-    "pitch": -108
+    "pitch": -122
    },
    "neck": {
-    "flex": 12
+    "flex": 36
    },
    "armL": {
     "pos": [
@@ -189,5 +189,11 @@
  },
  "qaAllow": {
   "rom:horizontal-pull.stretch": "floor elbow row is a bent-arm drive by design: the forearms stay vertical (about 90 deg) and the elbows press into the floor; there is no long-arm start"
+ },
+ "tempo": {
+  "lift": "there",
+  "up": 1,
+  "down": 1.8,
+  "squeeze": 0.5
  }
 }

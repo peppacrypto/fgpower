@@ -1,8 +1,8 @@
 {
  "slug": "seated-towel-foot-curl",
  "camera": {
-  "az": 48,
-  "el": 6
+  "az": 70,
+  "el": 8
  },
  "muscles": [
   "biceps"
@@ -357,5 +357,6 @@
     }
    ]
   }
- }
+ },
+ "muscleSide": "L"
 }

@@ -336,16 +336,16 @@
    "root": {
     "pos": [
      0,
-     0.4,
-     -0.2
+     0.42,
+     -0.22
     ],
-    "pitch": 28
+    "pitch": 14
    },
    "spine": {
     "flex": -2
    },
    "neck": {
-    "flex": -6
+    "flex": -2
    },
    "armL": {
     "pos": [

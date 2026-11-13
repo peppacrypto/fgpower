@@ -1,5 +1,6 @@
 import fs from 'fs';
-const W = (slug, s) => fs.writeFileSync(new URL(`../${slug}.json`, import.meta.url), JSON.stringify(s,null,1));
+const TEMPO={'alternating-kettlebell-row':{lift:'there',up:1.0,down:1.8},'incline-bench-pull':{lift:'there',up:1.0,down:1.8,squeeze:0.4}};
+const W = (slug, s) => fs.writeFileSync(new URL(`../${slug}.json`, import.meta.url), JSON.stringify({...s,...(TEMPO[slug]?{tempo:TEMPO[slug]}:{})},null,1));
 const legs = (x=0.14,z=-0.05,p=0.5) => ({ legL:{pos:[x,0,z],anchor:'sole',yaw:6,pole:[0.2,0.5,1]}, legR:{pos:[-x,0,z],anchor:'sole',yaw:-6,pole:[-0.2,0.5,1]} });
 // arm: fingers down, palm direction pd, elbows pole
 const arm = (s,x,y,z,pd,pole=[0.3,0.2,-1]) => ({pos:[x*s,y,z],contact:true,fingers:[0,-1,0],palm:[pd[0]*s,pd[1],pd[2]],pole:[pole[0]*s,pole[1],pole[2]],curl:0.85});
@@ -10,18 +11,19 @@ const bar = {type:'barbell',hands:true,plates:[20]};
 const dbs = [{type:'dumbbell',hand:'L',kg:15},{type:'dumbbell',hand:'R',kg:15}];
 const DX=0.26;
 const PR=[0,0,-1], SU=[0,0,1], NE=[-1,0,0];
-const R = (x,pd,top=[0.80,-0.19],pole,mid,sy=0.32,sz=0.12) => [fr(0.80,-0.30,65,both(x,sy,sz,pd,[0.3,0.2,-1])), fr(0.80,-0.30,65,both(x,top[0],top[1],pd,pole??[0.5,0.3,-1])), mid&&fr(0.80,-0.30,65,both(x,mid[0],mid[1],pd,pole??[0.4,0.25,-1]))];
-let [a,b,m]=R(0.235,PR,[0.74,0.0],undefined,[0.62,0.14]); mk('bent-over-barbell-row',[bar],a,b,['middle-back'],undefined,m);
+const R = (x,pd,top=[0.80,-0.19],pole,mid,sy=0.32,sz=0.12,pt=65) => [fr(0.80,-0.30,pt,both(x,sy,sz,pd,[0.3,0.2,-1])), fr(0.80,-0.30,pt,both(x,top[0],top[1],pd,pole??[0.5,0.3,-1])), mid&&fr(0.80,-0.30,pt,both(x,mid[0],mid[1],pd,pole??[0.4,0.25,-1]))];
+let [a,b,m]=R(0.235,PR,[0.74,0.0],undefined,[0.62,0.14],0.34,0.12,62); mk('bent-over-barbell-row',[bar],a,b,['middle-back'],{az:90,el:8},m);
 [a,b,m]=R(0.235,SU,[0.74,0.0],[0.2,0.1,-1],[0.62,0.14]); mk('reverse-grip-bent-over-rows',[bar],a,b,['middle-back'],undefined,m);
 // rear delt: wide, elbows flared
-[a,b]=R(0.42,PR,[0.84,0.16],[1,0.1,0],undefined,0.40); mk('barbell-rear-delt-row',[bar],a,b,['shoulders'],{az:70,el:14});
+[a,b]=R(0.42,PR,[0.84,0.16],[1,0.1,0],undefined,0.40); mk('barbell-rear-delt-row',[bar],a,b,['posterior-deltoid','rhomboids'],{az:140,el:25});
 [a,b,m]=R(DX,PR,[0.74,0.0],undefined,[0.60,0.12],0.34,0.12); mk('bent-over-two-dumbbell-row',dbs,a,b,['middle-back'],undefined,m);
 [a,b,m]=R(DX,NE,[0.74,0.0],undefined,[0.60,0.12],0.34,0.12); mk('bent-over-two-dumbbell-row-with-palms-in',dbs,a,b,['middle-back'],undefined,m);
 // kettlebells: bell on floor in front of feet
 const kb = (hand) => ({type:'kettlebell',kg:16,mode:'hang',...(hand?{hand}:{hands:true})});
 const K = (zf) => fr(0.72,-0.35,62,{}).root;
+const KP=+(process.env.KP||66), KY=+(process.env.KY||0.74);
 const kfr = (up2) => { const y2=up2?0.68:0.31, z2=up2?0.12:0.14;
-  return (L,Rr)=>({root:{pos:[0,0.72,-0.35],pitch:62},neck:{flex:-35},armL:L(y2,z2),armR:Rr(y2,z2),...legs(0.15,-0.2)}); };
+  return (L,Rr)=>({root:{pos:[0,KY,-0.35],pitch:KP},neck:{flex:-35},armL:L(y2,z2),armR:Rr(y2,z2),...legs(0.15,-0.2)}); };
 const NK=[-1,0,0.25];
 function up(y){return y>0.5?[0.6,0.3,-1]:[0.3,0.2,-1];}
 const rest=(y,z)=>({pos:[-0.24,0.58,0.0],contact:true,fingers:[0,-0.3,0.95],palm:[0,-1,0],pole:[-0.5,0,-1],curl:0.8});
@@ -33,11 +35,11 @@ mk('two-arm-kettlebell-row',[kb()],kfr(0)(Lc,Rc),kfr(1)(Lc,Rc),['middle-back']);
   const e3=lw((y,z)=>arm(1,0.12,0.31,0.14,NK),(y,z)=>arm(-1,0.12,0.68,0.12,NK,up(0.68)));
   W('alternating-kettlebell-row',{slug:'alternating-kettlebell-row',camera:{az:100,el:8},muscles:['middle-back'],props:[kb('L'),kb('R')],frames:{start:s1,end:e1,mid:e3}}); }
 // one-arm dumbbell row: right knee and hand on bench, left arm rows
-{ const E=process.env, ex=+(E.EX||0.44), ey=+(E.EY||0.82), ez=+(E.EZ||-0.05), fp=+(E.FP||70), hy=+(E.HY||0.47);
-  const f=(hx,hy_,hz,pole)=>({root:{pos:[0.12,0.92,-0.25],pitch:90},neck:{flex:-30},
+{ const E=process.env, RXo=+(E.RX||0.28)-0.12, ex=+(E.EX||0.44), ey=+(E.EY||0.82), ez=+(E.EZ||-0.05), fp=+(E.FP||70), hy=+(E.HY||0.47);
+  const f=(hx,hy_,hz,pole)=>({root:{pos:[+(E.RX||0.28),0.92,-0.25],pitch:90},neck:{flex:-30},
    armL:arm(1,hx,hy_,hz,NE,pole), armR:{pos:[0.0,hy,0.22],contact:true,fingers:[0,0,1],palm:[0,-1,0],pole:[-0.3,0.3,-1],curl:0.4},
-   legL:{pos:[0.30,0,-0.35],anchor:'sole',pole:[0.2,0.4,1]}, legR:{pos:[0.04,0.50,-0.62],anchor:'ankle',pitch:fp,pole:[0,-1,0.2]} });
-  mk('one-arm-dumbbell-row',[{type:'flat-bench'},{type:'dumbbell',hand:'L',kg:15}],f(0.36,0.30,0.10,[0.3,0.2,-1]),f(ex,ey,ez,[0.5,0.3,-1]),['middle-back'],{az:100,el:8}); }
+   legL:{pos:[0.42,0,-0.05],anchor:'sole',pole:[0.2,0.4,1]}, legR:{pos:[0.28,0,-0.30],anchor:'sole',pole:[0.2,0.3,1]} });
+  mk('one-arm-dumbbell-row',[{type:'flat-bench'},{type:'dumbbell',hand:'L',kg:15}],f(0.36+RXo,0.30,0.10,[0.3,0.2,-1]),f(ex+RXo,ey,ez,[0.5,0.3,-1]),['middle-back'],{az:100,el:8}); }
 // prone on 30 deg incline, head toward -Z (yaw 180): figure left is world -X, so armL/legL use mirrored sign
 { const E=process.env, fy=+(E.FY||180), fpt=+(E.FPT||30), fa=E.FA||'ball';
   const SH=+(E.SH||0), dz=-SH*0.866, dy=SH*0.5;
@@ -47,4 +49,4 @@ mk('two-arm-kettlebell-row',[kb()],kfr(0)(Lc,Rc),kfr(1)(Lc,Rc),['middle-back']);
   const P={ camera:{az:60,el:10},props:[{type:'incline-bench',angle:30},...dbs]};
   const PD=[0,0,1], NI=[-1,0,-0.25];
   W('incline-bench-pull',{slug:'incline-bench-pull',...P,muscles:['middle-back'],frames:{start:f(0.28,0.30,-0.66,PD,[1,0.2,0]),mid:f(0.42,0.62,-0.49,PD,[1,0.2,0]),end:f(0.46,0.84,-0.49,PD,[1,0.2,0])}});
-  W('dumbbell-incline-row',{slug:'dumbbell-incline-row',...P,muscles:['middle-back'],frames:{start:f(0.27,0.30,-0.66,NI,[0.3,0.2,0]),end:f(0.30,0.80,-0.27,NI,[0.3,0.4,1])}}); }
+  W('dumbbell-incline-row',{slug:'dumbbell-incline-row',...P,camera:{az:90,el:8},muscles:['middle-back'],frames:{start:f(0.27,0.30,-0.66,NI,[0.3,0.2,0]),end:f(0.30,0.80,-0.27,NI,[0.3,0.4,1])}}); }

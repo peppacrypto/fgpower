@@ -1,11 +1,12 @@
 {
  "slug": "side-lying-elbow-press",
  "camera": {
-  "az": 86,
-  "el": 20
+  "az": 40,
+  "el": 32
  },
  "muscles": [
-  "lateral-deltoid"
+  "lateral-deltoid",
+  "obliques"
  ],
  "muscleSide": "L",
  "frames": {
@@ -118,7 +119,7 @@
     "roll": -80
    },
    "spine": {
-    "side": -12
+    "side": -18
    },
    "neck": {
     "side": -8
@@ -146,8 +147,8 @@
     ],
     "curl": 0.3,
     "scap": {
-     "elev": -3,
-     "prot": 8
+     "elev": -6,
+     "prot": 10
     }
    },
    "armR": {
@@ -205,5 +206,10 @@
     ]
    }
   }
+ },
+ "tempo": {
+  "lift": "there",
+  "up": 1,
+  "down": 2.2
  }
 }

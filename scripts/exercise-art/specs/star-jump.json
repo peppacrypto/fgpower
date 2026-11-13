@@ -5,7 +5,9 @@
   "el": 8
  },
  "muscles": [
-  "quadriceps"
+  "quadriceps",
+  "glutes",
+  "lateral-deltoid"
  ],
  "floats": true,
  "frames": {
@@ -13,10 +15,10 @@
    "root": {
     "pos": [
      0,
-     0.62,
-     -0.15
+     0.74,
+     -0.08
     ],
-    "pitch": 25
+    "pitch": 14
    },
    "spine": {
     "flex": -6
@@ -26,20 +28,20 @@
    },
    "armL": {
     "fk": {
-     "flex": 0,
-     "abd": 12,
+     "flex": 25,
+     "abd": 10,
      "rot": 0,
-     "elbow": 8
+     "elbow": 15
     },
     "rel": "chest",
     "curl": 0.3
    },
    "armR": {
     "fk": {
-     "flex": 0,
-     "abd": 12,
+     "flex": 25,
+     "abd": 10,
      "rot": 0,
-     "elbow": 8
+     "elbow": 15
     },
     "rel": "chest",
     "curl": 0.3

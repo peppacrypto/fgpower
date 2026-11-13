@@ -43,26 +43,26 @@ flye('incline-dumbbell-flyes-with-a-twist', { root:incRoot, legs:incLegs, bench:
 flye('decline-dumbbell-flyes', { root:decRoot, legs:decLegs, bench:{type:'decline-bench',angle:20}, camera:{az:30,el:20} });
 
 // ---------- around the worlds: palms up, arms level, sweep from the thighs to overhead in a horizontal semicircle
-{ const root = flatRoot, sh = shoulder(root), r = 0.48;
+{ const root = flatRoot, sh = shoulder(root), r = 0.57;
   const hand = (s, a) => ({ pos: r3([s*(sh[0] + r*sd(a)), sh[1] - 0.02, sh[2] + r*cd(a)]), contact:true, hand:'grip', grip:0.016,
     fingers: norm([s*sd(a), 0, cd(a)]), palm:[0,1,0], pole:[s*0.2,-1,0], curl:0.82 });
   const fr = a => ({ root, neck:{flex:6}, spine:{flex:-4}, ...flatLegs, armL:hand(1,a), armR:hand(-1,a) });
   out('around-the-worlds', { camera:{az:20,el:35}, muscles:['chest','anterior-deltoid'], floats:true,
     props:[{type:'flat-bench'},{type:'dumbbell',kg:10,hand:'L'},{type:'dumbbell',kg:10,hand:'R'}],
-    frames:{ start:fr(35), mid:fr(70), mid2:fr(110), end:fr(145) } });
+    tempo:{lift:'even',even:1.5,hold:0.3}, frames:{ start:fr(35), mid:fr(70), mid2:fr(110), end:fr(145) } });
 }
 // ---------- dumbbell pullovers: across the bench (bench along Z, figure yaw 90, head toward -X), one dumbbell in both hands
 const pullover = (slug, bent) => {
   const p = -70, root = { pos:[0.374,0.43,0], yaw:90, pitch:p };
   const sx = root.pos[0] + 0.46*sd(p) + 0.053*cd(p), sy = root.pos[1] + 0.46*cd(p) - 0.053*sd(p);
-  const r = bent ? 0.45 : 0.5, hz = 0.07, rp = Math.sqrt(r*r - (0.19-hz)**2);
+  const r = bent ? 0.45 : 0.58, hz = 0.07, rp = Math.sqrt(r*r - (0.19-hz)**2);
   const fr = ph => { const d = [-sd(ph), cd(ph)];
     const arm = s => ({ pos: r3([sx + rp*d[0], sy + rp*d[1], -s*hz]), contact:true,
       fingers: norm([-1, -0.35, 0]), palm: norm([0, 1, s*0.55]), curl:0.6, pole: [0.2, -1, -s*0.4] });
     return { root, neck:{flex:-45}, legL:{pos:[0.8,0,-0.18],anchor:'sole',pole:[1,1,-0.1]}, legR:{pos:[0.8,0,0.18],anchor:'sole',pole:[1,1,0.1]},
       armL:arm(1), armR:arm(-1) }; };
-  const A = bent ? [-12,2,16,30] : [0,20,38,50];
-  out(slug, { camera:{az:0,el:12}, muscles:['chest','lats'], floats:true,
+  const A = bent ? [-12,2,16,30] : [0,20,40,58];
+  out(slug, { camera:{az:0,el:12}, muscles:['chest','lats'], floats:true, ...(bent?{}:{tempo:{lift:'back',up:1.0,down:1.8,stretch:0.5}}),
     props:[{type:'flat-bench'},{type:'dumbbell',kg:10,hold:'goblet',hands:true,dir:[0,1,0]}], frames:{ start:fr(A[0]), mid:fr(A[1]), mid2:fr(A[2]), end:fr(A[3]) } });
 };
 pullover('straight-arm-dumbbell-pullover', false);
@@ -75,9 +75,9 @@ const barArc = (slug, o) => { const root = o.root, sh = shoulder(root);
   const fr = t => ({ root, neck:{flex:6}, spine:{flex:-4}, ...o.legs, armL:hand(1,t), armR:hand(-1,t) });
   const T = o.t, k = ['start','mid','mid2','mid3','end'];
   const frames = {}; T.forEach((t,i) => frames[k[i === T.length-1 ? 4 : i]] = fr(t));
-  out(slug, { camera:o.camera ?? {az:75,el:10}, muscles:o.muscles, floats:true,
+  out(slug, { camera:o.camera ?? {az:75,el:10}, muscles:o.muscles, floats:true, tempo:o.tempo,
     props:[o.bench, {type:'barbell',hands:true,plates:[10]}], frames });
 };
-barArc('bent-arm-barbell-pullover', { root:flatRoot, legs:flatLegs, bench:{type:'flat-bench'}, x:0.28, r:0.48, t:[0,25,50,72,95], muscles:['lats','chest'], px:0.3, pz:0.2 });
-barArc('front-raise-and-pullover', { root:flatRoot, legs:flatLegs, bench:{type:'flat-bench'}, x:0.19, r:0.60, t:[-80,-40,0,35,62], muscles:['chest','anterior-deltoid'], px:0.2, pz:0, py:-1 });
+barArc('bent-arm-barbell-pullover', { root:flatRoot, legs:flatLegs, bench:{type:'flat-bench'}, x:0.28, r:0.48, t:[0,25,50,78,112], muscles:['lats','chest'], px:0.3, pz:0.2, tempo:{lift:'back',up:1.0,down:1.8,stretch:0.5} });
+barArc('front-raise-and-pullover', { root:flatRoot, legs:flatLegs, bench:{type:'flat-bench'}, x:0.19, r:0.60, t:[-70,-40,0,35,62], muscles:['chest','anterior-deltoid'], px:0.2, pz:0, py:-1, tempo:{lift:'there',up:1.0,down:1.8} });
 barArc('wide-grip-decline-barbell-pullover', { root:decRoot, legs:decLegs, bench:{type:'decline-bench',angle:20}, x:0.38, r:0.60, t:[-25,15,55,95,115], muscles:['chest','lats'], px:0.3, pz:0 });

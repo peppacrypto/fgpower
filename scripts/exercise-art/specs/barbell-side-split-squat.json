@@ -1,7 +1,7 @@
 {
  "slug": "barbell-side-split-squat",
  "camera": {
-  "az": 25,
+  "az": 35,
   "el": 8
  },
  "muscles": [
@@ -55,7 +55,7 @@
      0
     ],
     "anchor": "sole",
-    "yaw": -5,
+    "yaw": -12,
     "pole": [
      -0.2,
      0.3,
@@ -124,17 +124,17 @@
   "end": {
    "root": {
     "pos": [
-     0.24,
-     0.62,
-     -0.06
+     0.33,
+     0.54,
+     -0.04
     ],
-    "pitch": 6
+    "pitch": 4
    },
    "spine": {
     "flex": 8
    },
    "neck": {
-    "flex": -5.6000000000000005
+    "flex": -4.800000000000001
    },
    "legL": {
     "pos": [
@@ -157,7 +157,7 @@
      0
     ],
     "anchor": "sole",
-    "yaw": -5,
+    "yaw": -12,
     "pole": [
      -0.2,
      0.3,

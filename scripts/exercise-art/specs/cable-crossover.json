@@ -273,5 +273,11 @@
     ]
    }
   }
+ },
+ "tempo": {
+  "lift": "there",
+  "up": 1,
+  "down": 1.8,
+  "squeeze": 0.5
  }
 }

@@ -1,8 +1,8 @@
 {
  "slug": "side-neck-stretch",
  "camera": {
-  "az": 15,
-  "el": 6
+  "az": 0,
+  "el": 4
  },
  "muscles": [
   "neck"
@@ -48,21 +48,21 @@
    },
    "armL": {
     "pos": [
-     0.06,
-     0.14,
+     0.075,
+     0.13,
      0
     ],
     "rel": "head",
     "contact": true,
     "hand": "flat",
     "fingers": [
-     -0.5,
+     -0.4,
      0.8,
      0.3
     ],
     "palm": [
-     -0.7,
-     -0.7,
+     -0.8,
+     -0.6,
      0
     ],
     "pole": [
@@ -75,10 +75,13 @@
    "armR": {
     "fk": {
      "flex": 0,
-     "abd": 8,
-     "elbow": 6
+     "abd": 6,
+     "elbow": 4
     },
-    "curl": 0.2
+    "curl": 0.2,
+    "scap": {
+     "elev": -1
+    }
    }
   },
   "end": {
@@ -117,25 +120,25 @@
    },
    "neck": {
     "flex": 2,
-    "side": 32
+    "side": 45
    },
    "armL": {
     "pos": [
-     0.06,
-     0.14,
+     0.075,
+     0.13,
      0
     ],
     "rel": "head",
     "contact": true,
     "hand": "flat",
     "fingers": [
-     -0.5,
+     -0.4,
      0.8,
      0.3
     ],
     "palm": [
-     -0.7,
-     -0.7,
+     -0.8,
+     -0.6,
      0
     ],
     "pole": [
@@ -148,10 +151,13 @@
    "armR": {
     "fk": {
      "flex": 0,
-     "abd": 8,
-     "elbow": 6
+     "abd": 6,
+     "elbow": 4
     },
-    "curl": 0.2
+    "curl": 0.2,
+    "scap": {
+     "elev": -1
+    }
    }
   }
  }

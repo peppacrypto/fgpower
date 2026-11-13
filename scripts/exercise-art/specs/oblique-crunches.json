@@ -19,7 +19,7 @@
     "pitch": -90
    },
    "neck": {
-    "flex": 0
+    "flex": -8
    },
    "spine": {
     "flex": 0,
@@ -58,9 +58,9 @@
    },
    "armL": {
     "pos": [
-     0.3,
+     0.27,
      0.01,
-     -0.05
+     0.1
     ],
     "fingers": [
      0,
@@ -83,11 +83,11 @@
    "legL": {
     "pos": [
      0.11,
-     0.445,
+     0.52,
      0.45
     ],
-    "anchor": "sole",
-    "pitch": -12,
+    "anchor": "ankle",
+    "pitch": -20,
     "pole": [
      0,
      1,
@@ -97,11 +97,11 @@
    "legR": {
     "pos": [
      -0.11,
-     0.445,
+     0.52,
      0.45
     ],
-    "anchor": "sole",
-    "pitch": -12,
+    "anchor": "ankle",
+    "pitch": -20,
     "pole": [
      0,
      1,
@@ -119,11 +119,11 @@
     "pitch": -89.9
    },
    "neck": {
-    "flex": 0
+    "flex": -8
    },
    "spine": {
-    "flex": 30,
-    "twist": 24,
+    "flex": 34,
+    "twist": 28,
     "weights": [
      0,
      0.1,
@@ -158,9 +158,9 @@
    },
    "armL": {
     "pos": [
-     0.3,
+     0.27,
      0.01,
-     -0.05
+     0.1
     ],
     "fingers": [
      0,
@@ -183,11 +183,11 @@
    "legL": {
     "pos": [
      0.11,
-     0.445,
+     0.52,
      0.45
     ],
-    "anchor": "sole",
-    "pitch": -12,
+    "anchor": "ankle",
+    "pitch": -20,
     "pole": [
      0,
      1,
@@ -197,11 +197,11 @@
    "legR": {
     "pos": [
      -0.11,
-     0.445,
+     0.52,
      0.45
     ],
-    "anchor": "sole",
-    "pitch": -12,
+    "anchor": "ankle",
+    "pitch": -20,
     "pole": [
      0,
      1,
@@ -209,6 +209,9 @@
     ]
    }
   }
+ },
+ "tempo": {
+  "lift": "there"
  },
  "props": [
   {

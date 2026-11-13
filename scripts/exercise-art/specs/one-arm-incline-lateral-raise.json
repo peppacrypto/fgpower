@@ -2,8 +2,8 @@
  "slug": "one-arm-incline-lateral-raise",
  "floats": true,
  "camera": {
-  "az": 60,
-  "el": 12
+  "az": 100,
+  "el": 20
  },
  "muscles": [
   "lateral-deltoid"
@@ -13,7 +13,7 @@
   {
    "type": "incline-bench",
    "angle": 40,
-   "uprights": true
+   "uprights": false
   },
   {
    "type": "dumbbell",
@@ -102,7 +102,7 @@
    "armL": {
     "fk": {
      "flex": 12,
-     "abd": 39.5,
+     "abd": 36.5,
      "rot": 0,
      "elbow": 8
     },
@@ -152,7 +152,7 @@
    "armL": {
     "fk": {
      "flex": 12,
-     "abd": 57,
+     "abd": 51,
      "rot": 0,
      "elbow": 8
     },
@@ -202,7 +202,7 @@
    "armL": {
     "fk": {
      "flex": 12,
-     "abd": 74.5,
+     "abd": 65.5,
      "rot": 0,
      "elbow": 8
     },
@@ -252,7 +252,7 @@
    "armL": {
     "fk": {
      "flex": 12,
-     "abd": 92,
+     "abd": 80,
      "rot": 0,
      "elbow": 8
     },

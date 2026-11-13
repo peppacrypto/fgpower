@@ -1,8 +1,8 @@
 {
  "slug": "spell-caster",
  "camera": {
-  "az": 25,
-  "el": 14
+  "az": 10,
+  "el": 20
  },
  "muscles": [
   "obliques",
@@ -69,8 +69,8 @@
    },
    "armL": {
     "fk": {
-     "flex": 38,
-     "abd": 6,
+     "flex": 40,
+     "abd": -6,
      "rot": 0,
      "elbow": 4
     },
@@ -79,8 +79,8 @@
    },
    "armR": {
     "fk": {
-     "flex": 38,
-     "abd": 6,
+     "flex": 40,
+     "abd": -6,
      "rot": 0,
      "elbow": 4
     },
@@ -136,8 +136,8 @@
    },
    "armL": {
     "fk": {
-     "flex": 38,
-     "abd": 6,
+     "flex": 60,
+     "abd": -6,
      "rot": 0,
      "elbow": 4
     },
@@ -146,8 +146,8 @@
    },
    "armR": {
     "fk": {
-     "flex": 38,
-     "abd": 6,
+     "flex": 60,
+     "abd": -6,
      "rot": 0,
      "elbow": 4
     },
@@ -203,8 +203,8 @@
    },
    "armL": {
     "fk": {
-     "flex": 38,
-     "abd": 6,
+     "flex": 40,
+     "abd": -6,
      "rot": 0,
      "elbow": 4
     },
@@ -213,8 +213,8 @@
    },
    "armR": {
     "fk": {
-     "flex": 38,
-     "abd": 6,
+     "flex": 40,
+     "abd": -6,
      "rot": 0,
      "elbow": 4
     },

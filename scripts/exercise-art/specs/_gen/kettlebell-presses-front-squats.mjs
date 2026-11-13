@@ -26,22 +26,22 @@ mk('two-arm-kettlebell-military-press',['anterior-deltoid','lateral-deltoid','tr
 mk('alternating-kettlebell-press',['anterior-deltoid','lateral-deltoid','triceps'],{az:35,el:6},props2,{
   start:S(press(1,0),press(-1,0)), mid:S(press(1,1),press(-1,0)), mid2:S(press(1,0),press(-1,0)), end:S(press(1,0),press(-1,1))});
 mk('kettlebell-seesaw-press',['anterior-deltoid','lateral-deltoid','triceps'],{az:35,el:6},props2,{
-  start:S(press(1,1),press(-1,0)), end:S(press(1,0),press(-1,1))});
+  start:S(press(1,1),press(-1,0)), mid:S(press(1,0),press(-1,0)), end:S(press(1,0),press(-1,1)), mid2:S(press(1,0),press(-1,0))},{tempo:{lift:'there',up:1.0,down:1.8}});
 const one=(muscles,cam,frames,legs=stand())=>{};
-const single=(slug,cam,A,B,mid)=>mk(slug,['anterior-deltoid','lateral-deltoid','triceps'],cam,[{type:'kettlebell',hand:'L',kg:16,mode:'rack'}],
-  {start:S(arm(1,A),hang), ...(mid?{mid:S(arm(1,mid),hang)}:{}), end:S(arm(1,B),hang)},{muscleSide:'L'});
-single('one-arm-kettlebell-military-press-to-the-side',{az:62,el:6},R0,R1);
+const single=(slug,cam,A,B,mid,tempo)=>mk(slug,['anterior-deltoid','lateral-deltoid','triceps'],cam,[{type:'kettlebell',hand:'L',kg:16,mode:'rack'}],
+  {start:S(arm(1,A),hang), ...(mid?{mid:S(arm(1,mid),hang)}:{}), end:S(arm(1,B),hang)},{muscleSide:'L',...(tempo||{})});
+single('one-arm-kettlebell-military-press-to-the-side',{az:15,el:6},R0,R1,{pos:[0.33,1.78,0.1],f:[0,1,0.05],p:[-0.9,0,0.2],pole:[1,-0.45,-0.1]});
 // para press: elbow out, palm forward
 const P0={pos:[0.3,1.44,0.2],f:[0,1,0.1],p:[-0.95,-0.05,-0.3],pole:[0.8,-0.55,-0.2]};
 const P1={pos:[0.3,2.05,0.07],f:[0,1,0.03],p:[-0.1,0,0.99],pole:[0.8,-0.1,-0.3]};
-single('one-arm-kettlebell-para-press',{az:35,el:6},P0,P1,{pos:[0.32,1.7,0.14],f:[0,1,0.06],p:[-0.2,0,0.98],pole:[1,-0.2,-0.2]});
+single('one-arm-kettlebell-para-press',{az:35,el:6},P0,P1,{pos:[0.3,1.72,0.2],f:[0,1,0.06],p:[-0.2,0,0.98],pole:[0.5,-1,-0.15]},{tempo:{lift:'there',up:1.0,down:1.8}});
 // arnold: palm toward face -> palm forward
 const A0={pos:[0.14,1.45,0.22],f:[0,1,0.15],p:[-0.85,-0.05,-0.5],pole:[0.2,-1,-0.1]};
 single('kettlebell-arnold-press',{az:40,el:6},A0,R1,{pos:[0.26,1.72,0.22],f:[0,1,0.08],p:[-0.6,-0.02,0.4],pole:[0.55,-0.7,-0.15]});
 // seated on the floor, legs spread
 const seat={root:{pos:[0,0.115,0],pitch:0},neck:{flex:0}};
 const seatLegs={legL:{pos:[0.38,0.0,0.7],anchor:'heel',yaw:15,pitch:-20,pole:[0.2,1,0.2]},legR:{pos:[-0.38,0.0,0.7],anchor:'heel',yaw:-15,pitch:-20,pole:[-0.2,1,0.2]}};
-const hang2={fk:{flex:0,abd:38,elbow:25},curl:0.3};
+const hang2={fk:{flex:0,abd:30,elbow:30},curl:0.3};
 mk('kettlebell-seated-press',['anterior-deltoid','lateral-deltoid','triceps'],{az:55,el:8},[{type:'kettlebell',hand:'L',kg:16,mode:'rack'}],{
   start:fr(seat,seatLegs,press(1,0,[0,-0.81,0]),hang2), end:fr(seat,seatLegs,press(1,1,[0,-0.81,0]),hang2)},{muscleSide:'L',floats:true});
 // squats: shoulders drop with the root

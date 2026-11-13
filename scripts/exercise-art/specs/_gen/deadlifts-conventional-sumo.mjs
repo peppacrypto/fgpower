@@ -16,8 +16,8 @@ const sumo=(o={})=>{const f=(root,spine,neck,h,el,px=0.1)=>({root,spine,neck,
 // rack pull: bar on pins at knee height
 const rack=(py)=>{const f=(root,spine,neck,hy,hz,el)=>({root,spine,neck,armL:arm(1,0.235,hy,hz,{el}),armR:arm(-1,0.235,hy,hz,{el}),
   legL:leg(1,0.135,0.02,8,0,[0.25,0,1]),legR:leg(-1,0.135,0.02,8,0,[0.25,0,1])});
- return {start:f({pos:[0,0.68,-0.18],pitch:50},{flex:2},{flex:-14},py,0.27,2),
-         mid:f({pos:[0,0.78,-0.1],pitch:30},{flex:0},{flex:-6},0.66,0.21,2),
+ return {start:f({pos:[0,0.76,-0.14],pitch:38},{flex:2},{flex:-10},py,0.27,2),
+         mid:f({pos:[0,0.82,-0.08],pitch:26},{flex:0},{flex:-6},0.66,0.21,2),
          end:f({pos:[0,0.915,-0.02],pitch:-2},{flex:-2},{flex:2},0.86,0.14,2)};};
 const M=['spinal-erectors','glutes','hamstrings'], MS=['hamstrings','glutes','quadriceps'];
 const bar=(p=[20])=>({type:'barbell',hands:true,plates:p});
@@ -25,15 +25,15 @@ const out=(slug,camera,muscles,props,frames,extra={})=>fs.writeFileSync(new URL(
 const C={az:50,el:8}, C2={az:60,el:8};
 out('barbell-deadlift',C,M,[bar()],conv());
 out('axle-deadlift',C,M,[{type:'axle-bar',hands:true}],conv({curl:0.8}));
-out('deadlift-with-bands',{az:30,el:10},M,[bar([20,10]),{type:'bar-bands',hands:true,to:'feet',x:0.16,width:0.044,rest:0.42}],conv());
+out('deadlift-with-bands',{az:30,el:10},M,[bar([20,10]),{type:'bar-bands',hands:true,to:'floor',drawPeg:false,pegs:[[0.42,0.03,0.14],[-0.42,0.03,0.14]],x:0.42,width:0.09,thick:0.014,rest:0.3}],conv());
 out('deadlift-with-chains',{az:48,el:10},M,[bar([20,10]),{type:'chains',hands:true,x:0.97,base:[[0.97,0,0],[-0.97,0,0]]}],conv());
 out('deficit-deadlift',{az:118,el:12},M,[{type:'deficit-platform',height:0.075},bar()],conv({y0:0.075,hy:0.225,hx:0.30}));
 out('sumo-deadlift',C2,MS,[bar()],sumo());
-out('sumo-deadlift-with-bands',C2,MS,[bar([20,10]),{type:'bar-bands',hands:true,to:'feet',x:0.3,width:0.044,rest:0.42}],sumo());
+out('sumo-deadlift-with-bands',C2,MS,[bar([20,10]),{type:'bar-bands',hands:true,to:'feet',x:0.3,width:0.08,thick:0.012,rest:0.42}],sumo());
 out('sumo-deadlift-with-chains',C2,MS,[bar([20,10]),{type:'chains',hands:true,x:0.97,base:[[0.97,0,0],[-0.97,0,0]]}],sumo());
 const rk=(py)=>[{type:'power-rack',pos:[0,0,0.24],pinY:py},bar()];
-out('rack-pulls',C,M,rk(0.5),rack(0.5));
-out('rack-pull-with-bands',C,M,[{type:'power-rack',pos:[0,0,0.24],pinY:0.5},bar([20,10]),{type:'bar-bands',hands:true,to:'floor',drawPeg:false,pegs:[[0.6875,0.039,0.54],[-0.6875,0.039,0.54]],x:0.69,rest:0.3}],rack(0.5));
+out('rack-pulls',C,M,rk(0.56),rack(0.56));
+out('rack-pull-with-bands',C,M,[{type:'power-rack',pos:[0,0,0.24],pinY:0.56},bar([20,10]),{type:'bar-bands',hands:true,to:'floor',drawPeg:false,pegs:[[0.6875,0.039,0.54],[-0.6875,0.039,0.54]],x:0.69,width:0.09,thick:0.014,rest:0.3}],rack(0.56));
 const rb=(f)=>[{type:'power-rack',pos:[0,0,0.24]},bar([20,10]),{type:'bar-bands',hands:true,to:'top',x:0.69,pegs:[[0.6875,2.18,-0.06],[-0.6875,2.18,-0.06]],rest:0.42}];
 out('reverse-band-deadlift',C,M,rb(),conv());
 out('reverse-band-sumo-deadlift',C2,MS,rb(),sumo());

@@ -1,7 +1,7 @@
 {
  "slug": "stiff-legged-dumbbell-deadlift",
  "camera": {
-  "az": 100,
+  "az": 90,
   "el": 8
  },
  "muscles": [
@@ -114,19 +114,19 @@
    "root": {
     "pos": [
      0,
-     0.86,
-     -0.16
+     0.9,
+     -0.14
     ],
     "pitch": 35
    },
    "neck": {
-    "flex": -40
+    "flex": -12
    },
    "armL": {
     "pos": [
      0.27,
      0.7,
-     0.12
+     0.1
     ],
     "contact": true,
     "fingers": [
@@ -150,7 +150,7 @@
     "pos": [
      -0.27,
      0.7,
-     0.12
+     0.1
     ],
     "contact": true,
     "fingers": [
@@ -203,19 +203,19 @@
    "root": {
     "pos": [
      0,
-     0.78,
-     -0.32
+     0.885,
+     -0.27
     ],
     "pitch": 70
    },
    "neck": {
-    "flex": -40
+    "flex": -12
    },
    "armL": {
     "pos": [
      0.27,
-     0.32,
-     0.16
+     0.38,
+     0.13
     ],
     "contact": true,
     "fingers": [
@@ -238,8 +238,8 @@
    "armR": {
     "pos": [
      -0.27,
-     0.32,
-     0.16
+     0.38,
+     0.13
     ],
     "contact": true,
     "fingers": [

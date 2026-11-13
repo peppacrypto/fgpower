@@ -183,5 +183,12 @@
     }
    }
   }
+ },
+ "tempo": {
+  "lift": "even",
+  "up": 0.4,
+  "down": 0.4,
+  "squeeze": 0,
+  "stretch": 0
  }
 }

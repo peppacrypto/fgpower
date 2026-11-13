@@ -1,12 +1,14 @@
 {
  "slug": "hurdle-hops",
  "camera": {
-  "az": 100,
+  "az": 90,
   "el": 8
  },
  "muscles": [
-  "hamstrings",
-  "glutes"
+  "quadriceps",
+  "glutes",
+  "calves",
+  "hamstrings"
  ],
  "floats": true,
  "props": [
@@ -19,18 +21,21 @@
    ]
   }
  ],
+ "tempo": {
+  "lift": "even"
+ },
  "frames": {
   "start": {
    "root": {
     "pos": [
      0,
-     0.62,
-     -0.67
+     0.7,
+     -0.7
     ],
-    "pitch": 32
+    "pitch": 24
    },
    "neck": {
-    "flex": -18
+    "flex": -12
    },
    "armL": {
     "fk": {
@@ -54,7 +59,7 @@
     "pos": [
      0.13,
      0,
-     -0.55
+     -0.6
     ],
     "anchor": "sole",
     "pole": [
@@ -67,7 +72,7 @@
     "pos": [
      -0.13,
      0,
-     -0.55
+     -0.6
     ],
     "anchor": "sole",
     "pole": [
@@ -81,7 +86,7 @@
    "root": {
     "pos": [
      0,
-     1.52,
+     1.35,
      -0.02
     ],
     "pitch": -6
@@ -110,7 +115,7 @@
    "legL": {
     "pos": [
      0.13,
-     0.5900000000000001,
+     0.42000000000000004,
      0
     ],
     "anchor": "sole",
@@ -124,7 +129,7 @@
    "legR": {
     "pos": [
      -0.13,
-     0.5900000000000001,
+     0.42000000000000004,
      0
     ],
     "anchor": "sole",
@@ -140,28 +145,28 @@
    "root": {
     "pos": [
      0,
-     0.56,
-     0.41000000000000003
+     0.72,
+     0.5
     ],
-    "pitch": 34
+    "pitch": 22
    },
    "neck": {
-    "flex": -18
+    "flex": -12
    },
    "armL": {
     "fk": {
-     "flex": 60,
+     "flex": 50,
      "abd": 8,
-     "elbow": 16
+     "elbow": 20
     },
     "rel": "chest",
     "curl": 0.5
    },
    "armR": {
     "fk": {
-     "flex": 60,
+     "flex": 50,
      "abd": 8,
-     "elbow": 16
+     "elbow": 20
     },
     "rel": "chest",
     "curl": 0.5
@@ -170,7 +175,7 @@
     "pos": [
      0.13,
      0,
-     0.55
+     0.6
     ],
     "anchor": "sole",
     "pole": [
@@ -183,7 +188,7 @@
     "pos": [
      -0.13,
      0,
-     0.55
+     0.6
     ],
     "anchor": "sole",
     "pole": [

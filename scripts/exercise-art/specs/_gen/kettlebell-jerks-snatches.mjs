@@ -20,7 +20,7 @@ const free={fk:{flex:0,abd:12,elbow:12},curl:0.3};
 const wide=()=>({legL:{pos:[0.2,0,0.02],anchor:'sole',yaw:14,pitch:0,pole:[0.3,0,1]},legR:{pos:[-0.2,0,0.02],anchor:'sole',yaw:-14,pitch:0,pole:[-0.3,0,1]}});
 const stand=()=>wide();
 const air=(y=0.12,h=0.5)=>({legL:{pos:[0.2-0.07*h,y,0.02+0.38*h],anchor:'sole',yaw:5*h+14*(1-h),pitch:-8*h,pole:[0.3-0.25*h,0,1]},legR:{pos:[-0.2+0.07*h,y,0.02-0.3*h],anchor:'ball',yaw:-5*h-14*(1-h),pitch:(+(process.env.P||28))*h,pole:[-0.3+0.25*h,0,1]}});
-const split=(f=0.4,b=-0.28)=>({legL:{pos:[0.13,0,f],anchor:'sole',yaw:5,pitch:0,pole:[0.05,0,1]},legR:{pos:[-0.13,0,b],anchor:'ball',yaw:-5,pitch:0,pole:[-0.05,0,1]}});
+const split=(f=0.3,b=-0.33)=>({legL:{pos:[0.11,0,f],anchor:'sole',yaw:5,pitch:0,pole:[0.05,0,1]},legR:{pos:[-0.11,0,b],anchor:'ball',yaw:-5,pitch:30,pole:[-0.05,0,1]}});
 const STAND={root:{pos:[0,0.925,0]},neck:{flex:0}};
 const DIP=(y,z=-0.03)=>({root:{pos:[0,y,z],pitch:4},neck:{flex:0}});
 const dd=(y,z=-0.03)=>[0,y-0.925,z];
@@ -31,7 +31,7 @@ const P1=[{type:'kettlebell',hand:'L',kg:16,mode:'rack'}];
 const P2=[{type:'kettlebell',hand:'L',kg:16,mode:'rack'},{type:'kettlebell',hand:'R',kg:16,mode:'rack'}];
 const one=(b,legs,L)=>fr(b,legs,L,free);
 const two=(b,legs,f)=>fr(b,legs,f(1),f(-1));
-const dip=0.80, dipd=dd(dip);
+const dip=0.75, dipd=dd(dip);
 // ---- one-arm ----
 const cam1={az:55,el:6};
 mk('one-arm-kettlebell-push-press',cam1,P1,{
@@ -39,39 +39,46 @@ mk('one-arm-kettlebell-push-press',cam1,P1,{
   mid:one(DIP(dip),wide(),rk(1,0,dipd)),
   mid2:one({root:{pos:[0,0.925,0.0],pitch:-2},neck:{flex:0}},wide(),mid(1)),
   end:one(STAND,stand(),rk(1,1))},{muscleSide:'L'});
+const JT={lift:'there',up:0.6,down:1.6,squeeze:0.2,stretch:0.1};
+const UP={root:{pos:[0,0.925,0.0],pitch:-2},neck:{flex:0}};
 mk('one-arm-kettlebell-jerk',cam1,P1,{
   start:one(STAND,stand(),rk(1,0)),
   mid:one(DIP(dip),wide(),rk(1,0,dipd)),
-  mid2:one({root:{pos:[0,0.925,0.0],pitch:-2},neck:{flex:0}},wide(),mid(1,[0,0.02,0])),
-  mid3:one(DIP(0.84),wide(),rk(1,0.9,dd(0.84))),
-  end:one(STAND,stand(),rk(1,1))},{muscleSide:'L'});
-mk('one-arm-kettlebell-split-jerk',cam1,P1,{
-  start:one(STAND,stand(),rk(1,0)),
+  mid2:one(UP,wide(),mid(1,[0,0.02,0])),
+  mid3:one(DIP(0.80),wide(),rk(1,0.95,dd(0.80))),
+  end:one(STAND,stand(),rk(1,1))},{muscleSide:'L',tempo:JT});
+const SJ=(slug,start,pre,cam)=>mk(slug,cam,P1,{
+  start,...pre,
+  mid4:one({root:{pos:[0,0.72,0.05],pitch:0},neck:{flex:0}},split(),rk(1,1,dd(0.72,0.05))),
+  mid5:one({root:{pos:[0,0.88,0.02],pitch:0},neck:{flex:0}},air(0.14,0.5),rk(1,1,dd(0.88))),
+  end:one(STAND,stand(),rk(1,1))},{muscleSide:'L',tempo:{lift:'there',up:0.8,down:1.6,squeeze:0.3,stretch:0.1}});
+SJ('one-arm-kettlebell-split-jerk',one(STAND,stand(),rk(1,0)),{
   mid:one(DIP(dip),wide(),rk(1,0,dipd)),
-  mid2:one({root:{pos:[0,0.925,0.0],pitch:-2},neck:{flex:0}},wide(),mid(1,[0,0.02,0])),
-  mid3:one({root:{pos:[0,0.88,0.02],pitch:0},neck:{flex:0}},air(0.16,0.5),rk(1,0.9,dd(0.88,0.02))),
-  end:one({root:{pos:[0,0.8,0.03],pitch:0},neck:{flex:0}},split(),rk(1,1,dd(0.8,0.03)))},{muscleSide:'L',camera:{az:80,el:6}});
-out['one-arm-kettlebell-split-jerk'].camera={az:80,el:6};
+  mid2:one(UP,wide(),la(rk(1,0,[0,0.1,0]),mid(1,[0,0.02,0]),0.6)),
+  mid3:one({root:{pos:[0,0.9,0.0],pitch:0},neck:{flex:0}},air(0.14,0.3),la(mid(1,[0,0.02,0]),rk(1,0.95,dd(0.9)),0.5))},{az:80,el:6});
 const HR={root:{pos:[0,0.8,-0.27],pitch:52},neck:{flex:-30}};
 const MD={root:{pos:[0,0.86,-0.12],pitch:25},neck:{flex:-14}};
+const HR2={root:{pos:[0,0.8,-0.27],pitch:52},neck:{flex:-40}};
+const bk1=hg(1,0.08,0.6,0.14,5,[0.1,0,-1]);const bkC=hg(1,0.08,0.6,0.14,40,[0.1,0,-1]);
 mk('one-arm-kettlebell-clean-and-jerk',cam1,P1,{
-  start:one(STAND,stand(),hg(1,0.27,0.88,0.12,5,[0.5,-1,-0.3])),
+  start:one(HR2,wide(),bkC),
   mid:one({root:{pos:[0,0.925,0.0],pitch:-2},neck:{flex:0}},wide(),H2(1,0.28,1.2,0.3,110,0.5)),
-  mid2:one(DIP(0.84),wide(),rk(1,0,dd(0.84))),
-  mid3:one({root:{pos:[0,0.925,0.0],pitch:-2},neck:{flex:0}},wide(),mid(1)),
-  end:one(STAND,stand(),rk(1,1))},{muscleSide:'L'});
+  mid2:one(UP,wide(),la(H2(1,0.28,1.2,0.3,110,0.5),rk(1,0),0.6)),
+  mid3:one(STAND,stand(),rk(1,0)),
+  mid4:one(DIP(0.75),wide(),rk(1,0,dd(0.75))),
+  mid5:one(UP,wide(),mid(1,[0,0.02,0])),
+  end:one(STAND,stand(),rk(1,1))},{muscleSide:'L',tempo:{lift:'there',up:0.9,down:1.6,squeeze:0.3,stretch:0.15}});
+const SNT={lift:'there',up:0.65,down:1.8,squeeze:0.3,stretch:0.2};
+const snPre=(bk,k=0)=>({
+  mid:one({root:{pos:[0,0.9,-0.02],pitch:0},neck:{flex:0}},wide(),H2(1,0.2,1.0,0.3,70,0)),
+  mid2:one({root:{pos:[0,0.925,0.0],pitch:-2},neck:{flex:0}},wide(),la(H2(1,0.3,1.5,0.24,140,0.6,[0.6,-0.6,-0.3]),rk(1,0.8),k))});
 mk('one-arm-kettlebell-snatch',cam1,P1,{
-  start:one(HR,wide(),hg(1,0.08,0.64,0.2,5,[0.1,0,-1])),
-  mid:one({root:{pos:[0,0.9,-0.02],pitch:0},neck:{flex:0}},wide(),H2(1,0.2,1.0,0.36,70,0)),
-  mid2:one({root:{pos:[0,0.925,0.0],pitch:-2},neck:{flex:0}},wide(),H2(1,0.24,+(process.env.Y||1.3),+(process.env.Z||0.4),+(process.env.A||130),+(process.env.K||0.5))),
+  start:one(HR2,wide(),bk1),...snPre(),
   mid3:one({root:{pos:[0,0.93,0],pitch:-2},neck:{flex:0}},wide(),rk(1,0.9,[0,-0.02,0.03])),
-  end:one(STAND,stand(),rk(1,1))},{muscleSide:'L'});
-mk('one-arm-kettlebell-split-snatch',{az:80,el:6},P1,{
-  start:one(HR,wide(),hg(1,0.08,0.64,0.2,5,[0.1,0,-1])),
-  mid:one({root:{pos:[0,0.9,-0.02],pitch:0},neck:{flex:0}},wide(),H2(1,0.2,1.0,0.36,70,0)),
-  mid2:one({root:{pos:[0,0.925,0.0],pitch:-2},neck:{flex:0}},wide(),H2(1,0.24,+(process.env.Y||1.3),+(process.env.Z||0.4),+(process.env.A||130),+(process.env.K||0.5))),
-  mid3:one({root:{pos:[0,0.88,0.02],pitch:0},neck:{flex:0}},air(0.16,0.5),rk(1,0.9,dd(0.88,0.02))),
-  end:one({root:{pos:[0,0.8,0.03],pitch:0},neck:{flex:0}},split(),rk(1,1,dd(0.8,0.03)))},{muscleSide:'L'});
+  end:one(STAND,stand(),rk(1,1))},{muscleSide:'L',tempo:SNT});
+SJ('one-arm-kettlebell-split-snatch',one(HR2,wide(),bk1),{mid:snPre().mid,mid2:one({root:{pos:[0,0.925,0.0],pitch:-2},neck:{flex:0}},wide(),la(H2(1,0.2,1.0,0.3,70,0),H2(1,0.3,1.5,0.24,140,0.6,[0.6,-0.6,-0.3]),0.75)),
+  mid3:one({root:{pos:[0,0.9,0.0],pitch:0},neck:{flex:0}},air(0.14,0.3),la(H2(1,0.3,1.5,0.24,140,0.6,[0.6,-0.6,-0.3]),rk(1,0.9,[0,-0.02,0.03]),0.7))},{az:80,el:6});
+out['one-arm-kettlebell-split-snatch'].tempo=SNT;
 // ---- two-arm ----
 const cam2={az:40,el:6};
 const dbl=(slug,frames)=>mk(slug,cam2,P2,frames);
@@ -82,17 +89,21 @@ dbl('double-kettlebell-push-press',{
 dbl('double-kettlebell-jerk',{
   start:two(STAND,stand(),r2(0)),mid:two(DIP(dip),wide(),r2(0,dipd)),
   mid2:two({root:{pos:[0,0.925,0],pitch:-2},neck:{flex:0}},wide(),m2([0,0.02,0])),
-  mid3:two(DIP(0.84),wide(),r2(0.9,dd(0.84))),end:two(STAND,stand(),r2(1))});
+  mid3:two(DIP(0.80),wide(),r2(0.95,dd(0.80))),end:two(STAND,stand(),r2(1))});
 dbl('two-arm-kettlebell-jerk',{
   start:two(STAND,stand(),r2(0)),mid:two(DIP(dip),wide(),r2(0,dipd)),
   mid2:two({root:{pos:[0,0.925,0],pitch:-2},neck:{flex:0}},wide(),m2([0,0.02,0])),
-  mid3:two(DIP(0.82),wide(),r2(0.9,dd(0.82))),end:two(STAND,stand(),r2(1))});
-const back=s=>hg(s,0.12,0.6,0.1,10,[0.3,-0.5,-1]);
+  mid3:two(DIP(0.78),wide(),r2(0.95,dd(0.78))),end:two(STAND,stand(),r2(1))});
+const back=s=>hg(s,0.14,0.6,0.16,10,[0.3,-0.5,-1]);
 dbl('double-kettlebell-snatch',{
-  start:two(HR,wide(),back),
-  mid:two({root:{pos:[0,0.9,-0.02],pitch:0},neck:{flex:0}},wide(),x=>H2(x,0.2,1.0,0.36,70,0)),
-  mid2:two({root:{pos:[0,0.925,0],pitch:-2},neck:{flex:0}},wide(),x=>H2(x,0.24,+(process.env.Y||1.3),+(process.env.Z||0.4),+(process.env.A||130),+(process.env.K||0.5))),
+  start:two(HR2,wide(),back),
+  mid:two({root:{pos:[0,0.9,-0.02],pitch:0},neck:{flex:0}},wide(),x=>H2(x,0.2,1.0,0.3,70,0)),
+  mid2:two({root:{pos:[0,0.925,0],pitch:-2},neck:{flex:0}},wide(),x=>H2(x,0.3,1.5,0.24,140,0.6,[0.6,-0.6,-0.3])),
   mid3:two({root:{pos:[0,0.93,0],pitch:-2},neck:{flex:0}},wide(),r2(0.9,[0,-0.02,0.03])),
   end:two(STAND,stand(),r2(1))});
+out['double-kettlebell-snatch'].tempo=SNT;
+for(const k of ['double-kettlebell-jerk','two-arm-kettlebell-jerk']) out[k].tempo=JT;
+out['two-arm-kettlebell-jerk'].camera={az:85,el:6};
+out['two-arm-kettlebell-jerk'].props=out['two-arm-kettlebell-jerk'].props.map(p=>({...p,kg:20}));
 for(const [k,v] of Object.entries(out)) fs.writeFileSync(new URL(`../${k}.json`,import.meta.url),JSON.stringify(v,null,1));
 console.log(Object.keys(out).length);

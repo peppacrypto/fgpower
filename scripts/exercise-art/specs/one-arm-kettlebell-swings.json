@@ -1,8 +1,15 @@
 {
  "slug": "one-arm-kettlebell-swings",
  "camera": {
-  "az": 50,
+  "az": 75,
   "el": 8
+ },
+ "tempo": {
+  "lift": "there",
+  "up": 0.7,
+  "down": 0.7,
+  "squeeze": 0.04,
+  "stretch": 0.04
  },
  "muscles": [
   "hamstrings",
@@ -86,8 +93,8 @@
    },
    "armR": {
     "fk": {
-     "flex": 25,
-     "abd": 35,
+     "flex": 10,
+     "abd": 40,
      "elbow": 5
     },
     "curl": 0.2
@@ -137,7 +144,7 @@
    },
    "armL": {
     "pos": [
-     0.03,
+     0.05,
      0.9,
      0.45
     ],
@@ -161,8 +168,8 @@
    },
    "armR": {
     "fk": {
-     "flex": 25,
-     "abd": 35,
+     "flex": 20,
+     "abd": 55,
      "elbow": 5
     },
     "curl": 0.2
@@ -212,7 +219,7 @@
    },
    "armL": {
     "pos": [
-     0.03,
+     0.05,
      1.32,
      0.56
     ],
@@ -237,7 +244,7 @@
    "armR": {
     "fk": {
      "flex": 25,
-     "abd": 35,
+     "abd": 60,
      "elbow": 5
     },
     "curl": 0.2

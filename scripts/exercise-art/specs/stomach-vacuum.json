@@ -1,8 +1,8 @@
 {
  "slug": "stomach-vacuum",
  "camera": {
-  "az": 100,
-  "el": 8
+  "az": 90,
+  "el": 5
  },
  "muscles": [
   "abdominals"
@@ -17,6 +17,100 @@
      0
     ],
     "pitch": 0
+   },
+   "spine": {
+    "flex": -4
+   },
+   "armL": {
+    "pos": [
+     0.22,
+     0,
+     0
+    ],
+    "rel": "pelvis",
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     -0.6,
+     0.8
+    ],
+    "palm": [
+     -0.7,
+     0.3,
+     0.3
+    ],
+    "pole": [
+     0.5,
+     0,
+     -1
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.22,
+     0,
+     0
+    ],
+    "rel": "pelvis",
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     -0.6,
+     0.8
+    ],
+    "palm": [
+     0.7,
+     0.3,
+     0.3
+    ],
+    "pole": [
+     -0.5,
+     0,
+     -1
+    ]
+   },
+   "legL": {
+    "pos": [
+     0.15,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 4,
+    "pole": [
+     0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.15,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": -4,
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.925,
+     0
+    ],
+    "pitch": 0
+   },
+   "spine": {
+    "flex": 2
    },
    "armL": {
     "pos": [

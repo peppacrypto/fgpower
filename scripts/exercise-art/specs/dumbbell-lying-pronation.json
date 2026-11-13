@@ -1,8 +1,8 @@
 {
  "slug": "dumbbell-lying-pronation",
  "camera": {
-  "az": 240,
-  "el": 12
+  "az": 200,
+  "el": 20
  },
  "muscles": [
   "forearms"
@@ -64,16 +64,103 @@
     }
    },
    "armL": {
+    "pos": [
+     -0.471,
+     0.23,
+     -0.3
+    ],
+    "rel": "world",
+    "pole": [
+     -1,
+     0,
+     0
+    ],
+    "hand": "grip",
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     0.71,
+     0,
+     -0.7
+    ]
+   },
+   "armR": {
     "fk": {
      "flex": 0,
-     "abd": 90,
-     "rot": -6,
-     "elbow": 90
+     "abd": 75,
+     "rot": 0,
+     "elbow": 140
     },
     "rel": "chest",
+    "hand": "relaxed"
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.6,
+     0.2
+    ],
+    "yaw": 180,
+    "pitch": 90
+   },
+   "spine": {
+    "flex": 0
+   },
+   "neck": {
+    "flex": -20
+   },
+   "legL": {
+    "fk": {
+     "flex": 0,
+     "abd": 0,
+     "knee": 0,
+     "rot": 0
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 25
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 0,
+     "abd": 0,
+     "knee": 0,
+     "rot": 0
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 25
+    }
+   },
+   "armL": {
+    "pos": [
+     -0.471,
+     0.23,
+     -0.3
+    ],
+    "rel": "world",
+    "pole": [
+     -1,
+     0,
+     0
+    ],
     "hand": "grip",
-    "pron": -0.9,
-    "autoRoll": false
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     1,
+     0,
+     0
+    ]
    },
    "armR": {
     "fk": {
@@ -127,16 +214,28 @@
     }
    },
    "armL": {
-    "fk": {
-     "flex": 0,
-     "abd": 90,
-     "rot": 6,
-     "elbow": 90
-    },
-    "rel": "chest",
+    "pos": [
+     -0.471,
+     0.23,
+     -0.3
+    ],
+    "rel": "world",
+    "pole": [
+     -1,
+     0,
+     0
+    ],
     "hand": "grip",
-    "pron": 0.9,
-    "autoRoll": false
+    "fingers": [
+     0,
+     -1,
+     0
+    ],
+    "palm": [
+     0.71,
+     0,
+     0.7
+    ]
    },
    "armR": {
     "fk": {
@@ -151,5 +250,10 @@
   }
  },
  "muscleSide": "L",
- "floats": true
+ "floats": true,
+ "tempo": {
+  "lift": "there",
+  "up": 1.2,
+  "down": 1.8
+ }
 }

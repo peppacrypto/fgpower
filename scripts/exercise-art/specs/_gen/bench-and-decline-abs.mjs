@@ -18,7 +18,7 @@ const dcam = {az:62,el:14};
 W('decline-crunch',{camera:dcam,muscles:['abdominals'],floats:true,props:[DB],
   frames:{start:dFrame(-120,0,14), end:dFrame(-114,56,26)}});
 W('decline-oblique-crunch',{camera:{az:40,el:20},muscles:['abdominals','obliques'],floats:true,props:[DB],
-  frames:{start:dFrame(-120,0,14), end:dFrame(-114,44,-6,{twist:30})}});
+  frames:{start:dFrame(-120,0,14), end:dFrame(-114,44,-14,{twist:45})}});
 
 // ---------- weighted sit-up with bands ----------
 const bandProp = {type:'band-tube',hands:true,via:[{pos:[0.3,0.12,0.5]},{pos:[-0.3,0.12,0.5]}]};
@@ -35,8 +35,8 @@ const rArm = s => ({pos:[0.17*s,+(process.env.HY??0.5),+(process.env.HZ??-0.42)]
 const rFrame = (pitch, y, z, ank) => ({root:{pos:[0,y,z],pitch}, neck:{flex:6},
   armL:rArm(1), armR:rArm(-1),
   legL:{pos:[0.09,...ank],anchor:'ankle',pitch:+(process.env.FP??-40),pole:[0.1,1,0.3]}, legR:{pos:[-0.09,...ank],anchor:'ankle',pitch:+(process.env.FP??-40),pole:[-0.1,1,0.3]}});
-W('decline-reverse-crunch',{camera:{az:70,el:12},muscles:['abdominals'],floats:true,props:[RB],
-  frames:{start:rFrame(-70,0.58,0.22,[0.56,1.0]), mid:rFrame(-66,0.56,0.22,[0.85,0.9]), end:rFrame(-68,0.56,0.22,[0.9,0.78])}});
+W('decline-reverse-crunch',{tempo:{lift:'there',up:1,down:1.8,squeeze:0.4},camera:{az:70,el:12},muscles:['abdominals'],floats:true,props:[RB],
+  frames:{start:rFrame(-70,0.58,0.22,[0.56,1.0]), mid:rFrame(-66,0.56,0.22,[0.85,0.9]), end:rFrame(-68,0.58,0.22,[0.9,0.78])}});
 
 // ---------- seated on flat bench ----------
 const sArm = s => ({pos:[0.17*s,0.42,0.16],contact:true,hand:'grip',grip:0.02,fingers:[0,-1,0],palm:[-1*s,0,0],pole:[0.6*s,-0.4,-0.7]});
@@ -69,7 +69,7 @@ const dragon = (p, tuck) => {
   return o;
 };
 for (const [slug,tuck] of [['dragon-flag',false],['tuck-dragon-flag',true]])
-  W(slug,{camera:{az:75,el:10},muscles:['abdominals'],floats:true,...(tuck?{qaAllow:{'rom:anti-extension.pike':'a tuck dragon flag is a deliberate tucked position: knees to chest, hips folded 90 by definition'}}:{}),props:[{type:'flat-bench'}],
+  W(slug,{camera:{az:75,el:10},muscles:['abdominals'],floats:true,...(tuck?{}:{tempo:{lift:'back',up:1.2,down:3,squeeze:0.3,stretch:0.5}}),...(tuck?{qaAllow:{'rom:anti-extension.pike':'a tuck dragon flag is a deliberate tucked position: knees to chest, hips folded 90 by definition'}}:{}),props:[{type:'flat-bench'}],
     frames:{start:dragon(-172,tuck), mid:dragon(-154,tuck), mid2:dragon(-136,tuck), end:dragon(-104,tuck)}});
 
 // ---------- press sit-up ----------

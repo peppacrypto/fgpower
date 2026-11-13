@@ -8,6 +8,11 @@
   "glutes"
  ],
  "floats": true,
+ "tempo": {
+  "lift": "even",
+  "up": 0.5,
+  "down": 0.5
+ },
  "props": [
   {
    "type": "flat-bench",
@@ -83,7 +88,7 @@
    },
    "legL": {
     "fk": {
-     "flex": 18,
+     "flex": 0,
      "abd": 1,
      "knee": 2
     },
@@ -94,7 +99,7 @@
    },
    "legR": {
     "fk": {
-     "flex": 55,
+     "flex": 45,
      "abd": 1,
      "knee": 2
     },
@@ -167,7 +172,7 @@
    },
    "legL": {
     "fk": {
-     "flex": 55,
+     "flex": 45,
      "abd": 1,
      "knee": 2
     },
@@ -178,7 +183,7 @@
    },
    "legR": {
     "fk": {
-     "flex": -10,
+     "flex": 0,
      "abd": 1,
      "knee": 2
     },

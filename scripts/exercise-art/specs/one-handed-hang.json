@@ -1,7 +1,7 @@
 {
  "slug": "one-handed-hang",
  "camera": {
-  "az": 150,
+  "az": 35,
   "el": 8
  },
  "muscles": [
@@ -11,7 +11,7 @@
  "props": [
   {
    "type": "pull-up-bar",
-   "height": 1.8
+   "height": 2.25
   }
  ],
  "frames": {
@@ -19,7 +19,7 @@
    "root": {
     "pos": [
      0,
-     0.9,
+     1.185,
      -0.03
     ],
     "pitch": 0,
@@ -34,7 +34,7 @@
    "armL": {
     "pos": [
      0.19,
-     1.8,
+     2.25,
      0
     ],
     "contact": true,
@@ -58,29 +58,30 @@
    "armR": {
     "fk": {
      "flex": 0,
-     "abd": 14,
+     "abd": 12,
      "rot": 0,
-     "elbow": 10
-    },
-    "rel": "chest"
+     "elbow": 8
+    }
    },
    "legL": {
-    "pos": [
-     0.13,
-     0,
-     0.02
-    ],
-    "anchor": "sole",
-    "yaw": 6
+    "fk": {
+     "flex": 3,
+     "abd": 2,
+     "knee": 4
+    },
+    "foot": {
+     "pitch": 28
+    }
    },
    "legR": {
-    "pos": [
-     -0.13,
-     0,
-     0.02
-    ],
-    "anchor": "sole",
-    "yaw": -6
+    "fk": {
+     "flex": 3,
+     "abd": 2,
+     "knee": 4
+    },
+    "foot": {
+     "pitch": 28
+    }
    }
   }
  },

@@ -1,21 +1,24 @@
 {
  "slug": "kneeling-towel-chest-slide",
  "camera": {
-  "az": 30,
-  "el": 9
+  "az": 70,
+  "el": 8
  },
  "muscles": [
-  "chest"
+  "chest",
+  "anterior-deltoid",
+  "triceps",
+  "abdominals"
  ],
  "frames": {
   "start": {
    "root": {
     "pos": [
      0,
-     0.31,
-     0.02
+     0.32,
+     0.01
     ],
-    "pitch": 53.604
+    "pitch": 52
    },
    "neck": {
     "flex": -12
@@ -97,16 +100,19 @@
      "width": 0.3,
      "depth": 0.42
     }
-   ]
+   ],
+   "spine": {
+    "flex": 6
+   }
   },
   "end": {
    "root": {
     "pos": [
      0,
-     0.19,
-     0.059
+     0.17,
+     0.07
     ],
-    "pitch": 88
+    "pitch": 83
    },
    "neck": {
     "flex": -20
@@ -162,7 +168,7 @@
    "legL": {
     "pos": [
      0.11,
-     0.15,
+     0.07,
      -0.776
     ],
     "anchor": "ankle",
@@ -176,7 +182,7 @@
    "legR": {
     "pos": [
      -0.11,
-     0.15,
+     0.07,
      -0.776
     ],
     "anchor": "ankle",
@@ -198,7 +204,10 @@
      "width": 0.3,
      "depth": 0.42
     }
-   ]
+   ],
+   "spine": {
+    "flex": 6
+   }
   }
  },
  "muscleSide": "R"

@@ -1,42 +1,102 @@
 {
  "slug": "chair-pose",
  "camera": {
-  "az": 60,
-  "el": 8
+  "az": 90,
+  "el": 6
  },
  "muscles": [
-  "quadriceps",
-  "glutes"
+  "glutes",
+  "quadriceps"
  ],
  "frames": {
   "start": {
    "root": {
     "pos": [
      0,
-     0.62,
+     0.66,
      -0.2
     ],
-    "pitch": 30
+    "pitch": 20
    },
    "spine": {
-    "flex": -6
+    "flex": -4
    },
    "neck": {
-    "flex": -12
+    "flex": -6
    },
    "armL": {
     "fk": {
-     "flex": 172,
-     "abd": 6,
-     "elbow": 4
+     "flex": 180,
+     "abd": 0,
+     "elbow": 0
     },
     "curl": 0.3
    },
    "armR": {
     "fk": {
-     "flex": 172,
-     "abd": 6,
-     "elbow": 4
+     "flex": 180,
+     "abd": 0,
+     "elbow": 0
+    },
+    "curl": 0.3
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": 4,
+    "pole": [
+     0.4,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "yaw": -4,
+    "pole": [
+     -0.4,
+     0,
+     1
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.62,
+     -0.23
+    ],
+    "pitch": 23
+   },
+   "spine": {
+    "flex": -4
+   },
+   "neck": {
+    "flex": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": 180,
+     "abd": 0,
+     "elbow": 0
+    },
+    "curl": 0.3
+   },
+   "armR": {
+    "fk": {
+     "flex": 180,
+     "abd": 0,
+     "elbow": 0
     },
     "curl": 0.3
    },

@@ -1,19 +1,21 @@
 {
  "slug": "smith-machine-behind-the-back-shrug",
  "camera": {
-  "az": 150,
-  "el": 8
+  "az": 100,
+  "el": 6
  },
  "muscles": [
   "traps"
  ],
  "props": [
   {
-   "type": "barbell",
-   "hands": true,
-   "plates": [
-    20
-   ]
+   "type": "smith",
+   "pos": [
+    0,
+    0,
+    -0.14
+   ],
+   "follow": "hands"
   }
  ],
  "frames": {
@@ -163,7 +165,7 @@
    "armL": {
     "pos": [
      0.26,
-     0.8500000000000001,
+     0.88,
      -0.14
     ],
     "contact": true,
@@ -184,14 +186,14 @@
      -1
     ],
     "scap": {
-     "elev": 8,
+     "elev": 14,
      "prot": 0
     }
    },
    "armR": {
     "pos": [
      -0.26,
-     0.8500000000000001,
+     0.88,
      -0.14
     ],
     "contact": true,
@@ -212,7 +214,7 @@
      -1
     ],
     "scap": {
-     "elev": 8,
+     "elev": 14,
      "prot": 0
     }
    }

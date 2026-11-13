@@ -28,6 +28,8 @@ const wd=(y,z)=>({root:{pos:[0,y,z],pitch:-5},neck:{flex:-4},
  legL:{pos:[0.14,0.46,0.66],anchor:"heel",pitch:-15,pole:[0.3,1,0]},legR:{pos:[-0.14,0.46,0.66],anchor:"heel",pitch:-15,pole:[-0.3,1,0]},
  armL:{pos:[0.2,0.46,-0.3],contact:true,fingers:[0,-0.3,1],palm:[0,-1,0],pole:[0.4,0.2,-1],curl:0.7},
  armR:{pos:[-0.2,0.46,-0.3],contact:true,fingers:[0,-0.3,1],palm:[0,-1,0],pole:[-0.4,0.2,-1],curl:0.7}});
-save('weighted-bench-dip',{az:70,el:8},['triceps'],[{type:'flat-bench',pos:[0,0,BZ],yaw:90},{type:'flat-bench',pos:[0,0,0.66],yaw:90},{type:'dumbbell',kg:20,pos:[0,0.66,0.22],yaw:90}],{start:wd(0.58,-0.17),end:wd(0.40,-0.14)},{floats:false});
+const DB=(y,z)=>[{type:'flat-bench',pos:[0,0,BZ],yaw:90},{type:'flat-bench',pos:[0,0,0.66],yaw:90},{type:'dumbbell',kg:20,pos:[0,y,z],yaw:90}];
+const wdp=(y,z,dy,dz)=>({...wd(y,z),props:DB(dy,dz)});
+save('weighted-bench-dip',{az:70,el:8},['triceps'],[{type:'flat-bench',pos:[0,0,BZ],yaw:90},{type:'flat-bench',pos:[0,0,0.66],yaw:90},],{start:wdp(0.58,-0.17,0.64,0.16),end:wdp(0.40,-0.14,0.55,0.18)},{floats:false});
 for(const [k,v] of Object.entries(out))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
 console.log(Object.keys(out).join(' '));

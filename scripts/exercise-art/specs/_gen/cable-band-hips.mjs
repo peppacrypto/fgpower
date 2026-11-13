@@ -17,8 +17,8 @@ const bandA = z => [0,0.2,z-0.06];
 const bandProp = (z,rest=0.5) => ({ type:'band', follow:'pelvis', a:bandA(z), b:{ankle:'L'}, rest, width:0.03 });
 const hf = (rz,rp,leg,sp,nk) => facing(rz,rp,leg,sp,nk,0.70);
 W('hip-extension-with-bands', { camera:{az:100,el:8}, muscles:['glutes'], muscleSide:'L',
-  props:[bandPost(0.70), bandProp(0.70)],
-  frames:{ start:hf(0.03,10,ankL(0.28,0.5,-35),8,-8), mid:hf(0.03,10,ankL(0.2,0.12,-5),8,-8), mid2:hf(0.05,11,ankL(0.28,-0.3,28),9,-11),
+  props:[bandPost(0.70), bandProp(0.70,0.3)],
+  frames:{ start:hf(0.03,10,ankL(0.3,0.5,-30),8,-8), mid:hf(0.03,10,ankL(0.2,0.1,-5),8,-8), mid2:hf(0.05,11,ankL(0.28,-0.3,28),9,-11),
            end:hf(0.08,14,ankL(0.45,-0.6,50),10,-14) } });
 
 // ---- hip flexion with band: facing away from the post, knee to 90
@@ -33,9 +33,11 @@ W('hip-flexion-with-band', { camera:{az:95,el:8}, muscles:['quadriceps'], muscle
 const addF = (ax,ay,az_,p,rz=0) => ({ root:{pos:[-0.09,0.92,rz],pitch:2}, neck:{flex:0},
   armL:{fk:{flex:0,abd:25,elbow:10},curl:0.2}, armR:{fk:{flex:0,abd:25,elbow:10},curl:0.2},
   legR:{pos:[-0.12,0,0.0],anchor:'sole',pitch:0,yaw:-4}, legL:{pos:[ax,ay,az_],anchor:'ankle',pitch:p,pole:[0,0.1,1]} });
-const addFr = { start:addF(0.38,0.14,0.0,-4), mid:addF(0.12,0.2,0.06,-6), end:addF(-0.1,0.16,0.2,-8) };
+const hold = { pos:[0.55,1.15,0.08], fingers:[1,0,0], palm:[0,0,1], curl:0.7, pole:[0,-1,0.2] };
+const addFr0 = { start:addF(0.38,0.14,0.0,-4), mid:addF(0.12,0.2,0.06,-6), end:addF(-0.1,0.16,0.2,-8) };
+const addFr = addFr0, addFrH = JSON.parse(JSON.stringify(addFr0)); for (const k in addFrH) addFrH[k].armL = hold;
 W('cable-hip-adduction', { camera:{az:25,el:8}, muscles:['adductors'], muscleSide:'L',
-  props:[{type:'cable-tower',pos:[0.8,0,0],yaw:-90,pulleyY:0.2,foot:'L',attachment:'ankle-strap'}], frames:addFr });
+  props:[{type:'cable-tower',pos:[0.68,0,0],yaw:-90,pulleyY:0.2,foot:'L',attachment:'ankle-strap'}], frames:addFrH });
 W('band-hip-adductions', { camera:{az:25,el:8}, muscles:['adductors'], muscleSide:'L',
   props:[{type:'anchor-post',pos:[0.8,0,0],yaw:-90,bandY:0.2},{type:'band',follow:'pelvis',a:[0.74,0.2,0],b:{ankle:'L'},rest:0.5,width:0.03}], frames:addFr });
 
@@ -54,7 +56,7 @@ const pt = (rz, ry, pit, sp, nk, hand) => { const a = s => ({ pos:[hand[0]*s,han
   legL:{pos:[0.3,0,0],anchor:'sole',pitch:0,yaw:12,pole:[0.5,0,1]}, legR:{pos:[-0.3,0,0],anchor:'sole',pitch:0,yaw:-12,pole:[-0.5,0,1]} }; };
 W('pull-through', { camera:{az:70,el:8}, muscles:['glutes','hamstrings'],
   props:[{type:'cable-tower',pos:[0,0,-0.55],yaw:0,pulleyY:0.2,hands:true,attachment:'rope'}],
-  frames:{ start:pt(-0.28,0.84,55,0,-25,[0.05,0.6,0.06]), mid:pt(-0.14,0.9,28,0,-12,[0.05,0.82,0.12]), end:pt(0,0.9,6,0,-2,[0.05,0.92,0.17]) } });
+  frames:{ start:pt(-0.28,0.84,55,0,-15,[0.05,0.62,-0.02]), mid:pt(-0.14,0.9,28,0,-8,[0.05,0.78,0.08]), end:pt(0,0.9,6,0,-2,[0.05,0.92,0.17]) } });
 
 // ---- band good morning variants, from the barbell good-morning hinge
 const gm = ld('good-morning');

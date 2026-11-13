@@ -1,10 +1,11 @@
 {
  "slug": "reverse-barbell-preacher-curls",
  "camera": {
-  "az": 72,
-  "el": 12
+  "az": 55,
+  "el": 18
  },
  "muscles": [
+  "forearms",
   "biceps"
  ],
  "floats": true,

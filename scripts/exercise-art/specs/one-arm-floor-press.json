@@ -4,6 +4,10 @@
   "az": 50,
   "el": 10
  },
+ "tempo": {
+  "lift": "there",
+  "stretch": 1
+ },
  "muscles": [
   "triceps",
   "chest"
@@ -129,7 +133,7 @@
     "pos": [
      0.22,
      0.34,
-     -0.17
+     -0.12
     ],
     "contact": true,
     "hand": "grip",

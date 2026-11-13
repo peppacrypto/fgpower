@@ -18,7 +18,7 @@ function gripFrame(b,ad,side){const dd=ad[0]*b[0]+ad[1]*b[1]+ad[2]*b[2];const f=
  for(const s of ['armL','armR']){const x=s==='armL'?1:-1;for(const k of ['start','end'])g.frames[k]['leg'+s[3]].pos[1]+=BH-0.44;g.frames.start[s].pos=[x*0.4,+(E.CY||0.15),0.42];g.frames.end[s].pos=[x*0.4,+(E.CE||0.45),0.4];}
  save('lying-cambered-barbell-row',{...g,muscles:['middle-back','lats']});}
 // ---- jammers
-{const g=gal('landmine-jammer');{const E=process.env;const e=g.frames.end;e.root.pos=[0,+(E.JR||0.92),0];for(const s of ['armL','armR']){const x=s==='armL'?1:-1;e[s].pos=[x*0.22,+(E.JY||1.92),+(E.JZ||0.45)];e[s].fingers=[0,+(E.JF||0.5),0.7];}}save('landmine-linear-jammer',{...g,muscles:['shoulders','triceps','quadriceps']});}
+{const g=gal('landmine-jammer');{const E=process.env;const st=g.frames.start;st.root.pos=[0,0.74,-0.25];st.root.pitch=16;for(const s of ['armL','armR'])st[s].pos[1]+=0.14;const e=g.frames.end;e.root.pos=[0,+(E.JR||0.92),0];for(const s of ['armL','armR']){const x=s==='armL'?1:-1;e[s].pos=[x*0.22,+(E.JY||1.92),+(E.JZ||0.45)];e[s].fingers=[0,+(E.JF||0.8),0.7];if(E.SF)st[s].fingers=JSON.parse(E.SF);}}save('landmine-linear-jammer',{...g,muscles:['shoulders','triceps','quadriceps']});}
 {const g=gal('landmine');
  for(const k of ['start','end']){g.frames[k].legL.pos=[0.22,0,-0.2];g.frames[k].legR.pos=[-0.22,0,0.25];}
  g.frames.start.root.pos=[0,0.8,0];g.frames.end.root.pos=[0,+(process.env.SR||0.87),0.05];g.frames.end.root.pitch=8;
@@ -40,22 +40,22 @@ tb('bent-over-two-arm-long-bar-row',{camera:{az:70,el:12}});
 const one=(slug,pitch,rootY,rz,legz,leg2,DZ=-0.15)=>{
  const rx=-0.3;
  const arm=(y,pole)=>({pos:[0,y,zOf(y)],hand:'grip',grip:0.014,fingers:[0,-1,0],palm:[-1,0,0],pole});
- const fr=(y,p,pole,neck,dz=0)=>({root:{pos:[rx,rootY,rz+dz],pitch:p},neck:{flex:neck},armL:arm(y,pole),armR:{fk:{flex:10,abd:38,elbow:20},curl:0.3},
+ const fr=(y,p,pole,neck,dz=0)=>({root:{pos:[rx,rootY,rz+dz],pitch:p},neck:{flex:neck},armL:arm(y,pole),armR:{pos:[rx-0.2,+(process.env.HY||0.76),rz+dz+(+(process.env.HZ||0.25))],contact:true,fingers:JSON.parse(process.env.HF||"[0,-0.4,1]"),palm:[0,-1,0],curl:0.5,pole:JSON.parse(process.env.HP||"[-0.8,0,-0.6]")},
   legL:{pos:[rx+0.16,0,legz],anchor:'sole',yaw:14,pitch:0,pole:[0.4,0,1]},legR:{pos:[rx-0.16,0,leg2],anchor:'sole',yaw:-14,pitch:0,pole:[-0.4,0,1]}});
- save(slug,{camera:{az:55,el:12},muscles:['middle-back','lats'],muscleSide:'L',props:[{type:'landmine',pos:[0,0,PZ],yaw:0,hand:'L',plates:[20]}],
-  frames:{start:fr(0.46,pitch,[0.5,0.2,-0.5],-26,DZ),end:fr(0.72,pitch-5,[0.6,0.65,-0.55],-24)}});};
-one('bent-over-one-arm-long-bar-row',+process.env.P||58,+process.env.Y||0.84,-0.25,+process.env.L||0,+process.env.L||0,+process.env.D||-0.1);
-one('one-arm-long-bar-row',55,0.78,-0.22,0,-0.1);
+ save(slug,{camera:{az:slug.startsWith('bent')?60:100,el:12},muscles:['middle-back','lats'],muscleSide:'L',props:[{type:'landmine',pos:[0,0,PZ],yaw:0,hand:'L',plates:[20]}],
+  frames:{start:fr(+(process.env.SY||0.34),pitch,[0.5,0.2,-0.5],-26,DZ),end:fr(+(process.env.EY||0.66),pitch-5,[0.6,0.65,-0.55],-24)}});};
+one('bent-over-one-arm-long-bar-row',+process.env.P||68,+process.env.Y||0.78,-0.25,+process.env.L||0,+process.env.L||0,+process.env.D||-0.1);
+one('one-arm-long-bar-row',68,0.78,-0.25,0,0,-0.1);
 // ---- 180s
 {const R=2.1,P=[0,0.11,2.1];
  const hp=d=>{const u=nz(d);return {c:[P[0]+R*u[0],P[1]+R*u[1],P[2]+R*u[2]],u};};
  const frame=(d,yaw,twist)=>{const {c,u}=hp(d);
-  const mk=(s,off)=>{const pos=[c[0]+off*u[0],c[1]+off*u[1],c[2]+off*u[2]];const ad=[pos[0]-s*0.5,pos[1]-1.3,pos[2]-0.05];const g=gripFrame(u,ad,s);
-   return {pos,contact:true,...g,curl:0.85,pole:[s*0.9,-0.5,-0.3]};};
+  const mk=(s,off)=>{const pos=[c[0]+off*u[0],c[1]+off*u[1],c[2]+off*u[2]];const ad=[pos[0]-s*(+(process.env.SH||0.5)),pos[1]-1.3,pos[2]-0.05];const g=gripFrame(u,ad,s);
+   return {pos,contact:true,...g,curl:0.85,pole:(q=>[s*q[0],q[1],q[2]])(JSON.parse(process.env.PO||"[0.9,-0.5,-0.3]"))};};
   return {root:{pos:[0,0.8,0],yaw,pitch:6},spine:{flex:2,twist},neck:{flex:-4},armL:mk(1,0.07),armR:mk(-1,-0.07),
    legL:{pos:[0.3,0,0],anchor:'sole',yaw:20,pitch:0,pole:[0.5,0,1]},legR:{pos:[-0.3,0,0],anchor:'sole',yaw:-20,pitch:0,pole:[-0.5,0,1]}};};
  save('landmine-180s',{camera:{az:20,el:10},muscles:['abdominals','obliques'],props:[{type:'landmine',pos:[P[0],0,P[2]],yaw:0,hands:true,plates:[5]}],
-  frames:Object.fromEntries([-1,-.75,-.5,-.25,0,.25,.5,.75,1].map((t,i)=>[i==0?'start':i==8?'end':'k'+i,frame([0.26*t,1.4-0.15*t*t,-1.65-0.1*t*t],(t<-0.9?13*t:14*t),(t<-0.9?15*t:22*t))]))});}
+  frames:Object.fromEntries([-1,-.75,-.5,-.25,0,.25,.5,.75,1].map((t,i)=>[i==0?'start':i==8?'end':'k'+i,frame([+(process.env.AX||0.32)*t,1.4-(+(process.env.AH||0.15))*t*t,-1.65],+(process.env.AY||20)*t,+(process.env.AT||-16)*t)]))});}
 // ---- bench mid rows
 {const bar=(y,z)=>({pos:[0,y,z]});
  const fr=(y,z,p,sf)=>{const a=s=>({pos:[s*0.25,y,z],contact:true,fingers:[0,-1,0],palm:[0,0,-1],curl:0.85,pole:[s*0.6,0.2,-0.6]});

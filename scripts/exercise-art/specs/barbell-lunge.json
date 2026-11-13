@@ -2,7 +2,8 @@
  "slug": "barbell-lunge",
  "camera": {
   "az": 80,
-  "el": 8
+  "el": 5,
+  "zoom": 1.15
  },
  "muscles": [
   "quadriceps",
@@ -536,5 +537,11 @@
     }
    }
   }
+ },
+ "tempo": {
+  "lift": "back",
+  "up": 1,
+  "down": 1.8,
+  "maxLoop": 6
  }
 }

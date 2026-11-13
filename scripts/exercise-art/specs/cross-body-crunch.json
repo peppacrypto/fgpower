@@ -19,7 +19,7 @@
     "pitch": -90
    },
    "neck": {
-    "flex": 6
+    "flex": 2
    },
    "spine": {
     "flex": 0,
@@ -117,11 +117,11 @@
     "pitch": -89.9
    },
    "neck": {
-    "flex": 6
+    "flex": 2
    },
    "spine": {
-    "flex": 22,
-    "twist": 26,
+    "flex": 32,
+    "twist": 34,
     "weights": [
      0,
      0.1,
@@ -206,5 +206,8 @@
     ]
    }
   }
+ },
+ "tempo": {
+  "lift": "there"
  }
 }

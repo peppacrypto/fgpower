@@ -33,14 +33,14 @@ const ur = (x,y,z,pole,e=0,palm=[0,-0.05,-1],fing=[0,-1,0]) => ({
    end:stand(ur(0.24,1.2,0.18,[1,-0.3,-0.5],8,[0,-0.5,-0.85],[0,-0.85,0.5]))}}); }
 // dumbbell uprights: neutral-ish grip (palm toward thigh/body)
 const dur = (x,y,z,pole,e,pal,fing)=>ur(x,y,z,pole,e,pal,fing);
-const dbRow = (slug, startY, startZ, x0, xm, zm, pal, muscles, cam) => {
+const dbRow = (slug, startY, startZ, x0, xm, zm, pal, muscles, cam, ez=0.24, ex=null) => {
   W(slug,{slug,camera:cam,muscles,props:dbProps(['L','R']),frames:{
    start:stand(dur(x0,startY,startZ,[0.4,-0.2,-1],0,pal)),
-   mid:stand(dur(xm,1.02,zm+0.04,[1,-0.3,-0.5],4,[0,-0.3,-1],[0,-0.95,0.3])),
-   end:stand(dur(xm+0.04,1.2,0.24,[1,-0.3,-0.5],8,[0,-0.5,-0.85],[0,-0.85,0.5]))}});};
-dbRow('standing-dumbbell-upright-row',0.85,0.22,0.17,0.24,0.2,[-0.2,-0.05,-1],['traps','shoulders'],{az:30,el:6});
+   mid:stand(dur(xm,1.02,Math.min(zm+0.04,ez),[1,-0.3,-0.5],4,[0,-0.3,-1],[0,-0.95,0.3])),
+   end:stand(dur(ex??xm+0.04,1.2,ez,[1,-0.3,-0.5],8,[0,-0.5,-0.85],[0,-0.85,0.5]))}});};
+dbRow('standing-dumbbell-upright-row',0.85,0.22,0.23,0.24,0.2,[-0.2,-0.05,-1],['traps','shoulders'],{az:30,el:6},0.2);
 // dumbbell-raise: weights at the sides, elbows lead, hands wide
-dbRow('dumbbell-raise',0.78,0.05,0.29,0.30,0.12,[-0.8,-0.05,-0.6],['shoulders','lateral-deltoid'],{az:25,el:6});
+dbRow('dumbbell-raise',0.78,0.05,0.29,0.28,0.15,[-0.8,-0.05,-0.6],['shoulders','lateral-deltoid','traps'],{az:25,el:6},0.22,0.27);
 // one-arm
 { const slug='dumbbell-one-arm-upright-row';
   const g=(y,z,x,pole,e,pr)=>({ ...stand({}), armL:{pos:[x,y,z],contact:true,fingers:[0,-1,0],palm:[0,-0.1,-1],curl:0.85,pole,scap:sc(e)}, armR:{pos:[-0.28,0.88,0.0],hand:'relaxed',pole:[-0.3,0,-1]} });
@@ -54,10 +54,10 @@ const bar = (side) => ({ armL:{pos:[0.33,0.215,-0.015],rel:'chest',contact:true,
   const f=(sd)=>({root:{pos:[0,0.92,-0.03],pitch:0},spine:{flex:0,side:sd},neck:{flex:0},...legs(0.15),...bar()});
   W(slug,{slug,qaAllow:{'rom:trunk-flexion.range':'lateral flexion (spine.side 28 deg), not measured by the sagittal trunk-flexion rule'},camera:{az:15,el:5},muscles:['obliques','abdominals'],props:[{type:'barbell',hands:true,plates:[20]}],frames:{start:f(0),end:f(-28)}}); }
 { const slug='dumbbell-side-bend';
-  const f=(sd)=>({root:{pos:[0,0.92,0],pitch:0},spine:{flex:0,side:sd},neck:{flex:0},...legs(0.15),
+  const f=(sd)=>({root:{pos:[0,0.92,0],pitch:0},spine:{flex:0,side:sd},neck:{flex:0,side:-0.3*sd},...legs(0.15),
    armL:{pos:[0.26+0.14*sd/28,0.80,0.0],contact:true,fingers:[0,-1,0],palm:[-1,0,0],curl:0.85,pole:[0.15,0,-1]},
    armR:{pos:[-0.17,0.08,0.0],rel:'pelvis',contact:true,hand:'flat',fingers:[0,-0.5,0.85],palm:[1,0,0],pole:[-1,0,-1]} });
-  W(slug,{slug,qaAllow:{'rom:trunk-flexion.range':'lateral flexion (spine.side 28 deg), not measured by the sagittal trunk-flexion rule'},camera:{az:15,el:5},muscles:['obliques','abdominals'],props:dbProps(['L']),frames:{start:f(0),end:f(28)}}); }
+  W(slug,{slug,qaAllow:{'rom:trunk-flexion.range':'lateral flexion (spine.side 28 deg), not measured by the sagittal trunk-flexion rule'},camera:{az:6,el:4},muscles:['obliques','abdominals'],props:dbProps(['L']),frames:{start:f(0),end:f(28)}}); }
 
 // ---- seated twist
 { const slug='seated-barbell-twist';

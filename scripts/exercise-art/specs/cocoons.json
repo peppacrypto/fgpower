@@ -69,15 +69,15 @@
     "pitch": -110
    },
    "spine": {
-    "flex": 30
+    "flex": 45
    },
    "neck": {
-    "flex": 20
+    "flex": 30
    },
    "armL": {
     "fk": {
-     "flex": 85,
-     "abd": 6,
+     "flex": 90,
+     "abd": 20,
      "rot": 0,
      "elbow": 10
     },
@@ -85,8 +85,8 @@
    },
    "armR": {
     "fk": {
-     "flex": 85,
-     "abd": 6,
+     "flex": 90,
+     "abd": 20,
      "rot": 0,
      "elbow": 10
     },

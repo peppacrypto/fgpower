@@ -1,8 +1,8 @@
 {
  "slug": "wall-lateral-lean-raise",
  "camera": {
-  "az": -17,
-  "el": 13
+  "az": 28,
+  "el": 10
  },
  "muscles": [
   "lateral-deltoid"
@@ -92,7 +92,7 @@
      0.9103,
      0
     ],
-    "roll": -8
+    "roll": -5
    },
    "spine": {
     "side": 4
@@ -103,7 +103,7 @@
    "armL": {
     "pos": [
      0.623,
-     1.1531,
+     1.18,
      0.3145
     ],
     "fingers": [

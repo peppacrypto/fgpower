@@ -1,8 +1,8 @@
 {
  "slug": "one-arm-high-pulley-cable-side-bends",
  "camera": {
-  "az": 20,
-  "el": 6
+  "az": 8,
+  "el": 4
  },
  "muscles": [
   "obliques",
@@ -27,22 +27,22 @@
    "root": {
     "pos": [
      0,
-     0.9,
+     0.92,
      0
     ],
-    "pitch": 4,
+    "pitch": 0,
     "yaw": 0
    },
    "spine": {
-    "flex": 4,
+    "flex": 0,
     "twist": 0,
     "side": 0,
     "weights": [
-     0.1,
+     0.3,
+     0.3,
      0.2,
-     0.25,
-     0.25,
-     0.2
+     0.1,
+     0.1
     ]
    },
    "neck": {
@@ -78,10 +78,10 @@
    },
    "armR": {
     "fk": {
-     "flex": -5,
-     "abd": 35,
+     "flex": 0,
+     "abd": 12,
      "rot": 0,
-     "elbow": 105
+     "elbow": 12
     },
     "rel": "chest",
     "hand": "relaxed"
@@ -91,22 +91,22 @@
    "root": {
     "pos": [
      0,
-     0.9,
+     0.92,
      0
     ],
-    "pitch": 4,
+    "pitch": 0,
     "yaw": 0
    },
    "spine": {
-    "flex": 4,
+    "flex": 0,
     "twist": 0,
-    "side": -22,
+    "side": 28,
     "weights": [
-     0.1,
+     0.3,
+     0.3,
      0.2,
-     0.25,
-     0.25,
-     0.2
+     0.1,
+     0.1
     ]
    },
    "neck": {
@@ -142,10 +142,10 @@
    },
    "armR": {
     "fk": {
-     "flex": -5,
-     "abd": 35,
+     "flex": 0,
+     "abd": 12,
      "rot": 0,
-     "elbow": 105
+     "elbow": 12
     },
     "rel": "chest",
     "hand": "relaxed"

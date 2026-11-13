@@ -8,6 +8,13 @@
   "abdominals"
  ],
  "floats": true,
+ "tempo": {
+  "lift": "back",
+  "up": 1.2,
+  "down": 3,
+  "squeeze": 0.3,
+  "stretch": 0.5
+ },
  "props": [
   {
    "type": "flat-bench"

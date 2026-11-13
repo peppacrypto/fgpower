@@ -16,8 +16,16 @@ out('power-stairs',G('tractor-tire'),{muscles:['hamstrings','glutes','quadriceps
   const X=0.34, Z=0.0;
   for (const k of ['start','end']) { f[k].legL.pos=[X,0,Z]; f[k].legR.pos=[-X,0,Z]; f[k].legL.pole=[0.4,0,1]; f[k].legR.pole=[-0.4,0,1];
     f[k].legL.yaw=12; f[k].legR.yaw=-12; }
-  f.start.props[0].at[2]=0.40; f.start.armL.pos[2]=0.40; f.start.armR.pos[2]=0.40;
+  f.start.props[0].at[2]=0.46; f.start.armL.pos[2]=0.46; f.start.armR.pos[2]=0.46;
   f.end.root.pos[1]=0.895; f.end.props[0].at[2]=0.36; f.end.armL.pos[2]=0.36; f.end.armR.pos[2]=0.36;
+  { const cl=o=>JSON.parse(JSON.stringify(o)); const E=f.end;
+    const pose=(b,rootPos,pitch,y,z,pole)=>{ b.root={pos:rootPos,pitch}; b.props[0].at=[0,y,z]; for (const [k,m] of [['armL',1],['armR',-1]]) { b[k].pos=[0.3*m,+(y-0.06).toFixed(3),z]; if (y>1.3) { b[k].fingers=[-0.3*m,0,0.95]; b[k].palm=[0,1,0]; } b[k].pole=y>1.3?[0,-1,-0.2]:[pole[0]*m,pole[1],pole[2]]; } return b; };
+    const hug=pose(cl(E),[0,0.9,-0.04],-4,1.14,0.29,[0.9,-0.6,-0.5]);
+    const lift=pose(cl(E),[0,0.9,0.0],2,1.5,0.5,[0.9,-0.5,-0.4]);
+    pose(E,[0,0.88,0.04],16,1.41,0.74,[0.9,-0.3,-0.3]);
+    g.props[0].pos=[0,0,0.82];
+    const pull=pose(cl(E),[0,0.72,-0.14],42,0.72,0.58,[0.9,0.2,-0.4]); for (const k of ['armL','armR']) Object.assign(pull[k],{fingers:f.start[k].fingers,palm:f.start[k].palm,pos:[pull[k].pos[0],0.66,0.58]});
+    g.frames={start:f.start,pull,mid:hug,mid2:lift,end:E}; }
   out('keg-load',g); }
 // ---- sandbag: bag farther forward, feet fixed
 { const g=G('loading-sandbag'); const f=g.frames; const X=0.36;
@@ -27,6 +35,13 @@ out('power-stairs',G('tractor-tire'),{muscles:['hamstrings','glutes','quadriceps
   for (const k of ['start','end']) { f[k].legL.pole=[1,0,0.9]; f[k].legR.pole=[-1,0,0.9]; f[k].legL.yaw=25; f[k].legR.yaw=-25; }
   {const SP=JSON.parse(process.env.SP||'[1.6,1.4,-0.2]'); f.start.armL.pole=SP; f.start.armR.pole=[-SP[0],SP[1],SP[2]];} f.end.armL.pos[2]=0.31; f.end.armR.pos[2]=0.31; f.end.props[0].at[2]=0.27;
   for (const k of ['start','end']) for (const a of ['armL','armR']) { delete f[k][a].contact; f[k][a].hand='hook'; }
+  { const cl=o=>JSON.parse(JSON.stringify(o)); const E=f.end;
+    const pose=(b,rootPos,pitch,y,z,hz,pole)=>{ b.root={pos:rootPos,pitch}; b.props[0].at=[0,y,z]; for (const [k,m] of [['armL',1],['armR',-1]]) { b[k].pos=[0.2*m,+(y-0.13).toFixed(3),hz]; if (y>1.15) { b[k].fingers=[-0.12*m,0,0.97]; b[k].palm=[0,1,0]; b[k].curl=0.5; delete b[k].hand; } b[k].pole=y>1.4?[0,-1,-0.2]:[pole[0]*m,pole[1],pole[2]]; } return b; };
+    const hug=pose(cl(E),[0,0.9,-0.04],-4,1.2,0.3,0.32,[0.9,-0.6,-0.5]);
+    const lift=pose(cl(E),[0,0.9,0.0],2,1.6,0.48,0.5,[0.9,-0.5,-0.4]);
+    pose(E,[0,0.88,0.03],18,1.48,0.71,0.73,[0.9,-0.3,-0.3]);
+    g.props[0].pos=[0,0,0.8];
+    g.frames={start:f.start,mid:hug,mid2:lift,end:E}; }
   out('sandbag-load',g); }
 // ---- atlas stones: platform back 0.2, wide stance, lap frame between floor and chest
 function atlas(slug, over={}) {
@@ -47,14 +62,15 @@ function atlas(slug, over={}) {
   // chest: standing, stone high
   const ch=cl(f.mid); ch.root={pos:[0,0.875,-0.02],pitch:-6}; ch.spine={flex:-4}; ch.neck={flex:-4};
     setStone(ch,1.0,0.34);
-  f.end.root.pos[2]=0.08; f.end.root.pos[1]=0.86; for (const k of ['legL','legR']) { f.end[k].pos=[(k=='legL'?1:-1)*0.44,0,0]; f.end[k].yaw=(k=='legL'?18:-18); f.end[k].pole=[(k=='legL'?0.8:-0.8),0,1]; }
+  f.end.root.pos[2]=0.0; f.end.root.pos[1]=0.86; for (const k of ['legL','legR']) { f.end[k].pos=[(k=='legL'?1:-1)*0.44,0,0]; f.end[k].yaw=(k=='legL'?18:-18); f.end[k].pole=[(k=='legL'?0.8:-0.8),0,1]; }
   setStone(f.end,1.36,0.66);
   for (const [k,m] of [['armL',1],['armR',-1]]) Object.assign(f.end[k],{pos:[0.255*m,1.26,0.66],fingers:[-0.13*m*0-0.0*m+(-0.13*m)*-1*-1,-0.314,0.941],palm:[-0.992*m,0.041,-0.123],curl:0.3});
   const e=f.end; const EP=JSON.parse(process.env.EP||'[0.9,-0.3,-0.3]'); e.armL.pole=EP; e.armR.pole=[-EP[0],EP[1],EP[2]];
   const lift=cl(lap); lift.root={pos:[0,0.69,-0.2],pitch:57}; lift.spine={flex:14}; lift.neck={flex:-32}; setStone(lift,0.45,0.40);
   const LP=JSON.parse(process.env.LP||'[1,0.8,-0.3]'); lift.armL.pole=LP; lift.armR.pole=[-LP[0],LP[1],LP[2]];
-  const m3=cl(f.end); m3.root.pos[2]=0.08; m3.root.pos[1]=0.86; m3.props[0].at=[0,1.5,0.56]; m3.armL.pos=[0.255,1.4,0.56]; m3.armR.pos=[-0.255,1.4,0.56]; m3.armL.pole=[0.6,-0.3,-0.5]; m3.armR.pole=[-0.6,-0.3,-0.5];
+  const m3=cl(f.end); m3.root.pos[2]=0.0; m3.root.pos[1]=0.86; m3.props[0].at=[0,1.5,0.56]; m3.armL.pos=[0.255,1.4,0.56]; m3.armR.pos=[-0.255,1.4,0.56]; m3.armL.pole=[0.6,-0.3,-0.5]; m3.armR.pole=[-0.6,-0.3,-0.5];
   f.end.props[0].at=[0,1.4,0.66]; f.end.armL.pos[1]=1.3; f.end.armR.pos[1]=1.3; f.end.armL.pos[2]=0.66; f.end.armR.pos[2]=0.66;
+  f.end.root={pos:[0,0.86,-0.02],pitch:22}; f.end.props[0].at=[0,1.37,0.8]; g.props[0].pos=[0,0,0.94]; for (const [k,m] of [['armL',1],['armR',-1]]) { f.end[k].pos=[0.26*m,1.27,0.76]; f.end[k].pole=[0.9*m,-0.3,-0.3]; f.end[k].pole=[0.9*m,-0.3,-0.3]; }
   const lerp=(a,b,t)=>Array.isArray(a)?a.map((v,i)=>lerp(v,b[i],t)):(a&&typeof a=='object')?Object.fromEntries(Object.keys(a).map(k=>[k,k in b?lerp(a[k],b[k],t):a[k]])):(typeof a=='number'&&typeof b=='number')?a+(b-a)*t:a;
   const PW=JSON.parse(process.env.PW||'[1.6,0.9,0.1]'); const pre=lerp(f.start,lift,0.5); pre.armL.pole=PW; pre.armR.pole=[-PW[0],PW[1],PW[2]];
   g.frames={start:f.start,pre,mid:lift,mid2:lap,mid3:ch,mid4:m3,end:f.end};
@@ -154,3 +170,10 @@ function circusBell() {
   g.frames={start:fr(P.start),mid:fr(P.mid),mid2:fr(P.mid2),mid3:fr(P.mid3),end:fr(P.end)}; out('circus-bell',g);
 }
 circusBell();
+
+// ---- tempo, muscles (coach review 2026-11-13)
+for (const [slug,patch] of Object.entries({
+  'atlas-stones':{tempo:{lift:'there',up:1.0,down:1.8}}, 'atlas-stone-trainer':{tempo:{lift:'there',up:1.0,down:1.8}},
+  'keg-load':{tempo:{lift:'there',up:1.0,down:1.8}}, 'sandbag-load':{tempo:{lift:'there',up:1.0,down:1.8}},
+  'log-lift':{tempo:{lift:'there',up:1.0,down:1.8},muscles:['shoulders','quadriceps','glutes','spinal-erectors']} })) {
+  const u=new URL(`../${slug}.json`,import.meta.url); fs.writeFileSync(u,JSON.stringify({...JSON.parse(fs.readFileSync(u)),...patch},null,1)); }

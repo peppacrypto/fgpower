@@ -1,8 +1,13 @@
 {
  "slug": "chest-push-from-3-point-stance",
  "camera": {
-  "az": 70,
+  "az": 90,
   "el": 8
+ },
+ "tempo": {
+  "lift": "there",
+  "up": 0.5,
+  "down": 1.4
  },
  "muscles": [
   "chest",

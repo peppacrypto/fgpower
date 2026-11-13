@@ -64,9 +64,9 @@
    },
    "legR": {
     "fk": {
-     "flex": -24,
+     "flex": -10,
      "abd": 0,
-     "knee": 22
+     "knee": 40
     },
     "foot": {
      "pitch": 20
@@ -83,13 +83,13 @@
     "pitch": 80
    },
    "neck": {
-    "flex": -20
+    "flex": -30
    },
    "armL": {
     "pos": [
      0.29,
-     0.38,
-     0.38
+     0.48,
+     0.34
     ],
     "contact": true,
     "fingers": [

@@ -5,9 +5,17 @@
   "el": 8
  },
  "muscles": [
-  "quadriceps"
+  "quadriceps",
+  "glutes"
  ],
  "floats": true,
+ "tempo": {
+  "lift": "there",
+  "up": 0.45,
+  "down": 0.6,
+  "squeeze": 0.12,
+  "stretch": 0.18
+ },
  "frames": {
   "start": {
    "root": {
@@ -26,23 +34,23 @@
    },
    "armL": {
     "fk": {
-     "flex": 50,
-     "abd": -25,
+     "flex": -35,
+     "abd": 10,
      "rot": 0,
-     "elbow": 135
+     "elbow": 10
     },
     "rel": "chest",
-    "hand": "relaxed"
+    "curl": 0.3
    },
    "armR": {
     "fk": {
-     "flex": 58,
-     "abd": -25,
+     "flex": -35,
+     "abd": 10,
      "rot": 0,
-     "elbow": 135
+     "elbow": 10
     },
     "rel": "chest",
-    "hand": "relaxed"
+    "curl": 0.3
    },
    "legL": {
     "pos": [
@@ -77,40 +85,40 @@
    "root": {
     "pos": [
      0,
-     1.225,
+     1.27,
      0.05
     ],
     "pitch": 0
    },
    "armL": {
     "fk": {
-     "flex": 50,
-     "abd": -25,
+     "flex": 150,
+     "abd": 10,
      "rot": 0,
-     "elbow": 135
+     "elbow": 8
     },
     "rel": "chest",
-    "hand": "relaxed"
+    "curl": 0.3
    },
    "armR": {
     "fk": {
-     "flex": 58,
-     "abd": -25,
+     "flex": 150,
+     "abd": 10,
      "rot": 0,
-     "elbow": 135
+     "elbow": 8
     },
     "rel": "chest",
-    "hand": "relaxed"
+    "curl": 0.3
    },
    "legL": {
     "pos": [
-     0.18,
-     0.22,
-     0.14
+     0.12,
+     0.26,
+     0.05
     ],
     "anchor": "ball",
-    "pitch": 55,
-    "yaw": 10,
+    "pitch": 60,
+    "yaw": 4,
     "pole": [
      0.3,
      0,
@@ -119,13 +127,13 @@
    },
    "legR": {
     "pos": [
-     -0.18,
-     0.22,
-     0.14
+     -0.12,
+     0.26,
+     0.05
     ],
     "anchor": "ball",
-    "pitch": 55,
-    "yaw": -10,
+    "pitch": 60,
+    "yaw": -4,
     "pole": [
      -0.3,
      0,

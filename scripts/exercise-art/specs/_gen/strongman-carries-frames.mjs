@@ -27,22 +27,26 @@ const standBase=(g,pairs)=>cl(g.frames.end);
 
 // farmers walk
 {const g=G('farmers-handle');const b=cl(g.frames.end);
- const w=walk(b);out('farmers-walk',g,w,{floats:undefined});}
+ const w=walk(b);for(const f of Object.values(w))for(const k of['armL','armR'])f[k].scap={elev:-4,prot:0};out('farmers-walk',g,w,{floats:undefined,camera:{az:62,el:7},tempo:{lift:'even',even:0.7,hold:0}});}
 // rickshaw
 {const g=G('rickshaw');
- out('rickshaw-deadlift',g,lift(g,{pos:[0,0.68,-0.12],pitch:30},0.62),{muscles:['quadriceps','glutes','spinal-erectors']});
- const w=walk(cl(g.frames.end));out('rickshaw-carry',g,w,{muscles:['forearms','traps']});}
+ out('rickshaw-deadlift',g,lift(g,{pos:[0,0.76,-0.1],pitch:38},0.62),{muscles:['quadriceps','glutes','spinal-erectors']});
+ const w=walk(cl(g.frames.end));out('rickshaw-carry',g,w,{muscles:['forearms','traps'],tempo:{lift:'even',even:0.7,hold:0}});}
 // car deadlift
 {const g=G('car-deadlift');
- out('car-deadlift',g,lift(g,{pos:[0,0.72,-0.12],pitch:26},0.64));}
+ out('car-deadlift',g,lift(g,{pos:[0,0.78,-0.1],pitch:36},0.64));}
 // yoke
 {const g=G('yoke');const b=cl(g.frames.end);
- for(const [k,m] of [['armL',1],['armR',-1]])Object.assign(b[k],{contact:false,pos:[0.5*m,1.25,0.04],pole:[0.3*m,-1,-0.5],fingers:[0,1,0],palm:[m,0,0],curl:0.12});
- const w=walk(b);out('yoke-walk',g,w);}
+ const w=walk(b);for(const f of Object.values(w)){f.root.pos[0]=0;for(const [k,m] of [['armL',1],['armR',-1]])f[k].pos[0]=0.44*m;}
+ out('yoke-walk',g,w,{camera:{az:55,el:8},tempo:{lift:'even',even:0.7,hold:0}});}
 // conans wheel (zercher, bar in the elbow crooks, walking the arc)
 {const g=G('conans-wheel');const b=cl(g.frames.start);
  for(const [k,m] of [['armL',1],['armR',-1]])Object.assign(b[k],{pos:[0.22*m,1.44,0.31],pole:[0.5*m,-0.3,0],fingers:[-0.5*m,0.75,0.2]});
  const w=walk(b);
- out('conans-wheel',g,w);}
-// crucifix: static hold
-{const g=G('strongman-axe');out('crucifix',g,{start:cl(g.frames.start)},{muscles:['shoulders']});}
+ for(const f of Object.values(w))for(const k of['armL','armR'])f[k].hand='fist';out('conans-wheel',g,w,{muscles:['quadriceps','shoulders','forearms','obliques'],tempo:{lift:'even',even:0.8,hold:0}});}
+// crucifix: raise from the sides to arms-out, hold, lower
+{const g=G('strongman-axe');const e=cl(g.frames.start),st=cl(e),m=cl(e);
+ for(const [k,x] of [['armL',1],['armR',-1]]){
+  Object.assign(st[k],{pos:[0.34*x,0.815,0.02],fingers:[0,-1,0],palm:[-x,0,0],pole:[0.8*x,0.1,-0.4]});
+  Object.assign(m[k],{pos:[0.6*x,1.08,0.02],fingers:[0.95*x,-0.3,0],palm:[0,0.1,1],pole:[0.1*x,-1,-0.1]});}
+ out('crucifix',g,{start:st,mid:m,end:e},{muscles:['shoulders','traps','forearms'],tempo:{lift:'there'}});}

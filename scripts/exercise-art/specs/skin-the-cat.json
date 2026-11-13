@@ -18,8 +18,8 @@
  ],
  "tempo": {
   "lift": "even",
-  "even": 1.8,
-  "hold": 0.4
+  "even": 2,
+  "hold": 0.6
  },
  "frames": {
   "start": {
@@ -347,6 +347,89 @@
      "flex": 110,
      "abd": 2,
      "knee": 60
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 30
+    }
+   }
+  },
+  "mid4": {
+   "root": {
+    "pos": [
+     0,
+     1.844,
+     -0.427
+    ],
+    "pitch": -244
+   },
+   "neck": {
+    "flex": 20
+   },
+   "armL": {
+    "pos": [
+     0.33,
+     2.25,
+     0
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     1,
+     0
+    ],
+    "palm": [
+     0,
+     0,
+     1
+    ],
+    "pole": [
+     1,
+     0,
+     -0.3
+    ],
+    "curl": 0.82
+   },
+   "armR": {
+    "pos": [
+     -0.33,
+     2.25,
+     0
+    ],
+    "contact": true,
+    "fingers": [
+     0,
+     1,
+     0
+    ],
+    "palm": [
+     0,
+     0,
+     1
+    ],
+    "pole": [
+     -1,
+     0,
+     -0.3
+    ],
+    "curl": 0.82
+   },
+   "legL": {
+    "fk": {
+     "flex": 90,
+     "abd": 2,
+     "knee": 40
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 30
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 90,
+     "abd": 2,
+     "knee": 40
     },
     "rel": "pelvis",
     "foot": {

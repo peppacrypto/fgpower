@@ -126,16 +126,16 @@
     "pitch": 26
    },
    "spine": {
-    "flex": -4
+    "flex": -3
    },
    "neck": {
-    "flex": -18
+    "flex": -14
    },
    "armL": {
     "pos": [
-     0.42,
+     0.36,
      0.58,
-     -0.12
+     -0.02
     ],
     "contact": true,
     "fingers": [
@@ -157,9 +157,9 @@
    },
    "armR": {
     "pos": [
-     -0.42,
+     -0.36,
      0.58,
-     -0.12
+     -0.02
     ],
     "contact": true,
     "fingers": [

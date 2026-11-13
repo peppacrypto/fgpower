@@ -1,11 +1,12 @@
 {
  "slug": "side-laterals-to-front-raise",
  "camera": {
-  "az": 50,
+  "az": 45,
   "el": 8
  },
  "muscles": [
-  "shoulders"
+  "lateral-deltoid",
+  "anterior-deltoid"
  ],
  "props": [
   {
@@ -115,8 +116,8 @@
    },
    "armL": {
     "fk": {
-     "flex": 92,
-     "abd": 4,
+     "flex": 0,
+     "abd": 90,
      "rot": 0,
      "elbow": 10
     },
@@ -126,8 +127,66 @@
    },
    "armR": {
     "fk": {
-     "flex": 92,
-     "abd": 4,
+     "flex": 0,
+     "abd": 90,
+     "rot": 0,
+     "elbow": 10
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "pron": 0
+   }
+  },
+  "mid2": {
+   "root": {
+    "pos": [
+     0,
+     0.92,
+     0
+    ],
+    "pitch": 4
+   },
+   "spine": {
+    "flex": 2
+   },
+   "neck": {
+    "flex": -4
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 6
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0,
+     0.02
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": 45,
+     "abd": 50,
+     "rot": 0,
+     "elbow": 10
+    },
+    "rel": "chest",
+    "hand": "grip",
+    "pron": 0
+   },
+   "armR": {
+    "fk": {
+     "flex": 45,
+     "abd": 50,
      "rot": 0,
      "elbow": 10
     },
@@ -193,64 +252,12 @@
     "hand": "grip",
     "pron": 0
    }
-  },
-  "mid2": {
-   "root": {
-    "pos": [
-     0,
-     0.92,
-     0
-    ],
-    "pitch": 4
-   },
-   "spine": {
-    "flex": 2
-   },
-   "neck": {
-    "flex": -4
-   },
-   "legL": {
-    "pos": [
-     0.13,
-     0,
-     0.02
-    ],
-    "anchor": "sole",
-    "pitch": 0,
-    "yaw": 6
-   },
-   "legR": {
-    "pos": [
-     -0.13,
-     0,
-     0.02
-    ],
-    "anchor": "sole",
-    "pitch": 0,
-    "yaw": -6
-   },
-   "armL": {
-    "fk": {
-     "flex": 92,
-     "abd": 45,
-     "rot": 0,
-     "elbow": 10
-    },
-    "rel": "chest",
-    "hand": "grip",
-    "pron": 0
-   },
-   "armR": {
-    "fk": {
-     "flex": 92,
-     "abd": 45,
-     "rot": 0,
-     "elbow": 10
-    },
-    "rel": "chest",
-    "hand": "grip",
-    "pron": 0
-   }
   }
+ },
+ "tempo": {
+  "lift": "there",
+  "up": 1,
+  "down": 1.8,
+  "squeeze": 0.4
  }
 }

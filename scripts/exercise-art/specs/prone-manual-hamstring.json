@@ -1,8 +1,8 @@
 {
  "slug": "prone-manual-hamstring",
  "camera": {
-  "az": 105,
-  "el": 15
+  "az": 95,
+  "el": 10
  },
  "muscles": [
   "hamstrings"
@@ -20,13 +20,13 @@
      0.15,
      0
     ],
-    "pitch": 92
+    "pitch": 91
    },
    "spine": {
-    "flex": -15
+    "flex": -5
    },
    "neck": {
-    "flex": -8
+    "flex": -3
    },
    "legL": {
     "fk": {
@@ -106,19 +106,19 @@
      0.15,
      0
     ],
-    "pitch": 92
+    "pitch": 91
    },
    "spine": {
-    "flex": -15
+    "flex": -5
    },
    "neck": {
-    "flex": -8
+    "flex": -3
    },
    "legL": {
     "fk": {
      "flex": 0,
      "abd": 3,
-     "knee": 115
+     "knee": 98
     },
     "foot": {
      "pitch": 60
@@ -186,5 +186,9 @@
    }
   }
  },
- "muscleSide": "L"
+ "muscleSide": "L",
+ "tempo": {
+  "up": 1.5,
+  "down": 1.8
+ }
 }

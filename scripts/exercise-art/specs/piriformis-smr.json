@@ -25,19 +25,19 @@
     "pos": [
      0,
      0.24,
-     0
+     0.03
     ],
     "pitch": -45,
     "roll": 0
    },
    "neck": {
-    "flex": 4
+    "flex": 30
    },
    "armL": {
     "pos": [
      0.2,
      0,
-     -0.3
+     -0.26
     ],
     "contact": true,
     "hand": "flat",
@@ -62,7 +62,7 @@
     "pos": [
      -0.2,
      0,
-     -0.3
+     -0.26
     ],
     "contact": true,
     "hand": "flat",
@@ -114,19 +114,19 @@
     "pos": [
      0,
      0.24,
-     -0.03
+     -0.02
     ],
     "pitch": -45,
     "roll": 0
    },
    "neck": {
-    "flex": 4
+    "flex": 30
    },
    "armL": {
     "pos": [
      0.2,
      0,
-     -0.3
+     -0.26
     ],
     "contact": true,
     "hand": "flat",
@@ -151,7 +151,7 @@
     "pos": [
      -0.2,
      0,
-     -0.3
+     -0.26
     ],
     "contact": true,
     "hand": "flat",

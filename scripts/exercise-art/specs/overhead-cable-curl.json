@@ -1,7 +1,7 @@
 {
  "camera": {
-  "az": 25,
-  "el": 6
+  "az": 12,
+  "el": 12
  },
  "muscles": [
   "biceps"
@@ -15,7 +15,7 @@
     0
    ],
    "yaw": -90,
-   "pulleyY": 2,
+   "pulleyY": 2.3,
    "hand": "L",
    "attachment": "d-handle"
   },
@@ -27,7 +27,7 @@
     0
    ],
    "yaw": 90,
-   "pulleyY": 2,
+   "pulleyY": 2.3,
    "hand": "R",
    "attachment": "d-handle"
   }
@@ -67,7 +67,7 @@
    "armL": {
     "fk": {
      "flex": 0,
-     "abd": 90,
+     "abd": 105,
      "rot": 0,
      "elbow": 25
     },
@@ -78,7 +78,7 @@
    "armR": {
     "fk": {
      "flex": 0,
-     "abd": 90,
+     "abd": 105,
      "rot": 0,
      "elbow": 25
     },
@@ -121,7 +121,7 @@
    "armL": {
     "fk": {
      "flex": 0,
-     "abd": 90,
+     "abd": 105,
      "rot": 0,
      "elbow": 80
     },
@@ -132,7 +132,7 @@
    "armR": {
     "fk": {
      "flex": 0,
-     "abd": 90,
+     "abd": 105,
      "rot": 0,
      "elbow": 80
     },
@@ -175,7 +175,7 @@
    "armL": {
     "fk": {
      "flex": 0,
-     "abd": 90,
+     "abd": 105,
      "rot": 0,
      "elbow": 140
     },
@@ -186,7 +186,7 @@
    "armR": {
     "fk": {
      "flex": 0,
-     "abd": 90,
+     "abd": 105,
      "rot": 0,
      "elbow": 140
     },

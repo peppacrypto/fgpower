@@ -1,8 +1,8 @@
 {
  "slug": "skating",
  "camera": {
-  "az": 40,
-  "el": 9
+  "az": 25,
+  "el": 8
  },
  "muscles": [
   "quadriceps",
@@ -24,18 +24,18 @@
    "root": {
     "pos": [
      0.02,
-     0.86,
+     0.88,
      -0.04
     ],
-    "pitch": 30,
+    "pitch": 16,
     "yaw": 6
    },
    "spine": {
-    "flex": 14,
+    "flex": 6,
     "twist": -8
    },
    "neck": {
-    "flex": -34
+    "flex": -16
    },
    "legL": {
     "pos": [
@@ -84,22 +84,86 @@
     "curl": 0.5
    }
   },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     0.84,
+     -0.04
+    ],
+    "pitch": 16,
+    "yaw": 0
+   },
+   "spine": {
+    "flex": 6,
+    "twist": 0
+   },
+   "neck": {
+    "flex": -16
+   },
+   "legL": {
+    "pos": [
+     0.1,
+     0.112,
+     0.04
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": 4,
+    "pole": [
+     0.2,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.1,
+     0.112,
+     0.04
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "yaw": -4,
+    "pole": [
+     -0.2,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 2,
+     "abd": 26,
+     "elbow": 28
+    },
+    "curl": 0.5
+   },
+   "armR": {
+    "fk": {
+     "flex": 2,
+     "abd": 26,
+     "elbow": 70
+    },
+    "curl": 0.5
+   }
+  },
   "end": {
    "root": {
     "pos": [
      -0.02,
-     0.86,
+     0.88,
      -0.04
     ],
-    "pitch": 30,
+    "pitch": 16,
     "yaw": -6
    },
    "spine": {
-    "flex": 14,
+    "flex": 6,
     "twist": 8
    },
    "neck": {
-    "flex": -34
+    "flex": -16
    },
    "legL": {
     "pos": [
