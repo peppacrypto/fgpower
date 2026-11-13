@@ -69,6 +69,63 @@
   "mid": {
    "root": {
     "pos": [
+     0.3,
+     0.78,
+     0
+    ],
+    "pitch": 12
+   },
+   "neck": {
+    "flex": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": 40,
+     "abd": 15,
+     "elbow": 30
+    },
+    "curl": 0.5
+   },
+   "armR": {
+    "fk": {
+     "flex": 40,
+     "abd": 15,
+     "elbow": 30
+    },
+    "curl": 0.5
+   },
+   "legL": {
+    "pos": [
+     0.43,
+     0.06,
+     0
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.1,
+     0,
+     1
+    ],
+    "pitch": 0
+   },
+   "legR": {
+    "pos": [
+     0.17,
+     0.06,
+     0
+    ],
+    "anchor": "sole",
+    "pole": [
+     0.1,
+     0,
+     1
+    ],
+    "pitch": 0
+   }
+  },
+  "mid2": {
+   "root": {
+    "pos": [
      0,
      1,
      0
@@ -122,6 +179,63 @@
      1
     ],
     "pitch": 12
+   }
+  },
+  "mid3": {
+   "root": {
+    "pos": [
+     -0.9,
+     0.8,
+     0
+    ],
+    "pitch": 14
+   },
+   "neck": {
+    "flex": -6
+   },
+   "armL": {
+    "fk": {
+     "flex": 50,
+     "abd": 18,
+     "elbow": 35
+    },
+    "curl": 0.5
+   },
+   "armR": {
+    "fk": {
+     "flex": 50,
+     "abd": 18,
+     "elbow": 35
+    },
+    "curl": 0.5
+   },
+   "legL": {
+    "pos": [
+     -0.77,
+     0.06,
+     0
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.1,
+     0,
+     1
+    ],
+    "pitch": 0
+   },
+   "legR": {
+    "pos": [
+     -1.03,
+     0.06,
+     0
+    ],
+    "anchor": "sole",
+    "pole": [
+     -0.1,
+     0,
+     1
+    ],
+    "pitch": 0
    }
   },
   "end": {

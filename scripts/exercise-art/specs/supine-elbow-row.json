@@ -186,5 +186,8 @@
     ]
    }
   }
+ },
+ "qaAllow": {
+  "rom:horizontal-pull.stretch": "floor elbow row is a bent-arm drive by design: the forearms stay vertical (about 90 deg) and the elbows press into the floor; there is no long-arm start"
  }
 }

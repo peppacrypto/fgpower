@@ -208,15 +208,15 @@ function prepare(rawSpec, opts) {
   const frameSpecs = spec.frames
   const startF = body.resolveFrame(frameSpecs.start)
   const endF = body.resolveFrame(frameSpecs.end || frameSpecs.start)
-  // t runs 0..1 from start to end, through the optional mid, mid2 and mid3 poses, evenly spaced.
-  const keys = [startF, ...['mid', 'mid2', 'mid3'].filter((k) => frameSpecs[k]).map((k) => body.resolveFrame(frameSpecs[k])), endF]
+  // t runs 0..1 from start to end, through the optional mid ... mid5 poses, evenly spaced.
+  const keys = [startF, ...['mid', 'mid2', 'mid3', 'mid4', 'mid5'].filter((k) => frameSpecs[k]).map((k) => body.resolveFrame(frameSpecs[k])), endF]
   const at = (t) => {
     const x = Math.min(0.999999, Math.max(0, t)) * (keys.length - 1)
     const i = Math.floor(x)
     return mixFrames(keys[i], keys[i + 1], x - i)
   }
   // The loop's timeline (motion.js): which way is the lift, a slower lowering, pauses at the ends, minimum-jerk moves.
-  const keyNames = ['start', ...['mid', 'mid2', 'mid3'].filter((k) => frameSpecs[k]), 'end']
+  const keyNames = ['start', ...['mid', 'mid2', 'mid3', 'mid4', 'mid5'].filter((k) => frameSpecs[k]), 'end']
   const keyFrames = keyNames.map((k) => frameSpecs[k] || frameSpecs.start)
   const keyReports = keyFrames.map((f) => body.solve(f, { surface: false }).report)
   const segs = segmentsOf(spec, opts.info || {}, keyReports, keyFrames)

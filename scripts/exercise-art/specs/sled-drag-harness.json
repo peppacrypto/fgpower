@@ -1,4 +1,5 @@
 {
+ "slug": "sled-drag-harness",
  "camera": {
   "az": 60,
   "el": 10
@@ -47,7 +48,7 @@
     "pos": [
      0.13,
      0,
-     0.42
+     0.3
     ],
     "anchor": "sole",
     "pitch": 0,
@@ -60,8 +61,8 @@
    "legR": {
     "pos": [
      -0.13,
-     0.03,
-     -0.46
+     0,
+     -0.4
     ],
     "anchor": "ball",
     "pitch": 40,
@@ -75,7 +76,7 @@
    "armL": {
     "fk": {
      "flex": -30,
-     "abd": 14,
+     "abd": 24,
      "elbow": 92
     },
     "curl": 0.62
@@ -83,7 +84,7 @@
    "armR": {
     "fk": {
      "flex": 46,
-     "abd": 14,
+     "abd": 24,
      "elbow": 92
     },
     "curl": 0.62
@@ -108,7 +109,7 @@
     "pos": [
      0.13,
      0,
-     0
+     0.3
     ],
     "anchor": "sole",
     "pitch": 0,
@@ -121,7 +122,68 @@
    "legR": {
     "pos": [
      -0.13,
+     0.12,
+     -0.4
+    ],
+    "anchor": "ball",
+    "pitch": 40,
+    "toes": 0,
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": -30,
+     "abd": 24,
+     "elbow": 92
+    },
+    "curl": 0.62
+   },
+   "armR": {
+    "fk": {
+     "flex": 46,
+     "abd": 24,
+     "elbow": 92
+    },
+    "curl": 0.62
+   }
+  },
+  "mid2": {
+   "root": {
+    "pos": [
+     0,
+     0.74,
+     0.1
+    ],
+    "pitch": 50
+   },
+   "spine": {
+    "flex": 4
+   },
+   "neck": {
+    "flex": -40
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0.3
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "pole": [
      0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0.14,
      0
     ],
     "anchor": "ball",
@@ -136,7 +198,7 @@
    "armL": {
     "fk": {
      "flex": 8,
-     "abd": 14,
+     "abd": 24,
      "elbow": 92
     },
     "curl": 0.62
@@ -144,7 +206,67 @@
    "armR": {
     "fk": {
      "flex": 8,
-     "abd": 14,
+     "abd": 24,
+     "elbow": 92
+    },
+    "curl": 0.62
+   }
+  },
+  "mid3": {
+   "root": {
+    "pos": [
+     0,
+     0.74,
+     0.1
+    ],
+    "pitch": 50
+   },
+   "spine": {
+    "flex": 4
+   },
+   "neck": {
+    "flex": -40
+   },
+   "legL": {
+    "pos": [
+     0.13,
+     0,
+     0.3
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "pole": [
+     0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.13,
+     0.12,
+     0.6
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "fk": {
+     "flex": 46,
+     "abd": 24,
+     "elbow": 92
+    },
+    "curl": 0.62
+   },
+   "armR": {
+    "fk": {
+     "flex": -30,
+     "abd": 24,
      "elbow": 92
     },
     "curl": 0.62
@@ -168,12 +290,11 @@
    "legL": {
     "pos": [
      0.13,
-     0.03,
-     -0.46
+     0,
+     0.3
     ],
-    "anchor": "ball",
-    "pitch": 40,
-    "toes": 0,
+    "anchor": "sole",
+    "pitch": 0,
     "pole": [
      0.1,
      0,
@@ -184,7 +305,7 @@
     "pos": [
      -0.13,
      0,
-     0.42
+     0.6
     ],
     "anchor": "sole",
     "pitch": 0,
@@ -197,7 +318,7 @@
    "armL": {
     "fk": {
      "flex": 46,
-     "abd": 14,
+     "abd": 24,
      "elbow": 92
     },
     "curl": 0.62
@@ -205,11 +326,14 @@
    "armR": {
     "fk": {
      "flex": -30,
-     "abd": 14,
+     "abd": 24,
      "elbow": 92
     },
     "curl": 0.62
    }
   }
+ },
+ "qaAllow": {
+  "rom:carry.posture": "a harness drag leans into the line by design"
  }
 }

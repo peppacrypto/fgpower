@@ -27,7 +27,7 @@ function pf(y,z,p,n,hz,hy,fz,fp,sp=0,fing='out'){
  return {root:{pos:[0,y,z],pitch:p},spine:{flex:sp},neck:{flex:n},armL:arm(1),armR:arm(-1),legL:leg(1),legR:leg(-1)};}
 const LY=+(process.env.LY??0.415),LZ=+(process.env.LZ??0.05),LP=+(process.env.LP??72);
 save('planche-lean',{az:58,el:6},['shoulders'],[],{start:pf(LY,LZ,LP,-8,+(process.env.HZ??0.38),0,-0.74,62,-6)});
-save('pseudo-planche-push-up',{az:58,el:6},['shoulders'],[],{start:pf(LY,LZ,LP,-8,+(process.env.HZ??0.38),0,-0.74,62,-6),mid:pf(+(process.env.MY??0.37),+(process.env.MZ??0.09),+(process.env.MP??72),-13,+(process.env.HZ??0.38),0,-0.74,69,-5),end:pf(+(process.env.EY??0.3),+(process.env.EZ??0.12),+(process.env.EP??72),-18,+(process.env.HZ??0.38),0,-0.74,76,-4)});
+save('pseudo-planche-push-up',{az:58,el:6},['shoulders'],[],{start:pf(LY,LZ,LP,-8,+(process.env.HZ??0.38),0,-0.74,62,-6),mid:pf(+(process.env.MY??0.37),+(process.env.MZ??0.09),+(process.env.MP??72),-13,+(process.env.HZ??0.38),0,-0.74,69,-5),end:pf(+(process.env.EY??0.24),+(process.env.EZ??0.12),+(process.env.EP??72),-18,+(process.env.HZ??0.38),0,-0.74,76,-4)});
 // crow
 const cr=(foot)=>({root:{pos:[0,+(process.env.CY??0.6),+(process.env.CZ??-0.05)],pitch:+(process.env.CP??80)},spine:{flex:28},neck:{flex:-12},
  armL:{pos:[0.2,0,0.5],hand:'flat',contact:true,fingers:[0,0,1],palm:[0,-1,0],spread:1},armR:{pos:[-0.2,0,0.5],hand:'flat',contact:true,fingers:[0,0,1],palm:[0,-1,0],spread:1},

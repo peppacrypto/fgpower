@@ -15,7 +15,7 @@ const mk = (slug, props, start, end, muscles, cam={az:100,el:8}, mid) => W(slug,
 const soft = {p:0.1};
 mk('romanian-deadlift',[bb],stand(0.87,soft),hinge(0.80,-0.30,62,0.40,0.10,soft),['hamstrings','glutes'],undefined,hinge(0.87,-0.15,30,0.72,0.13,soft));
 mk('stiff-legged-barbell-deadlift',[bb],stand(0.87,soft),hinge(0.78,-0.32,70,0.307,0.10,soft),['hamstrings','glutes'],undefined,hinge(0.86,-0.16,33,0.70,0.13,soft));
-mk('romanian-deadlift-from-deficit',[{type:'deficit-platform',height:0.075},bb],stand(0.875,{y:0.075}),hinge(0.88,-0.30,66,0.46,0.10,{y:0.075}),['hamstrings','glutes'],undefined,hinge(0.90,-0.15,33,0.72,0.15,{y:0.075}));
+mk('romanian-deadlift-from-deficit',[{type:'deficit-platform',height:0.075},bb],stand(0.95,{y:0.075,ry:0.985,p:0.1}),hinge(0.955,-0.30,66,0.53,0.10,{y:0.075,p:0.1}),['hamstrings','glutes'],undefined,hinge(0.97,-0.15,33,0.79,0.15,{y:0.075,p:0.1}));
 mk('wide-stance-stiff-legs',[bb],hinge(0.80,-0.32,70,0.36,0.10,{x:0.30,yaw:20,p:0.4}),stand(0.87,{x:0.30,yaw:20,p:0.4,ry:0.915}),['hamstrings','glutes'],undefined,hinge(0.86,-0.16,35,0.66,0.19,{x:0.30,yaw:20,p:0.4}));
 // dumbbells beside the legs
 const dbh = (rootY,rootZ,pitch,hy,hz) => { const a=s=>({pos:[0.27*s,hy,hz],contact:true,fingers:[0,-1,0],palm:[-s,0,0],curl:0.85,pole:[0.15*s,0,-1]});

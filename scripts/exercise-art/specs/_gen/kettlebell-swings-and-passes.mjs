@@ -4,11 +4,11 @@ const G = JSON.parse(fs.readFileSync(new URL('../_gallery/kettlebell.json', impo
 const cp = o => JSON.parse(JSON.stringify(o));
 const legs = (x=0.2, z=0.02, yaw=14) => ({ legL:{pos:[x,0,z],anchor:'sole',yaw,pitch:0,pole:[0.3,0,1]}, legR:{pos:[-x,0,z],anchor:'sole',yaw:-yaw,pitch:0,pole:[-0.3,0,1]} });
 const hand = (x,y,z,f,p,pole,s=1) => ({ pos:[x,y,z], contact:true, fingers:f, palm:p, curl:0.85, pole });
-const two = (y,z,f,p,pole=[0.1,0,-1]) => ({ armL:hand(0.046,y,z,f,p,pole), armR:hand(-0.046,y,z,[-f[0],f[1],f[2]],[-p[0],p[1],p[2]],[-pole[0],pole[1],pole[2]]) });
+const two = (y,z,f,p,pole=[0.1,0,-1],hx=0.046) => ({ armL:hand(hx,y,z,f,p,pole), armR:hand(-hx,y,z,[-f[0],f[1],f[2]],[-p[0],p[1],p[2]],[-pole[0],pole[1],pole[2]]) });
 const kb = (o={}) => ({ type:'kettlebell', kg:16, ...o });
 const d2r=Math.PI/180;
 const th = (t) => ({ f:[0,-Math.cos(t*d2r),Math.sin(t*d2r)], p:[0,-Math.sin(t*d2r),-Math.cos(t*d2r)] });
-const arms = (y,z,t,pole=[0.1,0,-1],x=0.046) => { const a=th(t); return two(y,z,a.f,a.p,pole); };
+const arms = (y,z,t,pole=[0.1,0,-1],x=0.046) => { const a=th(t); return two(y,z,a.f,a.p,pole,x); };
 const HR = {pos:[0,0.8,-0.27],pitch:52};
 const hinge2 = (x=0.2) => ({ root:HR, neck:{flex:-30}, ...legs(x,0.02,14) });
 const MID = { root:{pos:[0,0.86,-0.12],pitch:25}, neck:{flex:-14}, ...legs(0.2,0.02,14) };
@@ -18,7 +18,7 @@ const free = { fk:{flex:0,abd:20,elbow:5}, curl:0.2 };
 { const a0=th(5), a1=th(40), a2=th(90);
   const one=(base,x,y,z,a,pole)=>({ ...base, armL:hand(x,y,z,a.f,a.p,pole), armR:{fk:{flex:25,abd:35,elbow:5},curl:0.2} });
   const s=one(hinge2(),0.04,0.66,0.2,a0,[0.1,0,-1]);
-  const m=one(MID,0.03,0.88,0.33,a1,[0.1,-1,-0.3]);
+  const m=one(MID,0.03,0.9,0.45,a1,[0.1,0,-1]);
   const e=one({ root:{pos:[0,0.915,-0.01],pitch:-3}, neck:{flex:4}, ...legs()},0.03,1.32,0.56,a2,[0.1,-1,0]);
   W('one-arm-kettlebell-swings', { camera:{az:50,el:8}, muscles:['hamstrings','glutes','spinal-erectors'], muscleSide:'L',
     props:[kb({hand:'L'})], frames:{start:s, mid:m, end:e} }); }
@@ -26,7 +26,7 @@ const free = { fk:{flex:0,abd:20,elbow:5}, curl:0.2 };
 // 2. vertical swing (kettlebell stands in for the dumbbell): between legs to overhead
 { const up=(phi,root)=>{ const r=phi*d2r, d=0.46; return { root, neck:{flex:0}, ...legs(0.2,0.02,14), ...arms(1.38-d*Math.cos(r), d*Math.sin(r)*0.95, phi, [0.15,-1,-0.1]) }; };
   W('vertical-swing', { camera:{az:50,el:8}, muscles:['hamstrings','glutes','shoulders'], props:[kb({hands:true})],
-    frames:{start:{...hinge2(), ...arms(0.66,0.2,5)}, mid:{...MID, ...arms(0.88,0.33,40,[0.1,-1,-0.3])}, mid2:up(90,{pos:[0,0.915,0],pitch:0}), end:up(150,{pos:[0,0.915,-0.02],pitch:-6}) } }); }
+    frames:{start:{...hinge2(), ...arms(0.66,0.2,5)}, mid:{...MID, ...arms(0.88,0.33,40,[0.3,-0.4,-1])}, mid2:up(90,{pos:[0,0.915,0],pitch:0}), end:up(150,{pos:[0,0.915,-0.02],pitch:-6}) } }); }
 
 // 3. sumo high pull
 { const lg=()=>({ legL:{pos:[0.3,0,0.0],anchor:'sole',yaw:35,pitch:0,pole:[0.8,0.3,1]}, legR:{pos:[-0.3,0,0.0],anchor:'sole',yaw:-35,pitch:0,pole:[-0.8,0.3,1]} });
@@ -54,7 +54,7 @@ pass('kettlebell-figure-8', 0.4, true);
 // 6. pirate ships
 { const lg={ legL:{pos:[0.3,0,0.0],anchor:'sole',yaw:25,pitch:0,pole:[0.5,0.2,1]}, legR:{pos:[-0.3,0,0.0],anchor:'sole',yaw:-25,pitch:0,pole:[-0.5,0.2,1]} };
   const side = (a,cy=1.5,R=0.48) => { const r=a*Math.PI/180, sx=Math.sin(r), cz=Math.cos(r);
-    const c=[R*sx, cy, R*cz], px=[0.046*cz,0,-0.046*sx]; const shx=[0.19*cz,1.38,-0.19*sx]; const fg=(h,sd)=>{ const v=[h[0]-sd*shx[0],h[1]-shx[1],h[2]-sd*shx[2]]; const n=Math.hypot(...v); return v.map(q=>q/n); };
+    const c=[R*sx, cy, R*cz], px=[0.06*cz,0,-0.06*sx]; const shx=[0.19*cz,1.38,-0.19*sx]; const fg=(h,sd)=>{ const v=[h[0]-sd*shx[0],h[1]-shx[1],h[2]-sd*shx[2]]; const n=Math.hypot(...v); return v.map(q=>q/n); };
     return { root:{pos:[0,0.9,0],pitch:4,yaw:a*0.3}, spine:{twist:a*0.7}, neck:{flex:0}, ...lg,
       armL:hand(c[0]+px[0],c[1],c[2]+px[2],fg([c[0]+px[0],c[1],c[2]+px[2]],1),[0,-1,0],[1,-1,0]), armR:hand(c[0]-px[0],c[1],c[2]-px[2],fg([c[0]-px[0],c[1],c[2]-px[2]],-1),[0,-1,0],[-1,-1,0]) }; };
   const low = side(0,1.0,0.42);
@@ -66,14 +66,14 @@ pass('kettlebell-figure-8', 0.4, true);
   const hnd=(sd,cx,cy,cz,phi,k)=>{ const r=phi*d2r;
     return hand(cx+sd*hx,cy,cz,[0,Math.sin(r),Math.cos(r)],[-sd,0,0],[sd*(0.8+0.2*k),-1+1.4*k,0.8*k]); };
   const at=(cx,cy,cz,phi,k,nf=0)=>({ root:{pos:[0,0.92,0]}, neck:{flex:nf}, ...lg, armL:hnd(1,cx,cy,cz,phi,k), armR:hnd(-1,cx,cy,cz,phi,k) });
-  const ring=(a)=>{ const r=a*d2r, k=(1-Math.cos(r))/2; return at(0.34*Math.sin(r),1.68,0.03+0.30*Math.cos(r)+0.17*Math.sin(r)**2,10+50*(1-Math.cos(r)),Math.max(0.6,k),NF*Math.sin(r)**2+NF2*Math.max(0,-Math.cos(r))); };
-  const NF=9, NF2=10;
+  const ring=(a)=>{ const r=a*d2r, k=(1-Math.cos(r))/2; return at((Math.sin(r)<0?0.37:0.34)*Math.sin(r),1.6,0.03+(Math.cos(r)<0?0.38*Math.cos(r)+0.12*Math.sin(r)**2:0.30*Math.cos(r)+0.17*Math.sin(r)**2),10+70*(1-Math.cos(r)),Math.max(0.6,k),NF*Math.sin(r)**2+NF2*Math.max(0,-Math.cos(r))); };
+  const NF=0, NF2=0;
   const front=at(0,1.25,0.36,10,0);
   const pr=[kb({hands:true,mode:'horns',up:[0,1,0]})];
   W('kettlebell-halo', { camera:{az:50,el:12}, muscles:['shoulders','traps'], props:pr,
     frames:{ start:front, mid:ring(90), mid2:ring(180), mid3:ring(270), end:front } });
   W('kettlebell-halo-with-overhead-extension', { camera:{az:50,el:12}, muscles:['shoulders','triceps'], props:pr,
-    frames:{ start:front, mid:ring(90), mid2:ring(180), end:at(0,1.9,-0.05,90,0.6) } }); }
+    frames:{ start:front, mid:ring(90), mid2:ring(180), end:at(0,2.06,-0.05,90,0.6) } }); }
 
 // 9. spell caster: two dumbbells swing hip to hip, arms straight, trunk rotates
 { const lg={ legL:{pos:[0.28,0,0.0],anchor:'sole',yaw:20,pitch:0,pole:[0.4,0.2,1]}, legR:{pos:[-0.28,0,0.0],anchor:'sole',yaw:-20,pitch:0,pole:[-0.4,0.2,1]} };

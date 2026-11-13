@@ -13,10 +13,10 @@ put('standing-calf-raises',{camera:{az:58,el:8},muscles:['calves'],props:sc.prop
 put('seated-calf-raise',{camera:{az:72,el:8},muscles:['calves'],props:se.props,frames:TW(se.frames,(f,k)=>{for(const a of ['armL','armR'])f[a].pos[1]+=0.04;if(k==='end'){for(const l of ['legL','legR']){f[l].pitch=24;f[l].pos[1]-=0.03;f[l].pos[2]+=0.02;}}})});
 put('donkey-calf-raises',{camera:{az:102,el:12},muscles:['calves'],floats:true,props:dk.props,frames:dk.frames});
 // shrug: feet flat, shoulders rise
-const shr=(y,hy,hz,el)=>({root:{pos:[0,1.065,0.0],pitch:0},spine:{flex:-19},neck:{flex:2},
+const shr=(y,hy,hz,el)=>({root:{pos:[0,1.03,-0.04],pitch:0},spine:{flex:-19},neck:{flex:2},
  legL:{pos:[0.11,0.14,0.06],anchor:'ball',pitch:0,toes:0},legR:{pos:[-0.11,0.14,0.06],anchor:'ball',pitch:0,toes:0},
- ...Object.fromEntries([['armL',1],['armR',-1]].map(([k,s])=>[k,{pos:[s*0.3013,hy,hz],contact:true,fingers:[0,0.95,0.3],palm:[0,-0.3,0.95],curl:0.75,pole:[s*0.9,-0.4,-0.2],scap:{elev:el,prot:0}}]))});
-put('calf-machine-shoulder-shrug',{camera:{az:58,el:8},floats:true,muscles:['traps'],props:sc.props,frames:{start:shr(0,1.51,0.15,0),end:shr(0,1.58,0.14,22)}});
+ ...Object.fromEntries([['armL',1],['armR',-1]].map(([k,s])=>[k,{pos:[s*0.301,hy,hz],contact:true,fingers:[0,0.95,0.3],palm:[0,-0.3,0.95],curl:0.75,pole:[s*0.8,-0.6,0.1],scap:{elev:el,prot:0}}]))});
+put('calf-machine-shoulder-shrug',{camera:{az:58,el:8},floats:true,muscles:['traps'],props:sc.props,frames:{start:shr(0,1.59,0.07,0),end:shr(0,1.64,0.052,22)}});
 // seated on bench, balls on block 30 cm ahead
 const seat=(pitch,extra={})=>({root:{pos:[0,0.54,0],pitch:0},spine:{flex:8},neck:{flex:-6},
  legL:{pos:[0.11,0.1,0.63],anchor:'ball',pitch,toes:0,pole:[0.1,0.3,1]},legR:{pos:[-0.11,0.1,0.63],anchor:'ball',pitch,toes:0,pole:[-0.1,0.3,1]},...extra});

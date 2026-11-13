@@ -5,8 +5,8 @@ const out=(slug,g,muscles,fn)=>{const s=structuredClone(g);s.slug=slug;s.muscles
 out('leg-extensions',G('leg-extension'),['quadriceps']);
 out('single-leg-leg-extension',G('leg-extension'),['quadriceps'],s=>{s.muscleSide='L';s.props[0].side='L';s.frames.end.legR=structuredClone(s.frames.start.legR);});
 out('seated-leg-curl',G('seated-leg-curl'),['hamstrings']);
-out('lying-leg-curls',G('lying-leg-curl'),['hamstrings'],s=>{for(const f of Object.values(s.frames))for(const a of ['armL','armR']){f[a].fingers=[0,0.4,1];f[a].pos[1]+=0.02;}});
+out('lying-leg-curls',G('lying-leg-curl'),['hamstrings'],s=>{for(const f of Object.values(s.frames)){f.armL.pole=[0.7,-0.7,0];f.armR.pole=[-0.7,-0.7,0];}});
 const lift=s=>{for(const f of Object.values(s.frames))f.root.pos[1]+=0.03;};
 out('thigh-abductor',G('hip-machine'),['abductors','glutes'],lift);
 out('thigh-adductor',G('hip-machine-adductor'),['adductors'],lift);
-out('standing-leg-curl',G('standing-leg-curl'),['hamstrings'],s=>{s.props[0].side='L';for(const f of Object.values(s.frames))f.legL.fk.abd=15;});
+out('standing-leg-curl',G('standing-leg-curl'),['hamstrings'],s=>{s.props[0].side='L';for(const f of Object.values(s.frames))f.legL.fk.abd=13;});

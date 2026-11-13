@@ -13,13 +13,13 @@ const bar = [{type:'barbell',hands:true,plates:[20,10]}];
 
 // 1 Smith squat: feet slightly ahead of the bar, vertical bar path, thighs below parallel
 spec('smith-machine-squat',{az:55,el:8},['quadriceps','glutes'],bar,{
-  start:sq(0.9,-0.03,3,0,-3,0.1), mid:sq(0.66,-0.03,16,-2,-5,0.1), end:sq(0.46,-0.03,26,-4,-8,0.1)});
+  start:sq(0.92,0.1,3,0,-3,0.12), mid:sq(0.66,0.0,14,-2,-5,0.12), end:sq(0.34,-0.08,28,-4,-8,0.12)});
 
 // 2 Chair squat: feet 45 cm ahead of the bar, trunk vertical, thighs below parallel
 spec('chair-squat',{az:60,el:8},['quadriceps'],bar,{
-  start:sq(0.74,-0.03,0,0,0,0.4,{sx:0.16,yaw:14,px:0.3}),
-  mid:sq(0.58,-0.03,0,0,0,0.4,{sx:0.16,yaw:14,px:0.3}),
-  end:sq(0.4,-0.03,2,0,0,0.4,{sx:0.16,yaw:14,px:0.3})});
+  start:sq(0.92,0.1,0,0,0,0.12,{sx:0.16,yaw:14,px:0.3}),
+  mid:sq(0.66,0.0,8,0,0,0.12,{sx:0.16,yaw:14,px:0.3}),
+  end:sq(0.34,-0.08,24,0,0,0.12,{sx:0.16,yaw:14,px:0.3})});
 
 // 3 Lunge sprint: jump lunge, legs swap in the air
 { const lu = (a) => { const f = { root:{pos:[0,0.6,0.0],pitch:0}, spine:{flex:0}, neck:{flex:0}, armL:back(1), armR:back(-1) };
@@ -34,7 +34,7 @@ spec('chair-squat',{az:60,el:8},['quadriceps'],bar,{
 { const b = JSON.parse(JSON.stringify(J('barbell-shrug-behind-the-back'))); b.slug='smith-machine-behind-the-back-shrug'; out(b); }
 
 // 5 Bent over row
-{ const b = J('bent-over-barbell-row'); b.slug='smith-machine-bent-over-row'; out(b); }
+{ const b = J('bent-over-barbell-row'); b.slug='smith-machine-bent-over-row'; for (const s of [1,-1]) b.frames.start[s>0?'armL':'armR'].pos=[0.235*s,0.36,0.16]; out(b); }
 
 // 6 Calf raise: balls on a block under the bar
 { const bk = (y,ry,p,off) => ({ root:{pos:[0,y,-0.07-0.0],pitch:2}, spine:{flex:0}, neck:{flex:0}, armL:back(1), armR:back(-1),
@@ -62,7 +62,7 @@ spec('chair-squat',{az:60,el:8},['quadriceps'],bar,{
   const top = mk({pos:[0,0.93,0],pitch:0}, hand(1.02,0.19,[0,-0.95,0.3],[0,-0.3,-1],[1,-0.3,-0.5],6), flat);
   const turn = mk({pos:[0,0.88,0],pitch:0}, s=>({pos:[0.22*s,0.08,0.17],rel:'chest',contact:true,curl:0.82,fingers:[0.02*s,-0.45,-0.9],palm:[0,0.9,-0.45],pole:[0.3*s,-0.7,0.6],scap:{elev:2,prot:0.3}}), flat);
   const rackA = s => ({ pos:[0.2*s,0.2,0.13],rel:'chest',contact:true,curl:0.82,fingers:[0.02*s,0.1,-1],palm:[0,1,0.1],pole:[0.3*s,-0.6,1],scap:{elev:0,prot:0.5} });
-  const catchW = mk({pos:[0,0.82,-0.04],pitch:5}, hand(1.17,0.2,[0,-0.85,0.5],[0,-0.5,-0.85],[0.6,-0.5,-0.8],8), flat);
+  const catchW = mk({pos:[0,0.82,-0.04],pitch:5}, hand(1.17,0.2,[0,-0.6,0.8],[0,-0.8,-0.6],[0.6,-0.5,-0.8],8), flat);
   const catchF = mk({pos:[0,0.8,-0.05],pitch:6}, rackA, flat);
   spec('smith-machine-hang-power-clean',{az:60,el:8},['hamstrings','glutes'],[{type:'barbell',hands:true,plates:[20,10]}],{start:chestFrame(hang),mid:chestFrame(top),end:chestFrame(catchW)}); }
 
@@ -70,7 +70,7 @@ spec('chair-squat',{az:60,el:8},['quadriceps'],bar,{
 { const b = J('upright-barbell-row'); b.slug='smith-machine-one-arm-upright-row'; b.muscles=['shoulders']; out(b); }
 
 // 10 Pistol squat under the bar
-{ const p = J('pistol-squat'); p.slug='smith-machine-pistol-squat'; p.props=bar;
+{ const p = J('pistol-squat'); p.slug='smith-machine-pistol-squat'; p.props=bar; p.frames.end.root={pos:[0.07,0.46,-0.04],pitch:34}; p.frames.end.spine={flex:-12}; p.frames.end.spine={flex:-6}; p.frames.end.legR.fk.flex=100;
   for (const k of Object.keys(p.frames)) { p.frames[k].armL=back(1); p.frames[k].armR=back(-1); }
   out(p); }
 
@@ -81,8 +81,8 @@ spec('chair-squat',{az:60,el:8},['quadriceps'],bar,{
 { const b = J('upright-barbell-row'); b.slug='smith-machine-upright-row'; b.muscles=['traps','shoulders']; out(b); }
 
 // 13 Split squat, rear foot on a flat bench
-{ const rear = {pos:[-0.11,0.485,-0.66],anchor:'ankle',pitch:170,toes:170};
+{ const rear = {pos:[-0.11,0.5,-0.55],anchor:'ankle',pitch:150,toes:150};
   const f = (y,z,pitch) => ({ root:{pos:[0,y,z],pitch}, spine:{flex:0}, neck:{flex:0}, armL:back(1), armR:back(-1),
     legL:{pos:[0.11,0,0.3],anchor:'sole'}, legR:rear });
-  spec('smith-single-leg-split-squat',{az:70,el:6},['quadriceps','glutes'],[...bar,{type:'flat-bench',height:0.45,pos:[0,0,-1.3]}],
-    {start:f(0.85,-0.03,3),end:f(0.5,-0.03,8)},{muscleSide:'L'}); }
+  spec('smith-single-leg-split-squat',{az:70,el:6},['quadriceps','glutes'],[...bar,{type:'flat-bench',height:0.45,pos:[0,0,-1.15]}],
+    {start:f(0.9,0.12,3),end:f(0.52,0.0,8)},{muscleSide:'L'}); }

@@ -16,7 +16,7 @@ save('hanging-pike',cam,bar,{
  end:fr(1.2,-0.12,-12,8,4,O,[132,10])});
 save('gorilla-chin-crunch',cam,bar,{
  start:fr(1.185,-0.03,-2,0,-4,arms(0.2,'under'),[90,95]),
- end:fr(1.42,-0.14,-10,12,2,arms(0.2,'under'),[120,115])});
+ end:fr(1.42,-0.14,-10,22,2,arms(0.2,'under'),[122,118])});
 save('wind-sprints',cam,bar,{
  start:fr(1.185,-0.03,-2,0,-4,O,[100,100],[4,6]),
  end:fr(1.185,-0.03,-2,0,-4,O,[4,6],[100,100])});

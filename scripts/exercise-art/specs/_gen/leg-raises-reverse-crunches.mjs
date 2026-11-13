@@ -10,7 +10,7 @@ const sp = (f)=>({flex:f, weights:[0.4,0.3,0.2,0.1,0]});
 // reverse crunch
 W('reverse-crunch',{camera:{az:108,el:18},muscles:['abdominals'],frames:{
   start:fl(R(0.105,0,-90),both(L(90,90))),
-  end:fl(R(0.2,-0.02,-118),both(L(116,90)),{nk:0,sp:sp(26)}) }});
+  end:fl(R(0.2,-0.03,-122),both({fk:{flex:126,abd:12,knee:125},foot:{pitch:0}}),{nk:0,sp:sp(26)}) }});
 // lying leg raise
 W('lying-leg-raise',{camera:{az:84,el:22},muscles:['abdominals'],frames:{
   start:fl(R(0.105,0,-90),both(L(20))),

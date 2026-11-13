@@ -378,7 +378,7 @@
      1.28,
      0.38
     ],
-    "contact": true,
+    "contact": false,
     "fingers": [
      0,
      0.3,
@@ -478,7 +478,6 @@
      1.2,
      0.38
     ],
-    "contact": true,
     "hand": "open",
     "fingers": [
      0,

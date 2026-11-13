@@ -22,6 +22,7 @@ const P=(f,l,v)=>{f[l].pos=v;};
 const sbs=out['side-bridge'].frames.start;sbs.root.pos[1]=0.384;sbs.armL.pos=[0.2,0.2,0.04];sbs.armL.pos=[0.2,0.2,0.04];
 P(sbs,"legL",[0,0.158,-0.795]);P(sbs,'legR',[0,0.06,-0.788]);
 const sa=out['side-plank-hip-abduction'].frames;
+sa.__x=0;delete sa.__x;out['side-plank-hip-abduction'].muscleSide='L';
 for(const f of Object.values(sa)){f.root.pos[1]=0.384;f.armL.pos=[0.2,0.2,0.04];f.legR.pos=[0,0.06,-0.788];f.legL.pos[2]+=0;}
 for(const f of Object.values(out['side-lying-hip-abduction'].frames))if(f.armR){f.armR.pole=[0.6,1,0];f.armR.palm=[-0.5,-0.85,0];}
 const dp=out['side-plank-hip-dip'].frames;
@@ -29,5 +30,15 @@ for(const f of Object.values(dp))f.armL.pos=[0.2,0.2,0.04];
 dp.start.spine={...dp.start.spine,side:28,flex:-15};dp.start.root.pos[1]=0.235;dp.start.neck={side:-40,flex:-30};dp.start.root.roll=78;dp.start.armL.fingers=[0,0.2,1];
 dp.end.legL.pos=[0,0.175,-0.80];dp.end.legR.pos=[0,0.06,-0.765];
 dp.mid=JSON.parse(JSON.stringify(dp.end));dp.mid.root.pos[1]=0.34;dp.mid.spine={side:4};dp.mid.neck={side:0};
+// push-up-to-side-plank repairs: R hand and R foot never move; the L foot steps in the air
+{const F=out['push-up-to-side-plank'].frames;const HX=-0.24,FX=-0.15;
+for(const k of ['start','mid']){F[k].armR.pos=[HX,0,0.5];F[k].legR.pos=[FX,0,-0.8];}
+F.start.armR.fingers=[0,0,1];F.start.armL.pos=[0.24,0,0.5];F.start.legL.pos=[0.15,0,-0.81];F.mid.legL.pos=[0.15,0,-0.8];F.mid.armL.pos=[0.24,0,0.5];
+for(const k of ['mid2','end']){const f=F[k];f.armR.pos=[HX,0,0.5];const dx=FX;f.root.pos[0]+=dx;f.armL.pos[0]+=dx;f.legL.pos[0]=FX;f.legR.pos=[FX,0.06,-0.76];}
+F.mid2.legR.pos=[FX,0.06,-0.76];F.mid2.legL.pos=[0.12,0.16,-0.76];
+F.end.legL.pos=[FX,0.158,-0.76];F.end.legR.pos=[FX,0.06,-0.76];
+for(const k of ['start','mid'])for(const a of ['armL','armR'])F[k][a].pos[2]=0.55;F.mid2.armR.pos[2]=0.55;F.end.armL.pole=[0.9,0.4,-0.2];F.end.armL.palm=[-0.7,-0.7,0];F.end.armL.fingers=[0,0.8,0.6];F.end.armR.pos[2]=0.55;F.mid2.armL.pos[1]=0.55;F.end.armL.pos[1]=1.03;F.mid2.armL.pos[2]=0.65;F.mid2.armL.palm=[-0.5,-0.85,0.05];F.mid2.armL.fingers=[0,0.7,0.7];
+for(const k of ['mid2','end']){const l=F[k].legL;l.anchor='ball';l.pos=[k=='end'?FX:0.22,k=='end'?0.25:0.3,-0.8];l.pitch=76;l.toes=0;l.roll=F[k].root.roll;delete l.pole;}
+for(const k of ['mid2','end']){const r=F[k].legR;r.anchor='ball';r.pos=[FX,0,-0.8];r.pitch=76;r.toes=0;r.roll=F[k].root.roll;}}
 for(const [k,v] of Object.entries(out))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
 console.log(Object.keys(out).join(' '));

@@ -36,7 +36,7 @@
      0.55,
      0.16
     ],
-    "contact": true,
+    "contact": false,
     "fingers": [
      0.4,
      -0.2,
@@ -60,7 +60,7 @@
      0.625,
      0.2
     ],
-    "contact": true,
+    "contact": false,
     "fingers": [
      0.1,
      0,
@@ -108,18 +108,18 @@
      0.585,
      -0.08
     ],
-    "pitch": 0
+    "pitch": 14
    },
    "neck": {
-    "flex": 2
+    "flex": 0
    },
    "armL": {
     "pos": [
      0.24,
-     0.695,
-     0.08000000000000002
+     0.725,
+     0.05000000000000002
     ],
-    "contact": true,
+    "contact": false,
     "fingers": [
      0.4,
      0.6,
@@ -143,7 +143,7 @@
      0.625,
      0.2
     ],
-    "contact": true,
+    "contact": false,
     "fingers": [
      0.1,
      0,
@@ -164,7 +164,7 @@
    "legL": {
     "pos": [
      0.14,
-     0.44,
+     0.4,
      0.32
     ],
     "anchor": "ankle",

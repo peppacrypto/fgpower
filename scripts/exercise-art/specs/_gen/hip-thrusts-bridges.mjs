@@ -5,15 +5,18 @@ const barArm = s => ({ pos:[0.3*s,0.07,0.16], rel:'pelvis', contact:true, hand:'
 const bar = { type:'barbell', hands:true, plates:[20] };
 const lift = (y, z, pitch, neck) => ({ root:{pos:[0,y,z],pitch}, neck:{flex:neck} });
 // barbell hip thrust: upper back on bench
-const thrust = (root, nk) => ({ ...root, neck:{flex:nk}, armL:barArm(1), armR:barArm(-1), ...legs(0.15, 0.40, 0.2) });
+const thrust = (root, nk) => ({ ...root, neck:{flex:nk}, armL:barArm(1), armR:barArm(-1), ...legs(0.15, 0.37, 0.2) });
 W('barbell-hip-thrust', { camera:{az:66,el:10}, muscles:['glutes'],
   props:[{type:'flat-bench', pos:[0,0,-0.7], yaw:90, height:0.42}, bar],
-  frames:{ start:thrust({root:{pos:[0,0.27,-0.15],pitch:-50}},5),
-           end:thrust({root:{pos:[0,0.505,-0.09],pitch:-90}},20) } });
+  frames:{ start:thrust({root:{pos:[0,0.24,-0.193],pitch:-50}},5),
+           mid:thrust({root:{pos:[0,0.292,-0.156],pitch:-60}},8),
+           mid2:thrust({root:{pos:[0,0.35,-0.129],pitch:-70}},12),
+           mid3:thrust({root:{pos:[0,0.411,-0.113],pitch:-80}},16),
+           end:thrust({root:{pos:[0,0.475,-0.107],pitch:-90}},20) } });
 // barbell glute bridge: back on the floor
 const gb = (r, nk) => ({ root:r, neck:{flex:nk}, armL:barArm(1), armR:barArm(-1), ...legs(0.15,0.5) });
 W('barbell-glute-bridge', { camera:{az:66,el:10}, muscles:['glutes'], props:[bar],
-  frames:{ start:gb({pos:[0,0.105,0],pitch:-90},8), end:gb({pos:[0,0.34,0.03],pitch:-112},26) } });
+  frames:{ start:gb({pos:[0,0.105,0],pitch:-90},8), mid:gb({pos:[0,0.19,0],pitch:-104},17), end:gb({pos:[0,0.34,0],pitch:-118},26) } });
 // butt-lift-bridge keeps its spec (floor bridge, arms by sides)
 // bridge-pose: shoulders under, hands clasped beneath the pelvis
 const clasp = s => ({ pos:[0.15*s,0,0.09], contact:true, fingers:[0.05*s,0,1], palm:[0,-1,0], pole:[s,0.5,-0.2], curl:-0.3 });
@@ -44,7 +47,12 @@ const sv=(n,o)=>fs.writeFileSync(new URL(`../${n}.json`, import.meta.url), JSON.
   for (const k of ['start','end']) { bl.frames[k].armL.pos[2]=0.1; bl.frames[k].armR.pos[2]=0.1; }
   sv('butt-lift-bridge',bl); }
 { const o=ld('single-leg-glute-bridge'); o.frames.start.neck={flex:14}; o.frames.end.neck={flex:26}; o.frames.start.root.pos[1]=0.125; o.frames.end.root.pos[1]=0.32; sv('single-leg-glute-bridge',o); }
-{ const o=ld('heel-elevated-bridge'); o.frames.start.neck={flex:14}; o.frames.end.neck={flex:30}; o.frames.start.root.pos[1]=0.145; o.frames.end.root.pos[1]=0.345; sv('heel-elevated-bridge',o); }
-for (const n of ['sofa-hip-thrust','single-leg-sofa-hip-thrust']) { const o=ld(n);
-  for (const f of Object.values(o.frames)) { f.armL.pos=[0.3,0.04,0.1]; f.armR.pos=[-0.3,0.04,0.1]; }
-  o.frames.start.root.pos[2]=-0.1; o.frames.end.root.pos[2]=0.03; o.frames.mid.root.pos[2]=-0.06; o.frames.mid.root.pitch=-58; sv(n,o); }
+{ const o=ld('heel-elevated-bridge'); o.frames.start.neck={flex:14}; o.frames.end.neck={flex:30}; o.frames.start.root.pos[1]=0.135; o.frames.start.root.pitch=-90; o.frames.end.root.pos[1]=0.345; sv('heel-elevated-bridge',o); }
+const SOFA={dy:0,dz:0.2};
+const ARC = [[0.24,-0.193,-50,5],[0.292,-0.156,-60,8],[0.35,-0.129,-70,12],[0.411,-0.113,-80,16],[0.475,-0.107,-90,20]];
+for (const n of ['sofa-hip-thrust','single-leg-sofa-hip-thrust']) { const o=ld(n); const t=o.frames.start; const fr={};
+  ARC.forEach(([y,z,pit,nk],k)=>{ const f=JSON.parse(JSON.stringify(t)); f.root={pos:[0,y+SOFA.dy,z+SOFA.dz],pitch:pit}; f.neck={flex:nk};
+    if (f.legR && f.legR.fk) f.legR.fk.flex=Math.round(105-20*k/4);
+    for (const lg of ['legL','legR']) if (f[lg] && f[lg].pos) f[lg].pos[2]=0.38+SOFA.dz-0.05;
+    fr[['start','mid','mid2','mid3','end'][k]]=f; });
+  o.frames=fr; sv(n,o); }

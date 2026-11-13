@@ -44,9 +44,9 @@ save('on-your-back-quad-stretch',{az:30,el:15},['quadriceps'],[bench],{start:{ro
  armL:grip([0.23,0.22,-0.12],[0,-1,0],[1,0,0],[1,-0.5,0.2]),
  armR:{fk:{flex:-10,abd:25,elbow:20},curl:0.2}}},{muscleSide:'L'});
 // ---- standing
-save('standing-elevated-quad-stretch',{az:80,el:10},['quadriceps'],[{type:'flat-bench',pos:[0,0,-0.9]}],{start:{root:{pos:[0,0.93,0],pitch:2},
- legR:{fk:{flex:0,abd:2,knee:10},foot:{pitch:0}},
- legL:{pos:[0.11,0.52,-0.5],anchor:'ankle',pitch:-120,pole:[0,0,1]},
+save('standing-elevated-quad-stretch',{az:80,el:10},['quadriceps'],[{type:'flat-bench',pos:[0,0,-0.9]}],{start:{root:{pos:[-0.0,0.93,0.0],pitch:2},
+  legR:{pos:[-0.05,0.08,-0.06],anchor:'ankle',pole:[0,0,1],foot:{pitch:0}},
+ legL:{pos:[0.11,0.52,-0.45],anchor:'ankle',pitch:-120,pole:[0,0,1]},
  armL:{fk:{flex:5,abd:10,elbow:15},curl:0.3},armR:{fk:{flex:5,abd:10,elbow:15},curl:0.3}}},{muscleSide:'L'});
 // ---- kneeling
 const kleg={fk:{flex:0,abd:3,knee:90},rel:'world',foot:{pitch:78}};

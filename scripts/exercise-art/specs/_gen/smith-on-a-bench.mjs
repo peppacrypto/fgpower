@@ -14,12 +14,12 @@ function press(slug, cfg) {
   const fr = (y, o) => ({ root:cfg.root, neck:cfg.neck, ...(cfg.spine?{spine:cfg.spine}:{}),
     armL:hand(1,cfg.x,y,{...cfg.h,...o,extra:{...(cfg.extra||{}),...(o.extra||{})}}), armR:hand(-1,cfg.x,y,{...cfg.h,...o,extra:{...(cfg.extra||{}),...(o.extra||{})}}), legL:cfg.legs(1), legR:cfg.legs(-1) });
   const s = { camera:cfg.cam, muscles:cfg.muscles, floats:true, props:[SM, cfg.bench],
-    frames:{ start:fr(cfg.top, cfg.ho?.top||{}), ...(cfg.mid?{mid:fr((cfg.top+cfg.bot)/2, cfg.ho.bot)}:{}), end:fr(cfg.bot, cfg.ho?.bot||{}) } };
+    frames:{ start:fr(cfg.top, cfg.ho?.top||{}), ...(cfg.mid?{mid:fr((cfg.top+cfg.bot)/2, cfg.ho.mid||cfg.ho.bot)}:{}), end:fr(cfg.bot, cfg.ho?.bot||{}) } };
   out(slug, s);
 }
 const flat = { root:{pos:[0,0.545,0.28],pitch:-90}, neck:{flex:4}, bench:{type:'flat-bench',pos:[0,0,0.08],yaw:0},
   legs:s=>({pos:[0.22*s,0,0.92],anchor:'sole',pitch:0,toes:0,pole:[0.2*s,0.5,0.6]}), cam:{az:50,el:14},
-  h:{}, ho:{top:{pole:undefined},bot:{}}, top:1.06, bot:0.73 };
+  h:{}, ho:{top:{pole:undefined},bot:{}}, top:1.14, bot:0.73 };
 const poleTop = {px:0.8,pey:-0.5,pz2:0.1}, poleBot={px:0.9,pey:-0.4,pz2:0.15};
 press('smith-machine-bench-press', {...flat, x:0.33, muscles:['chest','triceps'], ho:{top:poleTop,bot:poleBot}});
 press('smith-machine-close-grip-bench-press', {...flat, x:0.18, muscles:['triceps','chest'], bot:0.75,
@@ -29,10 +29,10 @@ press('smith-machine-close-grip-bench-press', {...flat, x:0.18, muscles:['tricep
 const D=0.2;
 const decl = { root:{pos:[0,0.6584,0.0556+D],pitch:-110}, neck:{flex:10}, bench:{type:'decline-bench',angle:20,pos:[0,0,D]},
   legs:s=>({pos:[0.12*s,0.405,0.5856+D],anchor:'ankle',pitch:25,pole:[0.05*s,1,0.4]}), cam:{az:40,el:18},
-  x:0.37, muscles:['chest','triceps'], top:1.081, bot:0.691,
+  x:0.37, muscles:['chest','triceps'], top:1.12, bot:0.691,
   h:{fx:0.05,fy:1,fz:-0.05,py:0.05,pz:1}, ho:{top:{px:0.7,pey:-0.5,pz2:0.5}, bot:{px:0.7,pey:-0.5,pz2:0.5}} };
-press('decline-smith-press', decl);
-press('smith-machine-decline-press', {...decl, x:0.36});
+press('decline-smith-press', {...decl, top:1.105});
+press('smith-machine-decline-press', {...decl, x:0.36, top:1.12});
 
 // incline: gallery shifted +0.17
 const I=0.03;
@@ -49,8 +49,8 @@ press('smith-incline-shoulder-raise', {...inc, x:0.2, muscles:['shoulders','ante
 const S=-0.25;
 press('smith-machine-overhead-shoulder-press', { root:{pos:[0,0.587,0.1545+S],pitch:-8}, neck:{flex:-2},
   bench:{type:'shoulder-press-bench',pos:[0,0,S]}, legs:s=>({pos:[0.22*s,0,0.58+S],anchor:'sole',pole:[0.2*s,0.4,1]}),
-  cam:{az:44,el:8}, mid:true, extra:{swivel:0}, x:0.34, muscles:['anterior-deltoid','lateral-deltoid','triceps'], top:1.5575, bot:1.0875,
-  h:{fx:0.05,fy:1,fz:0.05,py:-0.05,pz:1}, ho:{top:{px:0.8,pey:-0.35,pz2:0.5}, bot:{px:0.8,pey:-0.35,pz2:0.5}} });
+  cam:{az:44,el:8}, mid:true, extra:{swivel:0}, x:0.34, muscles:['anterior-deltoid','lateral-deltoid','triceps'], top:1.78, bot:1.0875,
+  h:{fx:0.05,fy:1,fz:0.05,py:-0.05,pz:1}, ho:{top:{px:0.8,pey:-0.35,pz2:0.5,fy:0.7,fz:0.7,py:-0.7,pz:0.7}, mid:{px:0.8,pey:-0.35,pz2:0.5,fy:0.85,fz:0.5,py:-0.5,pz:0.85}, bot:{px:0.8,pey:-0.35,pz2:0.5,fy:0.95,fz:0.25,py:-0.25,pz:0.95}} });
 
 // supine leg fk: thigh angle theta (deg, 0 = toward the feet, 90 = up, in the pelvis frame), solved so the ankle reaches the bar
 function legFk(hipY, hipZ, ankY, ankZ, tilt) {
@@ -65,9 +65,9 @@ const fkLeg = (s, hipY, hipZ, ankY, tilt, ft) => { const k = legFk(hipY,hipZ,ank
   return { fk:{flex:k.flex, abd:Number(process.env.ABD??12), rot:0, knee:k.knee}, rel:'pelvis', foot:{pitch:ft} }; };
 
 // hip raise: supine on the bench, soles on the bar, legs nearly straight, pelvis rolls up
-const flatH = (s,z) => ({ pos:[0.25*s,0.47,z], contact:true, hand:'flat', fingers:[0,0,1], palm:[0,-1,0] });
+const flatH = (s,z) => ({ pos:[0.15*s,0.44,z], contact:true, hand:'flat', fingers:[0,0,1], palm:[0,-1,0] });
 const hipFrame = (rootY, pitch, flex, footY) => ({ root:{pos:[0,rootY,0.2],pitch}, neck:{flex:4}, spine:{flex},
-  armL:flatH(1,-0.1), armR:flatH(-1,-0.1),
+  armL:flatH(1,0), armR:flatH(-1,0),
   legL:fkLeg(1,rootY,0.2,footY-0.07,-(pitch+90),FT), legR:fkLeg(-1,rootY,0.2,footY-0.07,-(pitch+90),FT) });
 out('smith-machine-hip-raise', { camera:{az:100,el:6}, muscles:['abdominals'], floats:true,
   props:[SMF, {type:'flat-bench',pos:[0,0,-0.05],yaw:0}],
@@ -79,4 +79,4 @@ const lpFrame = (hz, ay, rootY) => ({ root:{pos:[0,rootY,hz],pitch:-90}, neck:{f
   armL:floorArm(1,-0.1), armR:floorArm(-1,-0.1),
   legL:fkLeg(1,rootY,hz,ay-0.07,0,FT), legR:fkLeg(-1,rootY,hz,ay-0.07,0,FT) });
 out('smith-machine-leg-press', { camera:{az:95,el:6}, muscles:['quadriceps'], floats:true, props:[SMF],
-  frames:{ start:lpFrame(0.3,0.9,0.13), end:lpFrame(0.14,0.98,0.13) } });
+  frames:{ start:lpFrame(0.3,0.9,0.13), end:lpFrame(0.14,1.04,0.13) } });

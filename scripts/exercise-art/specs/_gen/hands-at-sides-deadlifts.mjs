@@ -15,6 +15,7 @@ const lvs=JSON.parse(fs.readFileSync(new URL('_gallery/leverage-lift-shrug.json'
 const lvf={...lv.frames};
 {const s=lv.frames.start,e=lv.frames.end;lvf.mid=JSON.parse(JSON.stringify(s));lvf.mid.root={pos:[0,0.84,-0.1],pitch:24};lvf.mid.neck={flex:-12};
  for(const k of ['armL','armR'])lvf.mid[k].pos[1]=0.69;}
+lvf.end=JSON.parse(JSON.stringify(lvf.end));lvf.end.root={pos:[0,1.005,-0.01],pitch:-4};
 save('leverage-deadlift',{az:62,el:8},M,lv.props,lvf);
 save('leverage-shrug',{az:62,el:8},['traps'],lvs.props,lvs.frames);
 // cable deadlifts
@@ -28,7 +29,7 @@ const hf2=(root,sp,nk,y,z)=>({...hf(root,sp,nk,y,z),...hl()});
 save('barbell-hack-squat',{az:60,el:8},['quadriceps','glutes'],[{type:'barbell',hands:true,plates:[20]}],{
  start:hf2({pos:[0,0.925,0],pitch:-1},0,2,0.85,-0.1),
  mid:hf2({pos:[0,0.72,-0.1],pitch:14},2,-4,0.6,-0.14),
- end:hf2({pos:[0,0.52,-0.22],pitch:30},4,-10,0.4,-0.28)});
+ end:hf2({pos:[0,0.46,-0.3],pitch:38},4,-12,0.32,-0.34)});
 // one-arm side deadlift
 const oa=(root,sp,nk,y,z)=>({root,spine:{flex:sp},neck:{flex:nk},
  armL:sd(1,0.33,y,z),
@@ -38,11 +39,11 @@ save('one-arm-side-deadlift',{az:20,el:10},M,[{type:'barbell',hand:'L',plates:[2
  mid:oa({pos:[0,0.68,-0.14],pitch:26},1,-14,0.5,0.05),
  end:oa({pos:[0,0.925,0],pitch:-1},0,2,0.83,0.06)},{muscleSide:'L'});
 // jefferson: facing +X, bar along Z between the legs
-const jl=(f)=>({legL:{pos:[f*0.2,0,-0.17],anchor:'sole',yaw:90,pitch:0,pole:[1,0,-0.3]},legR:{pos:[-f*0.38,0.035,0.17],anchor:'ball',yaw:90,pitch:52,pole:[1,0,0.3]}});
-const jh=(y)=>({armL:{pos:[0.1,y,-0.38],hand:'grip',grip:0.014,fingers:[0,-1,0],palm:[-1,0,0],pole:[0,0,-1]},
- armR:{pos:[0.1,y,0.38],hand:'grip',grip:0.014,fingers:[0,-1,0],palm:[-1,0,0],pole:[0,0,1]}});
-const jf=(root,sp,nk,y,f=1)=>({root,spine:{flex:sp},neck:{flex:nk},...jh(y),...jl(f)});
-save('jefferson-squats',{az:30,el:10},['quadriceps','glutes'],[{type:'barbell',pos:[0.1,0,0],yaw:90,plates:[20]}],{
- start:jf({pos:[-0.15,0.5,0],yaw:90,pitch:43},2,-20,0.225),
- mid:jf({pos:[-0.12,0.68,0],yaw:90,pitch:26},1,-10,0.5),
- end:jf({pos:[-0.04,0.885,0],yaw:90,pitch:-1},0,2,0.8)});
+const jl=(f)=>({legL:{pos:[f*0.3,0,-0.17],anchor:'sole',yaw:90,pitch:0,pole:[1,0,-0.3]},legR:{pos:[-f*0.56,0.035,0.17],anchor:'ball',yaw:90,pitch:52,pole:[1,0,0.3]}});
+const jh=(y,x)=>({armL:{pos:[x,y,-0.38],hand:'grip',grip:0.014,fingers:[0,-1,0],palm:[-1,0,0],pole:[0,0,-1]},
+ armR:{pos:[x,y,0.38],hand:'grip',grip:0.014,fingers:[0,-1,0],palm:[-1,0,0],pole:[0,0,1]}});
+const jf=(root,sp,nk,y,x,f=1)=>({root,spine:{flex:sp},neck:{flex:nk},...jh(y,x),...jl(f)});
+save('jefferson-squats',{az:30,el:10},['quadriceps','glutes'],[{type:'barbell',pos:[0.1,0,0],yaw:90,hands:true,plates:[20]}],{
+ start:jf({pos:[-0.15,0.5,0],yaw:90,pitch:43},2,-20,0.225,0.1),
+ mid:jf({pos:[-0.12,0.68,0],yaw:90,pitch:26},1,-10,0.5,0.1),
+ end:jf({pos:[-0.04,0.84,0],yaw:90,pitch:3},0,2,0.7,0.0)});

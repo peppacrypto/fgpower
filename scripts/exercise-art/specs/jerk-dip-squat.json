@@ -227,5 +227,8 @@
     ]
    }
   }
+ },
+ "qaAllow": {
+  "rom:squat.depth": "the jerk dip is a deliberate shallow quarter dip (knees bend about 15 percent of a squat), torso vertical"
  }
 }

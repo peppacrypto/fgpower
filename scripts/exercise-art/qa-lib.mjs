@@ -7,7 +7,7 @@
 //   console.log(formatResult(result))
 //
 // WHAT IS LOOKED AT. The spec as prep.js prepares it (grip magnet, free grips, resting hands: what page.js draws). Its key frames
-// (start, mid, mid2, mid3, end, plus any other name in spec.frames) and the loop's in-betweens at every eighth of the path (t.13,
+// (start, mid ... mid5, end, plus any other name in spec.frames) and the loop's in-betweens at every eighth of the path (t.13,
 // t.25, t.38 ...) and the middle of each segment between key frames; then one pass over 24 samples of the loop (checkLoop) for
 // twitches, slides, balance and the range of motion (MOTION.md).
 //
@@ -1146,7 +1146,7 @@ class Checker {
     const frameSpecs = spec.frames || {}
     const names = Object.keys(frameSpecs)
     const hasMotion = !!(frameSpecs.end || frameSpecs.mid)
-    const keyNames = ['start', ...['mid', 'mid2', 'mid3'].filter((k) => frameSpecs[k]), ...(frameSpecs.end ? ['end'] : [])].filter((k) => frameSpecs[k])
+    const keyNames = ['start', ...['mid', 'mid2', 'mid3', 'mid4', 'mid5'].filter((k) => frameSpecs[k]), ...(frameSpecs.end ? ['end'] : [])].filter((k) => frameSpecs[k])
     const keys = keyNames.map((k) => body.resolveFrame(frameSpecs[k]))
     if (!frameSpecs.end) keys.push(keys[0])
     const at = (t) => {

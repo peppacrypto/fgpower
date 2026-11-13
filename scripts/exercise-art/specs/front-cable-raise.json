@@ -56,35 +56,22 @@
     "yaw": -7
    },
    "armL": {
-    "pos": [
-     0.28,
-     0.8,
-     0.17
-    ],
+    "fk": {
+     "flex": 8,
+     "abd": 6,
+     "rot": 0,
+     "elbow": 14
+    },
+    "rel": "chest",
     "hand": "grip",
-    "grip": 0.015,
-    "fingers": [
-     -0.337,
-     -0.941,
-     0.106
-    ],
-    "palm": [
-     0,
-     0.1,
-     -1
-    ],
-    "pole": [
-     0.8,
-     -0.3,
-     -0.3
-    ]
+    "pron": 0.6
    },
    "armR": {
     "fk": {
      "flex": 0,
-     "abd": 10,
+     "abd": 8,
      "rot": 0,
-     "elbow": 15
+     "elbow": 12
     },
     "rel": "chest"
    }
@@ -123,35 +110,22 @@
     "yaw": -7
    },
    "armL": {
-    "pos": [
-     0.22,
-     1.18,
-     0.42
-    ],
+    "fk": {
+     "flex": 50,
+     "abd": 6,
+     "rot": 0,
+     "elbow": 14
+    },
+    "rel": "chest",
     "hand": "grip",
-    "grip": 0.015,
-    "fingers": [
-     -0.334,
-     -0.206,
-     0.941
-    ],
-    "palm": [
-     0,
-     -1,
-     0.1
-    ],
-    "pole": [
-     0.8,
-     -0.3,
-     -0.3
-    ]
+    "pron": 0.6
    },
    "armR": {
     "fk": {
      "flex": 0,
-     "abd": 10,
+     "abd": 8,
      "rot": 0,
-     "elbow": 15
+     "elbow": 12
     },
     "rel": "chest"
    }
@@ -190,35 +164,22 @@
     "yaw": -7
    },
    "armL": {
-    "pos": [
-     0.22,
-     1.38,
-     0.5
-    ],
+    "fk": {
+     "flex": 90,
+     "abd": 6,
+     "rot": 0,
+     "elbow": 14
+    },
+    "rel": "chest",
     "hand": "grip",
-    "grip": 0.015,
-    "fingers": [
-     -0.342,
-     0,
-     0.94
-    ],
-    "palm": [
-     0,
-     -1,
-     0
-    ],
-    "pole": [
-     0.8,
-     -0.3,
-     -0.3
-    ]
+    "pron": 0.6
    },
    "armR": {
     "fk": {
      "flex": 0,
-     "abd": 10,
+     "abd": 8,
      "rot": 0,
-     "elbow": 15
+     "elbow": 12
     },
     "rel": "chest"
    }

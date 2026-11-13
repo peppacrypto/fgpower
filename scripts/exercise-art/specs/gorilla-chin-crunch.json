@@ -109,7 +109,7 @@
     "pitch": -10
    },
    "spine": {
-    "flex": 12
+    "flex": 22
    },
    "neck": {
     "flex": 2
@@ -164,9 +164,9 @@
    },
    "legL": {
     "fk": {
-     "flex": 120,
+     "flex": 122,
      "abd": 2,
-     "knee": 115
+     "knee": 118
     },
     "foot": {
      "pitch": 10
@@ -174,9 +174,9 @@
    },
    "legR": {
     "fk": {
-     "flex": 120,
+     "flex": 122,
      "abd": 2,
-     "knee": 115
+     "knee": 118
     },
     "foot": {
      "pitch": 10

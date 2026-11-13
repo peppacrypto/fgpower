@@ -33,7 +33,7 @@ W('janda-sit-up',{camera:{az:88,el:12},muscles:['abdominals'],frames:{start:{},m
 { const ar=s=>({pos:[0.27*s,0,0.11],contact:true,hand:'flat',fingers:[0.08*s,0,1],palm:[0,-1,0],pole:[s,0.5,-0.2],curl:-0.3});
   const L=(fl,kn,ab)=>({legL:{fk:{flex:fl,abd:-ab,knee:kn},foot:{pitch:20}},legR:{fk:{flex:fl,abd:ab,knee:kn},foot:{pitch:20}}});
   const t=(p,f,n,fl,kn)=>fr(p,f,n,{armL:ar(1),armR:ar(-1),...L(fl,kn,2)});
-  W('tuck-crunch',{camera:cam,muscles:['abdominals'],floats:true,frames:{start:t(-90,0,6,88,25),end:t(-92,24,10,100,60)}}); }
+  W('tuck-crunch',{camera:cam,muscles:['abdominals'],floats:true,frames:{start:t(-90,0,0,88,25),end:t(-92,24,10,100,60)}}); }
 // frog sit-ups: knees open, soles together
 { const RL=+(process.env.RL||-50), FY=+(process.env.FY||0.1);const fg=(z)=>({legL:{pos:[0.065,FY,z],anchor:'ankle',roll:RL,pole:[1,0.1,0.2]},legR:{pos:[-0.065,FY,z],anchor:'ankle',roll:-RL,pole:[-1,0.1,0.2]}});
   const f=(p,fx,n)=>fr(p,fx,n,{...hd(),...fg(0.4)});

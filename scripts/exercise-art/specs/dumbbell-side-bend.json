@@ -1,5 +1,8 @@
 {
  "slug": "dumbbell-side-bend",
+ "qaAllow": {
+  "rom:trunk-flexion.range": "lateral flexion (spine.side 28 deg), not measured by the sagittal trunk-flexion rule"
+ },
  "camera": {
   "az": 15,
   "el": 5
@@ -86,26 +89,27 @@
    },
    "armR": {
     "pos": [
-     -0.2,
-     0.98,
-     -0.02
+     -0.17,
+     0.08,
+     0
     ],
+    "rel": "pelvis",
     "contact": true,
     "hand": "flat",
     "fingers": [
-     0.5,
-     -0.3,
-     0.8
+     0,
+     -0.5,
+     0.85
     ],
     "palm": [
-     0.3,
+     1,
      0,
-     -0.9
+     0
     ],
     "pole": [
      -1,
      0,
-     -0.5
+     -1
     ]
    }
   },
@@ -179,26 +183,27 @@
    },
    "armR": {
     "pos": [
-     -0.2,
-     0.98,
-     -0.02
+     -0.17,
+     0.08,
+     0
     ],
+    "rel": "pelvis",
     "contact": true,
     "hand": "flat",
     "fingers": [
-     0.5,
-     -0.3,
-     0.8
+     0,
+     -0.5,
+     0.85
     ],
     "palm": [
-     0.3,
+     1,
      0,
-     -0.9
+     0
     ],
     "pole": [
      -1,
      0,
-     -0.5
+     -1
     ]
    }
   }

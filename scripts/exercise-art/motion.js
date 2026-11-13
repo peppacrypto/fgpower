@@ -1,7 +1,7 @@
 // How a rep moves in time, and the joint measures behind it. Shared by page.js (the loop's frames), qa-lib.mjs (the motion checks)
 // and motion-strips.mjs. No DOM, no Node.
 //
-// THE LIFT. A spec runs start -> (mid, mid2, mid3) -> end and the loop comes back the same way. Each segment between two key
+// THE LIFT. A spec runs start -> (mid ... mid5) -> end and the loop comes back the same way. Each segment between two key
 // frames is a concentric part (the lit muscles shorten: the lift), an eccentric part (they lengthen: the lowering) or neither.
 // muscleLength() turns joint angles into a length for each muscle id of the taxonomy (degrees of the joints that stretch it), so
 // the frame where the lit muscles are shortest is the top of the concentric. spec.tempo.lift overrides it: "there" (start -> end

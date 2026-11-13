@@ -1,5 +1,8 @@
 {
  "slug": "barbell-side-bend",
+ "qaAllow": {
+  "rom:trunk-flexion.range": "lateral flexion (spine.side 28 deg), not measured by the sagittal trunk-flexion rule"
+ },
  "camera": {
   "az": 15,
   "el": 5

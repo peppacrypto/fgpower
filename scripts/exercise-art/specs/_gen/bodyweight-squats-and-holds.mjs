@@ -6,7 +6,7 @@ const out={};
 // keep proven specs as the base (rewritten for a stable generator)
 const bw=rd('bodyweight-squat'), tempo=rd('tempo-squat'), wall=rd('wall-sissy-squat'), sit=rd('chair-sit-to-stand');
 for(const k of ['start','end'])for(const [a,x,fx] of [['armL',0.06,-0.1],['armR',-0.06,0.1]]){const A=bw.frames[k][a];A.pos=[x,0.07,0.3];A.fingers=[fx,0.9,0.4];}
-out['bodyweight-squat']=bw; out['tempo-squat']=tempo; out['wall-sissy-squat']=wall;wall.props[0].pos=[-0.325,0,0.1];for(const k of ['start','end']){const a=wall.frames[k].armR;a.pos=[-0.29,1,0.1];a.fingers=[-0.7,-0.71,0];a.pole=[-0.5,-1,-0.87];}wall.frames.end.armR.pos=[-0.29,0.85,0.1]; out['chair-sit-to-stand']=sit;
+out['bodyweight-squat']=bw; out['tempo-squat']=tempo; out['wall-sissy-squat']=wall;wall.frames.end.root.pitch=-24;wall.props[0].pos=[-0.325,0,0.1];for(const k of ['start','end']){const a=wall.frames[k].armR;a.pos=[-0.29,1,0.1];a.fingers=[-0.7,-0.71,0];a.pole=[-0.5,-1,-0.87];}wall.frames.end.armR.pos=[-0.29,0.93,0.1];for(const k of ['start'])wall.frames[k].armR.pos=[-0.29,0.93,0.1]; out['chair-sit-to-stand']=sit;
 // sit-squats: partial depth
 const ss=cp(bw); ss.slug='sit-squats'; ss.muscles=['quadriceps'];
 ss.frames.end.root={pos:[0,0.68,-0.12],pitch:20}; ss.frames.end.spine={flex:-4}; ss.frames.end.neck={flex:-8};for(const k of ['start','end'])for(const [a,x] of [['armL',0.07],['armR',-0.07]])ss.frames[k][a].pos[0]=x;
@@ -23,9 +23,9 @@ out['garland-pose']={slug:'garland-pose',camera:{az:35,el:10},muscles:['adductor
  legL:{pos:[0.3,0,0.02],anchor:'sole',yaw:35,pole:[0.9,0,0.9]},legR:{pos:[-0.3,0,0.02],anchor:'sole',yaw:-35,pole:[-0.9,0,0.9]}}}};
 // weighted sissy: wall-sissy with plate on chest + rack upright
 const w=cp(wall); w.slug='weighted-sissy-squat';w.camera={az:40,el:8};
-w.props=[{type:'power-rack',width:0.9,depth:0.5,pos:[0,0,0],frameIgnore:true},{type:'weight-plate',kg:10,follow:true,hand:'L'}];
-for(const k of ['start','end']){const f=w.frames[k];f.armR.pos=[-0.44,1.1,0.37];f.armR.fingers=[0,-0.2,1];f.armR.palm=[1,0,0];f.armR.pole=[1,-0.8,0];
- f.armL={fk:{flex:70,abd:10,elbow:120},curl:0.5};}w.frames.end.armR.pos=[-0.44,1.05,0.37];
+w.props=[{type:'power-rack',width:0.46,depth:0.7,pos:[-0.46,0,0.25],frameIgnore:true},{type:'weight-plate',kg:10,follow:true,hand:'L'}];
+for(const k of ['start','end']){const f=w.frames[k];f.armR.pos=[-0.27,1.05,0.6];f.armR.hand='flat';f.armR.fingers=[0,0,1];f.armR.palm=[1,0,0];f.armR.pole=[-0.5,-1,-0.1];
+ f.armL={fk:{flex:70,abd:10,elbow:120},curl:0.5};}
 out['weighted-sissy-squat']=w;
 for(const [k,v] of Object.entries(out)){v.slug=k;fs.writeFileSync(D+k+'.json',JSON.stringify(v,null,1));}
 console.log(Object.keys(out).join(' '));

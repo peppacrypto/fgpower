@@ -14,16 +14,16 @@ const TM=Number(process.env.TM??-0.3), TE=Number(process.env.TE??-0.5), TS=Numbe
 const seatRoot = { root:{pos:[0,0.585,0.154],pitch:-8}, neck:{flex:-2} };
 const standRoot = { root:{pos:[0,0.925,0]}, neck:{flex:0}, ...stdLegs };
 W('seated-triceps-press', { camera:{az:62,el:8}, muscles:M, floats:true,
-  props:[{type:'shoulder-press-bench'}, dbGoblet],
+  props:[{type:'flat-bench'}, dbGoblet],
   frames:{ start:ov({...seatRoot,...seatLegs},168,8,-11,0,'grip',TS), mid:ov({...seatRoot,...seatLegs},MF,MA,-11,ROT,MH,TM), end:ov({...seatRoot,...seatLegs},168,125,-9,0,'grip',TE) } });
 W('standing-dumbbell-triceps-extension', { camera:{az:62,el:8}, muscles:M, props:[dbGoblet],
   frames:{ start:ov(standRoot,168,8,-11,0,'grip',TS), mid:ov(standRoot,MF,MA,-11,ROT,MH,TM), end:ov(standRoot,168,125,-9,0,'grip',TE) } });
 // ---------- kettlebell overhead ----------
-const kpr = f => ({ ...f, armL:{...f.armL,pron:30}, armR:{...f.armR,pron:30} });
-const kb = (el) => kpr(ov(standRoot,168,el,-8,0,'grip'));
+const kpr = f => ({ ...f, armL:{...f.armL,pron:70}, armR:{...f.armR,pron:70} });
+const kb = (el,t=0) => ({...kpr(ov(standRoot,168,el,-3,0,'grip')),props:[{type:'kettlebell',kg:16,mode:'horns',hands:true,up:[0,1,t]}]});
 W('kettlebell-overhead-triceps-extension', { camera:{az:62,el:8}, muscles:M,
   props:[{type:'kettlebell', kg:16, mode:'horns', hands:true, up:[0,1,0]}],
-  frames:{ start:kb(8), mid:kpr(ov(standRoot,MF,MA,-9,0,MH)), end:kb(125) } });
+  frames:{ start:kb(8), mid:{...kb(70,-0.3),armL:kb(70).armL,armR:kb(70).armR}, end:kb(125,-0.5) } });
 // ---------- one-arm overhead: neutral grip, upper arm beside the head ----------
 const one = (el) => fkA(165,el,10,0,'grip');
 const freeArm = { fk:{flex:0,abd:10,elbow:6}, rel:'chest', hand:'relaxed' };
@@ -76,3 +76,5 @@ const byPosition = (slug, at, staticProps) => {
 byPosition('standing-dumbbell-triceps-extension', { start: [1.975, 0.062, 0.2], mid: [1.89, -0.199, -0.3], end: [1.667, -0.176, -0.5] }, [])
 // TODO seated-triceps-press (held back): same fix, but on the shoulder-press-bench the pad top is at y 1.29, so the hands and the
 // dumbbell end up inside it at the bottom. Seat it on the end of a flat-bench first, then byPosition with that bench.
+
+byPosition('seated-triceps-press', { start: [1.63, 0.1, 0.0], mid: [1.54, -0.17, -0.3], end: [1.32, -0.15, -0.5] }, [{type:'flat-bench'}])

@@ -37,18 +37,18 @@ const mk = (slug, o) => {
   fs.writeFileSync(new URL(`../${slug}.json`, import.meta.url), JSON.stringify(s,null,1));
 };
 const base = { kind:'under', x:0.2325, px:0.15, py:{bot:0,mid:-0.15,top:-0.3},
-  pos:{bot:[0.84,0.17], mid:[1.12,0.33], top:[1.33,0.235]} };
+  pos:{bot:[0.79,0.14], mid:[1.12,0.33], top:[1.33,0.235]} };
 const bb = (extra={}) => ({type:'barbell',hands:true,plates:[20],...extra});
 mk('barbell-curl', {...base, x:0.2, props:[bb()]});
-mk('wide-grip-standing-barbell-curl', {...base, x:0.27, px:{bot:-0.15,mid:-0.15,top:0.3}, pos:{bot:[0.84,0.17],mid:[1.12,0.33],top:[1.33,0.235]}, props:[bb()]});
-mk('close-grip-standing-barbell-curl', {...base, x:0.11, px:{bot:0.5,mid:0.7,top:0.8}, pos:{bot:[0.95,0.34],mid:[1.12,0.35],top:[1.31,0.30]}, props:[bb()]});
+mk('wide-grip-standing-barbell-curl', {...base, x:0.27, px:{bot:-0.15,mid:-0.15,top:0.3}, pos:{bot:[0.79,0.14],mid:[1.12,0.33],top:[1.33,0.235]}, props:[bb()]});
+mk('close-grip-standing-barbell-curl', {...base, x:0.14, px:{bot:0.3,mid:0.6,top:0.8}, pos:{bot:[0.80,0.26],mid:[1.12,0.35],top:[1.31,0.30]}, props:[bb()]});
 mk('reverse-barbell-curl', {...base, kind:'over', x:0.2, props:[bb()]});
 mk('ez-bar-curl', {...base, tilt:17, props:[{type:'ez-bar',grip:'outer',hands:true,plates:[10]}]});
-mk('close-grip-ez-bar-curl', {...base, x:0.10, px:{bot:0.2,mid:0.3,top:0.8}, tilt:20, pos:{bot:[0.95,0.34],mid:[1.12,0.33],top:[1.33,0.235]}, props:[{type:'ez-bar',grip:'inner',hands:true,plates:[10]}]});
-mk('close-grip-ez-bar-curl-with-band', {...base, x:0.10, px:{bot:0.2,mid:0.3,top:0.8}, tilt:20, pos:{bot:[0.95,0.34],mid:[1.12,0.33],top:[1.33,0.235]}, props:[
+mk('close-grip-ez-bar-curl', {...base, x:0.12, px:{bot:0.2,mid:0.3,top:0.8}, tilt:20, pos:{bot:[0.80,0.20],mid:[1.12,0.33],top:[1.33,0.235]}, props:[{type:'ez-bar',grip:'inner',hands:true,plates:[10]}]});
+mk('close-grip-ez-bar-curl-with-band', {...base, x:0.12, px:{bot:0.2,mid:0.3,top:0.8}, tilt:20, pos:{bot:[0.80,0.20],mid:[1.12,0.33],top:[1.33,0.235]}, props:[
   {type:'ez-bar',grip:'inner',hands:true,plates:[]},
   {type:'bar-bands',hands:true,to:'feet',x:0.11,width:0.044,rest:0.42}]});
 // drag curl: elbows travel back, bar slides up the torso
 mk('drag-curl', {...base, x:0.2, px:0.1, props:[bb()],
   py:{bot:-0.1,mid:-0.2,top:-0.3},
-  pos:{bot:[0.84,0.17], mid:[1.05,0.14], top:[1.25,0.15]}, spine:{bot:0,mid:0,top:0}});
+  pos:{bot:[0.79,0.14], mid:[1.05,0.14], top:[1.25,0.15]}, spine:{bot:0,mid:0,top:0}});

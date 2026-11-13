@@ -11,10 +11,10 @@ const O = {
   over:   { bot:[[0,-1,0],[0,0,-1]], mid:[[0,0,1],[0,-1,0]], top:[[0,0.5,0.85],[0,-0.85,0.5]] },
   hammer: { bot:[[0,-1,0.1],[-1,0,0]], mid:[[0,0.2,1],[-1,0,0]], top:[[0,0.6,0.8],[-1,0,0]] },
 };
-const P = { bot:[0.86,0.20], mid:[1.1,0.29], top:[1.33,0.235] };
+const P = { bot:[0.80,0.16], mid:[1.1,0.29], top:[1.33,0.235] };
 const POLE = { bot:[0.25,-0.2,-1], mid:[0.25,-0.3,-1], top:[0.25,-0.5,-1] };
 const std = (slug, kind, x, att, opt={}) => {
-  const fr = ph => { const PP = (ph==='top'&&opt.top)||P[ph]; const a = grip(1, x, PP[0], PP[1], ...O[kind][ph], POLE[ph], att==='rope'?0.018:0.015);
+  const fr = ph => { const PP = (ph==='top'&&opt.top)||(ph==='bot'&&opt.bot)||P[ph]; const a = grip(1, x, PP[0], PP[1], ...O[kind][ph], POLE[ph], att==='rope'?0.018:0.015);
     return stand(a, opt.one ? { pos:[-0.3,1.0,0.0], rel:'world', pole:[-1,-0.2,-0.6], hand:'fist' } : grip(-1, x, PP[0], PP[1], ...O[kind][ph], POLE[ph], att==='rope'?0.018:0.015)); };
   const prop = { type:'cable-tower', pos:[0,0,0.7], yaw:180, pulleyY:0.22, attachment:att };
   if (opt.one) prop.hand='L'; else prop.hands=true;
@@ -24,7 +24,7 @@ const std = (slug, kind, x, att, opt={}) => {
 };
 std('standing-biceps-cable-curl','under',0.2,'straight-bar');
 std('reverse-cable-curl','over',0.2,'straight-bar');
-std('cable-hammer-curls-rope-attachment','hammer',0.12,'rope',{top:[1.27,0.30]});
+std('cable-hammer-curls-rope-attachment','hammer',0.12,'rope',{top:[1.27,0.30],bot:[0.82,0.21]});
 std('standing-one-arm-cable-curl','under',0.2,'d-handle',{one:true});
 
 // T-pose curls between two high pulleys (fk arms)
@@ -42,7 +42,7 @@ high('overhead-cable-curl', 90, 2.0);
 
 // lying cable curl: on mat, feet on machine frame, bar over thighs
 const lying = () => {
-  const fr = ph => { const P2 = { bot:[0.30,0.02], mid:[0.42,-0.17], top:[0.38,-0.37] }[ph];
+  const fr = ph => { const P2 = { bot:[0.34,0.12], mid:[0.42,-0.17], top:[0.38,-0.37] }[ph];
     const [f,p] = ph==='bot' ? [[0,0.3,0.95],[0,0.95,-0.3]] : ph==='mid' ? [[0,0.9,0.3],[0,0.3,-0.9]] : [[0,0.4,-0.9],[0,-0.9,-0.4]];
     return { root:{pos:[0,0.14,0],pitch:-90}, neck:{flex:5}, legL:{pos:[0.12,0.07,0.80],anchor:'ankle',pitch:-90,yaw:0}, legR:{pos:[-0.12,0.07,0.80],anchor:'ankle',pitch:-90,yaw:0},
       armL:grip(1,0.2,P2[0],P2[1],f,p,[0.3,-1,0]), armR:grip(-1,0.2,P2[0],P2[1],f,p,[0.3,-1,0]) }; };

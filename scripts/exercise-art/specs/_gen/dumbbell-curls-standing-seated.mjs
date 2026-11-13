@@ -20,7 +20,7 @@ save('dumbbell-bicep-curl',cam,dbs,{start:both(S,rest(SUP)),mid:both(S,[4,10,75,
 save('alternate-hammer-curl',cam,dbs,{start:both(S,rest(NEU)),mid:F(S,top(NEU),rest(NEU)),end:F(S,rest(NEU),top(NEU)),mid2:F(S,rest(NEU),[4,10,75,NEU])});
 // dumbbell alternate: palms in at start, supinate while curling
 save('dumbbell-alternate-bicep-curl',cam,dbs,{start:both(S,rest(NEU)),mid:F(S,[6,10,80,-45],rest(NEU)),mid2:F(S,top(SUP),rest(NEU)),end:F(S,rest(NEU),top(SUP))});
-save('seated-dumbbell-curl',cam,[...dbs,{type:'flat-bench'}],{start:both(sit,rest(NEU)),mid:both(sit,[4,10,80,-45]),end:both(sit,top(SUP))});
+save('seated-dumbbell-curl',cam,[...dbs,{type:'flat-bench'}],{start:both(sit,rest(NEU)),mid:both(sit,[2,24,80,-45]),end:both(sit,top(SUP))});
 // inner: forearms open outward in line with side delt, palms out/up
 const innerTop=[0,40,135,-10,0];
 save('standing-inner-biceps-curl',{az:20,el:8},dbs,{start:both(S,rest(NEU)),mid:both(S,[0,25,80,-45]),end:both(S,innerTop)});

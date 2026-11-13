@@ -30,7 +30,7 @@ const D = 180 / Math.PI
 
 export const MAGNET = 0.08
 export const REST_GAP = 0.035
-const KEYS = ['start', 'mid', 'mid2', 'mid3', 'end']
+const KEYS = ['start', 'mid', 'mid2', 'mid3', 'mid4', 'mid5', 'end']
 
 /** A closed hand: grip, hook, or an older closed hand (curl over 0.55 with fingers and palm). */
 export function isClosedArm(a) {

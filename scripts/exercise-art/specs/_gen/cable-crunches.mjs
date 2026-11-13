@@ -43,7 +43,7 @@ const P=+process.env.P||-30;const rv=(y,z,kz,ky,sf)=>({root:{pos:[0,y,z],pitch:-
  armL:{fk:{flex:+process.env.AF||120,abd:+process.env.AA||40,rot:0,elbow:+process.env.AE||140},rel:'chest'},armR:{fk:{flex:120,abd:40,rot:0,elbow:140},rel:'chest'}});
 DX=0.05;save('cable-reverse-crunch',{az:80,el:12},[tower(0.2,180,1.55,'ankle-strap',{foot:'L'})],{
  start:{...rv(0.12,-0.1,0.55,0.55,0),root:{pos:[0,0.12,-0.1],pitch:-90}},
- end:{...rv(0.15,-0.1,0.3,0.45,14),root:{pos:[0,0.2,-0.05],pitch:-100}}});
+ end:{...rv(0.17,-0.1,0.28,0.42,26),root:{pos:[0,0.2,-0.05],pitch:-100}}});
 // bosu
 const bo=(pitch,sf,side)=>({root:{pos:[0,0.3,0.26],pitch},spine:{flex:sf,side,weights:[0,0.15,0.25,0.3,0.3]},neck:{flex:12},
  legL:{pos:[0.25,0,0.74],anchor:'sole',yaw:8,pole:[0.3,0.5,0.7]},legR:{pos:[-0.25,0,0.74],anchor:'sole',yaw:-8,pole:[-0.3,0.5,0.7]}});

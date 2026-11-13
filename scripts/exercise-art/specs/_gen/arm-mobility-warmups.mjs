@@ -24,7 +24,7 @@ const stick=[{type:'stick',hands:true,length:1.5}];
 save('chest-and-front-of-shoulder-stretch',{az:70,el:8},['chest','shoulders'],{start:pl(1.2,0.3,[0,0,1],[0,-1,0]),mid:pl(1.85,0.05,[0,0.55,-0.83],[0,0.83,0.55]),end:pl(1.5,-0.2,[0,0.55,-0.83],[0,0.83,0.55],[0.75,-0.3,-0.3])},stick);
 const rw=(f,a)=>{const g={fk:{flex:f,abd:a,rot:0,elbow:0},rel:'chest',hand:'grip',curl:0.8,pron:90};return fr({armL:{...g},armR:{...g}});};
 save('round-the-world-shoulder-stretch',{az:70,el:8},['shoulders'],{start:rw(-35,16),mid:rw(70,16),end:rw(170,16)},stick);
-const sq=(g)=>{const h=(s)=>({pos:[s*0.02,1.28,0.32],hand:'flat',contact:true,fingers:[0,0,1],palm:[-s,0,0],pole:[s*0.8,-0.5,-0.3]});return fr({armL:h(1),armR:h(-1)});};
+const sq=(g)=>{const h=(s)=>({pos:[s*0.03,1.24,0.27],hand:'flat',fingers:[0,0,1],palm:[-s,0,0],pole:[s*0.8,-0.5,-0.3]});return fr({armL:h(1),armR:h(-1)});};
 save('isometric-chest-squeezes',{az:40,el:10},['chest'],{start:sq()});
 for(const [k,v] of Object.entries(out))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
 console.log(Object.keys(out).join(' '));

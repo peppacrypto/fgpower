@@ -10,8 +10,8 @@ const H = (s, pos, fingers, palm, pole, curl=0.5) => ({ pos:[pos[0]*s,pos[1],pos
 
 // seated floor chin to chest, fingers interlocked behind head
 const seat = nk => ({ root:{pos:[0,0.11,0]}, neck:{flex:nk}, spine:{flex:6},
-  armL:{pos:[0.04,0.07,-0.115],rel:'head',contact:true,hand:'flat',fingers:[-0.5,-0.85,0.1],palm:[0,0,1],pole:[0.5,-0.1,1],curl:0.6},
-  armR:{pos:[-0.04,0.07,-0.15],rel:'head',contact:true,hand:'flat',fingers:[0.5,-0.85,0.1],palm:[0,0,1],pole:[-0.5,-0.1,1],curl:0.6},
+  armL:{pos:[0.06,0.07,-0.115],rel:'head',contact:true,hand:'flat',fingers:[0.05,-1,0.1],palm:[0,0,1],pole:[0.5,-0.1,1],curl:0.6},
+  armR:{pos:[-0.07,0.07,-0.1],rel:'head',contact:true,hand:'flat',fingers:[-0.05,-1,0.1],palm:[0,0,1],pole:[-0.5,-0.1,1],curl:0.6},
   legL:{pos:[0.14,0.07,0.75],anchor:'ankle',pole:[0.05,1,0]}, legR:{pos:[-0.14,0.07,0.75],anchor:'ankle',pole:[-0.05,1,0]} });
 W('chin-to-chest-stretch', { camera:{az:70,el:8}, muscles:M, props:[{type:'floor-mat'}], frames:{ start:seat(46) } });
 
@@ -44,7 +44,7 @@ const up = nk => ({ root:{pos:[0,0.542,-0.27],pitch:-90}, neck:{flex:nk},
   legL:{pos:[0.26,0,0.3],anchor:'sole',pole:[0.2,1,0.4]}, legR:{pos:[-0.26,0,0.3],anchor:'sole',pole:[-0.2,1,0.4]} });
 W('lying-face-up-plate-neck-resistance', { camera:{az:70,el:8}, muscles:M, floats:true,
   props:[{...bench,pos:[0,0,0]},{type:'weight-plate',follow:'head',kg:5,at:[0,0.07,0.124],normal:[0,0,1]}],
-  frames:{ start:up(20), end:up(-40) } });
+  frames:{ start:up(8), end:up(-40) } });
 const dn = nk => ({ root:{pos:[0,0.64,0.27],pitch:90}, neck:{flex:nk},
   armL:H(1,[0.103,0.07,-0.124],[-0.1,0.1,-1],[-1,0,0],[1,0.5,0],0.75), armR:H(-1,[0.103,0.07,-0.124],[-0.1,0.1,-1],[-1,0,0],[1,0.5,0],0.75),
   legL:{pos:[0.1,0.72,-0.48],anchor:'ball',pitch:100,pole:[0,-1,0]}, legR:{pos:[-0.1,0.72,-0.48],anchor:'ball',pitch:100,pole:[0,-1,0]} });
@@ -54,8 +54,8 @@ W('lying-face-down-plate-neck-resistance', { camera:{az:70,el:8}, muscles:M, flo
 
 // seated head harness (gallery neck-harness), hands on knees
 const hs = nk => ({ root:{pos:[0,0.545,-0.2],pitch:42}, spine:{flex:8}, neck:{flex:nk},
-  armL:{pos:[0.2,0.62,0.2],contact:true,hand:'flat',fingers:[0.1,0,1],palm:[0,-1,0],curl:0.3,pole:[1,0.3,-0.3]},
-  armR:{pos:[-0.2,0.62,0.2],contact:true,hand:'flat',fingers:[-0.1,0,1],palm:[0,-1,0],curl:0.3,pole:[-1,0.3,-0.3]},
+  armL:{pos:[0.2,0.58,0.16],contact:true,hand:'flat',fingers:[0.1,0,1],palm:[0,-1,0],curl:0.3,pole:[1,0.3,-0.3]},
+  armR:{pos:[-0.2,0.58,0.16],contact:true,hand:'flat',fingers:[-0.1,0,1],palm:[0,-1,0],curl:0.3,pole:[-1,0.3,-0.3]},
   legL:{pos:[0.28,0,0.32],anchor:'sole',yaw:20,pitch:0,pole:[0.5,1,0.5]}, legR:{pos:[-0.28,0,0.32],anchor:'sole',yaw:-20,pitch:0,pole:[-0.5,1,0.5]} });
 W('seated-head-harness-neck-resistance', { camera:{az:48,el:8}, muscles:M,
   props:[{type:'flat-bench',pos:[0,0,-0.62]},{type:'neck-harness',follow:'head',kg:10}], frames:{ start:hs(42), end:hs(-30) } });

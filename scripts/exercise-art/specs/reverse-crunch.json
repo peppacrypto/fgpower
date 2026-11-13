@@ -94,9 +94,9 @@
     "pos": [
      0,
      0.2,
-     -0.02
+     -0.03
     ],
-    "pitch": -118
+    "pitch": -122
    },
    "neck": {
     "flex": 0
@@ -161,9 +161,9 @@
    },
    "legL": {
     "fk": {
-     "flex": 116,
-     "abd": 1,
-     "knee": 90
+     "flex": 126,
+     "abd": 12,
+     "knee": 125
     },
     "foot": {
      "pitch": 0
@@ -171,9 +171,9 @@
    },
    "legR": {
     "fk": {
-     "flex": 116,
-     "abd": 1,
-     "knee": 90
+     "flex": 126,
+     "abd": 12,
+     "knee": 125
     },
     "foot": {
      "pitch": 0

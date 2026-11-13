@@ -24,12 +24,12 @@ const RX=Number(process.env.RX||0.3);
 const T=(process.env.TN||'0.54,80,6,-0.05,0.35,0').split(',').map(Number);
 const tn=(thread)=>base(thread?{
  root:{pos:[0,T[0],0],pitch:T[1],roll:T[2]},neck:{flex:-5},spine:{flex:4},
- armL:{pos:[T[3],0.07,T[4]],hand:'open',fingers:[-1,0,0.2],palm:[0,1,0],pole:[0,0.5,-1]},
+ armL:{pos:[T[3],0.07,T[4]],hand:'open',fingers:JSON.parse(process.env.EF||'[-1,-0.2,0.2]'),palm:JSON.parse(process.env.EP||'[0,1,0]'),pole:[0,0.5,-1]},
  armR:hand(-1,RX,0.5)}:{armR:hand(-1,RX,0.5)});
 const tq=(pos,f,pa,pl=[0,0.5,-1])=>base({root:{pos:[0,0.5,0],pitch:78,roll:6},neck:{flex:-8},spine:{flex:2},
  armL:{pos,hand:'open',fingers:f,palm:pa,pole:pl},armR:hand(-1,RX,0.5)});
 const tm=base({root:{pos:[0,0.5,0],pitch:78,roll:6},neck:{flex:-8},spine:{flex:2},
- armL:{pos:[0.0,0.2,0.4],hand:'open',fingers:[-0.85,0,0.5],palm:[-0.2,0.2,-0.2],pole:[0,0.5,-1]},armR:hand(-1,RX,0.5)});
+ armL:{pos:JSON.parse(process.env.MPOS||'[0.0,0.2,0.4]'),hand:'open',fingers:JSON.parse(process.env.MF||'[-0.85,-0.1,0.5]'),palm:JSON.parse(process.env.MP||'[-0.4,0.1,-0.2]'),pole:JSON.parse(process.env.MPL||'[1,0.5,-0.7]')},armR:hand(-1,RX,0.5)});
 const ta=tq([0.19,0.07,0.5],[0,0,1],[0,-1,0],[0.3,0,-1]);
 const tb=tq([-0.06,0.15,0.4],[-1,0,0.5],[-0.3,0.9,-0.1]);
 save('thread-the-needle',{az:140,el:30},['shoulders'],{start:tn(false),a:ta,mid:tm,b:tb,end:tn(true)},{muscleSide:'L'});

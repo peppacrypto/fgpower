@@ -45,7 +45,7 @@ const oneF = (root,sp,nk,arm) => F(root,sp,nk,arm,stag);
 W('one-arm-medicine-ball-slam', { camera:{az:62,el:6}, muscles:['abdominals','lats'], muscleSide:'L', props:[{type:'medicine-ball',hand:'L',kg:4}], frames:{
   start:oneF({pos:[0,0.92,0],pitch:-6},{flex:-5},{flex:-12},one(1.88,0.0,0.9,0.4,[0.5,-0.3,0.6])),
   mid:oneF({pos:[0,0.9,0.0],pitch:12},{flex:6},{flex:-12},one(1.6,0.45,0.2,0.98,[0.9,-0.3,0.3])),
-  end:oneF({pos:[0,0.7,0.0],pitch:45},{flex:18},{flex:-20},one(0.4,0.5,-0.85,0.5,[0.15,0.3,-0.7])) }});
+  end:oneF({pos:[0,0.7,-0.06],pitch:45},{flex:18},{flex:-20},one(0.4,0.5,-0.85,0.5,[0.15,0.3,-0.7])) }});
 
 // full twist: ball at chest, rotate the trunk fully to one side
 const twist = (t, yawr) => F({pos:[0,0.93,0],pitch:0,yaw:yawr},{flex:2,twist:t},{flex:0,twist:-t/2},hands(1.2,0.32,0.2,0.95,0.125,0.25,[0.3,-0.4,-0.3]));

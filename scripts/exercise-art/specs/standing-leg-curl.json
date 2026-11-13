@@ -83,7 +83,7 @@
    "legL": {
     "fk": {
      "flex": 18,
-     "abd": 15,
+     "abd": 13,
      "knee": 8
     },
     "rel": "world",
@@ -170,7 +170,7 @@
    "legL": {
     "fk": {
      "flex": 18,
-     "abd": 15,
+     "abd": 13,
      "knee": 112
     },
     "rel": "world",

@@ -35,16 +35,17 @@ sq('reverse-band-power-squat',[rack,bandsR],{mid,spec:{camera:{az:42,el:8}}},{y:
 sq('squat-with-bands',[bandsF],{mid});
 sq('squat-with-chains',[chains],{mid});
 // kneeling
-const FP = +(process.env.FP ?? 70);
+const FP = +(process.env.FP ?? 66);
 const kn = (F,K,hy,hz,pitch,sp=0,nk=-3) => {
   const L = s => ({fk:{flex:F,abd:s*3,rot:0,knee:K},rel:'world',foot:{pitch:FP}});
   return { root:{pos:[0,hy,hz],pitch}, spine:{flex:sp}, neck:{flex:nk}, legL:L(1), legR:L(-1), armL:arm(1), armR:arm(-1) };
 };
-const kUp = kn(0,90,0.495,0.0,2), kDn = kn(65,145,0.33,-0.392,22,-4,-8), kMid = kn(30,115,0.45,-0.2,12,-2,-6);
-write('kneeling-squat',[bar],{start:kUp,mid:kMid,end:kDn},{muscles:['glutes','quadriceps'],camera:{az:60,el:8}});
+const kUp = kn(0,90,+(process.env.UY??0.485),0.0,2), kDn = kn(+(process.env.KF??70),+(process.env.KK??152),+(process.env.KY??0.25),-0.392,22,-4,-8), kMid = kn(30,115,+(process.env.MY??0.47),+(process.env.MZ??-0.215),12,-2,-6);
+const kMid2 = kn(50,135,+(process.env.M2Y??0.38),-0.33,17,-3,-7);
+write('kneeling-squat',[bar],{start:kUp,mid:kMid,mid2:kMid2,end:kDn},{muscles:['glutes','quadriceps'],camera:{az:60,el:8},qaAllow:{'rom:squat.top':'kneeling squat: the top is the tall kneel (hips over the knees), the shins stay on the floor, the rep never stands','rom:squat.depth':'kneeling squat ends with the glutes on the calves; the hip joint cannot drop to the knee joint with the shins on the floor'}});
 // jump: sit on calves, explode to tall kneel, land feet flat, stand
 const landF = kn(55,80,0.8,-0.14,22,-3,-6); landF.legL.foot.pitch=-25; landF.legR.foot.pitch=-25;
 const standF = kn(0,0,0.93,-0.03,4,0,-3); standF.legL.foot.pitch=0; standF.legR.foot.pitch=0;
 const air = kn(20,100,0.78,-0.05,6,0,-4); air.legL.foot.pitch=10; air.legR.foot.pitch=10;
-const land=landF, stand=standF;
+const land=landF; land.legL.foot.pitch=+(process.env.LP??-25); land.legR.foot.pitch=land.legL.foot.pitch; const stand=standF; stand.root.pos[2]=+(process.env.SZ??0.04);
 write('kneeling-jump-squat',[bar],{start:kDn,mid:kMid,mid2:air,mid3:land,end:stand},{muscles:['glutes','quadriceps'],camera:{az:60,el:8}});

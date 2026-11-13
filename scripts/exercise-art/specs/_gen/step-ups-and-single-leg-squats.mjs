@@ -21,22 +21,23 @@ save('step-up-with-knee-raise',cam,Q,box,{
  start:{...rootStart,armL:fk(-10),armR:fk(25)},
  mid:{root:{pos:[0.09,1.1,0.2],pitch:6},spine:{flex:1},neck:{flex:0},legL:footBox,legR:{pos:[-0.1,0.9,0.1],anchor:'ankle',pitch:45,pole:[-0.05,0.3,1]},armL:fk(10,20,12),armR:fk(-20,20,14)},
  end:{...rootTop(),legR:{pos:[-0.1,0.92,0.7],anchor:'ankle',pitch:-5,pole:[-0.05,0.3,1]},armL:fk(30,60,10),armR:fk(-15,60,10)}});
-const mid={root:{pos:[0.08,1.12,0.1],pitch:10},spine:{flex:2},neck:{flex:0},legL:footBox,legR:{pos:[-0.11,0.62,0.12],anchor:'sole',pitch:15,pole:[-0.05,0.3,1]}};
+const mid={root:{pos:[0.09,1.12,0.2],pitch:10},spine:{flex:2},neck:{flex:0},legL:footBox,legR:{pos:[-0.11,0.72,0.15],anchor:'sole',pitch:30,pole:[-0.05,0.3,1]}};
+const mid2={root:{pos:[0.1,1.1,0.28],pitch:6},spine:{flex:1},neck:{flex:0},legL:footBox,legR:{pos:[-0.11,BH+0.2,0.3],anchor:'sole',pitch:22,pole:[-0.05,0.3,1]}};
 const feetTop={...rootTop(),legR:{pos:[-0.11,BH+0.025,0.3],anchor:'sole',pole:[-0.05,0.3,1]}};
-save('barbell-step-ups',cam,Q,[...box,...bbProps],{start:{...rootStart,...bbArms},mid:{...mid,...bbArms},end:{...feetTop,...bbArms}});
-save('dumbbell-step-ups',cam,Q,[...box,...dbProps],{start:{...rootStart,...dbArms(0.82,-0.04)},mid:{...mid,...dbArms(1.12,0.1)},end:{...feetTop,...dbArms(0.92+BH,0.3)}});
+save('barbell-step-ups',cam,Q,[...box,...bbProps],{start:{...rootStart,...bbArms},mid:{...mid,...bbArms},mid2:{...mid2,...bbArms},end:{...feetTop,...bbArms}});
+save('dumbbell-step-ups',cam,Q,[...box,...dbProps],{start:{...rootStart,...dbArms(0.82,-0.04)},mid:{...mid,...dbArms(1.12,0.1)},mid2:{...mid2,...dbArms(1.1,0.25)},end:{...feetTop,...dbArms(0.92+BH,0.3)}});
 // pistol
 const pArm=fk(88,4);
 save('pistol-squat',{az:68,el:8},['quadriceps'],[],{
  start:{root:{pos:[0.07,0.928,0.2],pitch:3},armL:pArm,armR:pArm,legL:{pos:[0.1,0,0.28],anchor:'sole',pole:[-0.1,0,1]},legR:{fk:{flex:85,abd:0,knee:4},foot:{pitch:-20}}},
- end:{root:{pos:[0.07,0.585,-0.1],pitch:32},neck:{flex:-18},armL:fk(112,4),armR:fk(112,4),legL:{pos:[0.1,0,0.28],anchor:'sole',pole:[-0.1,0,1]},legR:{fk:{flex:100,abd:0,knee:4},foot:{pitch:-20}}}},{muscleSide:'L'});
+ end:{root:{pos:[0.07,0.52,-0.12],pitch:36},neck:{flex:-18},armL:fk(112,4),armR:fk(112,4),legL:{pos:[0.1,0,0.28],anchor:'sole',pole:[-0.1,0,1]},legR:{fk:{flex:100,abd:0,knee:4},foot:{pitch:-20}}}},{muscleSide:'L'});
 // shrimp: right leg stands, left foot held behind by the left hand (same side: the opposite hand cannot cross the body in this rig)
 const holdHand=(x,y,z)=>({pos:[x,y,z],contact:true,hand:'hook',fingers:[0,-0.4,-1],palm:[-1,0,0],pole:[0.9,-0.2,-0.3]});
 save('shrimp-squat',{az:60,el:8},['quadriceps','glutes'],[],{
  start:{root:{pos:[-0.05,0.92,0.02],pitch:14},legR:{pos:[-0.08,0,0.04],anchor:'sole',pole:[0,0,1]},
   legL:{pos:[0.16,0.9,-0.12],anchor:'ankle',pitch:95,pole:[0.1,-0.3,1]},armL:holdHand(0.218,0.91,-0.16),armR:fk(85,10)},
- end:{root:{pos:[-0.05,0.55,-0.1],pitch:46},neck:{flex:-15},legR:{pos:[-0.08,0,0.04],anchor:'sole',pole:[0,0,1]},
-  legL:{pos:[0.16,0.5,-0.2],anchor:'ankle',pitch:110,pole:[0.1,-0.5,1]},armL:holdHand(0.21,0.52,-0.24),armR:fk(100,10)}},{muscleSide:'R'});
+ end:{root:{pos:[-0.05,0.38,-0.22],pitch:40},neck:{flex:-15},legR:{pos:[-0.08,0,0.04],anchor:'sole',pole:[0,0,1]},
+  legL:{pos:[0.16,0.33,-0.24],anchor:'ankle',pitch:110,pole:[0.1,-0.5,1]},armL:holdHand(0.25,0.35,-0.3),armR:fk(100,10)}},{muscleSide:'R'});
 // single-leg high box squat: standing on a 0.6 box, free leg hanging, hand on band
 const HB=0.6;
 const hb=[{type:'plyo-box',height:HB,pos:[0.35,0,0.3]}];

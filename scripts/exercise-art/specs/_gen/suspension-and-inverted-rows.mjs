@@ -15,23 +15,23 @@ const body=(b,zh,nk,arms)=>({root:{pos:r4(b.root),pitch:b.P},neck:{flex:nk},...a
 // ---- strap row: hands carried on straps from one anchor
 function strapRow(slug,ths,the,cam,zh=0.5){
  const a=sup(ths,zh),b=sup(the,zh);
- const hs=[0.17,a.sh[1]+0.47,a.sh[2]];const SP=process.env.SP?JSON.parse(process.env.SP):[0.1,-1,0.2];
- const HX=+(process.env.HX||0.16);const he=[HX,b.sh[1]+0.2*b.n[1],b.sh[2]+0.2*b.n[2]];
+ const hs=[0.17,a.sh[1]+(+process.env.OFF||0.63),a.sh[2]];const SP=process.env.SP?JSON.parse(process.env.SP):[0.1,-1,0.2];
+ const HX=+(process.env.HX||0.1);const he=[HX,b.sh[1]+0.26*b.n[1],b.sh[2]+0.26*b.n[2]];
  const m=sup((ths+the)/2,zh),hm=[HX,m.sh[1]+0.36*m.n[1],m.sh[2]+0.36*m.n[2]];
- const ay=2.35;const T0=+(process.env.T0||0.5),T1=+(process.env.T1||0.5),T2=+(process.env.T2||0.5);
+ const ay=+(process.env.AY||2.6);const T0=+(process.env.T0||1),T1=+(process.env.T1||1),T2=+(process.env.T2||1);
  const az=(he[1]**2+he[2]**2+he[0]**2-hs[1]**2-hs[2]**2-hs[0]**2-2*ay*(he[1]-hs[1]))/(2*(he[2]-hs[2]));
  const anc=[0,ay,az];
  const arm=(s,h,pole,PT)=>{const f=nrm([-h[0]*0+(anc[0]-s*h[0]),anc[1]-h[1],anc[2]-h[2]]);
   return {pos:r4([s*h[0],h[1],h[2]]),contact:true,fingers:r4([-s*f[0]*0+f[0]*-1*-1*0+(-s*h[0]*0)+ (anc[0]-s*h[0])/Math.hypot(...[anc[0]-s*h[0],anc[1]-h[1],anc[2]-h[2]]),f[1],f[2]]),palm:r4(nrm([-s,PT*(pole[1]>-0.9?1:1),0])),pole:[s*pole[0],pole[1],pole[2]],curl:0.82};};
  const A=(h,p,t)=>({armL:arm(1,h,p,t),armR:arm(-1,h,p,t)});
  save(slug,cam,MR,[{type:'suspension-trainer',anchor:r4(anc),hands:true,frameIgnore:true}],
-  {start:body(a,zh,14,A(hs,SP,T0)),mid:body(m,zh,6,A(hm,process.env.MP?JSON.parse(process.env.MP):[0.75,-0.6,-0.6],T1)),end:body(b,zh,0,A(he,process.env.EPO?JSON.parse(process.env.EPO):[0.9,-0.1,-0.7],T2))});
+  {start:body(a,zh,14,A(hs,SP,T0)),mid:body(m,zh,6,A(hm,process.env.MP?JSON.parse(process.env.MP):[0.3,-1,-0.2],T1)),end:body(b,zh,0,A(he,process.env.EPO?JSON.parse(process.env.EPO):[0.9,-0.1,-0.7],T2))});
 }
 strapRow('suspended-row',50,82,{az:78,el:8});
 strapRow('inverted-row-with-straps',22,42,{az:80,el:8},0.6);
 // ---- inverted row on a bar in a rack
 (function(){
- const Y=1.1,hz=0;let ths=Math.asin((Y-0.52)/1.33)*180/Math.PI;
+ const Y=1.1,hz=0;let ths=Math.asin((Y-0.62-0.06)/1.33)*180/Math.PI;
  const zh=hz+1.33*Math.cos(rad(ths));
  let best=[1e9,0];
  for(let t=ths;t<85;t+=0.25){const b=sup(t,zh);
@@ -46,13 +46,12 @@ strapRow('inverted-row-with-straps',22,42,{az:80,el:8},0.6);
 // ---- bodyweight mid row: hanging head-down, thighs over the bar
 (function(){
  const Y=2.25;
- const arm=s=>({pos:[s*0.42,Y,0],contact:true,fingers:[0,1,0],palm:[0,0,1],pole:[s*1,0,0.5],curl:0.82});
+ const arm=s=>({pos:[s*(+process.env.BX||0.3),Y,0],contact:true,fingers:[0,1,0],palm:[0,0,1],pole:[s*1,0,0.5],curl:0.82});
  const leg=(F,K)=>({fk:{flex:F,abd:4,rot:0,knee:K},rel:'pelvis',foot:{pitch:0}});
- const fr=(P,sh,F,K,nk)=>{const d=[0,Math.cos(rad(P)),Math.sin(rad(P))];
-  const root=[0,sh[1]-0.46*d[1],sh[2]-0.46*d[2]];
-  return {root:{pos:r4(root),pitch:P},neck:{flex:nk},armL:arm(1),armR:arm(-1),legL:leg(F,K),legR:leg(F,K)};};
+ const HZ=+(process.env.MZ||0.33),HY=+(process.env.MY||1.95);
+ const fr=(P,F,K,nk)=>({root:{pos:[0,HY,HZ],pitch:P},neck:{flex:nk},armL:arm(1),armR:arm(-1),legL:leg(F,K),legR:leg(F,K)});
  save('bodyweight-mid-row',{az:75,el:6},MR,[{type:'pull-up-bar',height:Y,width:1.2}],
-  {start:fr(-160,[0,2.0,0.05],88,95,-10),end:fr(-160,[0,2.1,0.2],80,85,-10)},{floats:true});
+  {start:fr(+(process.env.P0||-134),+(process.env.F0||60),+(process.env.K0||95),-10),end:fr(+(process.env.P1||-105),+(process.env.F1||60),+(process.env.K1||95),-10)},{floats:true});
 })();
 // ---- standing-floor bodies (prone on toes)
 const prone=(P,zb,y0=0.12)=>{const s=Math.sin(rad(P)),c=Math.cos(rad(P));
@@ -65,19 +64,19 @@ const trainerArmOld=(s,h,anc,pole)=>{const v=[anc[0]-s*h[0],anc[1]-h[1],anc[2]-h
 function bisectAnchor(hs,he,ay){return [0,ay,(he[1]**2+he[2]**2+he[0]**2-hs[1]**2-hs[2]**2-hs[0]**2-2*ay*(he[1]-hs[1]))/(2*(he[2]-hs[2]))];}
 // suspended push-up: hands fixed on handles
 (function(){
- const h=[0.27,0.14,0.5],anc=[0,2.4,+(process.env.AZ||1.4)];
+ const PT=+(process.env.PT||62),TP=prone(PT,-0.81),h=[+(process.env.PX||0.32),0.14,TP.sh[2]+(+process.env.PZ||0)],anc=[0,2.4,+(process.env.AZ||1.4)];
  const fr=(P,y,z,nk,pole)=>({root:{pos:[0,y,z],pitch:P},neck:{flex:nk},armL:trainerArm(1,h,anc,pole),armR:trainerArm(-1,h,anc,pole),...toes(P,-0.81)});
  save('suspended-push-up',{az:52,el:5},['chest','triceps'],[{type:'suspension-trainer',anchor:anc,hands:true,frameIgnore:true}],
-  {start:fr(70.065,0.441,-0.001,-8,[0.4,-0.2,-1]),end:fr(85.543,0.21,0.084,-18,process.env.EP?JSON.parse(process.env.EP):[0.3,1,-0.5])});
+  {start:fr(PT,TP.root[1],TP.root[2],-8,[0.4,-0.2,-1]),end:fr(85.543,0.21,0.084,-18,process.env.EP?JSON.parse(process.env.EP):[0.3,0.3,-1])});
 })();
 // suspended fallout
 (function(){
  const zb=-0.5,a=prone(62,zb),b=prone(80,zb),m=prone(71,zb);
  const U=(v)=>nrm(v);
- const us=U([0,-0.95,0.3]),um=U(JSON.parse(process.env.UM||"[0,-0.3,0.95]")),ue=U(process.env.UE?JSON.parse(process.env.UE):[0,0.25,0.97]);
+ const us=U([0,-0.95,0.3]),um=U(JSON.parse(process.env.UM||"[0,-0.5,0.85]")),ue=U(process.env.UE?JSON.parse(process.env.UE):[0,0.25,0.97]);
  const H=(q,u)=>[0.2,q.sh[1]+0.5*u[1],q.sh[2]+0.5*u[2]];
  const hs=H(a,us),hm=H(m,um),he=H(b,ue);
- const anc=[0,2.4,+(process.env.FZ||0.95)];
+ const anc=[0,2.4,+(process.env.FZ||0.8)];
  const fr=(b,h,u,nk,pole,pal0)=>{const pal=r4(nrm([0,-u[2],u[1]]));return {root:{pos:r4(b.root),pitch:b.P},neck:{flex:nk},armL:trainerArm(1,h,anc,pole,u,pal&&pal.map((x,i)=>i?x:-x*0+x)),armR:trainerArm(-1,h,anc,pole,u,pal&&pal.map((x,i)=>i?x:-x)),...toes(b.P,zb)};};
  save('suspended-fallout',{az:70,el:6},['abdominals'],[{type:'suspension-trainer',anchor:r4(anc),hands:true,frameIgnore:true}],
   {start:fr(a,hs,us,-8,[0.4,-0.2,-1]),mid:fr(m,hm,um,-8,[0.4,-0.4,-0.9]),end:fr(b,he,ue,-6,[0.4,-0.6,-0.8],(()=>{const f=+(process.env.PH||0)*Math.PI/180;const q=nrm([0,-ue[2],ue[1]]);return [-Math.sin(f),q[1]*Math.cos(f),q[2]*Math.cos(f)];})())});
@@ -89,13 +88,13 @@ function bisectAnchor(hs,he,ay){return [0,ay,(he[1]**2+he[2]**2+he[0]**2-hs[1]**
 })();
 // suspended split squat: rear (right) foot in the handle
 (function(){
- const rear=[-0.12,0.51,-0.61],anc=[0,2.25,-0.65];
+ const RZ=+(process.env.RZ||-0.5),FZ2=+(process.env.FF||0.1),HZ2=+(process.env.HH||0.1),rear=[-0.12,0.51,RZ],anc=[0,2.25,RZ-0.04];
  const hip={fk:{flex:-35,abd:30,rot:0,elbow:25},rel:'chest'};
  const fr=(y,z,pitch,k)=>({root:{pos:[0,y,z],pitch},neck:{flex:0},armL:hip,armR:hip,
-  legL:{pos:[0.1,0,0.38],anchor:'sole',pole:[0.05,0.3,1]},
+  legL:{pos:[+(process.env.FX2||0.05),0,FZ2],anchor:'sole',pole:[0.05,0.3,1]},
   legR:{pos:rear,anchor:'ankle',pitch:130,pole:[-0.05,-1,0.3]}});
  save('suspended-split-squat',{az:70,el:6},['quadriceps','glutes'],[{type:'suspension-trainer',anchor:anc,feet:'R',frameIgnore:true}],
-  {start:fr(0.84,-0.02,0),end:fr(0.52,0.0,0)});
+  {start:fr(+(process.env.Y0||0.92),HZ2,0),end:fr(+(process.env.Y1||0.64),+(process.env.HE||0.04),+(process.env.PE||10))});
 })();
 for(const [k,v] of Object.entries(out))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
 console.log(Object.keys(out).join(' '));

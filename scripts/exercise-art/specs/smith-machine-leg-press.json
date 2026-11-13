@@ -123,10 +123,10 @@
    },
    "legL": {
     "fk": {
-     "flex": 122.9,
+     "flex": 107.4,
      "abd": 12,
      "rot": 0,
-     "knee": 45.7
+     "knee": 16
     },
     "rel": "pelvis",
     "foot": {
@@ -135,10 +135,10 @@
    },
    "legR": {
     "fk": {
-     "flex": 122.9,
+     "flex": 107.4,
      "abd": 12,
      "rot": 0,
-     "knee": 45.7
+     "knee": 16
     },
     "rel": "pelvis",
     "foot": {

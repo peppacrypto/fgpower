@@ -8,6 +8,9 @@
   "obliques",
   "abdominals"
  ],
+ "qaAllow": {
+  "rom:trunk-flexion.range": "lateral bend: the trunk side-flexes (about 56 deg total), it does not curl forward"
+ },
  "props": [
   {
    "type": "stability-ball",

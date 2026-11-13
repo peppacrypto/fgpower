@@ -24,14 +24,15 @@ const twist=(arm)=>({...root({roll:-38}),spine:{twist:-5},neck:{twist:-40,flex:0
 save('reclined-spinal-twist',{az:40,el:42},['spinal-erectors','obliques'],{
  start:{...root(),neck:{flex:0},legL:bentUp(1),legR:{fk:{flex:0,abd:0,rot:0,knee:0},rel:'pelvis',foot:{pitch:FP}},armL:T(1),armR:T(-1)},
  end:twist({armL:T(1),armR:T(-1)})});
-const KF=+(process.env.KF||112),KA=+(process.env.KA||-30),KK=+(process.env.KK||105),KR=+(process.env.KR||-25),RS=+(process.env.RS||1),KH=+(process.env.KH||0.055);
+const KF=+(process.env.KF||112),KA=+(process.env.KA||-30),KK=+(process.env.KK||105),KR=+(process.env.KR||-25),RS=+(process.env.RS||-1),KH=+(process.env.KH||-0.08);
 const K0F=+(process.env.K0F||120),K0A=+(process.env.K0A||-10),K0R=+(process.env.K0R||-10);
 const kneePt=(f,a,roll)=>{const c=Math.cos(a*D),d=[0.11+0.432*Math.sin(a*D)*Math.cos(f*D),0.432*Math.sin(f*D),0.432*Math.cos(f*D)*c];
  const r=RS*roll*D,x=d[0]-0.11+0.11-0,y=d[1];const X=0.11*0+ (d[0])*Math.cos(r)-(y)*Math.sin(r),Y=0.1+(d[0])*Math.sin(r)+(y)*Math.cos(r);return [X,Y,d[2]];};
-const kh=(q)=>({pos:[q[0],q[1]+KH,q[2]],contact:true,hand:'flat',fingers:[1,0,0.3],palm:[0,-1,0],curl:0.3,pole:[-0.5,-0.2,-0.6]});
+const KX=+(process.env.KX||0.02),KZ=+(process.env.KZ||-0.06);const kh=(q)=>({pos:[q[0]+KX,q[1]+KH,q[2]+KZ],contact:true,hand:'flat',fingers:JSON.parse(process.env.KFG||'[1,-0.5,0.3]'),palm:[0,-1,0],curl:0.3,pole:[-0.5,-0.2,-0.6]});
 const sideArm=(s)=>({fk:{flex:0,abd:35,rot:0,elbow:4},rel:'chest',hand:'relaxed',pron:0});
 save('knee-across-the-body',{az:40,el:42},['glutes'],{
  start:{...root({roll:K0R}),neck:{flex:0},legL:FK(K0F,K0A,0,KK),legR:FK(0),armL:sideArm(1),armR:kh(kneePt(K0F,K0A,K0R))},
+ mid:{...root({roll:(K0R+KR)/2}),neck:{twist:-18},legL:FK((K0F+KF)/2,(K0A+KA)/2,0,(0+KK)/2*0+KK),legR:FK(0),armL:sideArm(1),armR:kh(kneePt((K0F+KF)/2,(K0A+KA)/2,(K0R+KR)/2))},
  end:{...root({roll:KR}),neck:{twist:-35},legL:FK(KF,KA,0,KK),legR:FK(0),armL:sideArm(1),armR:kh(kneePt(KF,KA,KR))}});
 save('corpse-pose',{az:60,el:24},[],{
  start:{...root(),neck:{flex:0},legL:leg(1,[0.22,0.09,0.845],[0.3,1,0],{yaw:12}),legR:leg(-1,[0.22,0.09,0.845],[-0.3,1,0],{yaw:-12}),
@@ -58,14 +59,15 @@ const HX=+(process.env.HX||0.11),SD=+(process.env.SD||0.12),AL=+(process.env.AL|
 const shinPt=(s,f,k,abd=0)=>{const x=s*(HX+0.0);const kn=[x,0.1+0.432*Math.sin(f*D),0.432*Math.cos(f*D)];const a=(f-k)*D;
  return [s*(Math.abs(kn[0])+AL),kn[1]+SD*Math.sin(a),kn[2]+SD*Math.cos(a)];};
 const FG=JSON.parse(process.env.FG||'[0,1,-0.3]'),PA=JSON.parse(process.env.PA||'[-1,0,0]'),PL=JSON.parse(process.env.PL||'[0.8,-0.3,0.5]');
-const hug=(s,f,k)=>{const q=shinPt(s,f,k);return {pos:q,contact:true,hand:'flat',fingers:[s*FG[0],FG[1],FG[2]],palm:[s*PA[0],PA[1],PA[2]],curl:0.3,pole:[s*PL[0],PL[1],PL[2]]};};
+const HC=+(process.env.HC||0);const hug=(s,f,k,cross)=>{const q=shinPt(s,f,k);if(cross){q[0]=+(process.env.CX||0.11);q[1]+=+(process.env.CY||0.05);q[2]+=+(process.env.CZ||0.1);} return {pos:q,contact:true,hand:'flat',fingers:[s*FG[0],FG[1],FG[2]],palm:[s*PA[0],PA[1],PA[2]],curl:0.3,pole:[s*PL[0],PL[1],PL[2]]};};
 const HF=+(process.env.HF||112),HK=+(process.env.HK||120),HF2=+(process.env.HF2||122);
 save('hug-knees-to-chest',{az:62,el:14},['spinal-erectors','glutes'],{
  start:{...root(),neck:{flex:8},legL:FK(HF,0,0,HK,0),legR:FK(HF,0,0,HK,0),armL:hug(1,HF,HK),armR:hug(-1,HF,HK)},
  end:{...root(),neck:{flex:6},legL:FK(HF2,0,0,HK,0),legR:FK(HF2,0,0,HK,0),armL:hug(1,HF2,HK),armR:hug(-1,HF2,HK)}});
+const HF1=+(process.env.HF1||115);
 save('one-knee-to-chest',{az:62,el:14},['glutes'],{
- start:{...root(),neck:{flex:4},legL:FK(HF,0,0,HK,0),legR:FK(0),armL:hug(1,HF,HK),armR:hug(-1,HF,HK)},
- end:{...root(),neck:{flex:6},legL:FK(HF2,0,0,HK,0),legR:FK(0),armL:hug(1,HF2,HK),armR:hug(-1,HF2,HK)}});
+ start:{...root(),neck:{flex:4},legL:FK(HF1,0,0,HK,0),legR:FK(0),armL:hug(1,HF1,HK),armR:hug(-1,HF1,HK,1)},
+ end:{...root(),neck:{flex:6},legL:FK(HF2,0,0,HK,0),legR:FK(0),armL:hug(1,HF2,HK),armR:hug(-1,HF2,HK,1)}});
 const AOK=JSON.parse(process.env.AOK||'[-0.13,0.262,0.333,-0.124,1.284,-0.764,0.123,0.828,0.176,0.486,0.275,-0.529,0.149,0.468,-0.257,0.391,0.543,-0.351,0.514,-0.843,-0.053,0.51,-0.574,0.118,0.043,-0.002,-0.177,-0.058,-0.133,0.139]');
 const aok=(d)=>({...root(),neck:{flex:+(process.env.NF||2)+4*d},legR:leg(-1,[AOK[0],AOK[1]+AOK[24]*d,AOK[2]+AOK[25]*d],AOK.slice(3,6),{sa:AOK[28]||0,roll:AOK[29]||0}),legL:leg(1,[AOK[6],AOK[7]+AOK[24]*d,AOK[8]+AOK[25]*d],AOK.slice(9,12),{sa:AOK[26]||0,roll:AOK[27]||0}),
   armR:hold(-1,[AOK[12],AOK[13]+AOK[24]*d,AOK[14]+AOK[25]*d],[1,0,0],[0,1,0.3],0.035,AOK.slice(18,21)),armL:hold(1,[AOK[15],AOK[16]+AOK[24]*d,AOK[17]+AOK[25]*d],[1,0,0],[0,1,0.3],0.035,AOK.slice(21,24))});

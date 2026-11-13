@@ -41,13 +41,11 @@
    },
    "armL": {
     "pos": [
-     0.3,
-     0,
-     0
+     0.14,
+     0.62,
+     0.2
     ],
-    "rel": "pelvis",
-    "contact": true,
-    "hand": "flat",
+    "hand": "relaxed",
     "fingers": [
      0,
      0,
@@ -58,22 +56,19 @@
      -1,
      0
     ],
-    "curl": -0.3,
     "pole": [
      1,
-     0.2,
+     0.3,
      -0.5
     ]
    },
    "armR": {
     "pos": [
-     -0.3,
-     0,
-     0
+     -0.14,
+     0.62,
+     0.2
     ],
-    "rel": "pelvis",
-    "contact": true,
-    "hand": "flat",
+    "hand": "relaxed",
     "fingers": [
      0,
      0,
@@ -84,10 +79,9 @@
      -1,
      0
     ],
-    "curl": -0.3,
     "pole": [
      -1,
-     0.2,
+     0.3,
      -0.5
     ]
    },
@@ -138,13 +132,11 @@
    },
    "armL": {
     "pos": [
-     0.3,
-     0,
-     0
+     0.14,
+     0.62,
+     0.2
     ],
-    "rel": "pelvis",
-    "contact": true,
-    "hand": "flat",
+    "hand": "relaxed",
     "fingers": [
      0,
      0,
@@ -155,22 +147,19 @@
      -1,
      0
     ],
-    "curl": -0.3,
     "pole": [
      1,
-     0.2,
+     0.3,
      -0.5
     ]
    },
    "armR": {
     "pos": [
-     -0.3,
-     0,
-     0
+     -0.14,
+     0.62,
+     0.2
     ],
-    "rel": "pelvis",
-    "contact": true,
-    "hand": "flat",
+    "hand": "relaxed",
     "fingers": [
      0,
      0,
@@ -181,10 +170,9 @@
      -1,
      0
     ],
-    "curl": -0.3,
     "pole": [
      -1,
-     0.2,
+     0.3,
      -0.5
     ]
    },

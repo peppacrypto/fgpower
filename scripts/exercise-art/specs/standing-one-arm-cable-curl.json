@@ -59,8 +59,8 @@
    "armL": {
     "pos": [
      0.2,
-     0.86,
-     0.2
+     0.8,
+     0.16
     ],
     "contact": true,
     "hand": "grip",

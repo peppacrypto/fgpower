@@ -151,5 +151,8 @@
     "hand": "relaxed"
    }
   }
+ },
+ "qaAllow": {
+  "rom:trunk-flexion.range": "lateral flexion (side bend), not a sagittal crunch: the pattern table has no side-bend entry"
  }
 }

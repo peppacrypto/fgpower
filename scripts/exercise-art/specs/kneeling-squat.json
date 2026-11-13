@@ -23,7 +23,7 @@
    "root": {
     "pos": [
      0,
-     0.495,
+     0.485,
      0
     ],
     "pitch": 2
@@ -43,7 +43,7 @@
     },
     "rel": "world",
     "foot": {
-     "pitch": 70
+     "pitch": 66
     }
    },
    "legR": {
@@ -55,7 +55,7 @@
     },
     "rel": "world",
     "foot": {
-     "pitch": 70
+     "pitch": 66
     }
    },
    "armL": {
@@ -121,8 +121,8 @@
    "root": {
     "pos": [
      0,
-     0.45,
-     -0.2
+     0.47,
+     -0.215
     ],
     "pitch": 12
    },
@@ -141,7 +141,7 @@
     },
     "rel": "world",
     "foot": {
-     "pitch": 70
+     "pitch": 66
     }
    },
    "legR": {
@@ -153,7 +153,105 @@
     },
     "rel": "world",
     "foot": {
-     "pitch": 70
+     "pitch": 66
+    }
+   },
+   "armL": {
+    "pos": [
+     0.33,
+     0.215,
+     -0.015
+    ],
+    "rel": "chest",
+    "contact": true,
+    "fingers": [
+     -0.3,
+     0.45,
+     -0.85
+    ],
+    "palm": [
+     0,
+     0.97,
+     0.2
+    ],
+    "curl": 0.85,
+    "pole": [
+     0.5,
+     -0.7,
+     -0.6
+    ],
+    "scap": {
+     "elev": 0,
+     "prot": 0
+    }
+   },
+   "armR": {
+    "pos": [
+     -0.33,
+     0.215,
+     -0.015
+    ],
+    "rel": "chest",
+    "contact": true,
+    "fingers": [
+     0.3,
+     0.45,
+     -0.85
+    ],
+    "palm": [
+     0,
+     0.97,
+     0.2
+    ],
+    "curl": 0.85,
+    "pole": [
+     -0.5,
+     -0.7,
+     -0.6
+    ],
+    "scap": {
+     "elev": 0,
+     "prot": 0
+    }
+   }
+  },
+  "mid2": {
+   "root": {
+    "pos": [
+     0,
+     0.38,
+     -0.33
+    ],
+    "pitch": 17
+   },
+   "spine": {
+    "flex": -3
+   },
+   "neck": {
+    "flex": -7
+   },
+   "legL": {
+    "fk": {
+     "flex": 50,
+     "abd": 3,
+     "rot": 0,
+     "knee": 135
+    },
+    "rel": "world",
+    "foot": {
+     "pitch": 66
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 50,
+     "abd": -3,
+     "rot": 0,
+     "knee": 135
+    },
+    "rel": "world",
+    "foot": {
+     "pitch": 66
     }
    },
    "armL": {
@@ -219,7 +317,7 @@
    "root": {
     "pos": [
      0,
-     0.33,
+     0.25,
      -0.392
     ],
     "pitch": 22
@@ -232,26 +330,26 @@
    },
    "legL": {
     "fk": {
-     "flex": 65,
+     "flex": 70,
      "abd": 3,
      "rot": 0,
-     "knee": 145
+     "knee": 152
     },
     "rel": "world",
     "foot": {
-     "pitch": 70
+     "pitch": 66
     }
    },
    "legR": {
     "fk": {
-     "flex": 65,
+     "flex": 70,
      "abd": -3,
      "rot": 0,
-     "knee": 145
+     "knee": 152
     },
     "rel": "world",
     "foot": {
-     "pitch": 70
+     "pitch": 66
     }
    },
    "armL": {
@@ -313,5 +411,9 @@
     }
    }
   }
+ },
+ "qaAllow": {
+  "rom:squat.top": "kneeling squat: the top is the tall kneel (hips over the knees), the shins stay on the floor, the rep never stands",
+  "rom:squat.depth": "kneeling squat ends with the glutes on the calves; the hip joint cannot drop to the knee joint with the shins on the floor"
  }
 }

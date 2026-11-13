@@ -1,5 +1,4 @@
 {
- "slug": "sled-reverse-flye",
  "camera": {
   "az": 150,
   "el": 14
@@ -240,5 +239,6 @@
     "pron": 0
    }
   }
- }
+ },
+ "slug": "sled-reverse-flye"
 }

@@ -47,15 +47,15 @@ put('calf-raise-on-a-dumbbell',{camera:{az:80,el:6},floats:true,muscles:['calves
  props:[...wall,{type:'dumbbell',kg:5,pos:[0.11,0,0.04]},{type:'dumbbell',kg:5,pos:[-0.11,0,0.04]}],
  frames:{start:dd(-0.04,-0.04,-18),mid:dd(0.015,-0.04,16),end:dd(0.07,-0.04,50)}});
 // barbell on back
-const bb=(dy,dz,leg)=>{const f={root:{pos:[0,0.915+dy,-0.03+dz],pitch:4},neck:{flex:-3},
+const BASE=0.02;const bb=(dy,dz,leg)=>{const f={root:{pos:[0,0.915+dy,BASE+dz],pitch:4},neck:{flex:-3},
  armL:{pos:[0.33,0.215,-0.015],rel:'chest',contact:true,fingers:[-0.3,0.45,-0.85],palm:[0,0.97,0.2],curl:0.85,pole:[0.5,-0.7,-0.6],scap:{elev:0,prot:0}},
  armR:{pos:[-0.33,0.215,-0.015],rel:'chest',contact:true,fingers:[0.3,0.45,-0.85],palm:[0,0.97,0.2],curl:0.85,pole:[-0.5,-0.7,-0.6],scap:{elev:0,prot:0}}};
  f.legL={...leg,pos:[0.12,leg.y||0,leg.z],pole:[0.1,0,1]};f.legR={...leg,pos:[-0.12,leg.y||0,leg.z],pole:[-0.1,0,1]};delete f.legL.y;delete f.legL.z;delete f.legR.y;delete f.legR.z;return f;};
 const flat={anchor:'sole',pitch:0,z:0.04};
 const up={anchor:'ball',pitch:50,toes:0,z:0.13};
 const props=[{type:'barbell',hands:true,plates:[20,10]}];
-put('standing-barbell-calf-raise',{camera:{az:58,el:8},muscles:['calves'],props,frames:{start:bb(0,0,flat),end:bb(0.08,0.07,up)}});
-const back={anchor:'heel',pitch:-22,z:-0.03};
-put('rocking-standing-calf-raise',{camera:{az:70,el:8},muscles:['calves'],props,frames:{start:bb(0,0,flat),mid:bb(0.08,0.07,up),end:bb(-0.02,-0.05,back)}});
+put('standing-barbell-calf-raise',{camera:{az:58,el:8},muscles:['calves'],props,frames:{start:bb(0,0,flat),end:bb(0.08,0.10,up)}});
+const back={anchor:'heel',pitch:-12,z:-0.06};
+put('rocking-standing-calf-raise',{camera:{az:70,el:8},muscles:['calves'],props,frames:{start:bb(0,0,flat),mid:bb(0.08,0.10,up),end:bb(-0.02,-0.04,back)}});
 for(const [k,v] of Object.entries(out))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
 console.log(Object.keys(out).join(' '));

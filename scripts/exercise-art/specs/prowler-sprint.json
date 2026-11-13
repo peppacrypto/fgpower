@@ -1,4 +1,5 @@
 {
+ "slug": "prowler-sprint",
  "camera": {
   "az": 58,
   "el": 10
@@ -25,7 +26,7 @@
     "pos": [
      0,
      0.8,
-     -0.78
+     -0.9500000000000001
     ],
     "pitch": 52
    },
@@ -39,7 +40,7 @@
     "pos": [
      0.12,
      0,
-     -0.62
+     -0.8
     ],
     "anchor": "sole",
     "pitch": 0,
@@ -52,8 +53,8 @@
    "legR": {
     "pos": [
      -0.12,
-     0.02,
-     -1.28
+     0,
+     -1.4
     ],
     "anchor": "ball",
     "pitch": 38,
@@ -117,8 +118,8 @@
    "root": {
     "pos": [
      0,
-     0.84,
-     -0.64
+     0.8,
+     -0.9500000000000001
     ],
     "pitch": 52
    },
@@ -146,10 +147,103 @@
     "pos": [
      -0.12,
      0.12,
-     -0.8
+     -1.4
     ],
     "anchor": "ball",
-    "pitch": 35,
+    "pitch": 38,
+    "toes": 0,
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.27,
+     1.05,
+     0
+    ],
+    "contact": true,
+    "fingers": [
+     0.1,
+     0,
+     0.995
+    ],
+    "palm": [
+     -0.995,
+     0,
+     0.1
+    ],
+    "curl": 0.8,
+    "pole": [
+     0.5,
+     -0.8,
+     -0.3
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.27,
+     1.05,
+     0
+    ],
+    "contact": true,
+    "fingers": [
+     -0.1,
+     0,
+     0.995
+    ],
+    "palm": [
+     0.995,
+     0,
+     0.1
+    ],
+    "curl": 0.8,
+    "pole": [
+     -0.5,
+     -0.8,
+     -0.3
+    ]
+   }
+  },
+  "mid2": {
+   "root": {
+    "pos": [
+     0,
+     0.84,
+     -0.81
+    ],
+    "pitch": 52
+   },
+   "spine": {
+    "flex": 2
+   },
+   "neck": {
+    "flex": -46
+   },
+   "legL": {
+    "pos": [
+     0.12,
+     0,
+     -0.8
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "pole": [
+     0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.12,
+     0.14,
+     -1
+    ],
+    "anchor": "ball",
+    "pitch": 40,
     "toes": 0,
     "pole": [
      -0.1,
@@ -206,12 +300,12 @@
     ]
    }
   },
-  "end": {
+  "mid3": {
    "root": {
     "pos": [
      0,
      0.8,
-     -0.5
+     -0.67
     ],
     "pitch": 52
    },
@@ -224,12 +318,103 @@
    "legL": {
     "pos": [
      0.12,
-     0.02,
-     -1
+     0,
+     -0.8
     ],
-    "anchor": "ball",
-    "pitch": 38,
-    "toes": 0,
+    "anchor": "sole",
+    "pitch": 0,
+    "pole": [
+     0.1,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.12,
+     0.12,
+     -0.45
+    ],
+    "anchor": "sole",
+    "pitch": 0,
+    "pole": [
+     -0.1,
+     0,
+     1
+    ]
+   },
+   "armL": {
+    "pos": [
+     0.27,
+     1.05,
+     0.28
+    ],
+    "contact": true,
+    "fingers": [
+     0.1,
+     0,
+     0.995
+    ],
+    "palm": [
+     -0.995,
+     0,
+     0.1
+    ],
+    "curl": 0.8,
+    "pole": [
+     0.5,
+     -0.8,
+     -0.3
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.27,
+     1.05,
+     0.28
+    ],
+    "contact": true,
+    "fingers": [
+     -0.1,
+     0,
+     0.995
+    ],
+    "palm": [
+     0.995,
+     0,
+     0.1
+    ],
+    "curl": 0.8,
+    "pole": [
+     -0.5,
+     -0.8,
+     -0.3
+    ]
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.8,
+     -0.67
+    ],
+    "pitch": 52
+   },
+   "spine": {
+    "flex": 2
+   },
+   "neck": {
+    "flex": -46
+   },
+   "legL": {
+    "pos": [
+     0.12,
+     0,
+     -0.8
+    ],
+    "anchor": "sole",
+    "pitch": 0,
     "pole": [
      0.1,
      0,
@@ -240,7 +425,7 @@
     "pos": [
      -0.12,
      0,
-     -0.33999999999999997
+     -0.45
     ],
     "anchor": "sole",
     "pitch": 0,
@@ -299,5 +484,10 @@
     ]
    }
   }
+ },
+ "qaAllow": {
+  "rom:carry.posture": "a sled sprint leans forward by design",
+  "rom:horizontal-pull.stretch": "sprint on fixed handles, arms stay long and braced; it is not a row",
+  "rom:horizontal-pull.end": "sprint on fixed handles, not a row"
  }
 }

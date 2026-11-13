@@ -124,7 +124,7 @@
     "flex": 3
    },
    "spine": {
-    "side": -6
+    "side": -2
    },
    "legL": {
     "pos": [
@@ -215,7 +215,7 @@
     "flex": 3
    },
    "spine": {
-    "side": -14
+    "side": -4
    },
    "legL": {
     "pos": [
@@ -245,9 +245,9 @@
    },
    "armL": {
     "pos": [
-     0.26,
-     2,
-     0.1
+     0.22,
+     2.065,
+     0.06
     ],
     "contact": true,
     "hand": "grip",

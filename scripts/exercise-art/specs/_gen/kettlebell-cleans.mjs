@@ -80,18 +80,21 @@ W('one-arm-open-palm-kettlebell-clean',{camera:{az:50,el:8},muscles:['hamstrings
    mid2:F('stand',pose.catch(1),R(-1),[kb('L','rack')]),
    mid3:F('stand',m3p(1),R(-1),[kb('L','rack')]),
    end:F('stand',palm(1),R(-1),[kb('L','palm')])}});
-const palmR={pos:[-0.12,1.2,0.38],contact:true,hand:'open',fingers:[0,0,1],palm:[0,1,0],curl:0.1,pole:[-0.5,-1,-0.3]};
+const palmR={pos:[-0.12,1.2,0.38],hand:'open',fingers:[0,0,1],palm:[0,1,0],curl:0.1,pole:[-0.5,-1,-0.3]};
 W('open-palm-kettlebell-clean',{camera:{az:50,el:8},muscles:['hamstrings'],muscleSide:'L',
   frames:{
    start:F('hinge',pose.hang(1),pose.hang(-1),[kb('L','hang')]),
    mid:F('pull',pose.pull(1),pose.pull(-1),[kb('L','hang')]),
    mid2:F('stand',pose.catch(1),pose.catch(-1),[kb('L','rack')]),
-   mid3:F('stand',m3p(1),m3p(-1),[kb('L','rack')]),
+   mid3:F('stand',m3p(1),{...m3p(-1),contact:false},[kb('L','rack')]),
    end:F('stand',palm(1),palmR,[kb('L','palm')])}});
 // dumbbell clean (neutral grip, from floor)
 const db=(hand)=>({type:'dumbbell',kg:15,hand});
+const dmd=s=>arm(s,[0.3,0.62,0.12],[0,-1,0.05],[-1,0,0],[0.5,-0.5,-1]);
+const dfl=s=>arm(s,[0.33,0.3,0.1],[0,-1,0.05],[-1,0,0],[0.5,-0.5,-1]);
 W('dumbbell-clean',{camera:{az:50,el:8},muscles:['hamstrings'],
   frames:{
-   start:F('deep',pose.floor(1),pose.floor(-1),[db('L'),db('R')]),
-   mid:F('pull',pose.pull(1),pose.pull(-1),[db('L'),db('R')]),
+   start:F('deep',dfl(1),dfl(-1),[db('L'),db('R')]),
+   mid:F('high',dmd(1),dmd(-1),[db('L'),db('R')]),
+   mid2:F('pull',pose.pull(1),pose.pull(-1),[db('L'),db('R')]),
    end:F('stand',pose.rack(1),pose.rack(-1),[db('L'),db('R')])}});

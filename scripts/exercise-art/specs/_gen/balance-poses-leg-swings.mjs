@@ -8,7 +8,7 @@ const free=(pos,o={})=>({pos,anchor:'ankle',pole:[-0.1,0,1],...o});
 const fk=(flex,abd,elbow,rot=0)=>({fk:{flex,abd,rot,elbow},rel:'chest'});
 const down=fk(0,10,15);
 const side=fk(0,90,0), up=fk(172,14,0);
-const palmH=(s,x,y,z)=>({pos:[s*x,y,z],contact:true,fingers:[0,1,0.25],palm:[-s,0,0],pole:[s*0.5,-1,0],curl:0.3});
+const palmH=(s,x,y,z)=>({pos:[s*x,y,z],hand:'flat',fingers:[0,1,0.25],palm:[-s,0,0],pole:[s*0.5,-1,0],curl:0.3});
 const rail=(x,y,z)=>({pos:[x,y,z],contact:true,hand:'flat',fingers:[0,0,1],palm:[0,-1,0],pole:[0.6,-0.3,-1],curl:0.2});
 // tree
 save('tree-pose',{az:20,el:6},['calves'],{start:{root:rootS(0.1),neck:{flex:0},legL:stL(0.1),
@@ -21,9 +21,9 @@ save('eagle-pose',{az:15,el:6},['shoulders'],{start:{root:{pos:[0.05,0.72,0],pit
 const w3={root:{pos:[0,0.83,0.0],pitch:88},neck:{flex:-70},spine:{flex:0},legL:stL(0,{pole:[0,0.3,1]}),legR:free([-0.1,0.83,-0.85],{pole:[0,1,0],pitch:-90,roll:180}),armL:fk(172,10,0),armR:fk(172,10,0)};
 save('warrior-3',{az:85,el:6},['hamstrings'],{start:w3});
 // half moon
-save('half-moon-pose',{az:12,el:8},['hamstrings'],{start:{root:{pos:[0.25,0.78,0],roll:-85,yaw:0},neck:{twist:-90,flex:0},
+save('half-moon-pose',{az:12,el:8},['hamstrings'],{start:{root:{pos:[0.18,0.68,-0.1],roll:-85,yaw:0},neck:{twist:-90,flex:0},
  legL:stL(0.25,{pole:[0.1,0.3,1]}),legR:free([-0.58,0.72,0],{pole:[0,1,0],pitch:0,roll:-30}),
- armL:{pos:[0.6,0.14,-0.05],contact:true,hand:'flat',fingers:[0,0,1],palm:[0,-1,0],pole:[0.5,-0.3,-1],curl:0.2},armR:fk(0,170,0)}});
+ armL:{pos:[0.6,0.0,-0.05],contact:true,hand:'flat',fingers:[0,0,1],palm:[0,-1,0],pole:[0.5,-0.3,-1],curl:0.2},armR:fk(0,170,0)}});
 // swings with chair
 const ch=[{type:'chair',pos:[0.62,0,0],yaw:90}];
 const hold=rail(0.385,0.86,0.0);

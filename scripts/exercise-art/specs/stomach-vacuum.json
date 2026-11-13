@@ -20,11 +20,11 @@
    },
    "armL": {
     "pos": [
-     0.215,
-     0.97,
-     -0.02
+     0.22,
+     0,
+     0
     ],
-    "rel": "world",
+    "rel": "pelvis",
     "contact": true,
     "hand": "flat",
     "fingers": [
@@ -45,11 +45,11 @@
    },
    "armR": {
     "pos": [
-     -0.215,
-     0.97,
-     -0.02
+     -0.22,
+     0,
+     0
     ],
-    "rel": "world",
+    "rel": "pelvis",
     "contact": true,
     "hand": "flat",
     "fingers": [

@@ -104,8 +104,8 @@
    "root": {
     "pos": [
      0,
-     1.52,
-     -0.2
+     1.8,
+     -0.1
     ],
     "pitch": -30
    },
@@ -184,5 +184,8 @@
     }
    }
   }
+ },
+ "qaAllow": {
+  "rom:vertical-pull.chin": "Gironda: the head stays leaned back, the bar meets the sternum, not the chin"
  }
 }

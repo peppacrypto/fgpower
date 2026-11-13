@@ -1,3 +1,4 @@
+// NOTE: pike-push-up, incline-pike-push-up were hand-tuned in specs/*.json for full lockout (2026-11-13); this generator mutates the JSON on disk and is not idempotent. Do not rerun without reviewing.
 import fs from 'fs';
 const W='/home/dev-peppa/fgpower/scripts/exercise-art/specs/';
 const out={};

@@ -28,7 +28,7 @@ bends about 60 degrees (check.mjs then warns rom:...lockout / .bottom / .hang).
 
 ## Spec
     {"slug":"x","camera":{"az":60,"el":8},"muscles":["chest","triceps"],"props":[...],"frames":{"start":{...},"end":{...}}}
-A hold has only start. Optional frames mid, mid2, mid3 are visited in order: use one whenever a straight blend would be wrong,
+A hold has only start. Optional frames mid, mid2, mid3, mid4, mid5 are visited in order: use one whenever a straight blend would be wrong,
 because hands and feet travel in straight lines between frames (a curl's hand needs a mid on its arc, or use fk arms).
 Optional: "muscleSide":"L"|"R" (one-sided moves; the working limb is the figure's LEFT), "floats":true (nothing on the floor),
 "tempo":{"lift":"there"|"back"|"even","up":1,"down":1.8,"squeeze":0.35,"stretch":0.2} (MOTION.md: the loop already lowers slower

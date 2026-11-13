@@ -23,20 +23,20 @@ const mk = (slug, o, muscles, extra={}) => {
   if (extra.mid) s.frames.mid = frame({...o, ...extra.mid});
   W(slug, s);
 };
-const pl = {x:0.40, top:[1.105,-0.24], bot:[0.74,-0.16], arch:-14, legs:tucked, ry:0.60, px:0.9, pey:-0.3, topPole:-0.1, botPole:0.1};
+const pl = {x:0.40, top:[1.17,-0.24], bot:[0.74,-0.16], arch:-14, legs:tucked, ry:0.60, px:0.9, pey:-0.3, topPole:-0.1, botPole:0.1};
 mk('bench-press-powerlifting', pl, ['chest','triceps']);
 const chainProps = (lo) => [ {type:'flat-bench', barY:1.02}, {type:'barbell',hands:true,plates:[20]},
   {type:'chains',hands:true,x:0.97,length:1.55,base:[[0.97,0,-0.2],[-0.97,0,-0.2]]} ];
 mk('bench-press-with-chains', pl, ['chest','triceps'], {props:chainProps()});
 mk('board-press', {...pl, bot:[0.81,-0.16]}, ['triceps','chest'], {props:[ {type:'flat-bench', barY:1.02},
   {type:'press-board', boards:3, follow:'chest'}, {type:'barbell',hands:true,plates:[20]} ]});
-mk('pin-presses', {...pl, top:[0.80,-0.18], bot:[1.105,-0.24], topPole:0.1, botPole:-0.1}, ['triceps','chest'],
+mk('pin-presses', {...pl, top:[0.80,-0.18], bot:[1.17,-0.24], topPole:0.1, botPole:-0.1}, ['triceps','chest'],
   {props:[ {type:'flat-bench'}, rackAt({pinY:0.80, barY:1.02}), {type:'barbell',hands:true,plates:[20]} ]});
 mk('reverse-band-bench-press', pl, ['triceps','chest'], {props:[ {type:'flat-bench'}, rackAt({barY:1.02}),
   {type:'barbell',hands:true,plates:[20]},
   {type:'bar-bands',hands:true,to:'top',x:0.69,pegs:[[0.6875,2.18,-0.24],[-0.6875,2.18,-0.24]],rest:0.42} ]});
 // floor press: body on the floor, root 0.447 lower than on the bench
-const fl = {x:0.36, top:[0.66,-0.22], bot:[0.34,-0.17], ry:0.125, arch:-4, legs:{pos:[0.2,0,0.62],pole:[0.3,1,0.3]}, px:1.2, pey:-0.2, topPole:0, botPole:0.1};
+const fl = {x:0.36, top:[0.74,-0.22], bot:[0.34,-0.17], ry:0.125, arch:-4, legs:{pos:[0.2,0,0.62],pole:[0.3,1,0.3]}, px:1.2, pey:-0.2, topPole:0, botPole:0.1};
 const flProps = (more=[]) => [ rackAt({barY:0.76}), {type:'barbell',hands:true,plates:[20]}, ...more ];
 mk('floor-press', fl, ['triceps','chest'], {props:flProps()});
 mk('floor-press-with-chains', fl, ['triceps','chest'], {props:flProps([{type:'chains',hands:true,x:0.97,length:1.2,base:[[0.97,0,-0.2],[-0.97,0,-0.2]]}])});
@@ -45,11 +45,11 @@ mk('floor-press-with-chains', fl, ['triceps','chest'], {props:flProps([{type:'ch
   const h = (y,z) => ({pos:[0.22,y,z],contact:true,hand:'grip',grip:0.014,fingers:[0,0.95,-0.3],palm:[-1,0,0],pole:[1,-0.3,0.1],curl:0.82});
   const fr = (y,z) => ({root:{pos:[0,0.125,0.2],pitch:-90},neck:{flex:6},spine:{flex:-3},
     armL:h(y,z),
-    armR:{pos:[-0.30,0.05,0.0],rel:'world',contact:true,hand:'flat',fingers:[0,0,1],palm:[0,-1,0],pole:[-1,-0.3,0]},
+    armR:{pos:[-0.26,0.03,0.3],rel:'world',contact:true,hand:'flat',fingers:[0,0,1],palm:[0,-1,0],pole:[-1,-0.3,0]},
     legL:{pos:[0.2,0,0.55],anchor:'sole',pole:[0.2,1,0.3]}, legR:{pos:[-0.2,0,0.55],anchor:'sole',pole:[-0.2,1,0.3]}});
   W('one-arm-floor-press',{slug:'one-arm-floor-press',camera:{az:50,el:10},muscles:['triceps','chest'],muscleSide:'L',floats:true,
     props:[{type:'dumbbell',hand:'L'}],
-    frames:{start:fr(0.66,-0.20),end:fr(0.34,-0.17)}});
+    frames:{start:fr(0.74,-0.20),end:fr(0.34,-0.17)}});
 }
 // chain press and chain handle extension: handles with chains, flat bench
 const chainsH = [{type:'flat-bench',pos:[0,0,0]},{type:'chains',hands:true,onHands:true,length:1.3,base:[[0.3,0,-0.26],[-0.3,0,-0.26]]}];
@@ -58,7 +58,7 @@ const chainsH = [{type:'flat-bench',pos:[0,0,0]},{type:'chains',hands:true,onHan
   const fr = (y,x,z,pz) => ({root:{pos:[0,0.528,0.2],pitch:-90},neck:{flex:6},armL:a(1,x,y,z,pz),armR:a(-1,x,y,z,pz),
     legL:{pos:[0.2,0,0.72],anchor:'sole',yaw:0,pitch:0,pole:[0.2,1,0.4]},legR:{pos:[-0.2,0,0.72],anchor:'sole',yaw:0,pitch:0,pole:[-0.2,1,0.4]}});
   W('chain-press',{slug:'chain-press',camera:{az:56,el:12},muscles:['chest','triceps'],floats:true,props:chainsH,
-    frames:{start:fr(1.12,0.27,-0.24,-0.3),end:fr(0.82,0.36,-0.24,-0.1)}});
+    frames:{start:fr(1.17,0.27,-0.24,-0.3),end:fr(0.82,0.36,-0.24,-0.1)}});
 }
 {
   // lying extension: upper arms vertical (fk flex 90 in chest frame = up), forearm folds toward the head

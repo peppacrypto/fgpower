@@ -6,7 +6,7 @@ const rad = d => d*Math.PI/180;
 
 // ---- treadmill: walk, jog, run (jog/run = flight phase, more knee drive, bent elbows)
 const tm = (slug, o) => {
-  const s = G('treadmill'); s.timing = {there:o.there, back:0};
+  const s = G('treadmill'); s.props[0].feet = true; s.timing = {there:o.there, back:0};
   for (const k of K) {
     const f = s.frames[k];
     f.root.pitch = o.pitch; f.spine.flex = o.pitch/2+1;

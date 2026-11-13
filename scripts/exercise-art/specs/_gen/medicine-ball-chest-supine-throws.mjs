@@ -4,7 +4,7 @@ const BALL={type:'medicine-ball',kg:6,hands:true};
 const at=p=>({type:'medicine-ball',kg:6,at:p});
 const hb=(s,c,f=[0,0.6,0.8],pole=[0.6,-0.8,-0.2],palm=[-s,0,0])=>({pos:[s*0.125+c[0],c[1],c[2]],contact:true,fingers:[s*f[0],f[1],f[2]],palm:[palm[0],palm[1],palm[2]],curl:0.25,pole:[s*pole[0],pole[1],pole[2]]});
 const hold=(c,f,p,palm)=>({armL:hb(1,c,f,p,palm&&[palm[0],palm[1],palm[2]]),armR:hb(-1,c,f,p,palm&&[-palm[0],palm[1],palm[2]])});
-const rel=(c,f=[0,0.1,1],p=[0.6,-0.8,-0.2],q=[-1,0,0])=>({armL:{pos:[0.125+c[0],c[1],c[2]],hand:'open',fingers:f,palm:q,pole:p},armR:{pos:[-0.125+c[0],c[1],c[2]],hand:'open',fingers:[-f[0],f[1],f[2]],palm:[-q[0],q[1],q[2]],pole:[-p[0],p[1],p[2]]}});
+const rel=(c,f=[0,0.1,1],p=[0.6,-0.8,-0.2],q=[-1,0,0])=>({armL:{pos:[0.17+c[0],c[1],c[2]],hand:'open',fingers:f,palm:q,pole:p},armR:{pos:[-0.17+c[0],c[1],c[2]],hand:'open',fingers:[-f[0],f[1],f[2]],palm:[-q[0],q[1],q[2]],pole:[-p[0],p[1],p[2]]}});
 const stand=(zl=0.03,zr=0.03)=>({legL:{pos:[0.17,0,zl],anchor:'sole',yaw:12,pole:[0.25,0,1]},legR:{pos:[-0.17,0,zr],anchor:'sole',yaw:-12,pole:[-0.25,0,1]}});
 const kleg=(z=-0.37)=>({legL:{pos:[0.12,0.2,z],anchor:'ankle',pole:[0,-1,0],pitch:80},legR:{pos:[-0.12,0.2,z],anchor:'ankle',pole:[0,-1,0],pitch:80}});
 const fh=(s,x,z)=>({pos:[s*x,0,z],contact:true,hand:'flat',fingers:[0,0,1],palm:[0,-1,0],pole:[s,0.3,-0.4]});
@@ -16,7 +16,7 @@ const P=(f,...props)=>({...f,props});
 W('medicine-ball-chest-pass',{camera:{az:70,el:6},muscles:['chest','triceps'],frames:{
  start:P({root:{pos:[0,0.92,0],pitch:-2},...hold([0,1.2,0.27]),...stand(0.16,-0.1)},BALL),
  mid:P({root:{pos:[0,0.92,0],pitch:1},...hold([0,1.3,0.4],[0,0.4,0.9],[0.5,-0.5,-0.3]),...stand(0.16,-0.1)},BALL),
- end:P({root:{pos:[0,0.92,0],pitch:4},...rel([0,1.4,0.5]),...stand(0.16,-0.1)},at([0,1.45,1.5]))}});
+ end:P({root:{pos:[0,0.92,0],pitch:4},...rel([0,1.4,0.5]),...stand(0.16,-0.1)},at([0,1.45,0.95]))}});
 
 // 2/3 kneeling chest push: explode, fall onto hands
 const kl=()=>kleg(-0.4);
@@ -35,7 +35,7 @@ kfall('chest-push-multiple-response',{props:[{type:'wall',pos:[0,0,2.5],height:1
   W('supine-chest-throw',{camera:{az:75,el:12},muscles:['triceps','chest'],frames:{
    start:P({...sup(R,{flex:0}),...hold([0,0.34,-0.3],[0,0.65,-0.75],[1,-0.2,0.3])},BALL),
    mid:P({...sup(R,{flex:0}),...hold([0,0.5,-0.38],[0,0.8,-0.6],[1,-0.1,0.2])},BALL),
-   end:P({...sup(R,{flex:0}),...rel([0,0.57,-0.4],[0,1,-0.2],[1,-0.3,0])},at([0,1.7,-0.4]))}}); }
+   end:P({...sup(R,{flex:0}),...rel([0,0.57,-0.4],[0,1,-0.2],[1,-0.3,0])},at([0,1.15,-0.4]))}}); }
 
 // 5 supine two-arm overhead throw: arms behind head, sit up, throw forward
 const ohA=(c)=>hold(c,[0,0.1,-1],[0.4,0.1,-0.6],[-1,0,0]);
@@ -43,7 +43,7 @@ W('supine-two-arm-overhead-throw',{camera:{az:70,el:12},muscles:['abdominals'],f
  start:P({...sup({pos:[0,0.115,0],pitch:-90},{flex:0},0),...ohA([0,0.16,-0.93])},BALL),
  mid:P({...sup({pos:[0,0.115,0],pitch:-86},{flex:2},2),...hold([0,0.62,-0.8],[0,0.6,-0.8],[0.4,-0.2,-0.3],[-1,0,0])},BALL),
  mid2:P({...sup({pos:[0,0.1,0],pitch:-70},{flex:8},4),...hold([0,0.88,-0.55],[0,1,0.1],[0.4,-0.4,-0.2],[-1,-0.3,0])},BALL),
- end:P({...sup({pos:[0,0.11,0],pitch:-12},{flex:14},6),...rel([0,0.75,0.4],[0,0.3,1],[0.4,-0.4,-0.2])},at([0,1.0,1.7]))}});
+ end:P({...sup({pos:[0,0.11,0],pitch:-12},{flex:14},6),...rel([0,0.75,0.4],[0,0.3,1],[0.4,-0.4,-0.2])},at([0,1.0,1.0]))}});
 
 // 6 supine one-arm overhead throw (left arm; right arm counterbalances)
 { const BL={type:'medicine-ball',kg:6,hand:'L'};
@@ -60,24 +60,27 @@ const cb=(z,y,pitch,up=0.3,fw=0.26)=>{const a=pitch*Math.PI/180;return [0,+(y+up
 const FP=[0.5,-0.7,-0.2];
 // 7 return push from stance: catch then throw back (no partner drawn)
 { const st=(y,pitch)=>({root:{pos:[0,y,0],pitch},legL:{pos:[0.17,0,0.14],anchor:'sole',yaw:8,pole:[0.2,0.3,1]},legR:{pos:[-0.17,0,-0.14],anchor:'sole',yaw:-8,pole:[-0.2,0.3,1]},spine:{flex:6}});
-  const cup=(z)=>({armL:{pos:[0.12,1.15,z],hand:'open',fingers:[0,0.4,0.9],palm:[-1,0.2,0.2],pole:[0.5,-0.7,-0.2]},armR:{pos:[-0.12,1.15,z],hand:'open',fingers:[0,0.4,0.9],palm:[1,0.2,0.2],pole:[-0.5,-0.7,-0.2]}});
+  const cup=(z)=>({armL:{pos:[0.17,1.15,z],hand:'open',fingers:[0,0.4,0.9],palm:[-1,0.2,0.2],pole:[0.5,-0.7,-0.2]},armR:{pos:[-0.17,1.15,z],hand:'open',fingers:[0,0.4,0.9],palm:[1,0.2,0.2],pole:[-0.5,-0.7,-0.2]}});
   W('return-push-from-stance',{camera:{az:70,el:6},muscles:['shoulders','chest'],frames:{
    start:P({...st(0.8,14),...cup(0.55)},at([0,1.15,1.4])),
    mid:P({...st(0.78,16),...hold(cb(0,0.78,16),[0,0.5,0.85],FP)},BALL),
-   end:P({...st(0.82,12),...rel(cb(0,0.82,12,0.3,0.5),[0,0.2,1],FP)},at([0,1.4,1.6]))}}); }
+   end:P({...st(0.82,12),...rel(cb(0,0.82,12,0.3,0.5),[0,0.2,1],FP)},at([0,1.4,1.0]))}}); }
 
-// 8 chest push from 3 point stance: first step draws ball to chest, second step pushes
+const wide=(h,d)=>({armL:{...h.armL,pos:[h.armL.pos[0]+d,h.armL.pos[1],h.armL.pos[2]]},armR:{...h.armR,pos:[h.armR.pos[0]-d,h.armR.pos[1],h.armR.pos[2]]}});
 const ath=(z,y,pitch,fl,fr,sp=0)=>({root:{pos:[0,y,z],pitch},spine:{flex:sp},legL:fl,legR:fr});
 const ft=(x,y,z,pitch=0,yaw=0)=>({pos:[x,y,z],anchor:'sole',pitch,yaw,pole:[x*1.6,0.4,1]});
+// 8 chest push from 3 point stance: first step (R) draws ball to chest, second step (L) pushes; planted feet keep one spot, steps have a lifted frame (a foot that is lifted moves under 20 cm between key frames)
 W('chest-push-from-3-point-stance',{camera:{az:70,el:8},muscles:['chest','triceps'],frames:{
-   start:P({...ath(0.0,0.48,68,ft(0.45,0,0.1,0,20),ft(-0.45,0,0.1,0,-20),22),neck:{flex:-35},armL:{pos:[0.25,0,0.38],contact:true,hand:'flat',fingers:[0,0,1],palm:[0,-1,0],pole:[1,0.3,-0.3]},armR:{pos:[-0.12,0.25,0.5],contact:true,hand:'flat',fingers:[0,0,1],palm:[0,-1,0],pole:[-1,0.3,-0.3]}},at([0,0.125,0.5])),
-   mid:P({...ath(0.0,0.62,55,ft(0.55,0,0.3),ft(-0.55,0,-0.05)),...hold([0,0.45,0.5],[0,-0.5,0.9],FP)},BALL),
-   mid2:P({...ath(0.15,0.74,35,ft(0.3,0,0.5),ft(-0.3,0.08,0.05,0)),...hold(cb(0.15,0.72,35),[0,0.3,1],FP)},BALL),
-   end:P({...ath(0.45,0.86,12,ft(0.3,0,0.5),ft(-0.2,0,0.8)),...rel(cb(0.45,0.74,14,0.3,0.36),[0,0.2,1],[0.3,-0.9,-0.1],[-1,-0.3,0])},at([0,1.5,2.0]))}});
+   start:P({...ath(0.0,0.48,68,ft(0.5,0,0.1,0,20),ft(-0.5,0,0.1,0,-20),22),neck:{flex:-35},armL:{pos:[0.3,0,0.4],contact:true,hand:'flat',fingers:[0.35,0,0.94],palm:[0,-1,0],pole:[0.6,-0.5,-0.3]},armR:{pos:[-0.03,0.253,0.56],contact:true,hand:'flat',fingers:[0,0,1],palm:[0,-1,0],pole:[-1,0.3,-0.3]}},at([0,0.125,0.56])),
+   mid:P({...ath(0.03,0.66,52,ft(0.5,0,0.1,0,20),ft(-0.5,0.15,0.2,25)),...wide(hold([0,0.45,0.56],[0,-0.2,1],FP,[-1,-0.5,0]),0.015)},BALL),
+   mid2:P({...ath(0.15,0.66,45,ft(0.5,0,0.1,0,20),ft(-0.5,0,0.35),8),...hold(cb(0.15,0.66,45,0.3,0.32),[0,0.3,1],FP,[-1,-0.4,0])},BALL),
+   mid3:P({...ath(0.26,0.78,25,ft(0.45,0.2,0.28),ft(-0.5,0,0.35)),...hold(cb(0.26,0.78,25,0.3,0.4),[0,0.3,1],FP,[-1,-0.4,0])},BALL),
+   end:P({...ath(0.36,0.8,12,ft(0.4,0,0.45),ft(-0.5,0,0.35)),...rel(cb(0.36,0.8,12,0.3,0.45),[0,0.2,1],[0.3,-0.9,-0.1],[-1,0,0])},at([0,1.5,1.5]))}});
 
-// 9 chest push with run release: step 1 draw to chest, step 2 push, sprint away
+// 9 chest push with run release: step 1 (R) draws to chest, step 2 (L) pushes, sprint away
 W('chest-push-with-run-release',{camera:{az:70,el:8},muscles:['chest','triceps'],frames:{
    start:P({...ath(0,0.74,32,ft(0.25,0,0.2),ft(-0.25,0,-0.1)),...hold([0,0.72,0.33],[0,-0.1,1],FP,[-1,-0.3,0])},BALL),
-   mid:P({...ath(0.2,0.76,22,ft(0.25,0,0.2),ft(-0.25,0,0.4)),...hold(cb(0.2,0.76,22),[0,0.3,0.95],FP)},BALL),
-   mid2:P({...ath(0.5,0.78,14,ft(0.25,0,0.75),ft(-0.25,0,0.4)),...rel(cb(0.5,0.78,14,0.3,0.36),[0,0.2,1],[0.3,-0.9,-0.1])},at([0,1.45,1.6])),
-   end:P({...ath(0.95,0.8,25,ft(0.25,0,0.75),ft(-0.25,0.2,1.2,-10)),...rel(cb(0.95,0.8,25,0.3,0.3),[0,0.2,1],[0.3,-0.9,-0.1])},at([0,1.1,3.2]))}});
+   mid:P({...ath(0.1,0.75,28,ft(0.25,0,0.2),ft(-0.25,0.2,0.05,25)),...hold(cb(0.1,0.75,28),[0,0.3,0.95],FP)},BALL),
+   mid2:P({...ath(0.22,0.76,22,ft(0.25,0,0.2),ft(-0.25,0,0.25)),...hold(cb(0.22,0.76,22),[0,0.3,0.95],FP)},BALL),
+   mid3:P({...ath(0.32,0.78,16,ft(0.25,0.25,0.38),ft(-0.25,0,0.25)),...hold(cb(0.32,0.78,16,0.3,0.42),[0,0.3,1],FP)},BALL),
+   end:P({...ath(0.4,0.8,14,ft(0.25,0,0.55),ft(-0.25,0,0.25)),...rel(cb(0.4,0.8,14,0.3,0.4),[0,0.2,1],[0.3,-0.9,-0.1])},at([0,1.45,1.5]))}});

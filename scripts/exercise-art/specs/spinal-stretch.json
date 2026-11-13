@@ -207,7 +207,7 @@
      0.58,
      -0.12
     ],
-    "pitch": 28
+    "pitch": 14
    },
    "legL": {
     "pos": [
@@ -237,10 +237,10 @@
    },
    "spine": {
     "twist": 40,
-    "flex": 18
+    "flex": 12
    },
    "neck": {
-    "flex": 5
+    "flex": 3
    },
    "armL": {
     "pos": [

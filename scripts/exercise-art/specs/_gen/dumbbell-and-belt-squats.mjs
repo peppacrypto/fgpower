@@ -6,15 +6,15 @@ const leg=(x,yaw,y=0,z=0.02,pl=0.4,pitch=0)=>({legL:{pos:[x,y,z],anchor:'sole',y
 const standRoot=(dy=0)=>({root:{pos:[0,0.925+dy,0]}});
 const botRoot=(dy=0,z=-0.2)=>({root:{pos:[0,0.46+dy,z],pitch:30},spine:{flex:-4},neck:{flex:-18}});
 // goblet
-const PZ=+(process.env.PZ??0);const FE=+(process.env.FE??-0.1),FS=+(process.env.FS??-0.5);const C=+(process.env.C??0.3);const F=+(process.env.F??-0.3);const gob=(k)=>{const b=k==='end';const y=b?0.87:1.23;return {...(b?{root:{pos:[0,0.515,-0.2],pitch:18},spine:{flex:4},neck:{flex:-14}}:standRoot()),
+const PZ=+(process.env.PZ??0);const FE=+(process.env.FE??-0.1),FS=+(process.env.FS??-0.5);const C=+(process.env.C??0.3);const F=+(process.env.F??-0.3);const gob=(k)=>{const b=k==='end';const y=b?0.81:1.23;return {...(b?{root:{pos:[0,0.45,-0.2],pitch:18},spine:{flex:4},neck:{flex:-14}}:standRoot()),
  armL:{pos:[0.045,y,0.26],contact:true,fingers:[0,b?FE:FS,1],palm:[-0.2,0.9,-0.3],curl:C,pole:[b?1.2:1.6,-1,PZ]},
  armR:{pos:[-0.045,y,0.26],contact:true,fingers:[0,b?FE:FS,1],palm:[0.2,0.9,-0.3],curl:C,pole:[b?-1.2:-1.6,-1,PZ]},
  ...leg(0.2,22,0,0.02,0.5)};};
 out['goblet-squat']={slug:'goblet-squat',camera:{az:40,el:6},muscles:['quadriceps'],props:[{type:'dumbbell',hands:true,hold:'goblet',kg:20}],frames:{start:gob('start'),end:gob('end')}};
 // dumbbell squat: weights at sides
 const sidesArm=(s,b,hy)=>({pos:[s*(b?0.42:0.28),hy,b?-0.12:0.04],contact:true,fingers:[0,-1,0],palm:[-s,0,0],curl:0.85,pole:[s*0.15,0,-1]});
-const ds=(k,extra={})=>{const b=k==='end';return {...(b?botRoot():standRoot()),
- armL:sidesArm(1,b,b?0.62:0.825),armR:sidesArm(-1,b,b?0.62:0.825),...leg(0.2,18,0,0.02,0.45)};};
+const ds=(k,extra={})=>{const b=k==="end";return {...(b?botRoot(-0.03):standRoot()),
+ armL:sidesArm(1,b,b?0.58:0.825),armR:sidesArm(-1,b,b?0.58:0.825),...leg(0.2,18,0,0.02,0.45)};};
 out['dumbbell-squat']={slug:'dumbbell-squat',camera:{az:40,el:6},muscles:['quadriceps'],props:[{type:'dumbbell',hand:'L',kg:15},{type:'dumbbell',hand:'R',kg:15}],frames:{start:ds('start'),end:ds('end')}};
 // to bench
 const sb=cp(out['dumbbell-squat']);sb.slug='dumbbell-squat-to-a-bench';sb.camera={az:70,el:6};
@@ -22,9 +22,9 @@ sb.props.push({type:'flat-bench',pos:[0,0,-0.5],yaw:90});
 sb.frames.end.root.pos=[0,0.53,-0.2];sb.frames.end.root.pitch=26;
 out['dumbbell-squat-to-a-bench']=sb;
 // plie (dumbbell held low in both hands, wide toes-out stance)
-const pl=(k)=>{const b=k==='end';const g=gob(k);return {...(b?{root:{pos:[0,0.52,-0.1],pitch:16},spine:{flex:2},neck:{flex:-12}}:{root:{pos:[0,0.89,0]}}),
- armL:{...g.armL,palm:[-(process.env.PX??0.35),0.9,-0.3],pole:[b?+(process.env.PP??1.2):1.6,-1,0],pos:[0.045,b?0.87:1.2,0.26]},armR:{...g.armR,palm:[+(process.env.PX??0.35),0.9,-0.3],pole:[b?-(process.env.PP??1.2):-1.6,-1,0],pos:[-0.045,b?0.87:1.2,0.26]},
- ...leg(0.32,42,0,0.02,0.9)};};
+const pl=(k)=>{const b=k==='end';const g=gob(k);return {...(b?{root:{pos:[0,0.44,-0.3],pitch:18},spine:{flex:4},neck:{flex:-14}}:{root:{pos:[0,0.91,0]}}),
+ armL:{...g.armL,palm:[-(process.env.PX??0.35),0.9,-0.3],pole:[b?+(process.env.PP??1.2):1.6,-1,0],pos:[0.045,b?0.85:1.22,+(process.env.PZZ??0.26)],fingers:[0,b?+(process.env.PE??-0.1):-0.5,1]},armR:{...g.armR,palm:[+(process.env.PX??0.35),0.9,-0.3],pole:[b?-(process.env.PP??1.2):-1.6,-1,0],pos:[-0.045,b?0.87:1.2,0.26]},
+ ...leg(0.32,42,0,-0.03,0.9)};};
 out['plie-dumbbell-squat']={slug:'plie-dumbbell-squat',camera:{az:25,el:6},muscles:['quadriceps','adductors'],props:[{type:'dumbbell',hands:true,hold:'goblet',kg:20}],frames:{start:pl('start'),end:pl('end')}};
 // bands
 const bd=(k)=>{const b=k==='end';return {...(b?botRoot():standRoot()),

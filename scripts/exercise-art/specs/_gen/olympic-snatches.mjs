@@ -32,6 +32,8 @@ const P={
  deep:()=>OF({pos:[0,0.46,-0.2],pitch:28},-2,-6,1.27,wide()),
  splitc:()=>OF({pos:[0,0.66,0.0],pitch:2},-2,-3,1.68,{legL:{pos:[0.12,0,0.45],anchor:'sole',yaw:2,pole:[0.1,0.5,1]},legR:{pos:[-0.12,0.05,-0.6],anchor:'ball',pole:[-0.1,-0.2,1],pitch:60}}),
  turn:()=>{const T={th:100,y:1.4,z:0.25,x:0.5,pole:[1,-1,0.2],...JSON.parse(process.env.T||'{}')};const c=Math.cos(T.th*Math.PI/180),n=Math.sin(T.th*Math.PI/180);return F({pos:[0,0.97,0.0],pitch:-4},-2,T.nk??-6,s=>({pos:[T.x*s,T.y,T.z],hand:'grip',grip:0.014,fingers:[0,-c,n],palm:[0,-n,-c],pole:[T.pole[0]*s,T.pole[1],T.pole[2]],scap:{elev:1,prot:0}}),toes())},
+ air:()=>{const a=P.turn();return {...a,armL:{...a.armL,pos:[0.5,1.75,0.3]},armR:{...a.armR,pos:[-0.5,1.75,0.3]},root:{pos:[0,1.0,0.04],pitch:-2},...{legL:{pos:[0.22,0.1,0.06],anchor:'ball',pitch:30,pole:[0.5,0,1]},legR:{pos:[-0.22,0.1,0.06],anchor:'ball',pitch:30,pole:[-0.5,0,1]}}}},
+ airsplit:()=>({...P.air(),legL:{pos:[0.13,0.12,0.3],anchor:'ball',pitch:20,pole:[0.15,0.4,1]},legR:{pos:[-0.14,0.2,-0.15],anchor:'ball',pitch:50,pole:[-0.1,-0.1,1]}}),
  muscle:()=>OF({pos:[0,0.96,0],pitch:-4},-2,0,1.8,toes()),
  mhigh:()=>F({pos:[0,0.96,0],pitch:-4},-2,0,s=>gp(s,0.5,1.45,0.2),toes()),
 };
@@ -46,13 +48,13 @@ const blocks=[{type:'pull-blocks',height:0.3},{type:'barbell',hands:true,kind:'b
 const fl=()=>P.floor(),kn=()=>P.knee();
 const bf=()=>P.floor(0.3), bk=()=>P.knee(0.3);
 const H=['hamstrings','glutes','quadriceps'];
-save('snatch',cam,['quadriceps','glutes','shoulders'],[fl,kn,P.pull,P.turn,P.deep]);
-save('power-snatch',cam,H,[fl,kn,P.pull,P.turn,P.powercatch]);
-save('split-snatch',{az:75,el:8},H,[fl,kn,P.pull,P.turn,P.splitc]);
-save('hang-snatch',cam,H,[P.thigh,P.pull,P.turn,P.deep,P.up]);
-save('hang-snatch-below-knees',cam,H,[P.below,P.thigh,P.pull,P.turn,P.deep]);
-save('snatch-from-blocks',cam,['quadriceps','glutes'],[bf,bk,P.pull,P.turn,P.deep],blocks);
-save('power-snatch-from-blocks',cam,['quadriceps','glutes'],[bf,bk,P.pull,P.turn,P.powercatch],blocks);
+save('snatch',cam,['quadriceps','glutes','shoulders'],[fl,kn,P.pull,P.air,P.deep]);
+save('power-snatch',cam,H,[fl,kn,P.pull,P.air,P.powercatch]);
+save('split-snatch',{az:75,el:8},H,[fl,kn,P.pull,P.airsplit,P.splitc]);
+save('hang-snatch',cam,H,[P.thigh,P.pull,P.air,P.deep]);
+save('hang-snatch-below-knees',cam,H,[P.below,P.thigh,P.pull,P.air,P.deep]);
+save('snatch-from-blocks',cam,['quadriceps','glutes'],[bf,bk,P.pull,P.air,P.deep],blocks);
+save('power-snatch-from-blocks',cam,['quadriceps','glutes'],[bf,bk,P.pull,P.air,P.powercatch],blocks);
 save('muscle-snatch',cam,['shoulders','traps','hamstrings'],[P.thigh,P.pull,P.turn,P.muscle]);
 save('snatch-deadlift',cam,['hamstrings','glutes','spinal-erectors'],[fl,kn,P.hips]);
 save('snatch-pull',cam,['hamstrings','glutes','traps'],[fl,kn,P.thigh,P.ext,P.pull]);

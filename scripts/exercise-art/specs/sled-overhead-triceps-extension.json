@@ -1,5 +1,4 @@
 {
- "slug": "sled-overhead-triceps-extension",
  "camera": {
   "az": 55,
   "el": 10
@@ -239,5 +238,6 @@
     "pron": 0
    }
   }
- }
+ },
+ "slug": "sled-overhead-triceps-extension"
 }

@@ -34,7 +34,7 @@ for (const file of files) {
     continue
   }
   const info = catalogInfo(slug)
-  const names = ['start', ...['mid', 'mid2', 'mid3'].filter((k) => fr[k]), 'end']
+  const names = ['start', ...['mid', 'mid2', 'mid3', 'mid4', 'mid5'].filter((k) => fr[k]), 'end']
   const frames = names.map((n) => fr[n] || fr.start)
   const reports = frames.map((f) => body.solve(f).report)
   const segs = segmentsOf(spec, info, reports, frames)

@@ -10,13 +10,17 @@
  "props": [
   {
    "type": "stability-ball",
-   "pos": [
-    0,
-    0,
-    0
-   ],
    "radius": 0.325,
-   "load": 0.8
+   "load": 0.8,
+   "follow": {
+    "on": [
+     "upperleg01",
+     "spine01"
+    ],
+    "side": "both",
+    "clear": 0.12,
+    "at": 0.45
+   }
   }
  ],
  "frames": {
@@ -24,30 +28,29 @@
    "root": {
     "pos": [
      0,
-     0.66,
-     0.14
+     0.6,
+     0.05
     ],
-    "pitch": -118
+    "pitch": -100
    },
    "spine": {
-    "flex": -12
+    "flex": -40
    },
    "neck": {
     "flex": -10
    },
    "armL": {
     "pos": [
-     -0.1,
+     0.14,
      0.05,
      0.215
     ],
     "rel": "chest",
-    "contact": true,
     "hand": "flat",
     "fingers": [
-     -0.6,
-     0.5,
-     0.5
+     -0.25,
+     0.8,
+     0.4
     ],
     "palm": [
      0,
@@ -63,17 +66,16 @@
    },
    "armR": {
     "pos": [
-     0.1,
+     -0.14,
      0.05,
      0.215
     ],
     "rel": "chest",
-    "contact": true,
     "hand": "flat",
     "fingers": [
-     0.6,
-     0.5,
-     0.5
+     0.25,
+     0.8,
+     0.4
     ],
     "palm": [
      0,
@@ -122,30 +124,29 @@
    "root": {
     "pos": [
      0,
-     0.66,
-     0.14
+     0.6,
+     0.05
     ],
-    "pitch": -82
+    "pitch": -100
    },
    "spine": {
-    "flex": 28
+    "flex": 10
    },
    "neck": {
-    "flex": 18
+    "flex": 25
    },
    "armL": {
     "pos": [
-     -0.1,
+     0.14,
      0.05,
      0.215
     ],
     "rel": "chest",
-    "contact": true,
     "hand": "flat",
     "fingers": [
-     -0.6,
-     0.5,
-     0.5
+     -0.25,
+     0.8,
+     0.4
     ],
     "palm": [
      0,
@@ -161,17 +162,16 @@
    },
    "armR": {
     "pos": [
-     0.1,
+     -0.14,
      0.05,
      0.215
     ],
     "rel": "chest",
-    "contact": true,
     "hand": "flat",
     "fingers": [
-     0.6,
-     0.5,
-     0.5
+     0.25,
+     0.8,
+     0.4
     ],
     "palm": [
      0,

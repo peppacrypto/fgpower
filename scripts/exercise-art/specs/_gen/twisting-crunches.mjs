@@ -21,7 +21,7 @@ const bike=(tw,fl,fr_)=>fr(sup(-82),{spine:{flex:24,twist:tw,weights:SW},armL:he
 save('air-bike',{az:55,el:18},['abdominals','obliques'],{
  start:bike(24,leg(105,105),leg(35,5)),mid:bike(0,leg(70,55),leg(70,55)),end:bike(-24,leg(35,5),leg(105,105))});
 // ---- alternate-heel-touchers: side crunch to the right heel
-const ht=(c)=>{const hx=0.27;return fr(sup(-90,0.1),{neck:{flex:-4,side:8*c},spine:{flex:10*c,side:-24*c,weights:SW},
+const ht=(c)=>{const hx=0.27;return fr(sup(-90,0.1),{neck:{flex:-4,side:8*c},spine:{flex:26*c,side:-24*c,weights:SW},
   armL:{pos:[hx,0.02,0.0],fingers:[0,0,1],palm:[0,-1,0],contact:true,hand:'flat',pole:[1,0,-0.3]},
   armR:{pos:[-hx,0.02,0.0+0.2*c],fingers:[0,0,1],palm:[0,-1,0],contact:true,hand:'flat',pole:[-1,0,-0.3]},
   legL:sole(1,0.28,0.5,[0.2,1,0.1]),legR:sole(-1,0.28,0.5,[-0.2,1,0.1])});};
@@ -33,21 +33,22 @@ const etk=(c,tw)=>fr(sup(-90+c*0.1),{spine:{flex:24*c,twist:tw,weights:SW},armL:
 save('elbow-to-knee',{az:50,el:18},['abdominals','obliques'],{start:etk(0,0),end:etk(1,-26)});
 // ---- oblique-crunches: feet on a bench, right hand at head, left hand on floor
 const BZ=0.45;
-const oc=(c)=>fr(sup(-90+c*0.1),{neck:{flex:0},spine:{flex:18*c,twist:24*c,weights:SW},armR:head(-1),
+const oc=(c)=>fr(sup(-90+c*0.1),{neck:{flex:0},spine:{flex:30*c,twist:24*c,weights:SW},armR:head(-1),
   armL:{pos:[0.3,0.01,-0.05],fingers:[0,0,1],palm:[0,-1,0],contact:true,hand:'flat',pole:[1,0,-0.3]},
   legL:{pos:[0.11,0.445,BZ],anchor:'sole',pitch:-12,pole:[0,1,0.2]},legR:{pos:[-0.11,0.445,BZ],anchor:'sole',pitch:-12,pole:[0,1,0.2]}});
 save('oblique-crunches',{az:50,el:18},['obliques','abdominals'],{start:oc(0),end:oc(1)},{props:[{type:'plyo-box',height:0.43,width:0.6,depth:0.5,pos:[0,0,BZ+0.25-0.1]}]});
 // ---- side-jackknife: lying on side, top leg up, top elbow to knee
-const sj=(c)=>({root:{pos:[0,0.2,0],yaw:90,roll:81-2*c},neck:{side:-4+2*c},
- spine:{side:18*c,weights:[0,0.1,0.3,0.3,0.3]},
+const SD=6;const sj=(c,fl=0,lift=0.4,nf=0)=>({root:{pos:[0,0.2,0],yaw:90,roll:81-2*c},neck:{side:-4+2*c,flex:nf*c},
+ spine:{flex:fl*c,side:SD*c,weights:[0,0.1,0.3,0.3,0.3]},
  armL:{pos:[0.09,0.1,-0.17],rel:'head',fingers:[-1,0,0.2],palm:[0,0.2,1],pole:[0,1,0],curl:0.3},
- armR:{pos:[0.3,0.05,0.35],fingers:[0,0,-1],palm:[0.3,-1,0],pole:[1,0,0],curl:0.1,contact:true},
- legL:{pos:[0.08,0.16+0.4*c,-0.82+0.18*c],anchor:'ankle',yaw:90,roll:90,pole:[1,0,0]},
+ armR:{pos:[0.3,0.02,0.28],fingers:[0,0,-1],palm:[0,-1,0],pole:[1,0,0.3],curl:0.1,contact:true},
+ legL:{pos:[0.08,0.16+lift*c,-0.82+0.18*c],anchor:'ankle',yaw:90,roll:90,pole:[1,0,0]},
  legR:{pos:[0.08,0.07,-0.82],anchor:'ankle',yaw:90,roll:90,pole:[1,0,0]}});
-save('side-jackknife',{az:76,el:10},['obliques','abdominals'],{start:sj(0),end:sj(1)},{muscleSide:'L'});
+save('side-jackknife',{az:76,el:10},['obliques','abdominals'],{start:sj(0),end:sj(1,24,0.45,0)},{muscleSide:'L'});
+save('oblique-crunches-on-the-floor',{az:76,el:10},['obliques','abdominals'],{start:sj(0),end:sj(1,24,0.1,0)},{muscleSide:'L'});
 // ---- russian twist (feet on floor) and plate twist (legs crossed, plate)
 const twArm=(s)=>({fk:{flex:84,abd:-18*s*-1*-1,rot:0,elbow:8},rel:'chest',hand:'relaxed'});
-const rt=(tw)=>fr({pos:[0,0.11,-0.05],pitch:-50},{spine:{flex:0,twist:tw,weights:SW},neck:{flex:-4},
+const rt=(tw)=>fr({pos:[0,0.085,-0.05],pitch:-50},{spine:{flex:0,twist:tw,weights:SW},neck:{flex:-4},
   armL:{fk:{flex:84,abd:-16,rot:0,elbow:8},rel:'chest'},armR:{fk:{flex:84,abd:-16,rot:0,elbow:8},rel:'chest'},
   legL:sole(1,0.12,0.5,[0.1,1,0.3]),legR:sole(-1,0.12,0.5,[-0.1,1,0.3])});
 save('russian-twist',{az:25,el:18},['obliques','abdominals'],{start:rt(40),mid:rt(0),end:rt(-40)});

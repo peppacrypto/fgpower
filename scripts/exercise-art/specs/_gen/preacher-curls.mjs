@@ -1,5 +1,5 @@
 import fs from 'fs';
-const P = { bot:[0.7738,0.3795], mid:[0.963,0.424], top:[1.2052,0.2495] };
+const T=0.045; const P = { bot:[0.7738-0.6157*T,0.3795+0.788*T], mid:[0.963,0.424], top:[1.2052,0.2495] };
 const FP = { bot:[-0.6157,0.788], mid:[0,1], top:[0.866,0.5] }; // finger dir (y,z) along forearm
 const SH = +(process.env.SH||0.045);
 const n = v => { const l=Math.hypot(...v); return v.map(x=>x/l); };

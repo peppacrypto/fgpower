@@ -11,22 +11,26 @@ const air = (fy,fz,h,pitch,fl,o={}) => ({ root:{pos:[0,fy+h,fz-(o.b??0.05)],pitc
 W('standing-long-jump', { camera:{az:112,el:8}, muscles:['quadriceps','glutes','calves'], floats:true,
   frames:{ start:sq(0,-0.5,0.66,0.14,32,-18,-45,{leg:{anchor:'ball'}}),
            mid:{ root:{pos:[0,0.94,-0.4],pitch:20}, neck:{flex:-8}, ...arms(150,10,6), legL:leg(0.13,0.0,-0.5,{anchor:'ball',pitch:30}), legR:leg(-0.13,0.0,-0.5,{anchor:'ball',pitch:30}) },
-           mid2:{ root:{pos:[0,1.15,0.6],pitch:25}, neck:{flex:-6}, ...arms(110,20,6), ...legs(0.13,0.65,0.95,{pitch:10}) },
-           end:{ ...sq(0,1.45,0.55,0.25,38,-18,60), ...legs(0.13,0,1.45,{pitch:-8}) } } });
+           mid2:{ root:{pos:[0,1.2,0.6],pitch:14}, neck:{flex:-6}, ...arms(110,20,6), ...legs(0.13,0.5,0.9,{pitch:10}) },
+           end:{ ...sq(0,1.45,0.62,0.2,28,-14,60), ...legs(0.13,0,1.45,{pitch:-8}) } } });
 
 // 2 side standing long jump: travel to figure's right (-x), facing +Z, camera in front
 const sd = (rx,fy,legx,h,pitch,fl,o={}) => ({ root:{pos:[rx,fy+h,0],pitch}, neck:{flex:-8}, ...arms(fl,o.el??25,o.abd??10),
   legL:leg(rx+legx,fy,0,o.l||{}), legR:leg(rx-legx,fy,0,o.r||{}) });
 W('side-standing-long-jump', { camera:{az:15,el:8}, muscles:['quadriceps','glutes','abductors'], floats:true,
   frames:{ start:sd(0.3,0,0.13,0.68,24,10),
-           mid:{ root:{pos:[0.0,1.0,0],pitch:6,roll:-8}, neck:{flex:-4}, ...arms(60,40,25), legL:leg(0.1,0.18,0,{pitch:12}), legR:leg(-0.2,0.15,0,{pitch:12}) },
+           mid:{ root:{pos:[0.3,0.78,0],pitch:12}, neck:{flex:-6}, ...arms(40,30,15), legL:leg(0.43,0.06,0,{pitch:0}), legR:leg(0.17,0.06,0,{pitch:0}) },
+           mid2:{ root:{pos:[0.0,1.0,0],pitch:6,roll:-8}, neck:{flex:-4}, ...arms(60,40,25), legL:leg(0.1,0.18,0,{pitch:12}), legR:leg(-0.2,0.15,0,{pitch:12}) },
+           mid3:{ root:{pos:[-0.9,0.8,0],pitch:14}, neck:{flex:-6}, ...arms(50,35,18), legL:leg(-0.77,0.06,0,{pitch:0}), legR:leg(-1.03,0.06,0,{pitch:0}) },
            end:sd(-0.9,0,0.13,0.72,18,50,{el:40,abd:20}) } });
 
 // 3 lateral bound: single leg to the side, land on opposite leg, bend hip/knee
 W('lateral-bound', { camera:{az:15,el:8}, muscles:['adductors','glutes','quadriceps'], floats:true,
   frames:{ start:{ root:{pos:[0.25,0.72,0],pitch:22,roll:6}, neck:{flex:-8}, ...arms(20,60,15),
                    legL:leg(0.25,0,0,{pitch:0}), legR:leg(0.0,0,0,{pitch:0}) },
-           mid:{ root:{pos:[-0.05,1.0,0],pitch:12,roll:-8}, neck:{flex:-6}, ...arms(40,50,20), legL:leg(0.0,0.35,0,{pitch:15}), legR:leg(-0.2,0.05,0,{anchor:'ball',pitch:50}) },
+           mid:{ root:{pos:[0.2,0.8,0],pitch:16,roll:2}, neck:{flex:-7}, ...arms(30,55,18), legL:leg(0.25,0.06,0,{pitch:0}), legR:leg(0.0,0.06,0,{pitch:0}) },
+           mid2:{ root:{pos:[-0.2,1.05,0],pitch:12,roll:-4}, neck:{flex:-6}, ...arms(40,50,20), legL:leg(-0.05,0.25,0,{pitch:15}), legR:leg(-0.35,0.2,0,{pitch:20}) },
+           mid3:{ root:{pos:[-0.6,0.8,0],pitch:20,roll:-5}, neck:{flex:-7}, ...arms(25,55,16), legL:leg(-0.35,0.05,0,{anchor:'ball',pitch:20}), legR:leg(-0.7,0.06,0,{pitch:0}) },
            end:{ root:{pos:[-0.65,0.7,0],pitch:24,roll:-6}, neck:{flex:-8}, ...arms(20,60,15),
                  legL:leg(-0.35,0.12,0,{anchor:'ball',pitch:35}), legR:leg(-0.7,0,0,{pitch:0}) } } });
 

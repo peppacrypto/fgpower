@@ -40,7 +40,10 @@ mk('freehand-jump-squat',['quadriceps'],{az:50,el:8},{start:sq,end:jmp});
  const s=cp(sq);Object.assign(s,{armL:head(1),armR:head(-1)});
  const e=cp(jmp);e.root.pos=[0,1.1,0.5];Object.assign(e,{armL:head(1),armR:head(-1)});
  for(const l of ['legL','legR'])e[l].pos[2]=0.55;
- mk('frog-hops',['quadriceps'],{az:90,el:6},{start:s,end:e});}
+ // take-off: straight up first (feet leave the floor on the spot), then forward
+ const m=cp(jmp);m.root.pos=[0,1.0,0.0];Object.assign(m,{armL:head(1),armR:head(-1)});
+ for(const l of ['legL','legR'])m[l].pos[2]=s[l].pos[2];
+ mk('frog-hops',['quadriceps'],{az:90,el:6},{start:s,mid:m,end:e});}
 // lunge family
 const lunge=(front)=>{const f=front==='L'?1:-1;const F=front==='L'?'legL':'legR',B=front==='L'?'legR':'legL';
  const r={root:{pos:[0,0.6,0],pitch:0},spine:{flex:0},...side(15,12,40)};
@@ -53,6 +56,11 @@ const airS=()=>{const e={root:{pos:[0,AIR,0],pitch:0},...side(50,12,60)};
 mk('scissors-jump',['quadriceps'],{az:90,el:6},{start:lunge('L'),mid:airS(),end:lunge('R')});
 mk('split-jump',['quadriceps'],{az:90,el:6},{start:lunge('L'),mid:airT(),end:lunge('L')});
 mk('split-squats',['quadriceps'],{az:90,el:6},{start:lunge('L'),mid:airS(),end:lunge('R')});
+{const ZF=0.34,ZB=-0.45;const fix=(fr,f)=>{const F=f==='L'?'legL':'legR',B=f==='L'?'legR':'legL';fr[F].pos[2]=ZF;fr[B].pos[2]=ZB;};
+ const tall=(f)=>{const t=lunge(f);t.root.pos=[0,0.88,0];const F=f==='L'?'legL':'legR',B=f==='L'?'legR':'legL';t[F].pos[2]=ZF;t[B].pos[2]=ZB;return t;};
+ const o=out['split-squats'].frames;
+ fix(o.start,'L');fix(o.end,'R');
+ out['split-squats'].frames={start:tall('L'),mid:o.start,mid2:o.mid,mid3:o.end,end:tall('R')};}
 out['split-squats'].muscles=['hamstrings','quadriceps'];
 for(const [k,v] of Object.entries(out))fs.writeFileSync(D+k+'.json',JSON.stringify(v,null,1));
 console.log(Object.keys(out).map(k=>'specs/'+k+'.json').join(' '));

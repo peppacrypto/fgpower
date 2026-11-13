@@ -37,4 +37,51 @@ for(const s of slugs){const j=L(s),F=j.frames;
   towelFix(j);}
  if(s==='seated-thigh-lift-curl'){F.end.legL.pos[2]+=0.12;F.end.legL.pos[1]-=0.04;for(const f in F){F[f].armL.pos[0]=0.24;F[f].armL.palm=[f==='start'?-0.4:0.05,1,0.15];F[f].armL.fingers=[0.4,F[f].armL.fingers[1],0.9];F[f].armR.pos[0]-=0.03;}
   F.end.armL.pos[2]-=0.06;F.end.armL.pos[1]-=0.04;}
+ fix(s,j);
  fs.writeFileSync(D+s+'.json',JSON.stringify(j,null,1));}
+
+function fix(s,j){const F=j.frames,N=(a,b)=>a.map((v,i)=>+(v+b[i]).toFixed(4));
+ if(s==='supine-elbow-row'||s==='hips-up-elbow-row'){
+  j.qaAllow={'rom:horizontal-pull.stretch':'floor elbow row is a bent-arm drive by design: the forearms stay vertical (about 90 deg) and the elbows press into the floor; there is no long-arm start'};}
+ if(s==='seated-towel-row'){
+  const fz=+(process.env.FZ||0.86),fz2=+(process.env.FZ2||0.60),ry=+(process.env.RY||0.11);
+  const mk=(z,y,hz,hy,hx)=>({legL:{pos:[0.1,y,z]},legR:{pos:[-0.1,y,z]},hz,hy,hx});
+  const set=(f,ankZ,ankY,hx,hy,hz)=>{const fr=F[f];fr.root.pos[1]=ry;
+   for(const k of ['legL','legR']){fr[k].pos=[k==='legL'?0.1:-0.1,ankY,ankZ];}
+   fr.armL.pos=[hx,hy,hz];fr.armR.pos=[-hx,hy,hz];
+   const P=fr.props[0].points,fy=ankY+0.03,fzz=ankZ+0.08;
+   P[0]=[hx,hy,hz];P[5]=[-hx,hy,hz];P[1]=[0.16,fy,fzz-0.02];P[2]=[0.1,fy,fzz];P[3]=[-0.1,fy,fzz];P[4]=[-0.16,fy,fzz-0.02];};
+  const mid=JSON.parse(JSON.stringify(F.start));F.mid=mid;
+  set('start',fz,0.07,0.2,+(process.env.HY||0.5),+(process.env.HZ||0.7));
+  set('mid',(fz+fz2)/2,0.16,0.28,0.46,0.38);
+  set('end',fz2,0.07,0.31,0.44,0.17);
+  {const L0=dist(F.start.props[0].points[0],F.start.props[0].points[1]);
+   for(const f of ['mid','end'])for(const [h,ft,arm,sg] of [[0,1,'armL',1],[5,4,'armR',-1]]){const P=F[f].props[0].points,d=P[h].map((v,i)=>v-P[ft][i]),l=Math.hypot(...d);
+    P[h]=P[ft].map((v,i)=>+(v+d[i]/l*L0).toFixed(4));F[f][arm].pos=[...P[h]];}}
+  F.mid.root.pitch=0;F.mid.spine={flex:-2};
+  const o={};for(const k of ['start','mid','end'])o[k]=F[k];j.frames=o;
+ }
+ if(s==='knee-grip-lean-back-curl'){const a=+(process.env.SP||-22),b=+(process.env.EP||6);
+  for(const f in F){F[f].armL.pos[1]+=0.1;F[f].armR.pos[1]+=0.1;}F.start.root.pitch=a;F.start.root.pos[2]=+(process.env.SZ||-0.08);F.end.root.pitch=b;F.end.root.pos[2]=+(process.env.EZ||0.04);}
+ if(s==='door-frame-one-arm-row'||s==='door-frame-one-arm-curl'||s==='door-frame-deep-lean-row'){
+  const dz=+(process.env.DZ0||-0.06),dp=+(process.env.DP0||-4);
+  const fz=+(process.env.FZ0||-0.17),ry0=+(process.env.RY0||-0.03);
+  for(const f in F){for(const k of ['legL','legR'])F[f][k].pos[2]+=fz;}
+  F.start.root.pos[2]+=dz;F.start.root.pitch+=dp;F.start.root.pos[1]+=ry0;F.end.root.pos[2]+=+(process.env.EZ0||0);}
+ if(s==='seated-thigh-lift-curl'){for(const f of ['start','end']){F[f].armL.contact=false;F[f].armR.contact=false;}
+  F.end.root.pitch=+(process.env.EP||14);F.end.neck.flex=0;F.end.legL.pos[1]+=+(process.env.LY||-0.04);F.end.legL.pos[2]+=+(process.env.LZ||0);F.end.armL.pos[1]+=+(process.env.HY||0.03);F.end.armL.pos[2]+=+(process.env.HZ||-0.03);}
+ if(s==='seated-towel-foot-curl'){const e=process.env;
+  const hs={start:[0.25,+(e.HS||0.52),0.0],mid:[0.26,0.72,0.1],end:[0.26,+(e.HE||0.9),0.2]};
+  const len=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1],a[2]-b[2]);
+  for(const f of ['start','mid','end'])F[f].legR.pos=[-0.24,0,0.3];
+  let L0l,L0r;
+  for(const f of ['start','mid','end']){const fr=F[f],P=fr.props[0].points,a=fr.legL.pos;
+   P[1]=[a[0]+0.05,a[1]-0.07,a[2]+0.03];P[2]=[a[0],a[1]-0.09,a[2]+0.04];P[3]=[a[0]-0.06,a[1]-0.07,a[2]+0.03];
+   const tl=hs[f],tr=[-tl[0],tl[1],tl[2]];
+   if(f==='start'){P[0]=tl;P[4]=tr;L0l=len(tl,P[1]);L0r=len(tr,P[3]);}
+   else{const adj=(h,ft,t,L)=>{const d=t.map((v,i)=>v-ft[i]),l=Math.hypot(...d);return ft.map((v,i)=>+(v+d[i]/l*L).toFixed(4));};
+    P[0]=adj(0,P[1],tl,L0l);P[4]=adj(4,P[3],tr,L0r);}
+   fr.armL.pos=[...P[0]];fr.armR.pos=[...P[4]];
+   fr.armL.pole=[0.3,-0.3,-1];fr.armR.pole=[-0.3,-0.3,-1];
+   fr.armL.palm=[-0.1,0.9,0.2];fr.armR.palm=[0.1,0.9,0.2];fr.armL.fingers=[0,0.2,1];fr.armR.fingers=[0,0.2,1];}}
+}

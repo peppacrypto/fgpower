@@ -4,12 +4,12 @@ const knee=JSON.parse(fs.readFileSync('/tmp/claude-1000/-home-dev-peppa/6cc91ee7
 const UP={y:0.441,z:-0.001,p:70.065,n:-8,fp:62}, DN={y:0.21,z:0.084,p:85.543,n:-18,fp:76};
 // transform a floor point (x,y,z) by yaw about origin then shift
 const T=(v,yaw,dx,dy)=>{const a=yaw*Math.PI/180,c=Math.cos(a),s=Math.sin(a);return [v[0]*c+v[2]*s+dx,v[1]+dy,-v[0]*s+v[2]*c];};
-function frame(S,{hx=0.27,hz=0.5,yaw=0,dx=0,dy=0,hl=0,pole=true}={}){
- const arm=k=>{const x=k*hx;const f=[k*0.12,0,1];const pos=T([x,hl,hz],yaw,dx,dy);const ff=T(f,yaw,0,0);
-  const o={pos,hand:'flat',contact:hl===0,fingers:ff,palm:[0,-1,0],spread:1};
-  if(hl>0){o.contact=false;o.hand='open';}
+function frame(S,{hx=0.27,hz=0.5,yaw=0,dx=0,dy=0,hl=0,air=hl>0,pole=true}={}){
+ const arm=k=>{const x=k*hx;const f=air?[k*0.12,-0.5,0.85]:[k*0.12,0,1];const pos=T([x,air?0.03:0,hz],yaw,dx,dy);const ff=T(f,yaw,0,0);
+  const o={pos,hand:'flat',contact:!air,fingers:ff,palm:air?[0,-0.85,-0.5]:[0,-1,0],spread:1};
+  if(air){o.contact=false;}
   if(S===DN&&pole)o.pole=[k*0.75,0.55,-0.45];return o;};
- const leg=k=>({pos:T([k*0.1,0,-0.81],yaw,dx,dy),anchor:'ball',pitch:S.fp+(hl>0?25:0),yaw:0,toes:0});
+ const leg=k=>({pos:T([k*0.1,0,-0.81],yaw,dx,dy),anchor:'ball',pitch:S.fp+(air?25:0),yaw:0,toes:0});
  return {root:{pos:T([0,S.y,S.z],yaw,dx,dy),yaw,pitch:S.p},neck:{flex:S.n},armL:arm(1),armR:arm(-1),legL:leg(1),legR:leg(-1)};
 }
 const out={};

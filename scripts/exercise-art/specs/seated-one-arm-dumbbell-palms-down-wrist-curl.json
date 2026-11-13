@@ -81,7 +81,7 @@
    "armR": {
     "pos": [
      -0.15,
-     0.68,
+     0.605,
      0.62
     ],
     "rel": "world",
@@ -162,7 +162,7 @@
    "armR": {
     "pos": [
      -0.15,
-     0.68,
+     0.605,
      0.62
     ],
     "rel": "world",
@@ -243,7 +243,7 @@
    "armR": {
     "pos": [
      -0.15,
-     0.68,
+     0.605,
      0.62
     ],
     "rel": "world",
@@ -261,6 +261,9 @@
     ]
    }
   }
+ },
+ "qaAllow": {
+  "rom:elbow-flexion": "wrist curl: the forearm is braced on a pad or the thigh and only the wrist moves; the elbow stays fixed at about 90-100 deg on purpose"
  },
  "muscleSide": "L"
 }

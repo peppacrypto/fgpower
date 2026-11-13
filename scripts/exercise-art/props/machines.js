@@ -52,7 +52,8 @@
 //     decline  root.pitch -8:  hand [.25,.84,.21] -> [.236,.768,.48]. Pivot [.443,1.455,.53]. fingers [0,.45,.89]->[0,.25,.97], palm [0,-.89,.45]->[0,-.97,.25].
 //     pole [1,-.3,-.6] -> [1,-.6,-.1]. pressArc(name, side, conv) in this file gives the arc; conv 0 for stack.
 // shoulder-press  (leverage-shoulder-press, machine-shoulder-military-press load:"stack") Hips [0,.538,0], root.pitch -8. Hand [.27,1.1,.04] -> [.249,1.517,.084] (stack: x stays .27),
-//   pivot [.459,1.387,-.592], fingers [0,.75,-.66], palm [0,.66,.75], pole [1,-.5,0] -> [1,-.1,.1].
+//   pivot [.459,1.387,-.592], fingers [0,.75,-.66], palm [0,.66,.75], pole [1,-.5,0] -> [1,-.1,.1]. That stop leaves the elbows bent ~50: for a locked-out
+//   press go on up the arc to 1.45 x that travel, forearms stacked under the handles (pole [.25,-.8,.55] -> [.65,0,.75]): specs/_gen/seated-press-machines.mjs.
 // pec-deck        (butterfly; reverse-machine-flyes with mode:"reverse") Hips [0,.538,0], root.pitch -5. Axles over the shoulders at [+-.19,1.42,-.02]; handles .565 out, centre y 1.0, grip vertical.
 //   Fly: arms { fk:{flex:90,abd:72 -> -12,rot:90,elbow:14}, rel:"world", fingers:[sin a,0,cos a], palm:[-cos a,0,sin a], scap:{elev:0,prot:0} } (a = abd; right arm mirrors fingers and palm x).
 //   Reverse: root { pos:[0,.538,.03], yaw:180, pitch:-2 }, chest on the pad, knees either side of its rail (legs fk flex 86, abd 18, knee 90, rel pelvis), arms rel "chest" abd 8 -> 98, elbow 8.
@@ -60,8 +61,9 @@
 //   around [y 1.86, z -.12], R .835: rowHand("high", a) with a 52 -> 30. fingers [0,.55,.85] -> [0,.1,1], palm [0,-.85,.55] -> [0,-1,.1], pole [.5,-.8,0] -> [.4,-.5,-.8].
 // iso-row         (leverage-iso-row) Hips [0,.558,0], root.pitch 5, chest pad's face z .178 at y .885. Hand [.24,1.023,.62] -> [.24,1.026,.232]: rowHand("iso", a), a 15.5 -> -14.5, around [y .3, z .42], R .75.
 //   Neutral grip, vertical at the start and tilting with the lever: fingers [-.12,0,1], palm [-1,0,-.12] turned around X by a-15.5, pole [.5,-.8,0] -> [.35,-.3,-1].
-// dip-machine     (dip-machine) Hips [0,.558,0], root.pitch -8. Hand [.31,.72,.06] -> [.31,.46,.02] with a mid on the arc around [y .481, z .75]: the handle is the lever's end, along it, so the thumb points
-//   down the lever. fingers [.906,-.405,-.121] -> [.906,-.423,.002], palm [-.423,-.868,-.259] -> [-.423,-.906,.005], pole [.25,-.2,-1] -> [.25,-.1,-1].
+// dip-machine     (dip-machine) Hips [0,.558,0], root.pitch -8. Hand [.28,.72,.06] -> [.28,.46,.02] and on, mids on the arc around [y .481, z .75] (radius .73). The handle runs across (along X,
+//   from x .345 in to .205), palms down. Gallery rep: hand [.280,.631,.035] (elbows ~108) -> [.280,.394,.025] (soft lockout), fingers [.000,-.563,.827] palm [.000,-.827,-.563] ->
+//   fingers [.000,-.954,.301] palm [.000,-.301,-.954], pole [.12,-.2,-1] -> [.1,-.3,-1] (elbows back and in): specs/_gen/seated-press-machines.mjs.
 // machine-curl    (machine-bicep-curl) Hips [0,.578,0], root.pitch 4. Arms { fk:{flex:55,abd:0,elbow:12 -> 108}, rel:"world", fingers, palm, scap:{elev:0,prot:6} }: elbow pivot [.194,.869,.3].
 //   With q = flex+elbow: fingers [0,-cos q,sin q], palm [0,sin q,cos q]. A closed fk hand is a grip; the lever's reach follows the hands' grip centres.
 // machine-preacher (machine-preacher-curls) Hips [0,.618,0], root.pitch 8. Same arms with flex 50, elbow 12 -> 112, elbow pivot [.194,.883,.317]. One bar across both hands.
@@ -1946,7 +1948,7 @@ machines['iso-row'] = function isoRow(p, ctx) {
 }
 
 // ---- Dip machine: long levers from an axle in front of the knees, their ends are the handles by the hips.
-export const DIP = { S: 0.46, P: [0.33, 0.481, 0.75], H0: [0.31, 0.72, 0.06], H1: [0.31, 0.46, 0.02] }
+export const DIP = { S: 0.46, P: [0.36, 0.481, 0.75], H0: [0.28, 0.72, 0.06], H1: [0.28, 0.46, 0.02] }
 machines['dip-machine'] = function dipMachine(p, ctx) {
   const root = rootFor(p)
   const { S, P: pp, H0, H1 } = DIP
@@ -1979,12 +1981,11 @@ machines['dip-machine'] = function dipMachine(p, ctx) {
     const u = rest.clone().normalize()
     for (const s of [-1, 1]) {
       const X = s * px
-      const end = new V3(s * H0L.x, rest.y, rest.z)
-      const handle0 = end.clone().addScaledVector(u, -0.115)
-      const stem = handle0.clone().setX(X)
-      a.tube([X, 0, 0], stem, 0.04, 0.066, M.arm, { side: [1, 0, 0], r: 0.007 })
-      a.bentRod([stem, handle0], 0.0125, M.steel, { fillet: 0.01, caps: false })
-      a.grip(handle0, end.clone().addScaledVector(u, 0.075), 0.0165, { name: `handle${s > 0 ? 'L' : 'R'}` })
+      // The lever runs back beside the hand and its handle turns in from it along X (palms down): the forearm swings in the
+      // sagittal plane, so it meets a handle across it square from the bent start to the straight-arm finish.
+      const end = new V3(X, rest.y, rest.z)
+      a.tube([X, 0, 0], end.clone().addScaledVector(u, 0.03), 0.04, 0.066, M.arm, { side: [1, 0, 0], r: 0.007 })
+      a.grip([X - s * 0.015, rest.y, rest.z], [s * (H0L.x - 0.075), rest.y, rest.z], 0.0165, { name: `handle${s > 0 ? 'L' : 'R'}` })
       a.lathe([[0.04, -0.05], [0.04, 0.05], [0, 0.05]], M.arm, [X, 0, 0], [1, 0, 0], 28)
     }
     a.rod([-px + 0.05, 0, 0], [px - 0.05, 0, 0], 0.028, M.arm)

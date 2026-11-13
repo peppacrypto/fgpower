@@ -79,7 +79,7 @@
      "elbow": 140
     },
     "rel": "chest",
-    "hand": "relaxed"
+    "hand": "grip"
    },
    "armR": {
     "fk": {
@@ -89,7 +89,7 @@
      "elbow": 140
     },
     "rel": "chest",
-    "hand": "relaxed"
+    "hand": "grip"
    }
   },
   "end": {
@@ -138,7 +138,7 @@
      "elbow": 8
     },
     "rel": "chest",
-    "hand": "relaxed"
+    "hand": "grip"
    },
    "armR": {
     "fk": {
@@ -148,7 +148,7 @@
      "elbow": 8
     },
     "rel": "chest",
-    "hand": "relaxed"
+    "hand": "grip"
    }
   }
  }

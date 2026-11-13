@@ -120,8 +120,8 @@
    },
    "armL": {
     "fk": {
-     "flex": 4,
-     "abd": 10,
+     "flex": 2,
+     "abd": 24,
      "rot": 0,
      "elbow": 80
     },
@@ -132,8 +132,8 @@
    },
    "armR": {
     "fk": {
-     "flex": 4,
-     "abd": 10,
+     "flex": 2,
+     "abd": 24,
      "rot": 0,
      "elbow": 80
     },

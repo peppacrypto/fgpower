@@ -1,7 +1,7 @@
 import fs from 'fs';
-const P3=+(process.env.P3||-190);
 const RF=[0,0.92,0.39];
-const W = (slug, s) => fs.writeFileSync(new URL(`../${slug}.json`, import.meta.url), JSON.stringify({slug, ...s}, null, 1));
+// ONLY=slug[,slug] writes just those specs.
+const W = (slug, s) => { if (process.env.ONLY && !process.env.ONLY.split(',').includes(slug)) return; fs.writeFileSync(new URL(`../${slug}.json`, import.meta.url), JSON.stringify({slug, ...s}, null, 1)); };
 const rad = d => d*Math.PI/180;
 const R = v => v.map(x=>Math.round(x*1000)/1000);
 // ---------- bar ----------
@@ -14,12 +14,21 @@ const legsP = (flex, knee, foot=28) => legs(flex, knee, foot, 2, 'pelvis');
 const legsDown = (p, knee, foot=28) => { const c=Math.cos(rad(p)), sn=Math.sin(rad(p)); // down.cont=c? cont=(0,-c,-sn) belly=(0,-sn,c)
   const dc = c, db = sn; return legsP(Math.round(Math.atan2(db,dc)*180/Math.PI), knee, foot); };
 const hang = (p, sz, lg, neck, sy=1.645, pz=-0.3) => ({ root:{pos:rootFor([0,sy,sz],p), pitch:p}, neck:{flex:neck}, armL:barArm(1,Array.isArray(pz)?pz:[1,0,pz]), armR:barArm(-1,Array.isArray(pz)?[-pz[0],pz[1],pz[2]]:[-1,0,pz]), ...lg });
+// Skin the cat: arms straight the whole way (elbows about 7 deg in the keys, under 20 between them, the grip on the bar).
+// stc(p, b, r, ...): p the trunk's pitch, b the shoulders' angle around the bar (+ toward +Z), r the bar to the top of the trunk
+// line in the side view, which puts the shoulder joint at arm's length. The body turns about the shoulders while the root only
+// blends in straight lines, so the five keys were searched with the rig (every eighth of each segment) for straight arms between
+// them too: the shoulders pass under the bar as the body inverts, and the German hang ends with the shoulders in front of it.
+const stcArm = (s) => ({ pos:[0.33*s,2.25,0], contact:true, fingers:[0,1,0], palm:[0,0,1], pole:[s,0,-0.3], curl:0.82 });
+const stc = (p, b, r, hip, knee, foot, neck) => { const c=Math.cos(rad(p)), sn=Math.sin(rad(p)), S=[2.25-r*Math.cos(rad(b)), r*Math.sin(rad(b))];
+  return { root:{pos:R([0, S[0]-0.46*c+0.02*sn, S[1]-0.46*sn-0.02*c]), pitch:p}, neck:{flex:neck}, armL:stcArm(1), armR:stcArm(-1), ...legsP(hip, knee, foot) }; };
 W('skin-the-cat', { camera:{az:50,el:6,pad:-0.1}, muscles:['lats','shoulders'], floats:true, props:[bar],
-  frames:{ start:hang(-4,0,legsP(5,22),-6),
-           mid:hang(-50,0,legsP(105,115,40),10,1.70),
-           mid2:hang(-125,0.05,legsP(75,20,40),20,+(process.env.S2||1.9)),
-           mid3:hang(P3,+(process.env.Z3||-0.15),legsP(105,40,30),10,+(process.env.S3||1.96),process.env.PZ?process.env.PZ.split(',').map(Number):-0.3),
-           end:hang(-350,0,legsDown(-350,10,35),-20,1.86,+(process.env.PE||-0.3)) } });
+  tempo:{ lift:'even', even:1.8, hold:0.4 },  // one slow, continuous roll each way, a pause in the dead hang and in the German hang
+  frames:{ start:stc(-3,0,0.6611,5,15,28,-6),          // dead hang
+           mid:stc(-20,-12,0.6536,105,120,35,10),      // knees tuck up
+           mid2:stc(-153,17.5,0.6108,135,130,40,25),   // tucked, the knees through the arms, nearly inverted
+           mid3:stc(-203,-27.5,0.6212,110,60,30,25),    // past the inverted hang, legs opening behind
+           end:stc(-285,23,0.6309,70,15,30,-10) } });  // German hang: shoulders extended, legs hanging
 const german = hang(-350,0,legsDown(-350,10,35),-20,1.86);
 W('german-hang-hold', { camera:{az:50,el:6}, muscles:['shoulders','lats'], floats:true, props:[bar], frames:{ start:german } });
 const lever = (lg) => ({ root:{pos:rootFor([0,1.645,0],-90), pitch:-90}, neck:{flex:0}, armL:barArm(1), armR:barArm(-1), ...lg });
@@ -42,6 +51,7 @@ const FP=(process.env.FP||'0.1,0.2,0.95').split(',').map(Number), FT=(process.en
 const PM=(process.env.PM||'1,-0.4,-0.8').split(',').map(Number), TP=+(process.env.TP||-0.3);
 const HY=+(process.env.HY||1.8);
 const RS=process.env.RS||'';
+const MURS=process.env.MURS||'';
 const KY=+(process.env.KY||1.78);
 const mu = (kip) => {
   const fx=(o)=>{ if(RS){ for(const a of ['armL','armR']){ o[a].roll=+RS.split(',')[0]; o[a].swivel=+RS.split(',')[1]; } } return o; };
@@ -50,17 +60,17 @@ const mu = (kip) => {
   const trans = rf({pos:[0,1.12,0.04],pitch:25}, 6, rArm(1,1.12,0.17,FT), rArm(-1,1.12,0.17,FT), legs(6,50,30));
   const top = rf({pos:[0,1.3,-0.02],pitch:3}, -2, rArm(1,1.22,0.02), rArm(-1,1.22,0.02), legs(14,64,28));
   const half = rf({pos:[0,1.3,0.0],pitch:-6}, -10, rHang(1,HY,PM,[FH[0],FH[1],FH[2]]), rHang(-1,HY,[-PM[0],PM[1],PM[2]],[-FH[0],FH[1],FH[2]]), legs(8,35,30));
-  const mb = rf({pos:[0,1.365,-0.04],pitch:-7}, -12, rArm(1,1.72,0.08,[0.1,0.35,0.85]), rArm(-1,1.72,0.08,[0.1,0.35,0.85]), legs(9,42,30));
   const nz=v=>{const m=Math.hypot(...v);return R(v.map(x=>x/m));};
   const avg=(A,B)=>({...A, pos:A.pos.map((x,i)=>R([ (x+B.pos[i])/2 ])[0]), fingers:nz(A.fingers.map((x,i)=>x+B.fingers[i])), palm:nz(A.palm.map((x,i)=>x+B.palm[i])), pole:nz(A.pole.map((x,i)=>x+B.pole[i]))});
+  const mbA=(A,B,y)=>{const m=avg(A,B); m.pos=[m.pos[0],y,0.08]; return m;};
+  const mb = rf({pos:[0,1.365,-0.04],pitch:-7}, -12, mbA(half.armL,pull.armL,1.72), mbA(half.armR,pull.armR,1.72), legs(9,42,30));
   const pt = rf({pos:[0,1.275,-0.02],pitch:8}, -4, avg(pull.armL,trans.armL), avg(pull.armR,trans.armR), legs(8,50,30));
   const bt=(A,B,rt)=>rf({pos:A.root.pos.map((x,i)=>R([(x+B.root.pos[i])/2])[0]),pitch:(A.root.pitch+B.root.pitch)/2}, (A.neck.flex+B.neck.flex)/2, avg(A.armL,B.armL), avg(A.armR,B.armR), rt);
-  if (!kip) return { start:hangF(-4,legs(5,22)), mid:half, midb:mb, midc:bt(mb,pull,legs(9,45,30)), mid2:pull, mid2b:pt, mid3:trans, end:top };
-  const kmid={...hangF(-22,legs(60,10,30)), armL:rHang(1,KY,PM,[FH[0],FH[1],FH[2]]), armR:rHang(-1,KY,[-PM[0],PM[1],PM[2]],[-FH[0],FH[1],FH[2]])};
-  return { start:hangF(2,legs(-25,30,40)), mid:kmid, midc:bt(kmid,pull,legs(30,30,30)), mid2:pull, mid2b:pt, mid3:trans, end:top };
+  const kmid={...hangF(-22,kip?legs(60,10,30):legs(25,25,30)), armL:rHang(1,KY,PM,[FH[0],FH[1],FH[2]]), armR:rHang(-1,KY,[-PM[0],PM[1],PM[2]],[-FH[0],FH[1],FH[2]])};
+  return { start:kip?hangF(2,legs(-25,30,40)):hangF(2,legs(5,22)), mid:kmid, midc:bt(kmid,pull,legs(30,30,30)), mid2:pull, mid2b:pt, mid3:trans, end:top };
 };
-W('muscle-up', { camera:{az:70,el:6}, muscles:['lats','triceps','chest'], floats:true, props:[rings], frames:MUF(mu(false)) });
-W('kipping-muscle-up', { camera:{az:70,el:6}, muscles:['lats','triceps','chest'], floats:true, props:[rings], frames:MUF(mu(true)) });
+W('muscle-up', { camera:{az:70,el:6}, muscles:['lats','triceps','chest'], floats:true, props:[rings], frames:(()=>{const o=mu(false);for(const k in o)for(const a of ['armL','armR']){o[k][a].roll=30;o[k][a].swivel=10;}return o;})() });
+W('kipping-muscle-up', { camera:{az:70,el:6}, muscles:['lats','triceps','chest'], floats:true, props:[rings], frames:(()=>{const o=mu(true);for(const k in o)for(const a of ['armL','armR']){o[k][a].roll=30;o[k][a].swivel=10;}return o;})() });
 // ---------- rope ----------
 const g = JSON.parse(fs.readFileSync(new URL('../_gallery/climb-rope.json', import.meta.url)));
 delete g.slug; g.floats=true;

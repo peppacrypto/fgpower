@@ -58,8 +58,8 @@
    "armL": {
     "pos": [
      0.16,
-     1.57,
-     0.17
+     1.7,
+     0.1
     ],
     "contact": true,
     "fingers": [
@@ -82,8 +82,8 @@
    "armR": {
     "pos": [
      -0.16,
-     1.57,
-     0.17
+     1.7,
+     0.1
     ],
     "contact": true,
     "fingers": [

@@ -8,6 +8,9 @@
   "abdominals"
  ],
  "floats": true,
+ "qaAllow": {
+  "rom:anti-extension.pike": "a tuck dragon flag is a deliberate tucked position: knees to chest, hips folded 90 by definition"
+ },
  "props": [
   {
    "type": "flat-bench"

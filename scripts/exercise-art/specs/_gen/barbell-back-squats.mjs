@@ -14,13 +14,13 @@ const mk = (slug, o, top, bot, extra={}) => {
   fs.writeFileSync(new URL(`../${slug}.json`, import.meta.url), JSON.stringify(s,null,1));
 };
 const up = {y:0.915,z:-0.03,pitch:4,nk:-3};
-const par = {y:0.5,z:-0.2,pitch:30,sp:-4,nk:-8};
+const par = {y:0.42,z:-0.2,pitch:30,sp:-4,nk:-8};
 mk('barbell-squat', std, up, par);
 mk('barbell-full-squat', std, up, {y:0.40,z:-0.24,pitch:36,sp:-4,nk:-10});
 mk('speed-squats', std, up, par);
-mk('narrow-stance-squats', {sx:0.12,yaw:14,px:0.3}, up, {...par,y:0.53,sp:-8});
-mk('wide-stance-barbell-squat', {sx:0.34,yaw:35,px:0.7}, {...up,y:0.86}, {...par,y:0.48,pitch:26});
-mk('olympic-squat', {sx:0.15,yaw:12,px:0.3}, up, {y:0.54,z:-0.08,pitch:14,sp:0,nk:-4});
+mk('narrow-stance-squats', {sx:0.12,yaw:14,px:0.45}, up, {...par,y:0.41,sp:-4,pitch:20});
+mk('wide-stance-barbell-squat', {sx:0.34,yaw:35,px:0.7}, {...up,y:0.9}, {...par,y:0.42,pitch:26});
+mk('olympic-squat', {sx:0.15,yaw:12,px:0.42}, up, {y:0.37,z:-0.14,pitch:18,sp:0,nk:-4});
 mk('weighted-jump-squat', {sx:0.22,yaw:15,px:0.35}, {y:0.62,z:-0.14,pitch:22,sp:-3,nk:-6}, {y:1.12,z:-0.02,pitch:2,nk:4,ly:0.2,ry:0.2});
 // plate movers: wide, left foot on a plate (top 0.044), side step pushes plate along
 const wide = {sx:0.34,yaw:30,px:0.6};

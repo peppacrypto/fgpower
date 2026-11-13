@@ -22,9 +22,10 @@ build('barbell-ab-rollout-on-knees',{type:'barbell',hands:true,plates:[2.5]},bar
 build('ab-roller',{type:'ab-wheel',hands:true,radius:0.09},wheelArm,0.1409,['abdominals','lats']);
 // ---- barbell rollout from toes: plank (bar out front) -> hips up, bar rolls to feet
 const wh=rd('_gallery/ab-wheel').frames;
-const toes=(src,z,pole)=>{const f=cp(src);for(const [k,s] of [['armL',1],['armR',-1]])f[k]={pos:[s*0.2,BY,z],hand:'grip',grip:0.014,fingers:[0,-0.5,0.87],palm:[0,-0.87,-0.5],pole:[s*0.7,-0.1,-0.4]};return f;};
+const toes=(src,z,pole)=>{const f=cp(src);for(const [k,s] of [['armL',1],['armR',-1]])f[k]={pos:[s*0.2,BY,z],hand:'grip',grip:0.014,fingers:[0,-0.5,0.87],palm:[0,-0.87,-0.5],pole:[s*0.15,0.1,-0.5]};return f;};
 out['barbell-ab-rollout']={slug:'barbell-ab-rollout',camera:{az:70,el:8},muscles:['abdominals','lats'],props:[{type:'barbell',hands:true,plates:[2.5]}],
- frames:{start:toes(wh.end,0.9916),mid:toes(wh.start,0.55),end:toes(wh.start,0.1716)}};
+ frames:{start:toes(wh.end,0.9916),mid0:toes(wh.start,0.78),mid:toes(wh.start,0.55),end:toes(wh.start,0.1716)}};
+const b0=out['barbell-ab-rollout'].frames.mid0;b0.root={pos:[0,0.36,-0.04],pitch:73};b0.spine={flex:7};b0.neck={flex:-25};
 const bm=out['barbell-ab-rollout'].frames.mid;bm.root={pos:[0,0.43,-0.1],pitch:68};bm.spine={flex:10};bm.neck={flex:-22};
 
 // ---- barbell rollout from bench
@@ -45,8 +46,8 @@ out['bodyweight-flyes']={slug:'bodyweight-flyes',camera:{az:30,el:14},muscles:['
  if(t.mid3){t.end=t.mid3;delete t.mid3;}
  for(const f of Object.values(t))for(const l of ['legL','legR']){f[l].pitch=150;f[l].pos[1]=0.06;}
  const c=out['kneeling-towel-chest-slide'].frames;
- for(const f of Object.values(c)){for(const l of ['legL','legR']){f[l].pitch=158;f[l].pos[1]=0.07;}f.armL.pos[2]=0.46;}
- c.start.root.pos=[0,0.31,0.02];c.end.root.pos=[0,0.2,0.059];
+ for(const f of Object.values(c)){for(const l of ['legL','legR']){f[l].pitch=158;f[l].pos[1]=0.07;}f.armL.pos[2]=0.44;}
+ c.start.root.pos=[0,0.31,0.02];c.end.root.pos=[0,0.19,0.059];c.end.root.pitch=88;for(const l of ['legL','legR'])c.end[l].pos[1]=0.15;
  const b=out['towel-body-saw'].frames;
  delete b.mid;
  b.start.root.pos=[0,0.33,-0.177];b.end.root.pos=[0,0.285,-0.39];

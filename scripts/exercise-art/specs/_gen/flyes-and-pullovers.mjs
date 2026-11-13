@@ -26,7 +26,7 @@ const flye = (slug, o) => {
     props:[ o.bench, {type:'dumbbell',kg:12,hand:'L'}, {type:'dumbbell',kg:12,hand:'R'} ],
     frames:{ start: fr(A[0], W[0]), mid: fr(A[1], W[1]), end: fr(A[2], W[2]) } };
   if (o.oneArm) { s.props.splice(2,1); // other hand rests on the bench edge
-    for (const k in s.frames) s.frames[k].armR = { pos:[-0.2,0.45,0.0], contact:true, hand:'flat', fingers:[0,0,1], palm:[0,-1,0] };
+    for (const k in s.frames) s.frames[k].armR = { pos:[-0.17,0.44,0.28], contact:true, hand:'flat', fingers:[0,0,1], palm:[0,-1,0] };
     s.muscleSide = 'L'; }
   out(slug, s);
 };
@@ -61,7 +61,7 @@ const pullover = (slug, bent) => {
       fingers: norm([-1, -0.35, 0]), palm: norm([0, 1, s*0.55]), curl:0.6, pole: [0.2, -1, -s*0.4] });
     return { root, neck:{flex:-45}, legL:{pos:[0.8,0,-0.18],anchor:'sole',pole:[1,1,-0.1]}, legR:{pos:[0.8,0,0.18],anchor:'sole',pole:[1,1,0.1]},
       armL:arm(1), armR:arm(-1) }; };
-  const A = bent ? [0,13,25,36] : [0,20,38,50];
+  const A = bent ? [-12,2,16,30] : [0,20,38,50];
   out(slug, { camera:{az:0,el:12}, muscles:['chest','lats'], floats:true,
     props:[{type:'flat-bench'},{type:'dumbbell',kg:10,hold:'goblet',hands:true,dir:[0,1,0]}], frames:{ start:fr(A[0]), mid:fr(A[1]), mid2:fr(A[2]), end:fr(A[3]) } });
 };
@@ -79,5 +79,5 @@ const barArc = (slug, o) => { const root = o.root, sh = shoulder(root);
     props:[o.bench, {type:'barbell',hands:true,plates:[10]}], frames });
 };
 barArc('bent-arm-barbell-pullover', { root:flatRoot, legs:flatLegs, bench:{type:'flat-bench'}, x:0.28, r:0.48, t:[0,25,50,72,95], muscles:['lats','chest'], px:0.3, pz:0.2 });
-barArc('front-raise-and-pullover', { root:flatRoot, legs:flatLegs, bench:{type:'flat-bench'}, x:0.19, r:0.58, t:[-80,-40,0,35,62], muscles:['chest','anterior-deltoid'], px:0.2, pz:0, py:-1 });
-barArc('wide-grip-decline-barbell-pullover', { root:decRoot, legs:decLegs, bench:{type:'decline-bench',angle:20}, x:0.38, r:0.50, t:[0,35,70,95], muscles:['chest','lats'], px:0.3, pz:0 });
+barArc('front-raise-and-pullover', { root:flatRoot, legs:flatLegs, bench:{type:'flat-bench'}, x:0.19, r:0.60, t:[-80,-40,0,35,62], muscles:['chest','anterior-deltoid'], px:0.2, pz:0, py:-1 });
+barArc('wide-grip-decline-barbell-pullover', { root:decRoot, legs:decLegs, bench:{type:'decline-bench',angle:20}, x:0.38, r:0.60, t:[-25,15,55,95,115], muscles:['chest','lats'], px:0.3, pz:0 });

@@ -43,13 +43,13 @@ const bowL=(lift)=>({legL:{fk:{flex:lift,abd:5,knee:150},foot:{pitch:40}},legR:{
 const bowA={armL:{pos:[0.13,0.41,0.04],rel:'world',hand:'grip',fingers:[0,0,-1],palm:[-1,0,0],pole:[0.5,1,0]},armR:{pos:[-0.13,0.41,0.04],rel:'world',hand:'grip',fingers:[0,0,-1],palm:[1,0,0],pole:[-0.5,1,0]}};
 const bowE=JSON.parse(JSON.stringify(bowA));bowE.armL.pos=[0.12,0.46,0.05];bowE.armR.pos=[-0.12,0.46,0.05];
 save('bow-pose',cam,{
- start:{...base(),...bowA,...bowL(0)},
+ start:{...base(90,0.17),...bowA,...bowL(0)},
  end:{...base(92,0.15),spine:{flex:-35},neck:{flex:-12},...bowE,...bowL(-25)}});
 // lower back curl: untouched arms out
 for(const k of ['lower-back-curl','superman']){const o=JSON.parse(fs.readFileSync(W+'_gen/orig/'+k+'.json','utf8'));
  for(const f of Object.values(o.frames))if(f.root)f.root.pos[1]+=(f===o.frames.start?(k==="superman"?0.02:0.03):(k==='superman'?-0.017:(k==='lower-back-curl'?0.015:0)));
  if(k==='lower-back-curl')for(const f of Object.values(o.frames))for(const a of ['armL','armR'])if(f[a]){f[a].pos[0]*=0.92;f[a].pos[2]*=0.92;}
  out[k]=o;}
-for(const k of ['arch-body-hold','locust-pose','bow-pose']){const m=JSON.parse(JSON.stringify(out[k].frames.end));m.root.pos[1]=0.14;m.root.pitch=91;if(m.spine)m.spine.flex*=0.5;if(m.neck)m.neck.flex*=0.5;if(k==='bow-pose'){const [MX,MY,MZ]=(process.env.MP||'0.16,0.42,0.12').split(',').map(Number);m.armL.pos=[MX,MY,MZ];m.armR.pos=[-MX,MY,MZ];}out[k].frames.mid=m;}
+for(const k of ['arch-body-hold','locust-pose','bow-pose']){const m=JSON.parse(JSON.stringify(out[k].frames.end));m.root.pos[1]=0.14;m.root.pitch=91;if(m.spine)m.spine.flex*=0.5;if(m.neck)m.neck.flex*=0.5;if(k==='bow-pose'){const [MX,MY,MZ]=(process.env.MP||'0.17,0.46,0.10').split(',').map(Number);m.armL.pos=[MX,MY,MZ];m.armR.pos=[-MX,MY,MZ];}out[k].frames.mid=m;}
 for(const [k,v] of Object.entries(out))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
 console.log(Object.keys(out).join(' '));

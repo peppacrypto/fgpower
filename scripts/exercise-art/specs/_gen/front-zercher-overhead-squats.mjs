@@ -2,7 +2,7 @@ import fs from 'fs';
 const leg = (s,o,dz=0) => ({ pos:[o.sx*s,0,0.02+dz], anchor:'sole', yaw:o.yaw*s, pitch:0, pole:[o.px*s,0,1] });
 const std = {sx:0.2,yaw:18,px:0.38};
 const up = {y:0.915,z:-0.03,pitch:4,nk:-3,sp:0};
-const low = {y:0.5,z:-0.2,pitch:24,sp:-2,nk:-6};
+const low = {y:0.44,z:-0.22,pitch:26,sp:-2,nk:-6};
 const root = p => ({ pos:[0,p.y,p.z], pitch:p.pitch });
 // front rack: clean grip, fingers under the bar, elbows high
 const V=JSON.parse(process.env.V||'{}');

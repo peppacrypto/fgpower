@@ -17,7 +17,7 @@ const fr = (arms, extra={}) => ({ root:{pos:[0,0.925,0]}, ...arms, ...legs(), ..
   const sp = (y,z,fy,pole) => { const f=g(y,z,fy,pole); for (const k of ['armL','armR']) f[k].fingers=unit([0,fy,0.99]); return f; };
   const a = (y,z,fy,pole)=>{const f=g(y,z,fy,pole); f.armL.pos[1]=y; f.armR.pos[1]=y; f.armL.pos[2]=z; f.armR.pos[2]=z; return f;};
   W('front-plate-raise',{camera:{az:60,el:6},muscles:['anterior-deltoid','shoulders'],props:[{type:'weight-plate',hands:true,kg:20}],
-    frames:{ start:a(0.92,0.33,-0.45,[0.25,-0.2,-1]), mid:a(1.25,0.5,-0.2,[0.3,-0.6,-0.6]), end:a(1.53,0.56,0.12,[0.3,-1,-0.2]) }});
+    frames:Object.fromEntries([-56,-44,-34,-24,-14,-2,8,16].map((th,k,arr)=>{const R=0.625+0.005*Math.min(k,2);const t=th*Math.PI/180;const fy=-1+k/7*1.1;const nm=k==0?'start':k==arr.length-1?'end':(k==1?'mid':'mid'+k);return [nm,a(1.38+R*Math.sin(t),0.02+R*Math.cos(t),fy,[0.3,-0.2-0.1*k,-1+0.1*k])];}))});
 }
 // car-drivers: plate at shoulder height, turned like a wheel
 {
@@ -39,8 +39,8 @@ const fr = (arms, extra={}) => ({ root:{pos:[0,0.925,0]}, ...arms, ...legs(), ..
     props:[{type:'weight-plate',kg:20,at:[0,hy-0.196,hz],normal:[0,0,1]}] });
   W('reverse-plate-curls',{camera:{az:55,el:6},muscles:['biceps','forearms'],
     props:[],frames:{
-      start:f(0.95,0.36,[0.8,-0.3,-0.6],[0,0.05,1],[0,-1,0.05]),
-      mid:f(1.02,0.44,[0.8,-0.4,-0.6],[0,0.07,1],[0,-1,0.07]),
+      start:f(0.85,0.32,[0.8,-0.3,-0.6],[0,0.05,1],[0,-1,0.05]),
+      mid:f(0.98,0.4,[0.8,-0.4,-0.6],[0,0.07,1],[0,-1,0.07]),
       mid2:f(1.15,0.4,[0.3,-0.5,-1],[0,0.1,1],[0,-1,0.1]),
       end:f(1.32,0.3,[0.3,-0.8,-1],[0,0.3,0.95],[0,-0.95,0.3]) }});
 }
@@ -72,8 +72,8 @@ const fr = (arms, extra={}) => ({ root:{pos:[0,0.925,0]}, ...arms, ...legs(), ..
 // behind-the-back wrist curl: palms back, bar behind the glutes, wrists only
 {
   const hand = (s,a) => { const t=a*Math.PI/180, fi=[0,-Math.cos(t),-Math.sin(t)], pa=[0,Math.sin(t),-Math.cos(t)];
-    return { pos:[s*0.21, 0.92+0.08*fi[1]+0.03*pa[1], -0.2+0.08*fi[2]+0.03*pa[2]], contact:true,hand:'grip',grip:0.014, fingers:[0,fi[1],fi[2]], palm:[0,pa[1],pa[2]], pole:[s*0.3,0.3,-1] }; };
+    return { pos:[s*0.21, 0.865+0.08*fi[1]+0.03*pa[1], -0.1+0.08*fi[2]+0.03*pa[2]], contact:true,hand:'grip',grip:0.014, fingers:[0,fi[1],fi[2]], palm:[0,pa[1],pa[2]], pole:[s*0.3,0.3,-1] }; };
   const f = a => ({ root:{pos:[0,0.925,0]}, armL:hand(1,a), armR:hand(-1,a), ...legs() });
-  W('standing-palms-up-barbell-behind-the-back-wrist-curl',{camera:{az:125,el:10},muscles:['forearms'],props:[{type:'barbell',hands:true,plates:[]}],
+  W('standing-palms-up-barbell-behind-the-back-wrist-curl',{qaAllow:{'rom:elbow-flexion.top':'wrist-only curl: elbows stay straight behind the back by design; only the wrists move'},camera:{az:125,el:10},muscles:['forearms'],props:[{type:'barbell',hands:true,plates:[]}],
     frames:{ start:f(-25), end:f(55) }});
 }

@@ -63,25 +63,38 @@
    "armL": {
     "fk": {
      "flex": 168,
-     "abd": -8,
+     "abd": -3,
      "rot": 0,
      "elbow": 8
     },
     "rel": "chest",
     "hand": "grip",
-    "pron": 30
+    "pron": 70
    },
    "armR": {
     "fk": {
      "flex": 168,
-     "abd": -8,
+     "abd": -3,
      "rot": 0,
      "elbow": 8
     },
     "rel": "chest",
     "hand": "grip",
-    "pron": 30
-   }
+    "pron": 70
+   },
+   "props": [
+    {
+     "type": "kettlebell",
+     "kg": 16,
+     "mode": "horns",
+     "hands": true,
+     "up": [
+      0,
+      1,
+      0
+     ]
+    }
+   ]
   },
   "mid": {
    "root": {
@@ -124,26 +137,39 @@
    },
    "armL": {
     "fk": {
-     "flex": 176,
-     "abd": -9,
+     "flex": 168,
+     "abd": -3,
      "rot": 0,
-     "elbow": 65
+     "elbow": 70
     },
     "rel": "chest",
     "hand": "grip",
-    "pron": 30
+    "pron": 70
    },
    "armR": {
     "fk": {
-     "flex": 176,
-     "abd": -9,
+     "flex": 168,
+     "abd": -3,
      "rot": 0,
-     "elbow": 65
+     "elbow": 70
     },
     "rel": "chest",
     "hand": "grip",
-    "pron": 30
-   }
+    "pron": 70
+   },
+   "props": [
+    {
+     "type": "kettlebell",
+     "kg": 16,
+     "mode": "horns",
+     "hands": true,
+     "up": [
+      0,
+      1,
+      -0.3
+     ]
+    }
+   ]
   },
   "end": {
    "root": {
@@ -187,25 +213,38 @@
    "armL": {
     "fk": {
      "flex": 168,
-     "abd": -8,
+     "abd": -3,
      "rot": 0,
      "elbow": 125
     },
     "rel": "chest",
     "hand": "grip",
-    "pron": 30
+    "pron": 70
    },
    "armR": {
     "fk": {
      "flex": 168,
-     "abd": -8,
+     "abd": -3,
      "rot": 0,
      "elbow": 125
     },
     "rel": "chest",
     "hand": "grip",
-    "pron": 30
-   }
+    "pron": 70
+   },
+   "props": [
+    {
+     "type": "kettlebell",
+     "kg": 16,
+     "mode": "horns",
+     "hands": true,
+     "up": [
+      0,
+      1,
+      -0.5
+     ]
+    }
+   ]
   }
  }
 }

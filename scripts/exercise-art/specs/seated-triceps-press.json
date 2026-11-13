@@ -10,13 +10,7 @@
  "floats": true,
  "props": [
   {
-   "type": "shoulder-press-bench"
-  },
-  {
-   "type": "dumbbell",
-   "hands": true,
-   "hold": "goblet",
-   "kg": 15
+   "type": "flat-bench"
   }
  ],
  "frames": {
@@ -59,26 +53,54 @@
     ]
    },
    "armL": {
-    "fk": {
-     "flex": 168,
-     "abd": -11,
-     "rot": 0,
-     "elbow": 8
-    },
-    "rel": "chest",
-    "hand": "grip",
-    "pron": 60
+    "pos": [
+     0.06,
+     1.63,
+     0.1
+    ],
+    "rel": "world",
+    "pole": [
+     0.3,
+     0.6,
+     1
+    ],
+    "hand": "flat",
+    "contact": true,
+    "fingers": [
+     -0.25,
+     0,
+     -1
+    ],
+    "palm": [
+     0,
+     1,
+     0
+    ]
    },
    "armR": {
-    "fk": {
-     "flex": 168,
-     "abd": -11,
-     "rot": 0,
-     "elbow": 8
-    },
-    "rel": "chest",
-    "hand": "grip",
-    "pron": 60
+    "pos": [
+     -0.06,
+     1.63,
+     0.1
+    ],
+    "rel": "world",
+    "pole": [
+     -0.3,
+     0.6,
+     1
+    ],
+    "hand": "flat",
+    "contact": true,
+    "fingers": [
+     0.25,
+     0,
+     -1
+    ],
+    "palm": [
+     0,
+     1,
+     0
+    ]
    },
    "props": [
     {
@@ -133,26 +155,54 @@
     ]
    },
    "armL": {
-    "fk": {
-     "flex": 176,
-     "abd": -11,
-     "rot": -15,
-     "elbow": 65
-    },
-    "rel": "chest",
-    "hand": "grip",
-    "pron": 60
+    "pos": [
+     0.06,
+     1.54,
+     -0.17
+    ],
+    "rel": "world",
+    "pole": [
+     0.3,
+     0.6,
+     1
+    ],
+    "hand": "flat",
+    "contact": true,
+    "fingers": [
+     -0.25,
+     -0.3,
+     -1
+    ],
+    "palm": [
+     0,
+     1,
+     -0.3
+    ]
    },
    "armR": {
-    "fk": {
-     "flex": 176,
-     "abd": -11,
-     "rot": -15,
-     "elbow": 65
-    },
-    "rel": "chest",
-    "hand": "grip",
-    "pron": 60
+    "pos": [
+     -0.06,
+     1.54,
+     -0.17
+    ],
+    "rel": "world",
+    "pole": [
+     -0.3,
+     0.6,
+     1
+    ],
+    "hand": "flat",
+    "contact": true,
+    "fingers": [
+     0.25,
+     -0.3,
+     -1
+    ],
+    "palm": [
+     0,
+     1,
+     -0.3
+    ]
    },
    "props": [
     {
@@ -207,26 +257,54 @@
     ]
    },
    "armL": {
-    "fk": {
-     "flex": 168,
-     "abd": -9,
-     "rot": 0,
-     "elbow": 125
-    },
-    "rel": "chest",
-    "hand": "grip",
-    "pron": 60
+    "pos": [
+     0.06,
+     1.32,
+     -0.15
+    ],
+    "rel": "world",
+    "pole": [
+     0.3,
+     0.6,
+     1
+    ],
+    "hand": "flat",
+    "contact": true,
+    "fingers": [
+     -0.25,
+     -0.5,
+     -1
+    ],
+    "palm": [
+     0,
+     1,
+     -0.5
+    ]
    },
    "armR": {
-    "fk": {
-     "flex": 168,
-     "abd": -9,
-     "rot": 0,
-     "elbow": 125
-    },
-    "rel": "chest",
-    "hand": "grip",
-    "pron": 60
+    "pos": [
+     -0.06,
+     1.32,
+     -0.15
+    ],
+    "rel": "world",
+    "pole": [
+     -0.3,
+     0.6,
+     1
+    ],
+    "hand": "flat",
+    "contact": true,
+    "fingers": [
+     0.25,
+     -0.5,
+     -1
+    ],
+    "palm": [
+     0,
+     1,
+     -0.5
+    ]
    },
    "props": [
     {

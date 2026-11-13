@@ -1,5 +1,8 @@
 {
  "slug": "standing-palms-up-barbell-behind-the-back-wrist-curl",
+ "qaAllow": {
+  "rom:elbow-flexion.top": "wrist-only curl: elbows stay straight behind the back by design; only the wrists move"
+ },
  "camera": {
   "az": 125,
   "el": 10
@@ -26,8 +29,8 @@
    "armL": {
     "pos": [
      0.21,
-     0.834816829184847,
-     -0.19337977267184353
+     0.779816829184847,
+     -0.09337977267184354
     ],
     "contact": true,
     "hand": "grip",
@@ -51,8 +54,8 @@
    "armR": {
     "pos": [
      -0.21,
-     0.834816829184847,
-     -0.19337977267184353
+     0.779816829184847,
+     -0.09337977267184354
     ],
     "contact": true,
     "hand": "grip",
@@ -115,8 +118,8 @@
    "armL": {
     "pos": [
      0.21,
-     0.8986884464205861,
-     -0.28273945663365074
+     0.843688446420586,
+     -0.1827394566336507
     ],
     "contact": true,
     "hand": "grip",
@@ -140,8 +143,8 @@
    "armR": {
     "pos": [
      -0.21,
-     0.8986884464205861,
-     -0.28273945663365074
+     0.843688446420586,
+     -0.1827394566336507
     ],
     "contact": true,
     "hand": "grip",

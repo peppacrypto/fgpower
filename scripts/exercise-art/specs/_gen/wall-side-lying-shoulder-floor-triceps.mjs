@@ -8,7 +8,11 @@ const all = f => Object.values(f.frames);
   for (const f of all(s)) { f.legL.pos[0] = 0.06; f.legR.pos[0] = -0.06; }
   W(s); }
 // 2 elbow push-off: unchanged
-W(ld('wall-elbow-push-off'));
+{ const s = ld('wall-elbow-push-off'); const a = s.frames.start, b = s.frames.end; b.root.pos = [0, 0.86, -0.185]; b.root.pitch = -23; a.root.pos[2] += (+process.env.S||0);  const m = JSON.parse(JSON.stringify(a));
+  const av = (x, y) => x.map((v, i) => (v + y[i]) / 2);
+  m.root.pos = av(a.root.pos, b.root.pos); m.root.pos[2] += 0; m.root.pitch = (a.root.pitch + b.root.pitch) / 2; m.neck.flex = (a.neck.flex + b.neck.flex) / 2;
+  for (const k of ['armL','armR']) { m[k].pos = av(a[k].pos, b[k].pos); m[k].pole = av(a[k].pole, b[k].pole); m[k].scap = { prot: (a[k].scap.prot + b[k].scap.prot) / 2 }; }
+  s.frames = { start: a, mid: m, end: b }; W(s); }
 // 3 kneeling forearm press
 { const s = ld('kneeling-forearm-press');
   for (const f of all(s)) for (const l of ['legL','legR']) { f[l].pitch = 156; }

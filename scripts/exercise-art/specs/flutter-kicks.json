@@ -1,0 +1,192 @@
+{
+ "slug": "flutter-kicks",
+ "camera": {
+  "az": 90,
+  "el": 10
+ },
+ "muscles": [
+  "glutes"
+ ],
+ "floats": true,
+ "props": [
+  {
+   "type": "flat-bench",
+   "height": 0.7,
+   "pos": [
+    0,
+    0,
+    0
+   ]
+  }
+ ],
+ "frames": {
+  "start": {
+   "root": {
+    "pos": [
+     0,
+     0.87,
+     0.66
+    ],
+    "yaw": 180,
+    "pitch": 90
+   },
+   "neck": {
+    "flex": -10
+   },
+   "armL": {
+    "pos": [
+     -0.13,
+     0.7,
+     -0.38
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     -1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -1,
+     0.4,
+     0.3
+    ]
+   },
+   "armR": {
+    "pos": [
+     0.13,
+     0.7,
+     -0.38
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     -1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     1,
+     0.4,
+     0.3
+    ]
+   },
+   "legL": {
+    "fk": {
+     "flex": 18,
+     "abd": 1,
+     "knee": 2
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 30
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": 55,
+     "abd": 1,
+     "knee": 2
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 30
+    }
+   }
+  },
+  "end": {
+   "root": {
+    "pos": [
+     0,
+     0.87,
+     0.66
+    ],
+    "yaw": 180,
+    "pitch": 90
+   },
+   "neck": {
+    "flex": -10
+   },
+   "armL": {
+    "pos": [
+     -0.13,
+     0.7,
+     -0.38
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     -1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -1,
+     0.4,
+     0.3
+    ]
+   },
+   "armR": {
+    "pos": [
+     0.13,
+     0.7,
+     -0.38
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0,
+     -1
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     1,
+     0.4,
+     0.3
+    ]
+   },
+   "legL": {
+    "fk": {
+     "flex": 55,
+     "abd": 1,
+     "knee": 2
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 30
+    }
+   },
+   "legR": {
+    "fk": {
+     "flex": -10,
+     "abd": 1,
+     "knee": 2
+    },
+    "rel": "pelvis",
+    "foot": {
+     "pitch": 30
+    }
+   }
+  }
+ }
+}

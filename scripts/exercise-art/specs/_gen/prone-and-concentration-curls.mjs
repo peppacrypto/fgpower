@@ -3,7 +3,7 @@ import { BODY } from '../../props/benches.js';
 const D = Math.PI/180;
 const nrm = v => { const l = Math.hypot(...v); return v.map(x => x/l); };
 // hand centre for forearm angle th (0 = hanging, 90 = horizontal forward +Z, 140 = near shoulder)
-const hand = (E, th, L=0.265) => [E[0], E[1]-L*Math.cos(th*D), E[2]+L*Math.sin(th*D)];
+const hand = (E, th, L=0.345) => [E[0], E[1]-L*Math.cos(th*D), E[2]+L*Math.sin(th*D)];
 const orient = th => ({ f:[0,-Math.cos(th*D),Math.sin(th*D)], p:[0,Math.sin(th*D),Math.cos(th*D)] });
 // one curling arm: s = +1 left / -1 right; E = elbow world; th; xHand offset
 const curlArm = (s, E, th, o={}) => {
@@ -61,8 +61,8 @@ const db = h => ({ type:'dumbbell', hand:h, kg:10 });
   const leg = x => ({ pos:[x,0,0.3], anchor:'sole', pole:[x*1.5,0.5,1], pitch:0 });
   const common = { ths:T3, camera:{az:65,el:8}, floats:true, root:R, neck:{flex:-20}, legL:leg(0.46), legR:leg(-0.46) };
   const props = extra => [{type:'incline-bench',angle:ang,yaw:180}, ...extra];
-  write('dumbbell-prone-incline-curl', { ...common, props:props([db('L'),db('R')]),
-    arms:[{side:'L',E,dir:1},{side:'R',E,dir:1}] });
+  write('dumbbell-prone-incline-curl', { ...common, ths:{start:0,mid:70,end:120}, props:props([db('L'),db('R')]),
+    arms:[{side:'L',E,dir:1,L:0.385},{side:'R',E,dir:1,L:0.385}] });
   write('barbell-curls-lying-against-an-incline', { ...common, props:props([bb]),
     arms:[{side:'L',E:[0.17,E[1],E[2]],hx:0.14,dir:0},{side:'R',E:[0.17,E[1],E[2]],hx:0.14,dir:0}] });
 }
@@ -75,9 +75,9 @@ const db = h => ({ type:'dumbbell', hand:h, kg:10 });
   const legR = { pos:[-0.62,0,0.4], anchor:'sole', yaw:-15, pole:[-0.5,0.3,1] };
   const E = [0.18, sy-0.27, sz+0.0];
   const rest = { side:'R', frame:{ pos:[-0.3, bh+0.3, 0.22], hand:'relaxed' } };
-  const base = { ths:{start:25,mid:75,end:110}, camera:{az:50,el:8}, root, neck:{flex:-30}, spine:{flex:5}, legL, legR };
+  const base = { ths:{start:20,mid:75,end:125}, camera:{az:50,el:8}, root, neck:{flex:-30}, spine:{flex:5}, legL, legR };
   write('concentration-curls', { ...base, props:[{type:'flat-bench',height:bh,yaw:90}, db('L')], muscleSide:'L',
-    arms:[{side:'L',E,dir:1,hx:0.1}], other:rest });
+    arms:[{side:'L',E,dir:1,hx:0.1,L:0.335}], other:rest });
   write('seated-close-grip-concentration-barbell-curl', { ...base, props:[{type:'flat-bench',height:bh,yaw:90}, {...bb}],
     ths:{start:45,mid:85,end:112},
     arms:[{side:'L',E:[0.18,E[1],E[2]],hx:0.12,dir:0},{side:'R',E:[0.18,E[1],E[2]],hx:0.12,dir:0}] });
@@ -91,7 +91,7 @@ const db = h => ({ type:'dumbbell', hand:h, kg:10 });
   const E = [0.24, sy-0.275, sz];
   write('standing-concentration-curl', { ths:{start:5,mid:70,end:130}, camera:{az:60,el:8}, root, neck:{flex:-35},
     legL:leg(1), legR:leg(-1), props:[db('L')], muscleSide:'L',
-    arms:[{side:'L',E,dir:1,pole:[0.7,-0.2,-0.6],hx:0.2}],
+    arms:[{side:'L',E,dir:1,pole:[0.7,-0.2,-0.6],hx:0.2,L:0.375}],
     other:{ side:'R', frame:{ pos:[-0.2, 0.72, 0.14], hand:'flat', contact:true, fingers:[0,-1,0], palm:[0,0,-1] } } });
 }
 // ---- standing behind an incline bench, arm draped over the top
@@ -106,6 +106,6 @@ const db = h => ({ type:'dumbbell', hand:h, kg:10 });
     root, neck:{flex:10}, legL:{pos:[0.25,0,topZ-0.33],anchor:'sole',pole:[0.2,0,1]}, legR:{pos:[-0.25,0,topZ-0.33],anchor:'sole',pole:[-0.2,0,1]},
     props:[{type:'incline-bench',angle:ang}, db('L')], muscleSide:'L',
     arms:[{side:'L',E,dir:1}],
-    other:{ side:'R', frame:{ pos:[-0.2, bpy+0.7*d[0], bpz+0.7*d[1]], hand:'flat', contact:true, fingers:[0,-0.94,0.34], palm:[0,-0.34,-0.94] } } });
+    other:{ side:'R', frame:{ pos:[-0.1, bpy+0.7*d[0]+0.0034, bpz+0.7*d[1]+0.0094], hand:'flat', contact:true, fingers:[0,-0.94,0.34], palm:[0,-0.34,-0.94] } } });
   console.log('top', topY, topZ);
 }

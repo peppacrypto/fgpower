@@ -73,6 +73,66 @@
     ]
    }
   },
+  "mid": {
+   "root": {
+    "pos": [
+     0,
+     1,
+     0
+    ],
+    "pitch": 0
+   },
+   "armL": {
+    "fk": {
+     "flex": 40,
+     "abd": 85,
+     "rot": 0,
+     "elbow": 140
+    },
+    "rel": "chest",
+    "curl": 0.4
+   },
+   "armR": {
+    "fk": {
+     "flex": 40,
+     "abd": 85,
+     "rot": 0,
+     "elbow": 140
+    },
+    "rel": "chest",
+    "curl": 0.4
+   },
+   "legL": {
+    "pos": [
+     0.18,
+     0.22,
+     0.02
+    ],
+    "anchor": "ball",
+    "pitch": 55,
+    "yaw": 10,
+    "pole": [
+     0.3,
+     0,
+     1
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.18,
+     0.22,
+     0.02
+    ],
+    "anchor": "ball",
+    "pitch": 55,
+    "yaw": -10,
+    "pole": [
+     -0.3,
+     0,
+     1
+    ]
+   }
+  },
   "end": {
    "root": {
     "pos": [
