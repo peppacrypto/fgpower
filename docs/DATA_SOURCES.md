@@ -28,7 +28,8 @@ dedication to the public domain, unrestricted.
 ### ⚠️ Exercise photography — the licensing situation (project owner opted to include)
 
 **Current state:** FGPOWER ships the free-exercise-db photos (resized to WebP under
-`public/exercises/<slug>/`, 873 folders, ~46 MB). This is a deliberate decision by the project owner,
+`public/exercises/<slug>/`) for the exercises that do not have one of our own figures yet (§6): 122
+folders, ~6 MB on 2026-11-13, down from 873 folders and ~46 MB. This is a deliberate decision by the project owner,
 made with full knowledge of the licensing caveat documented below — the images add real
 visual value to the library and the owner accepts the risk for this project. The caveat
 and the cleaner alternatives are kept on record here so the decision can be revisited.
@@ -176,13 +177,17 @@ For completeness, these were investigated and explicitly **not** used, with the 
 
 ## 6. Exercise figures (our own renders)
 
-Checked 2026-11-07. The figures under `public/exercises/<slug>/f2-start.webp`, `f2-end.webp` and
-`f2-loop.mp4` (muted looping video, a still for a static hold) are rendered by FGPOWER itself, with the
-tooling in `scripts/exercise-art/`. On 2026-11-07 they cover 577 of the 996 exercises; the others still
-show the free-exercise-db photos of §1 (or an earlier figure) until their renders pass the checks and a
-visual audit. `node scripts/exercise-art/publish-figures.mjs` puts a batch in the app and removes the old
-photos of those exercises. Never run `scripts/build-exercise-catalog.mjs` afterwards: it would bring the old
-photos back into the seed.
+Checked 2026-11-13. The figures under `public/exercises/<slug>/f3-start.webp`, `f3-end.webp` and
+`f3-loop.mp4` (muted looping video, a still for a static hold) are rendered by FGPOWER itself, with the
+tooling in `scripts/exercise-art/`. The prefix names the engine generation: published files are served as
+immutable for a year (`next.config.ts`), so a changed picture gets a new prefix, never the same name. The
+loop follows a coached tempo (about 1 s lifting, 1.8 s lowering, short pauses at both ends, ~3.4 s per rep).
+On 2026-11-13 they cover 860 of the 998 exercises: 719 of this generation (f3) and 141 of the previous one
+(f2), kept where the new render did not yet pass the motion review or the close-up check of the hands.
+122 still show the free-exercise-db photos of §1, 4 an earlier figure (`fig-*`) and 12 nothing.
+`node scripts/exercise-art/publish-figures.mjs` puts a batch in the app and removes the old photos and
+figures of those exercises. Never run `scripts/build-exercise-catalog.mjs` afterwards: it would bring the
+old photos back into the seed.
 
 - **The body.** The mesh and morph targets are MakeHuman assets, whose `base.obj` header
   says "explicitly released as CC0 in september 2020"
@@ -216,7 +221,7 @@ photos back into the seed.
 - **Safe to keep extending:** exercise text/metadata (`free-exercise-db`, Unlicense), the
   scientific evidence base (real papers, DOI-verified) and our own rendered figures (§6).
 - **Shipped by owner decision, licensing caveat on record:** exercise photography. The app
-  serves the free-exercise-db photos (WebP under `public/exercises/<slug>/`, 873 folders,
-  ~46 MB) — a deliberate owner decision made with full knowledge of the licensing caveat in
-  §1, which falls back to a `Dumbbell` icon only for the 3 entries with no source image.
-  Revisit via the cleaner paths in §1 before changing the bundled image set.
+  serves the free-exercise-db photos (WebP under `public/exercises/<slug>/`) where an exercise
+  has no figure of ours yet: 122 folders, ~6 MB on 2026-11-13 — a deliberate owner decision made
+  with full knowledge of the licensing caveat in §1; an exercise with no image at all shows a
+  `Dumbbell` icon. The figures of §6 replace the photos family by family.
