@@ -1,22 +1,24 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { Prisma } from "@/generated/prisma/client";
 import { requireUserOrThrow } from "@/lib/auth/require-user";
 import { SESSION_EXPIRED_ERROR } from "@/lib/auth/session-expired";
 import { prisma } from "@/lib/db";
 import { isUniqueViolation } from "@/lib/db/prisma-error";
 import { getDietPlan } from "@/lib/data/diet";
 import { dayOfIso, isMarkableDay } from "@/lib/diet/days";
-import { findItem, optionOf, type DietItem, type DietMeal } from "@/lib/diet/plan";
+import { findItem, keptCounts, piecesTotal, servingOf, type DietCounts, type DietItem, type DietMeal } from "@/lib/diet/plan";
 import { dayNumberOf } from "@/lib/training/day-rotation";
 
 /**
- * Dieta's marks: which items of the plan were eaten on a São Paulo day, and
- * which option filled each — the owner's own health data. The client sends
- * the state it wants for each item and day, never a toggle, so a retry or a
- * duplicate from a flaky connection lands on the same row with the same
- * values. Only the item's id and the choice come from the client: the food and
- * its numbers are copied from the caller's own plan.
+ * Dieta's marks: which items of the plan were eaten on a São Paulo day, which
+ * option filled each and, for an item counted in pieces, how many of each kind
+ * — the owner's own health data. The client sends the state it wants for each
+ * item and day, never a toggle, so a retry or a duplicate from a flaky
+ * connection lands on the same row with the same values. Only the item's id,
+ * the choice and the counts come from the client: the food and its numbers are
+ * copied (or, for pieces, added up) from the caller's own plan.
  */
 
 export interface DietMarkInput {
@@ -26,11 +28,14 @@ export interface DietMarkInput {
   eaten: boolean;
   /** The alternative picked; null = the item itself. */
   choiceId: string | null;
+  /** An item counted in pieces: how many of each kind, by kind id; null or absent = as the plan has them. */
+  counts?: Record<string, number> | null;
 }
 
 /**
- * `skipped`: marks not kept — an item or a choice the plan doesn't have (it
- * changed since the page loaded), or a day ahead of today or over a year back.
+ * `skipped`: marks not kept — an item, a choice or a kind of piece the plan
+ * doesn't have (it changed since the page loaded), counts that aren't whole
+ * numbers up to MAX_PIECES, or a day ahead of today or over a year back.
  * `permanent`: sending the same again fails the same way (no plan, a bad batch).
  */
 export type DietSaveResult = { ok: true; savedAt: string; skipped: number } | { ok: false; error: string; permanent?: boolean };
@@ -44,6 +49,7 @@ interface CheckedMark {
   item: DietItem;
   eaten: boolean;
   choiceId: string | null;
+  counts: DietCounts | null;
 }
 
 /** A mark as sent, checked against the plan and the calendar; null when it can't be kept. */
@@ -58,14 +64,24 @@ function checkMark(raw: unknown, meals: readonly DietMeal[], todayNo: number): C
   // The item's own id as the choice is the item itself.
   const choiceId = m.choiceId == null || m.choiceId === found.item.id ? null : m.choiceId;
   if (choiceId !== null && (typeof choiceId !== "string" || !found.item.alternatives?.some((a) => a.id === choiceId))) return null;
-  return { day, meal: found.meal, item: found.item, eaten: m.eaten, choiceId };
+  // Counts only for an item counted in pieces; the plan's own counts keep nothing.
+  let counts: DietCounts | null = null;
+  if (m.counts != null) {
+    const kept = found.item.pieces ? keptCounts(found.item.pieces, m.counts) : undefined;
+    if (kept === undefined) return null;
+    counts = kept;
+  }
+  // No piece at all is nothing eaten.
+  const eaten = m.eaten && !(counts !== null && piecesTotal(counts) === 0);
+  return { day, meal: found.meal, item: found.item, eaten, choiceId, counts };
 }
 
 /**
  * Sets items' marks for their days. Each (item, day) keeps one row while it
- * says something — eaten, or an alternative picked — with the option's food
- * and numbers copied in; an item back to "not eaten, the item itself" has its
- * row deleted. The same item twice in one call: the last one wins.
+ * says something — eaten, an alternative picked, pieces counted other than
+ * planned — with what filled it copied in (pieces: added up, in words); an
+ * item back to "not eaten, the item itself, as planned" has its row deleted.
+ * The same item twice in one call: the last one wins.
  */
 export async function saveDietMarks(input: { marks: DietMarkInput[] }): Promise<DietSaveResult> {
   const user = await requireUserOrThrow().catch(() => null);
@@ -94,13 +110,14 @@ export async function saveDietMarks(input: { marks: DietMarkInput[] }): Promise<
 
   const writes = () =>
     [...rows.values()].map((r) => {
-      if (!r.eaten && r.choiceId === null) {
+      if (!r.eaten && r.choiceId === null && r.counts === null) {
         return prisma.dietLog.deleteMany({ where: { userId: user.id, day: r.day, itemId: r.item.id } });
       }
-      const option = optionOf(r.item, r.choiceId);
+      const option = servingOf(r.item, r);
       const data = {
         eaten: r.eaten,
         choiceId: r.choiceId,
+        counts: r.counts === null ? Prisma.DbNull : { ...r.counts },
         meal: r.meal.name,
         food: option.food,
         amount: option.amount,

@@ -10,7 +10,7 @@ import { isTimedHold, setKind } from "@/lib/training/set-plan";
 import { formatSpTime, spDayKey } from "@/lib/training/stale";
 import { EQUIPMENT_LABEL, EXPERIENCE_LABEL, GOAL_LABEL, PROGRESSION_LABEL } from "@/lib/constants/program-labels";
 import { toCsv, type CsvCell } from "@/lib/export/csv";
-import type { DietOption } from "@/lib/diet/plan";
+import type { DietOption, DietPieces } from "@/lib/diet/plan";
 import { dietMealsSchema } from "@/lib/validation/diet-plan";
 
 /**
@@ -460,13 +460,26 @@ function withoutIds(value: unknown): unknown {
   return Object.fromEntries(Object.entries(value).filter(([k]) => k !== "id").map(([k, v]) => [k, withoutIds(v)]));
 }
 
-/** DietPlan.meals in words: each meal's items and their alternatives, without the plan's ids. */
+/** An item counted in pieces, in words: each kind's numbers for one piece and how many the plan has. */
+function readablePieces(p: DietPieces) {
+  return {
+    one: p.one,
+    many: p.many,
+    kinds: p.kinds.map((k) => ({ label: k.label, ...readableOption(k), planned: k.planned })),
+  };
+}
+
+/** DietPlan.meals in words: each meal's items, their alternatives and pieces, without the plan's ids. */
 function readableMeals(raw: unknown) {
   const parsed = dietMealsSchema.safeParse(raw);
   if (!parsed.success) return withoutIds(raw);
   return parsed.data.map((meal) => ({
     name: meal.name,
-    items: meal.items.map((item) => ({ ...readableOption(item), alternatives: (item.alternatives ?? []).map(readableOption) })),
+    items: meal.items.map((item) => ({
+      ...readableOption(item),
+      alternatives: (item.alternatives ?? []).map(readableOption),
+      ...(item.pieces ? { pieces: readablePieces(item.pieces) } : {}),
+    })),
   }));
 }
 

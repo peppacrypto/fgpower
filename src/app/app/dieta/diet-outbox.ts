@@ -2,6 +2,7 @@ import { startTransition } from "react";
 import { OFFLINE_ERROR, runAction } from "@/components/social/run-action";
 import { saveDietMarks, type DietMarkInput } from "@/lib/actions/diet";
 import { isSessionExpiredError } from "@/lib/auth/session-expired";
+import { MAX_PIECES } from "@/lib/diet/plan";
 
 /**
  * Dieta's outbox: every tap on an item is a mark (the state wanted for that
@@ -67,6 +68,16 @@ const RETRY_MAX_MS = 30_000;
 const BATCH = 100;
 const PLAN_CHANGED = "O plano mudou desde que a página abriu: confira as marcações.";
 
+/** Pieces by kind id, as a mark sends them: a few short ids, each a whole number up to MAX_PIECES. */
+function isCounts(v: unknown): boolean {
+  if (!v || typeof v !== "object" || Array.isArray(v)) return false;
+  const entries = Object.entries(v);
+  return (
+    entries.length <= 8 &&
+    entries.every(([id, n]) => id.length <= 48 && typeof n === "number" && Number.isInteger(n) && n >= 0 && n <= MAX_PIECES)
+  );
+}
+
 function isMark(v: unknown): v is DietMarkInput {
   if (!v || typeof v !== "object") return false;
   const m = v as Record<string, unknown>;
@@ -76,7 +87,9 @@ function isMark(v: unknown): v is DietMarkInput {
     typeof m.itemId === "string" &&
     m.itemId.length <= 48 &&
     typeof m.eaten === "boolean" &&
-    (m.choiceId === null || (typeof m.choiceId === "string" && m.choiceId.length <= 48))
+    (m.choiceId === null || (typeof m.choiceId === "string" && m.choiceId.length <= 48)) &&
+    // Absent in marks stored before items had pieces: as planned.
+    (m.counts == null || isCounts(m.counts))
   );
 }
 

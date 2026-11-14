@@ -1,6 +1,6 @@
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Locator, type Page } from "@playwright/test";
 import { IPHONE, newOnboardedUser, sql, sqlText, type TestUser } from "./fixtures";
 
 /**
@@ -40,6 +40,14 @@ async function userWithPlan(page: Page, label: string): Promise<TestUser> {
 const dietRows = (userId: string) => sql(`SELECT count(*) FROM "DietLog" WHERE "userId" = ${sqlText(userId)}`);
 const item = (page: Page, id: string) => page.locator(`[data-diet-item="${id}"]`);
 const kcalMeter = (page: Page) => page.getByRole("progressbar", { name: "Calorias" });
+
+/** Taps `button` until `count` shows `want`: a tap before the (re)loaded page hydrates does nothing. */
+async function tapUntil(button: Locator, count: Locator, want: string) {
+  await expect(async () => {
+    if ((await count.textContent()) !== want) await button.click({ timeout: 1_000 });
+    await expect(count).toHaveText(want, { timeout: 1_000 });
+  }).toPass({ timeout: 15_000 });
+}
 
 async function noHorizontalScroll(page: Page) {
   const { scroll, client } = await page.evaluate(() => ({
@@ -151,6 +159,62 @@ test("Dieta: the import, items marked with an alternative, kept after a reload a
   // Perfil's card counts what was marked today.
   await page.goto("/app/profile");
   await expect(page.locator("[data-diet-card]")).toHaveText(`Dieta de hoje: 1 de 5 itens · 140 kcal de 1.800`);
+});
+
+test("Dieta: eggs counted with and without the yolk — a count is what was eaten, kept after a reload", async ({ page }) => {
+  const user = await userWithPlan(page, "diet-pieces");
+  await page.goto("/app/dieta");
+  const ovos = item(page, "cafe-ovos");
+  const count = (kind: "com-gema" | "sem-gema") => ovos.locator(`[data-diet-kind="cafe-ovos--${kind}"] [data-count]`);
+  const button = (name: string) => ovos.getByRole("button", { name });
+  const check = page.getByRole("checkbox", { name: /^Ovos mexidos/ });
+  const logged = () =>
+    sql(`SELECT eaten, amount, kcal, counts::text FROM "DietLog" WHERE "userId" = ${sqlText(user.id)} AND "itemId" = 'cafe-ovos'`);
+
+  // The plan's to start: two whole eggs, none without the yolk; not eaten yet.
+  await expect(count("com-gema")).toHaveText("2");
+  await expect(count("sem-gema")).toHaveText("0");
+  await expect(button("Menos 1 ovo sem gema")).toBeDisabled();
+  await expect(check).toHaveAttribute("aria-checked", "false");
+  await expect(ovos).toContainText("2 ovos com gema");
+
+  // One white more is what was eaten: the item is marked, with the three eggs' numbers (2 × 75 + 17 kcal).
+  await tapUntil(button("Mais 1 ovo sem gema"), count("sem-gema"), "1");
+  await expect(check).toHaveAttribute("aria-checked", "true");
+  await expect(ovos).toContainText("3 ovos: 2 com gema, 1 sem gema");
+  await expect(kcalMeter(page)).toHaveAttribute("aria-valuetext", `167 de 1.800${NBSP}kcal`);
+  // One whole egg fewer: 75 + 17.
+  await button("Menos 1 ovo com gema").click();
+  await expect(count("com-gema")).toHaveText("1");
+  await expect(kcalMeter(page)).toHaveAttribute("aria-valuetext", `92 de 1.800${NBSP}kcal`);
+  await expect(page.locator('[data-diet-meal="cafe"]')).toContainText(`1 de 2 · 212${NBSP}kcal`);
+
+  // Saved with its counts and in words.
+  await expect
+    .poll(logged, { timeout: 15_000 })
+    .toBe('t|2 ovos: 1 com gema, 1 sem gema|92|{"cafe-ovos--com-gema": 1, "cafe-ovos--sem-gema": 1}');
+  await expect(page.locator("[data-diet-item][data-pending]")).toHaveCount(0);
+
+  // A reload shows the same counts.
+  await page.reload();
+  await expect(count("com-gema")).toHaveText("1");
+  await expect(count("sem-gema")).toHaveText("1");
+  await expect(check).toHaveAttribute("aria-checked", "true");
+  await expect(kcalMeter(page)).toHaveAttribute("aria-valuetext", `92 de 1.800${NBSP}kcal`);
+
+  // Every counter at 0 is nothing eaten; a tap on the item then brings back the plan's two eggs.
+  await tapUntil(button("Menos 1 ovo com gema"), count("com-gema"), "0");
+  await button("Menos 1 ovo sem gema").click();
+  await expect(count("sem-gema")).toHaveText("0");
+  await expect(check).toHaveAttribute("aria-checked", "false");
+  await expect(kcalMeter(page)).toHaveAttribute("aria-valuetext", `0 de 1.800${NBSP}kcal`);
+  await check.click();
+  await expect(check).toHaveAttribute("aria-checked", "true");
+  await expect(count("com-gema")).toHaveText("2");
+  await expect(count("sem-gema")).toHaveText("0");
+  await expect(kcalMeter(page)).toHaveAttribute("aria-valuetext", `150 de 1.800${NBSP}kcal`);
+  await expect.poll(logged, { timeout: 15_000 }).toBe("t|2 ovos com gema|150|");
+  await noHorizontalScroll(page);
 });
 
 test("Dieta offline: a mark shows at once, goes when the signal is back — or on the next visit after the tab closed", async ({

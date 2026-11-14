@@ -1195,6 +1195,8 @@ model DietLog {
   itemId    String
   /// The alternative picked ("m2-sardinha"); null = the item itself.
   choiceId  String?
+  /// An item counted in pieces: how many of each kind, by kind id ({"m1-ovos--com-gema": 2, "m1-ovos--sem-gema": 2}); null = as planned.
+  counts    Json?
   eaten     Boolean
   meal      String
   food      String

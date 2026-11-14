@@ -87,7 +87,7 @@ describe("saveDietMarks", () => {
       kcal: 120,
       protein: 6,
     });
-    expect(await getDietMarks(USER_ID, today())).toEqual({ "cafe-pao": { eaten: true, choiceId: null } });
+    expect(await getDietMarks(USER_ID, today())).toEqual({ "cafe-pao": { eaten: true, choiceId: null, counts: null } });
   });
 
   it("unchecks idempotently: the row goes, and going again changes nothing", async () => {
@@ -112,6 +112,57 @@ describe("saveDietMarks", () => {
     [row] = await rowsOf(USER_ID);
     expect(row).toMatchObject({ eaten: true, choiceId: null, food: "Filé de tilápia grelhado", kcal: 190 });
     await saveDietMarks({ marks: [mark("almoco-tilapia", false)] });
+    expect(await rowsOf(USER_ID)).toHaveLength(0);
+  });
+
+  it("counts an item's pieces: their sum and words logged, the counts kept — the plan's own counts keep nothing", async () => {
+    const COM = "cafe-ovos--com-gema";
+    const SEM = "cafe-ovos--sem-gema";
+    const eggs = (eaten: boolean, counts: Record<string, number> | null) => ({ ...mark("cafe-ovos", eaten), counts });
+
+    // Three whole eggs and one white.
+    expect(await saveDietMarks({ marks: [eggs(true, { [COM]: 3, [SEM]: 1 })] })).toMatchObject({ ok: true, skipped: 0 });
+    let [row] = await rowsOf(USER_ID);
+    expect(row).toMatchObject({
+      itemId: "cafe-ovos",
+      eaten: true,
+      choiceId: null,
+      counts: { [COM]: 3, [SEM]: 1 },
+      food: "Ovos mexidos",
+      amount: "4 ovos: 3 com gema, 1 sem gema",
+      kcal: 242,
+      protein: 22.35,
+      carbs: 1.7,
+      fat: 15,
+    });
+    expect(await getDietMarks(USER_ID, today())).toEqual({ "cafe-ovos": { eaten: true, choiceId: null, counts: { [COM]: 3, [SEM]: 1 } } });
+    expect(await getDietGlance(USER_ID)).toMatchObject({ eaten: 1, kcal: 242 });
+
+    // Back at the plan's two whole eggs: the item itself, no counts of its own.
+    await saveDietMarks({ marks: [eggs(true, { [COM]: 2, [SEM]: 0 })] });
+    [row] = await rowsOf(USER_ID);
+    expect(row).toMatchObject({ eaten: true, counts: null, amount: "2 ovos com gema", kcal: 150 });
+
+    // No egg at all is nothing eaten, whatever was sent; the counts still say so.
+    await saveDietMarks({ marks: [eggs(true, { [COM]: 0, [SEM]: 0 })] });
+    [row] = await rowsOf(USER_ID);
+    expect(row).toMatchObject({ eaten: false, counts: { [COM]: 0, [SEM]: 0 }, amount: "0 ovos", kcal: 0 });
+
+    // Not eaten, as planned: no row.
+    await saveDietMarks({ marks: [eggs(false, null)] });
+    expect(await rowsOf(USER_ID)).toHaveLength(0);
+  });
+
+  it("skips counts the item can't take: a kind it doesn't have, a number that isn't whole or is too big, an item without pieces", async () => {
+    const result = await saveDietMarks({
+      marks: [
+        { ...mark("cafe-ovos", true), counts: { gema: 2 } },
+        { ...mark("cafe-ovos", true), counts: { "cafe-ovos--com-gema": 2.5 } },
+        { ...mark("cafe-ovos", true), counts: { "cafe-ovos--com-gema": 21 } },
+        { ...mark("cafe-pao", true), counts: { "cafe-ovos--com-gema": 1 } },
+      ],
+    });
+    expect(result).toMatchObject({ ok: true, skipped: 4 });
     expect(await rowsOf(USER_ID)).toHaveLength(0);
   });
 
@@ -141,7 +192,7 @@ describe("saveDietMarks", () => {
     // Unmarking yesterday leaves today alone.
     await saveDietMarks({ marks: [mark("cafe-pao", false, null, t - 1)] });
     expect(await getDietMarks(USER_ID, t - 1)).toEqual({});
-    expect(await getDietMarks(USER_ID, t)).toEqual({ "cafe-pao": { eaten: true, choiceId: null } });
+    expect(await getDietMarks(USER_ID, t)).toEqual({ "cafe-pao": { eaten: true, choiceId: null, counts: null } });
     await saveDietMarks({ marks: [mark("cafe-pao", false, null, t), mark("cafe-pao", false, null, t - DIET_BACKDATE_DAYS)] });
     expect(await rowsOf(USER_ID)).toHaveLength(0);
   });
@@ -220,10 +271,10 @@ describe("another account", () => {
 
   it("cannot read someone's plan or marks: every read is the caller's own", async () => {
     expect((await getDietPlan(OTHER_ID))?.title).toBe("Outro plano");
-    expect(await getDietMarks(OTHER_ID, today())).toEqual({ "cafe-pao": { eaten: true, choiceId: null } });
+    expect(await getDietMarks(OTHER_ID, today())).toEqual({ "cafe-pao": { eaten: true, choiceId: null, counts: null } });
     expect(await getDietMarks(USER_ID, today())).toEqual({
-      "cafe-ovos": { eaten: true, choiceId: null },
-      "cafe-pao": { eaten: true, choiceId: null },
+      "cafe-ovos": { eaten: true, choiceId: null, counts: null },
+      "cafe-pao": { eaten: true, choiceId: null, counts: null },
     });
     // Perfil's card: today's count and kcal against each one's own plan.
     expect(await getDietGlance(USER_ID)).toEqual({ eaten: 2, items: 5, kcal: 270, kcalTarget: 1800 });

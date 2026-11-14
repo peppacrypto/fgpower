@@ -9,7 +9,25 @@
       "name": "Café",
       "items": [
         { "id": "cafe-pao", "food": "Pão integral", "amount": "2 fatias", "measure": "50 g", "grams": 50, "kcal": 120, "protein": 6, "carbs": 22, "fat": 1.5 },
-        { "id": "cafe-ovos", "food": "Ovos mexidos", "amount": "2 unidades", "measure": "sem óleo", "grams": 100, "kcal": 150, "protein": 12.5, "carbs": 1, "fat": 10 }
+        {
+          "id": "cafe-ovos",
+          "food": "Ovos mexidos",
+          "amount": "2 ovos com gema",
+          "measure": "sem óleo",
+          "grams": 100,
+          "kcal": 150,
+          "protein": 12.5,
+          "carbs": 1,
+          "fat": 10,
+          "pieces": {
+            "one": "ovo",
+            "many": "ovos",
+            "kinds": [
+              { "id": "cafe-ovos--com-gema", "label": "Com gema", "food": "Ovo inteiro mexido", "amount": "1 ovo (≈ 50 g)", "grams": 50, "kcal": 75, "protein": 6.25, "carbs": 0.5, "fat": 5, "planned": 2 },
+              { "id": "cafe-ovos--sem-gema", "label": "Sem gema", "food": "Clara de ovo mexida", "amount": "a clara de 1 ovo (≈ 33 g)", "grams": 33, "kcal": 17, "protein": 3.6, "carbs": 0.2, "fat": 0, "planned": 0 }
+            ]
+          }
+        }
       ]
     },
     {

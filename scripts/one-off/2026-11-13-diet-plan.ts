@@ -64,9 +64,11 @@ async function main() {
 
   const items = planItems(plan.meals);
   const alternatives = items.reduce((sum, i) => sum + (i.alternatives?.length ?? 0), 0);
+  const counted = items.filter((i) => i.pieces).map((i) => `${i.id} (${i.pieces!.kinds.map((k) => k.label).join(" / ")})`);
   const sum = planTotals(plan.meals);
   const t = plan.targets;
   console.log(`Plan "${plan.title}"${plan.version ? ` (${plan.version})` : ""}: ${plan.meals.length} meals, ${items.length} items, ${alternatives} alternative(s), ${plan.swaps.length} swaps, ${plan.rules.length} rules.`);
+  if (counted.length > 0) console.log(`  counted in pieces: ${counted.join(", ")}`);
   console.log(`  targets:         ${t.kcal} kcal · ${t.protein} g protein · ${t.carbs} g carbs · ${t.fat} g fat${t.fiber != null ? ` · ${t.fiber} g fiber` : ""}`);
   console.log(`  items add up to: ${n(sum.kcal)} kcal · ${n(sum.protein)} g protein · ${n(sum.carbs)} g carbs · ${n(sum.fat)} g fat (each item itself)`);
 

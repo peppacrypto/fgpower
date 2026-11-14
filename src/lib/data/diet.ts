@@ -1,7 +1,7 @@
 import "server-only";
 import { prisma } from "@/lib/db";
 import { dietMealsSchema } from "@/lib/validation/diet-plan";
-import { dayTotals, type DietMark, type DietPlan } from "@/lib/diet/plan";
+import { MAX_PIECES, dayTotals, type DietCounts, type DietMark, type DietPlan } from "@/lib/diet/plan";
 import { dayNumberOf } from "@/lib/training/day-rotation";
 
 /**
@@ -56,13 +56,21 @@ export async function getDietPlan(userId: string): Promise<DietPlan | null> {
   };
 }
 
-/** One São Paulo day's marks, by item id (items without a row: not eaten, the item itself). */
+/** DietLog.counts read back: an object of whole numbers, else (nothing, or not that) as planned. */
+function storedCounts(value: unknown): DietCounts | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  const entries = Object.entries(value);
+  const whole = (n: unknown) => typeof n === "number" && Number.isInteger(n) && n >= 0 && n <= MAX_PIECES;
+  return entries.length > 0 && entries.every(([, n]) => whole(n)) ? (Object.fromEntries(entries) as DietCounts) : null;
+}
+
+/** One São Paulo day's marks, by item id (items without a row: not eaten, the item itself, as planned). */
 export async function getDietMarks(userId: string, day: number): Promise<Record<string, DietMark>> {
   const rows = await prisma.dietLog.findMany({
     where: { userId, day },
-    select: { itemId: true, eaten: true, choiceId: true },
+    select: { itemId: true, eaten: true, choiceId: true, counts: true },
   });
-  return Object.fromEntries(rows.map((r) => [r.itemId, { eaten: r.eaten, choiceId: r.choiceId }]));
+  return Object.fromEntries(rows.map((r) => [r.itemId, { eaten: r.eaten, choiceId: r.choiceId, counts: storedCounts(r.counts) }]));
 }
 
 export interface DietGlance {

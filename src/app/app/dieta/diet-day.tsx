@@ -8,14 +8,20 @@ import { SaveStatus } from "@/components/ui/save-status";
 import { SectionHead } from "@/components/ui/section-head";
 import { ChipRadioGroup } from "@/app/app/settings/chip-radio-group";
 import {
+  MAX_PIECES,
   choiceLabel,
+  countsOf,
   dayTotals,
+  kindWords,
   markOf,
-  optionOf,
+  piecesTotal,
+  servingOf,
   type DietDayMarks,
   type DietItem,
   type DietMark,
   type DietMeal,
+  type DietPieceKind,
+  type DietPieces,
   type DietTargets,
 } from "@/lib/diet/plan";
 import { cn } from "@/lib/utils/cn";
@@ -39,9 +45,10 @@ function failureText(failure: DietFailure, pending: number): string {
 /**
  * One day of the plan (Dieta): the targets and what the eaten items add up
  * to, then the meals — each item one big tap to mark it eaten, its
- * alternative a choice under it ("Frango | Sardinha"). Every tap shows at once
- * and is saved from the outbox (diet-outbox.ts), which retries until the
- * server has it and keeps it on this device meanwhile. Remounted per day.
+ * alternative a choice under it ("Frango | Sardinha"), an item counted in
+ * pieces a counter per kind ("Com gema − 3 +"). Every tap shows at once and is
+ * saved from the outbox (diet-outbox.ts), which retries until the server has
+ * it and keeps it on this device meanwhile. Remounted per day.
  */
 export function DietDay({
   userId,
@@ -79,7 +86,8 @@ export function DietDay({
   function shown(itemId: string): DietMark & { pending: boolean } {
     const entry = state.entries.get(markKey(date, itemId));
     if (entry && entryApplies(entry, loadedAtMs)) {
-      return { eaten: entry.mark.eaten, choiceId: entry.mark.choiceId, pending: entry.confirmedAtMs === null };
+      const { eaten, choiceId, counts } = entry.mark;
+      return { eaten, choiceId, counts: counts ?? null, pending: entry.confirmedAtMs === null };
     }
     return { ...markOf(marks, itemId), pending: false };
   }
@@ -90,7 +98,7 @@ export function DietDay({
   const stuck = state.failure != null && state.failure.kind !== "rejected";
 
   function set(item: DietItem, next: DietMark) {
-    outbox?.mark({ date, itemId: item.id, eaten: next.eaten, choiceId: next.choiceId });
+    outbox?.mark({ date, itemId: item.id, eaten: next.eaten, choiceId: next.choiceId, counts: next.counts });
   }
 
   return (
@@ -126,7 +134,7 @@ export function DietDay({
 
       {meals.map((meal) => {
         const eatenHere = meal.items.filter((i) => dayMarks[i.id]?.eaten).length;
-        const kcalHere = meal.items.reduce((sum, i) => sum + optionOf(i, dayMarks[i.id]?.choiceId).kcal, 0);
+        const kcalHere = meal.items.reduce((sum, i) => sum + servingOf(i, markOf(dayMarks, i.id)).kcal, 0);
         return (
           <section key={meal.id} className="mt-8" aria-labelledby={`refeicao-${meal.id}`} data-diet-meal={meal.id}>
             <SectionHead
@@ -152,7 +160,11 @@ export function DietDay({
   );
 }
 
-/** One item: the whole row marks it eaten (a checkbox); its alternatives, when it has any, a choice under it. */
+/**
+ * One item: the whole row marks it eaten (a checkbox); its alternatives, when
+ * it has any, a choice under it; its pieces, when counted in pieces, a counter
+ * per kind under it.
+ */
 function DietItemRow({
   item,
   mark,
@@ -165,9 +177,18 @@ function DietItemRow({
   stuck: boolean;
   onChange: (next: DietMark) => void;
 }) {
-  const option = optionOf(item, mark.choiceId);
+  const option = servingOf(item, mark);
   const options = item.alternatives?.length ? [item, ...item.alternatives] : null;
   const detail = option.measure ? `${option.amount} · ${option.measure}` : option.amount;
+
+  function toggle() {
+    // Every counter at 0 is no piece eaten: marking it eaten brings back the plan's pieces.
+    if (!mark.eaten && item.pieces && piecesTotal(countsOf(item.pieces, mark.counts)) === 0) {
+      onChange({ eaten: true, choiceId: null, counts: null });
+      return;
+    }
+    onChange({ eaten: !mark.eaten, choiceId: mark.choiceId, counts: mark.counts });
+  }
   return (
     <li
       data-diet-item={item.id}
@@ -181,7 +202,7 @@ function DietItemRow({
         role="checkbox"
         aria-checked={mark.eaten}
         aria-label={`${option.food}, ${option.amount}, ${whole(option.kcal)} kcal`}
-        onClick={() => onChange({ eaten: !mark.eaten, choiceId: mark.choiceId })}
+        onClick={toggle}
         className={cn(
           "flex min-h-16 w-full touch-manipulation items-center gap-3 px-4 py-3 text-left",
           !mark.eaten && "transition-colors hover:bg-surface-2 active:bg-surface-2",
@@ -225,11 +246,75 @@ function DietItemRow({
             value={option.id}
             onChange={(id) => {
               const choiceId = id === item.id ? null : id;
-              if (choiceId !== mark.choiceId) onChange({ eaten: mark.eaten, choiceId });
+              if (choiceId !== mark.choiceId) onChange({ eaten: mark.eaten, choiceId, counts: mark.counts });
             }}
           />
         </div>
       ) : null}
+      {item.pieces ? <PiecesCounter pieces={item.pieces} mark={mark} onChange={onChange} /> : null}
     </li>
+  );
+}
+
+// Drawn like the choice chips (a bordered plate), so they read on the eaten item's green as well.
+const STEP =
+  "flex size-11 shrink-0 touch-manipulation items-center justify-center rounded-[var(--radius-md)] border border-border bg-surface text-xl font-medium text-foreground transition-colors hover:border-border-strong hover:bg-surface-2 active:bg-surface-2 disabled:opacity-35";
+
+/**
+ * An item counted in pieces: one counter per kind ("Com gema − 3 +", "Sem gema
+ * − 0 +"), starting at the plan's. A count changed is what was eaten, so it
+ * marks the item eaten — and every counter at 0, not eaten. Counts back at the
+ * plan's are kept as the plan's (nothing of their own).
+ */
+function PiecesCounter({ pieces, mark, onChange }: { pieces: DietPieces; mark: DietMark; onChange: (next: DietMark) => void }) {
+  const counts = countsOf(pieces, mark.counts);
+
+  function step(kind: DietPieceKind, delta: 1 | -1) {
+    const next = { ...counts, [kind.id]: Math.min(MAX_PIECES, Math.max(0, counts[kind.id] + delta)) };
+    const asPlanned = pieces.kinds.every((k) => next[k.id] === k.planned);
+    onChange({ eaten: piecesTotal(next) > 0, choiceId: null, counts: asPlanned ? null : next });
+  }
+
+  return (
+    // Under the item's words from 360px; on a narrower phone from the edge, so a label stays on one line.
+    <div role="group" aria-label={`Quantos ${pieces.many}`} className="-mt-1 flex flex-col gap-2 pb-3 pl-4 pr-4 min-[360px]:pl-14" data-diet-pieces>
+      {pieces.kinds.map((kind) => {
+        const n = counts[kind.id];
+        const words = kindWords(kind);
+        return (
+          <div key={kind.id} className="flex items-center gap-3" data-diet-kind={kind.id}>
+            <p className="min-w-0 flex-1 leading-snug">
+              <span className="block text-[15px] font-medium">{kind.label}</span>
+              <span className="block text-[13px] tabular-nums text-muted">
+                {whole(kind.kcal)}
+                {NBSP}kcal cada
+              </span>
+            </p>
+            <div className="flex shrink-0 items-center gap-1">
+              <button type="button" className={STEP} aria-label={`Menos 1 ${pieces.one} ${words}`} disabled={n <= 0} onClick={() => step(kind, -1)}>
+                −
+              </button>
+              <span className="w-8 text-center text-[17px] font-semibold tabular-nums" aria-live="polite">
+                <span aria-hidden data-count>
+                  {n}
+                </span>
+                <span className="sr-only">
+                  {n} {words}
+                </span>
+              </span>
+              <button
+                type="button"
+                className={STEP}
+                aria-label={`Mais 1 ${pieces.one} ${words}`}
+                disabled={n >= MAX_PIECES}
+                onClick={() => step(kind, 1)}
+              >
+                +
+              </button>
+            </div>
+          </div>
+        );
+      })}
+    </div>
   );
 }

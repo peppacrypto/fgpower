@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { DietMeal, DietPlan } from "@/lib/diet/plan";
+import { MAX_PIECES, type DietMeal, type DietPlan } from "@/lib/diet/plan";
 
 /**
  * A diet plan (Dieta): what scripts/one-off/2026-11-13-diet-plan.ts accepts,
@@ -31,10 +31,53 @@ const optionShape = {
 
 export const dietOptionSchema = z.strictObject(optionShape);
 
-export const dietItemSchema = z.strictObject({
+/** One kind of piece, its numbers for one piece ("Com gema": a whole egg, 73 kcal). */
+const pieceKindSchema = z.strictObject({
+  id,
+  label: text(24),
+  food: text(120),
+  amount: text(60),
+  grams: z.number().min(0).max(1000).optional(),
+  kcal: z.number().min(0).max(2000),
+  protein: macro,
+  carbs: macro,
+  fat: macro,
+  planned: z.number().int().min(0).max(MAX_PIECES),
+});
+
+const piecesSchema = z.strictObject({
+  one: text(24),
+  many: text(24),
+  kinds: z.array(pieceKindSchema).min(1).max(4),
+});
+
+const itemShape = z.strictObject({
   ...optionShape,
   alternatives: z.array(dietOptionSchema).min(1).max(6).optional(),
+  pieces: piecesSchema.optional(),
 });
+
+const MACROS = ["kcal", "protein", "carbs", "fat"] as const;
+
+/**
+ * An item counted in pieces is its planned pieces: its numbers are theirs
+ * (give or take rounding: 1 kcal or 0.2 g, plus 2%), at least one is planned,
+ * and it has no alternatives (the counters say what filled it).
+ */
+function piecesAddUp(item: z.output<typeof itemShape>, ctx: z.RefinementCtx) {
+  const pieces = item.pieces;
+  if (!pieces) return;
+  if (item.alternatives) ctx.addIssue({ code: "custom", path: ["alternatives"], message: "an item counted in pieces has no alternatives" });
+  if (pieces.kinds.every((k) => k.planned === 0)) ctx.addIssue({ code: "custom", path: ["pieces", "kinds"], message: "plan at least one piece" });
+  for (const key of MACROS) {
+    const sum = pieces.kinds.reduce((s, k) => s + k.planned * k[key], 0);
+    if (Math.abs(item[key] - sum) > (key === "kcal" ? 1 : 0.2) + sum * 0.02) {
+      ctx.addIssue({ code: "custom", path: [key], message: `the planned pieces add up to ${Math.round(sum * 10) / 10}` });
+    }
+  }
+}
+
+export const dietItemSchema = itemShape.superRefine(piecesAddUp);
 
 export const dietMealSchema = z.strictObject({
   id,
@@ -42,7 +85,7 @@ export const dietMealSchema = z.strictObject({
   items: z.array(dietItemSchema).min(1).max(40),
 });
 
-/** Every id (meals, items, alternatives) at most once: an item's id keys its marks, an alternative's the choice. */
+/** Every id (meals, items, alternatives, kinds of piece) at most once: an item's id keys its marks, an alternative's the choice, a kind's its count. */
 function uniqueIds(meals: readonly z.output<typeof dietMealSchema>[], ctx: z.RefinementCtx, base: (string | number)[]) {
   const seen = new Set<string>();
   const check = (value: string, path: (string | number)[]) => {
@@ -54,6 +97,7 @@ function uniqueIds(meals: readonly z.output<typeof dietMealSchema>[], ctx: z.Ref
     meal.items.forEach((item, i) => {
       check(item.id, [m, "items", i, "id"]);
       item.alternatives?.forEach((alt, a) => check(alt.id, [m, "items", i, "alternatives", a, "id"]));
+      item.pieces?.kinds.forEach((kind, k) => check(kind.id, [m, "items", i, "pieces", "kinds", k, "id"]));
     });
   });
 }

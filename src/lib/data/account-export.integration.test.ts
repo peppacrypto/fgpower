@@ -488,6 +488,18 @@ describe("Dieta (v5)", () => {
       kcal: 190,
       alternatives: [{ food: "Atum em lata, escorrido", kcal: 140 }],
     });
+    // An item counted in pieces: each kind in words, with how many the plan has.
+    expect(meals[0].items[1]).toMatchObject({
+      food: "Ovos mexidos",
+      pieces: {
+        one: "ovo",
+        many: "ovos",
+        kinds: [
+          { label: "Com gema", food: "Ovo inteiro mexido", amount: "1 ovo (≈ 50 g)", kcal: 75, planned: 2 },
+          { label: "Sem gema", food: "Clara de ovo mexida", kcal: 17, planned: 0 },
+        ],
+      },
+    });
     expect(data.diet.days).toEqual([
       {
         date: isoDay(20_404),
@@ -520,6 +532,7 @@ describe("Dieta (v5)", () => {
     const text = JSON.stringify(data);
     expect(text).not.toMatch(/"(id|userId|itemId|choiceId)":/);
     expect(text).not.toContain("almoco-atum");
+    expect(text).not.toContain("cafe-ovos--com-gema");
     expect(text).not.toContain("Plano da outra pessoa");
     expect(text).not.toContain(isoDay(20_406));
   });
