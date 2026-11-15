@@ -196,5 +196,6 @@
  "tempo": {
   "lift": "even",
   "hold": 1
- }
+ },
+ "keyFrame": "end"
 }

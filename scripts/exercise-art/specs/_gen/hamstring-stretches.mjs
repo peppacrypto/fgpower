@@ -87,5 +87,7 @@ save('chair-leg-extended-stretch',{az:80,el:10},['hamstrings'],[CH],{
  mid:{...croot(),...cfeet(cl(0.13,0.12,0.5)),armL:thH(1),armR:thH(-1)},
  mid2:{...croot(),...cfeet(cl(0.13,0.0,0.7)),armL:thH(1),armR:thH(-1)},
  end:{...lean(18,14),...cfeet(cl(0.13,0.0,0.7)),armL:thH(1),armR:thH(-1)}},{muscleSide:'L'});
-for(const [k,v] of Object.entries(out))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
+// Fixed by hand after the owner's yoga review (2026-11-15): edit specs/<slug>.json directly; this generator no longer writes them.
+const HAND=new Set(["head-to-knee-pose"]);
+for(const [k,v] of Object.entries(out))if(!HAND.has(k))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
 console.log(Object.keys(out).join(' '));

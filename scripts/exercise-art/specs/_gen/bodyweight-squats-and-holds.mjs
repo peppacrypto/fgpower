@@ -54,5 +54,7 @@ for(const k of ['start','end']){const f=w.frames[k];f.armR.pos=[-0.27,1.05,0.6];
  f.armL={fk:{flex:70,abd:10,elbow:120},curl:0.5};}
 for(const k of ['start','end']){const f=w.frames[k];f.armR.pos=[-0.23,1.05,0.6];f.armR.hand='grip';f.armR.fingers=[-1,0,0];f.armR.palm=[0,0,1];f.armR.pole=[-1,-0.4,0];f.armR.grip=0.04;f.armR.pos=[-0.23,1.1,0.5];f.armR.pole=[-0.5,-1,-0.2];delete f.armR.contact;f.armL={fk:{flex:25,abd:12,elbow:105},curl:0.5};}
 out['weighted-sissy-squat']=w;
-for(const [k,v] of Object.entries(out)){v.slug=k;fs.writeFileSync(D+k+'.json',JSON.stringify(v,null,1));}
+// Fixed by hand after the owner's yoga review (2026-11-15): edit specs/<slug>.json directly; this generator no longer writes them.
+const HAND=new Set(["garland-pose"]);
+for(const [k,v] of Object.entries(out)){if(HAND.has(k))continue;v.slug=k;fs.writeFileSync(D+k+'.json',JSON.stringify(v,null,1));}
 console.log(Object.keys(out).join(' '));

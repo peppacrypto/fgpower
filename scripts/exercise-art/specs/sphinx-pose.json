@@ -1,8 +1,8 @@
 {
  "slug": "sphinx-pose",
  "camera": {
-  "az": 80,
-  "el": 12
+  "az": 86,
+  "el": 8
  },
  "muscles": [
   "spinal-erectors"
@@ -12,21 +12,35 @@
    "root": {
     "pos": [
      0,
-     0.175,
+     0.162,
      0
     ],
     "pitch": 90
    },
+   "spine": {
+    "flex": -20,
+    "weights": [
+     0.3,
+     0.3,
+     0.2,
+     0.1,
+     0.1
+    ]
+   },
+   "neck": {
+    "flex": 28
+   },
    "armL": {
     "pos": [
-     0.22,
-     0.03,
-     0.5
+     0.19,
+     0.012,
+     0.73
     ],
+    "rel": "world",
     "contact": true,
     "hand": "flat",
     "fingers": [
-     -0.3,
+     0,
      0,
      1
     ],
@@ -36,22 +50,26 @@
      0
     ],
     "pole": [
-     1,
-     0.3,
-     -0.4
+     0.05,
+     -1,
+     -0.15
     ],
-    "rel": "world"
+    "scap": {
+     "elev": 24,
+     "prot": -14
+    }
    },
    "armR": {
     "pos": [
-     -0.22,
-     0.03,
-     0.5
+     -0.19,
+     0.012,
+     0.73
     ],
+    "rel": "world",
     "contact": true,
     "hand": "flat",
     "fingers": [
-     0.3,
+     0,
      0,
      1
     ],
@@ -61,11 +79,14 @@
      0
     ],
     "pole": [
+     -0.05,
      -1,
-     0.3,
-     -0.4
+     -0.15
     ],
-    "rel": "world"
+    "scap": {
+     "elev": 24,
+     "prot": -14
+    }
    },
    "legL": {
     "fk": {
@@ -92,27 +113,35 @@
    "root": {
     "pos": [
      0,
-     0.178,
+     0.162,
      0
     ],
     "pitch": 90
    },
    "spine": {
-    "flex": -62
+    "flex": -41,
+    "weights": [
+     0.1,
+     0.15,
+     0.2,
+     0.25,
+     0.3
+    ]
    },
    "neck": {
-    "flex": -8
+    "flex": -27
    },
    "armL": {
     "pos": [
-     0.22,
-     0.03,
-     0.5
+     0.19,
+     0.012,
+     0.73
     ],
+    "rel": "world",
     "contact": true,
     "hand": "flat",
     "fingers": [
-     -0.3,
+     0,
      0,
      1
     ],
@@ -122,22 +151,26 @@
      0
     ],
     "pole": [
-     1,
-     0.3,
-     -0.4
+     0.05,
+     -1,
+     -0.15
     ],
-    "rel": "world"
+    "scap": {
+     "elev": -6,
+     "prot": 3
+    }
    },
    "armR": {
     "pos": [
-     -0.22,
-     0.03,
-     0.5
+     -0.19,
+     0.012,
+     0.73
     ],
+    "rel": "world",
     "contact": true,
     "hand": "flat",
     "fingers": [
-     0.3,
+     0,
      0,
      1
     ],
@@ -147,11 +180,14 @@
      0
     ],
     "pole": [
+     -0.05,
      -1,
-     0.3,
-     -0.4
+     -0.15
     ],
-    "rel": "world"
+    "scap": {
+     "elev": -6,
+     "prot": 3
+    }
    },
    "legL": {
     "fk": {
@@ -177,5 +213,6 @@
  },
  "tempo": {
   "lift": "there"
- }
+ },
+ "keyFrame": "end"
 }

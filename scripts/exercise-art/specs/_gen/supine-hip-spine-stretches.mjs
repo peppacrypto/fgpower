@@ -93,5 +93,7 @@ save('iron-crosses-stretch',{az:20,el:+(process.env.ICE||72)},['glutes','oblique
  start:{root:pr(),neck:{twist:70},legL:FK(0,0,0,0,IP),legR:FK(0,0,0,0,IP),armL:P(1),armR:P(-1)},
  mid:{root:pr(),neck:{twist:70},legL:FK(0,0,0,IK,IP),legR:FK(0,0,0,0,IP),armL:P(1),armR:P(-1)},
  end:{root:pr({roll:IR}),neck:{twist:70},legL:FK(+(process.env.IF||-30),IA,0,IK,IP),legR:FK(0,+(process.env.RA||45),0,0,IP),armL:P(1),armR:P(-1)}},{muscleSide:'L'});
-for(const [k,v] of Object.entries(out))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
+// Fixed by hand after the owner's yoga review (2026-11-15): edit specs/<slug>.json directly; this generator no longer writes them.
+const HAND=new Set(["happy-baby"]);
+for(const [k,v] of Object.entries(out))if(!HAND.has(k))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
 console.log(Object.keys(out).join(' '));

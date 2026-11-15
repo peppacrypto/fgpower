@@ -1,5 +1,7 @@
 import fs from 'fs';
-const W = (slug, s) => fs.writeFileSync(new URL(`../${slug}.json`, import.meta.url), JSON.stringify(s,null,1));
+// Fixed by hand after the owner's yoga review (2026-11-15): edit specs/<slug>.json directly; this generator no longer writes them.
+const HAND=new Set(["wide-legged-forward-fold"]);
+const W = (slug, s) => HAND.has(slug) || fs.writeFileSync(new URL(`../${slug}.json`, import.meta.url), JSON.stringify(s,null,1));
 const legs = (o={}) => { const x=o.x??0.11, y=o.y??0, z=o.z??0, yw=o.yaw??4, p=o.p??0.1;
   return { legL:{pos:[x,y,z],anchor:'sole',yaw:yw,pole:[p,0,1]}, legR:{pos:[-x,y,z],anchor:'sole',yaw:-yw,pole:[-p,0,1]} }; };
 const hang = ()=>({armL:{pos:[0.26,0.88,0.0],hand:'relaxed',pole:[0.5,0,-1]},armR:{pos:[-0.26,0.88,0.0],hand:'relaxed',pole:[-0.5,0,-1]}});

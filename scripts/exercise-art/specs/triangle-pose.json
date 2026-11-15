@@ -1,62 +1,72 @@
 {
  "slug": "triangle-pose",
  "camera": {
-  "az": 12,
+  "az": 8,
   "el": 6
  },
  "muscles": [
   "hamstrings",
   "obliques"
  ],
+ "muscleSide": "L",
+ "qaAllow": {
+  "self:chest:head": "Only in the in-betweens of the sideways tilt (spine side bend with the head turned up): the skull base sits in front of the upper back skin at the neck and the nearest-vertex normal test reads it as inside. The closest head-to-chest vertex distance there is 3.7 cm, the same as in the clean end frame (rest pose 4.0 cm): nothing intersects."
+ },
  "frames": {
   "start": {
    "root": {
     "pos": [
-     0,
-     0.62,
+     -0.0086,
+     0.835,
      0
     ],
-    "yaw": 0
+    "yaw": 0,
+    "roll": 0
+   },
+   "spine": {
+    "flex": 0,
+    "side": 0,
+    "twist": 0,
+    "weights": [
+     0.05,
+     0.1,
+     0.2,
+     0.3,
+     0.35
+    ]
    },
    "neck": {
+    "flex": 0,
+    "side": 0,
     "twist": 0
    },
    "legL": {
     "pos": [
-     0.62,
+     0.5404,
      0,
-     0
+     -0.0053
     ],
     "anchor": "sole",
-    "yaw": 90,
+    "yaw": 87,
     "pole": [
      1,
-     0.1,
-     0.3
+     0.3,
+     0
     ]
    },
    "legR": {
     "pos": [
-     -0.62,
+     -0.5,
      0,
      0
     ],
     "anchor": "sole",
-    "yaw": -80,
+    "yaw": 18,
     "pole": [
-     -1,
-     0.1,
-     0
+     0.32,
+     -0.14,
+     0.94
     ]
-   },
-   "armL": {
-    "fk": {
-     "flex": 0,
-     "abd": 90,
-     "rot": 0,
-     "elbow": 0
-    },
-    "rel": "world"
    },
    "armR": {
     "fk": {
@@ -65,74 +75,214 @@
      "rot": 0,
      "elbow": 0
     },
-    "rel": "world"
+    "rel": "chest",
+    "hand": "flat"
+   },
+   "armL": {
+    "pos": [
+     0.711,
+     0.133,
+     0.061
+    ],
+    "rel": "chest",
+    "pole": [
+     0,
+     0.2,
+     -1
+    ],
+    "fingers": [
+     0.997,
+     -0.009,
+     0.071
+    ],
+    "palm": [
+     -0.006,
+     -0.999,
+     -0.038
+    ],
+    "hand": "flat"
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     -0.0767,
+     0.8276,
+     0
+    ],
+    "yaw": 0,
+    "roll": -20
+   },
+   "spine": {
+    "flex": 0,
+    "side": 16,
+    "twist": -4,
+    "weights": [
+     0.05,
+     0.1,
+     0.2,
+     0.3,
+     0.35
+    ]
+   },
+   "neck": {
+    "flex": 0,
+    "side": 0,
+    "twist": -15
+   },
+   "legL": {
+    "pos": [
+     0.5404,
+     0,
+     -0.0053
+    ],
+    "anchor": "sole",
+    "yaw": 87,
+    "pole": [
+     1,
+     0.3,
+     0
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.5,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 18,
+    "pole": [
+     0.32,
+     -0.14,
+     0.94
+    ]
+   },
+   "armR": {
+    "fk": {
+     "flex": 0,
+     "abd": 99,
+     "rot": -45,
+     "elbow": 0
+    },
+    "rel": "chest",
+    "hand": "flat"
+   },
+   "armL": {
+    "pos": [
+     0.706,
+     0.046,
+     0.061
+    ],
+    "rel": "chest",
+    "pole": [
+     0,
+     0.2,
+     -1
+    ],
+    "fingers": [
+     0.984,
+     -0.164,
+     0.071
+    ],
+    "palm": [
+     -0.162,
+     -0.986,
+     -0.038
+    ],
+    "hand": "flat"
    }
   },
   "end": {
    "root": {
     "pos": [
-     -0.1,
-     0.62,
+     -0.1279,
+     0.8088,
      0
     ],
     "yaw": 0,
-    "roll": -34
+    "roll": -40
    },
    "spine": {
-    "side": 0
+    "flex": 0,
+    "side": 32,
+    "twist": -8,
+    "weights": [
+     0.05,
+     0.1,
+     0.2,
+     0.3,
+     0.35
+    ]
    },
    "neck": {
-    "twist": -10,
+    "flex": 0,
     "side": 0,
-    "flex": -20
+    "twist": -30
    },
    "legL": {
     "pos": [
-     0.62,
+     0.5404,
      0,
-     0
+     -0.0053
     ],
     "anchor": "sole",
-    "yaw": 90,
+    "yaw": 87,
     "pole": [
      1,
-     0.1,
-     0.3
+     0.3,
+     0
     ]
    },
    "legR": {
     "pos": [
-     -0.62,
+     -0.5,
      0,
      0
     ],
     "anchor": "sole",
-    "yaw": -80,
+    "yaw": 18,
     "pole": [
-     -1,
-     0.1,
-     0
+     0.32,
+     -0.14,
+     0.94
     ]
-   },
-   "armL": {
-    "fk": {
-     "flex": 0,
-     "abd": 25,
-     "rot": 0,
-     "elbow": 0
-    },
-    "rel": "world"
    },
    "armR": {
     "fk": {
      "flex": 0,
-     "abd": 158,
-     "rot": 0,
+     "abd": 108,
+     "rot": -90,
      "elbow": 0
     },
-    "rel": "world"
+    "rel": "chest",
+    "hand": "flat"
+   },
+   "armL": {
+    "pos": [
+     0.69,
+     0.009,
+     -0.044
+    ],
+    "rel": "chest",
+    "hand": "flat",
+    "pole": [
+     0,
+     0.2,
+     -1
+    ],
+    "fingers": [
+     0.941,
+     0.31,
+     -0.136
+    ],
+    "palm": [
+     0.287,
+     -0.943,
+     -0.167
+    ]
    }
   }
  },
- "muscleSide": "L"
+ "keyFrame": "end"
 }

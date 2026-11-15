@@ -135,5 +135,6 @@
    }
   }
  },
- "muscleSide": "L"
+ "muscleSide": "L",
+ "keyFrame": "end"
 }

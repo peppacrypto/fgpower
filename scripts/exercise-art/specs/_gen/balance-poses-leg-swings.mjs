@@ -57,5 +57,7 @@ const kc=(th)=>{const dx=0.06*Math.cos(th),dz=0.06*Math.sin(th);
  return {root:{pos:[dx*0.6,0.72,-0.02+dz*0.6],pitch:30},neck:{flex:-15},
  legL:{pos:[0.06,0,0],anchor:'sole',pole:[0.15+dx*5,0.2,1+dz*5]},legR:{pos:[-0.06,0,0],anchor:'sole',pole:[-0.15+dx*5,0.2,1+dz*5]},armL:h(1),armR:h(-1)};};
 save('knee-circles',{az:40,el:8},['quadriceps','hamstrings'],circ(6,kc),{tempo:{lift:'even'}});
-for(const [k,v] of Object.entries(out))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
+// Fixed by hand after the owner's yoga review (2026-11-15): edit specs/<slug>.json directly; this generator no longer writes them.
+const HAND=new Set(["half-moon-pose", "warrior-3", "tree-pose"]);
+for(const [k,v] of Object.entries(out))if(!HAND.has(k))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
 console.log(Object.keys(out).join(' '));

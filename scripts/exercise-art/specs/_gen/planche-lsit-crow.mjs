@@ -36,5 +36,7 @@ const cr=(y,z,p,sf,legfl,knee,hy,nk,ftp)=>({root:{pos:[0,y,z],pitch:p},spine:{fl
  armL:{pos:[0.2,0,0.5],hand:'flat',contact:true,fingers:[0,0,1],palm:[0,-1,0],spread:1,pole:[0.5,0,-1]},armR:{pos:[-0.2,0,0.5],hand:'flat',contact:true,fingers:[0,0,1],palm:[0,-1,0],spread:1,pole:[-0.5,0,-1]},
  legL:{fk:{flex:legfl,abd:E('CA',32),knee},foot:{pitch:ftp}},legR:{fk:{flex:legfl,abd:E('CA',32),knee},foot:{pitch:ftp}}});
 save('crow-pose',{az:90,el:6},['shoulders','abdominals','forearms'],[],{start:cr(E('CY0',0.5),E('CZ0',-0.1),E('CP0',60),30,E('CF0',110),150,0,-15,40),end:cr(E('CY',0.72),E('CZ',0.0),E('CP',96),E('CS',32),E('CF',135),150,0,E('CN',-50),40)},{floats:true,tempo:{lift:'there',up:1.4,down:2.0,squeeze:1.0,stretch:0.3}});
-for(const [k,v] of Object.entries(out))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
+// Fixed by hand after the owner's yoga review (2026-11-15): edit specs/<slug>.json directly; this generator no longer writes them.
+const HAND=new Set(["crow-pose"]);
+for(const [k,v] of Object.entries(out))if(!HAND.has(k))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
 console.log(Object.keys(out).join(' '));

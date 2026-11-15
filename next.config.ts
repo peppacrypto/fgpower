@@ -55,10 +55,10 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        // The exercise figures (scripts/exercise-art/publish-figures.mjs) never change in place: each engine generation
-        // publishes under a new prefix (f3-start.webp, f3-loop.mp4...), so they can be cached for a year. Every other
+        // The exercise figures (scripts/exercise-art/publish-figures.mjs) never change in place: every publish of changed
+        // pictures uses a new prefix (f3-start.webp, f4-loop.mp4...), so they can be cached for a year. Every other
         // public file keeps Next's default (public, max-age=0).
-        source: "/exercises/:slug/:file(f3-.+)",
+        source: "/exercises/:slug/:file(f\\d+-.+)",
         headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
       },
       {

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-// Renders the final pictures of exercises and puts them in the app: public/exercises/<slug>/f3-start.webp, f3-end.webp and
-// f3-loop.mp4 (a new prefix for every engine generation: the files are served as immutable for a year, see next.config.ts,
-// so a changed picture must get a new name), removes the exercise's old photos and earlier figures, and
+// Renders the final pictures of exercises and puts them in the app: public/exercises/<slug>/<PREFIX>-start.webp, -end.webp and
+// -loop.mp4 (PREFIX below; a new prefix whenever published pictures change: the files are served as immutable for a year, see
+// next.config.ts, so a changed picture must get a new name), removes the exercise's old photos and earlier figures, and
 // rewrites its media list in prisma/seed-data/exercises.generated.json. Never run build-exercise-catalog.mjs afterwards: it
 // would bring the old photos back.
 //
@@ -28,8 +28,9 @@ const opt = (k) => {
 const NO_RENDER = argv.includes('--no-render')
 const DRY = argv.includes('--dry')
 const RENDER_ONLY = argv.includes('--render-only')
-/** File-name prefix of this engine generation; bump it whenever published pictures change (they are cached as immutable). */
-const PREFIX = 'f3'
+/** File-name prefix of what is published now; bump it whenever published pictures change (they are cached as immutable).
+ * f3: the third engine generation (2026-11-14). f4: the yoga review fixes (2026-11-15), some of them re-publishing f3 slugs. */
+const PREFIX = 'f4'
 
 let slugs = []
 if (opt('--slugs')) slugs = opt('--slugs').split(',')

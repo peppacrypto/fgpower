@@ -1,11 +1,16 @@
 {
  "slug": "happy-baby",
  "camera": {
-  "az": 150,
-  "el": 30
+  "az": 130,
+  "el": 32
  },
  "muscles": [
   "adductors"
+ ],
+ "props": [
+  {
+   "type": "floor-mat"
+  }
  ],
  "frames": {
   "start": {
@@ -13,92 +18,87 @@
     "pos": [
      0,
      0.1,
-     0.096
+     0
     ],
     "pitch": -90
    },
    "neck": {
-    "flex": 6
-   },
-   "spine": {
-    "flex": 22.515
+    "flex": 5
    },
    "legL": {
     "pos": [
-     0.22,
+     0.28,
      0.62,
-     0.1
+     -0.36
     ],
     "anchor": "ankle",
+    "pitch": -188,
     "pole": [
-     0.435,
-     1.347,
-     -0.595
-    ],
-    "pitch": -160
+     0.4,
+     -0.3,
+     -0.8
+    ]
    },
    "legR": {
     "pos": [
-     -0.22,
+     -0.28,
      0.62,
-     0.1
+     -0.36
     ],
     "anchor": "ankle",
+    "pitch": -188,
     "pole": [
-     -0.435,
-     1.347,
-     -0.595
-    ],
-    "pitch": -160
+     -0.4,
+     -0.3,
+     -0.8
+    ]
    },
    "armL": {
     "pos": [
-     0.298,
-     0.62,
-     0.1
+     0.295,
+     0.685,
+     -0.41
     ],
-    "hand": "grip",
+    "hand": "hook",
     "grip": 0.02,
     "fingers": [
-     1.049,
-     0.575,
-     0.55
-    ],
-    "palm": [
-     -1,
-     0,
-     0
-    ],
-    "curl": 0.8,
-    "pole": [
-     0.176,
-     -1.055,
-     -1.424
-    ]
-   },
-   "armR": {
-    "pos": [
-     -0.298,
-     0.62,
-     0.1
-    ],
-    "hand": "grip",
-    "grip": 0.02,
-    "fingers": [
-     -1.049,
-     0.575,
-     0.55
-    ],
-    "palm": [
      1,
      0,
      0
     ],
-    "curl": 0.8,
+    "palm": [
+     0,
+     -1,
+     0
+    ],
     "pole": [
-     -0.176,
-     -1.055,
-     -1.424
+     0.8,
+     -0.3,
+     0.3
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.295,
+     0.685,
+     -0.41
+    ],
+    "hand": "hook",
+    "grip": 0.02,
+    "fingers": [
+     -1,
+     0,
+     0
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -0.8,
+     -0.3,
+     0.3
     ]
    }
   },
@@ -107,95 +107,96 @@
     "pos": [
      0,
      0.1,
-     0.096
+     0
     ],
-    "pitch": -90,
-    "roll": 2.74
+    "pitch": -90
    },
    "neck": {
-    "flex": 6
-   },
-   "spine": {
-    "flex": 22.515
+    "flex": 4
    },
    "legL": {
     "pos": [
-     0.422,
-     0.511,
-     0.139
+     0.32,
+     0.6,
+     -0.44
     ],
     "anchor": "ankle",
+    "pitch": -195,
     "pole": [
-     0.435,
-     1.347,
-     -0.595
-    ],
-    "pitch": -160
+     0.45,
+     -0.55,
+     -0.6
+    ]
    },
    "legR": {
     "pos": [
-     -0.422,
-     0.511,
-     0.139
+     -0.32,
+     0.6,
+     -0.44
     ],
     "anchor": "ankle",
+    "pitch": -195,
     "pole": [
-     -0.435,
-     1.347,
-     -0.595
-    ],
-    "pitch": -160
+     -0.45,
+     -0.55,
+     -0.6
+    ]
    },
    "armL": {
     "pos": [
-     0.5,
-     0.511,
-     0.139
+     0.335,
+     0.665,
+     -0.49
     ],
-    "hand": "grip",
+    "hand": "hook",
     "grip": 0.02,
     "fingers": [
-     1.049,
-     0.575,
-     0.55
-    ],
-    "palm": [
-     -1,
-     0,
-     0
-    ],
-    "curl": 0.8,
-    "pole": [
-     0.176,
-     -1.055,
-     -1.424
-    ]
-   },
-   "armR": {
-    "pos": [
-     -0.5,
-     0.511,
-     0.139
-    ],
-    "hand": "grip",
-    "grip": 0.02,
-    "fingers": [
-     -1.049,
-     0.575,
-     0.55
-    ],
-    "palm": [
      1,
      0,
      0
     ],
-    "curl": 0.8,
+    "palm": [
+     0,
+     -1,
+     0
+    ],
     "pole": [
-     -0.176,
-     -1.055,
-     -1.424
+     0.8,
+     -0.3,
+     0.3
+    ]
+   },
+   "armR": {
+    "pos": [
+     -0.335,
+     0.665,
+     -0.49
+    ],
+    "hand": "hook",
+    "grip": 0.02,
+    "fingers": [
+     -1,
+     0,
+     0
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "pole": [
+     -0.8,
+     -0.3,
+     0.3
     ]
    }
   }
- }
+ },
+ "qaAllow": {
+  "joint:hip.L.rot": "Ananda Balasana: hips deeply flexed and abducted, knees out wider than the torso and drawn down beside the ribs, shins near vertical. qa-lib measures rotation from a direct swing out of standing (Codman offset), which reads about 150 deg here; done as flexion, horizontal abduction, then rotation it is about 60-80 deg. Not a flipped knee.",
+  "joint:hip.R.rot": "Ananda Balasana: hips deeply flexed and abducted, knees out wider than the torso and drawn down beside the ribs, shins near vertical. qa-lib measures rotation from a direct swing out of standing (Codman offset), which reads about 150 deg here; done as flexion, horizontal abduction, then rotation it is about 60-80 deg. Not a flipped knee.",
+  "joint:hip.L.range": "Ananda Balasana: the thigh about 147-151 deg from hanging toward the armpit with the knee out to the side (deep flexion plus abduction), the knee beside the ribs and not inside them; a flexible person reaches it, qa-lib caps that plane at about 124.",
+  "joint:hip.R.range": "Ananda Balasana: the thigh about 147-151 deg from hanging toward the armpit with the knee out to the side (deep flexion plus abduction), the knee beside the ribs and not inside them; a flexible person reaches it, qa-lib caps that plane at about 124."
+ },
+ "keyFrame": "end"
 }

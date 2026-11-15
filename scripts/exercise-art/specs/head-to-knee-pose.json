@@ -1,12 +1,13 @@
 {
  "slug": "head-to-knee-pose",
  "camera": {
-  "az": 70,
-  "el": 12
+  "az": 50,
+  "el": 18
  },
  "muscles": [
   "hamstrings"
  ],
+ "muscleSide": "L",
  "props": [
   {
    "type": "floor-mat"
@@ -20,174 +21,89 @@
      0.125,
      -0.05
     ],
-    "pitch": 10
+    "pitch": 6,
+    "yaw": 0
    },
    "spine": {
-    "flex": 3
-   },
-   "neck": {
-    "flex": -2
-   },
-   "legR": {
-    "pos": [
-     -0.1,
-     0.08,
-     0.81
-    ],
-    "pitch": -70,
-    "pole": [
-     -0.1,
-     1,
-     0.1
-    ]
-   },
-   "legL": {
-    "fk": {
-     "flex": 84,
-     "abd": 52,
-     "rot": -75,
-     "knee": 135
-    },
-    "rel": "world",
-    "foot": {
-     "pitch": 0
-    }
-   },
-   "armL": {
-    "pos": [
-     0.22,
-     0.2,
-     0.3
-    ],
-    "hand": "relaxed",
-    "fingers": [
-     0,
-     -0.2,
-     1
-    ],
-    "palm": [
-     0,
-     -1,
-     0
-    ],
-    "curl": 0.3,
-    "pole": [
-     0.8,
-     -0.4,
-     -0.3
-    ]
-   },
-   "armR": {
-    "pos": [
-     -0.22,
-     0.2,
-     0.3
-    ],
-    "hand": "relaxed",
-    "fingers": [
-     0,
-     -0.2,
-     1
-    ],
-    "palm": [
-     0,
-     -1,
-     0
-    ],
-    "curl": 0.3,
-    "pole": [
-     -0.8,
-     -0.4,
-     -0.3
-    ]
-   }
-  },
-  "mid": {
-   "root": {
-    "pos": [
-     0,
-     0.125,
-     -0.05
-    ],
-    "pitch": 30
-   },
-   "spine": {
-    "flex": 8
+    "flex": 0,
+    "twist": 6
    },
    "neck": {
     "flex": 0
    },
-   "legR": {
+   "legL": {
     "pos": [
-     -0.1,
+     0.11,
      0.08,
-     0.81
+     0.808
     ],
     "pitch": -70,
     "pole": [
-     -0.1,
+     0.05,
      1,
-     0.1
+     0
     ]
    },
-   "legL": {
-    "fk": {
-     "flex": 84,
-     "abd": 52,
-     "rot": -75,
-     "knee": 135
-    },
-    "rel": "world",
-    "foot": {
-     "pitch": 0
-    }
+   "legR": {
+    "pos": [
+     -0.035,
+     0.05,
+     0.13
+    ],
+    "anchor": "ankle",
+    "roll": 90,
+    "pole": [
+     -1,
+     0.05,
+     0.6
+    ]
    },
    "armL": {
     "pos": [
-     0.09,
-     0.26,
-     0.56
+     0.135,
+     0.195,
+     0.31
     ],
-    "hand": "relaxed",
+    "contact": true,
+    "hand": "flat",
     "fingers": [
-     0.15,
-     -0.2,
+     0,
+     -0.12,
      1
     ],
     "palm": [
-     -0.8,
-     0.3,
+     -0.2,
+     -0.98,
      0
     ],
-    "curl": 0.3,
     "pole": [
      0.8,
-     -0.4,
-     -0.3
+     -0.2,
+     -0.4
     ]
    },
    "armR": {
     "pos": [
-     -0.18,
-     0.22,
-     0.55
+     -0.445,
+     0.2,
+     0.215
     ],
-    "hand": "relaxed",
+    "contact": true,
+    "hand": "flat",
     "fingers": [
-     0,
-     -0.2,
-     1
+     -0.6,
+     -0.1,
+     0.8
     ],
     "palm": [
      0,
      -1,
      0
     ],
-    "curl": 0.3,
     "pole": [
      -0.8,
-     -0.4,
-     -0.3
+     -0.2,
+     -0.4
     ]
    }
   },
@@ -198,88 +114,96 @@
      0.125,
      -0.05
     ],
-    "pitch": 36
+    "pitch": 32,
+    "yaw": 0
    },
    "spine": {
-    "flex": 10
+    "flex": 28,
+    "twist": 8,
+    "side": 5
    },
    "neck": {
-    "flex": 0
+    "flex": 10
    },
-   "legR": {
+   "legL": {
     "pos": [
-     -0.1,
+     0.11,
      0.08,
-     0.81
+     0.808
     ],
     "pitch": -70,
     "pole": [
-     -0.1,
+     0.05,
      1,
-     0.1
+     0
     ]
    },
-   "legL": {
-    "fk": {
-     "flex": 84,
-     "abd": 52,
-     "rot": -75,
-     "knee": 135
-    },
-    "rel": "world",
-    "foot": {
-     "pitch": 0
-    }
+   "legR": {
+    "pos": [
+     -0.035,
+     0.05,
+     0.13
+    ],
+    "anchor": "ankle",
+    "roll": 90,
+    "pole": [
+     -1,
+     0.05,
+     0.6
+    ]
    },
    "armL": {
     "pos": [
-     0.06,
-     0.2,
-     0.62
+     0.17,
+     0.12,
+     0.82
     ],
-    "hand": "relaxed",
+    "contact": true,
+    "hand": "flat",
     "fingers": [
-     0.2,
-     -0.2,
-     1
+     0,
+     0.25,
+     0.97
     ],
     "palm": [
-     -0.8,
-     0.3,
+     -1,
+     0,
      0
     ],
-    "curl": 0.3,
     "pole": [
      0.8,
-     -0.4,
-     -0.3
+     -0.2,
+     -0.4
     ]
    },
    "armR": {
     "pos": [
-     -0.2,
-     0.2,
-     0.66
+     0.05,
+     0.12,
+     0.845
     ],
-    "hand": "relaxed",
+    "contact": true,
+    "hand": "flat",
     "fingers": [
      0,
-     -0.2,
-     1
+     0.35,
+     0.94
     ],
     "palm": [
+     1,
      0,
-     -1,
      0
     ],
-    "curl": 0.3,
     "pole": [
      -0.8,
-     -0.4,
-     -0.3
+     -0.2,
+     -0.4
     ]
    }
   }
  },
- "muscleSide": "R"
+ "qaAllow": {
+  "joint:hip.R.rot": "Janu Sirsasana: the bent right hip is flexed, abducted and externally rotated, knee out to the side on the mat and the shin pointing at the groin (sole on the inner left thigh). qa-lib measures rotation from a direct swing out of standing (Codman offset), which reads 150-160 deg here; done as flexion, horizontal abduction, then rotation it is about 80-90 deg. Not a flipped knee."
+ },
+ "keyFrame": "end"
 }

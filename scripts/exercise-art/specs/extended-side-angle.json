@@ -1,7 +1,7 @@
 {
  "slug": "extended-side-angle",
  "camera": {
-  "az": 25,
+  "az": 10,
   "el": 8
  },
  "muscles": [
@@ -9,55 +9,65 @@
   "glutes",
   "obliques"
  ],
+ "muscleSide": "L",
+ "qaAllow": {
+  "self:chest:head": "Comes from the sideways tilt of the trunk (spine side bend), with any head position, even the head straight: the skull base sits in front of the upper back skin at the neck and the nearest-vertex normal test reads it as inside. The closest head-to-chest vertex distance here is 3.6 cm, the same as in the clean warrior-2 start (3.5 cm): nothing intersects."
+ },
  "frames": {
   "start": {
    "root": {
     "pos": [
-     0.27,
-     0.57,
+     0.1044,
+     0.5603,
      0
     ],
-    "yaw": 0
+    "yaw": 0,
+    "roll": 0
+   },
+   "spine": {
+    "flex": 0,
+    "side": 0,
+    "twist": 0,
+    "weights": [
+     0.05,
+     0.1,
+     0.2,
+     0.3,
+     0.35
+    ]
    },
    "neck": {
-    "twist": 0
+    "flex": 0,
+    "side": 0,
+    "twist": 80
    },
    "legL": {
     "pos": [
-     0.7,
+     0.6547,
      0,
-     0
+     -0.0053
     ],
     "anchor": "sole",
-    "yaw": 90,
+    "yaw": 87,
     "pole": [
      1,
      0.3,
-     0.1
+     0
     ]
    },
    "legR": {
     "pos": [
-     -0.46,
+     -0.7,
      0,
      0
     ],
     "anchor": "sole",
-    "yaw": -80,
+    "yaw": 18,
     "pole": [
-     -1,
-     0.3,
-     0
+     0.21,
+     -0.304,
+     0.929
     ]
-   },
-   "armL": {
-    "fk": {
-     "flex": 0,
-     "abd": 90,
-     "rot": 0,
-     "elbow": 0
-    },
-    "rel": "world"
    },
    "armR": {
     "fk": {
@@ -66,74 +76,172 @@
      "rot": 0,
      "elbow": 0
     },
-    "rel": "world"
+    "rel": "chest",
+    "hand": "flat"
+   },
+   "armL": {
+    "fk": {
+     "flex": 0,
+     "abd": 90,
+     "rot": 0,
+     "elbow": 0
+    },
+    "rel": "chest",
+    "hand": "flat"
+   }
+  },
+  "mid": {
+   "root": {
+    "pos": [
+     0.1035,
+     0.5465,
+     0
+    ],
+    "yaw": 0,
+    "roll": -7.5
+   },
+   "spine": {
+    "flex": 0,
+    "side": 11,
+    "twist": -4,
+    "weights": [
+     0.05,
+     0.1,
+     0.2,
+     0.3,
+     0.35
+    ]
+   },
+   "neck": {
+    "flex": 0,
+    "side": 0,
+    "twist": 15
+   },
+   "legL": {
+    "pos": [
+     0.6547,
+     0,
+     -0.0053
+    ],
+    "anchor": "sole",
+    "yaw": 87,
+    "pole": [
+     1,
+     0.3,
+     0
+    ]
+   },
+   "legR": {
+    "pos": [
+     -0.7,
+     0,
+     0
+    ],
+    "anchor": "sole",
+    "yaw": 18,
+    "pole": [
+     0.21,
+     -0.304,
+     0.929
+    ]
+   },
+   "armR": {
+    "fk": {
+     "flex": -10,
+     "abd": 140.5,
+     "rot": 90,
+     "elbow": 0
+    },
+    "rel": "chest",
+    "hand": "flat"
+   },
+   "armL": {
+    "fk": {
+     "flex": -12.45,
+     "abd": 83.1,
+     "rot": 7.35,
+     "elbow": 40.5
+    },
+    "rel": "chest",
+    "hand": "flat"
    }
   },
   "end": {
    "root": {
     "pos": [
-     0.27,
-     0.57,
+     0.1008,
+     0.533,
      0
     ],
     "yaw": 0,
-    "roll": -28
+    "roll": -15
    },
    "spine": {
-    "side": 0
+    "flex": 0,
+    "side": 22,
+    "twist": -8,
+    "weights": [
+     0.05,
+     0.1,
+     0.2,
+     0.3,
+     0.35
+    ]
    },
    "neck": {
-    "twist": -10,
+    "flex": 0,
     "side": 0,
-    "flex": -20
+    "twist": -50
    },
    "legL": {
     "pos": [
-     0.7,
+     0.6547,
      0,
-     0
+     -0.0053
     ],
     "anchor": "sole",
-    "yaw": 90,
+    "yaw": 87,
     "pole": [
      1,
      0.3,
-     0.1
+     0
     ]
    },
    "legR": {
     "pos": [
-     -0.46,
+     -0.7,
      0,
      0
     ],
     "anchor": "sole",
-    "yaw": -80,
+    "yaw": 18,
     "pole": [
-     -1,
-     0.3,
-     0
+     0.21,
+     -0.304,
+     0.929
     ]
-   },
-   "armL": {
-    "fk": {
-     "flex": 0,
-     "abd": 28,
-     "rot": 0,
-     "elbow": 0
-    },
-    "rel": "world"
    },
    "armR": {
     "fk": {
-     "flex": 0,
-     "abd": 172,
-     "rot": 0,
+     "flex": -20,
+     "abd": 191,
+     "rot": 180,
      "elbow": 0
     },
-    "rel": "world"
+    "rel": "chest",
+    "hand": "flat"
+   },
+   "armL": {
+    "fk": {
+     "flex": -41.5,
+     "abd": 67,
+     "rot": 24.5,
+     "elbow": 135
+    },
+    "rel": "chest",
+    "hand": "flat"
    }
   }
  },
- "muscleSide": "L"
+ "keyFrame": "end"
 }

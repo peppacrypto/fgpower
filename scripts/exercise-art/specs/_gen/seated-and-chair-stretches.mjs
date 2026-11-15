@@ -1,5 +1,7 @@
 import fs from 'fs';
-const W = (slug, s) => fs.writeFileSync(new URL(`../${slug}.json`, import.meta.url), JSON.stringify({slug, ...s}, null, 1));
+// Fixed by hand after the owner's yoga review (2026-11-15): edit specs/<slug>.json directly; this generator no longer writes them.
+const HAND=new Set(["bound-angle-pose"]);
+const W = (slug, s) => HAND.has(slug) || fs.writeFileSync(new URL(`../${slug}.json`, import.meta.url), JSON.stringify({slug, ...s}, null, 1));
 const mat = {type:'floor-mat'};
 // butterfly legs: soles together, knees open
 const FR=+(process.env.FR||-40);

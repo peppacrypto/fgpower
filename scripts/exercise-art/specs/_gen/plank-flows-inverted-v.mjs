@@ -68,5 +68,7 @@ const sol=(s,z=-0.2)=>({pos:[s*0.1,0,z],anchor:'sole',pitch:0,pole:[0,0,1]});
  const U=(process.env.U||'0,0.25,0.5,0.75,1').split(',').map(Number);
  save('inchworm',{az:72,el:8},['hamstrings'],{start:mk(0,H0,0,H0,0),mid:mk(U[1],M,LY,H0,0),mid2:mk(U[2],H1,0,H0,0),mid3:mk(U[3],H1,0,M,LY),end:mk(1,H1,0,H1,0)},{tempo:{lift:'even',stretch:0.9}});}
 for(const s of ['dolphin-pose','butt-ups'])for(const f of Object.values(out[s].frames)){f.armL.pos[1]=0.02;f.armR.pos[1]=0.02;}
-for(const [k,v] of Object.entries(out))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
+// Fixed by hand after the owner's yoga review (2026-11-15): edit specs/<slug>.json directly; this generator no longer writes them.
+const HAND=new Set(["downward-dog"]);
+for(const [k,v] of Object.entries(out))if(!HAND.has(k))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
 console.log(Object.keys(out).join(' '));

@@ -34,5 +34,7 @@ const tw=(arm,r)=>base({neck:{flex:-8},root:{pos:[0,r.y||0.5,0],pitch:r.p||78,ro
 const TA={pos:[0.19,0.07,0.5],hand:'open',fingers:[0,0,1],palm:[0,-1,0],pole:[0.3,0,-1]};
 const TM=tw({pos:JSON.parse(process.env.MPOS||'[-0.03,0.18,0.45]'),hand:'open',fingers:[-0.85,-0.1,0.5],palm:[-0.4,0.1,-0.2],pole:[1,0.5,-0.7]},{y:0.5,p:78,r:E('TR',-6)});
 save('thread-the-needle',{az:E('TAZ',300),el:25},['shoulders'],{start:tw(hand(1),{}),a:tw(TA,{}),mid:TM,end:tw(TA,{})},{muscleSide:'L'});
-for(const [k,v] of Object.entries(out))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
+// Fixed by hand after the owner's yoga review (2026-11-15): edit specs/<slug>.json directly; this generator no longer writes them.
+const HAND=new Set(["childs-pose", "cat-cow", "thread-the-needle"]);
+for(const [k,v] of Object.entries(out))if(!HAND.has(k))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
 console.log(Object.keys(out).join(' '));

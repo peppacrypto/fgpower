@@ -8,77 +8,84 @@
   "hamstrings",
   "glutes"
  ],
+ "muscleSide": "L",
+ "tempo": {
+  "lift": "even"
+ },
  "frames": {
   "start": {
    "root": {
     "pos": [
-     0.13,
-     1.03,
-     0
+     -0.15,
+     0.8,
+     0.0
     ],
-    "roll": -105
+    "roll": -80,
+    "pitch": 50
+   },
+   "spine": {
+    "twist": 0
    },
    "neck": {
-    "flex": 0
+    "flex": -5
    },
    "legL": {
     "pos": [
-     0.1,
+     0.0,
      0,
      0
     ],
     "anchor": "sole",
+    "yaw": 90,
     "pole": [
-     0.1,
-     0.3,
-     1
+     1,
+     0,
+     0
     ]
    },
    "legR": {
     "pos": [
-     -0.58,
-     0.75,
-     0
+     -0.5,
+     0,
+     0.2
     ],
-    "anchor": "ankle",
+    "anchor": "sole",
+    "yaw": 0,
     "pole": [
      0,
-     0,
+     0.2,
      1
-    ],
-    "roll": -80
+    ]
    },
    "armL": {
-    "hand": "flat",
-    "fingers": [
-     0,
-     0,
-     1
+    "pos": [
+     0.4,
+     0.193,
+     -0.005
     ],
-    "palm": [
-     0,
+    "hand": "open",
+    "fingers": [
+     0.36,
      -1,
      0
     ],
-    "pole": [
-     0.5,
-     -0.3,
-     -1
-    ],
-    "curl": 0.2,
-    "pos": [
-     0.52,
-     0.23,
+    "palm": [
+     -1,
+     -0.36,
      0
     ],
-    "contact": true
+    "pole": [
+     0,
+     0,
+     -1
+    ]
    },
    "armR": {
     "fk": {
-     "flex": 0,
-     "abd": 90,
-     "rot": 0,
-     "elbow": 0
+     "flex": 10,
+     "abd": 15,
+     "rot": -90,
+     "elbow": 15
     },
     "rel": "chest"
    }
@@ -86,90 +93,80 @@
   "end": {
    "root": {
     "pos": [
-     0.13,
-     1.03,
-     0
+     -0.011,
+     1.026,
+     0.025
     ],
-    "roll": -105
+    "roll": -108,
+    "pitch": 20
+   },
+   "spine": {
+    "twist": -20
    },
    "neck": {
     "flex": 0
    },
    "legL": {
     "pos": [
-     0.1,
+     0.0,
      0,
      0
     ],
     "anchor": "sole",
+    "yaw": 90,
     "pole": [
-     0.1,
-     0.3,
-     1
+     1,
+     0,
+     0
     ]
    },
    "legR": {
     "pos": [
-     -0.7,
-     1.12,
-     0
+     -0.837,
+     1.117,
+     0.06
     ],
     "anchor": "ankle",
+    "roll": -90,
     "pole": [
      0,
      0,
      1
-    ],
-    "roll": -90
+    ]
    },
    "armL": {
-    "hand": "flat",
-    "fingers": [
-     0,
-     0,
-     1
+    "pos": [
+     0.4,
+     0.193,
+     -0.005
     ],
-    "palm": [
-     0,
+    "hand": "open",
+    "fingers": [
+     0.36,
      -1,
      0
     ],
-    "pole": [
-     0.5,
-     -0.3,
-     -1
-    ],
-    "curl": 0.2,
-    "pos": [
-     0.52,
-     0.23,
+    "palm": [
+     -1,
+     -0.36,
      0
     ],
-    "contact": true
+    "pole": [
+     0,
+     0,
+     -1
+    ]
    },
    "armR": {
     "fk": {
      "flex": 0,
-     "abd": 90,
-     "rot": 0,
+     "abd": 72,
+     "rot": -90,
      "elbow": 0
     },
     "rel": "chest"
    }
   }
  },
- "props": [
-  {
-   "type": "yoga-block",
-   "orient": "tall",
-   "pos": [
-    0.52,
-    0,
-    0
-   ]
-  }
- ],
- "tempo": {
-  "lift": "even"
- }
+ "keyFrame": "end"
 }

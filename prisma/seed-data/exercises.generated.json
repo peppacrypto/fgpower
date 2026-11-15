@@ -8606,12 +8606,12 @@
   "instructionsEn": [
    "Get on your hands and knees, walk your hands in front of you.",
    "Lower your buttocks down to sit on your heels. Let your arms drag along the floor as you sit back to stretch your entire spine.",
-   "Once you settle onto your heels, bring your hands next to your feet and relax. \"breathe\" into your back. Rest your forehead on the floor. Avoid this position if you have knee problems."
+   "Once you settle onto your heels, keep your arms extended forward (or bring your hands next to your feet) and relax. \"breathe\" into your back. Rest your forehead on the floor. Avoid this position if you have knee problems."
   ],
   "instructionsPt": [
    "Fique apoiado em mãos e joelhos e caminhe com as mãos para frente.",
    "Abaixe os quadris até sentar sobre os calcanhares. Deixe os braços deslizarem pelo chão enquanto você se senta para trás, alongando toda a coluna.",
-   "Ao se acomodar sobre os calcanhares, traga as mãos para perto dos pés e relaxe. \"Respire\" em direção às costas. Apoie a testa no chão. Evite essa posição se tiver problemas no joelho."
+   "Ao se acomodar sobre os calcanhares, mantenha os braços estendidos à frente (ou leve as mãos para perto dos pés) e relaxe. \"Respire\" em direção às costas. Apoie a testa no chão. Evite essa posição se tiver problemas no joelho."
   ],
   "primaryMuscles": [
    "spinal-erectors"
@@ -8622,22 +8622,22 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/childs-pose/f3-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/childs-pose/f4-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/childs-pose/f3-end.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/childs-pose/f4-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
    },
    {
     "kind": "ILLUSTRATION",
-    "url": "/exercises/childs-pose/f3-loop.mp4",
+    "url": "/exercises/childs-pose/f4-loop.mp4",
     "width": 800,
     "height": 600,
     "sortOrder": 2
@@ -47459,22 +47459,22 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/downward-dog/f3-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/downward-dog/f4-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/downward-dog/f3-end.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/downward-dog/f4-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
    },
    {
     "kind": "ILLUSTRATION",
-    "url": "/exercises/downward-dog/f3-loop.mp4",
+    "url": "/exercises/downward-dog/f4-loop.mp4",
     "width": 800,
     "height": 600,
     "sortOrder": 2
@@ -47515,15 +47515,15 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/upward-dog/f3-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/upward-dog/f3-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/upward-dog/f3-end.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/upward-dog/f3-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
@@ -47571,22 +47571,22 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/cobra-pose/f2-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/cobra-pose/f4-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/cobra-pose/f2-end.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/cobra-pose/f4-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
    },
    {
     "kind": "ILLUSTRATION",
-    "url": "/exercises/cobra-pose/f2-loop.mp4",
+    "url": "/exercises/cobra-pose/f4-loop.mp4",
     "width": 800,
     "height": 600,
     "sortOrder": 2
@@ -47624,7 +47624,29 @@
    "abdominals",
    "middle-back"
   ],
-  "media": [],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/cat-cow/f4-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/cat-cow/f4-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/cat-cow/f4-loop.mp4",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 2
+   }
+  ],
   "videoUrl": "https://www.youtube.com/watch?v=ohfiTnNHcHw",
   "videoCredit": "Fernanda Yoga"
  },
@@ -47659,15 +47681,15 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/standing-forward-fold/f3-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/standing-forward-fold/f3-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/standing-forward-fold/f3-end.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/standing-forward-fold/f3-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
@@ -47713,15 +47735,15 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/halfway-lift/f3-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/halfway-lift/f3-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/halfway-lift/f3-end.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/halfway-lift/f3-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
@@ -47816,15 +47838,15 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/high-lunge/f3-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/high-lunge/f3-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/high-lunge/f3-end.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/high-lunge/f3-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
@@ -47872,15 +47894,15 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/chair-pose/f3-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/chair-pose/f3-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/chair-pose/f3-end.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/chair-pose/f3-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
@@ -47928,22 +47950,22 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/tree-pose/f3-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/tree-pose/f4-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/tree-pose/f3-end.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/tree-pose/f4-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
    },
    {
     "kind": "ILLUSTRATION",
-    "url": "/exercises/tree-pose/f3-loop.mp4",
+    "url": "/exercises/tree-pose/f4-loop.mp4",
     "width": 800,
     "height": 600,
     "sortOrder": 2
@@ -47983,15 +48005,15 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/warrior-1/f3-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/warrior-1/f3-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/warrior-1/f3-end.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/warrior-1/f3-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
@@ -48039,18 +48061,25 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/warrior-2/f2-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/warrior-2/f4-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "ILLUSTRATION",
-    "url": "/exercises/warrior-2/f2-start.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/warrior-2/f4-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/warrior-2/f4-loop.mp4",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 2
    }
   ],
   "videoUrl": "https://www.youtube.com/watch?v=51A73OBS7A8",
@@ -48088,22 +48117,22 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/warrior-3/f3-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/warrior-3/f4-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/warrior-3/f3-end.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/warrior-3/f4-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
    },
    {
     "kind": "ILLUSTRATION",
-    "url": "/exercises/warrior-3/f3-loop.mp4",
+    "url": "/exercises/warrior-3/f4-loop.mp4",
     "width": 800,
     "height": 600,
     "sortOrder": 2
@@ -48144,18 +48173,25 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/triangle-pose/f2-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/triangle-pose/f4-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "ILLUSTRATION",
-    "url": "/exercises/triangle-pose/f2-start.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/triangle-pose/f4-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/triangle-pose/f4-loop.mp4",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 2
    }
   ],
   "videoUrl": "https://www.youtube.com/watch?v=__GyEpJvQfo",
@@ -48193,18 +48229,25 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/extended-side-angle/f2-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/extended-side-angle/f4-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "ILLUSTRATION",
-    "url": "/exercises/extended-side-angle/f2-start.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/extended-side-angle/f4-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/extended-side-angle/f4-loop.mp4",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 2
    }
   ],
   "videoUrl": "https://www.youtube.com/watch?v=oTw5yokfYOk",
@@ -48242,18 +48285,25 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/half-moon-pose/f2-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/half-moon-pose/f4-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "ILLUSTRATION",
-    "url": "/exercises/half-moon-pose/f2-start.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/half-moon-pose/f4-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/half-moon-pose/f4-loop.mp4",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 2
    }
   ],
   "videoUrl": "https://www.youtube.com/watch?v=fKL47MLDHrA",
@@ -48290,22 +48340,22 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/wide-legged-forward-fold/f2-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/wide-legged-forward-fold/f4-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/wide-legged-forward-fold/f2-end.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/wide-legged-forward-fold/f4-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
    },
    {
     "kind": "ILLUSTRATION",
-    "url": "/exercises/wide-legged-forward-fold/f2-loop.mp4",
+    "url": "/exercises/wide-legged-forward-fold/f4-loop.mp4",
     "width": 800,
     "height": 600,
     "sortOrder": 2
@@ -48345,15 +48395,15 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/pyramid-pose/f3-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/pyramid-pose/f3-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/pyramid-pose/f3-end.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/pyramid-pose/f3-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
@@ -48401,18 +48451,25 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/lizard-pose/f2-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/lizard-pose/f4-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "ILLUSTRATION",
-    "url": "/exercises/lizard-pose/f2-start.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/lizard-pose/f4-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/lizard-pose/f4-loop.mp4",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 2
    }
   ],
   "videoUrl": "https://www.youtube.com/watch?v=7G6rHihu0_k",
@@ -48447,7 +48504,29 @@
    "quadriceps",
    "spinal-erectors"
   ],
-  "media": [],
+  "media": [
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/pigeon-pose/f4-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/pigeon-pose/f4-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/pigeon-pose/f4-loop.mp4",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 2
+   }
+  ],
   "videoUrl": "https://www.youtube.com/watch?v=1hB5LlY1OpM",
   "videoCredit": "Fernanda Yoga"
  },
@@ -48482,15 +48561,15 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/seated-forward-fold/f3-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/seated-forward-fold/f3-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/seated-forward-fold/f3-end.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/seated-forward-fold/f3-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
@@ -48537,22 +48616,22 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/head-to-knee-pose/f3-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/head-to-knee-pose/f4-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/head-to-knee-pose/f3-end.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/head-to-knee-pose/f4-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
    },
    {
     "kind": "ILLUSTRATION",
-    "url": "/exercises/head-to-knee-pose/f3-loop.mp4",
+    "url": "/exercises/head-to-knee-pose/f4-loop.mp4",
     "width": 800,
     "height": 600,
     "sortOrder": 2
@@ -48589,7 +48668,29 @@
   "secondaryMuscles": [
    "glutes"
   ],
-  "media": [],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/bound-angle-pose/f4-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/bound-angle-pose/f4-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/bound-angle-pose/f4-loop.mp4",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 2
+   }
+  ],
   "videoUrl": "https://www.youtube.com/watch?v=NcFed5H4Vq8",
   "videoCredit": "Pausa para um Respiro"
  },
@@ -48624,15 +48725,15 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/seated-spinal-twist/f3-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/seated-spinal-twist/f3-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/seated-spinal-twist/f3-end.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/seated-spinal-twist/f3-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
@@ -48680,15 +48781,15 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/bridge-pose/f3-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/bridge-pose/f3-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/bridge-pose/f3-end.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/bridge-pose/f3-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
@@ -48736,22 +48837,22 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/camel-pose/f2-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/camel-pose/f4-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/camel-pose/f2-end.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/camel-pose/f4-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
    },
    {
     "kind": "ILLUSTRATION",
-    "url": "/exercises/camel-pose/f2-loop.mp4",
+    "url": "/exercises/camel-pose/f4-loop.mp4",
     "width": 800,
     "height": 600,
     "sortOrder": 2
@@ -48792,15 +48893,15 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/bow-pose/f3-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/bow-pose/f3-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/bow-pose/f3-end.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/bow-pose/f3-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
@@ -48848,15 +48949,15 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/locust-pose/f3-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/locust-pose/f3-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/locust-pose/f3-end.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/locust-pose/f3-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
@@ -48904,14 +49005,14 @@
   "media": [
    {
     "kind": "IMAGE_START",
-    "url": "/exercises/boat-pose/f3-start.webp",
+    "url": "/exercises/boat-pose/f4-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
     "kind": "ILLUSTRATION",
-    "url": "/exercises/boat-pose/f3-start.webp",
+    "url": "/exercises/boat-pose/f4-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
@@ -48951,22 +49052,22 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/sphinx-pose/f2-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/sphinx-pose/f4-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/sphinx-pose/f2-end.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/sphinx-pose/f4-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
    },
    {
     "kind": "ILLUSTRATION",
-    "url": "/exercises/sphinx-pose/f2-loop.mp4",
+    "url": "/exercises/sphinx-pose/f4-loop.mp4",
     "width": 800,
     "height": 600,
     "sortOrder": 2
@@ -49004,7 +49105,29 @@
    "glutes",
    "hamstrings"
   ],
-  "media": [],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/happy-baby/f4-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/happy-baby/f4-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/happy-baby/f4-loop.mp4",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 2
+   }
+  ],
   "videoUrl": "https://www.youtube.com/watch?v=5qn3hk_Mz0I",
   "videoCredit": "CP - Conscientize e Pratique"
  },
@@ -49039,15 +49162,15 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/reclined-spinal-twist/f3-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/reclined-spinal-twist/f3-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/reclined-spinal-twist/f3-end.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/reclined-spinal-twist/f3-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
@@ -49189,22 +49312,22 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/garland-pose/f3-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/garland-pose/f4-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/garland-pose/f3-end.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/garland-pose/f4-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
    },
    {
     "kind": "ILLUSTRATION",
-    "url": "/exercises/garland-pose/f3-loop.mp4",
+    "url": "/exercises/garland-pose/f4-loop.mp4",
     "width": 800,
     "height": 600,
     "sortOrder": 2
@@ -49245,15 +49368,15 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/eagle-pose/f3-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/eagle-pose/f3-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/eagle-pose/f3-end.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/eagle-pose/f3-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
@@ -49301,15 +49424,15 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/dolphin-pose/f3-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/dolphin-pose/f3-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/dolphin-pose/f3-end.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/dolphin-pose/f3-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
@@ -49338,13 +49461,13 @@
   "laterality": "BILATERAL",
   "mechanics": "ISOLATION",
   "instructionsEn": [
-   "Squat with the hands flat on the floor shoulder-width and the knees resting high on the backs of the arms (Bakasana).",
-   "Lean the weight forward onto the hands and lift one foot, then the other, off the floor.",
+   "Squat with the hands flat on the floor shoulder-width and the knees resting on the backs of the upper arms, above the elbows (Kakasana).",
+   "Lean the weight forward onto the hands, bending the elbows, and lift the feet off the floor (one at a time at first, if needed).",
    "Round the upper back, hug the knees in and gaze slightly forward. Keep a cushion in front at first."
   ],
   "instructionsPt": [
-   "Agache com as mãos apoiadas no chão na largura dos ombros e os joelhos encostados no alto da parte de trás dos braços (Bakasana).",
-   "Leve o peso para frente sobre as mãos e eleve um pé, depois o outro, do chão.",
+   "Agache com as mãos apoiadas no chão na largura dos ombros e os joelhos apoiados na parte de trás dos braços, acima dos cotovelos (Kakasana).",
+   "Leve o peso para frente sobre as mãos, dobrando os cotovelos, e tire os pés do chão (um de cada vez no começo, se precisar).",
    "Arredonde a parte de cima das costas, abrace os joelhos e olhe levemente para frente. Mantenha uma almofada à frente no início."
   ],
   "primaryMuscles": [
@@ -49357,22 +49480,22 @@
   ],
   "media": [
    {
-    "kind": "IMAGE_START",
-    "url": "/exercises/crow-pose/f3-start.webp",
+    "kind": "IMAGE_END",
+    "url": "/exercises/crow-pose/f4-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
-    "kind": "IMAGE_END",
-    "url": "/exercises/crow-pose/f3-end.webp",
+    "kind": "IMAGE_START",
+    "url": "/exercises/crow-pose/f4-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
    },
    {
     "kind": "ILLUSTRATION",
-    "url": "/exercises/crow-pose/f3-loop.mp4",
+    "url": "/exercises/crow-pose/f4-loop.mp4",
     "width": 800,
     "height": 600,
     "sortOrder": 2
@@ -49410,7 +49533,29 @@
    "middle-back",
    "traps"
   ],
-  "media": [],
+  "media": [
+   {
+    "kind": "IMAGE_END",
+    "url": "/exercises/thread-the-needle/f4-end.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 0
+   },
+   {
+    "kind": "IMAGE_START",
+    "url": "/exercises/thread-the-needle/f4-start.webp",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 1
+   },
+   {
+    "kind": "ILLUSTRATION",
+    "url": "/exercises/thread-the-needle/f4-loop.mp4",
+    "width": 800,
+    "height": 600,
+    "sortOrder": 2
+   }
+  ],
   "videoUrl": "https://www.youtube.com/watch?v=AFZx_jpyG7Y",
   "videoCredit": "Aline Treinos em Casa"
  },

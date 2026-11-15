@@ -27,5 +27,7 @@ save('cocoons',{az:76,el:12},{
 const bt=(y,p,lf,kn)=>fr(lie(y,p),A(8,3,12),A(8,3,12),L(lf,kn),L(lf,kn),{neck:{flex:4}});
 save('bottoms-up',{az:76,el:12},{
  start:bt(0.1,-90,5,3),mid:bt(0.12,-92,105,120),mid2:bt(0.12,-92,90,4),end:bt(0.22,-104,76,4)});
-for(const [k,v] of Object.entries(out))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
+// Fixed by hand after the owner's yoga review (2026-11-15): edit specs/<slug>.json directly; this generator no longer writes them.
+const HAND=new Set(["boat-pose"]);
+for(const [k,v] of Object.entries(out))if(!HAND.has(k))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
 console.log(Object.keys(out).join(' '));

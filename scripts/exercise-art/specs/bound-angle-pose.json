@@ -1,8 +1,8 @@
 {
  "slug": "bound-angle-pose",
  "camera": {
-  "az": 70,
-  "el": 10
+  "az": 22,
+  "el": 20
  },
  "muscles": [
   "adductors"
@@ -18,9 +18,9 @@
     "pos": [
      0,
      0.125,
-     0
+     -0.03
     ],
-    "pitch": 0
+    "pitch": 6
    },
    "spine": {
     "flex": 0
@@ -30,55 +30,79 @@
    },
    "legL": {
     "pos": [
-     0.05,
-     0.09,
-     0.4
+     0.072,
+     0.055,
+     0.195
     ],
     "anchor": "ankle",
+    "roll": -90,
     "pole": [
-     0.5,
-     0.87,
-     0
-    ],
-    "pitch": 0,
-    "roll": -40,
-    "yaw": 0
+     1,
+     0.7,
+     0.3
+    ]
    },
    "legR": {
     "pos": [
-     -0.05,
-     0.09,
-     0.4
+     -0.072,
+     0.055,
+     0.195
     ],
     "anchor": "ankle",
+    "roll": 90,
     "pole": [
-     -0.5,
-     0.87,
-     0
-    ],
-    "pitch": 0,
-    "roll": 40,
-    "yaw": 0
+     -1,
+     0.7,
+     0.3
+    ]
    },
    "armL": {
-    "fk": {
-     "flex": 0,
-     "abd": 50,
-     "elbow": 40
-    },
-    "rel": "chest",
-    "hand": "relaxed",
-    "pron": 0
+    "pos": [
+     0.06,
+     0.085,
+     0.275
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0.3,
+     1
+    ],
+    "palm": [
+     -0.5,
+     -0.86,
+     0
+    ],
+    "pole": [
+     1,
+     0,
+     -0.3
+    ]
    },
    "armR": {
-    "fk": {
-     "flex": 0,
-     "abd": 45,
-     "elbow": 40
-    },
-    "rel": "chest",
-    "hand": "relaxed",
-    "pron": 0
+    "pos": [
+     -0.06,
+     0.085,
+     0.275
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0.3,
+     1
+    ],
+    "palm": [
+     0.5,
+     -0.86,
+     0
+    ],
+    "pole": [
+     -1,
+     0,
+     -0.3
+    ]
    }
   },
   "end": {
@@ -86,68 +110,97 @@
     "pos": [
      0,
      0.125,
-     0
+     -0.03
     ],
-    "pitch": 0
+    "pitch": 14
    },
    "spine": {
-    "flex": 22
+    "flex": 6
    },
    "neck": {
-    "flex": -10
+    "flex": 4
    },
    "legL": {
     "pos": [
-     0.05,
-     0.09,
-     0.4
+     0.072,
+     0.055,
+     0.195
     ],
     "anchor": "ankle",
+    "roll": -90,
     "pole": [
-     0.5,
-     0.87,
-     0
-    ],
-    "pitch": 0,
-    "roll": -40,
-    "yaw": 0
+     1,
+     0,
+     0.3
+    ]
    },
    "legR": {
     "pos": [
-     -0.05,
-     0.09,
-     0.4
+     -0.072,
+     0.055,
+     0.195
     ],
     "anchor": "ankle",
+    "roll": 90,
     "pole": [
-     -0.5,
-     0.87,
-     0
-    ],
-    "pitch": 0,
-    "roll": 40,
-    "yaw": 0
+     -1,
+     0,
+     0.3
+    ]
    },
    "armL": {
-    "fk": {
-     "flex": 0,
-     "abd": 50,
-     "elbow": 40
-    },
-    "rel": "chest",
-    "hand": "relaxed",
-    "pron": 0
+    "pos": [
+     0.06,
+     0.085,
+     0.275
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0.3,
+     1
+    ],
+    "palm": [
+     -0.5,
+     -0.86,
+     0
+    ],
+    "pole": [
+     1,
+     0,
+     -0.3
+    ]
    },
    "armR": {
-    "fk": {
-     "flex": 0,
-     "abd": 45,
-     "elbow": 40
-    },
-    "rel": "chest",
-    "hand": "relaxed",
-    "pron": 0
+    "pos": [
+     -0.06,
+     0.085,
+     0.275
+    ],
+    "contact": true,
+    "hand": "flat",
+    "fingers": [
+     0,
+     0.3,
+     1
+    ],
+    "palm": [
+     0.5,
+     -0.86,
+     0
+    ],
+    "pole": [
+     -1,
+     0,
+     -0.3
+    ]
    }
   }
- }
+ },
+ "qaAllow": {
+  "joint:hip.L.rot": "Baddha Konasana: both hips flexed, abducted and externally rotated, knees dropped out to the sides and the shins pointing in to the soles pressed together. qa-lib measures rotation from a direct swing out of standing (Codman offset), which reads 120-150 deg here; done as flexion, horizontal abduction, then rotation it is about 60-80 deg. Not a flipped knee.",
+  "joint:hip.R.rot": "Baddha Konasana: both hips flexed, abducted and externally rotated, knees dropped out to the sides and the shins pointing in to the soles pressed together. qa-lib measures rotation from a direct swing out of standing (Codman offset), which reads 120-150 deg here; done as flexion, horizontal abduction, then rotation it is about 60-80 deg. Not a flipped knee."
+ },
+ "keyFrame": "end"
 }

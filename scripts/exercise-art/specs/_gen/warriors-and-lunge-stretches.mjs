@@ -76,5 +76,7 @@ save('pigeon-pose',{az:35,el:25},['glutes'],{
  start:pg(0.5,85,{pos:[0.11,0.09,-0.43],anchor:'ankle',pole:[0,-1,0],pitch:130},10),
  mid:pg(0.4,70,{pos:[0.0,0.3,0.1],anchor:'ankle',pole:[1,-0.2,0.7]},15),
  end:pg(0.24,55,{pos:[-0.05,0.1,0.3],anchor:'ankle',pole:[1,-0.2,0.7]},20)},{muscleSide:'L'});
-for(const [k,v] of Object.entries(out))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
+// Fixed by hand after the owner's yoga review (2026-11-15): edit specs/<slug>.json directly; this generator no longer writes them.
+const HAND=new Set(["warrior-2", "triangle-pose", "extended-side-angle", "lizard-pose", "pigeon-pose"]);
+for(const [k,v] of Object.entries(out))if(!HAND.has(k))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
 console.log(Object.keys(out).join(' '));

@@ -186,5 +186,6 @@
    }
   }
  },
- "muscleSide": "R"
+ "muscleSide": "R",
+ "keyFrame": "end"
 }
