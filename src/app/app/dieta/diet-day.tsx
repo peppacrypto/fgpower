@@ -1,25 +1,28 @@
 "use client";
 
-import { useEffect, useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
-import { Check, CloudOff } from "lucide-react";
+import { Check, ChevronDown, CloudOff } from "lucide-react";
 import { Meter } from "@/components/ui/meter";
 import { SaveStatus } from "@/components/ui/save-status";
 import { SectionHead } from "@/components/ui/section-head";
 import { ChipRadioGroup } from "@/app/app/settings/chip-radio-group";
 import {
   MAX_PIECES,
+  NO_MARK,
   choiceLabel,
   countsOf,
   dayTotals,
   kindWords,
   markOf,
   piecesTotal,
+  planItems,
   servingOf,
   type DietDayMarks,
   type DietItem,
   type DietMark,
   type DietMeal,
+  type DietMealOption,
   type DietPieceKind,
   type DietPieces,
   type DietTargets,
@@ -42,13 +45,22 @@ function failureText(failure: DietFailure, pending: number): string {
   return `Não foi possível salvar agora.${held ? `${held}; tentando de novo.` : " Tentando de novo."}`;
 }
 
+/** A mark as shown: the outbox's when it speaks over the page's data, and whether the server has it yet. */
+type ShownMark = DietMark & { pending: boolean };
+
+/** The items' sum of one number, each by what fills it on the day. */
+function sumOf(items: readonly DietItem[], marks: DietDayMarks, key: "kcal" | "protein"): number {
+  return items.reduce((sum, i) => sum + servingOf(i, markOf(marks, i.id))[key], 0);
+}
+
 /**
  * One day of the plan (Dieta): the targets and what the eaten items add up
  * to, then the meals — each item one big tap to mark it eaten, its
  * alternative a choice under it ("Frango | Sardinha"), an item counted in
- * pieces a counter per kind ("Com gema − 3 +"). Every tap shows at once and is
- * saved from the outbox (diet-outbox.ts), which retries until the server has
- * it and keeps it on this device meanwhile. Remounted per day.
+ * pieces a counter per kind ("Com gema − 3 +"); a meal given as options, its
+ * options folded, one opened by a tap. Every tap shows at once and is saved
+ * from the outbox (diet-outbox.ts), which retries until the server has it and
+ * keeps it on this device meanwhile. Remounted per day.
  */
 export function DietDay({
   userId,
@@ -83,7 +95,7 @@ export function DietDay({
     outbox?.settle(date, loadedAtMs);
   }, [outbox, date, loadedAtMs]);
 
-  function shown(itemId: string): DietMark & { pending: boolean } {
+  function shown(itemId: string): ShownMark {
     const entry = state.entries.get(markKey(date, itemId));
     if (entry && entryApplies(entry, loadedAtMs)) {
       const { eaten, choiceId, counts } = entry.mark;
@@ -92,8 +104,8 @@ export function DietDay({
     return { ...markOf(marks, itemId), pending: false };
   }
 
-  const dayMarks: Record<string, DietMark> = {};
-  for (const meal of meals) for (const item of meal.items) dayMarks[item.id] = shown(item.id);
+  const dayMarks: Record<string, ShownMark> = {};
+  for (const item of planItems(meals)) dayMarks[item.id] = shown(item.id);
   const totals = dayTotals(meals, dayMarks);
   const stuck = state.failure != null && state.failure.kind !== "rejected";
 
@@ -132,31 +144,125 @@ export function DietDay({
         />
       </section>
 
-      {meals.map((meal) => {
-        const eatenHere = meal.items.filter((i) => dayMarks[i.id]?.eaten).length;
-        const kcalHere = meal.items.reduce((sum, i) => sum + servingOf(i, markOf(dayMarks, i.id)).kcal, 0);
-        return (
-          <section key={meal.id} className="mt-8" aria-labelledby={`refeicao-${meal.id}`} data-diet-meal={meal.id}>
-            <SectionHead
-              id={`refeicao-${meal.id}`}
-              label={meal.name}
-              count={`${eatenHere} de ${meal.items.length} · ${whole(kcalHere)}${NBSP}kcal`}
-            />
-            <ul className="card mt-3 divide-y divide-border overflow-hidden">
-              {meal.items.map((item) => (
-                <DietItemRow
-                  key={item.id}
-                  item={item}
-                  mark={shown(item.id)}
-                  stuck={stuck}
-                  onChange={(next) => set(item, next)}
-                />
-              ))}
-            </ul>
-          </section>
-        );
-      })}
+      {meals.map((meal) =>
+        meal.options ? (
+          <OptionsMeal key={meal.id} meal={meal} options={meal.options} marks={dayMarks} stuck={stuck} onChange={set} />
+        ) : (
+          <ItemsMeal key={meal.id} meal={meal} items={meal.items ?? []} marks={dayMarks} stuck={stuck} onChange={set} />
+        ),
+      )}
     </>
+  );
+}
+
+interface MealProps {
+  meal: DietMeal;
+  marks: Readonly<Record<string, ShownMark>>;
+  /** Saves are failing: a mark the server doesn't have yet says so. */
+  stuck: boolean;
+  onChange: (item: DietItem, next: DietMark) => void;
+}
+
+const markShown = (marks: MealProps["marks"], itemId: string): ShownMark =>
+  Object.hasOwn(marks, itemId) ? marks[itemId] : { ...NO_MARK, pending: false };
+
+/** A meal of items: each a row to mark, the meal's count and kcal (as filled today) at its head. */
+function ItemsMeal({ meal, items, marks, stuck, onChange }: MealProps & { items: DietItem[] }) {
+  const eatenHere = items.filter((i) => markShown(marks, i.id).eaten).length;
+  return (
+    <section className="mt-8" aria-labelledby={`refeicao-${meal.id}`} data-diet-meal={meal.id}>
+      <SectionHead
+        id={`refeicao-${meal.id}`}
+        label={meal.name}
+        count={`${eatenHere} de ${items.length} · ${whole(sumOf(items, marks, "kcal"))}${NBSP}kcal`}
+      />
+      <ul className="card mt-3 divide-y divide-border overflow-hidden">
+        {items.map((item) => (
+          <DietItemRow key={item.id} item={item} mark={markShown(marks, item.id)} stuck={stuck} onChange={(next) => onChange(item, next)} />
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+/**
+ * A meal given as options — whole versions of it to pick from: each folded to
+ * one row (its name, how many items, its kcal and protein as filled today),
+ * opened by a tap to mark its items, which folds the one open before; nothing
+ * opens by itself, so six options stay six rows. The options eaten from wear a
+ * check and say how much of them was eaten, folded or not, and the meal's count
+ * is theirs (none yet: how many options there are).
+ */
+function OptionsMeal({ meal, options, marks, stuck, onChange }: MealProps & { options: DietMealOption[] }) {
+  const [open, setOpen] = useState<string | null>(null);
+  const eatenOf = (o: DietMealOption) => o.items.filter((i) => markShown(marks, i.id).eaten).length;
+  const eatenFrom = options.filter((o) => eatenOf(o) > 0);
+  const fromItems = eatenFrom.flatMap((o) => o.items);
+  const count =
+    eatenFrom.length > 0
+      ? `${fromItems.filter((i) => markShown(marks, i.id).eaten).length} de ${fromItems.length} · ${whole(sumOf(fromItems, marks, "kcal"))}${NBSP}kcal`
+      : `${options.length} opções`;
+
+  return (
+    <section className="mt-8" aria-labelledby={`refeicao-${meal.id}`} data-diet-meal={meal.id}>
+      <SectionHead id={`refeicao-${meal.id}`} label={meal.name} count={count} />
+      <ul className="card mt-3 divide-y divide-border overflow-hidden">
+        {options.map((option) => {
+          const isOpen = open === option.id;
+          const eaten = eatenOf(option);
+          const panel = `opcao-${option.id}`;
+          const items = plural(option.items.length, "item", "itens");
+          return (
+            <li key={option.id} data-diet-option={option.id} data-open={isOpen ? "true" : "false"} data-eaten-from={eaten > 0 ? "true" : "false"}>
+              <button
+                type="button"
+                aria-expanded={isOpen}
+                aria-controls={isOpen ? panel : undefined}
+                onClick={() => setOpen(isOpen ? null : option.id)}
+                className={cn(
+                  "flex min-h-16 w-full touch-manipulation items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-surface-2 active:bg-surface-2",
+                  isOpen && "bg-surface-2",
+                )}
+              >
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-start gap-1.5 text-[15px] font-semibold leading-snug">
+                    {eaten > 0 ? <Check className="mt-0.5 size-4 shrink-0 text-accent" strokeWidth={3} aria-hidden /> : null}
+                    <span className="min-w-0">{option.name}</span>
+                  </span>
+                  <span className="mt-0.5 block text-[13px] leading-snug text-muted" data-diet-option-status>
+                    {eaten > 0 ? `Comeu ${eaten} de ${items}` : items}
+                  </span>
+                </span>
+                <span className="shrink-0 text-right">
+                  <span className="block whitespace-nowrap text-[15px] font-semibold tabular-nums">
+                    {whole(sumOf(option.items, marks, "kcal"))}
+                    {NBSP}kcal
+                  </span>
+                  <span className="block whitespace-nowrap text-[13px] tabular-nums text-muted">
+                    {whole(sumOf(option.items, marks, "protein"))}
+                    {NBSP}g prot.
+                  </span>
+                </span>
+                <ChevronDown className={cn("size-4 shrink-0 text-muted transition-transform", isOpen && "rotate-180")} aria-hidden />
+              </button>
+              {isOpen ? (
+                <ul id={panel} aria-label={option.name} className="divide-y divide-border border-t border-border">
+                  {option.items.map((item) => (
+                    <DietItemRow
+                      key={item.id}
+                      item={item}
+                      mark={markShown(marks, item.id)}
+                      stuck={stuck}
+                      onChange={(next) => onChange(item, next)}
+                    />
+                  ))}
+                </ul>
+              ) : null}
+            </li>
+          );
+        })}
+      </ul>
+    </section>
   );
 }
 

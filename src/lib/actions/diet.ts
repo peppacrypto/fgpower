@@ -8,7 +8,17 @@ import { prisma } from "@/lib/db";
 import { isUniqueViolation } from "@/lib/db/prisma-error";
 import { getDietPlan } from "@/lib/data/diet";
 import { dayOfIso, isMarkableDay } from "@/lib/diet/days";
-import { findItem, keptCounts, piecesTotal, servingOf, type DietCounts, type DietItem, type DietMeal } from "@/lib/diet/plan";
+import {
+  findItem,
+  keptCounts,
+  mealWords,
+  piecesTotal,
+  servingOf,
+  type DietCounts,
+  type DietItem,
+  type DietMeal,
+  type DietMealOption,
+} from "@/lib/diet/plan";
 import { dayNumberOf } from "@/lib/training/day-rotation";
 
 /**
@@ -46,6 +56,8 @@ const MAX_MARKS = 100;
 interface CheckedMark {
   day: number;
   meal: DietMeal;
+  /** In a meal given as options, the option holding the item. */
+  option: DietMealOption | null;
   item: DietItem;
   eaten: boolean;
   choiceId: string | null;
@@ -73,7 +85,7 @@ function checkMark(raw: unknown, meals: readonly DietMeal[], todayNo: number): C
   }
   // No piece at all is nothing eaten.
   const eaten = m.eaten && !(counts !== null && piecesTotal(counts) === 0);
-  return { day, meal: found.meal, item: found.item, eaten, choiceId, counts };
+  return { day, meal: found.meal, option: found.option, item: found.item, eaten, choiceId, counts };
 }
 
 /**
@@ -118,7 +130,8 @@ export async function saveDietMarks(input: { marks: DietMarkInput[] }): Promise<
         eaten: r.eaten,
         choiceId: r.choiceId,
         counts: r.counts === null ? Prisma.DbNull : { ...r.counts },
-        meal: r.meal.name,
+        // A meal given as options: the option eaten from too ("Almoço · Strogonoff de frango").
+        meal: mealWords(r.meal, r.option),
         food: option.food,
         amount: option.amount,
         kcal: option.kcal,

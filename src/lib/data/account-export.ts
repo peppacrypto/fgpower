@@ -10,7 +10,7 @@ import { isTimedHold, setKind } from "@/lib/training/set-plan";
 import { formatSpTime, spDayKey } from "@/lib/training/stale";
 import { EQUIPMENT_LABEL, EXPERIENCE_LABEL, GOAL_LABEL, PROGRESSION_LABEL } from "@/lib/constants/program-labels";
 import { toCsv, type CsvCell } from "@/lib/export/csv";
-import type { DietOption, DietPieces } from "@/lib/diet/plan";
+import type { DietItem, DietOption, DietPieces } from "@/lib/diet/plan";
 import { dietMealsSchema } from "@/lib/validation/diet-plan";
 
 /**
@@ -469,18 +469,27 @@ function readablePieces(p: DietPieces) {
   };
 }
 
-/** DietPlan.meals in words: each meal's items, their alternatives and pieces, without the plan's ids. */
+/** A meal's items in words: each with its alternatives and pieces. */
+function readableItems(items: readonly DietItem[]) {
+  return items.map((item) => ({
+    ...readableOption(item),
+    alternatives: (item.alternatives ?? []).map(readableOption),
+    ...(item.pieces ? { pieces: readablePieces(item.pieces) } : {}),
+  }));
+}
+
+/**
+ * DietPlan.meals in words, without the plan's ids: each meal's items — or, a
+ * meal given as options, each option's name and items.
+ */
 function readableMeals(raw: unknown) {
   const parsed = dietMealsSchema.safeParse(raw);
   if (!parsed.success) return withoutIds(raw);
-  return parsed.data.map((meal) => ({
-    name: meal.name,
-    items: meal.items.map((item) => ({
-      ...readableOption(item),
-      alternatives: (item.alternatives ?? []).map(readableOption),
-      ...(item.pieces ? { pieces: readablePieces(item.pieces) } : {}),
-    })),
-  }));
+  return parsed.data.map((meal) =>
+    meal.options
+      ? { name: meal.name, options: meal.options.map((o) => ({ name: o.name, items: readableItems(o.items) })) }
+      : { name: meal.name, items: readableItems(meal.items ?? []) },
+  );
 }
 
 /** A set row nobody filled in or ✓'d: the workout opened it, nothing more. */
@@ -584,7 +593,7 @@ export function toExportJson(data: AccountExportData, now: Date = new Date()) {
   return {
     format: "fgpower-export",
     // 4: Minha academia — the gym's loads and missing gear (profile), each exercise's own step.
-    // 5: Dieta — the eating plan and each day's marks.
+    // 5: Dieta — the eating plan (a meal: its items, or its options, each with its items) and each day's marks.
     version: 5,
     exportedAt: now.toISOString(),
     account: data.user

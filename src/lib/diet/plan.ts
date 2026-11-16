@@ -7,9 +7,12 @@
  *
  * A plan is meals of items; an item may name alternatives that fill its place
  * on a given day (a can of sardines for the chicken), or be counted in pieces
- * of a few kinds (eggs, with or without the yolk). A day marks each item eaten
- * or not, which option filled it and, for pieces, how many of each kind. Items
- * are identified by the plan's own ids ("m2-frango"), unique across the plan.
+ * of a few kinds (eggs, with or without the yolk). A meal may instead come as
+ * options: whole versions of it to pick from ("Cuscuz com ovo", "Tapioca de
+ * frango"), each with its own items — a day eats from one of them. A day marks
+ * each item eaten or not, which option filled it and, for pieces, how many of
+ * each kind. Items are identified by the plan's own ids ("m2-frango"), unique
+ * across the plan, options included.
  */
 
 /** One way to fill an item's place: the item itself or one of its alternatives. */
@@ -71,10 +74,23 @@ export interface DietItem extends DietOption {
 /** Pieces eaten, by kind id. */
 export type DietCounts = Readonly<Record<string, number>>;
 
+/** One whole version of a meal to pick from ("Cuscuz com ovo"), with its own items. */
+export interface DietMealOption {
+  id: string;
+  /** What it is, in a few words. */
+  name: string;
+  items: DietItem[];
+}
+
+/** Most options a meal can be given as. */
+export const MAX_MEAL_OPTIONS = 8;
+
 export interface DietMeal {
   id: string;
   name: string;
-  items: DietItem[];
+  /** The meal's items — or, instead, `options`: whole versions of it, one eaten on a day. Always one of the two. */
+  items?: DietItem[];
+  options?: DietMealOption[];
 }
 
 /** The day's targets: kcal, then grams. Fiber is a target only (items don't carry it). */
@@ -203,18 +219,44 @@ export function servingOf(item: DietItem, mark: Pick<DietMark, "choiceId" | "cou
   };
 }
 
-/** An item and the meal it belongs to, by the item's id. */
-export function findItem(meals: readonly DietMeal[], itemId: string): { meal: DietMeal; item: DietItem } | null {
+/** A meal's versions: its options, or (a meal of items) the meal itself as its one version. */
+export function mealOptions(meal: DietMeal): DietMealOption[] {
+  return meal.options ?? [{ id: meal.id, name: meal.name, items: meal.items ?? [] }];
+}
+
+/**
+ * The versions of a meal a day goes by: the options it ate from (an item marked
+ * eaten), none yet: the first — the plan as written. A meal of items: itself.
+ */
+export function dayOptions(meal: DietMeal, marks: DietDayMarks): DietMealOption[] {
+  const options = mealOptions(meal);
+  if (options.length === 1) return options;
+  const eatenFrom = options.filter((o) => o.items.some((i) => markOf(marks, i.id).eaten));
+  return eatenFrom.length > 0 ? eatenFrom : options.slice(0, 1);
+}
+
+/** An item, its meal and — in a meal given as options — the option holding it, by the item's id. */
+export function findItem(
+  meals: readonly DietMeal[],
+  itemId: string,
+): { meal: DietMeal; option: DietMealOption | null; item: DietItem } | null {
   for (const meal of meals) {
-    const item = meal.items.find((i) => i.id === itemId);
-    if (item) return { meal, item };
+    for (const option of mealOptions(meal)) {
+      const item = option.items.find((i) => i.id === itemId);
+      if (item) return { meal, option: meal.options ? option : null, item };
+    }
   }
   return null;
 }
 
-/** Every item of the plan, in order. */
+/** A logged item's meal in words: the meal's name, and the option's after it ("Almoço · Strogonoff de frango"). */
+export function mealWords(meal: Pick<DietMeal, "name">, option: Pick<DietMealOption, "name"> | null): string {
+  return option ? `${meal.name} · ${option.name}` : meal.name;
+}
+
+/** Every item of the plan, in order — every option's, in a meal given as options. */
 export function planItems(meals: readonly DietMeal[]): DietItem[] {
-  return meals.flatMap((m) => m.items);
+  return meals.flatMap((m) => mealOptions(m).flatMap((o) => o.items));
 }
 
 /** The words on an option's choice chip: its label, else its food up to the first comma ("Sardinha em lata"). */
@@ -231,7 +273,10 @@ export interface DietTotals {
   fat: number;
   /** Items marked eaten. */
   eaten: number;
-  /** Items in the plan (an alternative fills an item's place: it is not one more). */
+  /**
+   * Items in the plan for the day (an alternative fills an item's place: it is
+   * not one more; a meal given as options counts the ones eaten from, else its first).
+   */
   items: number;
 }
 
@@ -244,7 +289,8 @@ const tenth = (n: number) => Math.round(n * 10) / 10;
  */
 export function dayTotals(meals: readonly DietMeal[], marks: DietDayMarks): DietTotals {
   const sum = { kcal: 0, protein: 0, carbs: 0, fat: 0, eaten: 0, items: 0 };
-  for (const item of planItems(meals)) {
+  // Every eaten item is in an option the day goes by (eating from one is what makes it so).
+  for (const item of meals.flatMap((m) => dayOptions(m, marks).flatMap((o) => o.items))) {
     sum.items += 1;
     const mark = markOf(marks, item.id);
     if (!mark.eaten) continue;
@@ -258,9 +304,12 @@ export function dayTotals(meals: readonly DietMeal[], marks: DietDayMarks): Diet
   return { ...sum, kcal: tenth(sum.kcal), protein: tenth(sum.protein), carbs: tenth(sum.carbs), fat: tenth(sum.fat) };
 }
 
-/** The whole plan eaten as written (each item itself): what the import checks against the targets. */
+/**
+ * The whole plan eaten as written — each item itself, a meal given as options
+ * by its first: what the import checks against the targets.
+ */
 export function planTotals(meals: readonly DietMeal[]): DietTotals {
   const all: Record<string, DietMark> = {};
-  for (const item of planItems(meals)) all[item.id] = { eaten: true, choiceId: null, counts: null };
+  for (const meal of meals) for (const item of mealOptions(meal)[0]?.items ?? []) all[item.id] = { eaten: true, choiceId: null, counts: null };
   return dayTotals(meals, all);
 }

@@ -14,7 +14,7 @@ import "dotenv/config";
 import { readFileSync } from "node:fs";
 import { prisma } from "@/lib/db";
 import { saveDietPlan } from "@/lib/diet/save-plan";
-import { planItems, planTotals } from "@/lib/diet/plan";
+import { dayTotals, planItems, planTotals, type DietMark } from "@/lib/diet/plan";
 import { describeDietPlanIssues, dietPlanSchema } from "@/lib/validation/diet-plan";
 
 const USAGE = "usage: npx tsx scripts/one-off/2026-11-13-diet-plan.ts <plan.json | - | base64:…> <email> [--apply]";
@@ -67,10 +67,24 @@ async function main() {
   const counted = items.filter((i) => i.pieces).map((i) => `${i.id} (${i.pieces!.kinds.map((k) => k.label).join(" / ")})`);
   const sum = planTotals(plan.meals);
   const t = plan.targets;
-  console.log(`Plan "${plan.title}"${plan.version ? ` (${plan.version})` : ""}: ${plan.meals.length} meals, ${items.length} items, ${alternatives} alternative(s), ${plan.swaps.length} swaps, ${plan.rules.length} rules.`);
+  const withOptions = plan.meals.filter((m) => m.options);
+  const optionCount = withOptions.reduce((s, m) => s + m.options!.length, 0);
+  const asOptions = withOptions.length > 0 ? ` (${withOptions.length} given as ${optionCount} options)` : "";
+  console.log(`Plan "${plan.title}"${plan.version ? ` (${plan.version})` : ""}: ${plan.meals.length} meals${asOptions}, ${items.length} items, ${alternatives} alternative(s), ${plan.swaps.length} swaps, ${plan.rules.length} rules.`);
   if (counted.length > 0) console.log(`  counted in pieces: ${counted.join(", ")}`);
   console.log(`  targets:         ${t.kcal} kcal · ${t.protein} g protein · ${t.carbs} g carbs · ${t.fat} g fat${t.fiber != null ? ` · ${t.fiber} g fiber` : ""}`);
-  console.log(`  items add up to: ${n(sum.kcal)} kcal · ${n(sum.protein)} g protein · ${n(sum.carbs)} g carbs · ${n(sum.fat)} g fat (each item itself)`);
+  console.log(`  items add up to: ${n(sum.kcal)} kcal · ${n(sum.protein)} g protein · ${n(sum.carbs)} g carbs · ${n(sum.fat)} g fat (each item itself${asOptions ? ", a meal given as options by its first" : ""})`);
+  // Each option eaten whole, as written: how far apart a meal's options are.
+  for (const meal of withOptions) {
+    const kcal = meal.options!.map((o) => {
+      const marks: Record<string, DietMark> = Object.fromEntries(o.items.map((i) => [i.id, { eaten: true, choiceId: null, counts: null }]));
+      return dayTotals([{ ...meal, options: [o] }], marks);
+    });
+    const low = Math.min(...kcal.map((k) => k.kcal));
+    const high = Math.max(...kcal.map((k) => k.kcal));
+    const protein = Math.min(...kcal.map((k) => k.protein));
+    console.log(`  ${meal.name}: ${meal.options!.length} options, ${n(low)}–${n(high)} kcal, protein ≥ ${n(protein)} g`);
+  }
 
   const user = await prisma.user.findFirst({
     where: { email: { equals: email, mode: "insensitive" } },

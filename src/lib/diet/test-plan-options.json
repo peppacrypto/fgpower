@@ -1,0 +1,56 @@
+{
+  "title": "Plano de teste com opções",
+  "version": "2026-01-02",
+  "targets": { "kcal": 1500, "protein": 120, "carbs": 150, "fat": 50 },
+  "meals": [
+    {
+      "id": "cafe",
+      "name": "Café",
+      "items": [{ "id": "cafe-pao", "food": "Pão integral", "amount": "2 fatias", "grams": 50, "kcal": 120, "protein": 6, "carbs": 22, "fat": 1.5 }]
+    },
+    {
+      "id": "almoco",
+      "name": "Almoço",
+      "options": [
+        {
+          "id": "almoco-frango",
+          "name": "Arroz e frango",
+          "items": [
+            { "id": "almoco-frango-arroz", "food": "Arroz branco cozido", "amount": "120 g", "grams": 120, "kcal": 150, "protein": 3, "carbs": 33, "fat": 0.3 },
+            { "id": "almoco-frango-carne", "food": "Frango grelhado", "amount": "100 g", "grams": 100, "kcal": 160, "protein": 32, "carbs": 0, "fat": 2.5 }
+          ]
+        },
+        {
+          "id": "almoco-peixe",
+          "name": "Peixe com purê",
+          "items": [
+            { "id": "almoco-peixe-peixe", "food": "Peixe assado", "amount": "120 g", "grams": 120, "kcal": 150, "protein": 32, "carbs": 0, "fat": 1 },
+            { "id": "almoco-peixe-pure", "food": "Purê de batata", "amount": "250 g", "grams": 250, "kcal": 130, "protein": 3, "carbs": 30, "fat": 0.5 },
+            { "id": "almoco-peixe-legumes", "food": "Legumes cozidos", "amount": "150 g", "grams": 150, "kcal": 30, "protein": 2, "carbs": 6, "fat": 0.3 }
+          ]
+        },
+        {
+          "id": "almoco-massa",
+          "name": "Macarrão com carne",
+          "items": [
+            { "id": "almoco-massa-macarrao", "food": "Macarrão (peso cru)", "amount": "50 g cru", "grams": 50, "kcal": 190, "protein": 5, "carbs": 39, "fat": 0.7 },
+            {
+              "id": "almoco-massa-carne",
+              "food": "Carne moída",
+              "label": "Carne",
+              "amount": "90 g",
+              "grams": 90,
+              "kcal": 200,
+              "protein": 32,
+              "carbs": 0,
+              "fat": 7,
+              "alternatives": [{ "id": "almoco-massa-frango", "food": "Frango desfiado", "amount": "100 g", "grams": 100, "kcal": 160, "protein": 31, "carbs": 0, "fat": 3 }]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "swaps": ["Cada refeição com opções: toque em uma para ver os itens."],
+  "rules": []
+}

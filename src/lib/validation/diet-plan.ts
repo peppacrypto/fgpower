@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { MAX_PIECES, type DietMeal, type DietPlan } from "@/lib/diet/plan";
+import { MAX_MEAL_OPTIONS, MAX_PIECES, type DietMeal, type DietPlan } from "@/lib/diet/plan";
 
 /**
  * A diet plan (Dieta): what scripts/one-off/2026-11-13-diet-plan.ts accepts,
@@ -79,25 +79,51 @@ function piecesAddUp(item: z.output<typeof itemShape>, ctx: z.RefinementCtx) {
 
 export const dietItemSchema = itemShape.superRefine(piecesAddUp);
 
-export const dietMealSchema = z.strictObject({
+const itemsSchema = z.array(dietItemSchema).min(1).max(40);
+
+/** One whole version of a meal to pick from ("Cuscuz com ovo"), with its own items. */
+const dietMealOptionSchema = z.strictObject({
   id,
   name: text(60),
-  items: z.array(dietItemSchema).min(1).max(40),
+  items: itemsSchema,
 });
 
-/** Every id (meals, items, alternatives, kinds of piece) at most once: an item's id keys its marks, an alternative's the choice, a kind's its count. */
+/** A meal: its items, or its options (whole versions of it, one eaten on a day) — one of the two. */
+export const dietMealSchema = z
+  .strictObject({
+    id,
+    name: text(60),
+    items: itemsSchema.optional(),
+    options: z.array(dietMealOptionSchema).min(2).max(MAX_MEAL_OPTIONS).optional(),
+  })
+  .superRefine((meal, ctx) => {
+    if ((meal.items === undefined) === (meal.options === undefined)) {
+      ctx.addIssue({ code: "custom", path: [], message: "a meal has its items or its options, one of the two" });
+    }
+  });
+
+/**
+ * Every id (meals, options, items, alternatives, kinds of piece) at most once:
+ * an item's id keys its marks, an alternative's the choice, a kind's its count.
+ */
 function uniqueIds(meals: readonly z.output<typeof dietMealSchema>[], ctx: z.RefinementCtx, base: (string | number)[]) {
   const seen = new Set<string>();
   const check = (value: string, path: (string | number)[]) => {
     if (seen.has(value)) ctx.addIssue({ code: "custom", path: [...base, ...path], message: `duplicate id "${value}"` });
     seen.add(value);
   };
+  const checkItems = (items: readonly z.output<typeof dietItemSchema>[], at: (string | number)[]) =>
+    items.forEach((item, i) => {
+      check(item.id, [...at, i, "id"]);
+      item.alternatives?.forEach((alt, a) => check(alt.id, [...at, i, "alternatives", a, "id"]));
+      item.pieces?.kinds.forEach((kind, k) => check(kind.id, [...at, i, "pieces", "kinds", k, "id"]));
+    });
   meals.forEach((meal, m) => {
     check(meal.id, [m, "id"]);
-    meal.items.forEach((item, i) => {
-      check(item.id, [m, "items", i, "id"]);
-      item.alternatives?.forEach((alt, a) => check(alt.id, [m, "items", i, "alternatives", a, "id"]));
-      item.pieces?.kinds.forEach((kind, k) => check(kind.id, [m, "items", i, "pieces", "kinds", k, "id"]));
+    if (meal.items) checkItems(meal.items, [m, "items"]);
+    meal.options?.forEach((option, o) => {
+      check(option.id, [m, "options", o, "id"]);
+      checkItems(option.items, [m, "options", o, "items"]);
     });
   });
 }

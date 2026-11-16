@@ -24,10 +24,14 @@ const SP = "'America/Sao_Paulo'";
 /** São Paulo day number of now() minus `days`, in SQL. */
 const spDay = (days = 0) => `(((now() - interval '${days} days') AT TIME ZONE ${SP})::date - DATE '1970-01-01')`;
 
-/** Runs the import for `email`: the plan as a path, or on stdin ("-"). Returns what it printed. */
-function importPlan(email: string, opts: { apply: boolean; stdin?: boolean }): string {
-  const args = ["tsx", SCRIPT, opts.stdin ? "-" : PLAN, email, ...(opts.apply ? ["--apply"] : [])];
-  return execFileSync("npx", args, { encoding: "utf8", input: opts.stdin ? readFileSync(PLAN, "utf8") : "", timeout: 90_000 });
+/** A plan whose lunch is given as options: whole versions of it to pick from. */
+const OPTIONS_PLAN = "src/lib/diet/test-plan-options.json";
+
+/** Runs the import for `email`: the plan (the test plan unless named) as a path, or on stdin ("-"). Returns what it printed. */
+function importPlan(email: string, opts: { apply: boolean; stdin?: boolean; plan?: string }): string {
+  const plan = opts.plan ?? PLAN;
+  const args = ["tsx", SCRIPT, opts.stdin ? "-" : plan, email, ...(opts.apply ? ["--apply"] : [])];
+  return execFileSync("npx", args, { encoding: "utf8", input: opts.stdin ? readFileSync(plan, "utf8") : "", timeout: 90_000 });
 }
 
 /** A fresh account with the test plan loaded. */
@@ -215,6 +219,72 @@ test("Dieta: eggs counted with and without the yolk — a count is what was eate
   await expect(kcalMeter(page)).toHaveAttribute("aria-valuetext", `150 de 1.800${NBSP}kcal`);
   await expect.poll(logged, { timeout: 15_000 }).toBe("t|2 ovos com gema|150|");
   await noHorizontalScroll(page);
+});
+
+test("Dieta: a meal given as options — folded, one opened by a tap, its items marked; the one eaten from kept after a reload", async ({
+  page,
+}) => {
+  const user = await newOnboardedUser(page, { label: "diet-options" });
+  const dry = importPlan(user.email, { apply: false, plan: OPTIONS_PLAN });
+  expect(dry).toContain('Plan "Plano de teste com opções" (2026-01-02): 2 meals (1 given as 3 options), 8 items, 1 alternative(s)');
+  expect(dry).toContain("Almoço: 3 options, 310–390 kcal, protein ≥ 35 g");
+  expect(importPlan(user.email, { apply: true, plan: OPTIONS_PLAN })).toContain("Saved (created)");
+
+  await page.goto("/app/dieta");
+  const almoco = page.locator('[data-diet-meal="almoco"]');
+  const option = (id: string) => page.locator(`[data-diet-option="${id}"]`);
+  const opener = (id: string) => option(id).locator("button[aria-expanded]");
+
+  // Folded: three rows, none of their items; the day counts the first option's (the plan as written).
+  await expect(almoco).toContainText("3 opções");
+  await expect(almoco.locator("[data-diet-option]")).toHaveCount(3);
+  await expect(almoco.locator("[data-diet-item]")).toHaveCount(0);
+  await expect(option("almoco-peixe")).toContainText("Peixe com purê");
+  await expect(option("almoco-peixe")).toContainText(`3 itens`);
+  await expect(option("almoco-peixe")).toContainText(`310${NBSP}kcal`);
+  await expect(page.locator("[data-diet-count]")).toHaveText("0 de 3 itens");
+
+  // A tap opens one (a tap before the page hydrates does nothing: again until it opens).
+  await expect(async () => {
+    if ((await opener("almoco-peixe").getAttribute("aria-expanded")) !== "true") await opener("almoco-peixe").click({ timeout: 1_000 });
+    await expect(opener("almoco-peixe")).toHaveAttribute("aria-expanded", "true", { timeout: 1_000 });
+  }).toPass({ timeout: 15_000 });
+  await expect(almoco.locator("[data-diet-item]")).toHaveCount(3);
+
+  // Its items are marked like any other; the option and the meal say so.
+  const pure = page.getByRole("checkbox", { name: /^Purê de batata/ });
+  await pure.click();
+  await expect(pure).toHaveAttribute("aria-checked", "true");
+  await expect(kcalMeter(page)).toHaveAttribute("aria-valuetext", `130 de 1.500${NBSP}kcal`);
+  await expect(page.locator("[data-diet-count]")).toHaveText("1 de 4 itens");
+  await expect(almoco).toContainText(`1 de 3 · 310${NBSP}kcal`);
+  await expect(option("almoco-peixe").locator("[data-diet-option-status]")).toHaveText("Comeu 1 de 3 itens");
+  await expect(option("almoco-peixe")).toHaveAttribute("data-eaten-from", "true");
+
+  // Another tap opens another option and folds the first.
+  await opener("almoco-massa").click();
+  await expect(opener("almoco-massa")).toHaveAttribute("aria-expanded", "true");
+  await expect(opener("almoco-peixe")).toHaveAttribute("aria-expanded", "false");
+  await expect(almoco.locator("[data-diet-item]")).toHaveCount(2);
+  // A tap on the open one folds it.
+  await opener("almoco-massa").click();
+  await expect(almoco.locator("[data-diet-item]")).toHaveCount(0);
+
+  // Saved, the option's name in the logged meal.
+  const logged = () => sql(`SELECT meal, food FROM "DietLog" WHERE "userId" = ${sqlText(user.id)} AND "itemId" = 'almoco-peixe-pure'`);
+  await expect.poll(logged, { timeout: 15_000 }).toBe("Almoço · Peixe com purê|Purê de batata");
+
+  // A reload: everything folded, the option eaten from still checked, the day's numbers the same.
+  await page.reload();
+  await expect(option("almoco-peixe").locator("[data-diet-option-status]")).toHaveText("Comeu 1 de 3 itens");
+  await expect(almoco.locator("[data-diet-item]")).toHaveCount(0);
+  await expect(kcalMeter(page)).toHaveAttribute("aria-valuetext", `130 de 1.500${NBSP}kcal`);
+  await expect(page.locator("[data-diet-count]")).toHaveText("1 de 4 itens");
+  await noHorizontalScroll(page);
+
+  // Perfil's card counts the day the same way.
+  await page.goto("/app/profile");
+  await expect(page.locator("[data-diet-card]")).toHaveText(`Dieta de hoje: 1 de 4 itens · 130 kcal de 1.500`);
 });
 
 test("Dieta offline: a mark shows at once, goes when the signal is back — or on the next visit after the tab closed", async ({

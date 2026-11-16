@@ -4,11 +4,14 @@ import {
   MAX_PIECES,
   choiceLabel,
   countsOf,
+  dayOptions,
   dayTotals,
   findItem,
   keptCounts,
   kindWords,
   markOf,
+  mealOptions,
+  mealWords,
   optionOf,
   piecesAmount,
   piecesTotal,
@@ -18,6 +21,7 @@ import {
   type DietMark,
 } from "./plan";
 import testPlan from "./test-plan.json";
+import testPlanOptions from "./test-plan-options.json";
 
 /** The test fixture (src/lib/diet/test-plan.json), parsed as the app reads plans. */
 const plan = dietPlanSchema.parse(testPlan);
@@ -149,5 +153,60 @@ describe("dayTotals", () => {
 
   it("planTotals: the whole plan eaten as written", () => {
     expect(planTotals(plan.meals)).toEqual({ kcal: 680, protein: 67.5, carbs: 64, fat: 16.8, eaten: 5, items: 5 });
+  });
+});
+
+describe("a meal given as options (whole versions of it to pick from)", () => {
+  const options = dietPlanSchema.parse(testPlanOptions);
+  const almoco = options.meals[1];
+
+  it("lists every option's items as the plan's, and finds an item with the option holding it", () => {
+    expect(planItems(options.meals).map((i) => i.id)).toEqual([
+      "cafe-pao",
+      "almoco-frango-arroz",
+      "almoco-frango-carne",
+      "almoco-peixe-peixe",
+      "almoco-peixe-pure",
+      "almoco-peixe-legumes",
+      "almoco-massa-macarrao",
+      "almoco-massa-carne",
+    ]);
+    const found = findItem(options.meals, "almoco-peixe-pure")!;
+    expect([found.meal.id, found.option?.id, found.item.food]).toEqual(["almoco", "almoco-peixe", "Purê de batata"]);
+    expect(mealWords(found.meal, found.option)).toBe("Almoço · Peixe com purê");
+    // A meal of items has no option: its name alone.
+    const pao = findItem(options.meals, "cafe-pao")!;
+    expect(pao.option).toBeNull();
+    expect(mealWords(pao.meal, pao.option)).toBe("Café");
+    // An alternative's id is not an item's.
+    expect(findItem(options.meals, "almoco-massa-frango")).toBeNull();
+  });
+
+  it("goes by the options eaten from, else the first: their items are the day's", () => {
+    expect(mealOptions(almoco).map((o) => o.id)).toEqual(["almoco-frango", "almoco-peixe", "almoco-massa"]);
+    expect(dayOptions(almoco, {}).map((o) => o.id)).toEqual(["almoco-frango"]);
+    expect(dayOptions(almoco, { "almoco-peixe-pure": eaten() }).map((o) => o.id)).toEqual(["almoco-peixe"]);
+    // Picked but not eaten is not eating from it.
+    expect(dayOptions(almoco, { "almoco-massa-carne": { eaten: false, choiceId: "almoco-massa-frango", counts: null } }).map((o) => o.id)).toEqual([
+      "almoco-frango",
+    ]);
+    // A meal of items: itself, its one version.
+    expect(dayOptions(options.meals[0], {}).map((o) => [o.id, o.items.length])).toEqual([["cafe", 1]]);
+  });
+
+  it("counts the day's items by the options it ate from, and adds up every eaten item", () => {
+    expect(dayTotals(options.meals, {})).toMatchObject({ kcal: 0, eaten: 0, items: 3 });
+    expect(dayTotals(options.meals, { "almoco-peixe-pure": eaten() })).toMatchObject({ kcal: 130, protein: 3, eaten: 1, items: 4 });
+    // Eaten from two options: both count, items and all.
+    expect(dayTotals(options.meals, { "almoco-peixe-pure": eaten(), "almoco-massa-carne": eaten("almoco-massa-frango"), "cafe-pao": eaten() })).toMatchObject({
+      kcal: 410,
+      protein: 40,
+      eaten: 3,
+      items: 6,
+    });
+  });
+
+  it("planTotals: each meal as written, one given as options by its first", () => {
+    expect(planTotals(options.meals)).toEqual({ kcal: 430, protein: 41, carbs: 55, fat: 4.3, eaten: 3, items: 3 });
   });
 });
