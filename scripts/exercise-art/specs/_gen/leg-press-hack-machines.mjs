@@ -8,14 +8,19 @@ const shift=(s,fr,d)=>{for(const l of ['legL','legR']){s.frames[fr][l].pos[1]+=d
 const deeper=s=>shift(s,'end',-ev('LPE',-0.01));
 const longer=s=>shift(s,'start',ev('LPS',0.03));
 const lp=s=>{for(const f of Object.values(s.frames)){f.root.pitch=ev('RP',-52);f.root.pos[1]=ev('RY',0.44);f.root.pos[2]=ev('RZ',0);}};
-// Depth (2026-11-17, the owner: "não desce nem até 90 graus"): the end goes he metres further down the rails than the gallery's
-// knees-at-100 bottom. 0.22 puts the knees at about 133 deg, 0.20 (narrow stance) at about 130: as deep as the ankles allow (50 deg).
-const hackE=(he)=>s=>{const u=[0.743,-0.669];for(const [fr,k] of [['start',ev('HS',0.02)],['end',-he]]){const r=s.frames[fr].root.pos;for(const q of [r,s.frames[fr].armL.pos,s.frames[fr].armR.pos]){q[1]+=k*u[0];q[2]+=k*u[1];}}};
+// Depth (2026-11-17, the owner: "eu tento encostar a bunda", "não desce nem até 90 graus"): the soles FWD metres up the foot plate and
+// the hips from t=T0 to t=T1 on the rails (props/machines.js hack-squat). 0.10 / -0.02 / -0.64: knees about 17 -> 147 deg, the glutes
+// down to the calves. With the soles at the plate's centre the ankles (50 deg) stop the squat near 133.
+const hackDeep=s=>{const fwd=ev('FWD',0.10),r=[0.743,-0.669],nb=[0.669,0.743],ff=[Math.sin(25*Math.PI/180),Math.cos(25*Math.PI/180)],top=[0.9106,-0.6278];
+ const hip=t=>[0,+(top[0]+t*r[0]).toFixed(5),+(top[1]+t*r[1]).toFixed(5)];
+ const hand=(t,x)=>{const h=hip(t);return [x,+(h[1]+0.585*r[0]+0.03*nb[0]).toFixed(5),+(h[2]+0.585*r[1]+0.03*nb[1]).toFixed(5)];};
+ for(const [fr,t] of [['start',ev('T0',-0.02)],['end',ev('T1',-0.64)]]){const f=s.frames[fr];f.root.pos=hip(t);f.armL.pos=hand(t,0.28);f.armR.pos=hand(t,-0.28);
+  for(const l of ['legL','legR']){f[l].pos[1]=+(0.24+fwd*ff[0]).toFixed(5);f[l].pos[2]=+(fwd*ff[1]).toFixed(5);}}};
 const narrow=s=>{s.camera={az:55,el:12};for(const f of Object.values(s.frames)){f.legL.pos[0]=0.06;f.legR.pos[0]=-0.06;f.legL.yaw=8;f.legR.yaw=-8;}};
 out('leg-press',G('leg-press'),s=>{lp(s);longer(s);deeper(s);});
 out('narrow-stance-leg-press',G('leg-press'),s=>{narrow(s);lp(s);longer(s);deeper(s);});
-out('hack-squat',G('hack-squat'),hackE(ev('HE',0.22)));
-out('narrow-stance-hack-squats',G('hack-squat'),s=>{narrow(s);hackE(ev('HEN',0.20))(s);});
+out('hack-squat',G('hack-squat'),hackDeep);
+out('narrow-stance-hack-squats',G('hack-squat'),s=>{narrow(s);hackDeep(s);});
 out('calf-press-on-the-leg-press-machine',G('leg-press-calf'));
 out('calf-press',G('seated-calf'),s=>{s.frames.end.root.pos[1]=0.589;for(const f of Object.values(s.frames)){f.armL.pos[1]+=0.03;f.armR.pos[1]+=0.03;}});
 out('lying-machine-squat',G('lying-squat'),s=>{for(const f of Object.values(s.frames)){f.armL.pos[1]+=DY;f.armR.pos[1]+=DY;const c=Math.cos(A*Math.PI/180),n=Math.sin(A*Math.PI/180);for(const a of [f.armL,f.armR])a.fingers=[0,0.3*c-0.95*n,0.3*n+0.95*c];f.armL.pos[0]+=DX;f.armR.pos[0]-=DX;f.armL.pole=[PX,PY,PZ];f.armR.pole=[-PX,PY,PZ];}});

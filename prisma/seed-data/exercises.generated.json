@@ -16746,21 +16746,21 @@
   "media": [
    {
     "kind": "IMAGE_START",
-    "url": "/exercises/hack-squat/f5-start.webp",
+    "url": "/exercises/hack-squat/f6-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
     "kind": "IMAGE_END",
-    "url": "/exercises/hack-squat/f5-end.webp",
+    "url": "/exercises/hack-squat/f6-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
    },
    {
     "kind": "ILLUSTRATION",
-    "url": "/exercises/hack-squat/f5-loop.mp4",
+    "url": "/exercises/hack-squat/f6-loop.mp4",
     "width": 800,
     "height": 600,
     "sortOrder": 2
@@ -25678,21 +25678,21 @@
   "media": [
    {
     "kind": "IMAGE_START",
-    "url": "/exercises/narrow-stance-hack-squats/f5-start.webp",
+    "url": "/exercises/narrow-stance-hack-squats/f6-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
     "kind": "IMAGE_END",
-    "url": "/exercises/narrow-stance-hack-squats/f5-end.webp",
+    "url": "/exercises/narrow-stance-hack-squats/f6-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
    },
    {
     "kind": "ILLUSTRATION",
-    "url": "/exercises/narrow-stance-hack-squats/f5-loop.mp4",
+    "url": "/exercises/narrow-stance-hack-squats/f6-loop.mp4",
     "width": 800,
     "height": 600,
     "sortOrder": 2

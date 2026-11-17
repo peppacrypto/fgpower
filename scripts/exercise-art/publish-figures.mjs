@@ -30,8 +30,8 @@ const DRY = argv.includes('--dry')
 const RENDER_ONLY = argv.includes('--render-only')
 /** File-name prefix of what is published now; bump it whenever published pictures change (they are cached as immutable).
  * f3: the third engine generation (2026-11-14). f4: the yoga review fixes (2026-11-15), some of them re-publishing f3 slugs.
- * f5: the deep hack squats and the re-posed face pull (2026-11-17). */
-const PREFIX = 'f5'
+ * f5: the re-posed face pull and a first deeper hack (2026-11-17). f6: the hack squats down to the glutes on the calves (same day). */
+const PREFIX = 'f6'
 
 let slugs = []
 if (opt('--slugs')) slugs = opt('--slugs').split(',')
