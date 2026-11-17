@@ -56,5 +56,7 @@ save('alternating-cable-shoulder-press',{az:30,el:6},['shoulders'],pr,{start:pf(
 const ur=(x,y,z,pole,fi,pa,sc)=>({...st(0),...both([x,y,z],fi,pa,pole,{scap:{elev:sc}})});
 save('upright-cable-row',{az:40,el:6},['traps','lateral-deltoid'],front('straight-bar',0.2),{
  start:ur(0.2,0.78,0.2,[0.3,-0.4,-1],[0,-1,0],[0,0,-1],0),mid:ur(0.3,1.0,0.27,[0.5,0.1,-0.6],[0,-1,0.1],[0,0.1,-1],0.4),end:ur(0.36,1.22,0.31,[0.45,0.4,-0.5],[0,-0.8,0.6],[0,0.6,-0.8],0.8)},{});
-for(const [k,v] of Object.entries(out))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
+// face-pull was re-posed by hand on 2026-11-17 (facing the tower, arms long to the rope, hands to the ears): do not overwrite it.
+const HAND=new Set(["face-pull"]);
+for(const [k,v] of Object.entries(out))if(!HAND.has(k))fs.writeFileSync(W+k+'.json',JSON.stringify(v,null,1));
 console.log(Object.keys(out).length);

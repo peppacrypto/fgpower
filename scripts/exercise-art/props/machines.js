@@ -37,7 +37,8 @@
 //   Plate is .72 wide, .56 along f. Handles by the hips, neutral: hand [.305,.425,.03], fingers [0,-.59,.81], palm [-1,0,0], pole [.2,-.75,-.65].
 // hack-squat      (hack-squat, narrow-stance-hack-squats) r=[0,.743,-.669] up the rails, nb=[0,.669,.743] out of the back pad. Soles on the fixed plate at
 //   [+-.125,.24,0] (narrow: +-.05), anchor "sole", pitch -25, pole [0,.2,1]. Hips = [0,.911,-.628] + t*r, root.pitch -42, neck.flex 16: t=0 legs nearly
-//   straight, t=-.28 knees at 100. The carriage follows the pelvis along r. Hands move with it: hips + .585*r + .03*nb, x=.28, fingers r, palm nb,
+//   straight, t=-.28 knees at 100, t=-.50 knees at 133 (the owner's depth; the ankles allow about that much). The carriage follows the
+//   pelvis along r and bottoms out on a rubber stop just below t=-.50. Hands move with it: hips + .585*r + .03*nb, x=.28, fingers r, palm nb,
 //   pole [.85,-.5,.15].
 // standing-calf   (standing-calf-raises, calf-machine-shoulder-shrug) Balls [+-.11,.14,.06], anchor "ball", toes 0. Foot pitch -14: hips [0,1.03,-.04]. Foot
 //   pitch 28: hips [0,1.116,0]. Yoke pads rest on the shoulders, following the shoulder joints: pad faces y = shoulder joint + .065. Handles on the
@@ -1530,7 +1531,7 @@ machines['hack-squat'] = function hackSquat(p, ctx) {
         const low = L(X, -0.78, -HS.off - 0.09)
         a.tube(low, [X, 0.05, low.z], 0.08, 0.08, M.frame)
         // A rubber stop, where the carriage bottoms out.
-        a.lathe([[0.032, 0], [0.032, 0.03], [0.026, 0.04], [0.022, 0.04]], M.rubber, L(X, -0.37, -HS.off), r, 18)
+        a.lathe([[0.032, 0], [0.032, 0.03], [0.026, 0.04], [0.022, 0.04]], M.rubber, L(X, -0.66, -HS.off), r, 18)
       }
       for (const z of [-1.37, -0.32, 0.41]) a.tube([-0.33, 0.035, z], [0.33, 0.035, z], 0.07, 0.07, M.frame)
       a.tube(L(-RX, 0.7, -HS.off - 0.062), L(RX, 0.7, -HS.off - 0.062), 0.07, 0.07, M.frame)
