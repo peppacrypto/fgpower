@@ -1996,7 +1996,8 @@ const ROM = {
   squat(rows, spec, slug, warn) {
     const knee = sideOf(rows, spec, 'knee')
     if (isMachine(spec, /leg-press|hack|lying-squat|seated-leg-press|belt/)) {
-      const need = /hack/.test(slug) || isMachine(spec, /hack/) ? 140 : 95 // hack: the owner's depth, glutes down to the calves (2026-11-17)
+      // The owner's depth (2026-11-17): hack glutes down to the calves; 45 degree leg press thighs beside the chest, lower back on the pad.
+      const need = /hack/.test(slug) || isMachine(spec, /hack/) ? 140 : isMachine(spec, /^leg-press$/) ? 110 : 95
       if (mx(knee) < need) warn('depth', need - mx(knee), `the knees bend only ${deg(mx(knee))} deg at the bottom: a full rep on this machine goes to about ${need} (hips as low as the sled allows)`)
     } else if (/split|lunge|step/.test(slug)) {
       if (mx(knee) < 80) warn('depth', 80 - mx(knee), `the front knee bends only ${deg(mx(knee))} deg at the bottom: a split squat goes to about 90, the back knee near the floor`)

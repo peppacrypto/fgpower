@@ -31,8 +31,9 @@
 //   rel:"world" }, knee pivot [y .61, z .133], roller .355 down the shin behind it. Right sole [-.11,.12,-.05] on the step. Forearm rest top y 1.10 at
 //   z .35-.69. Handles: hand [.19,1.12,.72], fingers [.02,-.1,1], palm [0,-1,-.1], pole [.25,-1,-.2]. Use muscleSide "L". Follows p.side (default L).
 // leg-press       (leg-press, narrow-stance-leg-press, calf-press-on-the-leg-press-machine) 45 degree sled. Hips [0,.42,0], root.pitch -50, neck.flex 12.
-//   Rails go along r=[0,.707,.707]; toes point along f=[0,.707,-.707]. Each sole at hips + w*r + .04*f, x=+-.125 (narrow: +-.05), anchor "sole", pitch -135,
-//   pole [0,.75,-.65]. w=.90 legs nearly straight, w=.65 knees at 96. The sled's face follows the soles along r: keep them on that line.
+//   Rails go along r=[0,.707,.707]; toes point along f=[0,.707,-.707]. Each sole at hips + w*r + v*f, anchor "sole", pitch -135. The owner's full depth
+//   (2026-11-17): v .12, x +-.165, yaw +-13, pole [+-.32,.75,-.65], root.pitch -54; w .942 legs nearly straight, w .535 knees at 116, thighs beside the
+//   chest (narrow: v .14, x +-.06, w .545, knees 114). With v .04 the ankles stop it near 105. The sled's face follows the soles along r: keep them on that line.
 //   Calf press: prop anchor:"ball" (the sled then follows the balls). Each ball at hips + w*r - .2*f, heels off the plate's lower edge, anchor "ball", toes follow; pitch -150, w .80 -> pitch -105, w .89.
 //   Plate is .72 wide, .56 along f. Handles by the hips, neutral: hand [.305,.425,.03], fingers [0,-.59,.81], palm [-1,0,0], pole [.2,-.75,-.65].
 // hack-squat      (hack-squat, narrow-stance-hack-squats) r=[0,.743,-.669] up the rails, nb=[0,.669,.743] out of the back pad. Soles on the fixed plate at

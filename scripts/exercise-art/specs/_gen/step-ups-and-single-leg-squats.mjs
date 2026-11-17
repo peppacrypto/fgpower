@@ -28,9 +28,12 @@ save('barbell-step-ups',cam,Q,[...box,...bbProps],{start:{...rootStart,...bbArms
 save('dumbbell-step-ups',cam,Q,[...box,...dbProps],{start:{...rootStart,...dbArms(0.82,-0.04)},mid:{...mid,...dbArms(1.12,0.1)},mid2:{...mid2,...dbArms(1.1,0.25)},end:{...feetTop,...dbArms(0.92+BH,0.3)}});
 // pistol
 const pArm=fk(88,4);
+// Full depth (2026-11-17, the owner asked for the full range): the hamstrings down on the calf, knee about 138, the stance foot under its hip
+// (x .16, toes out 10) with the knee over the toes, the free leg straight out just off the floor, trunk 20 forward, arms out as counterweight.
+const pStand={pos:[0.16,0,0.28],anchor:'sole',yaw:10,pole:[-0.03,0,1]};
 save('pistol-squat',{az:68,el:8},['quadriceps'],[],{
- start:{root:{pos:[0.07,0.928,0.2],pitch:3},armL:pArm,armR:pArm,legL:{pos:[0.1,0,0.28],anchor:'sole',pole:[-0.1,0,1]},legR:{fk:{flex:85,abd:0,knee:4},foot:{pitch:-20}}},
- end:{root:{pos:[0.07,0.52,-0.12],pitch:36},neck:{flex:-18},armL:fk(112,4),armR:fk(112,4),legL:{pos:[0.1,0,0.28],anchor:'sole',pole:[-0.1,0,1]},legR:{fk:{flex:100,abd:0,knee:4},foot:{pitch:-20}}}},{muscleSide:'L'});
+ start:{root:{pos:[0.11,0.928,0.2],pitch:3},armL:pArm,armR:pArm,legL:pStand,legR:{fk:{flex:85,abd:0,knee:4},foot:{pitch:-20}}},
+ end:{root:{pos:[0.12,0.32,0.07],pitch:18},spine:{flex:2},neck:{flex:-12},armL:fk(112,4),armR:fk(112,4),legL:pStand,legR:{fk:{flex:98,abd:8,knee:4},foot:{pitch:-20}}}},{muscleSide:'L'});
 // shrimp: right leg stands, left foot held behind by the left hand (same side: the opposite hand cannot cross the body in this rig)
 const holdHand=(x,y,z)=>({pos:[x,y,z],contact:true,hand:'hook',fingers:[0,-0.4,-1],palm:[-1,0,0],pole:[0.9,-0.2,-0.3]});
 save('shrimp-squat',{az:90,el:5},['quadriceps','glutes'],[],{
