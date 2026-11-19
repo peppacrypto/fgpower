@@ -82,8 +82,10 @@
 //     benchH: top of the pad, default 0.42. Pad x +-0.15, z -0.53 to 0.42. Body: root.pos (0, benchH + 0.09, 0). Add "floats":true to the spec.
 //     Foot plates: two, centred (+-0.115, 0.36, 0.875), 0.15 x 0.32, facing the sitter and up 20 degrees, a heel lip at the bottom. Soles: pos (+-0.115, 0.343, 0.863),
 //     anchor "sole", pitch -70, pole [+-0.15, 1, 0.3]: knees bent about 40 degrees.
-//     Wheel centre (0, pulleyY, 0.976), pulleyY default 0.48: the cable passes between the feet. V-bar hands: (+-0.07, 0.74, 0.72), root.pitch 6, spine.flex 30, to
-//     (+-0.07, 0.84, 0.30), root.pitch -6, spine.flex -4. Default attachment v-bar; also rope, straight-bar; hand:"L" + d-handle.
+//     Wheel centre (0, pulleyY, 0.976), pulleyY default 0.48: the cable passes between the feet. V-bar row with the trunk still (specs/seated-cable-rows.json):
+//     hands (+-0.07, 0.69, 0.67) along the cable, root.pitch 6, spine.flex 0, scap prot 16, to (+-0.07, 0.72, 0.19) at the upper abdomen, root.pitch -1,
+//     spine.flex -4, scap prot -15, pole [+-0.35, -0.7, -1] (elbows back along the body). Not a 30 degree spine flex: that rounds the back.
+//     Default attachment v-bar; also rope, straight-bar; hand:"L" + d-handle.
 //     Lying on the bench, head toward the machine: root.pos (0, benchH + 0.10, -0.25), root.yaw 180, root.pitch -90 (the figure's left is then at -X, soles
 //     (-+0.2, 0, -0.74), yaw 180): specs/_gallery/seated-row-lying.json.
 //

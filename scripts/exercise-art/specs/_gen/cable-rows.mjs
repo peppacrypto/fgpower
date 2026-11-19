@@ -10,7 +10,18 @@ const seat=(h,att,extra={})=>[{type:'seated-row',pos:[0,0,0],benchH:h,hands:true
 const row=(slug,h,cam)=>save(slug,cam,['middle-back'],seat(h,'v-bar'),{
  start:{...sit(h,6,30,-24),...two([0.07,h+0.32,0.85],[-1,0,0],[0.5,-0.5,-0.2])},
  end:{...sit(h,-6,-4,4),...two([0.07,h+0.42,0.30],[-1,0,0],[0.5,-0.1,-1])}});
-row('seated-cable-rows',0.42,{az:118,el:10});
+// Seated cable row, the owner's review (2026-11-19). The old pose rocked the trunk 46 degrees (back rounded forward at the start,
+// leaning back at the end) while the V-bar stopped 15 cm short of the body, the elbows in front of the shoulders and flared.
+// Now the trunk stays tall and nearly still (6 forward to 5 back, the spine neutral, chest up). Start: arms long along the
+// cable, shoulder blades forward (scap prot 16). End: the V-bar at the upper abdomen, the elbows along the body and behind
+// the trunk (shoulder extension about 17, elbows about 110), the blades squeezed (prot -15). The hands converge on the
+// V-bar, so the fingers point forward and in. This figure's forearm cannot take the elbows further back with the
+// hands still in front of the belly (abdomen front at z 0.115).
+const rowStill=(slug,h,cam)=>{save(slug,cam,['middle-back'],seat(h,'v-bar'),{
+ start:{...sit(h,6,0,-6),...two([0.07,h+0.27,0.67],[-1,0,0],[0.5,-0.5,-0.2],[-0.15,-0.45,0.88])},
+ end:{...sit(h,-1,-4,2),...two([0.07,h+0.30,0.19],[-0.89,0,-0.45],[0.35,-0.7,-1],[-0.45,0,0.89])}});
+ const f=out[slug].frames;for(const a of ['armL','armR']){f.start[a].scap={prot:16};f.end[a].scap={prot:-15};}};
+rowStill('seated-cable-rows',0.42,{az:118,el:10});
 // platform on the seat: raised hips, feet stay on plates (soles up with the seat)
 row('elevated-cable-rows',0.42,{az:118,el:10});
 {const o=out['elevated-cable-rows'];o.props=[{type:'plyo-box',pos:[0,0,0.64],height:0.3,width:0.45,depth:0.36},...o.props];
