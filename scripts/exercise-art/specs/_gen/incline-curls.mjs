@@ -12,7 +12,17 @@ const pole=[0.4,-0.5,-0.8];
 // supinated down: palm forward (+Z)
 const dF=[0,-1,0.1], dP=[-0.45,0.1,0.9], tF=[0,0.5,0.85], tP=[-0.4,0.85,-0.4];
 const hF=[0,-1,0.3], hP=[-1,0,0], htF=[0,0.4,0.9], htP=[-1,0,0];
-save('incline-dumbbell-curl',{az:70,el:10},{start:{...base(),...both(low,dF,dP,pole)},mid:{...base(),...both(mid,[0,-0.2,1],[-0.4,0.9,0.1],[0.3,-0.5,-0.9])},end:{...base(),...both(top,tF,tP,[0.3,-0.5,-0.9])}});
+// Incline dumbbell curl, the owner's review (2026-11-19). The old hand targets moved in straight lines, so the upper arm swung
+// about 46 degrees (back first, then far forward) and the elbows stopped at 94: a front raise with a half curl.
+// Now the arms are driven by their joints (fk, like dumbbell-bicep-curl): the upper arm hangs straight down to the floor
+// (flex -50 on a back reclined 50) and drifts only 8 forward at the top, while the elbow goes 6 -> 135. rot -15 turns the
+// forearms a little out, so the dumbbells pass beside the hips and end in front of the shoulders, not in the chest.
+// The back lies on the pad (props/benches.js: pitch = angle - 90, root y 0.542; z 0.065 is 1 cm ahead of the doc's 0.055 for
+// angle 40, which keeps the shoulder blades out of the pad), the chin a little down (neck 26) instead of thrown back.
+const onPad=(extra={})=>({root:{pos:[0,0.542,0.065],pitch:-50},neck:{flex:26},
+ legL:{pos:[0.21,0,0.62],anchor:'sole',pole:[0.15,0.4,1]},legR:{pos:[-0.21,0,0.62],anchor:'sole',pole:[-0.15,0.4,1]},...extra});
+const fkArms=(flex,abd,rot,elbow)=>{const a=()=>({fk:{flex,abd,rot,elbow},rel:'chest',hand:'grip',grip:0.016,pron:0});return {armL:a(),armR:a()};};
+save('incline-dumbbell-curl',{az:70,el:10},{start:{...onPad(),...fkArms(-50,12,-15,6)},mid:{...onPad(),...fkArms(-47,11,-15,70)},end:{...onPad(),...fkArms(-42,10,-15,135)}});
 save('flexor-incline-dumbbell-curls',{az:70,el:10},{start:{...base(),...both(low,dF,dP,pole)},mid:{...base(),...both(mid,[0,-0.2,1],[-0.4,0.9,0.1],[0.3,-0.5,-0.9])},end:{...base(),...both(top,tF,tP,[0.3,-0.5,-0.9])}},props({offset:[0,0,0.05]}));
 const lowH=[0.31,0.26,-0.32], topH=[0.34,0.98,0.14], midH=[0.37,0.58,-0.12];
 save('incline-hammer-curls',{az:70,el:10},{start:{...base(),...both(lowH,hF,hP,[0.2,-0.5,-0.8])},mid:{...base(),...both(midH,[0,0.2,1],hP,[0.2,-0.5,-0.9])},end:{...base(),...both(topH,htF,htP,[0.2,-0.5,-0.9])}});

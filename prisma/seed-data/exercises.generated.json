@@ -18557,21 +18557,21 @@
   "media": [
    {
     "kind": "IMAGE_START",
-    "url": "/exercises/incline-dumbbell-curl/f3-start.webp",
+    "url": "/exercises/incline-dumbbell-curl/f8-start.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 0
    },
    {
     "kind": "IMAGE_END",
-    "url": "/exercises/incline-dumbbell-curl/f3-end.webp",
+    "url": "/exercises/incline-dumbbell-curl/f8-end.webp",
     "width": 800,
     "height": 600,
     "sortOrder": 1
    },
    {
     "kind": "ILLUSTRATION",
-    "url": "/exercises/incline-dumbbell-curl/f3-loop.mp4",
+    "url": "/exercises/incline-dumbbell-curl/f8-loop.mp4",
     "width": 800,
     "height": 600,
     "sortOrder": 2

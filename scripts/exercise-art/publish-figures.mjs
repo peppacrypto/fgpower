@@ -32,7 +32,8 @@ const RENDER_ONLY = argv.includes('--render-only')
  * f3: the third engine generation (2026-11-14). f4: the yoga review fixes (2026-11-15), some of them re-publishing f3 slugs.
  * f5: the re-posed face pull and a first deeper hack (2026-11-17). f6: the hack squats down to the glutes on the calves (same day).
  * f7: the leg presses to the thighs beside the chest and the pistol to the hamstrings on the calf (same day).
- * f8: the seated cable row with a still trunk, the V-bar to the abdomen and the elbows back (2026-11-19). */
+ * f8: the seated cable row with a still trunk, the V-bar to the abdomen and the elbows back (2026-11-19), and, deployed after
+ *   it, the incline dumbbell curl with the upper arm hanging still (a slug that never had f8, so the prefix could stay). */
 const PREFIX = 'f8'
 
 let slugs = []
