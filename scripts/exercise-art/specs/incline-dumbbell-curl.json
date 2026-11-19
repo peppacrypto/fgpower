@@ -67,25 +67,25 @@
     "fk": {
      "flex": -50,
      "abd": 12,
-     "rot": -15,
+     "rot": -22,
      "elbow": 6
     },
     "rel": "chest",
     "hand": "grip",
     "grip": 0.016,
-    "pron": 0
+    "pron": -90
    },
    "armR": {
     "fk": {
      "flex": -50,
      "abd": 12,
-     "rot": -15,
+     "rot": -22,
      "elbow": 6
     },
     "rel": "chest",
     "hand": "grip",
     "grip": 0.016,
-    "pron": 0
+    "pron": -90
    }
   },
   "mid": {
@@ -128,27 +128,27 @@
    },
    "armL": {
     "fk": {
-     "flex": -47,
+     "flex": -46,
      "abd": 11,
-     "rot": -15,
+     "rot": -22,
      "elbow": 70
     },
     "rel": "chest",
     "hand": "grip",
     "grip": 0.016,
-    "pron": 0
+    "pron": -90
    },
    "armR": {
     "fk": {
-     "flex": -47,
+     "flex": -46,
      "abd": 11,
-     "rot": -15,
+     "rot": -22,
      "elbow": 70
     },
     "rel": "chest",
     "hand": "grip",
     "grip": 0.016,
-    "pron": 0
+    "pron": -90
    }
   },
   "end": {
@@ -193,25 +193,25 @@
     "fk": {
      "flex": -42,
      "abd": 10,
-     "rot": -15,
+     "rot": -22,
      "elbow": 135
     },
     "rel": "chest",
     "hand": "grip",
     "grip": 0.016,
-    "pron": 0
+    "pron": -90
    },
    "armR": {
     "fk": {
      "flex": -42,
      "abd": 10,
-     "rot": -15,
+     "rot": -22,
      "elbow": 135
     },
     "rel": "chest",
     "hand": "grip",
     "grip": 0.016,
-    "pron": 0
+    "pron": -90
    }
   }
  }
